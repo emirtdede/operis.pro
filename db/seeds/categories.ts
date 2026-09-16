@@ -1937,4 +1937,72 @@ export const SEED_CATEGORIES: SeedCategory[] = [
       },
     },
   },
+  {
+    key: "photo-editing-retouching",
+    sectorKey: "sector-design-creative",
+    sortOrder: 305,
+    translations: {
+      tr: {
+        name: "Fotoğraf Düzenleme ve Retouching",
+        description:
+          "E-ticaret ürün dekupe, katalog görseli hazırlama, renk düzeltme ve profesyonel portre rötuşlama.",
+      },
+      en: {
+        name: "Photo Editing & Retouching",
+        description:
+          "E-commerce product cutout, catalog imagery, color grading, background removal, and portrait retouching.",
+      },
+    },
+  },
+  {
+    key: "music-production-beatmaking",
+    sectorKey: "sector-video-audio",
+    sortOrder: 505,
+    translations: {
+      tr: {
+        name: "Müzik Prodüksiyonu ve Beatmaking",
+        description:
+          "Özgün müzik besteleme, beat üretimi, reklam jingleları, şarkı aranjmanı ve miks/mastering.",
+      },
+      en: {
+        name: "Music Production & Beatmaking",
+        description:
+          "Original music composition, beatmaking, commercial jingles, song arrangement, and mixing/mastering.",
+      },
+    },
+  },
+  {
+    key: "hr-talent-recruitment",
+    sectorKey: "sector-business-finance",
+    sortOrder: 704,
+    translations: {
+      tr: {
+        name: "İnsan Kaynakları ve Yetenek Avcılığı",
+        description:
+          "Teknik yetenek bulma (headhunting), mülakat taraması, uzaktan ekip kurma ve İK danışmanlığı.",
+      },
+      en: {
+        name: "HR & Talent Recruitment",
+        description:
+          "Tech talent scouting, headhunting, candidate screening, remote team building, and HR advisory.",
+      },
+    },
+  },
+  {
+    key: "online-tutoring-mentorship",
+    sectorKey: "sector-business-finance",
+    sortOrder: 705,
+    translations: {
+      tr: {
+        name: "Online Eğitim, Özel Ders ve Mentorluk",
+        description:
+          "Yazılım mentorluğu, yabancı dil eğitimi, teknik mülakat hazırlığı ve LMS eğitim içerik tasarımı.",
+      },
+      en: {
+        name: "Online Tutoring & Mentorship",
+        description:
+          "Software engineering mentorship, language lessons, technical interview prep, and LMS curriculum design.",
+      },
+    },
+  },
 ];

@@ -767,6 +767,21 @@ export class OfferService {
             // non-blocking
           }
 
+          // Fail-open: Notify Inngest to cancel sleeping stale-offer lifecycle workflow
+          try {
+            import("@/src/lib/inngest/client")
+              .then(({ sendInngestEvent }) => {
+                sendInngestEvent("operis/offer.resolved", {
+                  offerId: withdrawn.withdrawn.id,
+                  listingId: withdrawn.offer.listingId,
+                  status: "WITHDRAWN",
+                }).catch(() => {});
+              })
+              .catch(() => {});
+          } catch {
+            // Fail-open
+          }
+
           return withdrawn.withdrawn;
         }
       } catch (err) {
@@ -1030,6 +1045,21 @@ export class OfferService {
             );
           } catch {
             // non-blocking
+          }
+
+          // Fail-open: Notify Inngest to cancel sleeping stale-offer lifecycle workflow
+          try {
+            import("@/src/lib/inngest/client")
+              .then(({ sendInngestEvent }) => {
+                sendInngestEvent("operis/offer.resolved", {
+                  offerId: rejected.id,
+                  listingId: offer.listingId,
+                  status: "REJECTED",
+                }).catch(() => {});
+              })
+              .catch(() => {});
+          } catch {
+            // Fail-open
           }
         }
 

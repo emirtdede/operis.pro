@@ -1,0 +1,886 @@
+{
+  "version": "5.1.0",
+  "provenance": "expert-curated synthetic human-style queries rewritten for natural Turkish; not production telemetry",
+  "categoriesBySlug": {
+    "web-gelistirme": [
+      "Şirketim için hızlı açılan, telefonda düzgün çalışan profesyonel bir internet sitesi yaptırmak istiyorum.",
+      "Mevcut sitem mobilde bozuluyor ve bazı sayfalar çok yavaş açılıyor; bunları düzeltecek biri lazım.",
+      "Tasarımı hazır olan kurumsal sitemi koda döküp yayına alabilecek bir geliştirici arıyorum.",
+      "Eski internet sitemi güncel teknolojilerle yenileyip yönetilebilir hale getirmek istiyorum.",
+      "Landing page ve birkaç tanıtım sayfasını responsive olarak hazırlatmak istiyorum.",
+      "Mevcut siteye yeni sayfalar ve formlar ekleyebilecek, sonrasında da yayına alabilecek biri arıyorum."
+    ],
+    "frontend-ve-arayuz-muhendisligi": [
+      "Figma tasarımım hazır; ekranları React ile birebir çalışan arayüze çevirecek biri lazım.",
+      "Mevcut arayüz masaüstünde iyi ama mobilde dağılıyor; responsive hale getirecek geliştirici arıyorum.",
+      "React projesindeki dağınık component yapısını toparlayıp daha sürdürülebilir hale getirmek istiyorum.",
+      "Next.js ile hazırlanmış ön yüzde performans ve yüklenme sorunlarını çözecek biri lazım.",
+      "Backend hazır; sadece kullanıcıya görünen ekranları geliştirecek deneyimli bir frontend geliştirici arıyorum.",
+      "Yeni tasarımları mevcut web uygulamasına eklerken erişilebilirlik ve responsive davranışı da düzgün kurmak istiyorum."
+    ],
+    "backend-ve-api-muhendisligi": [
+      "Uygulamam için giriş, yetkilendirme ve veri işlemlerini yapacak güvenli bir API geliştirmem gerekiyor.",
+      "Mevcut API yavaş çalışıyor ve zaman zaman hata veriyor; kodu inceleyip kalıcı şekilde düzeltecek biri arıyorum.",
+      "Node.js tarafında kullanıcı, ödeme ve bildirim işlemlerini yönetecek servisler geliştirmek istiyorum.",
+      "Frontend hazır; veritabanına bağlanan sağlam bir backend ve REST API kurulması gerekiyor.",
+      "Mevcut sunucu tarafını daha güvenli ve bakımı kolay hale getirecek deneyimli bir geliştirici arıyorum.",
+      "Harici bir servisi OAuth ile bağlayıp verileri kendi sistemimize aktaracak API entegrasyonu yaptırmak istiyorum."
+    ],
+    "mobil-uygulama-gelistirme": [
+      "Android ve iPhone’da çalışacak tek bir mobil uygulama yaptırmak istiyorum.",
+      "Figma ekranları hazır; Flutter ile gerçek uygulamaya dönüştürecek bir geliştirici arıyorum.",
+      "Mevcut mobil uygulama bazı cihazlarda çöküyor ve performansı düşük; sorunları düzeltecek biri lazım.",
+      "Uygulamaya bildirim, kullanıcı girişi ve ödeme gibi yeni özellikler ekletmek istiyorum.",
+      "React Native ile yazılmış mevcut projeyi devralıp mağazaya hazır hale getirecek biri arıyorum.",
+      "Mobil uygulamanın hem Android hem iOS sürümünü yayınlama sürecine kadar tamamlayabilecek bir freelancer lazım."
+    ],
+    "masaustu-yazilim-gelistirme": [
+      "Windows’ta çalışan kurulumlu bir masaüstü programına ihtiyacım var.",
+      "Mevcut C# uygulamamda hatalar var; kodu inceleyip stabil hale getirecek biri arıyorum.",
+      "WPF ile geliştirilmiş programın arayüzünü yenileyip yeni özellikler ekletmek istiyorum.",
+      "İnternetsiz de çalışabilen ve yerel veriyi saklayan bir Windows uygulaması yaptırmak istiyorum.",
+      "Electron ile hazırlanmış masaüstü uygulamanın performansını iyileştirecek bir geliştirici lazım.",
+      "Mevcut masaüstü yazılımını yeni Windows sürümleriyle uyumlu hale getirip kurulum paketini hazırlatmak istiyorum."
+    ],
+    "devops-ve-bulut-bilisim": [
+      "Uygulamamı Docker ile paketleyip buluta otomatik deploy edecek CI/CD altyapısı kurdurmak istiyorum.",
+      "Her kod gönderiminde test ve deployment çalışan güvenilir bir pipeline kurmak istiyorum.",
+      "AWS üzerindeki servisleri Docker ve Kubernetes ile daha düzenli yönetebilecek bir uzmana ihtiyacım var.",
+      "Mevcut sunucuların log, monitoring ve deployment süreçlerini otomatikleştirmek istiyorum.",
+      "Terraform ile tekrar kurulabilir bir bulut altyapısı hazırlayacak biri arıyorum.",
+      "Production ortamında kesinti riskini azaltacak, rollback ve monitoring süreçlerini düzgün kuracak bir DevOps uzmanı lazım."
+    ],
+    "veritabani-muhendisligi": [
+      "Veritabanındaki sorgular çok yavaş; indeksleri ve yapıyı optimize edecek bir uzman arıyorum.",
+      "PostgreSQL veritabanım büyüdükçe performans düştü; sorguları ve indeksleri gözden geçirmek istiyorum.",
+      "Mevcut tablolar arasında gereksiz tekrarlar var; veri modelini daha sağlıklı hale getirecek biri lazım.",
+      "Yedekleme ve geri yükleme sürecini güvenli şekilde kurmak istiyorum.",
+      "SQL Server tarafında kilitlenme ve uzun süren sorgu sorunlarını çözecek uzman arıyorum.",
+      "Yeni proje için ölçeklenebilir bir veritabanı şeması tasarlatmak istiyorum."
+    ],
+    "siber-guvenlik": [
+      "Sistemlerimde açık var mı kontrol ettirmek ve güvenlik seviyesini artırmak istiyorum.",
+      "Web uygulamamda kimlik doğrulama ve yetkilendirme tarafını güvenlik açısından inceletmek istiyorum.",
+      "Şirket içindeki erişimlerin kimde ne yetki var şeklinde düzenlenmesi gerekiyor.",
+      "Sunucu ve uygulamalarda temel hardening kontrollerini yapacak bir güvenlik uzmanı arıyorum.",
+      "Bir saldırı yaşanmadan önce riskli noktaları tespit edip önlem planı çıkarmak istiyorum.",
+      "Loglar ve uyarılar dağınık; olayları daha hızlı fark edebilmek için güvenlik izleme düzeni kurmak istiyorum."
+    ],
+    "yazilim-testi-ve-kalite-guvencesi": [
+      "Uygulamanın kritik akışlarını otomatik testlerle güvence altına almak istiyorum.",
+      "Yeni sürümlerde aynı hatalar tekrar çıkıyor; düzenli regression testleri kuracak biri lazım.",
+      "Playwright ile giriş, ödeme ve form akışlarını uçtan uca test ettirmek istiyorum.",
+      "API endpoint’lerini otomatik kontrol eden test senaryoları hazırlatmak istiyorum.",
+      "Mevcut projede test kapsamı çok düşük; önemli modüller için unit ve integration testleri ekletmek istiyorum.",
+      "Yayına çıkmadan önce manuel ve otomatik kontrollerle kapsamlı bir kalite süreci oluşturmak istiyorum."
+    ],
+    "blokzincir-muhendisligi": [
+      "Ethereum üzerinde güvenli bir akıllı sözleşme geliştirecek biri lazım.",
+      "Solidity ile yazılmış kontratı güvenlik ve gas maliyeti açısından gözden geçirmek istiyorum.",
+      "Web uygulamasını cüzdan bağlantısı ve zincir üzerindeki işlemlerle entegre etmek istiyorum.",
+      "Token işlemlerini yönetecek smart contract geliştirip test edecek deneyimli biri arıyorum.",
+      "Mevcut Web3 projesinde kontrat çağrıları bazen başarısız oluyor; sorunu çözecek geliştirici lazım.",
+      "Hardhat veya Foundry ile testleri kurulmuş, yayına hazır kontrat altyapısı istiyorum."
+    ],
+    "gomulu-sistemler-ve-iot": [
+      "Sensörden veri okuyup internete gönderen ESP32 tabanlı bir cihaz yazılımı yaptırmak istiyorum.",
+      "STM32 üzerinde çalışan firmware’e yeni sensör ve haberleşme özellikleri ekletmek istiyorum.",
+      "Arduino prototipini daha kararlı ve düşük güç tüketen bir ürüne dönüştürecek biri arıyorum.",
+      "MQTT üzerinden veri gönderen IoT cihazının bağlantı sorunlarını çözmek istiyorum.",
+      "Raspberry Pi ile çalışan cihazda açılış, servis ve uzaktan güncelleme süreçlerini düzenlemek istiyorum.",
+      "Donanımı hazır olan projeye mikrodenetleyici yazılımı ve temel testleri geliştirecek bir uzman lazım."
+    ],
+    "bt-sistem-ve-ag-yonetimi": [
+      "Ofisteki kullanıcı, ağ, sunucu ve Active Directory sorunlarını yönetecek teknik bir uzmana ihtiyacım var.",
+      "Windows Server ve kullanıcı yetkilerini düzenleyip mevcut sorunları çözecek biri arıyorum.",
+      "Ofis ağında bağlantı kopmaları oluyor; switch, VLAN ve ağ ayarlarını kontrol ettirmek istiyorum.",
+      "VPN erişimlerini güvenli ve düzenli hale getirecek sistem yöneticisi lazım.",
+      "Linux sunucuların bakım, güncelleme ve yedekleme işlerini düzenli takip edecek biri arıyorum.",
+      "DNS, DHCP ve kullanıcı hesaplarının yönetimini daha düzenli hale getirmek istiyorum."
+    ],
+    "bilgisayar-donanimi-ve-teknik-destek": [
+      "Bilgisayarlar açılmıyor veya yavaş çalışıyor; donanım ve Windows sorunlarını çözecek destek arıyorum.",
+      "Laptopta SSD ve RAM yükseltmesi yapıp sistemi temiz kuracak bir teknisyen lazım.",
+      "Windows açılışında hata veren bilgisayarın arızasını tespit ettirmek istiyorum.",
+      "Yeni ofis bilgisayarlarının kurulum, sürücü ve temel program ayarlarını yaptırmak istiyorum.",
+      "Birden fazla cihazda ağ ve yazıcı sorunları var; yerinde teknik destek arıyorum.",
+      "Bilgisayarda donanım mı yazılım mı sorunlu olduğunu tespit edip gerekli onarımı yapacak biri lazım."
+    ],
+    "diger-teknoloji-hizmetleri": [
+      "Hangi teknolojiyi seçmem gerektiğinden emin değilim; mevcut sistemi inceleyip teknik yön gösterecek biri lazım.",
+      "Eski sistemi tamamen değiştirmeden nasıl modernleştirebileceğimizi değerlendirecek deneyimli bir uzman arıyorum.",
+      "Yeni proje için teknoloji seçimi, mimari ve entegrasyon riskleri konusunda görüş almak istiyorum.",
+      "Kod ve altyapıyı inceleyip en kritik teknik sorunları önceliklendirecek biri lazım.",
+      "Yazılım kurulumu ve sistem entegrasyonu konusunda doğru yaklaşımı belirlemek istiyorum.",
+      "Mevcut teknik borcu azaltmak için uygulanabilir bir iyileştirme planı hazırlatmak istiyorum."
+    ],
+    "no-code-ve-low-code-gelistirme": [
+      "Kod yazmadan hızlı bir MVP çıkarmak için Bubble, Webflow veya benzeri araçlarla çözüm kurdurmak istiyorum.",
+      "Bubble üzerinde çalışan uygulamaya yeni ekranlar ve iş akışları ekletecek biri arıyorum.",
+      "Webflow ile kurumsal siteyi tasarıma sadık şekilde hazırlatmak istiyorum.",
+      "Make veya Zapier ile tekrarlayan işleri otomatikleştirecek bir no-code uzmanı lazım.",
+      "Airtable ve formları birbirine bağlayarak küçük bir operasyon sistemi kurmak istiyorum.",
+      "Mevcut no-code projeyi daha düzenli ve sürdürülebilir hale getirecek biri arıyorum."
+    ],
+    "yapay-zeka-ve-makine-ogrenimi": [
+      "Geçmiş verilerime göre tahmin yapan bir makine öğrenmesi modeli geliştirmek istiyorum.",
+      "Elimde etiketli veri var; sınıflandırma modeli eğitip sonuçlarını ölçmek istiyorum.",
+      "Mevcut modelin doğruluğu düşük; veri, özellikler ve model seçimini yeniden değerlendirecek biri arıyorum.",
+      "Python ve scikit-learn ile uçtan uca bir tahmin pipeline’ı kurmak istiyorum.",
+      "Deep learning gerekip gerekmediğini değerlendirip uygun çözümü geliştirecek uzman lazım.",
+      "Eğitilen modeli gerçek uygulamada kullanılabilir hale getirmek için deployment tarafında da destek arıyorum."
+    ],
+    "veri-muhendisligi-ve-analitik": [
+      "Farklı kaynaklardaki verileri tek yerde toplayan düzenli bir ETL veri hattına ihtiyacım var.",
+      "API, dosya ve veritabanından gelen verileri temizleyip veri ambarına aktarmak istiyorum.",
+      "Airflow ile çalışan pipeline sık sık hata veriyor; daha güvenilir hale getirecek biri arıyorum.",
+      "dbt ile dönüşümleri düzenleyip raporlama için temiz veri modelleri oluşturmak istiyorum.",
+      "BigQuery veya Snowflake üzerinde analitik veri yapısını baştan tasarlatmak istiyorum.",
+      "Veri akışlarının ne zaman bozulduğunu görebileceğimiz monitoring ve kalite kontrolleri ekletmek istiyorum."
+    ],
+    "otomasyon-ve-entegrasyonlar": [
+      "Form, CRM ve e-posta araçlarım arasında manuel işleri otomatikleştirmek istiyorum.",
+      "n8n ile gelen müşteri bilgilerini CRM’e kaydedip ekibe bildirim gönderen akış kurmak istiyorum.",
+      "Make üzerinde kurulu otomasyon bazen veri kaçırıyor; sorunu bulup düzeltmek istiyorum.",
+      "İki farklı servisi API ve webhook ile birbirine bağlayacak biri lazım.",
+      "Her gün elle yaptığımız Excel ve e-posta işlemlerini otomatik hale getirmek istiyorum.",
+      "Mevcut iş akışlarını inceleyip hangi adımların otomatikleştirilebileceğini belirleyecek uzman arıyorum."
+    ],
+    "yapay-zeka-ajanlari-ve-is-akislari": [
+      "Araç kullanabilen ve birden fazla adımı kendi başına yürüten yapay zeka ajanı geliştirmek istiyorum.",
+      "LangGraph ile farklı araçları çağıran ve gerektiğinde tekrar deneyen bir agent akışı kurmak istiyorum.",
+      "Mevcut chatbot sadece cevap veriyor; veri okuyup işlem yapabilecek hale getirmek istiyorum.",
+      "Birden fazla uzman agent’ın birlikte çalıştığı bir iş akışı tasarlatmak istiyorum.",
+      "Agent’ın hangi aracı ne zaman çağırdığını güvenli ve izlenebilir hale getirmek istiyorum.",
+      "MCP veya function calling kullanan ajan yapısını mevcut ürünümüze entegre edecek biri arıyorum."
+    ],
+    "prompt-muhendisligi-ve-ai-danismanligi": [
+      "LLM kullanan ürünüm için daha güvenilir sistem promptları ve değerlendirme yöntemi tasarlatmak istiyorum.",
+      "Model aynı soruya tutarsız cevaplar veriyor; promptları ve test yöntemini iyileştirecek biri arıyorum.",
+      "ChatGPT veya Claude için rol, kural ve çıktı formatı iyi tanımlanmış sistem promptları hazırlatmak istiyorum.",
+      "Prompt değişikliklerinin gerçekten kaliteyi artırıp artırmadığını ölçebileceğimiz bir değerlendirme seti istiyorum.",
+      "LLM ürününde hallucination ve yanlış yönlendirme riskini azaltacak guardrail yaklaşımı arıyorum.",
+      "Yapay zekayı ürüne nerede ve nasıl eklemenin mantıklı olduğunu değerlendirecek deneyimli bir danışman lazım."
+    ],
+    "is-zekasi-ve-dashboard-tasarimi": [
+      "Satış ve finans verilerini tek ekranda gösteren yönetici dashboard’u hazırlatmak istiyorum.",
+      "Power BI ile günlük satış, hedef ve kârlılık metriklerini takip edebileceğimiz rapor lazım.",
+      "Mevcut dashboard çok karışık; daha anlaşılır KPI’lar ve görsellerle yeniden düzenlemek istiyorum.",
+      "Excel ve veritabanındaki verileri otomatik yenilenen bir rapora bağlamak istiyorum.",
+      "DAX hesaplamalarında hatalar var; ölçüleri kontrol edip düzeltecek bir Power BI uzmanı arıyorum.",
+      "Yönetimin filtreleyip detayına inebileceği interaktif bir performans paneli hazırlatmak istiyorum."
+    ],
+    "ui-ux-tasarim": [
+      "Ürünümün kullanıcı akışları karışık; daha sade ve kullanılabilir bir arayüz tasarlatmak istiyorum.",
+      "Mevcut Figma dosyasını kullanıcı deneyimi açısından gözden geçirip sorunlu ekranları yeniden tasarlatmak istiyorum.",
+      "Yeni ürün için wireframe’den başlayıp tıklanabilir prototipe kadar ilerleyecek bir tasarımcı arıyorum.",
+      "Kullanıcıların hangi adımda zorlandığını anlayıp akışı sadeleştirecek biri lazım.",
+      "Web ve mobil ekranlarda aynı dilin korunacağı tutarlı bir ürün arayüzü istiyorum.",
+      "Yayın öncesi kullanılabilirlik problemlerini tespit edip tasarıma yansıtacak bir uzman arıyorum."
+    ],
+    "logo-ve-kurumsal-kimlik": [
+      "Yeni markam için özgün logo, tipografi ve tutarlı bir görsel kimlik hazırlatmak istiyorum.",
+      "Mevcut logom amatör görünüyor; daha sade ve profesyonel bir marka kimliği oluşturmak istiyorum.",
+      "Logo ile birlikte renk, yazı tipi ve kullanım kurallarını içeren bir marka kılavuzu hazırlatmak istiyorum.",
+      "Yeni girişim için farklı logo yönleri ve marka dili üzerinde çalışacak bir tasarımcı arıyorum.",
+      "Markanın web, sosyal medya ve baskıda aynı görünmesini sağlayacak bütünlüklü bir kimlik istiyorum.",
+      "Elimdeki logo fikrini özgün ve ölçeklenebilir bir vektör işarete dönüştürmek istiyorum."
+    ],
+    "tasarim-sistemleri-design-systems": [
+      "Birden fazla ürün ekranında aynı bileşenleri tutarlı kullanmak için kapsamlı bir tasarım sistemi kurmak istiyorum.",
+      "Figma’daki buton, input ve kartları tek bir component kütüphanesinde toplamak istiyorum.",
+      "Tasarım token’ları ve değişkenleri düzenleyip tema yönetimini kolaylaştıracak biri arıyorum.",
+      "Mevcut component’ler birbirinden kopuk; isimlendirme ve varyant yapısını standartlaştırmak istiyorum.",
+      "Tasarım ve frontend ekiplerinin aynı kurallarla ilerleyebileceği bir UI kütüphanesi hazırlatmak istiyorum.",
+      "Erişilebilirlik, tipografi ve spacing kurallarını netleştirip dokümante etmek istiyorum."
+    ],
+    "sosyal-medya-ve-reklam-gorselleri": [
+      "Instagram ve reklam kampanyalarım için profesyonel post, story ve banner görselleri hazırlatmak istiyorum.",
+      "Her hafta düzenli paylaşım yapabilmek için aynı görsel dilde sosyal medya şablonları istiyorum.",
+      "Meta reklamlarında kullanacağımız farklı boyutlarda dikkat çekici kreatifler hazırlatmak istiyorum.",
+      "Mevcut postlar birbirinden çok farklı görünüyor; marka diline uygun hale getirecek tasarımcı arıyorum.",
+      "Kampanya dönemleri için hızlıca uyarlanabilecek banner ve carousel tasarımlarına ihtiyacım var.",
+      "Ürün fotoğrafları ve metinleri kullanarak dönüşüm odaklı reklam görselleri hazırlatmak istiyorum."
+    ],
+    "illustrasyon-ve-vektorel-cizim": [
+      "Markam için özgün vektörel illüstrasyonlar ve çizimler yaptırmak istiyorum.",
+      "Web sitemde kullanmak üzere aynı stile sahip birkaç özel illüstrasyona ihtiyacım var.",
+      "Bir maskot fikrini temiz ve ölçeklenebilir vektör çizime dönüştürecek biri arıyorum.",
+      "Basılı ve dijital kullanım için düzenlenebilir Illustrator dosyaları hazırlatmak istiyorum.",
+      "Karmaşık bir fikri sade bir görsel anlatıma dönüştürecek illüstratör lazım.",
+      "Elimdeki eskizleri profesyonel vektör çizimlere çevirmek istiyorum."
+    ],
+    "ambalaj-etiket-ve-baski-tasarimi": [
+      "Yeni ürünümün kutu, etiket ve baskıya hazır ambalaj tasarımını hazırlatmak istiyorum.",
+      "Etiket tasarımını mevcut marka kimliğine uyarlayıp matbaaya hazır hale getirecek biri arıyorum.",
+      "Kutu ölçülerine göre dieline üzerinde çalışacak ambalaj tasarımcısı lazım.",
+      "Ürünün rafta daha dikkat çekmesi için ambalajın görsel dilini yenilemek istiyorum.",
+      "CMYK ve baskı payları doğru hazırlanmış üretim dosyalarına ihtiyacım var.",
+      "Farklı ürün çeşitleri için aynı sistemden türeyen etiket ailesi tasarlatmak istiyorum."
+    ],
+    "yatirimci-sunumu-ve-pitch-deck": [
+      "Yatırımcı görüşmelerinde kullanacağım kısa ve ikna edici bir şirket sunumuna ihtiyacım var.",
+      "Mevcut sunum çok metin dolu; daha net hikâye ve güçlü görsellerle yeniden düzenlemek istiyorum.",
+      "Problem, çözüm, pazar ve finans bölümlerini yatırımcıya uygun sırada anlatan bir deck hazırlatmak istiyorum.",
+      "PowerPoint dosyasını profesyonel ve tutarlı bir görsel dile kavuşturacak biri arıyorum.",
+      "Yatırım turu öncesi sunumun mesajlarını sadeleştirip daha ikna edici hale getirmek istiyorum.",
+      "Elimdeki verileri grafiklerle anlaşılır şekilde anlatan kısa bir yatırımcı sunumu lazım."
+    ],
+    "arama-motoru-optimizasyonu-seo": [
+      "Sitem Google’da görünmüyor; organik sıralamayı artıracak kapsamlı SEO çalışması yaptırmak istiyorum.",
+      "Hangi anahtar kelimelerde fırsat olduğunu araştırıp içerik planı çıkaracak bir uzman arıyorum.",
+      "Sayfaların başlık, açıklama ve içerik yapısını arama sonuçlarına uygun hale getirmek istiyorum.",
+      "Rakiplerin aldığı backlink’leri inceleyip sürdürülebilir bir bağlantı stratejisi oluşturmak istiyorum.",
+      "Google Search Console verilerine bakıp neden trafik kaybettiğimizi anlamak istiyorum.",
+      "Mevcut içeriklerin organik performansını artırmak için düzenli SEO desteği arıyorum."
+    ],
+    "google-reklamlari-sem-ve-ppc": [
+      "Google’da reklam verip ölçülebilir satış ve lead almak için kampanyalarımı profesyonel yönettirmek istiyorum.",
+      "Mevcut Google Ads hesabında çok harcama var ama dönüşüm az; hesabı inceleteceğim.",
+      "Arama kampanyaları için doğru anahtar kelime, negatif kelime ve teklif yapısını kurmak istiyorum.",
+      "Performance Max kampanyalarını ürün ve dönüşüm verisine göre optimize edecek biri arıyorum.",
+      "Dönüşüm takibini doğru kurup hangi reklamın satış getirdiğini net görmek istiyorum.",
+      "Bütçeyi boşa harcamadan yeni kampanyalar açıp düzenli optimizasyon yapacak bir PPC uzmanı lazım."
+    ],
+    "sosyal-medya-reklamciligi": [
+      "Meta ve TikTok reklamlarında bütçem boşa gidiyor; performansı artıracak bir reklam uzmanı arıyorum.",
+      "Facebook ve Instagram kampanyalarını baştan kurup düzenli optimize edecek biri lazım.",
+      "Retargeting ve benzer kitlelerle daha nitelikli müşteri bulmak istiyorum.",
+      "Meta Pixel ve dönüşüm ölçümünü doğru kurup kampanya sonuçlarını takip etmek istiyorum.",
+      "Farklı kreatifleri test ederek hangi mesajın daha iyi çalıştığını bulmak istiyorum.",
+      "TikTok Ads tarafında yeni kampanyalar açıp CPA’i düşürecek deneyimli bir media buyer arıyorum."
+    ],
+    "sosyal-medya-yonetimi-ve-stratejisi": [
+      "Markamın sosyal medya hesaplarını düzenli içerik planıyla profesyonel yönetmek istiyorum.",
+      "Instagram için aylık içerik takvimi hazırlayıp paylaşımları düzenli yürütecek biri arıyorum.",
+      "Yorum ve mesajlara marka diline uygun cevap verecek community desteğine ihtiyacım var.",
+      "Mevcut hesapların performansını analiz edip hangi içerik türlerine ağırlık vermemiz gerektiğini öğrenmek istiyorum.",
+      "Paylaşım fikirleri, metinleri ve yayın planını tek elden yönetecek bir sosyal medya uzmanı lazım.",
+      "Organik büyümeyi artırmak için içerik stratejisini yeniden düzenlemek istiyorum."
+    ],
+    "e-posta-pazarlamasi-ve-crm-akislari": [
+      "Sepeti terk eden ve tekrar alışveriş yapabilecek müşterilere otomatik e-postalar göndermek istiyorum.",
+      "Klaviyo’da hoş geldin, sepet terk ve yeniden kazanım akışlarını kurmak istiyorum.",
+      "Müşteri listesini ilgi ve satın alma davranışına göre segmentlere ayırıp farklı mesajlar göndermek istiyorum.",
+      "Mevcut e-posta kampanyalarının açılma ve satış oranlarını artıracak biri arıyorum.",
+      "CRM’deki müşteri verilerini kullanarak otomatik yaşam döngüsü iletişimi kurmak istiyorum.",
+      "Bülten tasarımı, gönderim planı ve ölçümlemeyi düzenli yönetecek bir e-posta pazarlama uzmanı lazım."
+    ],
+    "e-ticaret-yonetimi-ve-buyume": [
+      "Online mağazamın ürün, kampanya, dönüşüm ve büyüme tarafını uçtan uca yönetecek biri lazım.",
+      "Shopify mağazasında satış düşük; ürün sayfaları ve kampanyaları optimize etmek istiyorum.",
+      "Trendyol ve kendi sitemdeki ürün kataloğunu düzenli yönetecek biri arıyorum.",
+      "Sepet ve ödeme adımlarında müşterilerin neden çıktığını analiz edip dönüşümü artırmak istiyorum.",
+      "Kampanya takvimi ve mağaza içi promosyonları düzenli planlayacak e-ticaret uzmanı lazım.",
+      "Ürün performansını veriden takip edip hangi ürünlere odaklanmamız gerektiğini belirlemek istiyorum."
+    ],
+    "kisa-format-video-reels-tiktok-shorts": [
+      "Uzun videolarımdan hızlı tempolu Reels, TikTok ve Shorts videoları çıkartmak istiyorum.",
+      "Ham çekimleri 30-60 saniyelik dikey videolara dönüştürecek hızlı bir editör arıyorum.",
+      "Videolara altyazı, yakınlaştırma ve tempolu kesmeler ekleyip daha izlenebilir hale getirmek istiyorum.",
+      "Podcast kayıtlarından sosyal medya için kısa klipler hazırlatmak istiyorum.",
+      "İlk birkaç saniyesi güçlü, mobil ekrana uygun kısa videolar üretecek biri lazım.",
+      "Her hafta düzenli Shorts ve Reels çıkarabilecek bir video editörüyle çalışmak istiyorum."
+    ],
+    "youtube-ve-uzun-format-video-kurgusu": [
+      "YouTube ve podcast videolarımı profesyonel uzun format kurguya dönüştürecek editör arıyorum.",
+      "Ham kaydı gereksiz bölümlerden temizleyip akıcı bir YouTube videosuna çevirmek istiyorum.",
+      "Birden fazla kamera ve mikrofon kaydını senkronlayıp tek videoda birleştirecek biri lazım.",
+      "Videoya B-roll, basit grafikler ve temiz geçişler ekletmek istiyorum.",
+      "Uzun röportajın temposunu bozmadan izlenebilir bir kurgu hazırlanması gerekiyor.",
+      "Düzenli YouTube içerikleri için aynı kurgu dilini koruyacak bir editör arıyorum."
+    ],
+    "hareketli-grafik-motion-graphics": [
+      "Logomu ve metinleri akıcı hareketlerle canlandıran profesyonel motion tasarımlar istiyorum.",
+      "After Effects ile kısa bir logo intro animasyonu hazırlatmak istiyorum.",
+      "Ürün özelliklerini hareketli grafiklerle anlatan kısa bir tanıtım videosuna ihtiyacım var.",
+      "Metin ve ikonların ritimli şekilde hareket ettiği modern bir animasyon hazırlatmak istiyorum.",
+      "Mevcut statik tasarımı sosyal medya için hareketli versiyona dönüştürecek biri lazım.",
+      "Marka diline uygun birkaç motion template hazırlayıp tekrar kullanmak istiyorum."
+    ],
+    "seslendirme-ve-dublaj": [
+      "Reklam ve tanıtım videom için doğal, stüdyo kalitesinde Türkçe seslendirme yaptırmak istiyorum.",
+      "Kurumsal videonun metnini sıcak ama profesyonel bir tonla okutacak ses arıyorum.",
+      "İngilizce videoyu Türkçe dublajla yayınlamak istiyorum.",
+      "Kısa reklam spotu için enerjik bir kadın veya erkek seslendirme sanatçısı lazım.",
+      "Eğitim videoları için anlaşılır ve yorucu olmayan uzun anlatım kaydı yaptırmak istiyorum.",
+      "Karakterli bir proje için farklı tonlarda birkaç ses denemesi almak istiyorum."
+    ],
+    "podcast-duzenleme-ve-ses-muhendisligi": [
+      "Podcast kaydındaki dip sesi temizleyip konuşmaları dengeli ve yayınlanabilir hale getirecek biri lazım.",
+      "İki kişinin farklı ses seviyelerinde kaydedildiği bölümü eşitleyip temizlemek istiyorum.",
+      "Podcastteki nefes, tıkırtı ve uzun boşlukları doğal kalacak şekilde düzenletmek istiyorum.",
+      "Mix ve mastering yapıp tüm bölümlerin benzer ses yüksekliğinde çıkmasını istiyorum.",
+      "Uzaktan kaydedilmiş konuşmanın yankı ve gürültüsünü mümkün olduğunca azaltmak istiyorum.",
+      "Haftalık podcast bölümlerini düzenli teslim edecek bir ses editörü arıyorum."
+    ],
+    "teknik-yazarlik-ve-dokumantasyon": [
+      "API ve ürün özelliklerimizi geliştiricilerin kolay anlayacağı teknik dokümana dönüştürmek istiyorum.",
+      "Mevcut README dosyaları eksik; kurulum ve kullanım adımlarını düzgün şekilde yazdırmak istiyorum.",
+      "API endpoint’leri için örnekler ve hata durumları olan geliştirici dokümantasyonu lazım.",
+      "Yeni kullanıcıların ürünü kendi başına öğrenebileceği kapsamlı bir kullanım kılavuzu hazırlatmak istiyorum.",
+      "Teknik bilgiyi dağınık notlardan alıp düzenli bir dokümantasyon yapısına çevirecek biri arıyorum.",
+      "Dokümanların kodla birlikte güncel tutulabileceği docs-as-code düzeni kurmak istiyorum."
+    ],
+    "reklam-ve-satis-metni-yazarligi": [
+      "Landing page’im için ziyaretçiyi aksiyona yönlendiren güçlü satış metinlerine ihtiyacım var.",
+      "Ürün sayfasındaki metinleri daha ikna edici ve anlaşılır hale getirecek bir copywriter arıyorum.",
+      "Reklamlarda kullanmak için kısa ve dikkat çekici başlık alternatifleri istiyorum.",
+      "E-posta kampanyasının satış odaklı metinlerini yeniden yazdırmak istiyorum.",
+      "Markamızın tonuna uygun slogan ve kısa mesajlar geliştirecek biri lazım.",
+      "Mevcut satış metninin neden dönüşüm getirmediğini inceleyip daha güçlü bir versiyon hazırlatmak istiyorum."
+    ],
+    "seo-uyumlu-blog-ve-makale-yazarligi": [
+      "Google aramalarına uygun, iyi araştırılmış uzun blog içerikleri yazdırmak istiyorum.",
+      "Belirlediğim anahtar kelimelerde gerçekten faydalı ve özgün makaleler hazırlatmak istiyorum.",
+      "Mevcut blog yazılarını SEO açısından güncelleyip daha iyi sıralanacak hale getirmek istiyorum.",
+      "İçerik brief’ine uygun, başlık yapısı düzgün uzun form yazılar yazacak biri arıyorum.",
+      "Teknik bir konuyu sade dille anlatan ve arama niyetini karşılayan içerik lazım.",
+      "Her ay düzenli yayınlanacak SEO odaklı blog içerikleri için bir yazar arıyorum."
+    ],
+    "profesyonel-ceviri-ve-yerellestirme": [
+      "Web sitemi ve pazarlama içeriklerimi anlamı bozmadan İngilizceye profesyonel çevirmek istiyorum.",
+      "Ürün açıklamalarını Türkçeden İngilizceye doğal ve yerel kullanıma uygun şekilde çevirmek istiyorum.",
+      "İngilizce metinleri Türkçe okuyucuya yapay durmadan uyarlayacak bir çevirmen arıyorum.",
+      "Birden fazla sayfalık kurumsal dokümanı terminoloji tutarlı kalacak şekilde çevirmek istiyorum.",
+      "Çevirinin sadece kelime kelime değil, marka tonuna uygun yerelleştirilmesini istiyorum.",
+      "Web sitesi metinlerini iki dil arasında düzenli güncelleyebilecek bir dil uzmanı lazım."
+    ],
+    "editoryal-duzeltme-ve-redaksiyon": [
+      "Hazırladığım metni yayımlamadan önce anlatım, imla ve tutarlılık açısından profesyonel düzelttirmek istiyorum.",
+      "Uzun rapordaki yazım ve noktalama hatalarını temizleyip dili akıcı hale getirmek istiyorum.",
+      "Metnin tonunu değiştirmeden tekrarları ve anlatım bozukluklarını düzeltmek istiyorum.",
+      "Kitap taslağını baştan sona okuyup editoryal geri bildirim verecek biri arıyorum.",
+      "Kurumsal metinlerde terimlerin ve yazım biçiminin her yerde tutarlı olmasını istiyorum.",
+      "Yayıma hazır son kontrol için deneyimli bir proofreader arıyorum."
+    ],
+    "teknik-danismanlik": [
+      "Yazılım mimarimizi deneyimli birinin inceleyip teknik riskleri ve doğru çözüm yolunu belirlemesini istiyorum.",
+      "Yeni projeye başlamadan teknoloji ve mimari seçimlerini bağımsız bir uzmana değerlendirmek istiyorum.",
+      "Mevcut kod tabanının neden zor bakım yapıldığını analiz edip iyileştirme planı çıkartmak istiyorum.",
+      "Performans ve ölçeklenebilirlik sorunları için ikinci bir teknik görüş almak istiyorum.",
+      "Büyük bir yeniden yazım yapmadan hangi parçaları önce düzeltmemiz gerektiğini belirlemek istiyorum.",
+      "Ekip içinde tartıştığımız iki teknik yaklaşım arasında karar vermemize yardımcı olacak deneyimli biri lazım."
+    ],
+    "finansal-modelleme-ve-fizibilite": [
+      "Yeni iş fikrimin gelir, gider, nakit akışı ve senaryolarını içeren finansal model hazırlatmak istiyorum.",
+      "Yatırımcıya sunmak için üç yıllık gelir ve gider tahmini olan Excel modeli lazım.",
+      "Farklı fiyat ve satış senaryolarının nakit akışına etkisini görmek istiyorum.",
+      "Yeni yatırımın kendini ne zaman amorti edeceğini hesaplayan fizibilite çalışması hazırlatmak istiyorum.",
+      "Mevcut finansal modelde formüller ve varsayımlar karışık; bağımsız olarak kontrol ettirmek istiyorum.",
+      "Kötü, normal ve iyi senaryoları karşılaştırabileceğim esnek bir model hazırlatmak istiyorum."
+    ],
+    "muhasebe-ve-on-muhasebe-yonetimi": [
+      "Fatura, gider, cari ve banka hareketlerimin düzenli ön muhasebe takibini yaptırmak istiyorum.",
+      "Her ay gelir-gider kayıtlarını düzenleyip banka hareketleriyle mutabakat yapacak biri arıyorum.",
+      "Faturalar ve cari hesaplar dağınık; kayıtları toparlayıp düzenli bir sisteme geçirmek istiyorum.",
+      "E-fatura ve gider belgelerinin düzenli kontrol edilmesine ihtiyacım var.",
+      "Küçük işletmem için günlük muhasebe kayıtlarını takip edecek uzaktan destek arıyorum.",
+      "Aylık kapanış öncesi eksik belgeleri ve hesap farklarını kontrol ettirecek biri lazım."
+    ],
+    "vergi-planlamasi-ve-mali-musavirlik": [
+      "Şirketimin vergi yükümlülükleri ve beyan süreçleri için profesyonel mali müşavir desteğine ihtiyacım var.",
+      "KDV, stopaj ve kurumlar vergisi tarafında hangi yükümlülüklerimiz olduğunu netleştirmek istiyorum.",
+      "Beyanname dönemlerinde eksik veya hatalı işlem yapmamak için düzenli destek arıyorum.",
+      "E-fatura ve e-defter süreçlerini doğru yürütmek için bir SMMM ile çalışmak istiyorum.",
+      "Yeni şirket için vergi ve muhasebe düzeninin baştan doğru kurulmasını istiyorum.",
+      "Yaptığımız işlemlerin vergi açısından risk oluşturup oluşturmadığını kontrol ettirmek istiyorum."
+    ],
+    "girisim-stratejisi-ve-is-plani": [
+      "Girişimimin hedef pazarı, gelir modeli, fiyatlama ve pazara çıkış planını netleştirmek istiyorum.",
+      "Fikrin gerçekten kim için değer yarattığını ve nasıl para kazanacağını netleştirecek bir danışman arıyorum.",
+      "Yeni ürün için uygulanabilir bir go-to-market planı hazırlatmak istiyorum.",
+      "Pazar büyüklüğü, hedef müşteri ve fiyatlama konusunda karar vermeden önce çalışma yapmak istiyorum.",
+      "İş modelindeki zayıf noktaları bağımsız bir gözle değerlendirecek biri lazım.",
+      "Yatırımcı ve ekip için anlaşılır, gerçekçi bir iş planı hazırlamak istiyorum."
+    ],
+    "proje-yonetimi-ve-cevik-danismanlik": [
+      "Yazılım ekibinin sprint, görev, risk ve teslimat süreçlerini daha disiplinli yönetmek istiyorum.",
+      "Jira’daki işler karışık; backlog ve sprint düzenini toparlayacak biri arıyorum.",
+      "Projede sürekli gecikme oluyor; kapsam, öncelik ve teslim tarihlerini daha iyi yönetmek istiyorum.",
+      "Ekibe uygun Scrum veya Kanban düzenini kurup birkaç sprint boyunca destek verecek danışman lazım.",
+      "Paydaşlara düzenli durum ve risk raporu çıkaran bir proje yönetim sistemi oluşturmak istiyorum.",
+      "Birden fazla ekibin bağımlılıklarını ve teslimat planını koordineli yürütmek istiyorum."
+    ],
+    "sozlesme-hazirlama-ve-inceleme": [
+      "Hizmet alımında kullanacağım sözleşmeyi hazırlatmak ve riskli maddeleri kontrol ettirmek istiyorum.",
+      "İmzalamadan önce sözleşmedeki ödeme, teslim ve fesih maddelerini bir uzmana inceletmek istiyorum.",
+      "İş modelimize uygun, açık ve dengeli bir hizmet sözleşmesi hazırlatmak istiyorum.",
+      "Karşı taraftan gelen sözleşmede bizim için riskli hükümler var mı kontrol ettirmek istiyorum.",
+      "Mevcut sözleşme şablonunu yeni çalışma modelimize göre güncellemek istiyorum.",
+      "Görüşme sırasında hangi maddelerde değişiklik istememiz gerektiğini belirleyecek hukuki destek arıyorum."
+    ],
+    "kvkk-gdpr-ve-veri-gizliligi-uyumu": [
+      "Sitem ve uygulamam için KVKK/GDPR açısından aydınlatma, çerez ve veri işleme süreçlerini düzenlemek istiyorum.",
+      "Hangi kişisel verileri topladığımızı çıkarıp mevzuata uygun şekilde dokümante etmek istiyorum.",
+      "Çerez banner’ı ve gizlilik metinlerinin gerçekten uyumlu olup olmadığını kontrol ettirmek istiyorum.",
+      "Müşteri ve çalışan verilerinin saklama ve silme sürelerini belirlemek için destek arıyorum.",
+      "Yurt dışına veri aktarımı ve üçüncü taraf servisler açısından riskleri değerlendirmek istiyorum.",
+      "Mevcut süreçleri KVKK ve GDPR bakımından baştan sona denetleyecek bir uzman lazım."
+    ],
+    "marka-tescili-ve-fikri-mulkiyet": [
+      "Marka adımın uygunluğunu araştırıp resmi marka tescil sürecini yürütmek istiyorum.",
+      "Başvuru yapmadan önce aynı veya benzer markalar var mı kontrol ettirmek istiyorum.",
+      "TÜRKPATENT üzerinden hangi sınıflarda başvuru yapmam gerektiğini belirlemek istiyorum.",
+      "Marka tescil başvurusunu hazırlayıp süreci takip edecek bir uzman arıyorum.",
+      "Yurt dışında da marka koruması için hangi yolu izlemem gerektiğini öğrenmek istiyorum.",
+      "İtiraz veya benzerlik riski olan bir başvuruyu değerlendirecek fikri mülkiyet uzmanı lazım."
+    ],
+    "e-ticaret-ve-tuketici-hukuku": [
+      "Online satış sitemde mesafeli satış, iade ve tüketici metinlerini hukuka uygun hazırlatmak istiyorum.",
+      "İade, cayma ve teslimat koşullarını mevcut iş modelimize göre düzenlemek istiyorum.",
+      "Sitedeki sözleşme ve bilgilendirme metinlerinin tüketici mevzuatına uygunluğunu kontrol ettirmek istiyorum.",
+      "Pazaryerinde satış yaparken hangi tüketici yükümlülüklerinin geçerli olduğunu öğrenmek istiyorum.",
+      "Kampanya ve iade süreçlerinde hukuki risk yaşamamak için metinleri gözden geçirmek istiyorum.",
+      "E-ticaret sitesinin hukuki metinlerini uçtan uca hazırlayacak bir uzman arıyorum."
+    ],
+    "oyun-gelistirme": [
+      "Fikrimdeki oyunun oynanabilir prototipini ve temel mekaniklerini geliştirecek bir ekip veya uzman arıyorum.",
+      "Basit bir oyun fikrini hızlıca oynanabilir prototipe çevirmek istiyorum.",
+      "Mevcut projedeki temel oynanış döngüsü yeterince eğlenceli değil; mekanikleri geliştirmek istiyorum.",
+      "2D veya 3D bir oyunun temel sistemlerini baştan kuracak deneyimli geliştirici arıyorum.",
+      "Oyun prototipini test edip teknik ve oynanış sorunlarını düzeltecek biri lazım.",
+      "Fikri mağazaya çıkabilecek bir ürüne dönüştürmek için uçtan uca geliştirme desteği arıyorum."
+    ],
+    "mimari-proje-plan-ve-bim": [
+      "Mimari projemi AutoCAD veya Revit üzerinde teknik çizim ve BIM modeline dönüştürmek istiyorum.",
+      "Elimdeki eskiz ve ölçülerden uygulamaya uygun mimari planlar hazırlatmak istiyorum.",
+      "Revit modelindeki kat, duvar ve mahal bilgilerini düzenleyecek bir BIM uzmanı arıyorum.",
+      "Mevcut DWG çizimlerini temizleyip güncel projeye göre revize etmek istiyorum.",
+      "Mimari modelin farklı disiplinlerle koordinasyona uygun hale getirilmesi gerekiyor.",
+      "Plan, kesit ve görünüşleri düzenli pafta seti olarak teslim edecek biri lazım."
+    ],
+    "ic-mimari-ve-3d-fotogercekci-render": [
+      "Evin iç mekan tasarımını gerçekçi ışık ve malzemelerle 3D render olarak görmek istiyorum.",
+      "Salon ve mutfak için birkaç farklı yerleşim ve malzeme alternatifi hazırlatmak istiyorum.",
+      "3D model hazır; Corona veya V-Ray ile fotogerçekçi görseller almak istiyorum.",
+      "Mevcut iç mekan tasarımını daha modern hale getirip renderlarını yeniletmek istiyorum.",
+      "Mobilya, ışık ve malzemeleri gerçeğe yakın gösterecek bir 3D görselleştirme uzmanı arıyorum.",
+      "Proje sunumu için farklı açılardan yüksek çözünürlüklü iç mekan görselleri lazım."
+    ],
+    "3d-urun-modelleme-ve-cad": [
+      "Üretilecek fiziksel ürünün ölçülü ve üretime uygun 3D CAD modelini hazırlatmak istiyorum.",
+      "Elimdeki çizimi SolidWorks veya Fusion 360 üzerinde parametrik modele dönüştürmek istiyorum.",
+      "Üreticiye gönderebileceğim STEP ve teknik çizim dosyalarına ihtiyacım var.",
+      "Mevcut parçanın ölçülerini revize edip montaja uygun hale getirecek bir CAD tasarımcısı arıyorum.",
+      "Prototip için parçaların birbirine oturmasını kontrol edecek ve toleransları düzenleyecek biri lazım.",
+      "Ürün fikrini teknik olarak üretilebilir bir 3D modele çevirmek istiyorum."
+    ],
+    "yonetici-asistanligi-ve-takvim-yonetimi": [
+      "Toplantılarımı, e-postalarımı ve takvimimi düzenli takip edecek uzaktan bir yönetici asistanı arıyorum.",
+      "Gelen kutusunu düzenleyip önemli e-postaları ayıracak ve takip listesi oluşturacak biri lazım.",
+      "Toplantıları planlayıp değişiklikleri katılımcılarla koordine edecek bir asistan arıyorum.",
+      "Seyahat, rezervasyon ve günlük ajanda işlerini uzaktan yönetecek destek istiyorum.",
+      "Haftalık öncelikleri takip edip bana kısa durum özeti çıkaracak biriyle çalışmak istiyorum.",
+      "Rutin idari işleri devralıp takvim ve iletişim trafiğini düzenli tutacak güvenilir bir asistan lazım."
+    ],
+    "musteri-hizmetleri-ve-canli-destek": [
+      "Müşterilerden gelen canlı destek ve ticket taleplerini profesyonel yanıtlayacak destek personeli arıyorum.",
+      "Canlı chat üzerinden müşterilere hızlı ve düzgün cevap verecek uzaktan çalışan biri lazım.",
+      "Zendesk’te biriken talepleri sınıflandırıp çözülemeyenleri doğru ekibe aktaracak destek arıyorum.",
+      "Müşteri şikâyetlerini marka diline uygun şekilde yönetecek deneyimli temsilci arıyorum.",
+      "Sık sorulan sorulara göre hazır cevaplar ve destek akışı oluşturmak istiyorum.",
+      "Belirli saatlerde ticket ve e-posta desteğini düzenli takip edecek bir müşteri temsilcisine ihtiyacım var."
+    ],
+    "veri-girisi-ve-kapsamli-web-arastirmasi": [
+      "İnternetten belirli şirket ve ürün bilgilerini araştırıp temiz bir Excel tablosunda toplamam gerekiyor.",
+      "Bir listedeki şirketlerin web sitesi, telefon ve iletişim bilgilerini araştıracak biri lazım.",
+      "Elimdeki Excel’de eksik alanları güvenilir kaynaklardan tamamlatmak istiyorum.",
+      "Yüzlerce ürünü web sitelerinden bulup özellikleriyle birlikte tabloya aktarmak istiyorum.",
+      "Belirli kriterlere uyan firmaları araştırıp kaynak linkleriyle teslim edecek bir araştırmacı arıyorum.",
+      "Toplanan verileri tekrarları temizlenmiş ve düzenli bir Google Sheets dosyasında almak istiyorum."
+    ],
+    "full-stack-web-gelistirme": [
+      "Ön yüz, API ve veritabanıyla birlikte çalışan web ürününü baştan sona geliştirecek bir full stack geliştirici arıyorum.",
+      "Figma tasarımı ve backend ihtiyacı belli olan web uygulamasını tek kişinin geliştirmesini istiyorum.",
+      "Mevcut React ve Node.js projesini devralıp eksik özellikleri tamamlayacak biri lazım.",
+      "Kullanıcı girişi, panel ve veri yönetimi olan bir web uygulaması yaptırmak istiyorum.",
+      "Frontend ile backend arasındaki hataları çözüp projeyi yayına hazır hale getirecek geliştirici arıyorum.",
+      "Yeni SaaS fikrinin ilk çalışan sürümünü uçtan uca geliştirebilecek deneyimli biri lazım."
+    ],
+    "e-ticaret-sitesi-gelistirme": [
+      "Ürünlerimi kredi kartıyla satabileceğim ödeme ve sepet özellikli bir online mağaza yaptırmak istiyorum.",
+      "Shopify üzerinde ürün, sepet, ödeme ve kargo ayarları hazır bir mağaza kurdurmak istiyorum.",
+      "WooCommerce siteme ödeme ve sipariş akışını düzgün şekilde entegre edecek biri arıyorum.",
+      "Mevcut online mağaza yavaş ve sorunlu; teknik tarafını yenileyip stabil hale getirmek istiyorum.",
+      "Ürün varyantları ve stok takibi olan özel bir satış sitesi geliştirmek istiyorum.",
+      "Mağazayı mobilde sorunsuz çalışan ve dönüşüme uygun şekilde yayına hazırlayacak geliştirici lazım."
+    ],
+    "cms-ve-no-code-gelistirme": [
+      "İçeriğini kendim güncelleyebileceğim WordPress veya Webflow tabanlı bir site kurdurmak istiyorum.",
+      "WordPress sitesini Elementor ile kolay düzenlenebilir şekilde hazırlatmak istiyorum.",
+      "Mevcut temayı marka tasarımımıza uyarlayıp gereksiz eklentileri temizleyecek biri lazım.",
+      "Webflow tasarımını responsive hale getirip CMS koleksiyonlarını kurmak istiyorum.",
+      "Blog ve sayfa içeriklerini panelden yönetebileceğim sade bir siteye ihtiyacım var.",
+      "Mevcut CMS sitesindeki tema ve eklenti sorunlarını çözecek bir uzman arıyorum."
+    ],
+    "mikroservis-ve-api-mimarisi": [
+      "Büyüyen backend’i bağımsız servisler ve sağlam API sözleşmeleriyle mikroservis mimarisine taşımak istiyorum.",
+      "Tek parça uygulamayı hangi servislerden bölmemiz gerektiğini tasarlayacak bir mimar arıyorum.",
+      "Kafka veya RabbitMQ ile servisler arası olay tabanlı iletişim kurmak istiyorum.",
+      "Mevcut servislerde bağımlılıklar çok fazla; sınırları ve sorumlulukları yeniden düzenlemek istiyorum.",
+      "API Gateway, servis keşfi ve hata yönetimi gibi temel yapıların doğru kurulması gerekiyor.",
+      "Mikroservis geçişini kesinti yaratmadan adım adım planlayacak deneyimli biri lazım."
+    ],
+    "penetrasyon-testi-ve-guvenlik-denetimi": [
+      "Web veya mobil uygulamamı saldırgan gözüyle test edip güvenlik açıklarını raporlayacak pentester arıyorum.",
+      "Login ve ödeme akışlarında yetki atlama veya veri sızıntısı var mı kontrol ettirmek istiyorum.",
+      "Burp Suite ile kapsamlı web uygulama testi yapıp kanıtlı bulgu raporu hazırlanmasını istiyorum.",
+      "Yayına çıkmadan önce API ve web arayüzünü OWASP risklerine karşı test ettirmek istiyorum.",
+      "Bulunan açıkların önem sırasını ve nasıl düzeltileceğini net anlatan rapor istiyorum.",
+      "Düzeltmelerden sonra kritik açıkların gerçekten kapandığını tekrar test edecek uzman arıyorum."
+    ],
+    "bulut-mimarisi-ve-altyapi-yonetimi": [
+      "AWS veya Azure üzerinde ölçeklenebilir, güvenli ve kodla yönetilen bulut altyapısı tasarlatmak istiyorum.",
+      "Yeni sistem için ağ, IAM, load balancer ve veritabanı katmanlarını doğru şekilde kurmak istiyorum.",
+      "Terraform ile tüm altyapının tekrar oluşturulabilir olmasını sağlayacak bir cloud architect arıyorum.",
+      "Mevcut bulut maliyetleri yüksek; mimariyi inceleyip daha verimli hale getirmek istiyorum.",
+      "Yük arttığında otomatik ölçeklenen ve tek noktadan izlenebilen bir altyapıya ihtiyacım var.",
+      "Eski sunuculardaki uygulamaları kesinti yaşamadan buluta taşımak istiyorum."
+    ],
+    "llm-ve-gpt-uygulama-gelistirme": [
+      "Kendi verilerimden cevap veren RAG tabanlı GPT veya LLM uygulaması geliştirmek istiyorum.",
+      "PDF ve dokümanlarımızı okuyup kaynak göstererek cevap veren bir chatbot yaptırmak istiyorum.",
+      "OpenAI API kullanan mevcut uygulamada maliyet ve cevap kalitesi sorunlarını iyileştirecek biri arıyorum.",
+      "Vektör veritabanı, embedding ve retrieval katmanını düzgün kuracak deneyimli bir geliştirici lazım.",
+      "Mevcut ürüne Claude veya Gemini tabanlı bir yapay zeka özelliği eklemek istiyorum.",
+      "LLM çıktılarının kullanıcıya gitmeden önce kontrol edildiği güvenilir bir uygulama akışı kurmak istiyorum."
+    ],
+    "bilgisayarli-goru-ve-goruntu-isleme": [
+      "Kamera görüntüsünde nesneleri otomatik tespit eden bir bilgisayarlı görü sistemi geliştirmek istiyorum.",
+      "Elimde görüntü verisi var; belirli nesneleri YOLO ile tespit edecek model eğitmek istiyorum.",
+      "Mevcut OpenCV uygulamasında doğruluk ve hız sorunlarını iyileştirecek biri arıyorum.",
+      "Görüntülerde belirli bölgeleri otomatik ayıran segmentasyon modeli geliştirmek istiyorum.",
+      "Kamera akışını gerçek zamanlı işleyip sonuçları uygulamaya gönderen sistem lazım.",
+      "OCR ile fotoğraflardaki metni okuyup yapılandırılmış veriye dönüştürmek istiyorum."
+    ],
+    "dogal-dil-isleme-ve-ses-teknolojileri": [
+      "Ses kayıtlarını yazıya çeviren veya metni anlayıp sınıflandıran bir dil ve ses modeli çözümüne ihtiyacım var.",
+      "Whisper ile toplantı kayıtlarını otomatik yazıya döken bir servis geliştirmek istiyorum.",
+      "Müşteri yorumlarını olumlu, olumsuz ve nötr olarak sınıflandıran model hazırlatmak istiyorum.",
+      "Uzun metinlerden ana konuları ve önemli bilgileri çıkaran bir NLP akışı kurmak istiyorum.",
+      "Türkçe metin sınıflandırmasında doğruluğu artıracak deneyimli bir uzman arıyorum.",
+      "Metinden sese veya sesten metne özelliğini mevcut uygulamaya entegre etmek istiyorum."
+    ],
+    "web-kazima-ve-veri-madenciligi": [
+      "Belirli web sitelerinden düzenli olarak veri çekip yapılandırılmış dosyaya kaydeden scraper istiyorum.",
+      "Ürün fiyatlarını her gün kontrol edip değişiklikleri tabloya yazan bir sistem kurmak istiyorum.",
+      "JavaScript ile yüklenen sayfalardan Playwright kullanarak veri çekmem gerekiyor.",
+      "Mevcut scraper sık sık bloklanıyor; daha kararlı çalışacak şekilde iyileştirecek biri arıyorum.",
+      "Birden fazla siteden aynı tür bilgileri toplayıp temizleyen crawler geliştirmek istiyorum.",
+      "Çekilen veriyi tekrarları temizlenmiş şekilde veritabanına aktaracak bir süreç lazım."
+    ],
+    "web-sitesi-ui-ux-tasarimi": [
+      "Kurumsal web sitemin tüm sayfalarını Figma’da modern ve responsive şekilde tasarlatmak istiyorum.",
+      "Yeni landing page için önce wireframe sonra detaylı web arayüz tasarımı hazırlatmak istiyorum.",
+      "Mevcut site tasarımı eski görünüyor; daha premium ve sade bir görsel dil istiyorum.",
+      "Mobil ve masaüstü kırılımlarını düşünerek tüm sayfaları Figma’da tasarlayacak biri arıyorum.",
+      "Kodlamaya geçmeden önce kullanıcı akışları ve temel sayfa yapısını netleştirmek istiyorum.",
+      "Geliştiricinin doğrudan kullanabileceği düzenli component’lerle web tasarımı teslim almak istiyorum."
+    ],
+    "mobil-uygulama-ui-ux-tasarimi": [
+      "Mobil uygulamamın iOS ve Android ekranlarını kullanımı kolay bir akışla Figma’da tasarlatmak istiyorum.",
+      "Yeni uygulama için onboarding, ana ekran ve profil akışlarını baştan tasarlatmak istiyorum.",
+      "Mevcut mobil arayüz çok kalabalık; daha sade ve anlaşılır hale getirecek tasarımcı arıyorum.",
+      "iOS ve Android kurallarına uygun, geliştiriciye teslim edilebilir ekranlar hazırlatmak istiyorum.",
+      "Kullanıcının birkaç adımda işini bitirebildiği daha iyi bir mobil akış istiyorum.",
+      "Figma’da tıklanabilir prototip hazırlayıp geliştirmeden önce akışı test etmek istiyorum."
+    ],
+    "ikon-ve-tipografi-tasarimi": [
+      "Ürünüm için aynı stile sahip özel SVG ikon seti ve tutarlı tipografi sistemi hazırlatmak istiyorum.",
+      "Mevcut ikonlar farklı stillerde; hepsini aynı çizgi kalınlığı ve geometriyle yeniden çizdirmek istiyorum.",
+      "Uygulama için 20-30 adet özgün ve küçük boyutta okunaklı ikon tasarlatmak istiyorum.",
+      "Başlık ve metinlerde kullanacağımız font eşleşmesini ve tipografi kurallarını belirlemek istiyorum.",
+      "İkonları SVG olarak düzenlenebilir ve geliştiriciye hazır teslim edecek biri arıyorum.",
+      "Marka diline uygun özel glyph veya basit semboller geliştirmek istiyorum."
+    ],
+    "karakter-tasarimi-ve-konsept-sanat": [
+      "Oyunumdaki ana karakter ve dünyaya ait görsel konseptleri özgün şekilde çizdirmek istiyorum.",
+      "Karakterin farklı kıyafet ve poz alternatiflerini gösterecek concept sheet hazırlatmak istiyorum.",
+      "Oyun dünyasının atmosferini belirlemek için birkaç environment concept çizimine ihtiyacım var.",
+      "Elimdeki kaba karakter fikrini profesyonel bir tasarıma dönüştürecek concept artist arıyorum.",
+      "Düşman ve yaratıklar için birbirinden ayrışan görsel tasarımlar istiyorum.",
+      "3D modelleme öncesi karakterin ön, yan ve arka görünüşlerini netleştiren çizimler lazım."
+    ],
+    "fotograf-duzenleme-ve-retouching": [
+      "Ürün fotoğraflarının arka planını temizleyip renk ve ışıklarını profesyonel düzeltmek istiyorum.",
+      "E-ticaret için yüzlerce ürün fotoğrafını aynı beyaz arka plan ve ölçüye getirmek istiyorum.",
+      "Portrelerde doğal görünümü bozmadan cilt ve ışık rötuşu yapacak biri arıyorum.",
+      "Fotoğraflardaki istenmeyen objeleri temizleyip kompozisyonu bozmadan düzenlemek istiyorum.",
+      "Raw dosyaların renk ve pozlama ayarlarını tutarlı şekilde düzeltmek istiyorum.",
+      "Ürün görsellerini web ve pazaryerlerine uygun boyutlarda teslim edecek bir retoucher lazım."
+    ],
+    "teknik-seo-ve-site-hizi-optimizasyonu": [
+      "Sitem yavaş açılıyor ve Core Web Vitals kötü; teknik SEO ve performans iyileştirmesi yaptırmak istiyorum.",
+      "PageSpeed skorları düşük; gerçek darboğazları bulup siteyi hızlandıracak biri arıyorum.",
+      "Google Search Console’da tarama ve indeksleme hataları var; nedenini çözmek istiyorum.",
+      "Canonical, sitemap ve schema işaretlemelerini teknik olarak kontrol ettirmek istiyorum.",
+      "Mobilde LCP ve CLS değerlerini iyileştirecek bir performans uzmanı lazım.",
+      "Site taşıma sonrası oluşan yönlendirme ve indeks sorunlarını düzeltmek istiyorum."
+    ],
+    "tiktok-ve-dikey-video-reklamciligi": [
+      "TikTok ve Reels reklamlarında ilk saniyede dikkat çeken dikey UGC reklam videoları hazırlatmak istiyorum.",
+      "Ham ürün çekimlerinden satış odaklı 15-30 saniyelik reklam videoları çıkarmak istiyorum.",
+      "Farklı hook ve metinlerle birkaç UGC reklam varyasyonu hazırlatmak istiyorum.",
+      "Dikey videolara hızlı altyazı, yakın plan ve çağrı metni ekleyecek editör arıyorum.",
+      "Reklam testleri için aynı içeriğin birkaç farklı açılış versiyonuna ihtiyacım var.",
+      "TikTok diline uygun, fazla kurumsal görünmeyen kısa reklam kreatifleri istiyorum."
+    ],
+    "b2b-buyume-ve-linkedin-lead-generation": [
+      "LinkedIn’den hedef sektör ve unvanlara göre doğrulanmış B2B potansiyel müşteri listesi çıkarmak istiyorum.",
+      "Sales Navigator kullanarak belirli şirket ve karar verici profillerini bulacak biri arıyorum.",
+      "Belirlediğim ICP’ye uyan şirketleri ve ilgili kişileri listelemek istiyorum.",
+      "Cold outreach öncesi temiz ve nitelikli bir prospect listesine ihtiyacım var.",
+      "LinkedIn üzerinden hedef hesapları araştırıp doğru kişileri belirleyecek araştırmacı arıyorum.",
+      "Her lead için şirket, unvan ve profil linki olan düzenli bir liste istiyorum."
+    ],
+    "icerik-pazarlamasi-ve-donusum-hunisi": [
+      "İçerikten lead toplayıp e-posta ve satışa bağlanan bir dönüşüm hunisi kurmak istiyorum.",
+      "Blog ve sosyal medya içeriklerini müşteri adayına dönüştürecek bir içerik planına ihtiyacım var.",
+      "Lead magnet, landing page ve e-posta akışını tek bir funnel içinde kurgulamak istiyorum.",
+      "Mevcut içerikler trafik getiriyor ama satışa dönmüyor; süreci yeniden tasarlamak istiyorum.",
+      "Kullanıcının ilk içerikten satın almaya kadar geçtiği yolu ölçüp iyileştirecek biri arıyorum.",
+      "İçerik konularını iş hedefleri ve dönüşüm metrikleriyle birlikte planlamak istiyorum."
+    ],
+    "video-renk-duzenleme-color-grading": [
+      "Videolarımın farklı çekimlerini aynı sinematik renk dünyasında profesyonel olarak eşleştirmek istiyorum.",
+      "DaVinci Resolve ile çekimleri doğal ve tutarlı bir görünüme getirecek colorist arıyorum.",
+      "Farklı kameralarla çekilen sahnelerin renklerini birbirine yaklaştırmak istiyorum.",
+      "Log çekimleri doğru dönüştürüp ten renklerini bozmadan sinematik bir görüntü istiyorum.",
+      "Mevcut kurgunun sadece renk düzeltme ve grading aşamasını yaptırmak istiyorum.",
+      "Belirli bir referans görüntüye yakın LUT ve renk yaklaşımı oluşturacak biri lazım."
+    ],
+    "3d-urun-animasyonu-ve-tanitim": [
+      "Ürünümü fiziksel çekim yapmadan gerçekçi 3D animasyonla reklam videosunda göstermek istiyorum.",
+      "Blender veya Cinema 4D ile ürünün parçalarını ve kullanımını anlatan kısa animasyon hazırlatmak istiyorum.",
+      "Elimde CAD modeli var; reklam kalitesinde ışık, malzeme ve kamera hareketleri ekletmek istiyorum.",
+      "Ürünün farklı renk ve varyantlarını CGI olarak gösterecek bir 3D artist arıyorum.",
+      "15-30 saniyelik premium ürün tanıtım animasyonu hazırlatmak istiyorum.",
+      "Fiziksel prototip hazır olmadan yatırımcı sunumunda kullanabileceğim gerçekçi ürün görselleri ve animasyon lazım."
+    ],
+    "altyazi-transkripsiyon-ve-dinamik-metinler": [
+      "Videolarıma zamanlaması düzgün altyazı, konuşmacı ayrımı ve dinamik caption ekletmek istiyorum.",
+      "Uzun videonun konuşmalarını SRT dosyasına doğru zaman kodlarıyla çıkarmak istiyorum.",
+      "Reels videolarına kelime kelime hareket eden okunaklı altyazılar ekleteceğim.",
+      "İki dilli video için Türkçe ve İngilizce altyazı dosyaları hazırlatmak istiyorum.",
+      "Mevcut transkripti videoya senkronlayıp hataları düzeltecek biri arıyorum.",
+      "Podcast kliplerinde vurguya göre renklendirilen dinamik caption’lar istiyorum."
+    ],
+    "ses-tasarimi-ve-efektleri-sfx": [
+      "Film, reklam veya oyunum için özgün efekt, ambiyans ve foley sesleri tasarlatmak istiyorum.",
+      "Kısa filmde eksik olan kapı, adım ve çevre seslerini doğal şekilde tamamlatmak istiyorum.",
+      "Oyun için menü, buton ve aksiyon seslerinden oluşan tutarlı bir SFX paketi lazım.",
+      "Mevcut videonun ses dünyası boş kalıyor; sahnelere uygun ambience ve efekt ekletmek istiyorum.",
+      "Foley kayıtlarını temizleyip miksleyerek görüntüye oturtacak sound designer arıyorum.",
+      "Reklam videosuna güçlü ama abartısız geçiş ve vurgu efektleri ekletmek istiyorum."
+    ],
+    "muzik-produksiyonu-ve-beatmaking": [
+      "Şarkımın altyapısını üretip düzenleme, mix ve mastering sürecini profesyonel yaptırmak istiyorum.",
+      "Elimde vokal demo var; uygun beat ve düzenleme hazırlayacak prodüktör arıyorum.",
+      "Parçanın mix’inde vokal öne çıkmıyor; daha dengeli ve temiz hale getirmek istiyorum.",
+      "Mastering yapıp parçayı dijital platformların ses seviyesine uygun teslim almak istiyorum.",
+      "Ableton veya FL Studio’da mevcut projeyi düzenleyip eksik bölümleri tamamlatmak istiyorum.",
+      "Belirli bir referans parçaya yakın sound’da özgün bir instrumental hazırlatmak istiyorum."
+    ],
+    "yazilim-ve-arayuz-yerellestirmesi-i18n": [
+      "Uygulamamdaki tüm metinleri çoklu dile uygun i18n yapısına taşıyıp yerelleştirmek istiyorum.",
+      "Kodun içindeki sabit metinleri translation dosyalarına taşıyacak geliştirici arıyorum.",
+      "JSON dil dosyalarında eksik anahtarları bulup tüm dillerde tutarlı hale getirmek istiyorum.",
+      "i18next veya benzeri yapı ile dil değiştirme sistemini düzgün kurmak istiyorum.",
+      "Tarih, sayı ve çoğul kurallarının dile göre doğru çalışmasını sağlayacak biri lazım.",
+      "Yeni dil eklerken arayüzde çevrilmemiş metin kalmamasını garanti edecek süreç kurmak istiyorum."
+    ],
+    "hukuki-tibbi-ve-akademik-ceviri": [
+      "Hukuki, tıbbi veya akademik belgemin alan terminolojisine hakim biri tarafından çevrilmesi gerekiyor.",
+      "Sözleşme metnini hukuki anlamı bozulmadan İngilizceye çevirmek istiyorum.",
+      "Tıbbi raporu doğru terminolojiyle Türkçeye aktaracak deneyimli çevirmen arıyorum.",
+      "Akademik makalenin dilini ve alan terimlerini koruyarak profesyonel çeviri yaptırmak istiyorum.",
+      "Teknik terimlerin tutarlı kullanıldığı, son kontrolü yapılmış bir çeviri teslim almak istiyorum.",
+      "Uzmanlık gerektiren belgeler için genel çeviri değil, alan deneyimi olan bir çevirmen arıyorum."
+    ],
+    "whitepaper-ve-e-kitap-yazimi": [
+      "Uzmanlığımı anlatan araştırmalı bir whitepaper veya indirilebilir e-kitap hazırlatmak istiyorum.",
+      "Bir konu hakkında kaynaklı ve bölümlere ayrılmış uzun form rapor yazdırmak istiyorum.",
+      "Lead toplamak için değerli bilgi sunan profesyonel bir e-kitaba ihtiyacım var.",
+      "Elimde dağınık notlar var; bunları akıcı ve düzenli bir whitepaper’a dönüştürecek yazar arıyorum.",
+      "İçeriğin kaynaklarını düzgün gösteren ve tasarıma hazır metin halinde teslim edilmesini istiyorum.",
+      "Uzun içeriğin planını, araştırmasını ve yazımını tek kişinin üstlenmesini istiyorum."
+    ],
+    "hayalet-yazarlik-ve-liderlik-makaleleri": [
+      "LinkedIn’de kendi adımdan yayınlanacak güçlü uzmanlık ve liderlik yazıları hazırlatmak istiyorum.",
+      "Konuşmalarımı ve notlarımı benim üslubuma yakın gönderilere dönüştürecek ghostwriter arıyorum.",
+      "CEO profili için düzenli düşünce liderliği içerikleri yazdırmak istiyorum.",
+      "Metinlerin yapay veya reklam gibi görünmeden kişisel bir ses taşımasını istiyorum.",
+      "Röportaj yapıp fikirlerimi çıkaracak ve bunları makalelere dönüştürecek biri lazım.",
+      "LinkedIn’de belirli konularda otorite oluşturacak uzun vadeli içerik planı ve yazım desteği arıyorum."
+    ],
+    "pazar-ve-rakip-arastirmasi": [
+      "Yeni gireceğim pazardaki rakipleri, fiyatları ve fırsatları detaylı araştırmak istiyorum.",
+      "Rakip ürünlerin özellik, fiyat ve konumlandırmasını karşılaştıran bir rapor hazırlatmak istiyorum.",
+      "Hedef pazarın büyüklüğü ve müşteri segmentleri hakkında masa başı araştırması lazım.",
+      "Yeni bir ürün fikri için piyasada benzer çözümler var mı öğrenmek istiyorum.",
+      "Rakiplerin güçlü ve zayıf yönlerini kaynaklarıyla birlikte analiz edecek biri arıyorum.",
+      "Karar vermeden önce sektör trendlerini ve pazardaki boşlukları net görmek istiyorum."
+    ],
+    "girisim-degerleme-ve-yatirimci-metrikleri": [
+      "Girişimimin yatırım görüşmesi öncesinde değerlemesini ve CAC, LTV, MRR gibi metriklerini analiz ettirmek istiyorum.",
+      "SaaS şirketinin gelir çarpanı ve temel metriklerine göre makul değer aralığını hesaplatmak istiyorum.",
+      "Yatırım turu öncesi cap table ve seyrelme senaryolarını görmek istiyorum.",
+      "CAC, LTV ve churn hesaplarının doğru yapılıp yapılmadığını bağımsız olarak kontrol ettirmek istiyorum.",
+      "Yatırımcı sunumunda kullanacağımız finansal metrikleri tutarlı ve anlaşılır hale getirmek istiyorum.",
+      "Farklı büyüme senaryolarında şirket değerinin nasıl değişeceğini analiz etmek istiyorum."
+    ],
+    "surec-ve-operasyon-optimizasyonu": [
+      "Şirket içindeki yavaş ve tekrar eden süreçleri haritalayıp daha verimli hale getirmek istiyorum.",
+      "Bir işin neden sürekli geciktiğini adım adım inceleyip darboğazları bulacak danışman arıyorum.",
+      "Tekrarlanan görevler için net SOP’lar hazırlayıp ekipte standardı artırmak istiyorum.",
+      "Onay ve bilgi akışını sadeleştirip gereksiz adımları azaltmak istiyorum.",
+      "Operasyon KPI’larını belirleyip düzenli takip edebileceğimiz bir yapı kurmak istiyorum.",
+      "Mevcut süreci çizip hangi adımların otomasyona uygun olduğunu belirlemek istiyorum."
+    ],
+    "insan-kaynaklari-ve-yetenek-avciligi": [
+      "Belirli teknik rollere uygun adayları bulup ön elemeden geçirecek recruiter arıyorum.",
+      "LinkedIn üzerinden senior yazılım geliştirici adayları bulacak bir talent sourcer lazım.",
+      "İlan başvurularını değerlendirip uygun adaylarla ilk görüşmeyi yapacak biri arıyorum.",
+      "Zor bulunan bir rol için aktif aday araştırması ve kısa liste hazırlanmasını istiyorum.",
+      "Mülakat sürecini ve aday takibini ATS üzerinde düzenli yönetecek destek arıyorum.",
+      "Teknik ekiple birlikte rol kriterlerini netleştirip doğru aday havuzu oluşturmak istiyorum."
+    ],
+    "online-egitim-ozel-ders-ve-mentorluk": [
+      "Yazılım mülakatına hazırlanmak veya belirli bir konuda birebir mentorluk almak istiyorum.",
+      "React konusunda eksiklerimi kapatmak için haftalık birebir ders alacağım bir mentor arıyorum.",
+      "Sistem tasarımı mülakatlarına hazırlanırken gerçek sorular üzerinden çalışmak istiyorum.",
+      "Kariyer hedefime göre öğrenme planı çıkaracak ve ilerlemeyi takip edecek biri lazım.",
+      "Yaptığım projeleri inceleyip kod ve mimari konusunda düzenli geri bildirim almak istiyorum.",
+      "Belirli bir teknolojiyi kısa sürede öğrenmek için uygulamalı özel ders arıyorum."
+    ],
+    "freelance-ve-yazilim-hizmet-sozlesmeleri": [
+      "Freelance yazılım projesinde kapsam, teslim, ödeme ve fikri hakları koruyan sözleşme hazırlatmak istiyorum.",
+      "Yazılım geliştirme işinde değişiklik talepleri ve kabul kriterlerini net yazan bir anlaşma lazım.",
+      "Müşteriyle çalışmaya başlamadan önce ödeme takvimi ve teslim koşullarını sözleşmeye bağlamak istiyorum.",
+      "Kodun ve fikri mülkiyetin kime ait olacağını açıkça düzenleyen maddelere ihtiyacım var.",
+      "Bakım ve destek sorumluluklarını da kapsayan yazılım hizmet sözleşmesi hazırlatmak istiyorum.",
+      "Mevcut freelancer sözleşmesini proje yapımıza göre gözden geçirip güncelleyecek hukukçu arıyorum."
+    ],
+    "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma": [
+      "İş fikrimi paylaşmadan önce karşı tarafa imzalatacağım güçlü bir NDA hazırlatmak istiyorum.",
+      "Yatırımcı veya iş ortağıyla bilgi paylaşmadan önce gizlilik şartlarını netleştirmek istiyorum.",
+      "Mevcut NDA’da ticari sır ve ihlal durumlarının yeterince korunup korunmadığını kontrol ettirmek istiyorum.",
+      "Çalışan ve freelancer’larla kullanılabilecek dengeli bir gizlilik sözleşmesi şablonu lazım.",
+      "Gizli bilginin kapsamını ve ne kadar süre korunacağını açıkça yazdırmak istiyorum.",
+      "Yurt dışındaki tarafla kullanılacak İngilizce NDA’yı hukuken gözden geçirecek biri arıyorum."
+    ],
+    "saas-ve-uygulama-yasal-metinleri": [
+      "SaaS ürünüm için kullanım koşulları, abonelik şartları ve EULA metinleri hazırlatmak istiyorum.",
+      "Ücretsiz deneme, otomatik yenileme ve iptal şartlarını açıkça düzenleyen kullanım koşulları lazım.",
+      "Uygulamada kullanıcıların ne yapıp yapamayacağını anlatan kabul edilebilir kullanım politikası hazırlatmak istiyorum.",
+      "Mevcut terms of service metnini gerçek ürün akışımıza göre özelleştirecek hukukçu arıyorum.",
+      "Abonelik ve hesap kapatma süreçlerinin hukuki metinlerle uyumlu olmasını istiyorum.",
+      "Mobil uygulama için EULA ve ilgili yasal metinleri baştan hazırlatmak istiyorum."
+    ],
+    "unity-ile-oyun-gelistirme": [
+      "Unity ile 2D veya 3D oyun mekaniklerini ve mobil ya da PC build’lerini geliştirecek deneyimli biri lazım.",
+      "Mevcut Unity projesindeki performans ve hata sorunlarını çözecek geliştirici arıyorum.",
+      "C# ile yeni oyun mekanikleri ve UI sistemleri ekletmek istiyorum.",
+      "Photon veya Netcode kullanarak basit multiplayer özelliği geliştirmek istiyorum.",
+      "Mobil build’lerde FPS ve bellek sorunlarını optimize edecek Unity uzmanı lazım.",
+      "Projeyi düzenleyip mağazaya çıkabilecek stabil bir build hazırlamak istiyorum."
+    ],
+    "unreal-engine-ve-c-oyun-gelistirme": [
+      "UE5 üzerinde Blueprint ve C++ kullanarak yüksek kaliteli oyun sistemleri geliştirmek istiyorum.",
+      "Mevcut Unreal projesine yeni gameplay mekanikleri ekleyecek geliştirici arıyorum.",
+      "Blueprint prototiplerini performanslı C++ koduna taşımak istiyorum.",
+      "Multiplayer replication sorunlarını çözecek deneyimli Unreal uzmanı lazım.",
+      "Lumen ve Nanite kullanan sahnede performans optimizasyonu yaptırmak istiyorum.",
+      "Gameplay Ability System ile karakter yeteneklerini temiz bir yapıda kurmak istiyorum."
+    ],
+    "mobil-oyun-gelistirme-hypercasual-casual": [
+      "Reklam gelirli hypercasual veya casual mobil oyun geliştirip mağazalara yayınlamak istiyorum.",
+      "Basit bir mobil oyun fikrini hızlı prototipleyip test edecek geliştirici arıyorum.",
+      "AdMob veya AppLovin entegrasyonu olan oynanabilir bir mobil build istiyorum.",
+      "Mevcut oyuna in-app purchase ve reklam ödülü gibi monetization özellikleri ekletmek istiyorum.",
+      "Android ve iOS mağaza yayınına kadar süreci tamamlayacak biri lazım.",
+      "Oyuncu davranışını takip etmek için analytics ve temel event ölçümünü kurmak istiyorum."
+    ],
+    "2d-oyun-sanati-ve-piksel-cizim": [
+      "Oyunum için karakter, sprite, tileset ve animasyonları pixel art tarzında hazırlatmak istiyorum.",
+      "32x32 veya 64x64 boyutta okunaklı karakter sprite’ları çizecek pixel artist arıyorum.",
+      "Yürüme, saldırı ve bekleme animasyonları olan spritesheet hazırlatmak istiyorum.",
+      "Oyun dünyası için birbirine uyumlu tileset ve çevre objeleri lazım.",
+      "Mevcut piksel çizimlerin renk paletini ve stilini tutarlı hale getirmek istiyorum.",
+      "UI ikonları ve oyun içi objeleri aynı pixel art dilinde tamamlayacak biri arıyorum."
+    ],
+    "3d-oyun-varliklari-ve-karakter-modelleme": [
+      "Oyuna doğrudan aktarılabilecek optimize, UV’li ve PBR kaplamalı 3D karakter veya asset yaptırmak istiyorum.",
+      "Blender veya Maya’da low-poly oyun karakteri modelleteceğim.",
+      "ZBrush modelini retopology ve UV işlemleriyle game-ready hale getirmek istiyorum.",
+      "Substance Painter ile PBR texture setleri hazırlanmasına ihtiyacım var.",
+      "Karakteri rigleyip temel animasyonlara hazır teslim edecek 3D artist arıyorum.",
+      "Unity veya Unreal’a sorunsuz aktarılacak optimize prop ve environment asset’leri istiyorum."
+    ],
+    "oyun-mekanigi-ve-seviye-level-tasarimi": [
+      "Oyunun bölümlerini, zorluk eğrisini ve temel oynanış döngüsünü profesyonel tasarlatmak istiyorum.",
+      "Mevcut bölüm çok kolay ve sıkıcı; akışını ve karşılaşmaları yeniden düzenlemek istiyorum.",
+      "Yeni haritalar için oyuncuyu doğal yönlendiren seviye düzeni tasarlayacak biri lazım.",
+      "Oyun mekaniklerinin ne zaman ve nasıl öğretileceğini planlamak istiyorum.",
+      "Ekonomi ve ödül sisteminde denge sorunları var; sayıları ve ilerlemeyi gözden geçirmek istiyorum.",
+      "Fikirleri GDD içinde netleştirip geliştiriciye uygulanabilir şekilde aktaracak game designer arıyorum."
+    ],
+    "oyun-sesleri-ve-muzik-produksiyonu": [
+      "Oyunum için tekrar etmeyen müzik, efekt ve oyun içi adaptif ses sistemi hazırlatmak istiyorum.",
+      "Menü, savaş ve keşif bölümleri için farklı ama birbiriyle uyumlu müzikler bestelemek istiyorum.",
+      "Wwise veya FMOD ile oyundaki duruma göre değişen müzik sistemi kurmak istiyorum.",
+      "Oyun içi efektlerin seviyelerini ve miksini daha dengeli hale getirecek audio designer arıyorum.",
+      "Karakter, çevre ve arayüz için özgün ses paketine ihtiyacım var.",
+      "Müzik ve efektleri oyun motoruna düzgün entegre edecek deneyimli biri lazım."
+    ],
+    "dis-cephe-ve-peyzaj-3d-gorsellestirme": [
+      "Mimari projenin dış cephesini ve çevre peyzajını fotogerçekçi 3D görsellerle sunmak istiyorum.",
+      "Binanın farklı cephe malzemelerini gerçekçi renderlarla karşılaştırmak istiyorum.",
+      "Peyzaj, bitki ve çevre düzenlemesini ekleyerek dış mekan görselleri hazırlatmak istiyorum.",
+      "Mevcut 3D modele ışık, malzeme ve çevre ekleyip sunum kalitesine çıkarmak istiyorum.",
+      "Gündüz ve akşam ışığında birkaç farklı dış cephe renderı lazım.",
+      "Proje satış sunumu için yüksek çözünürlüklü exterior görseller hazırlayacak bir uzman arıyorum."
+    ],
+    "3d-baski-modelleme-ve-stl-hazirligi": [
+      "Elimdeki fikri 3D yazıcıda sorunsuz basılabilecek STL veya 3MF modele dönüştürmek istiyorum.",
+      "Mevcut 3D modelin ince duvar ve hatalı mesh sorunlarını baskıya uygun hale getirmek istiyorum.",
+      "Parçaların birbirine geçeceği yerlerde doğru toleransları ayarlayacak biri lazım.",
+      "Fusion 360 modelini destek ihtiyacını azaltacak şekilde baskıya hazırlamak istiyorum.",
+      "Baskı öncesi modeli manifold ve ölçü açısından kontrol ettireceğim.",
+      "Bir ürün prototipini FDM yazıcıda denemek için basılabilir parçalar halinde hazırlatmak istiyorum."
+    ],
+    "mekansal-bilisim-vr-ve-ar-gelistirme": [
+      "Meta Quest, telefon veya Vision Pro için etkileşimli VR veya AR deneyimi geliştirmek istiyorum.",
+      "ARKit veya ARCore ile kamerada ürünü gerçek ortamda gösterecek uygulama yaptırmak istiyorum.",
+      "Quest üzerinde çalışan basit bir eğitim simülasyonu geliştirecek XR geliştirici arıyorum.",
+      "WebXR ile tarayıcıdan açılan interaktif 3D deneyim oluşturmak istiyorum.",
+      "Vision Pro için mekânsal arayüz ve temel etkileşim prototipi geliştirmek istiyorum.",
+      "Mevcut Unity projesine VR controller ve spatial interaction desteği ekletmek istiyorum."
+    ],
+    "e-ticaret-magaza-ve-siparis-operasyon-destegi": [
+      "Online mağazadaki sipariş, stok, kargo, iade ve ürün katalog işlemlerini düzenli yönetecek destek arıyorum.",
+      "Günlük gelen siparişleri kontrol edip kargo durumlarını takip edecek biri lazım.",
+      "Stokların mağaza ve pazaryeri arasında tutarlı kalmasını sağlayacak operasyon desteği arıyorum.",
+      "İade ve değişim taleplerini belirli kurallara göre düzenli yönetecek bir profesyonel lazım.",
+      "Yeni ürünleri katalog bilgileri ve görselleriyle mağazaya ekleyecek biri arıyorum.",
+      "Siparişlerde gecikme veya eksik bilgi olduğunda hızlıca takip edip çözüm sağlayacak destek istiyorum."
+    ],
+    "potansiyel-musteri-ve-veri-zenginlestirme": [
+      "Elimdeki şirket listesini doğru e-posta, unvan ve LinkedIn bilgileriyle zenginleştirmek istiyorum.",
+      "Şirket isimlerinden karar verici kişileri ve doğrulanmış iletişim bilgilerini bulmak istiyorum.",
+      "Apollo, Clay veya benzeri araçlarla mevcut lead listesindeki eksik alanları tamamlatmak istiyorum.",
+      "E-posta adreslerini doğrulayıp geçersiz kayıtları temizleyecek biri arıyorum.",
+      "Her kayıt için şirket büyüklüğü, sektör ve kişi unvanı gibi ek veriler ekletmek istiyorum.",
+      "CRM’e aktarmadan önce potansiyel müşteri verilerini temizleyip standart hale getirmek istiyorum."
+    ],
+    "ses-ve-video-desifre-destegi": [
+      "Uzun toplantı ve röportaj kayıtlarını konuşmacı ve zaman bilgileriyle eksiksiz yazıya döktürmek istiyorum.",
+      "İki saatlik ses kaydını konuşmacıları ayırarak düzenli metne çevirecek biri arıyorum.",
+      "Röportaj kayıtlarının kelimesi kelimesine deşifresini ve zaman damgalarını istiyorum.",
+      "Whisper çıktısındaki hataları dinleyerek düzeltecek bir editör lazım.",
+      "Video konuşmalarını okunabilir metne çevirip gereksiz dolgu seslerini temizlemek istiyorum.",
+      "Birden fazla kayıt için aynı biçimde başlık, konuşmacı ve timestamp içeren transkriptler hazırlatmak istiyorum."
+    ]
+  }
+}

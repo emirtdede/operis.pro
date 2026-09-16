@@ -26,6 +26,13 @@ export type OperisEvents = {
       userId: string;
     };
   };
+  "operis/offer.resolved": {
+    data: {
+      offerId: string;
+      listingId?: string;
+      status: "ACCEPTED" | "REJECTED" | "WITHDRAWN" | "REJECTED_OTHER_SELECTED";
+    };
+  };
 };
 
 export const inngest = new Inngest({

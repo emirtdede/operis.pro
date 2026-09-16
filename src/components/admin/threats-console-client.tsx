@@ -158,8 +158,19 @@ export function ThreatsConsoleClient({ initialThreats }: ThreatsConsoleClientPro
             placeholder="IP adresi, hedef uçnokta veya tehdit türü ara..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-[#0d0e12] border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50"
+            className={`w-full bg-[#0d0e12] border border-slate-800 rounded-xl pl-9 ${search ? "pr-8" : "pr-4"} py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50`}
           />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch("")}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-0.5 cursor-pointer"
+              title="Aramayı Temizle"
+              aria-label="Aramayı Temizle"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">

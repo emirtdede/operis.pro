@@ -1,0 +1,118 @@
+{
+  "version": "4.0.0",
+  "matchingRule": "exact phrase/token only; no substring expansion",
+  "aliases": {
+    "react.js": [
+      "reactjs",
+      "react"
+    ],
+    "next.js": [
+      "nextjs",
+      "next js"
+    ],
+    "node.js": [
+      "nodejs",
+      "node js"
+    ],
+    "vue.js": [
+      "vuejs",
+      "vue js"
+    ],
+    "postgresql": [
+      "postgres",
+      "postgre sql"
+    ],
+    "sql server": [
+      "mssql",
+      "ms sql"
+    ],
+    "kubernetes": [
+      "k8s"
+    ],
+    "google cloud": [
+      "gcp"
+    ],
+    "google ads": [
+      "adwords"
+    ],
+    "power bi": [
+      "powerbi"
+    ],
+    "wordpress": [
+      "wp"
+    ],
+    "woocommerce": [
+      "woo commerce",
+      "woo-commerce"
+    ],
+    "e-commerce": [
+      "ecommerce",
+      "e commerce",
+      "eticaret",
+      "e ticaret"
+    ],
+    "ui/ux": [
+      "ui ux",
+      "ux ui",
+      "uiux"
+    ],
+    "unreal engine 5": [
+      "ue5"
+    ],
+    "unreal engine": [
+      "unreal"
+    ],
+    "c#": [
+      "c sharp",
+      "csharp"
+    ],
+    ".net": [
+      "dotnet"
+    ],
+    "typescript": [
+      "ts"
+    ],
+    "javascript": [
+      "js"
+    ],
+    "artificial intelligence": [
+      "ai"
+    ],
+    "machine learning": [
+      "ml"
+    ],
+    "large language model": [
+      "llm"
+    ],
+    "retrieval augmented generation": [
+      "rag"
+    ],
+    "speech to text": [
+      "stt"
+    ],
+    "text to speech": [
+      "tts"
+    ],
+    "sound effects": [
+      "sfx"
+    ],
+    "search engine optimization": [
+      "seo"
+    ],
+    "search engine marketing": [
+      "sem"
+    ],
+    "pay per click": [
+      "ppc"
+    ],
+    "conversion rate optimization": [
+      "cro"
+    ],
+    "customer relationship management": [
+      "crm"
+    ],
+    "building information modeling": [
+      "bim"
+    ]
+  }
+}

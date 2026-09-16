@@ -1,0 +1,272 @@
+{
+  "version": "4.0.0",
+  "correctionCount": 53,
+  "policy": "Package slugs are corrected canonical seeds. Existing production routes must not be changed blindly; map by stable repository category ID/name and preserve live URLs unless an explicit redirect migration is implemented.",
+  "corrections": [
+    {
+      "category": "Masaüstü Yazılım Geliştirme",
+      "oldSlug": "masaustu-yaz-l-m-gelistirme",
+      "newSlug": "masaustu-yazilim-gelistirme"
+    },
+    {
+      "category": "Veritabanı Mühendisliği",
+      "oldSlug": "veritaban-muhendisligi",
+      "newSlug": "veritabani-muhendisligi"
+    },
+    {
+      "category": "Yazılım Testi ve Kalite Güvencesi",
+      "oldSlug": "yaz-l-m-testi-ve-kalite-guvencesi",
+      "newSlug": "yazilim-testi-ve-kalite-guvencesi"
+    },
+    {
+      "category": "Bilgisayar Donanımı ve Teknik Destek",
+      "oldSlug": "bilgisayar-donan-m-ve-teknik-destek",
+      "newSlug": "bilgisayar-donanimi-ve-teknik-destek"
+    },
+    {
+      "category": "Yapay Zeka Ajanları ve İş Akışları",
+      "oldSlug": "yapay-zeka-ajanlar-ve-is-ak-slar",
+      "newSlug": "yapay-zeka-ajanlari-ve-is-akislari"
+    },
+    {
+      "category": "Prompt Mühendisliği ve AI Danışmanlığı",
+      "oldSlug": "prompt-muhendisligi-ve-ai-dan-smanl-g",
+      "newSlug": "prompt-muhendisligi-ve-ai-danismanligi"
+    },
+    {
+      "category": "İş Zekası ve Dashboard Tasarımı",
+      "oldSlug": "is-zekas-ve-dashboard-tasar-m",
+      "newSlug": "is-zekasi-ve-dashboard-tasarimi"
+    },
+    {
+      "category": "UI/UX Tasarım",
+      "oldSlug": "ui-ux-tasar-m",
+      "newSlug": "ui-ux-tasarim"
+    },
+    {
+      "category": "Tasarım Sistemleri (Design Systems)",
+      "oldSlug": "tasar-m-sistemleri-design-systems",
+      "newSlug": "tasarim-sistemleri-design-systems"
+    },
+    {
+      "category": "Ambalaj, Etiket ve Baskı Tasarımı",
+      "oldSlug": "ambalaj-etiket-ve-bask-tasar-m",
+      "newSlug": "ambalaj-etiket-ve-baski-tasarimi"
+    },
+    {
+      "category": "Yatırımcı Sunumu ve Pitch Deck",
+      "oldSlug": "yat-r-mc-sunumu-ve-pitch-deck",
+      "newSlug": "yatirimci-sunumu-ve-pitch-deck"
+    },
+    {
+      "category": "Google Reklamları (SEM & PPC)",
+      "oldSlug": "google-reklamlar-sem-ve-ppc",
+      "newSlug": "google-reklamlari-sem-ve-ppc"
+    },
+    {
+      "category": "Sosyal Medya Reklamcılığı",
+      "oldSlug": "sosyal-medya-reklamc-l-g",
+      "newSlug": "sosyal-medya-reklamciligi"
+    },
+    {
+      "category": "E-Posta Pazarlaması ve CRM Akışları",
+      "oldSlug": "e-posta-pazarlamas-ve-crm-ak-slar",
+      "newSlug": "e-posta-pazarlamasi-ve-crm-akislari"
+    },
+    {
+      "category": "Kısa Format Video (Reels, TikTok, Shorts)",
+      "oldSlug": "k-sa-format-video-reels-tiktok-shorts",
+      "newSlug": "kisa-format-video-reels-tiktok-shorts"
+    },
+    {
+      "category": "Teknik Yazarlık ve Dokümantasyon",
+      "oldSlug": "teknik-yazarl-k-ve-dokumantasyon",
+      "newSlug": "teknik-yazarlik-ve-dokumantasyon"
+    },
+    {
+      "category": "Reklam ve Satış Metni Yazarlığı",
+      "oldSlug": "reklam-ve-sat-s-metni-yazarl-g",
+      "newSlug": "reklam-ve-satis-metni-yazarligi"
+    },
+    {
+      "category": "SEO Uyumlu Blog ve Makale Yazarlığı",
+      "oldSlug": "seo-uyumlu-blog-ve-makale-yazarl-g",
+      "newSlug": "seo-uyumlu-blog-ve-makale-yazarligi"
+    },
+    {
+      "category": "Teknik Danışmanlık",
+      "oldSlug": "teknik-dan-smanl-k",
+      "newSlug": "teknik-danismanlik"
+    },
+    {
+      "category": "Vergi Planlaması ve Mali Müşavirlik",
+      "oldSlug": "vergi-planlamas-ve-mali-musavirlik",
+      "newSlug": "vergi-planlamasi-ve-mali-musavirlik"
+    },
+    {
+      "category": "Girişim Stratejisi ve İş Planı",
+      "oldSlug": "girisim-stratejisi-ve-is-plan",
+      "newSlug": "girisim-stratejisi-ve-is-plani"
+    },
+    {
+      "category": "Proje Yönetimi ve Çevik Danışmanlık",
+      "oldSlug": "proje-yonetimi-ve-cevik-dan-smanl-k",
+      "newSlug": "proje-yonetimi-ve-cevik-danismanlik"
+    },
+    {
+      "category": "Sözleşme Hazırlama ve İnceleme",
+      "oldSlug": "sozlesme-haz-rlama-ve-inceleme",
+      "newSlug": "sozlesme-hazirlama-ve-inceleme"
+    },
+    {
+      "category": "Yönetici Asistanlığı ve Takvim Yönetimi",
+      "oldSlug": "yonetici-asistanl-g-ve-takvim-yonetimi",
+      "newSlug": "yonetici-asistanligi-ve-takvim-yonetimi"
+    },
+    {
+      "category": "Müşteri Hizmetleri ve Canlı Destek",
+      "oldSlug": "musteri-hizmetleri-ve-canl-destek",
+      "newSlug": "musteri-hizmetleri-ve-canli-destek"
+    },
+    {
+      "category": "Veri Girişi ve Kapsamlı Web Araştırması",
+      "oldSlug": "veri-girisi-ve-kapsaml-web-arast-rmas",
+      "newSlug": "veri-girisi-ve-kapsamli-web-arastirmasi"
+    },
+    {
+      "category": "Bulut Mimarisi ve Altyapı Yönetimi",
+      "oldSlug": "bulut-mimarisi-ve-altyap-yonetimi",
+      "newSlug": "bulut-mimarisi-ve-altyapi-yonetimi"
+    },
+    {
+      "category": "Bilgisayarlı Görü ve Görüntü İşleme",
+      "oldSlug": "bilgisayarl-goru-ve-goruntu-isleme",
+      "newSlug": "bilgisayarli-goru-ve-goruntu-isleme"
+    },
+    {
+      "category": "Web Kazıma ve Veri Madenciliği",
+      "oldSlug": "web-kaz-ma-ve-veri-madenciligi",
+      "newSlug": "web-kazima-ve-veri-madenciligi"
+    },
+    {
+      "category": "Web Sitesi UI/UX Tasarımı",
+      "oldSlug": "web-sitesi-ui-ux-tasar-m",
+      "newSlug": "web-sitesi-ui-ux-tasarimi"
+    },
+    {
+      "category": "Mobil Uygulama UI/UX Tasarımı",
+      "oldSlug": "mobil-uygulama-ui-ux-tasar-m",
+      "newSlug": "mobil-uygulama-ui-ux-tasarimi"
+    },
+    {
+      "category": "İkon ve Tipografi Tasarımı",
+      "oldSlug": "ikon-ve-tipografi-tasar-m",
+      "newSlug": "ikon-ve-tipografi-tasarimi"
+    },
+    {
+      "category": "Karakter Tasarımı ve Konsept Sanat",
+      "oldSlug": "karakter-tasar-m-ve-konsept-sanat",
+      "newSlug": "karakter-tasarimi-ve-konsept-sanat"
+    },
+    {
+      "category": "Teknik SEO ve Site Hızı Optimizasyonu",
+      "oldSlug": "teknik-seo-ve-site-h-z-optimizasyonu",
+      "newSlug": "teknik-seo-ve-site-hizi-optimizasyonu"
+    },
+    {
+      "category": "TikTok ve Dikey Video Reklamcılığı",
+      "oldSlug": "tiktok-ve-dikey-video-reklamc-l-g",
+      "newSlug": "tiktok-ve-dikey-video-reklamciligi"
+    },
+    {
+      "category": "İçerik Pazarlaması ve Dönüşüm Hunisi",
+      "oldSlug": "icerik-pazarlamas-ve-donusum-hunisi",
+      "newSlug": "icerik-pazarlamasi-ve-donusum-hunisi"
+    },
+    {
+      "category": "3D Ürün Animasyonu ve Tanıtım",
+      "oldSlug": "3d-urun-animasyonu-ve-tan-t-m",
+      "newSlug": "3d-urun-animasyonu-ve-tanitim"
+    },
+    {
+      "category": "Altyazı, Transkripsiyon ve Dinamik Metinler",
+      "oldSlug": "altyaz-transkripsiyon-ve-dinamik-metinler",
+      "newSlug": "altyazi-transkripsiyon-ve-dinamik-metinler"
+    },
+    {
+      "category": "Ses Tasarımı ve Efektleri (SFX)",
+      "oldSlug": "ses-tasar-m-ve-efektleri-sfx",
+      "newSlug": "ses-tasarimi-ve-efektleri-sfx"
+    },
+    {
+      "category": "Yazılım ve Arayüz Yerelleştirmesi (I18n)",
+      "oldSlug": "yaz-l-m-ve-arayuz-yerellestirmesi-i18n",
+      "newSlug": "yazilim-ve-arayuz-yerellestirmesi-i18n"
+    },
+    {
+      "category": "Hukuki, Tıbbi ve Akademik Çeviri",
+      "oldSlug": "hukuki-t-bbi-ve-akademik-ceviri",
+      "newSlug": "hukuki-tibbi-ve-akademik-ceviri"
+    },
+    {
+      "category": "Whitepaper ve E-Kitap Yazımı",
+      "oldSlug": "whitepaper-ve-e-kitap-yaz-m",
+      "newSlug": "whitepaper-ve-e-kitap-yazimi"
+    },
+    {
+      "category": "Hayalet Yazarlık ve Liderlik Makaleleri",
+      "oldSlug": "hayalet-yazarl-k-ve-liderlik-makaleleri",
+      "newSlug": "hayalet-yazarlik-ve-liderlik-makaleleri"
+    },
+    {
+      "category": "Pazar ve Rakip Araştırması",
+      "oldSlug": "pazar-ve-rakip-arast-rmas",
+      "newSlug": "pazar-ve-rakip-arastirmasi"
+    },
+    {
+      "category": "Girişim Değerleme ve Yatırımcı Metrikleri",
+      "oldSlug": "girisim-degerleme-ve-yat-r-mc-metrikleri",
+      "newSlug": "girisim-degerleme-ve-yatirimci-metrikleri"
+    },
+    {
+      "category": "İnsan Kaynakları ve Yetenek Avcılığı",
+      "oldSlug": "insan-kaynaklar-ve-yetenek-avc-l-g",
+      "newSlug": "insan-kaynaklari-ve-yetenek-avciligi"
+    },
+    {
+      "category": "Freelance ve Yazılım Hizmet Sözleşmeleri",
+      "oldSlug": "freelance-ve-yaz-l-m-hizmet-sozlesmeleri",
+      "newSlug": "freelance-ve-yazilim-hizmet-sozlesmeleri"
+    },
+    {
+      "category": "Gizlilik Sözleşmesi (NDA) ve Ticari Sır Koruma",
+      "oldSlug": "gizlilik-sozlesmesi-nda-ve-ticari-s-r-koruma",
+      "newSlug": "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma"
+    },
+    {
+      "category": "2D Oyun Sanatı ve Piksel Çizim",
+      "oldSlug": "2d-oyun-sanat-ve-piksel-cizim",
+      "newSlug": "2d-oyun-sanati-ve-piksel-cizim"
+    },
+    {
+      "category": "3D Oyun Varlıkları ve Karakter Modelleme",
+      "oldSlug": "3d-oyun-varl-klar-ve-karakter-modelleme",
+      "newSlug": "3d-oyun-varliklari-ve-karakter-modelleme"
+    },
+    {
+      "category": "Oyun Mekaniği ve Seviye (Level) Tasarımı",
+      "oldSlug": "oyun-mekanigi-ve-seviye-level-tasar-m",
+      "newSlug": "oyun-mekanigi-ve-seviye-level-tasarimi"
+    },
+    {
+      "category": "Dış Cephe ve Peyzaj 3D Görselleştirme",
+      "oldSlug": "d-s-cephe-ve-peyzaj-3d-gorsellestirme",
+      "newSlug": "dis-cephe-ve-peyzaj-3d-gorsellestirme"
+    },
+    {
+      "category": "3D Baskı Modelleme ve STL Hazırlığı",
+      "oldSlug": "3d-bask-modelleme-ve-stl-haz-rl-g",
+      "newSlug": "3d-baski-modelleme-ve-stl-hazirligi"
+    }
+  ]
+}

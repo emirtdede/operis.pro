@@ -1,0 +1,40 @@
+{
+  "version": "4.0.0",
+  "authoritative": true,
+  "notes": "High-confidence phrase shortcuts only. Full problem-language coverage is in problem-language-corpus.json.",
+  "problemAliases": {
+    "sitem çok yavaş": [
+      "teknik-seo-ve-site-hizi-optimizasyonu",
+      "web-gelistirme"
+    ],
+    "google'da çıkmıyorum": [
+      "arama-motoru-optimizasyonu-seo"
+    ],
+    "reklam para harcıyor satış getirmiyor": [
+      "sosyal-medya-reklamciligi"
+    ],
+    "wordpress sitem hacklendi": [
+      "siber-guvenlik",
+      "penetrasyon-testi-ve-guvenlik-denetimi"
+    ],
+    "api bağlanmıyor": [
+      "backend-ve-api-muhendisligi",
+      "otomasyon-ve-entegrasyonlar"
+    ],
+    "veritabanı yavaş": [
+      "veritabani-muhendisligi"
+    ],
+    "logo lazım": [
+      "logo-ve-kurumsal-kimlik"
+    ],
+    "videoma altyazı lazım": [
+      "altyazi-transkripsiyon-ve-dinamik-metinler"
+    ],
+    "podcastte dip ses var": [
+      "podcast-duzenleme-ve-ses-muhendisligi"
+    ],
+    "fotoğrafın arka planını sil": [
+      "fotograf-duzenleme-ve-retouching"
+    ]
+  }
+}

@@ -330,16 +330,26 @@ export function LegalCenterClient({ locale }: LegalCenterClientProps) {
       list = list.filter((doc) => doc.category === activeCategory);
     }
 
-    // Filter by Search Query
+    // Filter by Search Query with Accent-Aware Normalization
     if (searchQuery.trim().length > 0) {
-      const q = searchQuery.toLowerCase().trim();
-      list = list.filter(
-        (doc) =>
-          doc.title.toLowerCase().includes(q) ||
-          doc.description.toLowerCase().includes(q) ||
-          doc.bullets.some((b) => b.toLowerCase().includes(q)) ||
-          doc.keywords.some((k) => k.toLowerCase().includes(q))
-      );
+      const normalize = (text: string) =>
+        text
+          .replace(/İ/g, "i")
+          .replace(/I/g, "ı")
+          .toLowerCase()
+          .replace(/ğ/g, "g")
+          .replace(/ü/g, "u")
+          .replace(/ş/g, "s")
+          .replace(/ö/g, "o")
+          .replace(/ç/g, "c");
+
+      const q = normalize(searchQuery.trim());
+      list = list.filter((doc) => {
+        const pool = normalize(
+          `${doc.title} ${doc.summaryTitle} ${doc.description} ${doc.bullets.join(" ")} ${doc.keywords.join(" ")}`
+        );
+        return pool.includes(q);
+      });
     }
 
     return list;

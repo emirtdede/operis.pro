@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useDeferredValue } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -62,11 +62,16 @@ import {
   Receipt,
   LogIn,
   Glasses,
+  Camera,
+  Music,
+  UserCheck,
+  GraduationCap,
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { SpotlightCard } from "../ui/spotlight-card";
 import { SEED_SECTORS } from "@/db/seeds/categories";
+import { searchCategories } from "@/src/lib/search/engine";
 
 const SECTOR_ICONS: Record<string, LucideIcon> = {
   "sector-software-it": Code2,
@@ -115,6 +120,7 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
   "illustration-vector": Palette,
   "print-packaging-design": Package,
   "presentation-deck-design": Presentation,
+  "photo-editing-retouching": Camera,
 
   // Sektör 4: Pazarlama & Büyüme
   "search-engine-optimization": TrendingUp,
@@ -130,6 +136,7 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
   "motion-graphics-2d-3d": Clapperboard,
   "voice-over-dubbing": Mic,
   "podcast-audio-editing": Mic,
+  "music-production-beatmaking": Music,
 
   // Sektör 6: Yazı & Çeviri
   "technical-writing": FileCode,
@@ -145,6 +152,8 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
   "tax-consulting": Coins,
   "startup-strategy-bizdev": Briefcase,
   "project-management-agile": Workflow,
+  "hr-talent-recruitment": UserCheck,
+  "online-tutoring-mentorship": GraduationCap,
 
   // Sektör 8: Hukuk & Mevzuat
   "contract-drafting-review": FileSignature,
@@ -219,6 +228,7 @@ export interface CategoryItem {
   description?: string | null;
   isFollowed?: boolean;
   listingCount?: number;
+  key?: string;
 }
 
 export interface CategoryListInteractiveProps {
@@ -239,18 +249,78 @@ export function CategoryListInteractive({
   const isTr = locale === "tr";
   const [selectedSector, setSelectedSector] = useState<string>(initialSector);
   const [searchQuery, setSearchQuery] = useState("");
+  const deferredQuery = useDeferredValue(searchQuery);
+  const isStale = searchQuery !== deferredQuery;
   const [followedIds, setFollowedIds] = useState<Set<string>>(new Set(initialFollowedIds));
   const [isLoading, setIsLoading] = useState(false);
   const [showAuthNotice, setShowAuthNotice] = useState(false);
 
-  const filteredCategories = categories.filter((c) => {
-    const matchesSearch =
-      c.name.toLowerCase().includes(searchQuery.toLowerCase().trim()) ||
-      c.slug.toLowerCase().includes(searchQuery.toLowerCase().trim()) ||
-      (c.description && c.description.toLowerCase().includes(searchQuery.toLowerCase().trim()));
-    const matchesSector = selectedSector === "all" || c.sectorKey === selectedSector;
-    return matchesSearch && matchesSector;
-  });
+  const POPULAR_SEARCH_CHIPS = useMemo(
+    () =>
+      isTr
+        ? ["Web Geliştirme", "UI/UX Tasarım", "SEO", "Yapay Zeka", "Mobil Uygulama", "Logo & Marka"]
+        : ["Web Development", "UI/UX Design", "SEO", "Artificial Intelligence", "Mobile App", "Logo & Branding"],
+    [isTr]
+  );
+
+  const globalCrossSectorMatches = useMemo(() => {
+    const query = deferredQuery.trim();
+    if (selectedSector === "all" || !query) return [];
+    return searchCategories(query, { limit: 5 });
+  }, [selectedSector, deferredQuery]);
+
+  const filteredCategories = useMemo(() => {
+    const trimmed = deferredQuery.trim();
+    if (!trimmed) {
+      return categories.filter((c) => selectedSector === "all" || c.sectorKey === selectedSector);
+    }
+
+    const searchResults = searchCategories(trimmed, {
+      sectorKey: selectedSector === "all" ? undefined : selectedSector,
+      limit: 110,
+    });
+
+    if (searchResults.length > 0) {
+      const categoryMap = new Map<string, CategoryItem>();
+      for (const c of categories) {
+        if (c.slug) categoryMap.set(c.slug.toLowerCase(), c);
+        if (c.id) categoryMap.set(c.id.toLowerCase(), c);
+        if (c.key) categoryMap.set(c.key.toLowerCase(), c);
+        if (c.name) categoryMap.set(c.name.toLowerCase().trim(), c);
+      }
+
+      const ranked: CategoryItem[] = [];
+      const seen = new Set<string>();
+
+      for (const res of searchResults) {
+        const item =
+          (res.repoKey && categoryMap.get(res.repoKey.toLowerCase())) ||
+          (res.slug && categoryMap.get(res.slug.toLowerCase())) ||
+          (res.name && categoryMap.get(res.name.toLowerCase().trim()));
+
+        if (item && !seen.has(item.id)) {
+          if (selectedSector === "all" || item.sectorKey === selectedSector) {
+            seen.add(item.id);
+            ranked.push(item);
+          }
+        }
+      }
+
+      if (ranked.length > 0) {
+        return ranked;
+      }
+    }
+
+    // Fallback if no taxonomy search result
+    return categories.filter((c) => {
+      const matchesSearch =
+        c.name.toLowerCase().includes(trimmed.toLowerCase()) ||
+        c.slug.toLowerCase().includes(trimmed.toLowerCase()) ||
+        (c.description && c.description.toLowerCase().includes(trimmed.toLowerCase()));
+      const matchesSector = selectedSector === "all" || c.sectorKey === selectedSector;
+      return matchesSearch && matchesSector;
+    });
+  }, [categories, deferredQuery, selectedSector]);
 
   const filteredListingCount = useMemo(() => {
     return filteredCategories.reduce((acc, cat) => acc + (cat.listingCount || 0), 0);
@@ -476,7 +546,7 @@ export function CategoryListInteractive({
               }}
             >
               <div className="flex items-center gap-2 min-w-0 flex-1">
-                <div className="h-6 w-6 rounded-lg bg-blue-500/15 text-blue-400 flex items-center justify-center shrink-0">
+                <div className="h-6 w-6 rounded-lg bg-blue-500/15 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
                   <ActiveSectorIcon className="h-3.5 w-3.5" aria-hidden="true" />
                 </div>
                 <span className="text-xs font-semibold truncate">
@@ -490,7 +560,7 @@ export function CategoryListInteractive({
                 </span>
                 <ChevronDown
                   className={`h-3.5 w-3.5 text-[var(--color-text-tertiary)] transition-transform duration-200 ${
-                    isSectorDropdownOpen ? "rotate-180 text-blue-400" : ""
+                    isSectorDropdownOpen ? "rotate-180 text-blue-600 dark:text-blue-400" : ""
                   }`}
                 />
               </div>
@@ -541,7 +611,7 @@ export function CategoryListInteractive({
                       <button
                         type="button"
                         onClick={() => setSectorSearchQuery("")}
-                        className="text-xs text-blue-400 hover:underline cursor-pointer"
+                        className="text-xs text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
                       >
                         {isTr ? "Aramayı temizle" : "Clear search"}
                       </button>
@@ -562,7 +632,7 @@ export function CategoryListInteractive({
                           }}
                           className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs transition-colors cursor-pointer text-left ${
                             isSelected
-                              ? "bg-blue-600/15 text-blue-400 border border-blue-500/30 font-semibold"
+                              ? "bg-blue-500/10 dark:bg-blue-600/15 text-blue-700 dark:text-blue-400 border border-blue-500/30 font-semibold"
                               : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]"
                           }`}
                         >
@@ -570,7 +640,7 @@ export function CategoryListInteractive({
                             <div
                               className={`h-7 w-7 rounded-lg flex items-center justify-center shrink-0 ${
                                 isSelected
-                                  ? "bg-blue-500/20 text-blue-400"
+                                  ? "bg-blue-500/15 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400"
                                   : "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)]"
                               }`}
                             >
@@ -590,14 +660,14 @@ export function CategoryListInteractive({
                             <span
                               className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
                                 isSelected
-                                  ? "bg-blue-500/20 text-blue-300"
+                                  ? "bg-blue-500/10 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/20 dark:border-transparent"
                                   : "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)]"
                               }`}
                             >
                               {item.count} {isTr ? "uzmanlık" : "specializations"} • {item.listingCount} {isTr ? "ilan" : "listings"}
                             </span>
                             {isSelected && (
-                              <Check className="h-4 w-4 text-blue-400" aria-hidden="true" />
+                              <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
                             )}
                           </div>
                         </button>
@@ -619,7 +689,7 @@ export function CategoryListInteractive({
               aria-hidden="true"
             />
             <input
-              type="search"
+              type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={
@@ -628,7 +698,7 @@ export function CategoryListInteractive({
                   : "Filter specializations (e.g. Frontend, Unity, Next.js, Cloud)..."
               }
               aria-label={isTr ? "Kategori filtrele" : "Filter categories"}
-              className="w-full h-10 rounded-xl bg-transparent border-none pl-9 pr-8 text-xs text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:outline-none transition-all"
+              className="w-full h-10 rounded-xl bg-transparent border-none pl-9 pr-8 text-xs text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:outline-none transition-all [&::-webkit-search-cancel-button]:hidden"
             />
             {searchQuery && (
               <button
@@ -648,7 +718,7 @@ export function CategoryListInteractive({
             <button
               type="button"
               onClick={() => setSelectedSector("all")}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 transition-colors shrink-0 cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-blue-500/10 hover:bg-blue-500/20 text-blue-700 dark:text-blue-400 border border-blue-500/20 transition-colors shrink-0 cursor-pointer"
               title={isTr ? "Sektör filtresini sıfırla" : "Reset sector filter"}
             >
               <span>{isTr ? "Filtreyi Sıfırla" : "Reset Filter"}</span>
@@ -661,8 +731,12 @@ export function CategoryListInteractive({
       {/* Frameless Meta Bar (Kutusuz, Temiz Zemin Bilgi & Aksiyon Satırı) */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1 text-xs -mt-2">
         {/* Sol: Canlı İlan ve Uzmanlık Sayacı */}
-        <div className="flex items-center gap-2 text-[var(--color-text-secondary)] font-medium">
-          <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+        <div
+          aria-live="polite"
+          aria-atomic="true"
+          className="flex items-center gap-2 text-[var(--color-text-secondary)] font-medium"
+        >
+          <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
           <span>
             <strong className="font-bold text-[var(--color-text-primary)]">
               {filteredCategories.length}
@@ -671,7 +745,7 @@ export function CategoryListInteractive({
           </span>
           <span className="opacity-40">•</span>
           <span>
-            <strong className="font-bold text-blue-400">
+            <strong className="font-bold text-blue-600 dark:text-blue-400">
               {filteredListingCount}
             </strong>{" "}
             {isTr ? "aktif ilan listeleniyor" : "active listings"}
@@ -681,7 +755,7 @@ export function CategoryListInteractive({
         {/* Sağ: Takip Durumu & Toplu Aksiyonlar */}
         <div className="flex items-center gap-3 self-end sm:self-auto flex-wrap">
           <div className="inline-flex items-center gap-1.5 text-xs text-[var(--color-text-secondary)]">
-            <BookmarkCheck className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />
+            <BookmarkCheck className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
             <span>
               <strong className="font-semibold text-[var(--color-text-primary)]">
                 {followedIds.size}
@@ -717,26 +791,115 @@ export function CategoryListInteractive({
 
       {/* Empty Filter State */}
       {filteredCategories.length === 0 ? (
-        <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/60 p-12 text-center space-y-3 backdrop-blur-xl shadow-sm">
-          <p className="text-sm font-medium text-[var(--color-text-primary)]">
-            {isTr
-              ? "Aramanızla eşleşen kategori bulunamadı."
-              : "No categories matched your search criteria."}
-          </p>
-          <p className="text-xs text-[var(--color-text-secondary)]">
-            {isTr
-              ? "Farklı bir anahtar kelime deneyebilir veya aramayı temizleyebilirsiniz."
-              : "Try a different query or clear your search."}
-          </p>
-          <div className="pt-2">
-            <Button variant="outline" size="sm" onClick={() => setSearchQuery("")}>
+        <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/60 p-8 sm:p-12 text-center space-y-6 backdrop-blur-xl shadow-sm animate-in fade-in-50 duration-200">
+          {/* Sektör Kısıtlaması Uyarısı ve Hızlı Çözüm Butonu */}
+          {selectedSector !== "all" && globalCrossSectorMatches.length > 0 ? (
+            <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/25 max-w-md mx-auto space-y-3">
+              <p className="text-xs text-[var(--color-text-primary)] leading-relaxed">
+                {isTr ? (
+                  <>
+                    Seçili <strong>&ldquo;{currentSectorLabel}&rdquo;</strong> sektöründe sonuç bulunamadı ancak diğer sektörlerde <strong>{globalCrossSectorMatches.length}+</strong> uzmanlık alanı mevcut.
+                  </>
+                ) : (
+                  <>
+                    No matches in <strong>&ldquo;{currentSectorLabel}&rdquo;</strong>, but found <strong>{globalCrossSectorMatches.length}+</strong> matching specializations in other sectors.
+                  </>
+                )}
+              </p>
+              <Button
+                type="button"
+                variant="primary"
+                size="sm"
+                onClick={() => setSelectedSector("all")}
+                className="w-full sm:w-auto h-8 text-xs font-semibold gap-1.5 shadow-sm cursor-pointer"
+              >
+                <span>{isTr ? "Tüm Sektörlerde Göster" : "Show Across All Sectors"}</span>
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-1.5">
+              <p className="text-sm font-semibold text-[var(--color-text-primary)]">
+                {isTr
+                  ? "Aramanızla eşleşen kategori bulunamadı."
+                  : "No categories matched your search criteria."}
+              </p>
+              <p className="text-xs text-[var(--color-text-secondary)]">
+                {isTr
+                  ? "Farklı bir anahtar kelime deneyebilir veya aramayı temizleyebilirsiniz."
+                  : "Try a different query or clear your search."}
+              </p>
+            </div>
+          )}
+
+          {/* Aksiyon Butonları (Temizle ve İlanlarda Ara Köprüsü) */}
+          <div className="flex flex-wrap items-center justify-center gap-2.5">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setSearchQuery("");
+                if (selectedSector !== "all") setSelectedSector("all");
+              }}
+              className="h-8 text-xs cursor-pointer"
+            >
               {isTr ? "Aramayı Temizle" : "Clear Search"}
             </Button>
+
+            {searchQuery.trim() && (
+              <Link
+                href={
+                  isTr
+                    ? `/tr/ilanlar?q=${encodeURIComponent(searchQuery.trim())}`
+                    : `/en/listings?q=${encodeURIComponent(searchQuery.trim())}`
+                }
+              >
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="h-8 text-xs gap-1.5 cursor-pointer shadow-sm"
+                >
+                  <Search className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>
+                    {isTr
+                      ? `"${searchQuery.trim()}" terimini İlanlar'da ara`
+                      : `Search "${searchQuery.trim()}" in Listings`}
+                  </span>
+                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                </Button>
+              </Link>
+            )}
+          </div>
+
+          {/* Akıllı Kurtarma Çipleri (Smart Recovery Chips) */}
+          <div className="pt-3 space-y-2.5 border-t border-[var(--color-border-subtle)]/50 max-w-lg mx-auto">
+            <p className="text-[10px] font-bold text-[var(--color-text-tertiary)] uppercase tracking-wider">
+              {isTr ? "Önerilen Popüler Alanlar" : "Suggested Popular Specializations"}
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-1.5">
+              {POPULAR_SEARCH_CHIPS.map((chip) => (
+                <button
+                  key={chip}
+                  type="button"
+                  onClick={() => {
+                    setSelectedSector("all");
+                    setSearchQuery(chip);
+                  }}
+                  className="px-3 py-1 rounded-xl text-xs font-medium bg-[var(--color-surface-hover)] hover:bg-blue-500/15 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-500/30 text-[var(--color-text-secondary)] border border-[var(--color-border-subtle)] transition-all cursor-pointer"
+                >
+                  {chip}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       ) : (
         /* Grid of Dynamic Category Spotlight Cards */
-        <div className="relative z-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+          className={`relative z-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 transition-opacity duration-150 ${
+            isStale ? "opacity-75" : "opacity-100"
+          }`}
+        >
           {filteredCategories.map((cat) => {
             const isFollowed = followedIds.has(cat.id);
             const Icon = CATEGORY_ICONS[cat.slug] || Code2;
@@ -747,14 +910,14 @@ export function CategoryListInteractive({
               >
                 <div className="flex flex-col flex-1">
                   <div className="flex items-start justify-between mb-3.5">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 group-hover:bg-blue-500/20 group-hover:scale-105 transition-all shrink-0">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:bg-blue-500/20 group-hover:scale-105 transition-all shrink-0">
                       <Icon className="h-5 w-5" aria-hidden="true" />
                     </div>
                     <div className="flex flex-col items-end gap-1.5 shrink-0">
                       <span
                         className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${
                           (cat.listingCount || 0) > 0
-                            ? "bg-blue-500/10 text-blue-400 border-blue-500/30"
+                            ? "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/30"
                             : "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)] border-[var(--color-border-subtle)]"
                         }`}
                       >
@@ -772,7 +935,7 @@ export function CategoryListInteractive({
                         href={
                           isTr ? `/tr/akis?category=${cat.slug}` : `/en/feed?category=${cat.slug}`
                         }
-                        className="font-bold text-base text-[var(--color-text-primary)] hover:text-blue-400 transition-colors line-clamp-2 leading-snug"
+                        className="font-bold text-base text-[var(--color-text-primary)] hover:text-blue-600 dark:hover:text-blue-400 transition-colors line-clamp-2 leading-snug"
                         title={cat.name}
                       >
                         {cat.name}
@@ -789,7 +952,7 @@ export function CategoryListInteractive({
                 <div className="mt-5 flex items-center justify-between pt-4 border-t border-[var(--color-border-subtle)]/60 shrink-0">
                   <Link
                     href={isTr ? `/tr/akis?category=${cat.slug}` : `/en/feed?category=${cat.slug}`}
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-blue-500 hover:text-blue-400 transition-colors"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
                   >
                     <span>{isTr ? `İlanlar (${cat.listingCount || 0})` : `Listings (${cat.listingCount || 0})`}</span>
                     <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -828,7 +991,7 @@ export function CategoryListInteractive({
           className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-lg w-[calc(100%-2rem)] p-4 rounded-2xl bg-[var(--color-surface-base)]/95 backdrop-blur-xl border border-blue-500/40 shadow-2xl shadow-blue-500/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-in fade-in slide-in-from-bottom-5 duration-200"
         >
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/20">
+            <div className="h-9 w-9 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/20">
               <LogIn className="h-4 w-4" aria-hidden="true" />
             </div>
             <div className="space-y-0.5">

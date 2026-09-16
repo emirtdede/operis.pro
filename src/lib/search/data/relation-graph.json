@@ -1,0 +1,4318 @@
+{
+  "version": "5.0.0",
+  "method": "precision-first curated semantic families; no forced minimum; no weak filler edges",
+  "categoriesBySlug": {
+    "web-gelistirme": [
+      {
+        "categorySlug": "backend-ve-api-muhendisligi",
+        "categoryName": "Backend ve API Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-stack"
+        ]
+      },
+      {
+        "categorySlug": "cms-ve-no-code-gelistirme",
+        "categoryName": "CMS ve No-Code Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-platforms"
+        ]
+      },
+      {
+        "categorySlug": "e-ticaret-sitesi-gelistirme",
+        "categoryName": "E-Ticaret Sitesi Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-platforms"
+        ]
+      },
+      {
+        "categorySlug": "frontend-ve-arayuz-muhendisligi",
+        "categoryName": "Frontend ve Arayüz Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-stack"
+        ]
+      },
+      {
+        "categorySlug": "full-stack-web-gelistirme",
+        "categoryName": "Full Stack Web Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-stack"
+        ]
+      },
+      {
+        "categorySlug": "no-code-ve-low-code-gelistirme",
+        "categoryName": "No-Code & Low-Code Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-platforms"
+        ]
+      }
+    ],
+    "frontend-ve-arayuz-muhendisligi": [
+      {
+        "categorySlug": "backend-ve-api-muhendisligi",
+        "categoryName": "Backend ve API Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-stack"
+        ]
+      },
+      {
+        "categorySlug": "full-stack-web-gelistirme",
+        "categoryName": "Full Stack Web Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-stack"
+        ]
+      },
+      {
+        "categorySlug": "tasarim-sistemleri-design-systems",
+        "categoryName": "Tasarım Sistemleri (Design Systems)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "frontend-product-design"
+        ]
+      },
+      {
+        "categorySlug": "ui-ux-tasarim",
+        "categoryName": "UI/UX Tasarım",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "frontend-product-design"
+        ]
+      },
+      {
+        "categorySlug": "web-gelistirme",
+        "categoryName": "Web Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-stack"
+        ]
+      },
+      {
+        "categorySlug": "web-sitesi-ui-ux-tasarimi",
+        "categoryName": "Web Sitesi UI/UX Tasarımı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "frontend-product-design"
+        ]
+      }
+    ],
+    "backend-ve-api-muhendisligi": [
+      {
+        "categorySlug": "full-stack-web-gelistirme",
+        "categoryName": "Full Stack Web Geliştirme",
+        "score": 0.77,
+        "strength": "strong",
+        "sharedFamilies": [
+          "backend-architecture",
+          "web-stack"
+        ]
+      },
+      {
+        "categorySlug": "blokzincir-muhendisligi",
+        "categoryName": "Blokzincir Mühendisliği",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "blockchain"
+        ]
+      },
+      {
+        "categorySlug": "siber-guvenlik",
+        "categoryName": "Siber Güvenlik",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "blockchain"
+        ]
+      },
+      {
+        "categorySlug": "frontend-ve-arayuz-muhendisligi",
+        "categoryName": "Frontend ve Arayüz Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-stack"
+        ]
+      },
+      {
+        "categorySlug": "mikroservis-ve-api-mimarisi",
+        "categoryName": "Mikroservis ve API Mimarisi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "backend-architecture"
+        ]
+      },
+      {
+        "categorySlug": "veritabani-muhendisligi",
+        "categoryName": "Veritabanı Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "backend-architecture"
+        ]
+      },
+      {
+        "categorySlug": "web-gelistirme",
+        "categoryName": "Web Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-stack"
+        ]
+      }
+    ],
+    "mobil-uygulama-gelistirme": [
+      {
+        "categorySlug": "mobil-uygulama-ui-ux-tasarimi",
+        "categoryName": "Mobil Uygulama UI/UX Tasarımı",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "mobile-product"
+        ]
+      },
+      {
+        "categorySlug": "yazilim-testi-ve-kalite-guvencesi",
+        "categoryName": "Yazılım Testi ve Kalite Güvencesi",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "mobile-product"
+        ]
+      },
+      {
+        "categorySlug": "bilgisayarli-goru-ve-goruntu-isleme",
+        "categoryName": "Bilgisayarlı Görü ve Görüntü İşleme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "spatial-xr"
+        ]
+      },
+      {
+        "categorySlug": "mekansal-bilisim-vr-ve-ar-gelistirme",
+        "categoryName": "Mekânsal Bilişim, VR & AR Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "spatial-xr"
+        ]
+      },
+      {
+        "categorySlug": "oyun-gelistirme",
+        "categoryName": "Oyun Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "spatial-xr"
+        ]
+      }
+    ],
+    "masaustu-yazilim-gelistirme": [
+      {
+        "categorySlug": "bilgisayar-donanimi-ve-teknik-destek",
+        "categoryName": "Bilgisayar Donanımı ve Teknik Destek",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "desktop-quality-support"
+        ]
+      },
+      {
+        "categorySlug": "yazilim-testi-ve-kalite-guvencesi",
+        "categoryName": "Yazılım Testi ve Kalite Güvencesi",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "desktop-quality-support"
+        ]
+      }
+    ],
+    "devops-ve-bulut-bilisim": [
+      {
+        "categorySlug": "bt-sistem-ve-ag-yonetimi",
+        "categoryName": "BT, Sistem ve Ağ Yönetimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "cloud-platform"
+        ]
+      },
+      {
+        "categorySlug": "bulut-mimarisi-ve-altyapi-yonetimi",
+        "categoryName": "Bulut Mimarisi ve Altyapı Yönetimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "cloud-platform"
+        ]
+      },
+      {
+        "categorySlug": "mikroservis-ve-api-mimarisi",
+        "categoryName": "Mikroservis ve API Mimarisi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "cloud-platform"
+        ]
+      }
+    ],
+    "veritabani-muhendisligi": [
+      {
+        "categorySlug": "backend-ve-api-muhendisligi",
+        "categoryName": "Backend ve API Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "backend-architecture"
+        ]
+      },
+      {
+        "categorySlug": "full-stack-web-gelistirme",
+        "categoryName": "Full Stack Web Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "backend-architecture"
+        ]
+      },
+      {
+        "categorySlug": "mikroservis-ve-api-mimarisi",
+        "categoryName": "Mikroservis ve API Mimarisi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "backend-architecture"
+        ]
+      },
+      {
+        "categorySlug": "veri-muhendisligi-ve-analitik",
+        "categoryName": "Veri Mühendisliği ve Analitik",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "database-data"
+        ]
+      },
+      {
+        "categorySlug": "web-kazima-ve-veri-madenciligi",
+        "categoryName": "Web Kazıma ve Veri Madenciliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "database-data"
+        ]
+      },
+      {
+        "categorySlug": "is-zekasi-ve-dashboard-tasarimi",
+        "categoryName": "İş Zekası ve Dashboard Tasarımı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "database-data"
+        ]
+      }
+    ],
+    "siber-guvenlik": [
+      {
+        "categorySlug": "backend-ve-api-muhendisligi",
+        "categoryName": "Backend ve API Mühendisliği",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "blockchain"
+        ]
+      },
+      {
+        "categorySlug": "blokzincir-muhendisligi",
+        "categoryName": "Blokzincir Mühendisliği",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "blockchain"
+        ]
+      },
+      {
+        "categorySlug": "bt-sistem-ve-ag-yonetimi",
+        "categoryName": "BT, Sistem ve Ağ Yönetimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "security"
+        ]
+      },
+      {
+        "categorySlug": "kvkk-gdpr-ve-veri-gizliligi-uyumu",
+        "categoryName": "KVKK, GDPR ve Veri Gizliliği Uyumu",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "security"
+        ]
+      },
+      {
+        "categorySlug": "penetrasyon-testi-ve-guvenlik-denetimi",
+        "categoryName": "Penetrasyon Testi ve Güvenlik Denetimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "security"
+        ]
+      }
+    ],
+    "yazilim-testi-ve-kalite-guvencesi": [
+      {
+        "categorySlug": "bilgisayar-donanimi-ve-teknik-destek",
+        "categoryName": "Bilgisayar Donanımı ve Teknik Destek",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "desktop-quality-support"
+        ]
+      },
+      {
+        "categorySlug": "masaustu-yazilim-gelistirme",
+        "categoryName": "Masaüstü Yazılım Geliştirme",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "desktop-quality-support"
+        ]
+      },
+      {
+        "categorySlug": "mobil-uygulama-gelistirme",
+        "categoryName": "Mobil Uygulama Geliştirme",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "mobile-product"
+        ]
+      },
+      {
+        "categorySlug": "mobil-uygulama-ui-ux-tasarimi",
+        "categoryName": "Mobil Uygulama UI/UX Tasarımı",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "mobile-product"
+        ]
+      }
+    ],
+    "blokzincir-muhendisligi": [
+      {
+        "categorySlug": "backend-ve-api-muhendisligi",
+        "categoryName": "Backend ve API Mühendisliği",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "blockchain"
+        ]
+      },
+      {
+        "categorySlug": "siber-guvenlik",
+        "categoryName": "Siber Güvenlik",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "blockchain"
+        ]
+      }
+    ],
+    "gomulu-sistemler-ve-iot": [
+      {
+        "categorySlug": "bt-sistem-ve-ag-yonetimi",
+        "categoryName": "BT, Sistem ve Ağ Yönetimi",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "embedded-iot"
+        ]
+      },
+      {
+        "categorySlug": "bilgisayar-donanimi-ve-teknik-destek",
+        "categoryName": "Bilgisayar Donanımı ve Teknik Destek",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "embedded-iot"
+        ]
+      }
+    ],
+    "bt-sistem-ve-ag-yonetimi": [
+      {
+        "categorySlug": "bilgisayar-donanimi-ve-teknik-destek",
+        "categoryName": "Bilgisayar Donanımı ve Teknik Destek",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "embedded-iot",
+          "technical-support"
+        ]
+      },
+      {
+        "categorySlug": "gomulu-sistemler-ve-iot",
+        "categoryName": "Gömülü Sistemler ve IoT",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "embedded-iot"
+        ]
+      },
+      {
+        "categorySlug": "bulut-mimarisi-ve-altyapi-yonetimi",
+        "categoryName": "Bulut Mimarisi ve Altyapı Yönetimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "cloud-platform"
+        ]
+      },
+      {
+        "categorySlug": "devops-ve-bulut-bilisim",
+        "categoryName": "DevOps ve Bulut Bilişim",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "cloud-platform"
+        ]
+      },
+      {
+        "categorySlug": "diger-teknoloji-hizmetleri",
+        "categoryName": "Diğer Teknoloji Hizmetleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-support"
+        ]
+      },
+      {
+        "categorySlug": "kvkk-gdpr-ve-veri-gizliligi-uyumu",
+        "categoryName": "KVKK, GDPR ve Veri Gizliliği Uyumu",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "security"
+        ]
+      },
+      {
+        "categorySlug": "mikroservis-ve-api-mimarisi",
+        "categoryName": "Mikroservis ve API Mimarisi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "cloud-platform"
+        ]
+      },
+      {
+        "categorySlug": "penetrasyon-testi-ve-guvenlik-denetimi",
+        "categoryName": "Penetrasyon Testi ve Güvenlik Denetimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "security"
+        ]
+      },
+      {
+        "categorySlug": "siber-guvenlik",
+        "categoryName": "Siber Güvenlik",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "security"
+        ]
+      },
+      {
+        "categorySlug": "teknik-danismanlik",
+        "categoryName": "Teknik Danışmanlık",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-support"
+        ]
+      }
+    ],
+    "bilgisayar-donanimi-ve-teknik-destek": [
+      {
+        "categorySlug": "bt-sistem-ve-ag-yonetimi",
+        "categoryName": "BT, Sistem ve Ağ Yönetimi",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "embedded-iot",
+          "technical-support"
+        ]
+      },
+      {
+        "categorySlug": "gomulu-sistemler-ve-iot",
+        "categoryName": "Gömülü Sistemler ve IoT",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "embedded-iot"
+        ]
+      },
+      {
+        "categorySlug": "masaustu-yazilim-gelistirme",
+        "categoryName": "Masaüstü Yazılım Geliştirme",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "desktop-quality-support"
+        ]
+      },
+      {
+        "categorySlug": "yazilim-testi-ve-kalite-guvencesi",
+        "categoryName": "Yazılım Testi ve Kalite Güvencesi",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "desktop-quality-support"
+        ]
+      },
+      {
+        "categorySlug": "diger-teknoloji-hizmetleri",
+        "categoryName": "Diğer Teknoloji Hizmetleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-support"
+        ]
+      },
+      {
+        "categorySlug": "teknik-danismanlik",
+        "categoryName": "Teknik Danışmanlık",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-support"
+        ]
+      }
+    ],
+    "diger-teknoloji-hizmetleri": [
+      {
+        "categorySlug": "bt-sistem-ve-ag-yonetimi",
+        "categoryName": "BT, Sistem ve Ağ Yönetimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-support"
+        ]
+      },
+      {
+        "categorySlug": "bilgisayar-donanimi-ve-teknik-destek",
+        "categoryName": "Bilgisayar Donanımı ve Teknik Destek",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-support"
+        ]
+      },
+      {
+        "categorySlug": "teknik-danismanlik",
+        "categoryName": "Teknik Danışmanlık",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-support"
+        ]
+      }
+    ],
+    "no-code-ve-low-code-gelistirme": [
+      {
+        "categorySlug": "cms-ve-no-code-gelistirme",
+        "categoryName": "CMS ve No-Code Geliştirme",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "no-code-automation",
+          "web-platforms"
+        ]
+      },
+      {
+        "categorySlug": "otomasyon-ve-entegrasyonlar",
+        "categoryName": "Otomasyon ve Entegrasyonlar",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "no-code-automation"
+        ]
+      },
+      {
+        "categorySlug": "e-ticaret-sitesi-gelistirme",
+        "categoryName": "E-Ticaret Sitesi Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-platforms"
+        ]
+      },
+      {
+        "categorySlug": "web-gelistirme",
+        "categoryName": "Web Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-platforms"
+        ]
+      }
+    ],
+    "yapay-zeka-ve-makine-ogrenimi": [
+      {
+        "categorySlug": "veri-muhendisligi-ve-analitik",
+        "categoryName": "Veri Mühendisliği ve Analitik",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "data-ai"
+        ]
+      },
+      {
+        "categorySlug": "is-zekasi-ve-dashboard-tasarimi",
+        "categoryName": "İş Zekası ve Dashboard Tasarımı",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "data-ai"
+        ]
+      },
+      {
+        "categorySlug": "bilgisayarli-goru-ve-goruntu-isleme",
+        "categoryName": "Bilgisayarlı Görü ve Görüntü İşleme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ai-core"
+        ]
+      },
+      {
+        "categorySlug": "dogal-dil-isleme-ve-ses-teknolojileri",
+        "categoryName": "Doğal Dil İşleme ve Ses Teknolojileri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ai-core"
+        ]
+      },
+      {
+        "categorySlug": "llm-ve-gpt-uygulama-gelistirme",
+        "categoryName": "LLM ve GPT Uygulama Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ai-core"
+        ]
+      }
+    ],
+    "veri-muhendisligi-ve-analitik": [
+      {
+        "categorySlug": "is-zekasi-ve-dashboard-tasarimi",
+        "categoryName": "İş Zekası ve Dashboard Tasarımı",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "data-ai",
+          "database-data"
+        ]
+      },
+      {
+        "categorySlug": "yapay-zeka-ve-makine-ogrenimi",
+        "categoryName": "Yapay Zeka ve Makine Öğrenimi",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "data-ai"
+        ]
+      },
+      {
+        "categorySlug": "veritabani-muhendisligi",
+        "categoryName": "Veritabanı Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "database-data"
+        ]
+      },
+      {
+        "categorySlug": "web-kazima-ve-veri-madenciligi",
+        "categoryName": "Web Kazıma ve Veri Madenciliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "database-data"
+        ]
+      }
+    ],
+    "otomasyon-ve-entegrasyonlar": [
+      {
+        "categorySlug": "cms-ve-no-code-gelistirme",
+        "categoryName": "CMS ve No-Code Geliştirme",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "no-code-automation"
+        ]
+      },
+      {
+        "categorySlug": "e-posta-pazarlamasi-ve-crm-akislari",
+        "categoryName": "E-Posta Pazarlaması ve CRM Akışları",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "automation-ops"
+        ]
+      },
+      {
+        "categorySlug": "no-code-ve-low-code-gelistirme",
+        "categoryName": "No-Code & Low-Code Geliştirme",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "no-code-automation"
+        ]
+      },
+      {
+        "categorySlug": "surec-ve-operasyon-optimizasyonu",
+        "categoryName": "Süreç ve Operasyon Optimizasyonu",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "automation-ops"
+        ]
+      },
+      {
+        "categorySlug": "llm-ve-gpt-uygulama-gelistirme",
+        "categoryName": "LLM ve GPT Uygulama Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "agentic-ai"
+        ]
+      },
+      {
+        "categorySlug": "prompt-muhendisligi-ve-ai-danismanligi",
+        "categoryName": "Prompt Mühendisliği ve AI Danışmanlığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "agentic-ai"
+        ]
+      },
+      {
+        "categorySlug": "yapay-zeka-ajanlari-ve-is-akislari",
+        "categoryName": "Yapay Zeka Ajanları ve İş Akışları",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "agentic-ai"
+        ]
+      }
+    ],
+    "yapay-zeka-ajanlari-ve-is-akislari": [
+      {
+        "categorySlug": "llm-ve-gpt-uygulama-gelistirme",
+        "categoryName": "LLM ve GPT Uygulama Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "agentic-ai"
+        ]
+      },
+      {
+        "categorySlug": "otomasyon-ve-entegrasyonlar",
+        "categoryName": "Otomasyon ve Entegrasyonlar",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "agentic-ai"
+        ]
+      },
+      {
+        "categorySlug": "prompt-muhendisligi-ve-ai-danismanligi",
+        "categoryName": "Prompt Mühendisliği ve AI Danışmanlığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "agentic-ai"
+        ]
+      }
+    ],
+    "prompt-muhendisligi-ve-ai-danismanligi": [
+      {
+        "categorySlug": "llm-ve-gpt-uygulama-gelistirme",
+        "categoryName": "LLM ve GPT Uygulama Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "agentic-ai"
+        ]
+      },
+      {
+        "categorySlug": "otomasyon-ve-entegrasyonlar",
+        "categoryName": "Otomasyon ve Entegrasyonlar",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "agentic-ai"
+        ]
+      },
+      {
+        "categorySlug": "yapay-zeka-ajanlari-ve-is-akislari",
+        "categoryName": "Yapay Zeka Ajanları ve İş Akışları",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "agentic-ai"
+        ]
+      }
+    ],
+    "is-zekasi-ve-dashboard-tasarimi": [
+      {
+        "categorySlug": "veri-muhendisligi-ve-analitik",
+        "categoryName": "Veri Mühendisliği ve Analitik",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "data-ai",
+          "database-data"
+        ]
+      },
+      {
+        "categorySlug": "yapay-zeka-ve-makine-ogrenimi",
+        "categoryName": "Yapay Zeka ve Makine Öğrenimi",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "data-ai"
+        ]
+      },
+      {
+        "categorySlug": "veritabani-muhendisligi",
+        "categoryName": "Veritabanı Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "database-data"
+        ]
+      },
+      {
+        "categorySlug": "web-kazima-ve-veri-madenciligi",
+        "categoryName": "Web Kazıma ve Veri Madenciliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "database-data"
+        ]
+      }
+    ],
+    "ui-ux-tasarim": [
+      {
+        "categorySlug": "tasarim-sistemleri-design-systems",
+        "categoryName": "Tasarım Sistemleri (Design Systems)",
+        "score": 0.77,
+        "strength": "strong",
+        "sharedFamilies": [
+          "frontend-product-design",
+          "product-design"
+        ]
+      },
+      {
+        "categorySlug": "web-sitesi-ui-ux-tasarimi",
+        "categoryName": "Web Sitesi UI/UX Tasarımı",
+        "score": 0.77,
+        "strength": "strong",
+        "sharedFamilies": [
+          "frontend-product-design",
+          "product-design"
+        ]
+      },
+      {
+        "categorySlug": "frontend-ve-arayuz-muhendisligi",
+        "categoryName": "Frontend ve Arayüz Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "frontend-product-design"
+        ]
+      },
+      {
+        "categorySlug": "mobil-uygulama-ui-ux-tasarimi",
+        "categoryName": "Mobil Uygulama UI/UX Tasarımı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-design"
+        ]
+      }
+    ],
+    "logo-ve-kurumsal-kimlik": [
+      {
+        "categorySlug": "ambalaj-etiket-ve-baski-tasarimi",
+        "categoryName": "Ambalaj, Etiket ve Baskı Tasarımı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "brand-identity"
+        ]
+      },
+      {
+        "categorySlug": "ikon-ve-tipografi-tasarimi",
+        "categoryName": "İkon ve Tipografi Tasarımı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "brand-identity"
+        ]
+      },
+      {
+        "categorySlug": "illustrasyon-ve-vektorel-cizim",
+        "categoryName": "İllüstrasyon ve Vektörel Çizim",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "brand-identity"
+        ]
+      }
+    ],
+    "tasarim-sistemleri-design-systems": [
+      {
+        "categorySlug": "ui-ux-tasarim",
+        "categoryName": "UI/UX Tasarım",
+        "score": 0.77,
+        "strength": "strong",
+        "sharedFamilies": [
+          "frontend-product-design",
+          "product-design"
+        ]
+      },
+      {
+        "categorySlug": "web-sitesi-ui-ux-tasarimi",
+        "categoryName": "Web Sitesi UI/UX Tasarımı",
+        "score": 0.77,
+        "strength": "strong",
+        "sharedFamilies": [
+          "frontend-product-design",
+          "product-design"
+        ]
+      },
+      {
+        "categorySlug": "frontend-ve-arayuz-muhendisligi",
+        "categoryName": "Frontend ve Arayüz Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "frontend-product-design"
+        ]
+      },
+      {
+        "categorySlug": "mobil-uygulama-ui-ux-tasarimi",
+        "categoryName": "Mobil Uygulama UI/UX Tasarımı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-design"
+        ]
+      }
+    ],
+    "sosyal-medya-ve-reklam-gorselleri": [
+      {
+        "categorySlug": "illustrasyon-ve-vektorel-cizim",
+        "categoryName": "İllüstrasyon ve Vektörel Çizim",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "photo-visual",
+          "social-creative"
+        ]
+      },
+      {
+        "categorySlug": "tiktok-ve-dikey-video-reklamciligi",
+        "categoryName": "TikTok ve Dikey Video Reklamcılığı",
+        "score": 0.77,
+        "strength": "strong",
+        "sharedFamilies": [
+          "social-creative",
+          "social-growth"
+        ]
+      },
+      {
+        "categorySlug": "fotograf-duzenleme-ve-retouching",
+        "categoryName": "Fotoğraf Düzenleme ve Retouching",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "photo-visual"
+        ]
+      },
+      {
+        "categorySlug": "kisa-format-video-reels-tiktok-shorts",
+        "categoryName": "Kısa Format Video (Reels, TikTok, Shorts)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "social-creative"
+        ]
+      },
+      {
+        "categorySlug": "sosyal-medya-reklamciligi",
+        "categoryName": "Sosyal Medya Reklamcılığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "social-growth"
+        ]
+      },
+      {
+        "categorySlug": "sosyal-medya-yonetimi-ve-stratejisi",
+        "categoryName": "Sosyal Medya Yönetimi ve Stratejisi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "social-growth"
+        ]
+      }
+    ],
+    "illustrasyon-ve-vektorel-cizim": [
+      {
+        "categorySlug": "sosyal-medya-ve-reklam-gorselleri",
+        "categoryName": "Sosyal Medya ve Reklam Görselleri",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "photo-visual",
+          "social-creative"
+        ]
+      },
+      {
+        "categorySlug": "fotograf-duzenleme-ve-retouching",
+        "categoryName": "Fotoğraf Düzenleme ve Retouching",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "photo-visual"
+        ]
+      },
+      {
+        "categorySlug": "ambalaj-etiket-ve-baski-tasarimi",
+        "categoryName": "Ambalaj, Etiket ve Baskı Tasarımı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "brand-identity"
+        ]
+      },
+      {
+        "categorySlug": "kisa-format-video-reels-tiktok-shorts",
+        "categoryName": "Kısa Format Video (Reels, TikTok, Shorts)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "social-creative"
+        ]
+      },
+      {
+        "categorySlug": "logo-ve-kurumsal-kimlik",
+        "categoryName": "Logo ve Kurumsal Kimlik",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "brand-identity"
+        ]
+      },
+      {
+        "categorySlug": "tiktok-ve-dikey-video-reklamciligi",
+        "categoryName": "TikTok ve Dikey Video Reklamcılığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "social-creative"
+        ]
+      },
+      {
+        "categorySlug": "ikon-ve-tipografi-tasarimi",
+        "categoryName": "İkon ve Tipografi Tasarımı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "brand-identity"
+        ]
+      }
+    ],
+    "ambalaj-etiket-ve-baski-tasarimi": [
+      {
+        "categorySlug": "logo-ve-kurumsal-kimlik",
+        "categoryName": "Logo ve Kurumsal Kimlik",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "brand-identity"
+        ]
+      },
+      {
+        "categorySlug": "ikon-ve-tipografi-tasarimi",
+        "categoryName": "İkon ve Tipografi Tasarımı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "brand-identity"
+        ]
+      },
+      {
+        "categorySlug": "illustrasyon-ve-vektorel-cizim",
+        "categoryName": "İllüstrasyon ve Vektörel Çizim",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "brand-identity"
+        ]
+      }
+    ],
+    "yatirimci-sunumu-ve-pitch-deck": [
+      {
+        "categorySlug": "finansal-modelleme-ve-fizibilite",
+        "categoryName": "Finansal Modelleme ve Fizibilite",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "pitch-strategy"
+        ]
+      },
+      {
+        "categorySlug": "girisim-stratejisi-ve-is-plani",
+        "categoryName": "Girişim Stratejisi ve İş Planı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "pitch-strategy"
+        ]
+      },
+      {
+        "categorySlug": "pazar-ve-rakip-arastirmasi",
+        "categoryName": "Pazar ve Rakip Araştırması",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "pitch-strategy"
+        ]
+      }
+    ],
+    "arama-motoru-optimizasyonu-seo": [
+      {
+        "categorySlug": "seo-uyumlu-blog-ve-makale-yazarligi",
+        "categoryName": "SEO Uyumlu Blog ve Makale Yazarlığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "organic-growth"
+        ]
+      },
+      {
+        "categorySlug": "teknik-seo-ve-site-hizi-optimizasyonu",
+        "categoryName": "Teknik SEO ve Site Hızı Optimizasyonu",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "organic-growth"
+        ]
+      },
+      {
+        "categorySlug": "icerik-pazarlamasi-ve-donusum-hunisi",
+        "categoryName": "İçerik Pazarlaması ve Dönüşüm Hunisi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "organic-growth"
+        ]
+      }
+    ],
+    "google-reklamlari-sem-ve-ppc": [
+      {
+        "categorySlug": "sosyal-medya-reklamciligi",
+        "categoryName": "Sosyal Medya Reklamcılığı",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "paid-acquisition"
+        ]
+      },
+      {
+        "categorySlug": "tiktok-ve-dikey-video-reklamciligi",
+        "categoryName": "TikTok ve Dikey Video Reklamcılığı",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "paid-acquisition"
+        ]
+      }
+    ],
+    "sosyal-medya-reklamciligi": [
+      {
+        "categorySlug": "tiktok-ve-dikey-video-reklamciligi",
+        "categoryName": "TikTok ve Dikey Video Reklamcılığı",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "paid-acquisition",
+          "social-growth"
+        ]
+      },
+      {
+        "categorySlug": "google-reklamlari-sem-ve-ppc",
+        "categoryName": "Google Reklamları (SEM & PPC)",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "paid-acquisition"
+        ]
+      },
+      {
+        "categorySlug": "sosyal-medya-yonetimi-ve-stratejisi",
+        "categoryName": "Sosyal Medya Yönetimi ve Stratejisi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "social-growth"
+        ]
+      },
+      {
+        "categorySlug": "sosyal-medya-ve-reklam-gorselleri",
+        "categoryName": "Sosyal Medya ve Reklam Görselleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "social-growth"
+        ]
+      }
+    ],
+    "sosyal-medya-yonetimi-ve-stratejisi": [
+      {
+        "categorySlug": "sosyal-medya-reklamciligi",
+        "categoryName": "Sosyal Medya Reklamcılığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "social-growth"
+        ]
+      },
+      {
+        "categorySlug": "sosyal-medya-ve-reklam-gorselleri",
+        "categoryName": "Sosyal Medya ve Reklam Görselleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "social-growth"
+        ]
+      },
+      {
+        "categorySlug": "tiktok-ve-dikey-video-reklamciligi",
+        "categoryName": "TikTok ve Dikey Video Reklamcılığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "social-growth"
+        ]
+      }
+    ],
+    "e-posta-pazarlamasi-ve-crm-akislari": [
+      {
+        "categorySlug": "otomasyon-ve-entegrasyonlar",
+        "categoryName": "Otomasyon ve Entegrasyonlar",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "automation-ops"
+        ]
+      },
+      {
+        "categorySlug": "surec-ve-operasyon-optimizasyonu",
+        "categoryName": "Süreç ve Operasyon Optimizasyonu",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "automation-ops"
+        ]
+      },
+      {
+        "categorySlug": "e-ticaret-magaza-ve-siparis-operasyon-destegi",
+        "categoryName": "E-Ticaret Mağaza ve Sipariş Operasyon Desteği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ecommerce-growth"
+        ]
+      },
+      {
+        "categorySlug": "e-ticaret-sitesi-gelistirme",
+        "categoryName": "E-Ticaret Sitesi Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ecommerce-growth"
+        ]
+      },
+      {
+        "categorySlug": "e-ticaret-yonetimi-ve-buyume",
+        "categoryName": "E-Ticaret Yönetimi ve Büyüme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ecommerce-growth"
+        ]
+      }
+    ],
+    "e-ticaret-yonetimi-ve-buyume": [
+      {
+        "categorySlug": "e-ticaret-ve-tuketici-hukuku",
+        "categoryName": "E-Ticaret ve Tüketici Hukuku",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "consumer-ecommerce-law",
+          "ecommerce-legal"
+        ]
+      },
+      {
+        "categorySlug": "saas-ve-uygulama-yasal-metinleri",
+        "categoryName": "SaaS ve Uygulama Yasal Metinleri",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "consumer-ecommerce-law",
+          "ecommerce-legal"
+        ]
+      },
+      {
+        "categorySlug": "e-ticaret-sitesi-gelistirme",
+        "categoryName": "E-Ticaret Sitesi Geliştirme",
+        "score": 0.77,
+        "strength": "strong",
+        "sharedFamilies": [
+          "ecommerce-growth",
+          "ecommerce-legal"
+        ]
+      },
+      {
+        "categorySlug": "e-posta-pazarlamasi-ve-crm-akislari",
+        "categoryName": "E-Posta Pazarlaması ve CRM Akışları",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ecommerce-growth"
+        ]
+      },
+      {
+        "categorySlug": "e-ticaret-magaza-ve-siparis-operasyon-destegi",
+        "categoryName": "E-Ticaret Mağaza ve Sipariş Operasyon Desteği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ecommerce-growth"
+        ]
+      }
+    ],
+    "kisa-format-video-reels-tiktok-shorts": [
+      {
+        "categorySlug": "3d-urun-animasyonu-ve-tanitim",
+        "categoryName": "3D Ürün Animasyonu ve Tanıtım",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "motion-3d"
+        ]
+      },
+      {
+        "categorySlug": "hareketli-grafik-motion-graphics",
+        "categoryName": "Hareketli Grafik (Motion Graphics)",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "motion-3d"
+        ]
+      },
+      {
+        "categorySlug": "altyazi-transkripsiyon-ve-dinamik-metinler",
+        "categoryName": "Altyazı, Transkripsiyon ve Dinamik Metinler",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "video-post"
+        ]
+      },
+      {
+        "categorySlug": "sosyal-medya-ve-reklam-gorselleri",
+        "categoryName": "Sosyal Medya ve Reklam Görselleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "social-creative"
+        ]
+      },
+      {
+        "categorySlug": "tiktok-ve-dikey-video-reklamciligi",
+        "categoryName": "TikTok ve Dikey Video Reklamcılığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "social-creative"
+        ]
+      },
+      {
+        "categorySlug": "video-renk-duzenleme-color-grading",
+        "categoryName": "Video Renk Düzenleme (Color Grading)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "video-post"
+        ]
+      },
+      {
+        "categorySlug": "youtube-ve-uzun-format-video-kurgusu",
+        "categoryName": "YouTube ve Uzun Format Video Kurgusu",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "video-post"
+        ]
+      },
+      {
+        "categorySlug": "illustrasyon-ve-vektorel-cizim",
+        "categoryName": "İllüstrasyon ve Vektörel Çizim",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "social-creative"
+        ]
+      }
+    ],
+    "youtube-ve-uzun-format-video-kurgusu": [
+      {
+        "categorySlug": "altyazi-transkripsiyon-ve-dinamik-metinler",
+        "categoryName": "Altyazı, Transkripsiyon ve Dinamik Metinler",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "video-post"
+        ]
+      },
+      {
+        "categorySlug": "kisa-format-video-reels-tiktok-shorts",
+        "categoryName": "Kısa Format Video (Reels, TikTok, Shorts)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "video-post"
+        ]
+      },
+      {
+        "categorySlug": "video-renk-duzenleme-color-grading",
+        "categoryName": "Video Renk Düzenleme (Color Grading)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "video-post"
+        ]
+      }
+    ],
+    "hareketli-grafik-motion-graphics": [
+      {
+        "categorySlug": "3d-urun-animasyonu-ve-tanitim",
+        "categoryName": "3D Ürün Animasyonu ve Tanıtım",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "motion-3d"
+        ]
+      },
+      {
+        "categorySlug": "kisa-format-video-reels-tiktok-shorts",
+        "categoryName": "Kısa Format Video (Reels, TikTok, Shorts)",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "motion-3d"
+        ]
+      }
+    ],
+    "seslendirme-ve-dublaj": [
+      {
+        "categorySlug": "podcast-duzenleme-ve-ses-muhendisligi",
+        "categoryName": "Podcast Düzenleme ve Ses Mühendisliği",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "voice-audio"
+        ]
+      },
+      {
+        "categorySlug": "ses-ve-video-desifre-destegi",
+        "categoryName": "Ses ve Video Deşifre Desteği",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "voice-audio"
+        ]
+      }
+    ],
+    "podcast-duzenleme-ve-ses-muhendisligi": [
+      {
+        "categorySlug": "ses-ve-video-desifre-destegi",
+        "categoryName": "Ses ve Video Deşifre Desteği",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "voice-audio"
+        ]
+      },
+      {
+        "categorySlug": "seslendirme-ve-dublaj",
+        "categoryName": "Seslendirme ve Dublaj",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "voice-audio"
+        ]
+      },
+      {
+        "categorySlug": "muzik-produksiyonu-ve-beatmaking",
+        "categoryName": "Müzik Prodüksiyonu ve Beatmaking",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "audio-production"
+        ]
+      },
+      {
+        "categorySlug": "oyun-sesleri-ve-muzik-produksiyonu",
+        "categoryName": "Oyun Sesleri ve Müzik Prodüksiyonu",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "audio-production"
+        ]
+      },
+      {
+        "categorySlug": "ses-tasarimi-ve-efektleri-sfx",
+        "categoryName": "Ses Tasarımı ve Efektleri (SFX)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "audio-production"
+        ]
+      }
+    ],
+    "teknik-yazarlik-ve-dokumantasyon": [
+      {
+        "categorySlug": "editoryal-duzeltme-ve-redaksiyon",
+        "categoryName": "Editoryal Düzeltme ve Redaksiyon",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-editorial"
+        ]
+      },
+      {
+        "categorySlug": "whitepaper-ve-e-kitap-yazimi",
+        "categoryName": "Whitepaper ve E-Kitap Yazımı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-editorial"
+        ]
+      },
+      {
+        "categorySlug": "yazilim-ve-arayuz-yerellestirmesi-i18n",
+        "categoryName": "Yazılım ve Arayüz Yerelleştirmesi (I18n)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-editorial"
+        ]
+      }
+    ],
+    "reklam-ve-satis-metni-yazarligi": [
+      {
+        "categorySlug": "hayalet-yazarlik-ve-liderlik-makaleleri",
+        "categoryName": "Hayalet Yazarlık ve Liderlik Makaleleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "copy-content"
+        ]
+      },
+      {
+        "categorySlug": "seo-uyumlu-blog-ve-makale-yazarligi",
+        "categoryName": "SEO Uyumlu Blog ve Makale Yazarlığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "copy-content"
+        ]
+      },
+      {
+        "categorySlug": "icerik-pazarlamasi-ve-donusum-hunisi",
+        "categoryName": "İçerik Pazarlaması ve Dönüşüm Hunisi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "copy-content"
+        ]
+      }
+    ],
+    "seo-uyumlu-blog-ve-makale-yazarligi": [
+      {
+        "categorySlug": "icerik-pazarlamasi-ve-donusum-hunisi",
+        "categoryName": "İçerik Pazarlaması ve Dönüşüm Hunisi",
+        "score": 0.77,
+        "strength": "strong",
+        "sharedFamilies": [
+          "copy-content",
+          "organic-growth"
+        ]
+      },
+      {
+        "categorySlug": "arama-motoru-optimizasyonu-seo",
+        "categoryName": "Arama Motoru Optimizasyonu (SEO)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "organic-growth"
+        ]
+      },
+      {
+        "categorySlug": "hayalet-yazarlik-ve-liderlik-makaleleri",
+        "categoryName": "Hayalet Yazarlık ve Liderlik Makaleleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "copy-content"
+        ]
+      },
+      {
+        "categorySlug": "reklam-ve-satis-metni-yazarligi",
+        "categoryName": "Reklam ve Satış Metni Yazarlığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "copy-content"
+        ]
+      },
+      {
+        "categorySlug": "teknik-seo-ve-site-hizi-optimizasyonu",
+        "categoryName": "Teknik SEO ve Site Hızı Optimizasyonu",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "organic-growth"
+        ]
+      }
+    ],
+    "profesyonel-ceviri-ve-yerellestirme": [
+      {
+        "categorySlug": "ses-ve-video-desifre-destegi",
+        "categoryName": "Ses ve Video Deşifre Desteği",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "transcription-captioning",
+          "translation-localization"
+        ]
+      },
+      {
+        "categorySlug": "altyazi-transkripsiyon-ve-dinamik-metinler",
+        "categoryName": "Altyazı, Transkripsiyon ve Dinamik Metinler",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "transcription-captioning"
+        ]
+      },
+      {
+        "categorySlug": "hukuki-tibbi-ve-akademik-ceviri",
+        "categoryName": "Hukuki, Tıbbi ve Akademik Çeviri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "translation-localization"
+        ]
+      },
+      {
+        "categorySlug": "yazilim-ve-arayuz-yerellestirmesi-i18n",
+        "categoryName": "Yazılım ve Arayüz Yerelleştirmesi (I18n)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "translation-localization"
+        ]
+      }
+    ],
+    "editoryal-duzeltme-ve-redaksiyon": [
+      {
+        "categorySlug": "teknik-yazarlik-ve-dokumantasyon",
+        "categoryName": "Teknik Yazarlık ve Dokümantasyon",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-editorial"
+        ]
+      },
+      {
+        "categorySlug": "whitepaper-ve-e-kitap-yazimi",
+        "categoryName": "Whitepaper ve E-Kitap Yazımı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-editorial"
+        ]
+      },
+      {
+        "categorySlug": "yazilim-ve-arayuz-yerellestirmesi-i18n",
+        "categoryName": "Yazılım ve Arayüz Yerelleştirmesi (I18n)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-editorial"
+        ]
+      }
+    ],
+    "teknik-danismanlik": [
+      {
+        "categorySlug": "bt-sistem-ve-ag-yonetimi",
+        "categoryName": "BT, Sistem ve Ağ Yönetimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-support"
+        ]
+      },
+      {
+        "categorySlug": "bilgisayar-donanimi-ve-teknik-destek",
+        "categoryName": "Bilgisayar Donanımı ve Teknik Destek",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-support"
+        ]
+      },
+      {
+        "categorySlug": "diger-teknoloji-hizmetleri",
+        "categoryName": "Diğer Teknoloji Hizmetleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-support"
+        ]
+      },
+      {
+        "categorySlug": "girisim-stratejisi-ve-is-plani",
+        "categoryName": "Girişim Stratejisi ve İş Planı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "consulting-operations"
+        ]
+      },
+      {
+        "categorySlug": "proje-yonetimi-ve-cevik-danismanlik",
+        "categoryName": "Proje Yönetimi ve Çevik Danışmanlık",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "consulting-operations"
+        ]
+      },
+      {
+        "categorySlug": "surec-ve-operasyon-optimizasyonu",
+        "categoryName": "Süreç ve Operasyon Optimizasyonu",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "consulting-operations"
+        ]
+      }
+    ],
+    "finansal-modelleme-ve-fizibilite": [
+      {
+        "categorySlug": "girisim-degerleme-ve-yatirimci-metrikleri",
+        "categoryName": "Girişim Değerleme ve Yatırımcı Metrikleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "finance"
+        ]
+      },
+      {
+        "categorySlug": "girisim-stratejisi-ve-is-plani",
+        "categoryName": "Girişim Stratejisi ve İş Planı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "pitch-strategy"
+        ]
+      },
+      {
+        "categorySlug": "muhasebe-ve-on-muhasebe-yonetimi",
+        "categoryName": "Muhasebe ve Ön Muhasebe Yönetimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "finance"
+        ]
+      },
+      {
+        "categorySlug": "pazar-ve-rakip-arastirmasi",
+        "categoryName": "Pazar ve Rakip Araştırması",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "pitch-strategy"
+        ]
+      },
+      {
+        "categorySlug": "vergi-planlamasi-ve-mali-musavirlik",
+        "categoryName": "Vergi Planlaması ve Mali Müşavirlik",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "finance"
+        ]
+      },
+      {
+        "categorySlug": "yatirimci-sunumu-ve-pitch-deck",
+        "categoryName": "Yatırımcı Sunumu ve Pitch Deck",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "pitch-strategy"
+        ]
+      }
+    ],
+    "muhasebe-ve-on-muhasebe-yonetimi": [
+      {
+        "categorySlug": "finansal-modelleme-ve-fizibilite",
+        "categoryName": "Finansal Modelleme ve Fizibilite",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "finance"
+        ]
+      },
+      {
+        "categorySlug": "girisim-degerleme-ve-yatirimci-metrikleri",
+        "categoryName": "Girişim Değerleme ve Yatırımcı Metrikleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "finance"
+        ]
+      },
+      {
+        "categorySlug": "vergi-planlamasi-ve-mali-musavirlik",
+        "categoryName": "Vergi Planlaması ve Mali Müşavirlik",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "finance"
+        ]
+      }
+    ],
+    "vergi-planlamasi-ve-mali-musavirlik": [
+      {
+        "categorySlug": "finansal-modelleme-ve-fizibilite",
+        "categoryName": "Finansal Modelleme ve Fizibilite",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "finance"
+        ]
+      },
+      {
+        "categorySlug": "girisim-degerleme-ve-yatirimci-metrikleri",
+        "categoryName": "Girişim Değerleme ve Yatırımcı Metrikleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "finance"
+        ]
+      },
+      {
+        "categorySlug": "muhasebe-ve-on-muhasebe-yonetimi",
+        "categoryName": "Muhasebe ve Ön Muhasebe Yönetimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "finance"
+        ]
+      }
+    ],
+    "girisim-stratejisi-ve-is-plani": [
+      {
+        "categorySlug": "finansal-modelleme-ve-fizibilite",
+        "categoryName": "Finansal Modelleme ve Fizibilite",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "pitch-strategy"
+        ]
+      },
+      {
+        "categorySlug": "pazar-ve-rakip-arastirmasi",
+        "categoryName": "Pazar ve Rakip Araştırması",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "pitch-strategy"
+        ]
+      },
+      {
+        "categorySlug": "proje-yonetimi-ve-cevik-danismanlik",
+        "categoryName": "Proje Yönetimi ve Çevik Danışmanlık",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "consulting-operations"
+        ]
+      },
+      {
+        "categorySlug": "surec-ve-operasyon-optimizasyonu",
+        "categoryName": "Süreç ve Operasyon Optimizasyonu",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "consulting-operations"
+        ]
+      },
+      {
+        "categorySlug": "teknik-danismanlik",
+        "categoryName": "Teknik Danışmanlık",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "consulting-operations"
+        ]
+      },
+      {
+        "categorySlug": "yatirimci-sunumu-ve-pitch-deck",
+        "categoryName": "Yatırımcı Sunumu ve Pitch Deck",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "pitch-strategy"
+        ]
+      }
+    ],
+    "proje-yonetimi-ve-cevik-danismanlik": [
+      {
+        "categorySlug": "girisim-stratejisi-ve-is-plani",
+        "categoryName": "Girişim Stratejisi ve İş Planı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "consulting-operations"
+        ]
+      },
+      {
+        "categorySlug": "surec-ve-operasyon-optimizasyonu",
+        "categoryName": "Süreç ve Operasyon Optimizasyonu",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "consulting-operations"
+        ]
+      },
+      {
+        "categorySlug": "teknik-danismanlik",
+        "categoryName": "Teknik Danışmanlık",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "consulting-operations"
+        ]
+      }
+    ],
+    "sozlesme-hazirlama-ve-inceleme": [
+      {
+        "categorySlug": "saas-ve-uygulama-yasal-metinleri",
+        "categoryName": "SaaS ve Uygulama Yasal Metinleri",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "contracts",
+          "privacy-legal"
+        ]
+      },
+      {
+        "categorySlug": "marka-tescili-ve-fikri-mulkiyet",
+        "categoryName": "Marka Tescili ve Fikri Mülkiyet",
+        "score": 0.78,
+        "strength": "strong",
+        "sharedFamilies": [
+          "ip-legal"
+        ]
+      },
+      {
+        "categorySlug": "kvkk-gdpr-ve-veri-gizliligi-uyumu",
+        "categoryName": "KVKK, GDPR ve Veri Gizliliği Uyumu",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "privacy-legal"
+        ]
+      },
+      {
+        "categorySlug": "freelance-ve-yazilim-hizmet-sozlesmeleri",
+        "categoryName": "Freelance ve Yazılım Hizmet Sözleşmeleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "contracts"
+        ]
+      },
+      {
+        "categorySlug": "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma",
+        "categoryName": "Gizlilik Sözleşmesi (NDA) ve Ticari Sır Koruma",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "contracts"
+        ]
+      }
+    ],
+    "kvkk-gdpr-ve-veri-gizliligi-uyumu": [
+      {
+        "categorySlug": "saas-ve-uygulama-yasal-metinleri",
+        "categoryName": "SaaS ve Uygulama Yasal Metinleri",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "privacy-legal"
+        ]
+      },
+      {
+        "categorySlug": "sozlesme-hazirlama-ve-inceleme",
+        "categoryName": "Sözleşme Hazırlama ve İnceleme",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "privacy-legal"
+        ]
+      },
+      {
+        "categorySlug": "bt-sistem-ve-ag-yonetimi",
+        "categoryName": "BT, Sistem ve Ağ Yönetimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "security"
+        ]
+      },
+      {
+        "categorySlug": "penetrasyon-testi-ve-guvenlik-denetimi",
+        "categoryName": "Penetrasyon Testi ve Güvenlik Denetimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "security"
+        ]
+      },
+      {
+        "categorySlug": "siber-guvenlik",
+        "categoryName": "Siber Güvenlik",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "security"
+        ]
+      }
+    ],
+    "marka-tescili-ve-fikri-mulkiyet": [
+      {
+        "categorySlug": "sozlesme-hazirlama-ve-inceleme",
+        "categoryName": "Sözleşme Hazırlama ve İnceleme",
+        "score": 0.78,
+        "strength": "strong",
+        "sharedFamilies": [
+          "ip-legal"
+        ]
+      }
+    ],
+    "e-ticaret-ve-tuketici-hukuku": [
+      {
+        "categorySlug": "e-ticaret-yonetimi-ve-buyume",
+        "categoryName": "E-Ticaret Yönetimi ve Büyüme",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "consumer-ecommerce-law",
+          "ecommerce-legal"
+        ]
+      },
+      {
+        "categorySlug": "saas-ve-uygulama-yasal-metinleri",
+        "categoryName": "SaaS ve Uygulama Yasal Metinleri",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "consumer-ecommerce-law",
+          "ecommerce-legal"
+        ]
+      },
+      {
+        "categorySlug": "e-ticaret-sitesi-gelistirme",
+        "categoryName": "E-Ticaret Sitesi Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ecommerce-legal"
+        ]
+      }
+    ],
+    "oyun-gelistirme": [
+      {
+        "categorySlug": "oyun-mekanigi-ve-seviye-level-tasarimi",
+        "categoryName": "Oyun Mekaniği ve Seviye (Level) Tasarımı",
+        "score": 0.71,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art",
+          "game-development"
+        ]
+      },
+      {
+        "categorySlug": "bilgisayarli-goru-ve-goruntu-isleme",
+        "categoryName": "Bilgisayarlı Görü ve Görüntü İşleme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "spatial-xr"
+        ]
+      },
+      {
+        "categorySlug": "mekansal-bilisim-vr-ve-ar-gelistirme",
+        "categoryName": "Mekânsal Bilişim, VR & AR Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "spatial-xr"
+        ]
+      },
+      {
+        "categorySlug": "mobil-uygulama-gelistirme",
+        "categoryName": "Mobil Uygulama Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "spatial-xr"
+        ]
+      },
+      {
+        "categorySlug": "2d-oyun-sanati-ve-piksel-cizim",
+        "categoryName": "2D Oyun Sanatı ve Piksel Çizim",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      },
+      {
+        "categorySlug": "3d-oyun-varliklari-ve-karakter-modelleme",
+        "categoryName": "3D Oyun Varlıkları ve Karakter Modelleme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      },
+      {
+        "categorySlug": "karakter-tasarimi-ve-konsept-sanat",
+        "categoryName": "Karakter Tasarımı ve Konsept Sanat",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      },
+      {
+        "categorySlug": "mobil-oyun-gelistirme-hypercasual-casual",
+        "categoryName": "Mobil Oyun Geliştirme (Hypercasual / Casual)",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      },
+      {
+        "categorySlug": "unity-ile-oyun-gelistirme",
+        "categoryName": "Unity ile Oyun Geliştirme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      },
+      {
+        "categorySlug": "unreal-engine-ve-c-oyun-gelistirme",
+        "categoryName": "Unreal Engine & C++ Oyun Geliştirme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      }
+    ],
+    "mimari-proje-plan-ve-bim": [
+      {
+        "categorySlug": "dis-cephe-ve-peyzaj-3d-gorsellestirme",
+        "categoryName": "Dış Cephe ve Peyzaj 3D Görselleştirme",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "architecture-visualization"
+        ]
+      },
+      {
+        "categorySlug": "ic-mimari-ve-3d-fotogercekci-render",
+        "categoryName": "İç Mimari ve 3D Fotogerçekçi Render",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "architecture-visualization"
+        ]
+      }
+    ],
+    "ic-mimari-ve-3d-fotogercekci-render": [
+      {
+        "categorySlug": "dis-cephe-ve-peyzaj-3d-gorsellestirme",
+        "categoryName": "Dış Cephe ve Peyzaj 3D Görselleştirme",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "architecture-visualization"
+        ]
+      },
+      {
+        "categorySlug": "mimari-proje-plan-ve-bim",
+        "categoryName": "Mimari Proje, Plan ve BIM",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "architecture-visualization"
+        ]
+      }
+    ],
+    "3d-urun-modelleme-ve-cad": [
+      {
+        "categorySlug": "3d-baski-modelleme-ve-stl-hazirligi",
+        "categoryName": "3D Baskı Modelleme ve STL Hazırlığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-3d"
+        ]
+      },
+      {
+        "categorySlug": "3d-oyun-varliklari-ve-karakter-modelleme",
+        "categoryName": "3D Oyun Varlıkları ve Karakter Modelleme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-3d"
+        ]
+      },
+      {
+        "categorySlug": "3d-urun-animasyonu-ve-tanitim",
+        "categoryName": "3D Ürün Animasyonu ve Tanıtım",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-3d"
+        ]
+      }
+    ],
+    "yonetici-asistanligi-ve-takvim-yonetimi": [
+      {
+        "categorySlug": "musteri-hizmetleri-ve-canli-destek",
+        "categoryName": "Müşteri Hizmetleri ve Canlı Destek",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "assistant-operations"
+        ]
+      },
+      {
+        "categorySlug": "surec-ve-operasyon-optimizasyonu",
+        "categoryName": "Süreç ve Operasyon Optimizasyonu",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "assistant-operations"
+        ]
+      }
+    ],
+    "musteri-hizmetleri-ve-canli-destek": [
+      {
+        "categorySlug": "e-ticaret-magaza-ve-siparis-operasyon-destegi",
+        "categoryName": "E-Ticaret Mağaza ve Sipariş Operasyon Desteği",
+        "score": 0.78,
+        "strength": "strong",
+        "sharedFamilies": [
+          "support-ecommerce-ops"
+        ]
+      },
+      {
+        "categorySlug": "surec-ve-operasyon-optimizasyonu",
+        "categoryName": "Süreç ve Operasyon Optimizasyonu",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "assistant-operations"
+        ]
+      },
+      {
+        "categorySlug": "yonetici-asistanligi-ve-takvim-yonetimi",
+        "categoryName": "Yönetici Asistanlığı ve Takvim Yönetimi",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "assistant-operations"
+        ]
+      }
+    ],
+    "veri-girisi-ve-kapsamli-web-arastirmasi": [
+      {
+        "categorySlug": "pazar-ve-rakip-arastirmasi",
+        "categoryName": "Pazar ve Rakip Araştırması",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "research-data"
+        ]
+      },
+      {
+        "categorySlug": "potansiyel-musteri-ve-veri-zenginlestirme",
+        "categoryName": "Potansiyel Müşteri ve Veri Zenginleştirme",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "research-data"
+        ]
+      }
+    ],
+    "full-stack-web-gelistirme": [
+      {
+        "categorySlug": "backend-ve-api-muhendisligi",
+        "categoryName": "Backend ve API Mühendisliği",
+        "score": 0.77,
+        "strength": "strong",
+        "sharedFamilies": [
+          "backend-architecture",
+          "web-stack"
+        ]
+      },
+      {
+        "categorySlug": "frontend-ve-arayuz-muhendisligi",
+        "categoryName": "Frontend ve Arayüz Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-stack"
+        ]
+      },
+      {
+        "categorySlug": "mikroservis-ve-api-mimarisi",
+        "categoryName": "Mikroservis ve API Mimarisi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "backend-architecture"
+        ]
+      },
+      {
+        "categorySlug": "veritabani-muhendisligi",
+        "categoryName": "Veritabanı Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "backend-architecture"
+        ]
+      },
+      {
+        "categorySlug": "web-gelistirme",
+        "categoryName": "Web Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-stack"
+        ]
+      }
+    ],
+    "e-ticaret-sitesi-gelistirme": [
+      {
+        "categorySlug": "e-ticaret-yonetimi-ve-buyume",
+        "categoryName": "E-Ticaret Yönetimi ve Büyüme",
+        "score": 0.77,
+        "strength": "strong",
+        "sharedFamilies": [
+          "ecommerce-growth",
+          "ecommerce-legal"
+        ]
+      },
+      {
+        "categorySlug": "cms-ve-no-code-gelistirme",
+        "categoryName": "CMS ve No-Code Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-platforms"
+        ]
+      },
+      {
+        "categorySlug": "e-posta-pazarlamasi-ve-crm-akislari",
+        "categoryName": "E-Posta Pazarlaması ve CRM Akışları",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ecommerce-growth"
+        ]
+      },
+      {
+        "categorySlug": "e-ticaret-magaza-ve-siparis-operasyon-destegi",
+        "categoryName": "E-Ticaret Mağaza ve Sipariş Operasyon Desteği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ecommerce-growth"
+        ]
+      },
+      {
+        "categorySlug": "e-ticaret-ve-tuketici-hukuku",
+        "categoryName": "E-Ticaret ve Tüketici Hukuku",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ecommerce-legal"
+        ]
+      },
+      {
+        "categorySlug": "no-code-ve-low-code-gelistirme",
+        "categoryName": "No-Code & Low-Code Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-platforms"
+        ]
+      },
+      {
+        "categorySlug": "saas-ve-uygulama-yasal-metinleri",
+        "categoryName": "SaaS ve Uygulama Yasal Metinleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ecommerce-legal"
+        ]
+      },
+      {
+        "categorySlug": "web-gelistirme",
+        "categoryName": "Web Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-platforms"
+        ]
+      }
+    ],
+    "cms-ve-no-code-gelistirme": [
+      {
+        "categorySlug": "no-code-ve-low-code-gelistirme",
+        "categoryName": "No-Code & Low-Code Geliştirme",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "no-code-automation",
+          "web-platforms"
+        ]
+      },
+      {
+        "categorySlug": "otomasyon-ve-entegrasyonlar",
+        "categoryName": "Otomasyon ve Entegrasyonlar",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "no-code-automation"
+        ]
+      },
+      {
+        "categorySlug": "e-ticaret-sitesi-gelistirme",
+        "categoryName": "E-Ticaret Sitesi Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-platforms"
+        ]
+      },
+      {
+        "categorySlug": "web-gelistirme",
+        "categoryName": "Web Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "web-platforms"
+        ]
+      }
+    ],
+    "mikroservis-ve-api-mimarisi": [
+      {
+        "categorySlug": "bt-sistem-ve-ag-yonetimi",
+        "categoryName": "BT, Sistem ve Ağ Yönetimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "cloud-platform"
+        ]
+      },
+      {
+        "categorySlug": "backend-ve-api-muhendisligi",
+        "categoryName": "Backend ve API Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "backend-architecture"
+        ]
+      },
+      {
+        "categorySlug": "bulut-mimarisi-ve-altyapi-yonetimi",
+        "categoryName": "Bulut Mimarisi ve Altyapı Yönetimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "cloud-platform"
+        ]
+      },
+      {
+        "categorySlug": "devops-ve-bulut-bilisim",
+        "categoryName": "DevOps ve Bulut Bilişim",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "cloud-platform"
+        ]
+      },
+      {
+        "categorySlug": "full-stack-web-gelistirme",
+        "categoryName": "Full Stack Web Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "backend-architecture"
+        ]
+      },
+      {
+        "categorySlug": "veritabani-muhendisligi",
+        "categoryName": "Veritabanı Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "backend-architecture"
+        ]
+      }
+    ],
+    "penetrasyon-testi-ve-guvenlik-denetimi": [
+      {
+        "categorySlug": "bt-sistem-ve-ag-yonetimi",
+        "categoryName": "BT, Sistem ve Ağ Yönetimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "security"
+        ]
+      },
+      {
+        "categorySlug": "kvkk-gdpr-ve-veri-gizliligi-uyumu",
+        "categoryName": "KVKK, GDPR ve Veri Gizliliği Uyumu",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "security"
+        ]
+      },
+      {
+        "categorySlug": "siber-guvenlik",
+        "categoryName": "Siber Güvenlik",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "security"
+        ]
+      }
+    ],
+    "bulut-mimarisi-ve-altyapi-yonetimi": [
+      {
+        "categorySlug": "bt-sistem-ve-ag-yonetimi",
+        "categoryName": "BT, Sistem ve Ağ Yönetimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "cloud-platform"
+        ]
+      },
+      {
+        "categorySlug": "devops-ve-bulut-bilisim",
+        "categoryName": "DevOps ve Bulut Bilişim",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "cloud-platform"
+        ]
+      },
+      {
+        "categorySlug": "mikroservis-ve-api-mimarisi",
+        "categoryName": "Mikroservis ve API Mimarisi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "cloud-platform"
+        ]
+      }
+    ],
+    "llm-ve-gpt-uygulama-gelistirme": [
+      {
+        "categorySlug": "bilgisayarli-goru-ve-goruntu-isleme",
+        "categoryName": "Bilgisayarlı Görü ve Görüntü İşleme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ai-core"
+        ]
+      },
+      {
+        "categorySlug": "dogal-dil-isleme-ve-ses-teknolojileri",
+        "categoryName": "Doğal Dil İşleme ve Ses Teknolojileri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ai-core"
+        ]
+      },
+      {
+        "categorySlug": "otomasyon-ve-entegrasyonlar",
+        "categoryName": "Otomasyon ve Entegrasyonlar",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "agentic-ai"
+        ]
+      },
+      {
+        "categorySlug": "prompt-muhendisligi-ve-ai-danismanligi",
+        "categoryName": "Prompt Mühendisliği ve AI Danışmanlığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "agentic-ai"
+        ]
+      },
+      {
+        "categorySlug": "yapay-zeka-ajanlari-ve-is-akislari",
+        "categoryName": "Yapay Zeka Ajanları ve İş Akışları",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "agentic-ai"
+        ]
+      },
+      {
+        "categorySlug": "yapay-zeka-ve-makine-ogrenimi",
+        "categoryName": "Yapay Zeka ve Makine Öğrenimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ai-core"
+        ]
+      }
+    ],
+    "bilgisayarli-goru-ve-goruntu-isleme": [
+      {
+        "categorySlug": "dogal-dil-isleme-ve-ses-teknolojileri",
+        "categoryName": "Doğal Dil İşleme ve Ses Teknolojileri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ai-core"
+        ]
+      },
+      {
+        "categorySlug": "llm-ve-gpt-uygulama-gelistirme",
+        "categoryName": "LLM ve GPT Uygulama Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ai-core"
+        ]
+      },
+      {
+        "categorySlug": "mekansal-bilisim-vr-ve-ar-gelistirme",
+        "categoryName": "Mekânsal Bilişim, VR & AR Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "spatial-xr"
+        ]
+      },
+      {
+        "categorySlug": "mobil-uygulama-gelistirme",
+        "categoryName": "Mobil Uygulama Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "spatial-xr"
+        ]
+      },
+      {
+        "categorySlug": "oyun-gelistirme",
+        "categoryName": "Oyun Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "spatial-xr"
+        ]
+      },
+      {
+        "categorySlug": "yapay-zeka-ve-makine-ogrenimi",
+        "categoryName": "Yapay Zeka ve Makine Öğrenimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ai-core"
+        ]
+      }
+    ],
+    "dogal-dil-isleme-ve-ses-teknolojileri": [
+      {
+        "categorySlug": "bilgisayarli-goru-ve-goruntu-isleme",
+        "categoryName": "Bilgisayarlı Görü ve Görüntü İşleme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ai-core"
+        ]
+      },
+      {
+        "categorySlug": "llm-ve-gpt-uygulama-gelistirme",
+        "categoryName": "LLM ve GPT Uygulama Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ai-core"
+        ]
+      },
+      {
+        "categorySlug": "yapay-zeka-ve-makine-ogrenimi",
+        "categoryName": "Yapay Zeka ve Makine Öğrenimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ai-core"
+        ]
+      }
+    ],
+    "web-kazima-ve-veri-madenciligi": [
+      {
+        "categorySlug": "veri-muhendisligi-ve-analitik",
+        "categoryName": "Veri Mühendisliği ve Analitik",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "database-data"
+        ]
+      },
+      {
+        "categorySlug": "veritabani-muhendisligi",
+        "categoryName": "Veritabanı Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "database-data"
+        ]
+      },
+      {
+        "categorySlug": "is-zekasi-ve-dashboard-tasarimi",
+        "categoryName": "İş Zekası ve Dashboard Tasarımı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "database-data"
+        ]
+      }
+    ],
+    "web-sitesi-ui-ux-tasarimi": [
+      {
+        "categorySlug": "tasarim-sistemleri-design-systems",
+        "categoryName": "Tasarım Sistemleri (Design Systems)",
+        "score": 0.77,
+        "strength": "strong",
+        "sharedFamilies": [
+          "frontend-product-design",
+          "product-design"
+        ]
+      },
+      {
+        "categorySlug": "ui-ux-tasarim",
+        "categoryName": "UI/UX Tasarım",
+        "score": 0.77,
+        "strength": "strong",
+        "sharedFamilies": [
+          "frontend-product-design",
+          "product-design"
+        ]
+      },
+      {
+        "categorySlug": "frontend-ve-arayuz-muhendisligi",
+        "categoryName": "Frontend ve Arayüz Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "frontend-product-design"
+        ]
+      },
+      {
+        "categorySlug": "mobil-uygulama-ui-ux-tasarimi",
+        "categoryName": "Mobil Uygulama UI/UX Tasarımı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-design"
+        ]
+      }
+    ],
+    "mobil-uygulama-ui-ux-tasarimi": [
+      {
+        "categorySlug": "mobil-uygulama-gelistirme",
+        "categoryName": "Mobil Uygulama Geliştirme",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "mobile-product"
+        ]
+      },
+      {
+        "categorySlug": "yazilim-testi-ve-kalite-guvencesi",
+        "categoryName": "Yazılım Testi ve Kalite Güvencesi",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "mobile-product"
+        ]
+      },
+      {
+        "categorySlug": "tasarim-sistemleri-design-systems",
+        "categoryName": "Tasarım Sistemleri (Design Systems)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-design"
+        ]
+      },
+      {
+        "categorySlug": "ui-ux-tasarim",
+        "categoryName": "UI/UX Tasarım",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-design"
+        ]
+      },
+      {
+        "categorySlug": "web-sitesi-ui-ux-tasarimi",
+        "categoryName": "Web Sitesi UI/UX Tasarımı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-design"
+        ]
+      }
+    ],
+    "ikon-ve-tipografi-tasarimi": [
+      {
+        "categorySlug": "ambalaj-etiket-ve-baski-tasarimi",
+        "categoryName": "Ambalaj, Etiket ve Baskı Tasarımı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "brand-identity"
+        ]
+      },
+      {
+        "categorySlug": "logo-ve-kurumsal-kimlik",
+        "categoryName": "Logo ve Kurumsal Kimlik",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "brand-identity"
+        ]
+      },
+      {
+        "categorySlug": "illustrasyon-ve-vektorel-cizim",
+        "categoryName": "İllüstrasyon ve Vektörel Çizim",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "brand-identity"
+        ]
+      }
+    ],
+    "karakter-tasarimi-ve-konsept-sanat": [
+      {
+        "categorySlug": "2d-oyun-sanati-ve-piksel-cizim",
+        "categoryName": "2D Oyun Sanatı ve Piksel Çizim",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      },
+      {
+        "categorySlug": "3d-oyun-varliklari-ve-karakter-modelleme",
+        "categoryName": "3D Oyun Varlıkları ve Karakter Modelleme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      },
+      {
+        "categorySlug": "oyun-gelistirme",
+        "categoryName": "Oyun Geliştirme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      },
+      {
+        "categorySlug": "oyun-mekanigi-ve-seviye-level-tasarimi",
+        "categoryName": "Oyun Mekaniği ve Seviye (Level) Tasarımı",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      }
+    ],
+    "fotograf-duzenleme-ve-retouching": [
+      {
+        "categorySlug": "sosyal-medya-ve-reklam-gorselleri",
+        "categoryName": "Sosyal Medya ve Reklam Görselleri",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "photo-visual"
+        ]
+      },
+      {
+        "categorySlug": "illustrasyon-ve-vektorel-cizim",
+        "categoryName": "İllüstrasyon ve Vektörel Çizim",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "photo-visual"
+        ]
+      }
+    ],
+    "teknik-seo-ve-site-hizi-optimizasyonu": [
+      {
+        "categorySlug": "arama-motoru-optimizasyonu-seo",
+        "categoryName": "Arama Motoru Optimizasyonu (SEO)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "organic-growth"
+        ]
+      },
+      {
+        "categorySlug": "seo-uyumlu-blog-ve-makale-yazarligi",
+        "categoryName": "SEO Uyumlu Blog ve Makale Yazarlığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "organic-growth"
+        ]
+      },
+      {
+        "categorySlug": "icerik-pazarlamasi-ve-donusum-hunisi",
+        "categoryName": "İçerik Pazarlaması ve Dönüşüm Hunisi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "organic-growth"
+        ]
+      }
+    ],
+    "tiktok-ve-dikey-video-reklamciligi": [
+      {
+        "categorySlug": "sosyal-medya-reklamciligi",
+        "categoryName": "Sosyal Medya Reklamcılığı",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "paid-acquisition",
+          "social-growth"
+        ]
+      },
+      {
+        "categorySlug": "sosyal-medya-ve-reklam-gorselleri",
+        "categoryName": "Sosyal Medya ve Reklam Görselleri",
+        "score": 0.77,
+        "strength": "strong",
+        "sharedFamilies": [
+          "social-creative",
+          "social-growth"
+        ]
+      },
+      {
+        "categorySlug": "google-reklamlari-sem-ve-ppc",
+        "categoryName": "Google Reklamları (SEM & PPC)",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "paid-acquisition"
+        ]
+      },
+      {
+        "categorySlug": "kisa-format-video-reels-tiktok-shorts",
+        "categoryName": "Kısa Format Video (Reels, TikTok, Shorts)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "social-creative"
+        ]
+      },
+      {
+        "categorySlug": "sosyal-medya-yonetimi-ve-stratejisi",
+        "categoryName": "Sosyal Medya Yönetimi ve Stratejisi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "social-growth"
+        ]
+      },
+      {
+        "categorySlug": "illustrasyon-ve-vektorel-cizim",
+        "categoryName": "İllüstrasyon ve Vektörel Çizim",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "social-creative"
+        ]
+      }
+    ],
+    "b2b-buyume-ve-linkedin-lead-generation": [
+      {
+        "categorySlug": "pazar-ve-rakip-arastirmasi",
+        "categoryName": "Pazar ve Rakip Araştırması",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "lead-generation"
+        ]
+      },
+      {
+        "categorySlug": "potansiyel-musteri-ve-veri-zenginlestirme",
+        "categoryName": "Potansiyel Müşteri ve Veri Zenginleştirme",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "lead-generation"
+        ]
+      }
+    ],
+    "icerik-pazarlamasi-ve-donusum-hunisi": [
+      {
+        "categorySlug": "seo-uyumlu-blog-ve-makale-yazarligi",
+        "categoryName": "SEO Uyumlu Blog ve Makale Yazarlığı",
+        "score": 0.77,
+        "strength": "strong",
+        "sharedFamilies": [
+          "copy-content",
+          "organic-growth"
+        ]
+      },
+      {
+        "categorySlug": "arama-motoru-optimizasyonu-seo",
+        "categoryName": "Arama Motoru Optimizasyonu (SEO)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "organic-growth"
+        ]
+      },
+      {
+        "categorySlug": "hayalet-yazarlik-ve-liderlik-makaleleri",
+        "categoryName": "Hayalet Yazarlık ve Liderlik Makaleleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "copy-content"
+        ]
+      },
+      {
+        "categorySlug": "reklam-ve-satis-metni-yazarligi",
+        "categoryName": "Reklam ve Satış Metni Yazarlığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "copy-content"
+        ]
+      },
+      {
+        "categorySlug": "teknik-seo-ve-site-hizi-optimizasyonu",
+        "categoryName": "Teknik SEO ve Site Hızı Optimizasyonu",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "organic-growth"
+        ]
+      }
+    ],
+    "video-renk-duzenleme-color-grading": [
+      {
+        "categorySlug": "altyazi-transkripsiyon-ve-dinamik-metinler",
+        "categoryName": "Altyazı, Transkripsiyon ve Dinamik Metinler",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "video-post"
+        ]
+      },
+      {
+        "categorySlug": "kisa-format-video-reels-tiktok-shorts",
+        "categoryName": "Kısa Format Video (Reels, TikTok, Shorts)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "video-post"
+        ]
+      },
+      {
+        "categorySlug": "youtube-ve-uzun-format-video-kurgusu",
+        "categoryName": "YouTube ve Uzun Format Video Kurgusu",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "video-post"
+        ]
+      }
+    ],
+    "3d-urun-animasyonu-ve-tanitim": [
+      {
+        "categorySlug": "hareketli-grafik-motion-graphics",
+        "categoryName": "Hareketli Grafik (Motion Graphics)",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "motion-3d"
+        ]
+      },
+      {
+        "categorySlug": "kisa-format-video-reels-tiktok-shorts",
+        "categoryName": "Kısa Format Video (Reels, TikTok, Shorts)",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "motion-3d"
+        ]
+      },
+      {
+        "categorySlug": "3d-baski-modelleme-ve-stl-hazirligi",
+        "categoryName": "3D Baskı Modelleme ve STL Hazırlığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-3d"
+        ]
+      },
+      {
+        "categorySlug": "3d-oyun-varliklari-ve-karakter-modelleme",
+        "categoryName": "3D Oyun Varlıkları ve Karakter Modelleme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-3d"
+        ]
+      },
+      {
+        "categorySlug": "3d-urun-modelleme-ve-cad",
+        "categoryName": "3D Ürün Modelleme ve CAD",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-3d"
+        ]
+      }
+    ],
+    "altyazi-transkripsiyon-ve-dinamik-metinler": [
+      {
+        "categorySlug": "profesyonel-ceviri-ve-yerellestirme",
+        "categoryName": "Profesyonel Çeviri ve Yerelleştirme",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "transcription-captioning"
+        ]
+      },
+      {
+        "categorySlug": "ses-ve-video-desifre-destegi",
+        "categoryName": "Ses ve Video Deşifre Desteği",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "transcription-captioning"
+        ]
+      },
+      {
+        "categorySlug": "kisa-format-video-reels-tiktok-shorts",
+        "categoryName": "Kısa Format Video (Reels, TikTok, Shorts)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "video-post"
+        ]
+      },
+      {
+        "categorySlug": "video-renk-duzenleme-color-grading",
+        "categoryName": "Video Renk Düzenleme (Color Grading)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "video-post"
+        ]
+      },
+      {
+        "categorySlug": "youtube-ve-uzun-format-video-kurgusu",
+        "categoryName": "YouTube ve Uzun Format Video Kurgusu",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "video-post"
+        ]
+      }
+    ],
+    "ses-tasarimi-ve-efektleri-sfx": [
+      {
+        "categorySlug": "muzik-produksiyonu-ve-beatmaking",
+        "categoryName": "Müzik Prodüksiyonu ve Beatmaking",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "audio-production",
+          "game-audio"
+        ]
+      },
+      {
+        "categorySlug": "oyun-sesleri-ve-muzik-produksiyonu",
+        "categoryName": "Oyun Sesleri ve Müzik Prodüksiyonu",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "audio-production",
+          "game-audio"
+        ]
+      },
+      {
+        "categorySlug": "podcast-duzenleme-ve-ses-muhendisligi",
+        "categoryName": "Podcast Düzenleme ve Ses Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "audio-production"
+        ]
+      }
+    ],
+    "muzik-produksiyonu-ve-beatmaking": [
+      {
+        "categorySlug": "oyun-sesleri-ve-muzik-produksiyonu",
+        "categoryName": "Oyun Sesleri ve Müzik Prodüksiyonu",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "audio-production",
+          "game-audio"
+        ]
+      },
+      {
+        "categorySlug": "ses-tasarimi-ve-efektleri-sfx",
+        "categoryName": "Ses Tasarımı ve Efektleri (SFX)",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "audio-production",
+          "game-audio"
+        ]
+      },
+      {
+        "categorySlug": "podcast-duzenleme-ve-ses-muhendisligi",
+        "categoryName": "Podcast Düzenleme ve Ses Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "audio-production"
+        ]
+      }
+    ],
+    "yazilim-ve-arayuz-yerellestirmesi-i18n": [
+      {
+        "categorySlug": "editoryal-duzeltme-ve-redaksiyon",
+        "categoryName": "Editoryal Düzeltme ve Redaksiyon",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-editorial"
+        ]
+      },
+      {
+        "categorySlug": "hukuki-tibbi-ve-akademik-ceviri",
+        "categoryName": "Hukuki, Tıbbi ve Akademik Çeviri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "translation-localization"
+        ]
+      },
+      {
+        "categorySlug": "profesyonel-ceviri-ve-yerellestirme",
+        "categoryName": "Profesyonel Çeviri ve Yerelleştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "translation-localization"
+        ]
+      },
+      {
+        "categorySlug": "ses-ve-video-desifre-destegi",
+        "categoryName": "Ses ve Video Deşifre Desteği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "translation-localization"
+        ]
+      },
+      {
+        "categorySlug": "teknik-yazarlik-ve-dokumantasyon",
+        "categoryName": "Teknik Yazarlık ve Dokümantasyon",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-editorial"
+        ]
+      },
+      {
+        "categorySlug": "whitepaper-ve-e-kitap-yazimi",
+        "categoryName": "Whitepaper ve E-Kitap Yazımı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-editorial"
+        ]
+      }
+    ],
+    "hukuki-tibbi-ve-akademik-ceviri": [
+      {
+        "categorySlug": "profesyonel-ceviri-ve-yerellestirme",
+        "categoryName": "Profesyonel Çeviri ve Yerelleştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "translation-localization"
+        ]
+      },
+      {
+        "categorySlug": "ses-ve-video-desifre-destegi",
+        "categoryName": "Ses ve Video Deşifre Desteği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "translation-localization"
+        ]
+      },
+      {
+        "categorySlug": "yazilim-ve-arayuz-yerellestirmesi-i18n",
+        "categoryName": "Yazılım ve Arayüz Yerelleştirmesi (I18n)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "translation-localization"
+        ]
+      }
+    ],
+    "whitepaper-ve-e-kitap-yazimi": [
+      {
+        "categorySlug": "editoryal-duzeltme-ve-redaksiyon",
+        "categoryName": "Editoryal Düzeltme ve Redaksiyon",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-editorial"
+        ]
+      },
+      {
+        "categorySlug": "teknik-yazarlik-ve-dokumantasyon",
+        "categoryName": "Teknik Yazarlık ve Dokümantasyon",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-editorial"
+        ]
+      },
+      {
+        "categorySlug": "yazilim-ve-arayuz-yerellestirmesi-i18n",
+        "categoryName": "Yazılım ve Arayüz Yerelleştirmesi (I18n)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "technical-editorial"
+        ]
+      }
+    ],
+    "hayalet-yazarlik-ve-liderlik-makaleleri": [
+      {
+        "categorySlug": "reklam-ve-satis-metni-yazarligi",
+        "categoryName": "Reklam ve Satış Metni Yazarlığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "copy-content"
+        ]
+      },
+      {
+        "categorySlug": "seo-uyumlu-blog-ve-makale-yazarligi",
+        "categoryName": "SEO Uyumlu Blog ve Makale Yazarlığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "copy-content"
+        ]
+      },
+      {
+        "categorySlug": "icerik-pazarlamasi-ve-donusum-hunisi",
+        "categoryName": "İçerik Pazarlaması ve Dönüşüm Hunisi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "copy-content"
+        ]
+      }
+    ],
+    "pazar-ve-rakip-arastirmasi": [
+      {
+        "categorySlug": "potansiyel-musteri-ve-veri-zenginlestirme",
+        "categoryName": "Potansiyel Müşteri ve Veri Zenginleştirme",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "lead-generation",
+          "research-data"
+        ]
+      },
+      {
+        "categorySlug": "b2b-buyume-ve-linkedin-lead-generation",
+        "categoryName": "B2B Büyüme ve LinkedIn Lead Generation",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "lead-generation"
+        ]
+      },
+      {
+        "categorySlug": "veri-girisi-ve-kapsamli-web-arastirmasi",
+        "categoryName": "Veri Girişi ve Kapsamlı Web Araştırması",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "research-data"
+        ]
+      },
+      {
+        "categorySlug": "finansal-modelleme-ve-fizibilite",
+        "categoryName": "Finansal Modelleme ve Fizibilite",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "pitch-strategy"
+        ]
+      },
+      {
+        "categorySlug": "girisim-stratejisi-ve-is-plani",
+        "categoryName": "Girişim Stratejisi ve İş Planı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "pitch-strategy"
+        ]
+      },
+      {
+        "categorySlug": "yatirimci-sunumu-ve-pitch-deck",
+        "categoryName": "Yatırımcı Sunumu ve Pitch Deck",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "pitch-strategy"
+        ]
+      }
+    ],
+    "girisim-degerleme-ve-yatirimci-metrikleri": [
+      {
+        "categorySlug": "finansal-modelleme-ve-fizibilite",
+        "categoryName": "Finansal Modelleme ve Fizibilite",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "finance"
+        ]
+      },
+      {
+        "categorySlug": "muhasebe-ve-on-muhasebe-yonetimi",
+        "categoryName": "Muhasebe ve Ön Muhasebe Yönetimi",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "finance"
+        ]
+      },
+      {
+        "categorySlug": "vergi-planlamasi-ve-mali-musavirlik",
+        "categoryName": "Vergi Planlaması ve Mali Müşavirlik",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "finance"
+        ]
+      }
+    ],
+    "surec-ve-operasyon-optimizasyonu": [
+      {
+        "categorySlug": "e-posta-pazarlamasi-ve-crm-akislari",
+        "categoryName": "E-Posta Pazarlaması ve CRM Akışları",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "automation-ops"
+        ]
+      },
+      {
+        "categorySlug": "musteri-hizmetleri-ve-canli-destek",
+        "categoryName": "Müşteri Hizmetleri ve Canlı Destek",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "assistant-operations"
+        ]
+      },
+      {
+        "categorySlug": "otomasyon-ve-entegrasyonlar",
+        "categoryName": "Otomasyon ve Entegrasyonlar",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "automation-ops"
+        ]
+      },
+      {
+        "categorySlug": "yonetici-asistanligi-ve-takvim-yonetimi",
+        "categoryName": "Yönetici Asistanlığı ve Takvim Yönetimi",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "assistant-operations"
+        ]
+      },
+      {
+        "categorySlug": "girisim-stratejisi-ve-is-plani",
+        "categoryName": "Girişim Stratejisi ve İş Planı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "consulting-operations"
+        ]
+      },
+      {
+        "categorySlug": "proje-yonetimi-ve-cevik-danismanlik",
+        "categoryName": "Proje Yönetimi ve Çevik Danışmanlık",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "consulting-operations"
+        ]
+      },
+      {
+        "categorySlug": "teknik-danismanlik",
+        "categoryName": "Teknik Danışmanlık",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "consulting-operations"
+        ]
+      }
+    ],
+    "insan-kaynaklari-ve-yetenek-avciligi": [],
+    "online-egitim-ozel-ders-ve-mentorluk": [],
+    "freelance-ve-yazilim-hizmet-sozlesmeleri": [
+      {
+        "categorySlug": "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma",
+        "categoryName": "Gizlilik Sözleşmesi (NDA) ve Ticari Sır Koruma",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "contracts"
+        ]
+      },
+      {
+        "categorySlug": "saas-ve-uygulama-yasal-metinleri",
+        "categoryName": "SaaS ve Uygulama Yasal Metinleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "contracts"
+        ]
+      },
+      {
+        "categorySlug": "sozlesme-hazirlama-ve-inceleme",
+        "categoryName": "Sözleşme Hazırlama ve İnceleme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "contracts"
+        ]
+      }
+    ],
+    "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma": [
+      {
+        "categorySlug": "freelance-ve-yazilim-hizmet-sozlesmeleri",
+        "categoryName": "Freelance ve Yazılım Hizmet Sözleşmeleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "contracts"
+        ]
+      },
+      {
+        "categorySlug": "saas-ve-uygulama-yasal-metinleri",
+        "categoryName": "SaaS ve Uygulama Yasal Metinleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "contracts"
+        ]
+      },
+      {
+        "categorySlug": "sozlesme-hazirlama-ve-inceleme",
+        "categoryName": "Sözleşme Hazırlama ve İnceleme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "contracts"
+        ]
+      }
+    ],
+    "saas-ve-uygulama-yasal-metinleri": [
+      {
+        "categorySlug": "e-ticaret-yonetimi-ve-buyume",
+        "categoryName": "E-Ticaret Yönetimi ve Büyüme",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "consumer-ecommerce-law",
+          "ecommerce-legal"
+        ]
+      },
+      {
+        "categorySlug": "e-ticaret-ve-tuketici-hukuku",
+        "categoryName": "E-Ticaret ve Tüketici Hukuku",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "consumer-ecommerce-law",
+          "ecommerce-legal"
+        ]
+      },
+      {
+        "categorySlug": "sozlesme-hazirlama-ve-inceleme",
+        "categoryName": "Sözleşme Hazırlama ve İnceleme",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "contracts",
+          "privacy-legal"
+        ]
+      },
+      {
+        "categorySlug": "kvkk-gdpr-ve-veri-gizliligi-uyumu",
+        "categoryName": "KVKK, GDPR ve Veri Gizliliği Uyumu",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "privacy-legal"
+        ]
+      },
+      {
+        "categorySlug": "e-ticaret-sitesi-gelistirme",
+        "categoryName": "E-Ticaret Sitesi Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ecommerce-legal"
+        ]
+      },
+      {
+        "categorySlug": "freelance-ve-yazilim-hizmet-sozlesmeleri",
+        "categoryName": "Freelance ve Yazılım Hizmet Sözleşmeleri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "contracts"
+        ]
+      },
+      {
+        "categorySlug": "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma",
+        "categoryName": "Gizlilik Sözleşmesi (NDA) ve Ticari Sır Koruma",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "contracts"
+        ]
+      }
+    ],
+    "unity-ile-oyun-gelistirme": [
+      {
+        "categorySlug": "mobil-oyun-gelistirme-hypercasual-casual",
+        "categoryName": "Mobil Oyun Geliştirme (Hypercasual / Casual)",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      },
+      {
+        "categorySlug": "oyun-gelistirme",
+        "categoryName": "Oyun Geliştirme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      },
+      {
+        "categorySlug": "oyun-mekanigi-ve-seviye-level-tasarimi",
+        "categoryName": "Oyun Mekaniği ve Seviye (Level) Tasarımı",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      },
+      {
+        "categorySlug": "unreal-engine-ve-c-oyun-gelistirme",
+        "categoryName": "Unreal Engine & C++ Oyun Geliştirme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      }
+    ],
+    "unreal-engine-ve-c-oyun-gelistirme": [
+      {
+        "categorySlug": "mobil-oyun-gelistirme-hypercasual-casual",
+        "categoryName": "Mobil Oyun Geliştirme (Hypercasual / Casual)",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      },
+      {
+        "categorySlug": "oyun-gelistirme",
+        "categoryName": "Oyun Geliştirme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      },
+      {
+        "categorySlug": "oyun-mekanigi-ve-seviye-level-tasarimi",
+        "categoryName": "Oyun Mekaniği ve Seviye (Level) Tasarımı",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      },
+      {
+        "categorySlug": "unity-ile-oyun-gelistirme",
+        "categoryName": "Unity ile Oyun Geliştirme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      }
+    ],
+    "mobil-oyun-gelistirme-hypercasual-casual": [
+      {
+        "categorySlug": "oyun-gelistirme",
+        "categoryName": "Oyun Geliştirme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      },
+      {
+        "categorySlug": "oyun-mekanigi-ve-seviye-level-tasarimi",
+        "categoryName": "Oyun Mekaniği ve Seviye (Level) Tasarımı",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      },
+      {
+        "categorySlug": "unity-ile-oyun-gelistirme",
+        "categoryName": "Unity ile Oyun Geliştirme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      },
+      {
+        "categorySlug": "unreal-engine-ve-c-oyun-gelistirme",
+        "categoryName": "Unreal Engine & C++ Oyun Geliştirme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      }
+    ],
+    "2d-oyun-sanati-ve-piksel-cizim": [
+      {
+        "categorySlug": "3d-oyun-varliklari-ve-karakter-modelleme",
+        "categoryName": "3D Oyun Varlıkları ve Karakter Modelleme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      },
+      {
+        "categorySlug": "karakter-tasarimi-ve-konsept-sanat",
+        "categoryName": "Karakter Tasarımı ve Konsept Sanat",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      },
+      {
+        "categorySlug": "oyun-gelistirme",
+        "categoryName": "Oyun Geliştirme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      },
+      {
+        "categorySlug": "oyun-mekanigi-ve-seviye-level-tasarimi",
+        "categoryName": "Oyun Mekaniği ve Seviye (Level) Tasarımı",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      }
+    ],
+    "3d-oyun-varliklari-ve-karakter-modelleme": [
+      {
+        "categorySlug": "3d-baski-modelleme-ve-stl-hazirligi",
+        "categoryName": "3D Baskı Modelleme ve STL Hazırlığı",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-3d"
+        ]
+      },
+      {
+        "categorySlug": "3d-urun-animasyonu-ve-tanitim",
+        "categoryName": "3D Ürün Animasyonu ve Tanıtım",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-3d"
+        ]
+      },
+      {
+        "categorySlug": "3d-urun-modelleme-ve-cad",
+        "categoryName": "3D Ürün Modelleme ve CAD",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-3d"
+        ]
+      },
+      {
+        "categorySlug": "2d-oyun-sanati-ve-piksel-cizim",
+        "categoryName": "2D Oyun Sanatı ve Piksel Çizim",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      },
+      {
+        "categorySlug": "karakter-tasarimi-ve-konsept-sanat",
+        "categoryName": "Karakter Tasarımı ve Konsept Sanat",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      },
+      {
+        "categorySlug": "oyun-gelistirme",
+        "categoryName": "Oyun Geliştirme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      },
+      {
+        "categorySlug": "oyun-mekanigi-ve-seviye-level-tasarimi",
+        "categoryName": "Oyun Mekaniği ve Seviye (Level) Tasarımı",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      }
+    ],
+    "oyun-mekanigi-ve-seviye-level-tasarimi": [
+      {
+        "categorySlug": "oyun-gelistirme",
+        "categoryName": "Oyun Geliştirme",
+        "score": 0.71,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art",
+          "game-development"
+        ]
+      },
+      {
+        "categorySlug": "2d-oyun-sanati-ve-piksel-cizim",
+        "categoryName": "2D Oyun Sanatı ve Piksel Çizim",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      },
+      {
+        "categorySlug": "3d-oyun-varliklari-ve-karakter-modelleme",
+        "categoryName": "3D Oyun Varlıkları ve Karakter Modelleme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      },
+      {
+        "categorySlug": "karakter-tasarimi-ve-konsept-sanat",
+        "categoryName": "Karakter Tasarımı ve Konsept Sanat",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-art"
+        ]
+      },
+      {
+        "categorySlug": "mobil-oyun-gelistirme-hypercasual-casual",
+        "categoryName": "Mobil Oyun Geliştirme (Hypercasual / Casual)",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      },
+      {
+        "categorySlug": "unity-ile-oyun-gelistirme",
+        "categoryName": "Unity ile Oyun Geliştirme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      },
+      {
+        "categorySlug": "unreal-engine-ve-c-oyun-gelistirme",
+        "categoryName": "Unreal Engine & C++ Oyun Geliştirme",
+        "score": 0.58,
+        "strength": "medium",
+        "sharedFamilies": [
+          "game-development"
+        ]
+      }
+    ],
+    "oyun-sesleri-ve-muzik-produksiyonu": [
+      {
+        "categorySlug": "muzik-produksiyonu-ve-beatmaking",
+        "categoryName": "Müzik Prodüksiyonu ve Beatmaking",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "audio-production",
+          "game-audio"
+        ]
+      },
+      {
+        "categorySlug": "ses-tasarimi-ve-efektleri-sfx",
+        "categoryName": "Ses Tasarımı ve Efektleri (SFX)",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "audio-production",
+          "game-audio"
+        ]
+      },
+      {
+        "categorySlug": "podcast-duzenleme-ve-ses-muhendisligi",
+        "categoryName": "Podcast Düzenleme ve Ses Mühendisliği",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "audio-production"
+        ]
+      }
+    ],
+    "dis-cephe-ve-peyzaj-3d-gorsellestirme": [
+      {
+        "categorySlug": "mimari-proje-plan-ve-bim",
+        "categoryName": "Mimari Proje, Plan ve BIM",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "architecture-visualization"
+        ]
+      },
+      {
+        "categorySlug": "ic-mimari-ve-3d-fotogercekci-render",
+        "categoryName": "İç Mimari ve 3D Fotogerçekçi Render",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "architecture-visualization"
+        ]
+      }
+    ],
+    "3d-baski-modelleme-ve-stl-hazirligi": [
+      {
+        "categorySlug": "3d-oyun-varliklari-ve-karakter-modelleme",
+        "categoryName": "3D Oyun Varlıkları ve Karakter Modelleme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-3d"
+        ]
+      },
+      {
+        "categorySlug": "3d-urun-animasyonu-ve-tanitim",
+        "categoryName": "3D Ürün Animasyonu ve Tanıtım",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-3d"
+        ]
+      },
+      {
+        "categorySlug": "3d-urun-modelleme-ve-cad",
+        "categoryName": "3D Ürün Modelleme ve CAD",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "product-3d"
+        ]
+      }
+    ],
+    "mekansal-bilisim-vr-ve-ar-gelistirme": [
+      {
+        "categorySlug": "bilgisayarli-goru-ve-goruntu-isleme",
+        "categoryName": "Bilgisayarlı Görü ve Görüntü İşleme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "spatial-xr"
+        ]
+      },
+      {
+        "categorySlug": "mobil-uygulama-gelistirme",
+        "categoryName": "Mobil Uygulama Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "spatial-xr"
+        ]
+      },
+      {
+        "categorySlug": "oyun-gelistirme",
+        "categoryName": "Oyun Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "spatial-xr"
+        ]
+      }
+    ],
+    "e-ticaret-magaza-ve-siparis-operasyon-destegi": [
+      {
+        "categorySlug": "musteri-hizmetleri-ve-canli-destek",
+        "categoryName": "Müşteri Hizmetleri ve Canlı Destek",
+        "score": 0.78,
+        "strength": "strong",
+        "sharedFamilies": [
+          "support-ecommerce-ops"
+        ]
+      },
+      {
+        "categorySlug": "e-posta-pazarlamasi-ve-crm-akislari",
+        "categoryName": "E-Posta Pazarlaması ve CRM Akışları",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ecommerce-growth"
+        ]
+      },
+      {
+        "categorySlug": "e-ticaret-sitesi-gelistirme",
+        "categoryName": "E-Ticaret Sitesi Geliştirme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ecommerce-growth"
+        ]
+      },
+      {
+        "categorySlug": "e-ticaret-yonetimi-ve-buyume",
+        "categoryName": "E-Ticaret Yönetimi ve Büyüme",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "ecommerce-growth"
+        ]
+      }
+    ],
+    "potansiyel-musteri-ve-veri-zenginlestirme": [
+      {
+        "categorySlug": "pazar-ve-rakip-arastirmasi",
+        "categoryName": "Pazar ve Rakip Araştırması",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "lead-generation",
+          "research-data"
+        ]
+      },
+      {
+        "categorySlug": "b2b-buyume-ve-linkedin-lead-generation",
+        "categoryName": "B2B Büyüme ve LinkedIn Lead Generation",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "lead-generation"
+        ]
+      },
+      {
+        "categorySlug": "veri-girisi-ve-kapsamli-web-arastirmasi",
+        "categoryName": "Veri Girişi ve Kapsamlı Web Araştırması",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "research-data"
+        ]
+      }
+    ],
+    "ses-ve-video-desifre-destegi": [
+      {
+        "categorySlug": "profesyonel-ceviri-ve-yerellestirme",
+        "categoryName": "Profesyonel Çeviri ve Yerelleştirme",
+        "score": 0.83,
+        "strength": "strong",
+        "sharedFamilies": [
+          "transcription-captioning",
+          "translation-localization"
+        ]
+      },
+      {
+        "categorySlug": "altyazi-transkripsiyon-ve-dinamik-metinler",
+        "categoryName": "Altyazı, Transkripsiyon ve Dinamik Metinler",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "transcription-captioning"
+        ]
+      },
+      {
+        "categorySlug": "podcast-duzenleme-ve-ses-muhendisligi",
+        "categoryName": "Podcast Düzenleme ve Ses Mühendisliği",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "voice-audio"
+        ]
+      },
+      {
+        "categorySlug": "seslendirme-ve-dublaj",
+        "categoryName": "Seslendirme ve Dublaj",
+        "score": 0.7,
+        "strength": "medium",
+        "sharedFamilies": [
+          "voice-audio"
+        ]
+      },
+      {
+        "categorySlug": "hukuki-tibbi-ve-akademik-ceviri",
+        "categoryName": "Hukuki, Tıbbi ve Akademik Çeviri",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "translation-localization"
+        ]
+      },
+      {
+        "categorySlug": "yazilim-ve-arayuz-yerellestirmesi-i18n",
+        "categoryName": "Yazılım ve Arayüz Yerelleştirmesi (I18n)",
+        "score": 0.64,
+        "strength": "medium",
+        "sharedFamilies": [
+          "translation-localization"
+        ]
+      }
+    ]
+  }
+}

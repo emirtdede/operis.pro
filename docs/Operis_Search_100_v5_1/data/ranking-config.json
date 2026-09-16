@@ -1,0 +1,39 @@
+{
+  "version": "4.0.0",
+  "weights": {
+    "exactCategoryName": 1.0,
+    "exactCanonicalTerm": 0.98,
+    "exactSearchTerm": 0.94,
+    "exactSkillTag": 0.9,
+    "prefixSearchTerm": 0.84,
+    "aliasExact": 0.8,
+    "serviceIntentPhrase": 0.78,
+    "fuzzySearchTerm": 0.6,
+    "queryCoverageBonusMax": 0.22,
+    "categorySpecificityBonusMax": 0.18,
+    "relatedCategoryPriorMax": 0.08,
+    "softNegativeContextMin": -0.25,
+    "popularityPriorMax": 0.06,
+    "personalizationPriorMax": 0.04
+  },
+  "rules": [
+    "Exact category/canonical matches outrank exact terms; exact terms outrank prefix; prefix outranks fuzzy.",
+    "Apply global term specificity from term-weights.json; common collision terms contribute less than unique terms.",
+    "Use query-token coverage as a positive signal.",
+    "Use disambiguation-rules.json only as soft context; never hard-filter unless hardExclusions explicitly contains a rule.",
+    "Single-token ambiguous queries may legitimately return multiple categories.",
+    "Related-category prior is small and may not overpower lexical relevance.",
+    "Popularity and personalization are bounded priors and may not overpower relevance.",
+    "Protected technical tokens must survive normalization.",
+    "Human-style gold benchmark is an independent release gate and must not be generated from the runtime taxonomy at test execution time.",
+    "Do not tune ranking to memorize benchmark strings; use benchmark failures to improve general rules/data."
+  ],
+  "tieBreakers": [
+    "exactMatchClass",
+    "queryCoverage",
+    "termSpecificity",
+    "categorySpecificity",
+    "boundedHistoricalCTR",
+    "stableCategoryId"
+  ]
+}

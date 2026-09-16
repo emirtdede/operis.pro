@@ -29,6 +29,13 @@ describe("Inngest Serverless Architecture Suite", () => {
         batchSize: 20,
       });
       expect(success).toBe(true);
+
+      const resolvedSuccess = await sendInngestEvent("operis/offer.resolved", {
+        offerId: "test-offer-1",
+        listingId: "test-listing-1",
+        status: "WITHDRAWN",
+      });
+      expect(resolvedSuccess).toBe(true);
     });
 
     it("handles unexpected errors during event send gracefully with fail-open", async () => {
@@ -83,10 +90,12 @@ describe("Inngest Serverless Architecture Suite", () => {
       expect(inngestFunctions).toContain(privacyExportRunnerJob);
     });
 
-    it("configures processOutboxJob with correct id and triggers", () => {
+    it("configures processOutboxJob with correct id, concurrency, and debounce", () => {
       const id =
         typeof processOutboxJob.id === "function" ? processOutboxJob.id() : processOutboxJob.id;
       expect(id).toBe("operis-process-outbox");
+      expect(processOutboxJob.opts.concurrency).toEqual({ limit: 1 });
+      expect(processOutboxJob.opts.debounce).toEqual({ period: "2s", timeout: "10s" });
     });
 
     it("configures maintenanceCronJob with correct id and triggers", () => {
@@ -97,12 +106,18 @@ describe("Inngest Serverless Architecture Suite", () => {
       expect(id).toBe("operis-scheduled-maintenance");
     });
 
-    it("configures staleOfferLifecycleJob with correct id and triggers", () => {
+    it("configures staleOfferLifecycleJob with correct id and cancelOn", () => {
       const id =
         typeof staleOfferLifecycleJob.id === "function"
           ? staleOfferLifecycleJob.id()
           : staleOfferLifecycleJob.id;
       expect(id).toBe("operis-stale-offer-lifecycle");
+      expect(staleOfferLifecycleJob.opts.cancelOn).toEqual([
+        {
+          event: "operis/offer.resolved",
+          match: "data.offerId",
+        },
+      ]);
     });
 
     it("configures privacyExportRunnerJob with correct id and triggers", () => {

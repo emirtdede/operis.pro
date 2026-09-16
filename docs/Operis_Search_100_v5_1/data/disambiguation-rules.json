@@ -1,0 +1,3567 @@
+{
+  "version": "4.0.0",
+  "description": "Soft contextual signals. No category-name-as-negative-term shortcuts.",
+  "categoriesBySlug": {
+    "web-gelistirme": {
+      "positiveContext": [
+        "internet sayfası",
+        "internet sitesi",
+        "kurumsal site",
+        "landing page",
+        "portal",
+        "responsive site",
+        "site geliştirme",
+        "site yaptırma"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "angular",
+          "towardCategorySlug": "frontend-ve-arayuz-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'accessibility'"
+        },
+        {
+          "term": "arayüz geliştirme",
+          "towardCategorySlug": "frontend-ve-arayuz-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'accessibility'"
+        },
+        {
+          "term": "api",
+          "towardCategorySlug": "backend-ve-api-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'rest api'"
+        },
+        {
+          "term": "api geliştirme",
+          "towardCategorySlug": "backend-ve-api-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'rest api'"
+        },
+        {
+          "term": ".net full stack",
+          "towardCategorySlug": "full-stack-web-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'rest api'"
+        },
+        {
+          "term": "full stack",
+          "towardCategorySlug": "full-stack-web-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'rest api'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "frontend-ve-arayuz-muhendisligi": {
+      "positiveContext": [
+        "angular",
+        "arayüz geliştirme",
+        "client side",
+        "front end",
+        "frontend",
+        "frontend developer",
+        "reactjs",
+        "responsive frontend"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "component design",
+          "towardCategorySlug": "tasarim-sistemleri-design-systems",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'accessibility'"
+        },
+        {
+          "term": "component library",
+          "towardCategorySlug": "tasarim-sistemleri-design-systems",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'accessibility'"
+        },
+        {
+          "term": "internet sayfası",
+          "towardCategorySlug": "web-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'accessibility'"
+        },
+        {
+          "term": "internet sitesi",
+          "towardCategorySlug": "web-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'accessibility'"
+        },
+        {
+          "term": "figma website",
+          "towardCategorySlug": "web-sitesi-ui-ux-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'accessibility'"
+        },
+        {
+          "term": "kurumsal site tasarımı",
+          "towardCategorySlug": "web-sitesi-ui-ux-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'accessibility'"
+        },
+        {
+          "term": ".net full stack",
+          "towardCategorySlug": "full-stack-web-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'ts'"
+        },
+        {
+          "term": "full stack",
+          "towardCategorySlug": "full-stack-web-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'ts'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "backend-ve-api-muhendisligi": {
+      "positiveContext": [
+        "api",
+        "api geliştirme",
+        "asp.net",
+        "back end",
+        "backend",
+        "backend developer",
+        "server side",
+        "spring boot"
+      ],
+      "softNegativeContext": [
+        {
+          "term": ".net full stack",
+          "towardCategorySlug": "full-stack-web-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'rest api'"
+        },
+        {
+          "term": "full stack",
+          "towardCategorySlug": "full-stack-web-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'rest api'"
+        },
+        {
+          "term": "internet sayfası",
+          "towardCategorySlug": "web-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'rest api'"
+        },
+        {
+          "term": "internet sitesi",
+          "towardCategorySlug": "web-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'rest api'"
+        },
+        {
+          "term": "desktop app",
+          "towardCategorySlug": "masaustu-yazilim-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'dotnet'"
+        },
+        {
+          "term": "desktop application",
+          "towardCategorySlug": "masaustu-yazilim-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'dotnet'"
+        },
+        {
+          "term": "api architecture",
+          "towardCategorySlug": "mikroservis-ve-api-mimarisi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'graphql'"
+        },
+        {
+          "term": "dağıtık sistem",
+          "towardCategorySlug": "mikroservis-ve-api-mimarisi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'graphql'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "mobil-uygulama-gelistirme": {
+      "positiveContext": [
+        "android uygulama",
+        "app geliştirme",
+        "cross platform",
+        "expo",
+        "flutter",
+        "hibrit uygulama",
+        "ios uygulama",
+        "iphone uygulama"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "masaustu-yazilim-gelistirme": {
+      "positiveContext": [
+        "desktop app",
+        "desktop application",
+        "electron",
+        "linux uygulaması",
+        "macos uygulaması",
+        "masaüstü uygulama",
+        "masaüstü yazılım",
+        "tauri"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "api",
+          "towardCategorySlug": "backend-ve-api-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'dotnet'"
+        },
+        {
+          "term": "api geliştirme",
+          "towardCategorySlug": "backend-ve-api-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'dotnet'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "devops-ve-bulut-bilisim": {
+      "positiveContext": [
+        "bulut",
+        "ci cd",
+        "cicd",
+        "cloud",
+        "cloud deployment",
+        "deployment",
+        "devops",
+        "sunucu kurulumu"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "aws mimarisi",
+          "towardCategorySlug": "bulut-mimarisi-ve-altyapi-yonetimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'docker'"
+        },
+        {
+          "term": "azure architecture",
+          "towardCategorySlug": "bulut-mimarisi-ve-altyapi-yonetimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'docker'"
+        },
+        {
+          "term": "api architecture",
+          "towardCategorySlug": "mikroservis-ve-api-mimarisi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'docker'"
+        },
+        {
+          "term": "dağıtık sistem",
+          "towardCategorySlug": "mikroservis-ve-api-mimarisi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'docker'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "veritabani-muhendisligi": {
+      "positiveContext": [
+        "database",
+        "database design",
+        "database tuning",
+        "mongodb",
+        "mssql",
+        "mysql",
+        "query optimization",
+        "redis"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "business intelligence",
+          "towardCategorySlug": "is-zekasi-ve-dashboard-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'sql'"
+        },
+        {
+          "term": "dashboard",
+          "towardCategorySlug": "is-zekasi-ve-dashboard-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'sql'"
+        },
+        {
+          "term": "airflow",
+          "towardCategorySlug": "veri-muhendisligi-ve-analitik",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'sql'"
+        },
+        {
+          "term": "bigquery",
+          "towardCategorySlug": "veri-muhendisligi-ve-analitik",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'sql'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "siber-guvenlik": {
+      "positiveContext": [
+        "bilgi güvenliği",
+        "cyber security",
+        "cybersecurity",
+        "güvenlik analizi",
+        "network security",
+        "secure coding",
+        "security audit",
+        "siem"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "yazilim-testi-ve-kalite-guvencesi": {
+      "positiveContext": [
+        "api test",
+        "cypress",
+        "e2e",
+        "integration test",
+        "manuel test",
+        "otomasyon testi",
+        "quality assurance",
+        "software testing"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "blokzincir-muhendisligi": {
+      "positiveContext": [
+        "akıllı sözleşme",
+        "blockchain",
+        "blokzincir",
+        "crypto development",
+        "dapp",
+        "ethereum",
+        "nft",
+        "smart contract"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "gomulu-sistemler-ve-iot": {
+      "positiveContext": [
+        "arduino",
+        "embedded systems",
+        "esp32",
+        "firmware",
+        "gömülü sistem",
+        "internet of things",
+        "iot",
+        "mikrodenetleyici"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "bt-sistem-ve-ag-yonetimi": {
+      "positiveContext": [
+        "active directory",
+        "ağ yönetimi",
+        "cisco",
+        "it support",
+        "linux server",
+        "network admin",
+        "sistem yönetimi",
+        "sunucu yönetimi"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "bilgisayar-donanimi-ve-teknik-destek": {
+      "positiveContext": [
+        "anakart",
+        "arıza tespiti",
+        "bilgisayar tamiri",
+        "driver kurulumu",
+        "format atma",
+        "hardware support",
+        "laptop tamiri",
+        "pc toplama"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "diger-teknoloji-hizmetleri": {
+      "positiveContext": [
+        "legacy modernization",
+        "migration",
+        "sistem entegrasyonu",
+        "sistem taşıma",
+        "software setup",
+        "teknik analiz",
+        "teknik çözüm",
+        "teknoloji danışmanlığı"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "no-code-ve-low-code-gelistirme": {
+      "positiveContext": [
+        "airtable",
+        "glide",
+        "hızlı mvp",
+        "low code",
+        "low-code",
+        "lowcode",
+        "no code",
+        "no-code"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "api entegrasyonu",
+          "towardCategorySlug": "otomasyon-ve-entegrasyonlar",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'api integration'"
+        },
+        {
+          "term": "automation",
+          "towardCategorySlug": "otomasyon-ve-entegrasyonlar",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'api integration'"
+        },
+        {
+          "term": "cms",
+          "towardCategorySlug": "cms-ve-no-code-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'bubble'"
+        },
+        {
+          "term": "elementor",
+          "towardCategorySlug": "cms-ve-no-code-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'bubble'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "yapay-zeka-ve-makine-ogrenimi": {
+      "positiveContext": [
+        "artificial intelligence",
+        "classification",
+        "deep learning",
+        "machine learning",
+        "model eğitimi",
+        "recommendation system",
+        "tahmin modeli",
+        "yapay zeka"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "airflow",
+          "towardCategorySlug": "veri-muhendisligi-ve-analitik",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'python'"
+        },
+        {
+          "term": "bigquery",
+          "towardCategorySlug": "veri-muhendisligi-ve-analitik",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'python'"
+        },
+        {
+          "term": "beautifulsoup",
+          "towardCategorySlug": "web-kazima-ve-veri-madenciligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'python'"
+        },
+        {
+          "term": "crawler",
+          "towardCategorySlug": "web-kazima-ve-veri-madenciligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'python'"
+        },
+        {
+          "term": "bilgisayarlı görü",
+          "towardCategorySlug": "bilgisayarli-goru-ve-goruntu-isleme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'pytorch'"
+        },
+        {
+          "term": "computer vision",
+          "towardCategorySlug": "bilgisayarli-goru-ve-goruntu-isleme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'pytorch'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "veri-muhendisligi-ve-analitik": {
+      "positiveContext": [
+        "airflow",
+        "bigquery",
+        "data analytics",
+        "data engineering",
+        "data pipeline",
+        "data warehouse",
+        "dbt",
+        "elt"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "beautifulsoup",
+          "towardCategorySlug": "web-kazima-ve-veri-madenciligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'python'"
+        },
+        {
+          "term": "crawler",
+          "towardCategorySlug": "web-kazima-ve-veri-madenciligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'python'"
+        },
+        {
+          "term": "artificial intelligence",
+          "towardCategorySlug": "yapay-zeka-ve-makine-ogrenimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'python'"
+        },
+        {
+          "term": "classification",
+          "towardCategorySlug": "yapay-zeka-ve-makine-ogrenimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'python'"
+        },
+        {
+          "term": "business intelligence",
+          "towardCategorySlug": "is-zekasi-ve-dashboard-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'sql'"
+        },
+        {
+          "term": "dashboard",
+          "towardCategorySlug": "is-zekasi-ve-dashboard-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'sql'"
+        },
+        {
+          "term": "database",
+          "towardCategorySlug": "veritabani-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'sql'"
+        },
+        {
+          "term": "database design",
+          "towardCategorySlug": "veritabani-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'sql'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "otomasyon-ve-entegrasyonlar": {
+      "positiveContext": [
+        "api entegrasyonu",
+        "automation",
+        "bot",
+        "entegrasyon",
+        "integration",
+        "iş akışı otomasyonu",
+        "otomasyon",
+        "otomatik işlem"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "airtable",
+          "towardCategorySlug": "no-code-ve-low-code-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'api integration'"
+        },
+        {
+          "term": "glide",
+          "towardCategorySlug": "no-code-ve-low-code-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'api integration'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "yapay-zeka-ajanlari-ve-is-akislari": {
+      "positiveContext": [
+        "agentic ai",
+        "ai agent",
+        "ai otomasyon",
+        "ai workflow",
+        "autonomous agent",
+        "crewai",
+        "langgraph",
+        "mcp"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "ai chatbot",
+          "towardCategorySlug": "llm-ve-gpt-uygulama-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'langchain'"
+        },
+        {
+          "term": "chatbot",
+          "towardCategorySlug": "llm-ve-gpt-uygulama-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'langchain'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "prompt-muhendisligi-ve-ai-danismanligi": {
+      "positiveContext": [
+        "ai danışmanlığı",
+        "chatgpt prompt",
+        "claude prompt",
+        "gemini prompt",
+        "prompt engineering",
+        "prompt mühendisi",
+        "prompt optimizasyonu",
+        "sistem promptu"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "is-zekasi-ve-dashboard-tasarimi": {
+      "positiveContext": [
+        "business intelligence",
+        "dashboard",
+        "iş zekası",
+        "kpi dashboard",
+        "looker studio",
+        "power bi",
+        "powerbi",
+        "raporlama paneli"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "airflow",
+          "towardCategorySlug": "veri-muhendisligi-ve-analitik",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'sql'"
+        },
+        {
+          "term": "bigquery",
+          "towardCategorySlug": "veri-muhendisligi-ve-analitik",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'sql'"
+        },
+        {
+          "term": "database",
+          "towardCategorySlug": "veritabani-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'sql'"
+        },
+        {
+          "term": "database design",
+          "towardCategorySlug": "veritabani-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'sql'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "ui-ux-tasarim": {
+      "positiveContext": [
+        "kullanıcı arayüzü",
+        "kullanıcı deneyimi",
+        "prototip",
+        "prototype",
+        "ui ux",
+        "ui/ux",
+        "user flow",
+        "ux ui"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "custom icons",
+          "towardCategorySlug": "ikon-ve-tipografi-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "font pairing",
+          "towardCategorySlug": "ikon-ve-tipografi-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "component design",
+          "towardCategorySlug": "tasarim-sistemleri-design-systems",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "component library",
+          "towardCategorySlug": "tasarim-sistemleri-design-systems",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "figma website",
+          "towardCategorySlug": "web-sitesi-ui-ux-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "kurumsal site tasarımı",
+          "towardCategorySlug": "web-sitesi-ui-ux-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "logo-ve-kurumsal-kimlik": {
+      "positiveContext": [
+        "amblem",
+        "brand identity",
+        "branding",
+        "kurumsal kimlik",
+        "logo",
+        "logo design",
+        "logo tasarımı",
+        "marka kimliği"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "custom icons",
+          "towardCategorySlug": "ikon-ve-tipografi-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'typography'"
+        },
+        {
+          "term": "font pairing",
+          "towardCategorySlug": "ikon-ve-tipografi-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'typography'"
+        },
+        {
+          "term": "component design",
+          "towardCategorySlug": "tasarim-sistemleri-design-systems",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'typography'"
+        },
+        {
+          "term": "component library",
+          "towardCategorySlug": "tasarim-sistemleri-design-systems",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'typography'"
+        },
+        {
+          "term": "dijital çizim",
+          "towardCategorySlug": "illustrasyon-ve-vektorel-cizim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'adobe illustrator'"
+        },
+        {
+          "term": "editorial illustration",
+          "towardCategorySlug": "illustrasyon-ve-vektorel-cizim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'adobe illustrator'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "tasarim-sistemleri-design-systems": {
+      "positiveContext": [
+        "component design",
+        "component library",
+        "design library",
+        "design system",
+        "design tokens",
+        "figma variables",
+        "tasarım sistemi",
+        "ui kit"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "custom icons",
+          "towardCategorySlug": "ikon-ve-tipografi-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "font pairing",
+          "towardCategorySlug": "ikon-ve-tipografi-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "kullanıcı arayüzü",
+          "towardCategorySlug": "ui-ux-tasarim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "kullanıcı deneyimi",
+          "towardCategorySlug": "ui-ux-tasarim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "figma website",
+          "towardCategorySlug": "web-sitesi-ui-ux-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "kurumsal site tasarımı",
+          "towardCategorySlug": "web-sitesi-ui-ux-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "angular",
+          "towardCategorySlug": "frontend-ve-arayuz-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'accessibility'"
+        },
+        {
+          "term": "arayüz geliştirme",
+          "towardCategorySlug": "frontend-ve-arayuz-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'accessibility'"
+        },
+        {
+          "term": "amblem",
+          "towardCategorySlug": "logo-ve-kurumsal-kimlik",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'typography'"
+        },
+        {
+          "term": "brand identity",
+          "towardCategorySlug": "logo-ve-kurumsal-kimlik",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'typography'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "sosyal-medya-ve-reklam-gorselleri": {
+      "positiveContext": [
+        "banner",
+        "carousel",
+        "facebook görseli",
+        "instagram post",
+        "instagram story",
+        "post tasarımı",
+        "reklam görseli",
+        "sosyal medya postu"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "custom icons",
+          "towardCategorySlug": "ikon-ve-tipografi-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "font pairing",
+          "towardCategorySlug": "ikon-ve-tipografi-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "arka plan silme",
+          "towardCategorySlug": "fotograf-duzenleme-ve-retouching",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'photoshop'"
+        },
+        {
+          "term": "background removal",
+          "towardCategorySlug": "fotograf-duzenleme-ve-retouching",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'photoshop'"
+        },
+        {
+          "term": "ambalaj tasarımı",
+          "towardCategorySlug": "ambalaj-etiket-ve-baski-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'illustrator'"
+        },
+        {
+          "term": "baskı tasarımı",
+          "towardCategorySlug": "ambalaj-etiket-ve-baski-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'illustrator'"
+        },
+        {
+          "term": "dikey reklam",
+          "towardCategorySlug": "tiktok-ve-dikey-video-reklamciligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'ad creative'"
+        },
+        {
+          "term": "reels reklamı",
+          "towardCategorySlug": "tiktok-ve-dikey-video-reklamciligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'ad creative'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "illustrasyon-ve-vektorel-cizim": {
+      "positiveContext": [
+        "dijital çizim",
+        "editorial illustration",
+        "flat illustration",
+        "illustration",
+        "illüstrasyon",
+        "vector art",
+        "vektör çizim",
+        "vektörel çizim"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "amblem",
+          "towardCategorySlug": "logo-ve-kurumsal-kimlik",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'adobe illustrator'"
+        },
+        {
+          "term": "brand identity",
+          "towardCategorySlug": "logo-ve-kurumsal-kimlik",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'adobe illustrator'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "ambalaj-etiket-ve-baski-tasarimi": {
+      "positiveContext": [
+        "ambalaj tasarımı",
+        "baskı tasarımı",
+        "broşür",
+        "dieline",
+        "etiket tasarımı",
+        "katalog",
+        "kutu tasarımı",
+        "label design"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "custom icons",
+          "towardCategorySlug": "ikon-ve-tipografi-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'illustrator'"
+        },
+        {
+          "term": "font pairing",
+          "towardCategorySlug": "ikon-ve-tipografi-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'illustrator'"
+        },
+        {
+          "term": "banner",
+          "towardCategorySlug": "sosyal-medya-ve-reklam-gorselleri",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'illustrator'"
+        },
+        {
+          "term": "carousel",
+          "towardCategorySlug": "sosyal-medya-ve-reklam-gorselleri",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'illustrator'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "yatirimci-sunumu-ve-pitch-deck": {
+      "positiveContext": [
+        "investor deck",
+        "keynote",
+        "pitch deck",
+        "powerpoint tasarımı",
+        "presentation design",
+        "satış sunumu",
+        "startup sunumu",
+        "yatırımcı sunumu"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "arama-motoru-optimizasyonu-seo": {
+      "positiveContext": [
+        "anahtar kelime",
+        "arama motoru optimizasyonu",
+        "backlink",
+        "google seo",
+        "link building",
+        "off page seo",
+        "on page seo",
+        "search engine optimization"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "core web vitals",
+          "towardCategorySlug": "teknik-seo-ve-site-hizi-optimizasyonu",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'google search console'"
+        },
+        {
+          "term": "crawl error",
+          "towardCategorySlug": "teknik-seo-ve-site-hizi-optimizasyonu",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'google search console'"
+        },
+        {
+          "term": "blog content",
+          "towardCategorySlug": "seo-uyumlu-blog-ve-makale-yazarligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'keyword research'"
+        },
+        {
+          "term": "blog yazarı",
+          "towardCategorySlug": "seo-uyumlu-blog-ve-makale-yazarligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'keyword research'"
+        },
+        {
+          "term": "content marketing",
+          "towardCategorySlug": "icerik-pazarlamasi-ve-donusum-hunisi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'seo'"
+        },
+        {
+          "term": "conversion funnel",
+          "towardCategorySlug": "icerik-pazarlamasi-ve-donusum-hunisi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'seo'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "google-reklamlari-sem-ve-ppc": {
+      "positiveContext": [
+        "adwords",
+        "display ads",
+        "google ads",
+        "google reklamları",
+        "performance max",
+        "pmax",
+        "ppc",
+        "search ads"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "sosyal-medya-reklamciligi": {
+      "positiveContext": [
+        "facebook ads",
+        "instagram ads",
+        "linkedin ads",
+        "media buying",
+        "meta ads",
+        "paid social",
+        "reklam yönetimi",
+        "sosyal medya reklamı"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "dikey reklam",
+          "towardCategorySlug": "tiktok-ve-dikey-video-reklamciligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'tiktok ads'"
+        },
+        {
+          "term": "reels reklamı",
+          "towardCategorySlug": "tiktok-ve-dikey-video-reklamciligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'tiktok ads'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "sosyal-medya-yonetimi-ve-stratejisi": {
+      "positiveContext": [
+        "community management",
+        "content calendar",
+        "instagram yönetimi",
+        "içerik takvimi",
+        "paylaşım planlama",
+        "sosyal medya stratejisi",
+        "sosyal medya yönetimi",
+        "Buffer"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "e-posta-pazarlamasi-ve-crm-akislari": {
+      "positiveContext": [
+        "abandoned cart",
+        "bülten",
+        "e-posta pazarlama",
+        "email automation",
+        "email marketing",
+        "hubspot",
+        "klaviyo",
+        "mailchimp"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "e-ticaret-yonetimi-ve-buyume": {
+      "positiveContext": [
+        "cro",
+        "e-ticaret yönetimi",
+        "ecommerce growth",
+        "ecommerce management",
+        "pazaryeri yönetimi",
+        "shopify yönetimi",
+        "amazon",
+        "online mağaza"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "ecommerce operations",
+          "towardCategorySlug": "e-ticaret-magaza-ve-siparis-operasyon-destegi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'amazon'"
+        },
+        {
+          "term": "iade yönetimi",
+          "towardCategorySlug": "e-ticaret-magaza-ve-siparis-operasyon-destegi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'amazon'"
+        },
+        {
+          "term": "e-ticaret sitesi",
+          "towardCategorySlug": "e-ticaret-sitesi-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'online magaza'"
+        },
+        {
+          "term": "ecommerce website",
+          "towardCategorySlug": "e-ticaret-sitesi-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'online magaza'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "kisa-format-video-reels-tiktok-shorts": {
+      "positiveContext": [
+        "dikey video",
+        "kısa video",
+        "reels",
+        "reels edit",
+        "short form video",
+        "shorts edit",
+        "tiktok video",
+        "viral video"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "altyazı",
+          "towardCategorySlug": "altyazi-transkripsiyon-ve-dinamik-metinler",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'premiere pro'"
+        },
+        {
+          "term": "dynamic captions",
+          "towardCategorySlug": "altyazi-transkripsiyon-ve-dinamik-metinler",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'premiere pro'"
+        },
+        {
+          "term": "dikey reklam",
+          "towardCategorySlug": "tiktok-ve-dikey-video-reklamciligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'premiere pro'"
+        },
+        {
+          "term": "reels reklamı",
+          "towardCategorySlug": "tiktok-ve-dikey-video-reklamciligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'premiere pro'"
+        },
+        {
+          "term": "belgesel kurgu",
+          "towardCategorySlug": "youtube-ve-uzun-format-video-kurgusu",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'premiere pro'"
+        },
+        {
+          "term": "long form video",
+          "towardCategorySlug": "youtube-ve-uzun-format-video-kurgusu",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'premiere pro'"
+        },
+        {
+          "term": "animasyon",
+          "towardCategorySlug": "hareketli-grafik-motion-graphics",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'after effects'"
+        },
+        {
+          "term": "explainer animation",
+          "towardCategorySlug": "hareketli-grafik-motion-graphics",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'after effects'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "youtube-ve-uzun-format-video-kurgusu": {
+      "positiveContext": [
+        "belgesel kurgu",
+        "long form video",
+        "podcast video",
+        "uzun video",
+        "video montaj",
+        "youtube editor",
+        "youtube kurgu",
+        "youtube video edit"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "altyazı",
+          "towardCategorySlug": "altyazi-transkripsiyon-ve-dinamik-metinler",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'premiere pro'"
+        },
+        {
+          "term": "dynamic captions",
+          "towardCategorySlug": "altyazi-transkripsiyon-ve-dinamik-metinler",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'premiere pro'"
+        },
+        {
+          "term": "dikey video",
+          "towardCategorySlug": "kisa-format-video-reels-tiktok-shorts",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'premiere pro'"
+        },
+        {
+          "term": "kısa video",
+          "towardCategorySlug": "kisa-format-video-reels-tiktok-shorts",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'premiere pro'"
+        },
+        {
+          "term": "cinematic color",
+          "towardCategorySlug": "video-renk-duzenleme-color-grading",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'davinci resolve'"
+        },
+        {
+          "term": "color grading",
+          "towardCategorySlug": "video-renk-duzenleme-color-grading",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'davinci resolve'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "hareketli-grafik-motion-graphics": {
+      "positiveContext": [
+        "animasyon",
+        "explainer animation",
+        "hareketli grafik",
+        "intro animation",
+        "kinetic typography",
+        "logo animasyonu",
+        "after effects",
+        "motion graphics"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "dikey video",
+          "towardCategorySlug": "kisa-format-video-reels-tiktok-shorts",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'after effects'"
+        },
+        {
+          "term": "kısa video",
+          "towardCategorySlug": "kisa-format-video-reels-tiktok-shorts",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'after effects'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "seslendirme-ve-dublaj": {
+      "positiveContext": [
+        "anlatıcı",
+        "dubbing",
+        "dublaj",
+        "ingilizce seslendirme",
+        "narration",
+        "reklam sesi",
+        "seslendirme",
+        "türkçe seslendirme"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "noise removal",
+          "towardCategorySlug": "podcast-duzenleme-ve-ses-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'adobe audition'"
+        },
+        {
+          "term": "podcast düzenleme",
+          "towardCategorySlug": "podcast-duzenleme-ve-ses-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'adobe audition'"
+        },
+        {
+          "term": "audio effects",
+          "towardCategorySlug": "ses-tasarimi-ve-efektleri-sfx",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'adobe audition'"
+        },
+        {
+          "term": "cinematic sound",
+          "towardCategorySlug": "ses-tasarimi-ve-efektleri-sfx",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'adobe audition'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "podcast-duzenleme-ve-ses-muhendisligi": {
+      "positiveContext": [
+        "noise removal",
+        "podcast düzenleme",
+        "podcast edit",
+        "ses mühendisliği",
+        "ses temizleme",
+        "audio editing",
+        "mastering",
+        "Compression"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "ableton",
+          "towardCategorySlug": "muzik-produksiyonu-ve-beatmaking",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'mixing'"
+        },
+        {
+          "term": "beat",
+          "towardCategorySlug": "muzik-produksiyonu-ve-beatmaking",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'mixing'"
+        },
+        {
+          "term": "audio effects",
+          "towardCategorySlug": "ses-tasarimi-ve-efektleri-sfx",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'mixing'"
+        },
+        {
+          "term": "cinematic sound",
+          "towardCategorySlug": "ses-tasarimi-ve-efektleri-sfx",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'mixing'"
+        },
+        {
+          "term": "anlatıcı",
+          "towardCategorySlug": "seslendirme-ve-dublaj",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'adobe audition'"
+        },
+        {
+          "term": "dubbing",
+          "towardCategorySlug": "seslendirme-ve-dublaj",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'adobe audition'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "teknik-yazarlik-ve-dokumantasyon": {
+      "positiveContext": [
+        "api docs",
+        "api dokümantasyonu",
+        "documentation",
+        "dokümantasyon",
+        "kullanıcı kılavuzu",
+        "prd",
+        "readme",
+        "srs"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "araştırma raporu",
+          "towardCategorySlug": "whitepaper-ve-e-kitap-yazimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'technical writing'"
+        },
+        {
+          "term": "e-book",
+          "towardCategorySlug": "whitepaper-ve-e-kitap-yazimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'technical writing'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "reklam-ve-satis-metni-yazarligi": {
+      "positiveContext": [
+        "conversion copy",
+        "copywriter",
+        "copywriting",
+        "email copy",
+        "landing page metni",
+        "reklam metni",
+        "satış metni",
+        "slogan"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "seo-uyumlu-blog-ve-makale-yazarligi": {
+      "positiveContext": [
+        "blog content",
+        "blog yazarı",
+        "content writer",
+        "içerik yazarlığı",
+        "keyword article",
+        "makale yazarı",
+        "seo içerik",
+        "seo makale"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "anahtar kelime",
+          "towardCategorySlug": "arama-motoru-optimizasyonu-seo",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'keyword research'"
+        },
+        {
+          "term": "arama motoru optimizasyonu",
+          "towardCategorySlug": "arama-motoru-optimizasyonu-seo",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'keyword research'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "profesyonel-ceviri-ve-yerellestirme": {
+      "positiveContext": [
+        "localization",
+        "transcreation",
+        "türkçe ingilizce çeviri",
+        "uygulama çevirisi",
+        "website translation",
+        "yerelleştirme",
+        "çeviri",
+        "translation"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "academic translation",
+          "towardCategorySlug": "hukuki-tibbi-ve-akademik-ceviri",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'terminology management'"
+        },
+        {
+          "term": "akademik çeviri",
+          "towardCategorySlug": "hukuki-tibbi-ve-akademik-ceviri",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'terminology management'"
+        },
+        {
+          "term": "i18n",
+          "towardCategorySlug": "yazilim-ve-arayuz-yerellestirmesi-i18n",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'terminology management'"
+        },
+        {
+          "term": "interface localization",
+          "towardCategorySlug": "yazilim-ve-arayuz-yerellestirmesi-i18n",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'terminology management'"
+        },
+        {
+          "term": "altyazı",
+          "towardCategorySlug": "altyazi-transkripsiyon-ve-dinamik-metinler",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'translation'"
+        },
+        {
+          "term": "dynamic captions",
+          "towardCategorySlug": "altyazi-transkripsiyon-ve-dinamik-metinler",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'translation'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "editoryal-duzeltme-ve-redaksiyon": {
+      "positiveContext": [
+        "dil bilgisi düzeltme",
+        "editörlük",
+        "grammar correction",
+        "metin düzenleme",
+        "redaksiyon",
+        "yazım denetimi",
+        "copy editing",
+        "proofreading"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "araştırma raporu",
+          "towardCategorySlug": "whitepaper-ve-e-kitap-yazimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'copy editing'"
+        },
+        {
+          "term": "e-book",
+          "towardCategorySlug": "whitepaper-ve-e-kitap-yazimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'copy editing'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "teknik-danismanlik": {
+      "positiveContext": [
+        "architecture review",
+        "feasibility",
+        "software consulting",
+        "teknik denetim",
+        "teknoloji seçimi",
+        "yazılım danışmanlığı",
+        "code review",
+        "Performance Analysis"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "coding mentor",
+          "towardCategorySlug": "online-egitim-ozel-ders-ve-mentorluk",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'code review'"
+        },
+        {
+          "term": "interview prep",
+          "towardCategorySlug": "online-egitim-ozel-ders-ve-mentorluk",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'code review'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "finansal-modelleme-ve-fizibilite": {
+      "positiveContext": [
+        "cash flow",
+        "excel model",
+        "feasibility study",
+        "financial modeling",
+        "finansal model",
+        "finansal tahmin",
+        "fizibilite",
+        "forecast"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "accounting",
+          "towardCategorySlug": "muhasebe-ve-on-muhasebe-yonetimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'excel'"
+        },
+        {
+          "term": "banka mutabakatı",
+          "towardCategorySlug": "muhasebe-ve-on-muhasebe-yonetimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'excel'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "muhasebe-ve-on-muhasebe-yonetimi": {
+      "positiveContext": [
+        "accounting",
+        "banka mutabakatı",
+        "bookkeeping",
+        "cari hesap",
+        "fatura",
+        "gider takibi",
+        "muhasebe",
+        "ön muhasebe"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "cash flow",
+          "towardCategorySlug": "finansal-modelleme-ve-fizibilite",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'excel'"
+        },
+        {
+          "term": "excel model",
+          "towardCategorySlug": "finansal-modelleme-ve-fizibilite",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'excel'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "vergi-planlamasi-ve-mali-musavirlik": {
+      "positiveContext": [
+        "beyanname",
+        "e-defter",
+        "e-fatura",
+        "kdv",
+        "kurumlar vergisi",
+        "mali müşavir",
+        "mali müşavirlik",
+        "smmm"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "girisim-stratejisi-ve-is-plani": {
+      "positiveContext": [
+        "business model",
+        "business plan",
+        "girişim danışmanlığı",
+        "go to market",
+        "gtm",
+        "iş modeli",
+        "iş planı",
+        "pazar giriş stratejisi"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "benchmark",
+          "towardCategorySlug": "pazar-ve-rakip-arastirmasi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'swot'"
+        },
+        {
+          "term": "competitor analysis",
+          "towardCategorySlug": "pazar-ve-rakip-arastirmasi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'swot'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "proje-yonetimi-ve-cevik-danismanlik": {
+      "positiveContext": [
+        "agile",
+        "jira",
+        "kanban",
+        "proje yöneticisi",
+        "proje yönetimi",
+        "project management",
+        "scrum",
+        "sprint planning"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "sozlesme-hazirlama-ve-inceleme": {
+      "positiveContext": [
+        "contract review",
+        "sözleşme",
+        "sözleşme hazırlama",
+        "sözleşme inceleme",
+        "ticari sözleşme",
+        "hizmet sözleşmesi",
+        "Commercial Contracts",
+        "Contract Clauses"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "bakım sözleşmesi",
+          "towardCategorySlug": "freelance-ve-yazilim-hizmet-sozlesmeleri",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'contract drafting'"
+        },
+        {
+          "term": "freelance sözleşmesi",
+          "towardCategorySlug": "freelance-ve-yazilim-hizmet-sozlesmeleri",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'contract drafting'"
+        },
+        {
+          "term": "confidentiality agreement",
+          "towardCategorySlug": "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'contract drafting'"
+        },
+        {
+          "term": "confidentiality clause",
+          "towardCategorySlug": "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'contract drafting'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "kvkk-gdpr-ve-veri-gizliligi-uyumu": {
+      "positiveContext": [
+        "aydınlatma metni",
+        "açık rıza",
+        "cookie policy",
+        "data privacy",
+        "dpa",
+        "gdpr",
+        "kvkk",
+        "privacy compliance"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "marka-tescili-ve-fikri-mulkiyet": {
+      "positiveContext": [
+        "fikri mülkiyet",
+        "intellectual property",
+        "marka tescili",
+        "patent",
+        "telif hakkı",
+        "trademark",
+        "trademark registration",
+        "türkpatent"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "e-ticaret-ve-tuketici-hukuku": {
+      "positiveContext": [
+        "cayma hakkı",
+        "e-ticaret hukuku",
+        "iade politikası",
+        "marketplace sözleşmesi",
+        "mesafeli satış sözleşmesi",
+        "online satış hukuku",
+        "tüketici hukuku",
+        "Cancellation Rights"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "oyun-gelistirme": {
+      "positiveContext": [
+        "2d oyun",
+        "3d oyun",
+        "game developer",
+        "game development",
+        "gameplay programming",
+        "godot",
+        "Game Architecture"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "ad mediation",
+          "towardCategorySlug": "mobil-oyun-gelistirme-hypercasual-casual",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'c sharp'"
+        },
+        {
+          "term": "android oyun",
+          "towardCategorySlug": "mobil-oyun-gelistirme-hypercasual-casual",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'c sharp'"
+        },
+        {
+          "term": "c# oyun",
+          "towardCategorySlug": "unity-ile-oyun-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'c sharp'"
+        },
+        {
+          "term": "unity 2d",
+          "towardCategorySlug": "unity-ile-oyun-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'c sharp'"
+        },
+        {
+          "term": "blueprint",
+          "towardCategorySlug": "unreal-engine-ve-c-oyun-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'c++'"
+        },
+        {
+          "term": "c++ game",
+          "towardCategorySlug": "unreal-engine-ve-c-oyun-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'c++'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "mimari-proje-plan-ve-bim": {
+      "positiveContext": [
+        "archicad",
+        "autocad",
+        "bim",
+        "floor plan",
+        "kat planı",
+        "mimari proje",
+        "mimari çizim",
+        "revit"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "3d ürün modelleme",
+          "towardCategorySlug": "3d-urun-modelleme-ve-cad",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'technical drawing'"
+        },
+        {
+          "term": "endüstriyel tasarım",
+          "towardCategorySlug": "3d-urun-modelleme-ve-cad",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'technical drawing'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "ic-mimari-ve-3d-fotogercekci-render": {
+      "positiveContext": [
+        "3d render",
+        "corona",
+        "fotogerçekçi render",
+        "interior design",
+        "iç mimari",
+        "mutfak render",
+        "oda render",
+        "vray"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "3d baskı",
+          "towardCategorySlug": "3d-baski-modelleme-ve-stl-hazirligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "3d printing",
+          "towardCategorySlug": "3d-baski-modelleme-ve-stl-hazirligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "architectural visualization",
+          "towardCategorySlug": "dis-cephe-ve-peyzaj-3d-gorsellestirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term '3ds max'"
+        },
+        {
+          "term": "dış cephe render",
+          "towardCategorySlug": "dis-cephe-ve-peyzaj-3d-gorsellestirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term '3ds max'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "3d-urun-modelleme-ve-cad": {
+      "positiveContext": [
+        "3d ürün modelleme",
+        "endüstriyel tasarım",
+        "industrial design",
+        "product cad",
+        "solidworks",
+        "ürün modeli",
+        "cad",
+        "fusion 360"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "3d baskı",
+          "towardCategorySlug": "3d-baski-modelleme-ve-stl-hazirligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'cad'"
+        },
+        {
+          "term": "3d printing",
+          "towardCategorySlug": "3d-baski-modelleme-ve-stl-hazirligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'cad'"
+        },
+        {
+          "term": "archicad",
+          "towardCategorySlug": "mimari-proje-plan-ve-bim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'technical drawing'"
+        },
+        {
+          "term": "autocad",
+          "towardCategorySlug": "mimari-proje-plan-ve-bim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'technical drawing'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "yonetici-asistanligi-ve-takvim-yonetimi": {
+      "positiveContext": [
+        "email yönetimi",
+        "executive assistant",
+        "sanal asistan",
+        "seyahat planlama",
+        "takvim yönetimi",
+        "toplantı planlama",
+        "virtual assistant",
+        "yönetici asistanı"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "musteri-hizmetleri-ve-canli-destek": {
+      "positiveContext": [
+        "canlı destek",
+        "customer support",
+        "freshdesk",
+        "live chat",
+        "müşteri hizmetleri",
+        "müşteri temsilcisi",
+        "support agent",
+        "ticket support"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "veri-girisi-ve-kapsamli-web-arastirmasi": {
+      "positiveContext": [
+        "copy paste",
+        "data entry",
+        "excel veri girişi",
+        "internet araştırması",
+        "spreadsheet",
+        "veri girişi",
+        "veri toplama",
+        "web research"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "full-stack-web-gelistirme": {
+      "positiveContext": [
+        ".net full stack",
+        "full stack",
+        "full stack developer",
+        "fullstack",
+        "mern",
+        "react node",
+        "uçtan uca web geliştirme",
+        "django"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "api",
+          "towardCategorySlug": "backend-ve-api-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'rest api'"
+        },
+        {
+          "term": "api geliştirme",
+          "towardCategorySlug": "backend-ve-api-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'rest api'"
+        },
+        {
+          "term": "internet sayfası",
+          "towardCategorySlug": "web-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'rest api'"
+        },
+        {
+          "term": "internet sitesi",
+          "towardCategorySlug": "web-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'rest api'"
+        },
+        {
+          "term": "angular",
+          "towardCategorySlug": "frontend-ve-arayuz-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'ts'"
+        },
+        {
+          "term": "arayüz geliştirme",
+          "towardCategorySlug": "frontend-ve-arayuz-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'ts'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "e-ticaret-sitesi-gelistirme": {
+      "positiveContext": [
+        "e-ticaret sitesi",
+        "ecommerce website",
+        "eticaret sitesi",
+        "internet mağazası",
+        "magento",
+        "sanal mağaza",
+        "shopify developer",
+        "ödeme entegrasyonu"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "cro",
+          "towardCategorySlug": "e-ticaret-yonetimi-ve-buyume",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'online magaza'"
+        },
+        {
+          "term": "e-ticaret yönetimi",
+          "towardCategorySlug": "e-ticaret-yonetimi-ve-buyume",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'online magaza'"
+        },
+        {
+          "term": "ecommerce operations",
+          "towardCategorySlug": "e-ticaret-magaza-ve-siparis-operasyon-destegi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'woo commerce'"
+        },
+        {
+          "term": "iade yönetimi",
+          "towardCategorySlug": "e-ticaret-magaza-ve-siparis-operasyon-destegi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'woo commerce'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "cms-ve-no-code-gelistirme": {
+      "positiveContext": [
+        "cms",
+        "elementor",
+        "içerik yönetim sistemi",
+        "no code website",
+        "site builder",
+        "wordpress sitesi",
+        "bubble",
+        "webflow"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "airtable",
+          "towardCategorySlug": "no-code-ve-low-code-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'bubble'"
+        },
+        {
+          "term": "glide",
+          "towardCategorySlug": "no-code-ve-low-code-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'bubble'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "mikroservis-ve-api-mimarisi": {
+      "positiveContext": [
+        "api architecture",
+        "dağıtık sistem",
+        "distributed systems",
+        "grpc",
+        "kafka",
+        "microservices",
+        "mikroservis",
+        "rabbitmq"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "aws mimarisi",
+          "towardCategorySlug": "bulut-mimarisi-ve-altyapi-yonetimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'docker'"
+        },
+        {
+          "term": "azure architecture",
+          "towardCategorySlug": "bulut-mimarisi-ve-altyapi-yonetimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'docker'"
+        },
+        {
+          "term": "bulut",
+          "towardCategorySlug": "devops-ve-bulut-bilisim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'docker'"
+        },
+        {
+          "term": "ci cd",
+          "towardCategorySlug": "devops-ve-bulut-bilisim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'docker'"
+        },
+        {
+          "term": "api",
+          "towardCategorySlug": "backend-ve-api-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'graphql'"
+        },
+        {
+          "term": "api geliştirme",
+          "towardCategorySlug": "backend-ve-api-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'graphql'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "penetrasyon-testi-ve-guvenlik-denetimi": {
+      "positiveContext": [
+        "güvenlik testi",
+        "mobile pentest",
+        "owasp testi",
+        "penetration test",
+        "penetration testing",
+        "pentest",
+        "vulnerability assessment",
+        "web pentest"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "bulut-mimarisi-ve-altyapi-yonetimi": {
+      "positiveContext": [
+        "aws mimarisi",
+        "azure architecture",
+        "bulut mimarisi",
+        "cloud architecture",
+        "cloud migration",
+        "kubernetes altyapı",
+        "gcp",
+        "terraform"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "bulut",
+          "towardCategorySlug": "devops-ve-bulut-bilisim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'docker'"
+        },
+        {
+          "term": "ci cd",
+          "towardCategorySlug": "devops-ve-bulut-bilisim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'docker'"
+        },
+        {
+          "term": "api architecture",
+          "towardCategorySlug": "mikroservis-ve-api-mimarisi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'docker'"
+        },
+        {
+          "term": "dağıtık sistem",
+          "towardCategorySlug": "mikroservis-ve-api-mimarisi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'docker'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "llm-ve-gpt-uygulama-gelistirme": {
+      "positiveContext": [
+        "ai chatbot",
+        "chatbot",
+        "chatgpt api",
+        "claude api",
+        "embeddings",
+        "gemini api",
+        "gpt uygulama",
+        "llm"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "agentic ai",
+          "towardCategorySlug": "yapay-zeka-ajanlari-ve-is-akislari",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'langchain'"
+        },
+        {
+          "term": "ai agent",
+          "towardCategorySlug": "yapay-zeka-ajanlari-ve-is-akislari",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'langchain'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "bilgisayarli-goru-ve-goruntu-isleme": {
+      "positiveContext": [
+        "bilgisayarlı görü",
+        "computer vision",
+        "görüntü işleme",
+        "image classification",
+        "image processing",
+        "nesne algılama",
+        "object detection",
+        "ocr"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "artificial intelligence",
+          "towardCategorySlug": "yapay-zeka-ve-makine-ogrenimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'pytorch'"
+        },
+        {
+          "term": "classification",
+          "towardCategorySlug": "yapay-zeka-ve-makine-ogrenimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'pytorch'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "dogal-dil-isleme-ve-ses-teknolojileri": {
+      "positiveContext": [
+        "doğal dil işleme",
+        "nlp",
+        "sentiment analysis",
+        "ses tanıma",
+        "speech recognition",
+        "speech to text",
+        "stt",
+        "text to speech"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "web-kazima-ve-veri-madenciligi": {
+      "positiveContext": [
+        "beautifulsoup",
+        "crawler",
+        "data extraction",
+        "playwright scraping",
+        "scraping",
+        "scrapy",
+        "selenium scraping",
+        "veri çekme"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "airflow",
+          "towardCategorySlug": "veri-muhendisligi-ve-analitik",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'python'"
+        },
+        {
+          "term": "bigquery",
+          "towardCategorySlug": "veri-muhendisligi-ve-analitik",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'python'"
+        },
+        {
+          "term": "artificial intelligence",
+          "towardCategorySlug": "yapay-zeka-ve-makine-ogrenimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'python'"
+        },
+        {
+          "term": "classification",
+          "towardCategorySlug": "yapay-zeka-ve-makine-ogrenimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'python'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "web-sitesi-ui-ux-tasarimi": {
+      "positiveContext": [
+        "figma website",
+        "kurumsal site tasarımı",
+        "landing page design",
+        "responsive web design",
+        "website design",
+        "website ui ux",
+        "web tasarım",
+        "Design Systems"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "component design",
+          "towardCategorySlug": "tasarim-sistemleri-design-systems",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "component library",
+          "towardCategorySlug": "tasarim-sistemleri-design-systems",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "kullanıcı arayüzü",
+          "towardCategorySlug": "ui-ux-tasarim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "kullanıcı deneyimi",
+          "towardCategorySlug": "ui-ux-tasarim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "angular",
+          "towardCategorySlug": "frontend-ve-arayuz-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'accessibility'"
+        },
+        {
+          "term": "arayüz geliştirme",
+          "towardCategorySlug": "frontend-ve-arayuz-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'accessibility'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "mobil-uygulama-ui-ux-tasarimi": {
+      "positiveContext": [
+        "android ui",
+        "app prototype",
+        "figma mobile",
+        "ios ui",
+        "mobil ux",
+        "mobil uygulama tasarımı",
+        "mobile app design",
+        "Material Design"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "ikon-ve-tipografi-tasarimi": {
+      "positiveContext": [
+        "custom icons",
+        "font pairing",
+        "glyph",
+        "icon design",
+        "icon set",
+        "ikon tasarımı",
+        "lettering",
+        "tipografi"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "banner",
+          "towardCategorySlug": "sosyal-medya-ve-reklam-gorselleri",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "carousel",
+          "towardCategorySlug": "sosyal-medya-ve-reklam-gorselleri",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "component design",
+          "towardCategorySlug": "tasarim-sistemleri-design-systems",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "component library",
+          "towardCategorySlug": "tasarim-sistemleri-design-systems",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "kullanıcı arayüzü",
+          "towardCategorySlug": "ui-ux-tasarim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "kullanıcı deneyimi",
+          "towardCategorySlug": "ui-ux-tasarim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'figma'"
+        },
+        {
+          "term": "ambalaj tasarımı",
+          "towardCategorySlug": "ambalaj-etiket-ve-baski-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'illustrator'"
+        },
+        {
+          "term": "baskı tasarımı",
+          "towardCategorySlug": "ambalaj-etiket-ve-baski-tasarimi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'illustrator'"
+        },
+        {
+          "term": "amblem",
+          "towardCategorySlug": "logo-ve-kurumsal-kimlik",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'typography'"
+        },
+        {
+          "term": "brand identity",
+          "towardCategorySlug": "logo-ve-kurumsal-kimlik",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'typography'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "karakter-tasarimi-ve-konsept-sanat": {
+      "positiveContext": [
+        "character design",
+        "concept art",
+        "creature design",
+        "digital painting",
+        "karakter tasarımı",
+        "konsept sanat",
+        "game art",
+        "maskot"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "3d game asset",
+          "towardCategorySlug": "3d-oyun-varliklari-ve-karakter-modelleme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "3d karakter",
+          "towardCategorySlug": "3d-oyun-varliklari-ve-karakter-modelleme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "2d game art",
+          "towardCategorySlug": "2d-oyun-sanati-ve-piksel-cizim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'photoshop'"
+        },
+        {
+          "term": "2d oyun sanatı",
+          "towardCategorySlug": "2d-oyun-sanati-ve-piksel-cizim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'photoshop'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "fotograf-duzenleme-ve-retouching": {
+      "positiveContext": [
+        "arka plan silme",
+        "background removal",
+        "fotoğraf düzenleme",
+        "photo editing",
+        "retouch",
+        "rötuş",
+        "ürün fotoğrafı düzenleme",
+        "color correction"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "banner",
+          "towardCategorySlug": "sosyal-medya-ve-reklam-gorselleri",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'photoshop'"
+        },
+        {
+          "term": "carousel",
+          "towardCategorySlug": "sosyal-medya-ve-reklam-gorselleri",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'photoshop'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "teknik-seo-ve-site-hizi-optimizasyonu": {
+      "positiveContext": [
+        "core web vitals",
+        "crawl error",
+        "lighthouse",
+        "pagespeed",
+        "schema markup",
+        "site hızı",
+        "technical seo",
+        "teknik seo"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "anahtar kelime",
+          "towardCategorySlug": "arama-motoru-optimizasyonu-seo",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'google search console'"
+        },
+        {
+          "term": "arama motoru optimizasyonu",
+          "towardCategorySlug": "arama-motoru-optimizasyonu-seo",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'google search console'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "tiktok-ve-dikey-video-reklamciligi": {
+      "positiveContext": [
+        "dikey reklam",
+        "reels reklamı",
+        "short video ad",
+        "tiktok ads creative",
+        "tiktok reklam videosu",
+        "ugc ad",
+        "vertical video ad",
+        "Subtitles"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "dikey video",
+          "towardCategorySlug": "kisa-format-video-reels-tiktok-shorts",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'premiere pro'"
+        },
+        {
+          "term": "kısa video",
+          "towardCategorySlug": "kisa-format-video-reels-tiktok-shorts",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'premiere pro'"
+        },
+        {
+          "term": "banner",
+          "towardCategorySlug": "sosyal-medya-ve-reklam-gorselleri",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'ad creative'"
+        },
+        {
+          "term": "carousel",
+          "towardCategorySlug": "sosyal-medya-ve-reklam-gorselleri",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'ad creative'"
+        },
+        {
+          "term": "facebook ads",
+          "towardCategorySlug": "sosyal-medya-reklamciligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'tiktok ads'"
+        },
+        {
+          "term": "instagram ads",
+          "towardCategorySlug": "sosyal-medya-reklamciligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'tiktok ads'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "b2b-buyume-ve-linkedin-lead-generation": {
+      "positiveContext": [
+        "b2b lead",
+        "cold outreach",
+        "linkedin lead",
+        "linkedin prospecting",
+        "müşteri bulma",
+        "lead generation",
+        "prospect list",
+        "sales navigator"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "b2b leads",
+          "towardCategorySlug": "potansiyel-musteri-ve-veri-zenginlestirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'apollo'"
+        },
+        {
+          "term": "data enrichment",
+          "towardCategorySlug": "potansiyel-musteri-ve-veri-zenginlestirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'apollo'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "icerik-pazarlamasi-ve-donusum-hunisi": {
+      "positiveContext": [
+        "content marketing",
+        "conversion funnel",
+        "dönüşüm hunisi",
+        "funnel",
+        "inbound marketing",
+        "içerik pazarlama",
+        "içerik stratejisi",
+        "lead magnet"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "anahtar kelime",
+          "towardCategorySlug": "arama-motoru-optimizasyonu-seo",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'seo'"
+        },
+        {
+          "term": "arama motoru optimizasyonu",
+          "towardCategorySlug": "arama-motoru-optimizasyonu-seo",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'seo'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "video-renk-duzenleme-color-grading": {
+      "positiveContext": [
+        "cinematic color",
+        "color grading",
+        "lut",
+        "premiere color",
+        "renk düzenleme",
+        "video color correction",
+        "davinci resolve",
+        "ACES"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "belgesel kurgu",
+          "towardCategorySlug": "youtube-ve-uzun-format-video-kurgusu",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'davinci resolve'"
+        },
+        {
+          "term": "long form video",
+          "towardCategorySlug": "youtube-ve-uzun-format-video-kurgusu",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'davinci resolve'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "3d-urun-animasyonu-ve-tanitim": {
+      "positiveContext": [
+        "3d product animation",
+        "blender animation",
+        "cgi reklam",
+        "product visualization",
+        "ürün animasyonu",
+        "ürün tanıtım animasyonu",
+        "cinema 4d",
+        "3D Animation"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "3d baskı",
+          "towardCategorySlug": "3d-baski-modelleme-ve-stl-hazirligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "3d printing",
+          "towardCategorySlug": "3d-baski-modelleme-ve-stl-hazirligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "3d game asset",
+          "towardCategorySlug": "3d-oyun-varliklari-ve-karakter-modelleme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "3d karakter",
+          "towardCategorySlug": "3d-oyun-varliklari-ve-karakter-modelleme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "altyazi-transkripsiyon-ve-dinamik-metinler": {
+      "positiveContext": [
+        "altyazı",
+        "dynamic captions",
+        "kinetic captions",
+        "podcast altyazı",
+        "subtitle",
+        "transkripsiyon",
+        "captions",
+        "srt"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "dikey video",
+          "towardCategorySlug": "kisa-format-video-reels-tiktok-shorts",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'premiere pro'"
+        },
+        {
+          "term": "kısa video",
+          "towardCategorySlug": "kisa-format-video-reels-tiktok-shorts",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'premiere pro'"
+        },
+        {
+          "term": "belgesel kurgu",
+          "towardCategorySlug": "youtube-ve-uzun-format-video-kurgusu",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'premiere pro'"
+        },
+        {
+          "term": "long form video",
+          "towardCategorySlug": "youtube-ve-uzun-format-video-kurgusu",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'premiere pro'"
+        },
+        {
+          "term": "audio to text",
+          "towardCategorySlug": "ses-ve-video-desifre-destegi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'srt'"
+        },
+        {
+          "term": "deşifre",
+          "towardCategorySlug": "ses-ve-video-desifre-destegi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'srt'"
+        },
+        {
+          "term": "localization",
+          "towardCategorySlug": "profesyonel-ceviri-ve-yerellestirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'translation'"
+        },
+        {
+          "term": "transcreation",
+          "towardCategorySlug": "profesyonel-ceviri-ve-yerellestirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'translation'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "ses-tasarimi-ve-efektleri-sfx": {
+      "positiveContext": [
+        "audio effects",
+        "cinematic sound",
+        "film sesi",
+        "foley",
+        "ses tasarımı",
+        "sfx",
+        "sound effects",
+        "oyun sesi"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "ableton",
+          "towardCategorySlug": "muzik-produksiyonu-ve-beatmaking",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'mixing'"
+        },
+        {
+          "term": "beat",
+          "towardCategorySlug": "muzik-produksiyonu-ve-beatmaking",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'mixing'"
+        },
+        {
+          "term": "adaptive audio",
+          "towardCategorySlug": "oyun-sesleri-ve-muzik-produksiyonu",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'mixing'"
+        },
+        {
+          "term": "fmod",
+          "towardCategorySlug": "oyun-sesleri-ve-muzik-produksiyonu",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'mixing'"
+        },
+        {
+          "term": "noise removal",
+          "towardCategorySlug": "podcast-duzenleme-ve-ses-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'mixing'"
+        },
+        {
+          "term": "podcast düzenleme",
+          "towardCategorySlug": "podcast-duzenleme-ve-ses-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'mixing'"
+        },
+        {
+          "term": "anlatıcı",
+          "towardCategorySlug": "seslendirme-ve-dublaj",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'adobe audition'"
+        },
+        {
+          "term": "dubbing",
+          "towardCategorySlug": "seslendirme-ve-dublaj",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'adobe audition'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "muzik-produksiyonu-ve-beatmaking": {
+      "positiveContext": [
+        "ableton",
+        "beat",
+        "beatmaking",
+        "fl studio",
+        "instrumental",
+        "logic pro",
+        "music production",
+        "müzik prodüksiyonu"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "noise removal",
+          "towardCategorySlug": "podcast-duzenleme-ve-ses-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'mixing'"
+        },
+        {
+          "term": "podcast düzenleme",
+          "towardCategorySlug": "podcast-duzenleme-ve-ses-muhendisligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'mixing'"
+        },
+        {
+          "term": "audio effects",
+          "towardCategorySlug": "ses-tasarimi-ve-efektleri-sfx",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'mixing'"
+        },
+        {
+          "term": "cinematic sound",
+          "towardCategorySlug": "ses-tasarimi-ve-efektleri-sfx",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'mixing'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "yazilim-ve-arayuz-yerellestirmesi-i18n": {
+      "positiveContext": [
+        "i18n",
+        "interface localization",
+        "json translation",
+        "l10n",
+        "po translation",
+        "software localization",
+        "uygulama yerelleştirme",
+        "xliff"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "academic translation",
+          "towardCategorySlug": "hukuki-tibbi-ve-akademik-ceviri",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'terminology management'"
+        },
+        {
+          "term": "akademik çeviri",
+          "towardCategorySlug": "hukuki-tibbi-ve-akademik-ceviri",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'terminology management'"
+        },
+        {
+          "term": "localization",
+          "towardCategorySlug": "profesyonel-ceviri-ve-yerellestirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'terminology management'"
+        },
+        {
+          "term": "transcreation",
+          "towardCategorySlug": "profesyonel-ceviri-ve-yerellestirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'terminology management'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "hukuki-tibbi-ve-akademik-ceviri": {
+      "positiveContext": [
+        "academic translation",
+        "akademik çeviri",
+        "hukuki çeviri",
+        "legal translation",
+        "makale çeviri",
+        "medical translation",
+        "sözleşme çevirisi",
+        "tıbbi çeviri"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "localization",
+          "towardCategorySlug": "profesyonel-ceviri-ve-yerellestirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'terminology management'"
+        },
+        {
+          "term": "transcreation",
+          "towardCategorySlug": "profesyonel-ceviri-ve-yerellestirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'terminology management'"
+        },
+        {
+          "term": "i18n",
+          "towardCategorySlug": "yazilim-ve-arayuz-yerellestirmesi-i18n",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'terminology management'"
+        },
+        {
+          "term": "interface localization",
+          "towardCategorySlug": "yazilim-ve-arayuz-yerellestirmesi-i18n",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'terminology management'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "whitepaper-ve-e-kitap-yazimi": {
+      "positiveContext": [
+        "araştırma raporu",
+        "e-book",
+        "e-kitap",
+        "ebook",
+        "research report",
+        "teknik rapor",
+        "uzun içerik",
+        "whitepaper"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "dil bilgisi düzeltme",
+          "towardCategorySlug": "editoryal-duzeltme-ve-redaksiyon",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'copy editing'"
+        },
+        {
+          "term": "editörlük",
+          "towardCategorySlug": "editoryal-duzeltme-ve-redaksiyon",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'copy editing'"
+        },
+        {
+          "term": "api docs",
+          "towardCategorySlug": "teknik-yazarlik-ve-dokumantasyon",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'technical writing'"
+        },
+        {
+          "term": "api dokümantasyonu",
+          "towardCategorySlug": "teknik-yazarlik-ve-dokumantasyon",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'technical writing'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "hayalet-yazarlik-ve-liderlik-makaleleri": {
+      "positiveContext": [
+        "ceo content",
+        "ghostwriter",
+        "ghostwriting",
+        "hayalet yazarlık",
+        "liderlik yazısı",
+        "linkedin makalesi",
+        "thought leadership",
+        "yönetici içeriği"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "pazar-ve-rakip-arastirmasi": {
+      "positiveContext": [
+        "benchmark",
+        "competitor analysis",
+        "market research",
+        "pazar araştırması",
+        "rakip analizi",
+        "sektör araştırması",
+        "swot",
+        "tam sam som"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "business model",
+          "towardCategorySlug": "girisim-stratejisi-ve-is-plani",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'swot'"
+        },
+        {
+          "term": "business plan",
+          "towardCategorySlug": "girisim-stratejisi-ve-is-plani",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'swot'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "girisim-degerleme-ve-yatirimci-metrikleri": {
+      "positiveContext": [
+        "arr",
+        "cac",
+        "cap table",
+        "girişim değerleme",
+        "investor metrics",
+        "ltv",
+        "mrr",
+        "startup valuation"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "surec-ve-operasyon-optimizasyonu": {
+      "positiveContext": [
+        "iş süreci",
+        "lean",
+        "operasyon yönetimi",
+        "process mapping",
+        "process optimization",
+        "sop",
+        "süreç optimizasyonu",
+        "workflow improvement"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "insan-kaynaklari-ve-yetenek-avciligi": {
+      "positiveContext": [
+        "candidate sourcing",
+        "headhunter",
+        "insan kaynakları",
+        "işe alım",
+        "recruiter",
+        "recruitment",
+        "talent acquisition",
+        "teknik recruiter"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "online-egitim-ozel-ders-ve-mentorluk": {
+      "positiveContext": [
+        "coding mentor",
+        "interview prep",
+        "kariyer danışmanlığı",
+        "mentor",
+        "mentorluk",
+        "online eğitim",
+        "tutoring",
+        "yazılım mentoru"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "architecture review",
+          "towardCategorySlug": "teknik-danismanlik",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'code review'"
+        },
+        {
+          "term": "feasibility",
+          "towardCategorySlug": "teknik-danismanlik",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'code review'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "freelance-ve-yazilim-hizmet-sozlesmeleri": {
+      "positiveContext": [
+        "bakım sözleşmesi",
+        "freelance sözleşmesi",
+        "sla",
+        "software development agreement",
+        "sow",
+        "yazılım sözleşmesi",
+        "hizmet sözleşmesi",
+        "Acceptance Criteria"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "confidentiality agreement",
+          "towardCategorySlug": "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'contract drafting'"
+        },
+        {
+          "term": "confidentiality clause",
+          "towardCategorySlug": "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'contract drafting'"
+        },
+        {
+          "term": "contract review",
+          "towardCategorySlug": "sozlesme-hazirlama-ve-inceleme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'contract drafting'"
+        },
+        {
+          "term": "sözleşme",
+          "towardCategorySlug": "sozlesme-hazirlama-ve-inceleme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'contract drafting'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma": {
+      "positiveContext": [
+        "confidentiality agreement",
+        "confidentiality clause",
+        "gizlilik sözleşmesi",
+        "nda",
+        "non disclosure agreement",
+        "ticari sır",
+        "Confidentiality Clauses",
+        "IP Protection"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "bakım sözleşmesi",
+          "towardCategorySlug": "freelance-ve-yazilim-hizmet-sozlesmeleri",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'contract drafting'"
+        },
+        {
+          "term": "freelance sözleşmesi",
+          "towardCategorySlug": "freelance-ve-yazilim-hizmet-sozlesmeleri",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'contract drafting'"
+        },
+        {
+          "term": "contract review",
+          "towardCategorySlug": "sozlesme-hazirlama-ve-inceleme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'contract drafting'"
+        },
+        {
+          "term": "sözleşme",
+          "towardCategorySlug": "sozlesme-hazirlama-ve-inceleme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'contract drafting'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "saas-ve-uygulama-yasal-metinleri": {
+      "positiveContext": [
+        "acceptable use policy",
+        "eula",
+        "kullanım koşulları",
+        "saas sözleşmesi",
+        "terms and conditions",
+        "terms of service",
+        "uygulama kullanım şartları",
+        "AUP"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "unity-ile-oyun-gelistirme": {
+      "positiveContext": [
+        "c# oyun",
+        "unity 2d",
+        "unity 3d",
+        "unity developer",
+        "unity game",
+        "unity mobile",
+        "unity multiplayer",
+        "unity oyun"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "ad mediation",
+          "towardCategorySlug": "mobil-oyun-gelistirme-hypercasual-casual",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'c sharp'"
+        },
+        {
+          "term": "android oyun",
+          "towardCategorySlug": "mobil-oyun-gelistirme-hypercasual-casual",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'c sharp'"
+        },
+        {
+          "term": "2d oyun",
+          "towardCategorySlug": "oyun-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'c sharp'"
+        },
+        {
+          "term": "3d oyun",
+          "towardCategorySlug": "oyun-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'c sharp'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "unreal-engine-ve-c-oyun-gelistirme": {
+      "positiveContext": [
+        "blueprint",
+        "c++ game",
+        "lumen",
+        "nanite",
+        "ue5",
+        "unreal developer",
+        "unreal multiplayer",
+        "Blueprints"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "2d oyun",
+          "towardCategorySlug": "oyun-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'c++'"
+        },
+        {
+          "term": "3d oyun",
+          "towardCategorySlug": "oyun-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'c++'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "mobil-oyun-gelistirme-hypercasual-casual": {
+      "positiveContext": [
+        "ad mediation",
+        "android oyun",
+        "casual game",
+        "hyper casual",
+        "hypercasual",
+        "ios oyun",
+        "mobil oyun",
+        "mobile game"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "2d oyun",
+          "towardCategorySlug": "oyun-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'c sharp'"
+        },
+        {
+          "term": "3d oyun",
+          "towardCategorySlug": "oyun-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'c sharp'"
+        },
+        {
+          "term": "c# oyun",
+          "towardCategorySlug": "unity-ile-oyun-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'c sharp'"
+        },
+        {
+          "term": "unity 2d",
+          "towardCategorySlug": "unity-ile-oyun-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'c sharp'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "2d-oyun-sanati-ve-piksel-cizim": {
+      "positiveContext": [
+        "2d game art",
+        "2d oyun sanatı",
+        "piksel çizim",
+        "pixel art",
+        "pixel character",
+        "sprite",
+        "sprite animation",
+        "spritesheet"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "character design",
+          "towardCategorySlug": "karakter-tasarimi-ve-konsept-sanat",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'photoshop'"
+        },
+        {
+          "term": "concept art",
+          "towardCategorySlug": "karakter-tasarimi-ve-konsept-sanat",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'photoshop'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "3d-oyun-varliklari-ve-karakter-modelleme": {
+      "positiveContext": [
+        "3d game asset",
+        "3d karakter",
+        "character modeling",
+        "game asset",
+        "game ready model",
+        "low poly",
+        "oyun modeli",
+        "pbr"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "3d baskı",
+          "towardCategorySlug": "3d-baski-modelleme-ve-stl-hazirligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "3d printing",
+          "towardCategorySlug": "3d-baski-modelleme-ve-stl-hazirligi",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "3d product animation",
+          "towardCategorySlug": "3d-urun-animasyonu-ve-tanitim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "blender animation",
+          "towardCategorySlug": "3d-urun-animasyonu-ve-tanitim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "character design",
+          "towardCategorySlug": "karakter-tasarimi-ve-konsept-sanat",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "concept art",
+          "towardCategorySlug": "karakter-tasarimi-ve-konsept-sanat",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "oyun-mekanigi-ve-seviye-level-tasarimi": {
+      "positiveContext": [
+        "game balancing",
+        "game mechanics",
+        "gameplay design",
+        "gdd",
+        "level design",
+        "oyun ekonomisi",
+        "oyun mekaniği",
+        "seviye tasarımı"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "oyun-sesleri-ve-muzik-produksiyonu": {
+      "positiveContext": [
+        "adaptive audio",
+        "fmod",
+        "game audio",
+        "game music",
+        "game sfx",
+        "oyun müziği",
+        "soundtrack",
+        "wwise"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "audio effects",
+          "towardCategorySlug": "ses-tasarimi-ve-efektleri-sfx",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'mixing'"
+        },
+        {
+          "term": "cinematic sound",
+          "towardCategorySlug": "ses-tasarimi-ve-efektleri-sfx",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'mixing'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "dis-cephe-ve-peyzaj-3d-gorsellestirme": {
+      "positiveContext": [
+        "architectural visualization",
+        "dış cephe render",
+        "exterior render",
+        "facade render",
+        "landscape visualization",
+        "mimari görselleştirme",
+        "peyzaj render",
+        "Exterior Visualization"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "3d render",
+          "towardCategorySlug": "ic-mimari-ve-3d-fotogercekci-render",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term '3ds max'"
+        },
+        {
+          "term": "corona",
+          "towardCategorySlug": "ic-mimari-ve-3d-fotogercekci-render",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term '3ds max'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "3d-baski-modelleme-ve-stl-hazirligi": {
+      "positiveContext": [
+        "3d baskı",
+        "3d printing",
+        "3mf",
+        "baskıya hazır model",
+        "cad for printing",
+        "mesh repair",
+        "printable model",
+        "stl"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "3d game asset",
+          "towardCategorySlug": "3d-oyun-varliklari-ve-karakter-modelleme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "3d karakter",
+          "towardCategorySlug": "3d-oyun-varliklari-ve-karakter-modelleme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "3d product animation",
+          "towardCategorySlug": "3d-urun-animasyonu-ve-tanitim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "blender animation",
+          "towardCategorySlug": "3d-urun-animasyonu-ve-tanitim",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "3d render",
+          "towardCategorySlug": "ic-mimari-ve-3d-fotogercekci-render",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "corona",
+          "towardCategorySlug": "ic-mimari-ve-3d-fotogercekci-render",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'blender'"
+        },
+        {
+          "term": "3d ürün modelleme",
+          "towardCategorySlug": "3d-urun-modelleme-ve-cad",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'cad'"
+        },
+        {
+          "term": "endüstriyel tasarım",
+          "towardCategorySlug": "3d-urun-modelleme-ve-cad",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'cad'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "mekansal-bilisim-vr-ve-ar-gelistirme": {
+      "positiveContext": [
+        "artırılmış gerçeklik",
+        "augmented reality",
+        "meta quest",
+        "sanal gerçeklik",
+        "spatial computing",
+        "virtual reality",
+        "visionos",
+        "webxr"
+      ],
+      "softNegativeContext": [],
+      "hardExclusions": []
+    },
+    "e-ticaret-magaza-ve-siparis-operasyon-destegi": {
+      "positiveContext": [
+        "ecommerce operations",
+        "iade yönetimi",
+        "kargo takibi",
+        "mağaza yönetimi",
+        "order management",
+        "sipariş yönetimi",
+        "stok yönetimi",
+        "ürün kataloğu"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "cro",
+          "towardCategorySlug": "e-ticaret-yonetimi-ve-buyume",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'amazon'"
+        },
+        {
+          "term": "e-ticaret yönetimi",
+          "towardCategorySlug": "e-ticaret-yonetimi-ve-buyume",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'amazon'"
+        },
+        {
+          "term": "e-ticaret sitesi",
+          "towardCategorySlug": "e-ticaret-sitesi-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'woo commerce'"
+        },
+        {
+          "term": "ecommerce website",
+          "towardCategorySlug": "e-ticaret-sitesi-gelistirme",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'woo commerce'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "potansiyel-musteri-ve-veri-zenginlestirme": {
+      "positiveContext": [
+        "b2b leads",
+        "data enrichment",
+        "email finding",
+        "lead list",
+        "linkedin research",
+        "müşteri listesi",
+        "veri zenginleştirme",
+        "lead generation"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "b2b lead",
+          "towardCategorySlug": "b2b-buyume-ve-linkedin-lead-generation",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'apollo'"
+        },
+        {
+          "term": "cold outreach",
+          "towardCategorySlug": "b2b-buyume-ve-linkedin-lead-generation",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'apollo'"
+        }
+      ],
+      "hardExclusions": []
+    },
+    "ses-ve-video-desifre-destegi": {
+      "positiveContext": [
+        "audio to text",
+        "deşifre",
+        "interview transcription",
+        "konuşma yazıya çevirme",
+        "ses yazıya çevirme",
+        "timestamp",
+        "toplantı deşifresi",
+        "video to text"
+      ],
+      "softNegativeContext": [
+        {
+          "term": "altyazı",
+          "towardCategorySlug": "altyazi-transkripsiyon-ve-dinamik-metinler",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'srt'"
+        },
+        {
+          "term": "dynamic captions",
+          "towardCategorySlug": "altyazi-transkripsiyon-ve-dinamik-metinler",
+          "penalty": -0.1,
+          "reason": "context for ambiguous term 'srt'"
+        }
+      ],
+      "hardExclusions": []
+    }
+  }
+}

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
-import { ShieldCheck } from "lucide-react";
 import { getSession } from "@/src/modules/auth/session";
 import { CategoryService } from "@/src/modules/categories/service";
 import { CategoryListInteractive } from "@/src/components/categories/category-list-interactive";
@@ -127,21 +126,30 @@ export default async function CategoriesPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Header */}
-      <header className="space-y-3 pb-2">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--color-text-primary)]">
-            {isTr ? "Sektörler ve Uzmanlık Kategorileri" : "Sectors & Expertise Categories"}
-          </h1>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold self-start sm:self-auto shrink-0 shadow-xs">
-            <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>{isTr ? "Uçtan Uca Gizli Takip" : "100% Private Follow"}</span>
-          </div>
-        </div>
-        <p className="text-sm sm:text-base text-[var(--color-text-secondary)] max-w-3xl leading-relaxed">
+      {/* Centered Hero Header */}
+      <header className="text-center max-w-4xl mx-auto space-y-4 pt-2 pb-2">
+        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--color-text-primary)] leading-tight sm:leading-tight">
+          {isTr ? (
+            <>
+              Geleceğin Projelerini ve{" "}
+              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 dark:from-blue-400 dark:via-indigo-300 dark:to-violet-400 bg-clip-text text-transparent">
+                Doğru Yetenekleri
+              </span>{" "}
+              Keşfedin
+            </>
+          ) : (
+            <>
+              Discover Modern Projects &{" "}
+              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 dark:from-blue-400 dark:via-indigo-300 dark:to-violet-400 bg-clip-text text-transparent">
+                World-Class Talent
+              </span>
+            </>
+          )}
+        </h1>
+        <p className="text-base sm:text-lg text-[var(--color-text-secondary)] max-w-2xl mx-auto leading-relaxed">
           {isTr
-            ? "10 ana sektördeki 106 uzmanlık alanını takip ederek doğrudan ilan akışınızı kişiselleştirin. Takip tercihleriniz profilinizde asla herkese açık paylaşılmaz."
-            : "Explore and follow specializations across 10 major industry sectors to personalize your direct feed. Your choices remain strictly confidential."}
+            ? `Yazılımdan tasarıma, yapay zekadan dijital pazarlamaya 10 ana sektörde ${categories.length} uzmanlık alanını inceleyin. İlan akışınızı kişiselleştirin veya projeniz için en doğru yetenekle anında buluşun.`
+            : `Explore ${categories.length} specialized categories across 10 major industries. Personalize your project feed, connect with top-tier freelance experts, or discover your next big opportunity.`}
         </p>
       </header>
 

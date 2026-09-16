@@ -7,9 +7,9 @@ import path from "node:path";
 
 describe("Database Foundation & Schema Invariants", () => {
   describe("Seed Taxonomy Validation", () => {
-    it("contains 10 official sectors and 106 categories", () => {
+    it("contains 10 official sectors and 110 categories", () => {
       expect(SEED_SECTORS.length).toBe(10);
-      expect(SEED_CATEGORIES.length).toBe(106);
+      expect(SEED_CATEGORIES.length).toBe(110);
     });
 
     it("ensures each category has unique keys, valid parent sector and TR/EN translations", () => {

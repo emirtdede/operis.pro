@@ -434,6 +434,32 @@ export class EngagementService {
           }
         }
 
+        // Fail-open: Notify Inngest to cancel sleeping stale-offer workflows for accepted & superseded offers
+        try {
+          import("@/src/lib/inngest/client")
+            .then(({ sendInngestEvent }) => {
+              if (engagement?.acceptedOfferId) {
+                sendInngestEvent("operis/offer.resolved", {
+                  offerId: engagement.acceptedOfferId,
+                  listingId: engagement.listingId,
+                  status: "ACCEPTED",
+                }).catch(() => {});
+              }
+              if (Array.isArray(rejectedOfferors)) {
+                for (const rej of rejectedOfferors) {
+                  sendInngestEvent("operis/offer.resolved", {
+                    offerId: rej.id,
+                    listingId: engagement.listingId,
+                    status: "REJECTED_OTHER_SELECTED",
+                  }).catch(() => {});
+                }
+              }
+            })
+            .catch(() => {});
+        } catch {
+          // Fail-open
+        }
+
         return engagement;
       } catch (err: unknown) {
         const errObj = err as { code?: string; message?: string };

@@ -17,9 +17,12 @@ import {
   Laptop,
   ArrowRight,
   FileText,
+  Folder,
+  X,
 } from "lucide-react";
 import { useTheme } from "./theme-provider";
 import { Locale } from "@/src/lib/i18n/config";
+import { searchCategories } from "@/src/lib/search/engine";
 
 interface SearchListingResult {
   id: string;
@@ -45,7 +48,7 @@ interface PaletteAction {
   title: string;
   subtitle?: string;
   icon: React.ReactNode;
-  category: "listings" | "navigation" | "theme";
+  category: "categories" | "listings" | "navigation" | "theme";
   onSelect: () => void;
 }
 
@@ -254,6 +257,20 @@ export function CommandPalette({ locale, isOpen, onClose, userHandle }: CommandP
     },
   ];
 
+  // Dynamic category search actions via v5 search engine
+  const categoryResults = query.trim() ? searchCategories(query.trim(), { limit: 3 }) : [];
+  const categoryActions: PaletteAction[] = categoryResults.map((cat) => ({
+    id: `category-${cat.slug}`,
+    title: cat.name,
+    subtitle: isTr ? "Kategoriyi İncele" : "Explore Category",
+    icon: <Folder className="h-4 w-4 text-emerald-400" />,
+    category: "categories",
+    onSelect: () => {
+      router.push(isTr ? `/tr/kategoriler?q=${encodeURIComponent(cat.name)}` : `/en/categories?q=${encodeURIComponent(cat.name)}`);
+      onClose();
+    },
+  }));
+
   // Dynamic listing search actions
   const listingActions: PaletteAction[] = searchResults.map((item) => ({
     id: `listing-${item.id}`,
@@ -270,6 +287,31 @@ export function CommandPalette({ locale, isOpen, onClose, userHandle }: CommandP
       onClose();
     },
   }));
+
+  // Universal search action (always available when query is typed)
+  const universalSearchActions: PaletteAction[] = query.trim()
+    ? [
+        {
+          id: "search-all-listings-universal",
+          title: isTr
+            ? `"${query.trim()}" için tüm ilanlarda ara`
+            : `Search all listings for "${query.trim()}"`,
+          subtitle: isTr
+            ? "İlanlar sayfasına git ve tüm sonuçları listele"
+            : "Go to listings page with full filter results",
+          icon: <Search className="h-4 w-4 text-blue-400" />,
+          category: "navigation",
+          onSelect: () => {
+            router.push(
+              isTr
+                ? `/tr/ilanlar?q=${encodeURIComponent(query.trim())}`
+                : `/en/listings?q=${encodeURIComponent(query.trim())}`
+            );
+            onClose();
+          },
+        },
+      ]
+    : [];
 
   // Build combined item list
   const filteredNavActions = query.trim()
@@ -289,6 +331,8 @@ export function CommandPalette({ locale, isOpen, onClose, userHandle }: CommandP
     : themeActions;
 
   const combinedActions: PaletteAction[] = [
+    ...universalSearchActions,
+    ...categoryActions,
     ...listingActions,
     ...filteredNavActions,
     ...filteredThemeActions,
@@ -353,6 +397,21 @@ export function CommandPalette({ locale, isOpen, onClose, userHandle }: CommandP
             }
             className="flex-1 bg-transparent text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none"
           />
+          {query && (
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                setSelectedIndex(0);
+                inputRef.current?.focus();
+              }}
+              className="p-1 rounded-lg text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] transition-colors cursor-pointer"
+              title={isTr ? "Temizle" : "Clear"}
+              aria-label={isTr ? "Aramayı Temizle" : "Clear search"}
+            >
+              <X className="h-3.5 w-3.5" aria-hidden="true" />
+            </button>
+          )}
           {isSearching ? (
             <span className="text-[11px] text-blue-400 font-medium animate-pulse">
               {isTr ? "Aranıyor..." : "Searching..."}
@@ -368,19 +427,107 @@ export function CommandPalette({ locale, isOpen, onClose, userHandle }: CommandP
 
         {/* Results Body */}
         <div className="flex-1 overflow-y-auto p-2 space-y-3 divide-y divide-[var(--color-border-subtle)]/40">
+          {/* Universal Search section (Always available when query is typed) */}
+          {universalSearchActions.length > 0 && (
+            <div className="space-y-1">
+              <div className="px-3 py-1 text-[10px] font-bold text-blue-500 uppercase tracking-wider">
+                {isTr ? "Doğrudan Arama" : "Direct Search"}
+              </div>
+              {universalSearchActions.map((action) => {
+                const overallIdx = combinedActions.findIndex((a) => a.id === action.id);
+                const isSelected = overallIdx === selectedIndex;
+                return (
+                  <div
+                    key={action.id}
+                    onClick={action.onSelect}
+                    onMouseEnter={() => setSelectedIndex(overallIdx)}
+                    className={`flex items-center justify-between gap-3 px-3 py-2.5 rounded-2xl cursor-pointer transition-all ${
+                      isSelected
+                        ? "bg-blue-600/15 text-[var(--color-text-primary)] border border-blue-500/30"
+                        : "hover:bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)]"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="h-7 w-7 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
+                        {action.icon}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-xs font-semibold text-[var(--color-text-primary)] truncate">
+                          {action.title}
+                        </div>
+                        {action.subtitle && (
+                          <div className="text-[10px] text-[var(--color-text-tertiary)] truncate">
+                            {action.subtitle}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <kbd className="px-1.5 py-0.5 rounded border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] text-[10px] font-mono text-blue-400">
+                        ↵
+                      </kbd>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          {/* Categories section */}
+          {categoryActions.length > 0 && (
+            <div className="space-y-1">
+              <div className="px-3 py-1 text-[10px] font-bold text-emerald-500 uppercase tracking-wider">
+                {isTr ? "Kategoriler" : "Categories"}
+              </div>
+              {categoryActions.map((action) => {
+                const overallIdx = combinedActions.findIndex((a) => a.id === action.id);
+                const isSelected = overallIdx === selectedIndex;
+                return (
+                  <div
+                    key={action.id}
+                    onClick={action.onSelect}
+                    onMouseEnter={() => setSelectedIndex(overallIdx)}
+                    className={`flex items-center justify-between gap-3 px-3 py-2.5 rounded-2xl cursor-pointer transition-all ${
+                      isSelected
+                        ? "bg-emerald-500/15 text-[var(--color-text-primary)] border border-emerald-500/25"
+                        : "hover:bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)]"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="h-7 w-7 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+                        {action.icon}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-xs font-semibold text-[var(--color-text-primary)] truncate">
+                          {action.title}
+                        </div>
+                        {action.subtitle && (
+                          <div className="text-[10px] text-[var(--color-text-tertiary)] truncate">
+                            {action.subtitle}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <ArrowRight className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
           {/* Listings section */}
           {listingActions.length > 0 && (
             <div className="space-y-1">
               <div className="px-3 py-1 text-[10px] font-bold text-[var(--color-text-tertiary)] uppercase tracking-wider">
                 {isTr ? "Eşleşen İlanlar" : "Matching Listings"}
               </div>
-              {listingActions.map((action, idx) => {
-                const isSelected = idx === selectedIndex;
+              {listingActions.map((action) => {
+                const overallIdx = combinedActions.findIndex((a) => a.id === action.id);
+                const isSelected = overallIdx === selectedIndex;
                 return (
                   <div
                     key={action.id}
                     onClick={action.onSelect}
-                    onMouseEnter={() => setSelectedIndex(idx)}
+                    onMouseEnter={() => setSelectedIndex(overallIdx)}
                     className={`flex items-center justify-between gap-3 px-3 py-2.5 rounded-2xl cursor-pointer transition-all ${
                       isSelected
                         ? "bg-blue-500/15 text-[var(--color-text-primary)] border border-blue-500/25"

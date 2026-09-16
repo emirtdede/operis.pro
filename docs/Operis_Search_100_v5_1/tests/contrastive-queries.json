@@ -1,0 +1,434 @@
+{
+  "version": "5.0.0",
+  "caseCount": 50,
+  "description": "Pairwise/contrastive relevance tests for categories that share tools, deliverables or vocabulary.",
+  "cases": [
+    {
+      "id": "CQ-001",
+      "query": "Figma tasarımım hazır, bunu React ile çalışan sayfalara çevirecek geliştirici arıyorum.",
+      "expectedTop1": "frontend-ve-arayuz-muhendisligi",
+      "mustRankAbove": [
+        "web-sitesi-ui-ux-tasarimi",
+        "ui-ux-tasarim"
+      ]
+    },
+    {
+      "id": "CQ-002",
+      "query": "Web sitem henüz kodlanmayacak; önce tüm ekranları Figma'da tasarlatmak istiyorum.",
+      "expectedTop1": "web-sitesi-ui-ux-tasarimi",
+      "mustRankAbove": [
+        "frontend-ve-arayuz-muhendisligi",
+        "web-gelistirme"
+      ]
+    },
+    {
+      "id": "CQ-003",
+      "query": "Mobil uygulamanın ekranları hazır, Flutter ile gerçek uygulamaya dönüştürülecek.",
+      "expectedTop1": "mobil-uygulama-gelistirme",
+      "mustRankAbove": [
+        "mobil-uygulama-ui-ux-tasarimi"
+      ]
+    },
+    {
+      "id": "CQ-004",
+      "query": "Uygulamanın sadece kullanıcı akışlarını ve mobil ekran tasarımlarını hazırlatmak istiyorum.",
+      "expectedTop1": "mobil-uygulama-ui-ux-tasarimi",
+      "mustRankAbove": [
+        "mobil-uygulama-gelistirme"
+      ]
+    },
+    {
+      "id": "CQ-005",
+      "query": "API büyüdü; servisleri Kafka ve bağımsız deploy yapısıyla mikroservislere ayırmak istiyorum.",
+      "expectedTop1": "mikroservis-ve-api-mimarisi",
+      "mustRankAbove": [
+        "backend-ve-api-muhendisligi"
+      ]
+    },
+    {
+      "id": "CQ-006",
+      "query": "Tek bir uygulama için giriş, CRUD ve temel REST API geliştirecek backend geliştirici arıyorum.",
+      "expectedTop1": "backend-ve-api-muhendisligi",
+      "mustRankAbove": [
+        "mikroservis-ve-api-mimarisi"
+      ]
+    },
+    {
+      "id": "CQ-007",
+      "query": "AWS üzerindeki uygulamamı CI/CD ve container yapısıyla otomatik deploy etmek istiyorum.",
+      "expectedTop1": "devops-ve-bulut-bilisim",
+      "mustRankAbove": [
+        "bulut-mimarisi-ve-altyapi-yonetimi"
+      ]
+    },
+    {
+      "id": "CQ-008",
+      "query": "Şirket için baştan AWS ağ, IAM, Terraform ve ölçeklenebilir cloud mimarisi tasarlatacağım.",
+      "expectedTop1": "bulut-mimarisi-ve-altyapi-yonetimi",
+      "mustRankAbove": [
+        "devops-ve-bulut-bilisim"
+      ]
+    },
+    {
+      "id": "CQ-009",
+      "query": "Web uygulamamı saldırgan gibi test edip bulunan açıkları kanıtlarıyla raporlayacak uzman arıyorum.",
+      "expectedTop1": "penetrasyon-testi-ve-guvenlik-denetimi",
+      "mustRankAbove": [
+        "siber-guvenlik"
+      ]
+    },
+    {
+      "id": "CQ-010",
+      "query": "Şirket genelinde güvenlik politikaları, erişimler ve uygulama güvenliği için sürekli danışmanlık istiyorum.",
+      "expectedTop1": "siber-guvenlik",
+      "mustRankAbove": [
+        "penetrasyon-testi-ve-guvenlik-denetimi"
+      ]
+    },
+    {
+      "id": "CQ-011",
+      "query": "Geçmiş satış verilerinden tahmin modeli eğitmek istiyorum.",
+      "expectedTop1": "yapay-zeka-ve-makine-ogrenimi",
+      "mustRankAbove": [
+        "llm-ve-gpt-uygulama-gelistirme"
+      ]
+    },
+    {
+      "id": "CQ-012",
+      "query": "Kendi dokümanlarımdan cevap veren RAG tabanlı GPT uygulaması yapmak istiyorum.",
+      "expectedTop1": "llm-ve-gpt-uygulama-gelistirme",
+      "mustRankAbove": [
+        "yapay-zeka-ve-makine-ogrenimi",
+        "yapay-zeka-ajanlari-ve-is-akislari"
+      ]
+    },
+    {
+      "id": "CQ-013",
+      "query": "Birden çok aracı çağırıp görevleri sırayla tamamlayan AI agent geliştirmek istiyorum.",
+      "expectedTop1": "yapay-zeka-ajanlari-ve-is-akislari",
+      "mustRankAbove": [
+        "llm-ve-gpt-uygulama-gelistirme",
+        "otomasyon-ve-entegrasyonlar"
+      ]
+    },
+    {
+      "id": "CQ-014",
+      "query": "Sitemin organik Google sıralamasını artırmak için anahtar kelime ve backlink çalışması lazım.",
+      "expectedTop1": "arama-motoru-optimizasyonu-seo",
+      "mustRankAbove": [
+        "teknik-seo-ve-site-hizi-optimizasyonu",
+        "seo-uyumlu-blog-ve-makale-yazarligi"
+      ]
+    },
+    {
+      "id": "CQ-015",
+      "query": "Core Web Vitals kötü ve crawl hataları var; teknik sorunları düzeltmek istiyorum.",
+      "expectedTop1": "teknik-seo-ve-site-hizi-optimizasyonu",
+      "mustRankAbove": [
+        "arama-motoru-optimizasyonu-seo"
+      ]
+    },
+    {
+      "id": "CQ-016",
+      "query": "Google arama reklamlarında anahtar kelime ve teklif optimizasyonu istiyorum.",
+      "expectedTop1": "google-reklamlari-sem-ve-ppc",
+      "mustRankAbove": [
+        "sosyal-medya-reklamciligi"
+      ]
+    },
+    {
+      "id": "CQ-017",
+      "query": "Instagram ve TikTok'ta ücretli reklam kampanyalarını yönetecek media buyer arıyorum.",
+      "expectedTop1": "sosyal-medya-reklamciligi",
+      "mustRankAbove": [
+        "google-reklamlari-sem-ve-ppc",
+        "sosyal-medya-yonetimi-ve-stratejisi"
+      ]
+    },
+    {
+      "id": "CQ-018",
+      "query": "Instagram hesabım için içerik takvimi ve organik topluluk yönetimi istiyorum.",
+      "expectedTop1": "sosyal-medya-yonetimi-ve-stratejisi",
+      "mustRankAbove": [
+        "sosyal-medya-reklamciligi"
+      ]
+    },
+    {
+      "id": "CQ-019",
+      "query": "Shopify üzerinde ödeme, sepet ve ürün sayfaları olan mağaza geliştirecek biri lazım.",
+      "expectedTop1": "e-ticaret-sitesi-gelistirme",
+      "mustRankAbove": [
+        "e-ticaret-yonetimi-ve-buyume",
+        "e-ticaret-magaza-ve-siparis-operasyon-destegi"
+      ]
+    },
+    {
+      "id": "CQ-020",
+      "query": "Mevcut online mağazanın kampanya, dönüşüm ve büyüme tarafını yönetecek uzman arıyorum.",
+      "expectedTop1": "e-ticaret-yonetimi-ve-buyume",
+      "mustRankAbove": [
+        "e-ticaret-sitesi-gelistirme",
+        "e-ticaret-magaza-ve-siparis-operasyon-destegi"
+      ]
+    },
+    {
+      "id": "CQ-021",
+      "query": "Sipariş, stok, kargo ve iade operasyonlarını her gün takip edecek destek arıyorum.",
+      "expectedTop1": "e-ticaret-magaza-ve-siparis-operasyon-destegi",
+      "mustRankAbove": [
+        "e-ticaret-yonetimi-ve-buyume",
+        "e-ticaret-sitesi-gelistirme"
+      ]
+    },
+    {
+      "id": "CQ-022",
+      "query": "Podcast kaydındaki dip sesi temizleyip konuşma seviyelerini eşitlemek istiyorum.",
+      "expectedTop1": "podcast-duzenleme-ve-ses-muhendisligi",
+      "mustRankAbove": [
+        "ses-ve-video-desifre-destegi"
+      ]
+    },
+    {
+      "id": "CQ-023",
+      "query": "Bir röportaj kaydını konuşmacılar ve zaman damgalarıyla eksiksiz yazıya döktürmek istiyorum.",
+      "expectedTop1": "ses-ve-video-desifre-destegi",
+      "mustRankAbove": [
+        "altyazi-transkripsiyon-ve-dinamik-metinler",
+        "podcast-duzenleme-ve-ses-muhendisligi"
+      ]
+    },
+    {
+      "id": "CQ-024",
+      "query": "Videoya zamanlaması düzgün SRT altyazı ve dinamik caption ekletmek istiyorum.",
+      "expectedTop1": "altyazi-transkripsiyon-ve-dinamik-metinler",
+      "mustRankAbove": [
+        "ses-ve-video-desifre-destegi"
+      ]
+    },
+    {
+      "id": "CQ-025",
+      "query": "Web uygulamasının JSON ve arayüz metinlerini i18n yapısına taşıyıp çoklu dile hazırlamak istiyorum.",
+      "expectedTop1": "yazilim-ve-arayuz-yerellestirmesi-i18n",
+      "mustRankAbove": [
+        "profesyonel-ceviri-ve-yerellestirme"
+      ]
+    },
+    {
+      "id": "CQ-026",
+      "query": "Genel şirket tanıtım metnini Türkçeden İngilizceye profesyonel çevirmek istiyorum.",
+      "expectedTop1": "profesyonel-ceviri-ve-yerellestirme",
+      "mustRankAbove": [
+        "yazilim-ve-arayuz-yerellestirmesi-i18n",
+        "hukuki-tibbi-ve-akademik-ceviri"
+      ]
+    },
+    {
+      "id": "CQ-027",
+      "query": "Tıbbi raporu alan terminolojisine hakim bir çevirmene çevirmek istiyorum.",
+      "expectedTop1": "hukuki-tibbi-ve-akademik-ceviri",
+      "mustRankAbove": [
+        "profesyonel-ceviri-ve-yerellestirme"
+      ]
+    },
+    {
+      "id": "CQ-028",
+      "query": "Unity ile mobil oyunun oynanış kodlarını ve build sürecini geliştirecek biri lazım.",
+      "expectedTop1": "unity-ile-oyun-gelistirme",
+      "mustRankAbove": [
+        "oyun-gelistirme",
+        "mobil-oyun-gelistirme-hypercasual-casual"
+      ]
+    },
+    {
+      "id": "CQ-029",
+      "query": "UE5 Blueprint ve C++ ile oyun mekanikleri geliştirecek uzman arıyorum.",
+      "expectedTop1": "unreal-engine-ve-c-oyun-gelistirme",
+      "mustRankAbove": [
+        "oyun-gelistirme"
+      ]
+    },
+    {
+      "id": "CQ-030",
+      "query": "Reklam gelirli hypercasual mobil oyun geliştirip mağazaya çıkmak istiyorum.",
+      "expectedTop1": "mobil-oyun-gelistirme-hypercasual-casual",
+      "mustRankAbove": [
+        "oyun-gelistirme",
+        "unity-ile-oyun-gelistirme"
+      ]
+    },
+    {
+      "id": "CQ-031",
+      "query": "Oyunun motorundan bağımsız olarak genel mekanik ve prototip geliştirme desteği arıyorum.",
+      "expectedTop1": "oyun-gelistirme",
+      "mustRankAbove": [
+        "unity-ile-oyun-gelistirme",
+        "unreal-engine-ve-c-oyun-gelistirme",
+        "mobil-oyun-gelistirme-hypercasual-casual"
+      ]
+    },
+    {
+      "id": "CQ-032",
+      "query": "Fiziksel üretim için ölçülü SolidWorks/Fusion 360 CAD modeli istiyorum.",
+      "expectedTop1": "3d-urun-modelleme-ve-cad",
+      "mustRankAbove": [
+        "3d-baski-modelleme-ve-stl-hazirligi",
+        "3d-urun-animasyonu-ve-tanitim"
+      ]
+    },
+    {
+      "id": "CQ-033",
+      "query": "Ürünü reklamda göstermek için gerçekçi CGI animasyon hazırlatmak istiyorum.",
+      "expectedTop1": "3d-urun-animasyonu-ve-tanitim",
+      "mustRankAbove": [
+        "3d-urun-modelleme-ve-cad"
+      ]
+    },
+    {
+      "id": "CQ-034",
+      "query": "Modeli 3D yazıcıda sorunsuz basılabilecek STL dosyasına dönüştürmek istiyorum.",
+      "expectedTop1": "3d-baski-modelleme-ve-stl-hazirligi",
+      "mustRankAbove": [
+        "3d-urun-modelleme-ve-cad"
+      ]
+    },
+    {
+      "id": "CQ-035",
+      "query": "Binanın Revit/BIM teknik modelini ve planlarını hazırlatmak istiyorum.",
+      "expectedTop1": "mimari-proje-plan-ve-bim",
+      "mustRankAbove": [
+        "ic-mimari-ve-3d-fotogercekci-render",
+        "dis-cephe-ve-peyzaj-3d-gorsellestirme"
+      ]
+    },
+    {
+      "id": "CQ-036",
+      "query": "Salon ve mutfağın fotogerçekçi iç mekan renderlarını istiyorum.",
+      "expectedTop1": "ic-mimari-ve-3d-fotogercekci-render",
+      "mustRankAbove": [
+        "mimari-proje-plan-ve-bim",
+        "dis-cephe-ve-peyzaj-3d-gorsellestirme"
+      ]
+    },
+    {
+      "id": "CQ-037",
+      "query": "Binanın dış cephesi ve peyzajı için fotogerçekçi görselleştirme istiyorum.",
+      "expectedTop1": "dis-cephe-ve-peyzaj-3d-gorsellestirme",
+      "mustRankAbove": [
+        "mimari-proje-plan-ve-bim",
+        "ic-mimari-ve-3d-fotogercekci-render"
+      ]
+    },
+    {
+      "id": "CQ-038",
+      "query": "Genel hizmet sözleşmesindeki riskli maddeleri inceletmek istiyorum.",
+      "expectedTop1": "sozlesme-hazirlama-ve-inceleme",
+      "mustRankAbove": [
+        "freelance-ve-yazilim-hizmet-sozlesmeleri",
+        "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma",
+        "saas-ve-uygulama-yasal-metinleri"
+      ]
+    },
+    {
+      "id": "CQ-039",
+      "query": "Yazılım geliştirme projesi için kapsam, teslim, IP ve ödeme maddeleri olan sözleşme lazım.",
+      "expectedTop1": "freelance-ve-yazilim-hizmet-sozlesmeleri",
+      "mustRankAbove": [
+        "sozlesme-hazirlama-ve-inceleme"
+      ]
+    },
+    {
+      "id": "CQ-040",
+      "query": "Fikri paylaşmadan önce karşı tarafa imzalatacağım NDA hazırlatmak istiyorum.",
+      "expectedTop1": "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma",
+      "mustRankAbove": [
+        "sozlesme-hazirlama-ve-inceleme"
+      ]
+    },
+    {
+      "id": "CQ-041",
+      "query": "SaaS uygulamam için kullanım koşulları, abonelik şartları ve EULA lazım.",
+      "expectedTop1": "saas-ve-uygulama-yasal-metinleri",
+      "mustRankAbove": [
+        "sozlesme-hazirlama-ve-inceleme"
+      ]
+    },
+    {
+      "id": "CQ-042",
+      "query": "Rakip şirketlerin fiyat, özellik ve konumlandırmasını detaylı araştırmak istiyorum.",
+      "expectedTop1": "pazar-ve-rakip-arastirmasi",
+      "mustRankAbove": [
+        "b2b-buyume-ve-linkedin-lead-generation",
+        "potansiyel-musteri-ve-veri-zenginlestirme"
+      ]
+    },
+    {
+      "id": "CQ-043",
+      "query": "LinkedIn'den hedef unvanlara göre potansiyel müşteri listesi çıkarmak istiyorum.",
+      "expectedTop1": "b2b-buyume-ve-linkedin-lead-generation",
+      "mustRankAbove": [
+        "potansiyel-musteri-ve-veri-zenginlestirme",
+        "pazar-ve-rakip-arastirmasi"
+      ]
+    },
+    {
+      "id": "CQ-044",
+      "query": "Elimdeki şirket listesini doğrulanmış e-posta ve unvanlarla zenginleştirmek istiyorum.",
+      "expectedTop1": "potansiyel-musteri-ve-veri-zenginlestirme",
+      "mustRankAbove": [
+        "b2b-buyume-ve-linkedin-lead-generation",
+        "veri-girisi-ve-kapsamli-web-arastirmasi"
+      ]
+    },
+    {
+      "id": "CQ-045",
+      "query": "Landing page için satışa yönlendiren başlıklar ve ikna edici metin yazdırmak istiyorum.",
+      "expectedTop1": "reklam-ve-satis-metni-yazarligi",
+      "mustRankAbove": [
+        "seo-uyumlu-blog-ve-makale-yazarligi",
+        "icerik-pazarlamasi-ve-donusum-hunisi"
+      ]
+    },
+    {
+      "id": "CQ-046",
+      "query": "Google için araştırılmış uzun SEO blog makalesi yazdırmak istiyorum.",
+      "expectedTop1": "seo-uyumlu-blog-ve-makale-yazarligi",
+      "mustRankAbove": [
+        "reklam-ve-satis-metni-yazarligi",
+        "arama-motoru-optimizasyonu-seo"
+      ]
+    },
+    {
+      "id": "CQ-047",
+      "query": "API endpoint'lerini geliştiriciler için teknik dokümana dönüştürmek istiyorum.",
+      "expectedTop1": "teknik-yazarlik-ve-dokumantasyon",
+      "mustRankAbove": [
+        "editoryal-duzeltme-ve-redaksiyon"
+      ]
+    },
+    {
+      "id": "CQ-048",
+      "query": "Yazdığım makalenin imla, anlatım ve tutarlılığını düzelttirmek istiyorum.",
+      "expectedTop1": "editoryal-duzeltme-ve-redaksiyon",
+      "mustRankAbove": [
+        "teknik-yazarlik-ve-dokumantasyon"
+      ]
+    },
+    {
+      "id": "CQ-049",
+      "query": "Videonun kurgusu tamam, sadece sinematik renk düzenlemesi yaptırmak istiyorum.",
+      "expectedTop1": "video-renk-duzenleme-color-grading",
+      "mustRankAbove": [
+        "youtube-ve-uzun-format-video-kurgusu"
+      ]
+    },
+    {
+      "id": "CQ-050",
+      "query": "Ham YouTube kaydını kesip biçip akıcı uzun videoya dönüştürecek editör arıyorum.",
+      "expectedTop1": "youtube-ve-uzun-format-video-kurgusu",
+      "mustRankAbove": [
+        "video-renk-duzenleme-color-grading",
+        "kisa-format-video-reels-tiktok-shorts"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,902 @@
+{
+  "version": "5.0.0",
+  "policy": "precision-first, category-scoped synonyms; no required minimum; exact phrase/token matching only",
+  "categoriesBySlug": {
+    "web-gelistirme": [
+      "ts",
+      "js",
+      "web dev",
+      "website dev",
+      "site geliştirme",
+      "web geliştirici",
+      "website developer",
+      "kurumsal web geliştirici"
+    ],
+    "frontend-ve-arayuz-muhendisligi": [
+      "vuejs",
+      "next js",
+      "vue js",
+      "ts",
+      "js",
+      "frontend dev",
+      "front-end dev",
+      "ui engineer",
+      "react geliştirici",
+      "web arayüz geliştirici",
+      "frontend engineer"
+    ],
+    "backend-ve-api-muhendisligi": [
+      "aspnet",
+      "net",
+      "node js",
+      "dotnet",
+      "backend dev",
+      "back-end dev",
+      "api developer",
+      "api geliştirici",
+      "server side developer",
+      "backend engineer"
+    ],
+    "mobil-uygulama-gelistirme": [
+      "mobile dev",
+      "app developer",
+      "mobil geliştirici",
+      "flutter geliştirici",
+      "react native geliştirici",
+      "mobile engineer"
+    ],
+    "masaustu-yazilim-gelistirme": [
+      "c sharp",
+      "csharp",
+      "dotnet",
+      "desktop dev",
+      "masaüstü geliştirici",
+      "windows developer",
+      "desktop developer",
+      "wpf developer"
+    ],
+    "devops-ve-bulut-bilisim": [
+      "cloud devops",
+      "dev ops",
+      "platform engineer",
+      "devops engineer",
+      "cloud engineer",
+      "site reliability engineer"
+    ],
+    "veritabani-muhendisligi": [
+      "postgre sql",
+      "ms sql",
+      "database engineer",
+      "db engineer",
+      "database admin",
+      "database developer",
+      "sql uzmanı",
+      "db admin"
+    ],
+    "siber-guvenlik": [
+      "infosec",
+      "cybersec",
+      "security engineer",
+      "security consultant",
+      "security analyst",
+      "application security"
+    ],
+    "yazilim-testi-ve-kalite-guvencesi": [
+      "software qa",
+      "qa testing",
+      "test engineer",
+      "qa engineer",
+      "software tester",
+      "automation tester"
+    ],
+    "blokzincir-muhendisligi": [
+      "web3js",
+      "web3 js",
+      "ethersjs",
+      "ethers js",
+      "web3 developer",
+      "smart contract developer",
+      "solidity developer",
+      "blockchain developer",
+      "web3 engineer"
+    ],
+    "gomulu-sistemler-ve-iot": [
+      "embedded dev",
+      "firmware engineer",
+      "iot developer",
+      "firmware developer",
+      "embedded engineer",
+      "iot engineer"
+    ],
+    "bt-sistem-ve-ag-yonetimi": [
+      "sysadmin",
+      "network admin",
+      "system administrator",
+      "network engineer",
+      "system engineer",
+      "it administrator"
+    ],
+    "bilgisayar-donanimi-ve-teknik-destek": [
+      "BIOS UEFI",
+      "desktop support",
+      "it support",
+      "hardware support",
+      "desktop support engineer",
+      "pc technician",
+      "help desk technician"
+    ],
+    "diger-teknoloji-hizmetleri": [
+      "it consulting",
+      "technology consulting",
+      "it consultant",
+      "technology specialist"
+    ],
+    "no-code-ve-low-code-gelistirme": [
+      "No Code & Low Code Geliştirme",
+      "nocode",
+      "lowcode",
+      "no code dev",
+      "bubble developer",
+      "nocode developer",
+      "lowcode developer"
+    ],
+    "yapay-zeka-ve-makine-ogrenimi": [
+      "scikit learn",
+      "ai engineer",
+      "ml engineer",
+      "machine learning engineer",
+      "artificial intelligence engineer",
+      "data scientist",
+      "deep learning engineer"
+    ],
+    "veri-muhendisligi-ve-analitik": [
+      "data engineer",
+      "analytics engineer",
+      "etl developer",
+      "data pipeline engineer",
+      "data analytics engineer"
+    ],
+    "otomasyon-ve-entegrasyonlar": [
+      "workflow automation",
+      "integration developer",
+      "n8n expert",
+      "zapier expert",
+      "integration specialist"
+    ],
+    "yapay-zeka-ajanlari-ve-is-akislari": [
+      "ai agents",
+      "agentic workflows",
+      "agent developer",
+      "agentic ai developer",
+      "langgraph developer",
+      "ai workflow developer"
+    ],
+    "prompt-muhendisligi-ve-ai-danismanligi": [
+      "prompt engineer",
+      "llm consultant",
+      "prompt specialist",
+      "llm prompt engineer",
+      "ai strategy consultant"
+    ],
+    "is-zekasi-ve-dashboard-tasarimi": [
+      "bi dashboard",
+      "business intelligence",
+      "bi developer",
+      "power bi developer",
+      "dashboard developer",
+      "bi analyst"
+    ],
+    "ui-ux-tasarim": [
+      "UI UX Tasarım",
+      "uiux",
+      "product designer",
+      "ux designer",
+      "ui designer",
+      "product design",
+      "interaction designer",
+      "user experience designer"
+    ],
+    "logo-ve-kurumsal-kimlik": [
+      "brand identity",
+      "branding designer",
+      "logo designer",
+      "brand designer",
+      "visual identity designer",
+      "logo artist"
+    ],
+    "tasarim-sistemleri-design-systems": [
+      "design system",
+      "ui library",
+      "component design system",
+      "design system designer",
+      "design ops",
+      "ui component system"
+    ],
+    "sosyal-medya-ve-reklam-gorselleri": [
+      "social creative",
+      "ad creative design",
+      "social media designer",
+      "creative designer",
+      "ad designer"
+    ],
+    "illustrasyon-ve-vektorel-cizim": [
+      "vector illustrator",
+      "digital illustrator",
+      "illustrator",
+      "vector artist",
+      "digital artist"
+    ],
+    "ambalaj-etiket-ve-baski-tasarimi": [
+      "packaging design",
+      "label design",
+      "print designer",
+      "packaging designer",
+      "label designer"
+    ],
+    "yatirimci-sunumu-ve-pitch-deck": [
+      "investor deck",
+      "startup deck",
+      "presentation designer",
+      "pitch deck designer",
+      "investor presentation"
+    ],
+    "arama-motoru-optimizasyonu-seo": [
+      "organic seo",
+      "seo specialist",
+      "seo consultant",
+      "seo expert",
+      "organic search specialist"
+    ],
+    "google-reklamlari-sem-ve-ppc": [
+      "paid search",
+      "search ads",
+      "google ppc",
+      "google ads specialist",
+      "ppc specialist",
+      "paid search specialist"
+    ],
+    "sosyal-medya-reklamciligi": [
+      "paid social",
+      "social ads",
+      "media buyer",
+      "performance marketer",
+      "paid social specialist"
+    ],
+    "sosyal-medya-yonetimi-ve-stratejisi": [
+      "social media manager",
+      "community manager",
+      "social media strategist",
+      "social media specialist",
+      "community specialist"
+    ],
+    "e-posta-pazarlamasi-ve-crm-akislari": [
+      "e posta pazarlama",
+      "E Posta Pazarlaması ve CRM Akışları",
+      "email automation",
+      "lifecycle marketing",
+      "crm marketing",
+      "email marketer",
+      "crm specialist",
+      "lifecycle marketer"
+    ],
+    "e-ticaret-yonetimi-ve-buyume": [
+      "e ticaret yönetimi",
+      "E Ticaret Yönetimi ve Büyüme",
+      "E Commerce Analytics",
+      "ecommerce growth",
+      "e-commerce manager",
+      "ecommerce manager",
+      "ecommerce growth specialist",
+      "marketplace manager"
+    ],
+    "kisa-format-video-reels-tiktok-shorts": [
+      "Short Form Editing",
+      "short form editor",
+      "reels editor",
+      "shorts editor",
+      "tiktok editor"
+    ],
+    "youtube-ve-uzun-format-video-kurgusu": [
+      "long form editor",
+      "youtube editor",
+      "video editor"
+    ],
+    "hareketli-grafik-motion-graphics": [
+      "motion designer",
+      "motion graphics designer",
+      "motion graphics artist",
+      "after effects artist"
+    ],
+    "seslendirme-ve-dublaj": [
+      "voice actor",
+      "voiceover artist",
+      "dubbing artist",
+      "voice talent",
+      "narrator",
+      "voice over artist"
+    ],
+    "podcast-duzenleme-ve-ses-muhendisligi": [
+      "podcast editor",
+      "audio engineer",
+      "podcast producer",
+      "podcast audio editor",
+      "audio post engineer"
+    ],
+    "teknik-yazarlik-ve-dokumantasyon": [
+      "Docs as Code",
+      "technical writer",
+      "docs writer",
+      "documentation writer",
+      "documentation specialist",
+      "api technical writer",
+      "developer documentation writer"
+    ],
+    "reklam-ve-satis-metni-yazarligi": [
+      "copywriter",
+      "sales copywriter",
+      "conversion copywriter",
+      "ad copywriter"
+    ],
+    "seo-uyumlu-blog-ve-makale-yazarligi": [
+      "Long Form Content",
+      "wp",
+      "seo writer",
+      "blog writer",
+      "content writer",
+      "seo content writer",
+      "article writer",
+      "blog content writer"
+    ],
+    "profesyonel-ceviri-ve-yerellestirme": [
+      "translator",
+      "localization specialist",
+      "professional translator",
+      "localization translator",
+      "language specialist"
+    ],
+    "editoryal-duzeltme-ve-redaksiyon": [
+      "proofreader",
+      "copy editor",
+      "editor",
+      "proofreading editor",
+      "language editor"
+    ],
+    "teknik-danismanlik": [
+      "software consultant",
+      "technical consultant",
+      "solution consultant",
+      "software architecture consultant",
+      "technology advisor",
+      "solution architect consultant"
+    ],
+    "finansal-modelleme-ve-fizibilite": [
+      "financial modeler",
+      "feasibility analyst",
+      "financial analyst",
+      "financial modeling consultant",
+      "feasibility consultant"
+    ],
+    "muhasebe-ve-on-muhasebe-yonetimi": [
+      "bookkeeper",
+      "pre-accounting",
+      "accounting support",
+      "accounting assistant",
+      "bookkeeping specialist",
+      "pre-accounting specialist"
+    ],
+    "vergi-planlamasi-ve-mali-musavirlik": [
+      "e defter",
+      "e fatura",
+      "E Invoice",
+      "E Ledger",
+      "tax consultant",
+      "smmm",
+      "financial advisor",
+      "tax advisor",
+      "tax specialist",
+      "certified public accountant"
+    ],
+    "girisim-stratejisi-ve-is-plani": [
+      "TAM SAM SOM",
+      "startup consultant",
+      "business planner",
+      "gtm consultant",
+      "startup advisor",
+      "business strategy consultant",
+      "go to market consultant"
+    ],
+    "proje-yonetimi-ve-cevik-danismanlik": [
+      "project manager",
+      "scrum consultant",
+      "agile coach",
+      "agile project manager",
+      "scrum master",
+      "delivery manager"
+    ],
+    "sozlesme-hazirlama-ve-inceleme": [
+      "contract lawyer",
+      "contract review",
+      "contract drafting",
+      "commercial contract lawyer",
+      "contract specialist",
+      "contract counsel"
+    ],
+    "kvkk-gdpr-ve-veri-gizliligi-uyumu": [
+      "privacy consultant",
+      "data protection consultant",
+      "privacy lawyer",
+      "gdpr consultant",
+      "kvkk consultant"
+    ],
+    "marka-tescili-ve-fikri-mulkiyet": [
+      "trademark consultant",
+      "ip consultant",
+      "trademark attorney",
+      "intellectual property consultant",
+      "brand registration consultant"
+    ],
+    "e-ticaret-ve-tuketici-hukuku": [
+      "e ticaret hukuku",
+      "E Ticaret ve Tüketici Hukuku",
+      "E Commerce Law",
+      "consumer law",
+      "ecommerce legal",
+      "consumer law lawyer",
+      "ecommerce lawyer",
+      "distance sales lawyer"
+    ],
+    "oyun-gelistirme": [
+      "c sharp",
+      "csharp",
+      "game dev",
+      "game developer",
+      "game programmer",
+      "game development studio"
+    ],
+    "mimari-proje-plan-ve-bim": [
+      "architectural drafting",
+      "bim specialist",
+      "revit specialist",
+      "bim modeler",
+      "architectural drafter",
+      "revit modeler"
+    ],
+    "ic-mimari-ve-3d-fotogercekci-render": [
+      "V Ray",
+      "interior visualization",
+      "interior render",
+      "archviz interior",
+      "interior visualizer",
+      "3d interior artist",
+      "interior renderer"
+    ],
+    "3d-urun-modelleme-ve-cad": [
+      "cad designer",
+      "product cad",
+      "3d cad",
+      "industrial cad designer",
+      "mechanical cad designer",
+      "product modeler"
+    ],
+    "yonetici-asistanligi-ve-takvim-yonetimi": [
+      "executive assistant",
+      "virtual assistant",
+      "calendar assistant",
+      "remote executive assistant",
+      "online assistant",
+      "administrative assistant"
+    ],
+    "musteri-hizmetleri-ve-canli-destek": [
+      "customer support",
+      "support agent",
+      "live chat support",
+      "customer service agent",
+      "support representative",
+      "helpdesk agent"
+    ],
+    "veri-girisi-ve-kapsamli-web-arastirmasi": [
+      "data entry specialist",
+      "web researcher",
+      "data entry operator",
+      "online researcher",
+      "research assistant"
+    ],
+    "full-stack-web-gelistirme": [
+      "net full stack",
+      "nextjs",
+      "nodejs",
+      "next js",
+      "node js",
+      "Full Stack Development",
+      "postgres",
+      "postgre sql",
+      "dotnet",
+      "ts",
+      "fullstack",
+      "full-stack dev",
+      "full stack dev",
+      "full stack developer",
+      "fullstack engineer",
+      "web application developer"
+    ],
+    "e-ticaret-sitesi-gelistirme": [
+      "e ticaret sitesi",
+      "E Ticaret Sitesi Geliştirme",
+      "E Commerce Development",
+      "woo commerce",
+      "woo-commerce",
+      "ecommerce developer",
+      "online store developer",
+      "shop developer",
+      "shopify developer",
+      "woocommerce developer"
+    ],
+    "cms-ve-no-code-gelistirme": [
+      "CMS ve No Code Geliştirme",
+      "wp",
+      "wordpress developer",
+      "cms developer",
+      "webflow developer",
+      "wordpress specialist",
+      "webflow specialist"
+    ],
+    "mikroservis-ve-api-mimarisi": [
+      "Event Driven Architecture",
+      "k8s",
+      "microservices architect",
+      "api architect",
+      "distributed systems engineer",
+      "distributed systems architect",
+      "microservice architect",
+      "backend architect"
+    ],
+    "penetrasyon-testi-ve-guvenlik-denetimi": [
+      "pentester",
+      "penetration tester",
+      "security tester",
+      "ethical hacker",
+      "security auditor",
+      "web pentester"
+    ],
+    "bulut-mimarisi-ve-altyapi-yonetimi": [
+      "k8s",
+      "cloud architect",
+      "infrastructure engineer",
+      "platform engineer",
+      "cloud infrastructure engineer",
+      "aws architect",
+      "azure architect"
+    ],
+    "llm-ve-gpt-uygulama-gelistirme": [
+      "llm developer",
+      "gpt developer",
+      "ai app developer",
+      "rag developer",
+      "openai developer",
+      "generative ai developer"
+    ],
+    "bilgisayarli-goru-ve-goruntu-isleme": [
+      "computer vision engineer",
+      "vision engineer",
+      "image processing engineer",
+      "opencv developer",
+      "computer vision developer",
+      "vision ai engineer"
+    ],
+    "dogal-dil-isleme-ve-ses-teknolojileri": [
+      "nlp engineer",
+      "speech ai engineer",
+      "language ai",
+      "nlp developer",
+      "speech recognition engineer",
+      "language model engineer"
+    ],
+    "web-kazima-ve-veri-madenciligi": [
+      "scraping developer",
+      "web scraper",
+      "crawler developer",
+      "web scraping developer",
+      "data extraction specialist",
+      "crawler engineer"
+    ],
+    "web-sitesi-ui-ux-tasarimi": [
+      "web ui designer",
+      "website ux designer",
+      "web designer",
+      "website ui designer",
+      "landing page designer"
+    ],
+    "mobil-uygulama-ui-ux-tasarimi": [
+      "mobile ui designer",
+      "app ux designer",
+      "mobile product designer",
+      "app ui designer",
+      "mobile ux designer"
+    ],
+    "ikon-ve-tipografi-tasarimi": [
+      "icon designer",
+      "typography designer",
+      "iconographer",
+      "type designer",
+      "svg icon designer"
+    ],
+    "karakter-tasarimi-ve-konsept-sanat": [
+      "concept artist",
+      "character artist",
+      "character illustrator",
+      "visual development artist"
+    ],
+    "fotograf-duzenleme-ve-retouching": [
+      "photo retoucher",
+      "retoucher",
+      "photo editor",
+      "image editor",
+      "product photo editor"
+    ],
+    "teknik-seo-ve-site-hizi-optimizasyonu": [
+      "technical seo",
+      "core web vitals specialist",
+      "site speed expert",
+      "website performance specialist",
+      "core web vitals expert",
+      "pagespeed specialist"
+    ],
+    "tiktok-ve-dikey-video-reklamciligi": [
+      "ugc ad editor",
+      "vertical ad editor",
+      "tiktok creative editor",
+      "ugc video editor",
+      "tiktok ad editor",
+      "vertical ad creative"
+    ],
+    "b2b-buyume-ve-linkedin-lead-generation": [
+      "linkedin lead gen",
+      "b2b lead generation",
+      "prospecting specialist",
+      "linkedin prospecting specialist",
+      "b2b prospecting",
+      "sales development researcher"
+    ],
+    "icerik-pazarlamasi-ve-donusum-hunisi": [
+      "content strategist",
+      "funnel strategist",
+      "inbound marketer",
+      "conversion funnel strategist",
+      "inbound marketing specialist"
+    ],
+    "video-renk-duzenleme-color-grading": [
+      "colorist",
+      "video colorist",
+      "color grading artist",
+      "davinci colorist"
+    ],
+    "3d-urun-animasyonu-ve-tanitim": [
+      "3d product animator",
+      "cgi product artist",
+      "cgi artist",
+      "3d motion designer",
+      "product visualization artist"
+    ],
+    "altyazi-transkripsiyon-ve-dinamik-metinler": [
+      "subtitle editor",
+      "caption editor",
+      "transcription editor",
+      "subtitle specialist",
+      "captioning specialist"
+    ],
+    "ses-tasarimi-ve-efektleri-sfx": [
+      "sound designer",
+      "sfx designer",
+      "foley artist",
+      "audio designer",
+      "foley designer",
+      "sound effects artist"
+    ],
+    "muzik-produksiyonu-ve-beatmaking": [
+      "music producer",
+      "beatmaker",
+      "producer",
+      "beat producer",
+      "mixing engineer"
+    ],
+    "yazilim-ve-arayuz-yerellestirmesi-i18n": [
+      "software localization",
+      "app localization",
+      "i18n specialist",
+      "localization engineer",
+      "software localization specialist",
+      "i18n developer"
+    ],
+    "hukuki-tibbi-ve-akademik-ceviri": [
+      "legal translator",
+      "medical translator",
+      "academic translator",
+      "specialized translator",
+      "legal medical translator"
+    ],
+    "whitepaper-ve-e-kitap-yazimi": [
+      "e book",
+      "e kitap",
+      "Whitepaper ve E Kitap Yazımı",
+      "Long Form Writing",
+      "whitepaper writer",
+      "ebook writer",
+      "report writer",
+      "long form writer",
+      "whitepaper author",
+      "ebook author"
+    ],
+    "hayalet-yazarlik-ve-liderlik-makaleleri": [
+      "Interview Based Writing",
+      "ghostwriter",
+      "thought leadership writer",
+      "executive ghostwriter",
+      "linkedin ghostwriter"
+    ],
+    "pazar-ve-rakip-arastirmasi": [
+      "market researcher",
+      "competitive analyst",
+      "competitive intelligence analyst",
+      "market analyst",
+      "competitor researcher"
+    ],
+    "girisim-degerleme-ve-yatirimci-metrikleri": [
+      "startup valuation",
+      "valuation analyst",
+      "saas metrics analyst",
+      "startup finance analyst",
+      "valuation consultant",
+      "saas metrics consultant"
+    ],
+    "surec-ve-operasyon-optimizasyonu": [
+      "process consultant",
+      "operations consultant",
+      "process improvement",
+      "process improvement consultant",
+      "operations excellence consultant",
+      "workflow consultant"
+    ],
+    "insan-kaynaklari-ve-yetenek-avciligi": [
+      "recruiter",
+      "talent sourcer",
+      "talent acquisition",
+      "talent acquisition specialist",
+      "technical recruiter",
+      "candidate sourcer"
+    ],
+    "online-egitim-ozel-ders-ve-mentorluk": [
+      "online tutor",
+      "mentor",
+      "career mentor",
+      "online instructor",
+      "private tutor",
+      "professional mentor"
+    ],
+    "freelance-ve-yazilim-hizmet-sozlesmeleri": [
+      "software contract lawyer",
+      "freelance contract lawyer",
+      "software contracts lawyer",
+      "freelance contract specialist",
+      "development agreement lawyer"
+    ],
+    "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma": [
+      "nda lawyer",
+      "confidentiality agreement lawyer",
+      "nda specialist",
+      "confidentiality lawyer",
+      "trade secret lawyer"
+    ],
+    "saas-ve-uygulama-yasal-metinleri": [
+      "saas lawyer",
+      "app terms lawyer",
+      "terms of service lawyer",
+      "saas legal counsel",
+      "app legal counsel"
+    ],
+    "unity-ile-oyun-gelistirme": [
+      "c sharp",
+      "csharp",
+      "unity developer",
+      "unity dev",
+      "unity programmer",
+      "unity game developer",
+      "unity engineer"
+    ],
+    "unreal-engine-ve-c-oyun-gelistirme": [
+      "unreal developer",
+      "ue developer",
+      "unreal c++ developer",
+      "unreal programmer",
+      "ue5 developer",
+      "unreal gameplay programmer"
+    ],
+    "mobil-oyun-gelistirme-hypercasual-casual": [
+      "In App Purchases",
+      "c sharp",
+      "csharp",
+      "mobile game developer",
+      "hypercasual developer",
+      "casual game developer",
+      "mobile game programmer"
+    ],
+    "2d-oyun-sanati-ve-piksel-cizim": [
+      "pixel artist",
+      "2d game artist",
+      "sprite artist"
+    ],
+    "3d-oyun-varliklari-ve-karakter-modelleme": [
+      "Game Ready Assets",
+      "3d game artist",
+      "game asset artist",
+      "character modeler",
+      "game character modeler",
+      "3d asset artist",
+      "game prop artist"
+    ],
+    "oyun-mekanigi-ve-seviye-level-tasarimi": [
+      "level designer",
+      "game designer",
+      "gameplay designer",
+      "game systems designer"
+    ],
+    "oyun-sesleri-ve-muzik-produksiyonu": [
+      "game audio designer",
+      "game composer",
+      "game sound designer",
+      "game audio engineer",
+      "interactive audio designer"
+    ],
+    "dis-cephe-ve-peyzaj-3d-gorsellestirme": [
+      "V Ray",
+      "unreal",
+      "exterior archviz",
+      "landscape visualizer",
+      "exterior renderer",
+      "exterior visualizer",
+      "architectural visualizer",
+      "landscape renderer"
+    ],
+    "3d-baski-modelleme-ve-stl-hazirligi": [
+      "3d print modeler",
+      "stl designer",
+      "printable model designer",
+      "3d printing designer",
+      "stl modeler",
+      "additive manufacturing modeler"
+    ],
+    "mekansal-bilisim-vr-ve-ar-gelistirme": [
+      "xr developer",
+      "vr developer",
+      "ar developer",
+      "xr engineer",
+      "spatial computing developer",
+      "immersive developer"
+    ],
+    "e-ticaret-magaza-ve-siparis-operasyon-destegi": [
+      "E Ticaret Mağaza ve Sipariş Operasyon Desteği",
+      "woo commerce",
+      "woo-commerce",
+      "ecommerce operations",
+      "order operations",
+      "store operations",
+      "ecommerce operations specialist",
+      "order management specialist",
+      "store operations assistant"
+    ],
+    "potansiyel-musteri-ve-veri-zenginlestirme": [
+      "data enrichment specialist",
+      "lead researcher",
+      "prospect researcher",
+      "lead enrichment specialist",
+      "contact data researcher"
+    ],
+    "ses-ve-video-desifre-destegi": [
+      "transcriber",
+      "audio transcription",
+      "video transcription",
+      "transcriptionist",
+      "meeting transcriber",
+      "interview transcriber"
+    ]
+  }
+}

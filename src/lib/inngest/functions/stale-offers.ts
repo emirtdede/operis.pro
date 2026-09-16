@@ -13,6 +13,12 @@ export const staleOfferLifecycleJob = inngest.createFunction(
     id: "operis-stale-offer-lifecycle",
     name: "Operis: Stale Offer Auto-Cancel Lifecycle",
     triggers: [{ event: "operis/offer.submitted" }],
+    cancelOn: [
+      {
+        event: "operis/offer.resolved",
+        match: "data.offerId",
+      },
+    ],
     retries: 2,
   },
   async ({ event, step }) => {

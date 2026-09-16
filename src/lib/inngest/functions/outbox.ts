@@ -12,6 +12,13 @@ export const processOutboxJob = inngest.createFunction(
     name: "Operis: Process Outbox Notifications",
     triggers: [{ cron: "*/2 * * * *" }, { event: "operis/outbox.process" }],
     retries: 3,
+    concurrency: {
+      limit: 1,
+    },
+    debounce: {
+      period: "2s",
+      timeout: "10s",
+    },
   },
   async ({ event, step }) => {
     const rawBatchSize = (event.data as Record<string, unknown> | undefined)?.batchSize;

@@ -130,16 +130,37 @@ export function ListingsTableClient({
             e.preventDefault();
             updateUrl({ search: search.trim(), page: "1" });
           }}
-          className="relative flex-1 max-w-md"
+          className="relative flex items-center gap-2 flex-1 max-w-md"
         >
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="İlan başlığı veya ilan sahibi ile ara (Enter)..."
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-blue-500"
-          />
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="İlan başlığı veya ilan sahibi ile ara..."
+              className={`w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 ${search ? "pr-8" : "pr-3"} py-1.5 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-blue-500`}
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearch("");
+                  updateUrl({ search: "", page: "1" });
+                }}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-0.5 cursor-pointer"
+                title="Aramayı Temizle"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+          <button
+            type="submit"
+            className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-colors cursor-pointer shrink-0 shadow-sm"
+          >
+            Ara
+          </button>
         </form>
 
         <div className="flex items-center gap-2.5">

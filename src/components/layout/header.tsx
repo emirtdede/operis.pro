@@ -525,8 +525,18 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
           )}
         </div>
 
-        {/* Mobile Hamburger Button */}
-        <div className="flex lg:hidden items-center gap-2 ml-auto">
+        {/* Mobile Action Buttons (Search + Hamburger) */}
+        <div className="flex lg:hidden items-center gap-1 ml-auto">
+          <button
+            type="button"
+            onClick={() => setCommandPaletteOpen(true)}
+            className="p-2 rounded-xl text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] border border-transparent hover:border-[var(--color-border-subtle)] transition-all cursor-pointer focus:outline-none flex items-center justify-center"
+            title={isTr ? "Hızlı Arama" : "Quick Search"}
+            aria-label={isTr ? "Hızlı Arama" : "Quick Search"}
+          >
+            <Search className="h-5 w-5" aria-hidden="true" />
+          </button>
+
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -561,6 +571,25 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
           }}
         >
           <nav className="flex flex-col gap-1.5">
+            {/* Quick Search inside Mobile Menu Drawer */}
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setCommandPaletteOpen(true);
+              }}
+              className="flex items-center justify-between gap-2.5 w-full rounded-2xl px-3.5 py-2.5 text-xs text-[var(--color-text-secondary)] bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] hover:border-blue-500/40 hover:text-[var(--color-text-primary)] transition-all mb-2 cursor-pointer text-left"
+            >
+              <div className="flex items-center gap-2">
+                <Search className="h-4 w-4 text-blue-500 shrink-0" aria-hidden="true" />
+                <span className="font-medium text-[var(--color-text-tertiary)]">
+                  {isTr ? "İlanlarda, kategorilerde ara..." : "Search listings, categories..."}
+                </span>
+              </div>
+              <kbd className="px-1.5 py-0.5 rounded border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] text-[10px] font-mono text-[var(--color-text-tertiary)]">
+                ⌘K
+              </kbd>
+            </button>
             {navLinks.map((link) => (
               <Link
                 key={link.href}

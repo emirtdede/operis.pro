@@ -1,0 +1,506 @@
+{
+  "version": "5.0.0",
+  "caseCount": 100,
+  "cases": [
+    {
+      "id": "AQ-001",
+      "query": "",
+      "expectation": "no-results"
+    },
+    {
+      "id": "AQ-002",
+      "query": "   ",
+      "expectation": "no-results"
+    },
+    {
+      "id": "AQ-003",
+      "query": "<script>alert(1)</script>",
+      "expectation": "safe-inert"
+    },
+    {
+      "id": "AQ-004",
+      "query": "%' OR 1=1 --",
+      "expectation": "safe-inert"
+    },
+    {
+      "id": "AQ-005",
+      "query": "../../../../etc/passwd",
+      "expectation": "safe-inert"
+    },
+    {
+      "id": "AQ-006",
+      "query": "${7*7}",
+      "expectation": "safe-inert"
+    },
+    {
+      "id": "AQ-007",
+      "query": "javascript:alert(1)",
+      "expectation": "safe-inert"
+    },
+    {
+      "id": "AQ-008",
+      "query": "\u0000\u0000react",
+      "expectation": "safe-normalize"
+    },
+    {
+      "id": "AQ-009",
+      "query": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expectation": "length-guard"
+    },
+    {
+      "id": "AQ-010",
+      "query": "💻 react 🚀",
+      "expectation": "unicode-safe"
+    },
+    {
+      "id": "AQ-011",
+      "query": "test10 <x10> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-012",
+      "query": "test11 <x11> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-013",
+      "query": "test12 <x12> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-014",
+      "query": "test13 <x13> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-015",
+      "query": "test14 <x14> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-016",
+      "query": "test15 <x15> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-017",
+      "query": "test16 <x16> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-018",
+      "query": "test17 <x17> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-019",
+      "query": "test18 <x18> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-020",
+      "query": "test19 <x19> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-021",
+      "query": "test20 <x20> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-022",
+      "query": "test21 <x21> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-023",
+      "query": "test22 <x22> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-024",
+      "query": "test23 <x23> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-025",
+      "query": "test24 <x24> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-026",
+      "query": "test25 <x25> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-027",
+      "query": "test26 <x26> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-028",
+      "query": "test27 <x27> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-029",
+      "query": "test28 <x28> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-030",
+      "query": "test29 <x29> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-031",
+      "query": "test30 <x30> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-032",
+      "query": "test31 <x31> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-033",
+      "query": "test32 <x32> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-034",
+      "query": "test33 <x33> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-035",
+      "query": "test34 <x34> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-036",
+      "query": "test35 <x35> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-037",
+      "query": "test36 <x36> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-038",
+      "query": "test37 <x37> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-039",
+      "query": "test38 <x38> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-040",
+      "query": "test39 <x39> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-041",
+      "query": "test40 <x40> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-042",
+      "query": "test41 <x41> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-043",
+      "query": "test42 <x42> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-044",
+      "query": "test43 <x43> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-045",
+      "query": "test44 <x44> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-046",
+      "query": "test45 <x45> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-047",
+      "query": "test46 <x46> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-048",
+      "query": "test47 <x47> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-049",
+      "query": "test48 <x48> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-050",
+      "query": "test49 <x49> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-051",
+      "query": "test50 <x50> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-052",
+      "query": "test51 <x51> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-053",
+      "query": "test52 <x52> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-054",
+      "query": "test53 <x53> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-055",
+      "query": "test54 <x54> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-056",
+      "query": "test55 <x55> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-057",
+      "query": "test56 <x56> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-058",
+      "query": "test57 <x57> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-059",
+      "query": "test58 <x58> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-060",
+      "query": "test59 <x59> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-061",
+      "query": "test60 <x60> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-062",
+      "query": "test61 <x61> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-063",
+      "query": "test62 <x62> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-064",
+      "query": "test63 <x63> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-065",
+      "query": "test64 <x64> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-066",
+      "query": "test65 <x65> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-067",
+      "query": "test66 <x66> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-068",
+      "query": "test67 <x67> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-069",
+      "query": "test68 <x68> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-070",
+      "query": "test69 <x69> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-071",
+      "query": "test70 <x70> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-072",
+      "query": "test71 <x71> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-073",
+      "query": "test72 <x72> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-074",
+      "query": "test73 <x73> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-075",
+      "query": "test74 <x74> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-076",
+      "query": "test75 <x75> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-077",
+      "query": "test76 <x76> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-078",
+      "query": "test77 <x77> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-079",
+      "query": "test78 <x78> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-080",
+      "query": "test79 <x79> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-081",
+      "query": "test80 <x80> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-082",
+      "query": "test81 <x81> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-083",
+      "query": "test82 <x82> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-084",
+      "query": "test83 <x83> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-085",
+      "query": "test84 <x84> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-086",
+      "query": "test85 <x85> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-087",
+      "query": "test86 <x86> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-088",
+      "query": "test87 <x87> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-089",
+      "query": "test88 <x88> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-090",
+      "query": "test89 <x89> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-091",
+      "query": "test90 <x90> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-092",
+      "query": "test91 <x91> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-093",
+      "query": "test92 <x92> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-094",
+      "query": "test93 <x93> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-095",
+      "query": "test94 <x94> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-096",
+      "query": "test95 <x95> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-097",
+      "query": "test96 <x96> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-098",
+      "query": "test97 <x97> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-099",
+      "query": "test98 <x98> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    },
+    {
+      "id": "AQ-100",
+      "query": "test99 <x99> ' \" ; -- % _ \\\\ {} []",
+      "expectation": "safe-no-crash"
+    }
+  ]
+}

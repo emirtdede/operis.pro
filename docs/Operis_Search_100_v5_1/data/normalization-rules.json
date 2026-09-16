@@ -1,0 +1,68 @@
+{
+  "version": "4.0.0",
+  "authoritative": true,
+  "pipeline": [
+    {
+      "order": 1,
+      "op": "unicode_nfkc"
+    },
+    {
+      "order": 2,
+      "op": "trim_collapse_whitespace"
+    },
+    {
+      "order": 3,
+      "op": "turkish_locale_lowercase"
+    },
+    {
+      "order": 4,
+      "op": "protected_token_preservation"
+    },
+    {
+      "order": 5,
+      "op": "soft_punctuation_normalization"
+    },
+    {
+      "order": 6,
+      "op": "turkish_ascii_shadow"
+    },
+    {
+      "order": 7,
+      "op": "exact_phrase_or_token_alias_expansion"
+    },
+    {
+      "order": 8,
+      "op": "unigram_bigram_trigram_generation"
+    },
+    {
+      "order": 9,
+      "op": "bounded_fuzzy_candidate_generation"
+    }
+  ],
+  "protectedTokens": [
+    "C#",
+    "C++",
+    ".NET",
+    "UI/UX",
+    "3D",
+    "2D",
+    "B2B",
+    "B2C",
+    "SEO",
+    "SEM",
+    "PPC",
+    "KVKK",
+    "GDPR",
+    "LLM",
+    "RAG",
+    "API",
+    "SDK",
+    "iOS"
+  ],
+  "fuzzyPolicy": {
+    "length1to2": "disabled",
+    "length3to4": "max_edit_distance_1_with_strong_candidate",
+    "length5plus": "max_edit_distance_1_by_default; distance_2_only_when_strongly_constrained"
+  },
+  "maxQueryLength": 160
+}

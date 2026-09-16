@@ -1,0 +1,1726 @@
+{
+  "version": "4.0.0",
+  "provenance": "curated common typos plus conservative synthetic word-level seeds",
+  "categoriesBySlug": {
+    "web-gelistirme": [
+      {
+        "input": "web gelisirme",
+        "canonical": "Web Geliştirme",
+        "expectedCategorySlug": "web-gelistirme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "web gelisitrme",
+        "canonical": "Web Geliştirme",
+        "expectedCategorySlug": "web-gelistirme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "frontend-ve-arayuz-muhendisligi": [
+      {
+        "input": "frontend ve arayuz muhendsligi",
+        "canonical": "Frontend ve Arayüz Mühendisliği",
+        "expectedCategorySlug": "frontend-ve-arayuz-muhendisligi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "frontend ve arayuz muhendsiligi",
+        "canonical": "Frontend ve Arayüz Mühendisliği",
+        "expectedCategorySlug": "frontend-ve-arayuz-muhendisligi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "backend-ve-api-muhendisligi": [
+      {
+        "input": "backend ve api muhendsligi",
+        "canonical": "Backend ve API Mühendisliği",
+        "expectedCategorySlug": "backend-ve-api-muhendisligi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "backend ve api muhendsiligi",
+        "canonical": "Backend ve API Mühendisliği",
+        "expectedCategorySlug": "backend-ve-api-muhendisligi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "mobil-uygulama-gelistirme": [
+      {
+        "input": "mobil uygulama gelisirme",
+        "canonical": "Mobil Uygulama Geliştirme",
+        "expectedCategorySlug": "mobil-uygulama-gelistirme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "mobil uygulama gelisitrme",
+        "canonical": "Mobil Uygulama Geliştirme",
+        "expectedCategorySlug": "mobil-uygulama-gelistirme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "masaustu-yazilim-gelistirme": [
+      {
+        "input": "masaustu yazilim gelisirme",
+        "canonical": "Masaüstü Yazılım Geliştirme",
+        "expectedCategorySlug": "masaustu-yazilim-gelistirme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "masaustu yazilim gelisitrme",
+        "canonical": "Masaüstü Yazılım Geliştirme",
+        "expectedCategorySlug": "masaustu-yazilim-gelistirme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "devops-ve-bulut-bilisim": [
+      {
+        "input": "devops ve bulut bilsim",
+        "canonical": "DevOps ve Bulut Bilişim",
+        "expectedCategorySlug": "devops-ve-bulut-bilisim",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "devops ve bulut bilsiim",
+        "canonical": "DevOps ve Bulut Bilişim",
+        "expectedCategorySlug": "devops-ve-bulut-bilisim",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "veritabani-muhendisligi": [
+      {
+        "input": "veritabani muhendsligi",
+        "canonical": "Veritabanı Mühendisliği",
+        "expectedCategorySlug": "veritabani-muhendisligi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "veritabani muhendsiligi",
+        "canonical": "Veritabanı Mühendisliği",
+        "expectedCategorySlug": "veritabani-muhendisligi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "siber-guvenlik": [
+      {
+        "input": "siber guvelik",
+        "canonical": "Siber Güvenlik",
+        "expectedCategorySlug": "siber-guvenlik",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "siber guvelnik",
+        "canonical": "Siber Güvenlik",
+        "expectedCategorySlug": "siber-guvenlik",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "yazilim-testi-ve-kalite-guvencesi": [
+      {
+        "input": "yazilim testi ve kalite guvecesi",
+        "canonical": "Yazılım Testi ve Kalite Güvencesi",
+        "expectedCategorySlug": "yazilim-testi-ve-kalite-guvencesi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "yazilim testi ve kalite guvecnesi",
+        "canonical": "Yazılım Testi ve Kalite Güvencesi",
+        "expectedCategorySlug": "yazilim-testi-ve-kalite-guvencesi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "blokzincir-muhendisligi": [
+      {
+        "input": "blokzincir muhendsligi",
+        "canonical": "Blokzincir Mühendisliği",
+        "expectedCategorySlug": "blokzincir-muhendisligi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "blokzincir muhendsiligi",
+        "canonical": "Blokzincir Mühendisliği",
+        "expectedCategorySlug": "blokzincir-muhendisligi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "gomulu-sistemler-ve-iot": [
+      {
+        "input": "gomulu sistmler ve iot",
+        "canonical": "Gömülü Sistemler ve IoT",
+        "expectedCategorySlug": "gomulu-sistemler-ve-iot",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "gomulu sistmeler ve iot",
+        "canonical": "Gömülü Sistemler ve IoT",
+        "expectedCategorySlug": "gomulu-sistemler-ve-iot",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "bt-sistem-ve-ag-yonetimi": [
+      {
+        "input": "bt, sistem ve ag yoneimi",
+        "canonical": "BT, Sistem ve Ağ Yönetimi",
+        "expectedCategorySlug": "bt-sistem-ve-ag-yonetimi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "bt, sistem ve ag yoneitmi",
+        "canonical": "BT, Sistem ve Ağ Yönetimi",
+        "expectedCategorySlug": "bt-sistem-ve-ag-yonetimi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "bilgisayar-donanimi-ve-teknik-destek": [
+      {
+        "input": "bilgiayar donanimi ve teknik destek",
+        "canonical": "Bilgisayar Donanımı ve Teknik Destek",
+        "expectedCategorySlug": "bilgisayar-donanimi-ve-teknik-destek",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "bilgiasyar donanimi ve teknik destek",
+        "canonical": "Bilgisayar Donanımı ve Teknik Destek",
+        "expectedCategorySlug": "bilgisayar-donanimi-ve-teknik-destek",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "diger-teknoloji-hizmetleri": [
+      {
+        "input": "diger teknoloji hizmeleri",
+        "canonical": "Diğer Teknoloji Hizmetleri",
+        "expectedCategorySlug": "diger-teknoloji-hizmetleri",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "diger teknoloji hizmelteri",
+        "canonical": "Diğer Teknoloji Hizmetleri",
+        "expectedCategorySlug": "diger-teknoloji-hizmetleri",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "no-code-ve-low-code-gelistirme": [
+      {
+        "input": "no-code & low-code gelisirme",
+        "canonical": "No-Code & Low-Code Geliştirme",
+        "expectedCategorySlug": "no-code-ve-low-code-gelistirme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "no-code & low-code gelisitrme",
+        "canonical": "No-Code & Low-Code Geliştirme",
+        "expectedCategorySlug": "no-code-ve-low-code-gelistirme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "yapay-zeka-ve-makine-ogrenimi": [
+      {
+        "input": "yapay zeka ve makine ogreimi",
+        "canonical": "Yapay Zeka ve Makine Öğrenimi",
+        "expectedCategorySlug": "yapay-zeka-ve-makine-ogrenimi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "yapay zeka ve makine ogreinmi",
+        "canonical": "Yapay Zeka ve Makine Öğrenimi",
+        "expectedCategorySlug": "yapay-zeka-ve-makine-ogrenimi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "veri-muhendisligi-ve-analitik": [
+      {
+        "input": "veri muhendsligi ve analitik",
+        "canonical": "Veri Mühendisliği ve Analitik",
+        "expectedCategorySlug": "veri-muhendisligi-ve-analitik",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "veri muhendsiligi ve analitik",
+        "canonical": "Veri Mühendisliği ve Analitik",
+        "expectedCategorySlug": "veri-muhendisligi-ve-analitik",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "otomasyon-ve-entegrasyonlar": [
+      {
+        "input": "otomasyon ve entegrayonlar",
+        "canonical": "Otomasyon ve Entegrasyonlar",
+        "expectedCategorySlug": "otomasyon-ve-entegrasyonlar",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "otomasyon ve entegraysonlar",
+        "canonical": "Otomasyon ve Entegrasyonlar",
+        "expectedCategorySlug": "otomasyon-ve-entegrasyonlar",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "otomsyon",
+        "canonical": "otomasyon",
+        "expectedCategorySlug": "otomasyon-ve-entegrasyonlar",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "otomsayon",
+        "canonical": "otomasyon",
+        "expectedCategorySlug": "otomasyon-ve-entegrasyonlar",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "yapay-zeka-ajanlari-ve-is-akislari": [
+      {
+        "input": "yapay zeka ajanari ve i̇s akislari",
+        "canonical": "Yapay Zeka Ajanları ve İş Akışları",
+        "expectedCategorySlug": "yapay-zeka-ajanlari-ve-is-akislari",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "yapay zeka ajanalri ve i̇s akislari",
+        "canonical": "Yapay Zeka Ajanları ve İş Akışları",
+        "expectedCategorySlug": "yapay-zeka-ajanlari-ve-is-akislari",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "prompt-muhendisligi-ve-ai-danismanligi": [
+      {
+        "input": "prompt muhendsligi ve ai danismanligi",
+        "canonical": "Prompt Mühendisliği ve AI Danışmanlığı",
+        "expectedCategorySlug": "prompt-muhendisligi-ve-ai-danismanligi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "prompt muhendsiligi ve ai danismanligi",
+        "canonical": "Prompt Mühendisliği ve AI Danışmanlığı",
+        "expectedCategorySlug": "prompt-muhendisligi-ve-ai-danismanligi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "is-zekasi-ve-dashboard-tasarimi": [
+      {
+        "input": "i̇s zekasi ve dashoard tasarimi",
+        "canonical": "İş Zekası ve Dashboard Tasarımı",
+        "expectedCategorySlug": "is-zekasi-ve-dashboard-tasarimi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "i̇s zekasi ve dashobard tasarimi",
+        "canonical": "İş Zekası ve Dashboard Tasarımı",
+        "expectedCategorySlug": "is-zekasi-ve-dashboard-tasarimi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "ui-ux-tasarim": [
+      {
+        "input": "ui/ux tasrim",
+        "canonical": "UI/UX Tasarım",
+        "expectedCategorySlug": "ui-ux-tasarim",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "ui/ux tasraim",
+        "canonical": "UI/UX Tasarım",
+        "expectedCategorySlug": "ui-ux-tasarim",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "logo-ve-kurumsal-kimlik": [
+      {
+        "input": "logo ve kurusal kimlik",
+        "canonical": "Logo ve Kurumsal Kimlik",
+        "expectedCategorySlug": "logo-ve-kurumsal-kimlik",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "logo ve kurusmal kimlik",
+        "canonical": "Logo ve Kurumsal Kimlik",
+        "expectedCategorySlug": "logo-ve-kurumsal-kimlik",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "logo tasaimi",
+        "canonical": "logo tasarımı",
+        "expectedCategorySlug": "logo-ve-kurumsal-kimlik",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "logo tasairmi",
+        "canonical": "logo tasarımı",
+        "expectedCategorySlug": "logo-ve-kurumsal-kimlik",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "tasarim-sistemleri-design-systems": [
+      {
+        "input": "tasarim sisteleri (design systems)",
+        "canonical": "Tasarım Sistemleri (Design Systems)",
+        "expectedCategorySlug": "tasarim-sistemleri-design-systems",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "tasarim sistelmeri (design systems)",
+        "canonical": "Tasarım Sistemleri (Design Systems)",
+        "expectedCategorySlug": "tasarim-sistemleri-design-systems",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "sosyal-medya-ve-reklam-gorselleri": [
+      {
+        "input": "sosyal medya ve reklam gorseleri",
+        "canonical": "Sosyal Medya ve Reklam Görselleri",
+        "expectedCategorySlug": "sosyal-medya-ve-reklam-gorselleri",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "sosyal medya tasaimi",
+        "canonical": "sosyal medya tasarımı",
+        "expectedCategorySlug": "sosyal-medya-ve-reklam-gorselleri",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "sosyal medya tasairmi",
+        "canonical": "sosyal medya tasarımı",
+        "expectedCategorySlug": "sosyal-medya-ve-reklam-gorselleri",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "instgram post",
+        "canonical": "instagram post",
+        "expectedCategorySlug": "sosyal-medya-ve-reklam-gorselleri",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "instgaram post",
+        "canonical": "instagram post",
+        "expectedCategorySlug": "sosyal-medya-ve-reklam-gorselleri",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "illustrasyon-ve-vektorel-cizim": [
+      {
+        "input": "i̇llusrasyon ve vektorel cizim",
+        "canonical": "İllüstrasyon ve Vektörel Çizim",
+        "expectedCategorySlug": "illustrasyon-ve-vektorel-cizim",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "i̇llusrtasyon ve vektorel cizim",
+        "canonical": "İllüstrasyon ve Vektörel Çizim",
+        "expectedCategorySlug": "illustrasyon-ve-vektorel-cizim",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "i̇llustasyon ve vektorel cizim",
+        "canonical": "i̇llüstrasyon ve vektörel çizim",
+        "expectedCategorySlug": "illustrasyon-ve-vektorel-cizim",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "i̇llustarsyon ve vektorel cizim",
+        "canonical": "i̇llüstrasyon ve vektörel çizim",
+        "expectedCategorySlug": "illustrasyon-ve-vektorel-cizim",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "ambalaj-etiket-ve-baski-tasarimi": [
+      {
+        "input": "ambalaj, etiket ve baski tasaimi",
+        "canonical": "Ambalaj, Etiket ve Baskı Tasarımı",
+        "expectedCategorySlug": "ambalaj-etiket-ve-baski-tasarimi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "ambalaj, etiket ve baski tasairmi",
+        "canonical": "Ambalaj, Etiket ve Baskı Tasarımı",
+        "expectedCategorySlug": "ambalaj-etiket-ve-baski-tasarimi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "yatirimci-sunumu-ve-pitch-deck": [
+      {
+        "input": "yatiimci sunumu ve pitch deck",
+        "canonical": "Yatırımcı Sunumu ve Pitch Deck",
+        "expectedCategorySlug": "yatirimci-sunumu-ve-pitch-deck",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "yatiirmci sunumu ve pitch deck",
+        "canonical": "Yatırımcı Sunumu ve Pitch Deck",
+        "expectedCategorySlug": "yatirimci-sunumu-ve-pitch-deck",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "arama-motoru-optimizasyonu-seo": [
+      {
+        "input": "arama motoru optimiasyonu (seo)",
+        "canonical": "Arama Motoru Optimizasyonu (SEO)",
+        "expectedCategorySlug": "arama-motoru-optimizasyonu-seo",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "arama motoru optimiazsyonu (seo)",
+        "canonical": "Arama Motoru Optimizasyonu (SEO)",
+        "expectedCategorySlug": "arama-motoru-optimizasyonu-seo",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "search engine optimiation",
+        "canonical": "search engine optimization",
+        "expectedCategorySlug": "arama-motoru-optimizasyonu-seo",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "search engine optimiaztion",
+        "canonical": "search engine optimization",
+        "expectedCategorySlug": "arama-motoru-optimizasyonu-seo",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "google-reklamlari-sem-ve-ppc": [
+      {
+        "input": "google reklalari (sem & ppc)",
+        "canonical": "Google Reklamları (SEM & PPC)",
+        "expectedCategorySlug": "google-reklamlari-sem-ve-ppc",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "google reklalmari (sem & ppc)",
+        "canonical": "Google Reklamları (SEM & PPC)",
+        "expectedCategorySlug": "google-reklamlari-sem-ve-ppc",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "sosyal-medya-reklamciligi": [
+      {
+        "input": "sosyal medya reklamiligi",
+        "canonical": "Sosyal Medya Reklamcılığı",
+        "expectedCategorySlug": "sosyal-medya-reklamciligi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "sosyal medya reklamicligi",
+        "canonical": "Sosyal Medya Reklamcılığı",
+        "expectedCategorySlug": "sosyal-medya-reklamciligi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "sosyal-medya-yonetimi-ve-stratejisi": [
+      {
+        "input": "sosyal medya yonetimi ve stratjisi",
+        "canonical": "Sosyal Medya Yönetimi ve Stratejisi",
+        "expectedCategorySlug": "sosyal-medya-yonetimi-ve-stratejisi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "sosyal medya yonetimi ve stratjeisi",
+        "canonical": "Sosyal Medya Yönetimi ve Stratejisi",
+        "expectedCategorySlug": "sosyal-medya-yonetimi-ve-stratejisi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "e-posta-pazarlamasi-ve-crm-akislari": [
+      {
+        "input": "e-posta pazaramasi ve crm akislari",
+        "canonical": "E-Posta Pazarlaması ve CRM Akışları",
+        "expectedCategorySlug": "e-posta-pazarlamasi-ve-crm-akislari",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "e-posta pazaralmasi ve crm akislari",
+        "canonical": "E-Posta Pazarlaması ve CRM Akışları",
+        "expectedCategorySlug": "e-posta-pazarlamasi-ve-crm-akislari",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "e-ticaret-yonetimi-ve-buyume": [
+      {
+        "input": "e-ticaret yoneimi ve buyume",
+        "canonical": "E-Ticaret Yönetimi ve Büyüme",
+        "expectedCategorySlug": "e-ticaret-yonetimi-ve-buyume",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "e-ticaret yoneitmi ve buyume",
+        "canonical": "E-Ticaret Yönetimi ve Büyüme",
+        "expectedCategorySlug": "e-ticaret-yonetimi-ve-buyume",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "kisa-format-video-reels-tiktok-shorts": [
+      {
+        "input": "kisa forat video (reels, tiktok, shorts)",
+        "canonical": "Kısa Format Video (Reels, TikTok, Shorts)",
+        "expectedCategorySlug": "kisa-format-video-reels-tiktok-shorts",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "kisa foramt video (reels, tiktok, shorts)",
+        "canonical": "Kısa Format Video (Reels, TikTok, Shorts)",
+        "expectedCategorySlug": "kisa-format-video-reels-tiktok-shorts",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "youtube-ve-uzun-format-video-kurgusu": [
+      {
+        "input": "youube ve uzun format video kurgusu",
+        "canonical": "YouTube ve Uzun Format Video Kurgusu",
+        "expectedCategorySlug": "youtube-ve-uzun-format-video-kurgusu",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "youutbe ve uzun format video kurgusu",
+        "canonical": "YouTube ve Uzun Format Video Kurgusu",
+        "expectedCategorySlug": "youtube-ve-uzun-format-video-kurgusu",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "youube video edit",
+        "canonical": "youtube video edit",
+        "expectedCategorySlug": "youtube-ve-uzun-format-video-kurgusu",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "youutbe video edit",
+        "canonical": "youtube video edit",
+        "expectedCategorySlug": "youtube-ve-uzun-format-video-kurgusu",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "hareketli-grafik-motion-graphics": [
+      {
+        "input": "hareetli grafik (motion graphics)",
+        "canonical": "Hareketli Grafik (Motion Graphics)",
+        "expectedCategorySlug": "hareketli-grafik-motion-graphics",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "hareektli grafik (motion graphics)",
+        "canonical": "Hareketli Grafik (Motion Graphics)",
+        "expectedCategorySlug": "hareketli-grafik-motion-graphics",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "motion grapics",
+        "canonical": "motion graphics",
+        "expectedCategorySlug": "hareketli-grafik-motion-graphics",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "motion grapihcs",
+        "canonical": "motion graphics",
+        "expectedCategorySlug": "hareketli-grafik-motion-graphics",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "seslendirme-ve-dublaj": [
+      {
+        "input": "sesledirme ve dublaj",
+        "canonical": "Seslendirme ve Dublaj",
+        "expectedCategorySlug": "seslendirme-ve-dublaj",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "seslednirme ve dublaj",
+        "canonical": "Seslendirme ve Dublaj",
+        "expectedCategorySlug": "seslendirme-ve-dublaj",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "sesledirme",
+        "canonical": "seslendirme",
+        "expectedCategorySlug": "seslendirme-ve-dublaj",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "seslednirme",
+        "canonical": "seslendirme",
+        "expectedCategorySlug": "seslendirme-ve-dublaj",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "podcast-duzenleme-ve-ses-muhendisligi": [
+      {
+        "input": "podcast duzenleme ve ses muhendsligi",
+        "canonical": "Podcast Düzenleme ve Ses Mühendisliği",
+        "expectedCategorySlug": "podcast-duzenleme-ve-ses-muhendisligi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "podcast duzenleme ve ses muhendsiligi",
+        "canonical": "Podcast Düzenleme ve Ses Mühendisliği",
+        "expectedCategorySlug": "podcast-duzenleme-ve-ses-muhendisligi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "teknik-yazarlik-ve-dokumantasyon": [
+      {
+        "input": "teknik yazarlik ve dokumatasyon",
+        "canonical": "Teknik Yazarlık ve Dokümantasyon",
+        "expectedCategorySlug": "teknik-yazarlik-ve-dokumantasyon",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "teknik yazarlik ve dokumatnasyon",
+        "canonical": "Teknik Yazarlık ve Dokümantasyon",
+        "expectedCategorySlug": "teknik-yazarlik-ve-dokumantasyon",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "reklam-ve-satis-metni-yazarligi": [
+      {
+        "input": "reklam ve satis metni yazaligi",
+        "canonical": "Reklam ve Satış Metni Yazarlığı",
+        "expectedCategorySlug": "reklam-ve-satis-metni-yazarligi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "reklam ve satis metni yazalrigi",
+        "canonical": "Reklam ve Satış Metni Yazarlığı",
+        "expectedCategorySlug": "reklam-ve-satis-metni-yazarligi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "seo-uyumlu-blog-ve-makale-yazarligi": [
+      {
+        "input": "seo uyumlu blog ve makale yazaligi",
+        "canonical": "SEO Uyumlu Blog ve Makale Yazarlığı",
+        "expectedCategorySlug": "seo-uyumlu-blog-ve-makale-yazarligi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "seo uyumlu blog ve makale yazalrigi",
+        "canonical": "SEO Uyumlu Blog ve Makale Yazarlığı",
+        "expectedCategorySlug": "seo-uyumlu-blog-ve-makale-yazarligi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "profesyonel-ceviri-ve-yerellestirme": [
+      {
+        "input": "profesyonel ceviri ve yerellstirme",
+        "canonical": "Profesyonel Çeviri ve Yerelleştirme",
+        "expectedCategorySlug": "profesyonel-ceviri-ve-yerellestirme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "profesyonel ceviri ve yerellsetirme",
+        "canonical": "Profesyonel Çeviri ve Yerelleştirme",
+        "expectedCategorySlug": "profesyonel-ceviri-ve-yerellestirme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "editoryal-duzeltme-ve-redaksiyon": [
+      {
+        "input": "editoryal duzeltme ve redakiyon",
+        "canonical": "Editoryal Düzeltme ve Redaksiyon",
+        "expectedCategorySlug": "editoryal-duzeltme-ve-redaksiyon",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "editoryal duzeltme ve redakisyon",
+        "canonical": "Editoryal Düzeltme ve Redaksiyon",
+        "expectedCategorySlug": "editoryal-duzeltme-ve-redaksiyon",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "teknik-danismanlik": [
+      {
+        "input": "teknik danisanlik",
+        "canonical": "Teknik Danışmanlık",
+        "expectedCategorySlug": "teknik-danismanlik",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "teknik danisamnlik",
+        "canonical": "Teknik Danışmanlık",
+        "expectedCategorySlug": "teknik-danismanlik",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "finansal-modelleme-ve-fizibilite": [
+      {
+        "input": "finansal modelleme ve fiziblite",
+        "canonical": "Finansal Modelleme ve Fizibilite",
+        "expectedCategorySlug": "finansal-modelleme-ve-fizibilite",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "finansal modelleme ve fizibliite",
+        "canonical": "Finansal Modelleme ve Fizibilite",
+        "expectedCategorySlug": "finansal-modelleme-ve-fizibilite",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "finasal model",
+        "canonical": "finansal model",
+        "expectedCategorySlug": "finansal-modelleme-ve-fizibilite",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "finasnal model",
+        "canonical": "finansal model",
+        "expectedCategorySlug": "finansal-modelleme-ve-fizibilite",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "muhasebe-ve-on-muhasebe-yonetimi": [
+      {
+        "input": "muhaebe ve on muhasebe yonetimi",
+        "canonical": "Muhasebe ve Ön Muhasebe Yönetimi",
+        "expectedCategorySlug": "muhasebe-ve-on-muhasebe-yonetimi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "muhaesbe ve on muhasebe yonetimi",
+        "canonical": "Muhasebe ve Ön Muhasebe Yönetimi",
+        "expectedCategorySlug": "muhasebe-ve-on-muhasebe-yonetimi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "vergi-planlamasi-ve-mali-musavirlik": [
+      {
+        "input": "vergi planlmasi ve mali musavirlik",
+        "canonical": "Vergi Planlaması ve Mali Müşavirlik",
+        "expectedCategorySlug": "vergi-planlamasi-ve-mali-musavirlik",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "vergi planlmaasi ve mali musavirlik",
+        "canonical": "Vergi Planlaması ve Mali Müşavirlik",
+        "expectedCategorySlug": "vergi-planlamasi-ve-mali-musavirlik",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "girisim-stratejisi-ve-is-plani": [
+      {
+        "input": "girisim stratjisi ve i̇s plani",
+        "canonical": "Girişim Stratejisi ve İş Planı",
+        "expectedCategorySlug": "girisim-stratejisi-ve-is-plani",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "girisim stratjeisi ve i̇s plani",
+        "canonical": "Girişim Stratejisi ve İş Planı",
+        "expectedCategorySlug": "girisim-stratejisi-ve-is-plani",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "proje-yonetimi-ve-cevik-danismanlik": [
+      {
+        "input": "proje yonetimi ve cevik danisanlik",
+        "canonical": "Proje Yönetimi ve Çevik Danışmanlık",
+        "expectedCategorySlug": "proje-yonetimi-ve-cevik-danismanlik",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "proje yonetimi ve cevik danisamnlik",
+        "canonical": "Proje Yönetimi ve Çevik Danışmanlık",
+        "expectedCategorySlug": "proje-yonetimi-ve-cevik-danismanlik",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "sozlesme-hazirlama-ve-inceleme": [
+      {
+        "input": "sozlesme hazilama ve i̇nceleme",
+        "canonical": "Sözleşme Hazırlama ve İnceleme",
+        "expectedCategorySlug": "sozlesme-hazirlama-ve-inceleme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "sozlesme hazilrama ve i̇nceleme",
+        "canonical": "Sözleşme Hazırlama ve İnceleme",
+        "expectedCategorySlug": "sozlesme-hazirlama-ve-inceleme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "kvkk-gdpr-ve-veri-gizliligi-uyumu": [
+      {
+        "input": "kvkk, gdpr ve veri gizlligi uyumu",
+        "canonical": "KVKK, GDPR ve Veri Gizliliği Uyumu",
+        "expectedCategorySlug": "kvkk-gdpr-ve-veri-gizliligi-uyumu",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "kvkk, gdpr ve veri gizlliigi uyumu",
+        "canonical": "KVKK, GDPR ve Veri Gizliliği Uyumu",
+        "expectedCategorySlug": "kvkk-gdpr-ve-veri-gizliligi-uyumu",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "marka-tescili-ve-fikri-mulkiyet": [
+      {
+        "input": "marka tescili ve fikri mulkyet",
+        "canonical": "Marka Tescili ve Fikri Mülkiyet",
+        "expectedCategorySlug": "marka-tescili-ve-fikri-mulkiyet",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "marka tescili ve fikri mulkyiet",
+        "canonical": "Marka Tescili ve Fikri Mülkiyet",
+        "expectedCategorySlug": "marka-tescili-ve-fikri-mulkiyet",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "e-ticaret-ve-tuketici-hukuku": [
+      {
+        "input": "e-ticaret ve tukeici hukuku",
+        "canonical": "E-Ticaret ve Tüketici Hukuku",
+        "expectedCategorySlug": "e-ticaret-ve-tuketici-hukuku",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "e-ticaret ve tukeitci hukuku",
+        "canonical": "E-Ticaret ve Tüketici Hukuku",
+        "expectedCategorySlug": "e-ticaret-ve-tuketici-hukuku",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "oyun-gelistirme": [
+      {
+        "input": "oyun gelisirme",
+        "canonical": "Oyun Geliştirme",
+        "expectedCategorySlug": "oyun-gelistirme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "oyun gelisitrme",
+        "canonical": "Oyun Geliştirme",
+        "expectedCategorySlug": "oyun-gelistirme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "mimari-proje-plan-ve-bim": [
+      {
+        "input": "mimri proje, plan ve bim",
+        "canonical": "Mimari Proje, Plan ve BIM",
+        "expectedCategorySlug": "mimari-proje-plan-ve-bim",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "mimrai proje, plan ve bim",
+        "canonical": "Mimari Proje, Plan ve BIM",
+        "expectedCategorySlug": "mimari-proje-plan-ve-bim",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "mimri proje",
+        "canonical": "mimari proje",
+        "expectedCategorySlug": "mimari-proje-plan-ve-bim",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "mimrai proje",
+        "canonical": "mimari proje",
+        "expectedCategorySlug": "mimari-proje-plan-ve-bim",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "ic-mimari-ve-3d-fotogercekci-render": [
+      {
+        "input": "i̇c mimari ve 3d fotogecekci render",
+        "canonical": "İç Mimari ve 3D Fotogerçekçi Render",
+        "expectedCategorySlug": "ic-mimari-ve-3d-fotogercekci-render",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "i̇c mimari ve 3d fotogecrekci render",
+        "canonical": "İç Mimari ve 3D Fotogerçekçi Render",
+        "expectedCategorySlug": "ic-mimari-ve-3d-fotogercekci-render",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "3d-urun-modelleme-ve-cad": [
+      {
+        "input": "3d urun modeleme ve cad",
+        "canonical": "3D Ürün Modelleme ve CAD",
+        "expectedCategorySlug": "3d-urun-modelleme-ve-cad",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "3d urun modeleme",
+        "canonical": "3d ürün modelleme",
+        "expectedCategorySlug": "3d-urun-modelleme-ve-cad",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "solidorks",
+        "canonical": "solidworks",
+        "expectedCategorySlug": "3d-urun-modelleme-ve-cad",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "solidowrks",
+        "canonical": "solidworks",
+        "expectedCategorySlug": "3d-urun-modelleme-ve-cad",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "yonetici-asistanligi-ve-takvim-yonetimi": [
+      {
+        "input": "yonetici asistnligi ve takvim yonetimi",
+        "canonical": "Yönetici Asistanlığı ve Takvim Yönetimi",
+        "expectedCategorySlug": "yonetici-asistanligi-ve-takvim-yonetimi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "yonetici asistnaligi ve takvim yonetimi",
+        "canonical": "Yönetici Asistanlığı ve Takvim Yönetimi",
+        "expectedCategorySlug": "yonetici-asistanligi-ve-takvim-yonetimi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "musteri-hizmetleri-ve-canli-destek": [
+      {
+        "input": "musteri hizmeleri ve canli destek",
+        "canonical": "Müşteri Hizmetleri ve Canlı Destek",
+        "expectedCategorySlug": "musteri-hizmetleri-ve-canli-destek",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "musteri hizmelteri ve canli destek",
+        "canonical": "Müşteri Hizmetleri ve Canlı Destek",
+        "expectedCategorySlug": "musteri-hizmetleri-ve-canli-destek",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "veri-girisi-ve-kapsamli-web-arastirmasi": [
+      {
+        "input": "veri girisi ve kapsamli web arastrmasi",
+        "canonical": "Veri Girişi ve Kapsamlı Web Araştırması",
+        "expectedCategorySlug": "veri-girisi-ve-kapsamli-web-arastirmasi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "veri girisi ve kapsamli web arastrimasi",
+        "canonical": "Veri Girişi ve Kapsamlı Web Araştırması",
+        "expectedCategorySlug": "veri-girisi-ve-kapsamli-web-arastirmasi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "full-stack-web-gelistirme": [
+      {
+        "input": "full stack web gelisirme",
+        "canonical": "Full Stack Web Geliştirme",
+        "expectedCategorySlug": "full-stack-web-gelistirme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "full stack web gelisitrme",
+        "canonical": "Full Stack Web Geliştirme",
+        "expectedCategorySlug": "full-stack-web-gelistirme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "e-ticaret-sitesi-gelistirme": [
+      {
+        "input": "e-ticaret sitesi gelisirme",
+        "canonical": "E-Ticaret Sitesi Geliştirme",
+        "expectedCategorySlug": "e-ticaret-sitesi-gelistirme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "e-ticaret sitesi gelisitrme",
+        "canonical": "E-Ticaret Sitesi Geliştirme",
+        "expectedCategorySlug": "e-ticaret-sitesi-gelistirme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "cms-ve-no-code-gelistirme": [
+      {
+        "input": "cms ve no-code gelisirme",
+        "canonical": "CMS ve No-Code Geliştirme",
+        "expectedCategorySlug": "cms-ve-no-code-gelistirme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "cms ve no-code gelisitrme",
+        "canonical": "CMS ve No-Code Geliştirme",
+        "expectedCategorySlug": "cms-ve-no-code-gelistirme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "mikroservis-ve-api-mimarisi": [
+      {
+        "input": "mikroervis ve api mimarisi",
+        "canonical": "Mikroservis ve API Mimarisi",
+        "expectedCategorySlug": "mikroservis-ve-api-mimarisi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "mikroesrvis ve api mimarisi",
+        "canonical": "Mikroservis ve API Mimarisi",
+        "expectedCategorySlug": "mikroservis-ve-api-mimarisi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "mikroervis",
+        "canonical": "mikroservis",
+        "expectedCategorySlug": "mikroservis-ve-api-mimarisi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "mikroesrvis",
+        "canonical": "mikroservis",
+        "expectedCategorySlug": "mikroservis-ve-api-mimarisi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "penetrasyon-testi-ve-guvenlik-denetimi": [
+      {
+        "input": "penetasyon testi ve guvenlik denetimi",
+        "canonical": "Penetrasyon Testi ve Güvenlik Denetimi",
+        "expectedCategorySlug": "penetrasyon-testi-ve-guvenlik-denetimi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "penetarsyon testi ve guvenlik denetimi",
+        "canonical": "Penetrasyon Testi ve Güvenlik Denetimi",
+        "expectedCategorySlug": "penetrasyon-testi-ve-guvenlik-denetimi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "bulut-mimarisi-ve-altyapi-yonetimi": [
+      {
+        "input": "bulut mimaisi ve altyapi yonetimi",
+        "canonical": "Bulut Mimarisi ve Altyapı Yönetimi",
+        "expectedCategorySlug": "bulut-mimarisi-ve-altyapi-yonetimi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "bulut mimairsi ve altyapi yonetimi",
+        "canonical": "Bulut Mimarisi ve Altyapı Yönetimi",
+        "expectedCategorySlug": "bulut-mimarisi-ve-altyapi-yonetimi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "llm-ve-gpt-uygulama-gelistirme": [
+      {
+        "input": "llm ve gpt uygulama gelisirme",
+        "canonical": "LLM ve GPT Uygulama Geliştirme",
+        "expectedCategorySlug": "llm-ve-gpt-uygulama-gelistirme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "llm ve gpt uygulama gelisitrme",
+        "canonical": "LLM ve GPT Uygulama Geliştirme",
+        "expectedCategorySlug": "llm-ve-gpt-uygulama-gelistirme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "bilgisayarli-goru-ve-goruntu-isleme": [
+      {
+        "input": "bilgisyarli goru ve goruntu i̇sleme",
+        "canonical": "Bilgisayarlı Görü ve Görüntü İşleme",
+        "expectedCategorySlug": "bilgisayarli-goru-ve-goruntu-isleme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "bilgisyaarli goru ve goruntu i̇sleme",
+        "canonical": "Bilgisayarlı Görü ve Görüntü İşleme",
+        "expectedCategorySlug": "bilgisayarli-goru-ve-goruntu-isleme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "dogal-dil-isleme-ve-ses-teknolojileri": [
+      {
+        "input": "dogal dil i̇sleme ve ses teknoljileri",
+        "canonical": "Doğal Dil İşleme ve Ses Teknolojileri",
+        "expectedCategorySlug": "dogal-dil-isleme-ve-ses-teknolojileri",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "dogal dil i̇sleme ve ses teknoljoileri",
+        "canonical": "Doğal Dil İşleme ve Ses Teknolojileri",
+        "expectedCategorySlug": "dogal-dil-isleme-ve-ses-teknolojileri",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "web-kazima-ve-veri-madenciligi": [
+      {
+        "input": "web kazima ve veri madeniligi",
+        "canonical": "Web Kazıma ve Veri Madenciliği",
+        "expectedCategorySlug": "web-kazima-ve-veri-madenciligi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "web kazima ve veri madenicligi",
+        "canonical": "Web Kazıma ve Veri Madenciliği",
+        "expectedCategorySlug": "web-kazima-ve-veri-madenciligi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "web-sitesi-ui-ux-tasarimi": [
+      {
+        "input": "web sitesi ui/ux tasaimi",
+        "canonical": "Web Sitesi UI/UX Tasarımı",
+        "expectedCategorySlug": "web-sitesi-ui-ux-tasarimi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "web sitesi ui/ux tasairmi",
+        "canonical": "Web Sitesi UI/UX Tasarımı",
+        "expectedCategorySlug": "web-sitesi-ui-ux-tasarimi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "mobil-uygulama-ui-ux-tasarimi": [
+      {
+        "input": "mobil uyguama ui/ux tasarimi",
+        "canonical": "Mobil Uygulama UI/UX Tasarımı",
+        "expectedCategorySlug": "mobil-uygulama-ui-ux-tasarimi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "mobil uygualma ui/ux tasarimi",
+        "canonical": "Mobil Uygulama UI/UX Tasarımı",
+        "expectedCategorySlug": "mobil-uygulama-ui-ux-tasarimi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "ikon-ve-tipografi-tasarimi": [
+      {
+        "input": "i̇kon ve tiporafi tasarimi",
+        "canonical": "İkon ve Tipografi Tasarımı",
+        "expectedCategorySlug": "ikon-ve-tipografi-tasarimi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "i̇kon ve tiporgafi tasarimi",
+        "canonical": "İkon ve Tipografi Tasarımı",
+        "expectedCategorySlug": "ikon-ve-tipografi-tasarimi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "karakter-tasarimi-ve-konsept-sanat": [
+      {
+        "input": "karater tasarimi ve konsept sanat",
+        "canonical": "Karakter Tasarımı ve Konsept Sanat",
+        "expectedCategorySlug": "karakter-tasarimi-ve-konsept-sanat",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "karatker tasarimi ve konsept sanat",
+        "canonical": "Karakter Tasarımı ve Konsept Sanat",
+        "expectedCategorySlug": "karakter-tasarimi-ve-konsept-sanat",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "fotograf-duzenleme-ve-retouching": [
+      {
+        "input": "fotograf duzenleme ve retouhing",
+        "canonical": "Fotoğraf Düzenleme ve Retouching",
+        "expectedCategorySlug": "fotograf-duzenleme-ve-retouching",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "fotograf duzenleme ve retouhcing",
+        "canonical": "Fotoğraf Düzenleme ve Retouching",
+        "expectedCategorySlug": "fotograf-duzenleme-ve-retouching",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "teknik-seo-ve-site-hizi-optimizasyonu": [
+      {
+        "input": "teknik seo ve site hizi optimiasyonu",
+        "canonical": "Teknik SEO ve Site Hızı Optimizasyonu",
+        "expectedCategorySlug": "teknik-seo-ve-site-hizi-optimizasyonu",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "teknik seo ve site hizi optimiazsyonu",
+        "canonical": "Teknik SEO ve Site Hızı Optimizasyonu",
+        "expectedCategorySlug": "teknik-seo-ve-site-hizi-optimizasyonu",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "tiktok-ve-dikey-video-reklamciligi": [
+      {
+        "input": "tiktok ve dikey video reklamiligi",
+        "canonical": "TikTok ve Dikey Video Reklamcılığı",
+        "expectedCategorySlug": "tiktok-ve-dikey-video-reklamciligi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "tiktok ve dikey video reklamicligi",
+        "canonical": "TikTok ve Dikey Video Reklamcılığı",
+        "expectedCategorySlug": "tiktok-ve-dikey-video-reklamciligi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "b2b-buyume-ve-linkedin-lead-generation": [
+      {
+        "input": "b2b buyume ve linkedin lead genertion",
+        "canonical": "B2B Büyüme ve LinkedIn Lead Generation",
+        "expectedCategorySlug": "b2b-buyume-ve-linkedin-lead-generation",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "b2b buyume ve linkedin lead genertaion",
+        "canonical": "B2B Büyüme ve LinkedIn Lead Generation",
+        "expectedCategorySlug": "b2b-buyume-ve-linkedin-lead-generation",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "icerik-pazarlamasi-ve-donusum-hunisi": [
+      {
+        "input": "i̇cerik pazaramasi ve donusum hunisi",
+        "canonical": "İçerik Pazarlaması ve Dönüşüm Hunisi",
+        "expectedCategorySlug": "icerik-pazarlamasi-ve-donusum-hunisi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "i̇cerik pazaralmasi ve donusum hunisi",
+        "canonical": "İçerik Pazarlaması ve Dönüşüm Hunisi",
+        "expectedCategorySlug": "icerik-pazarlamasi-ve-donusum-hunisi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "video-renk-duzenleme-color-grading": [
+      {
+        "input": "video renk duzeleme (color grading)",
+        "canonical": "Video Renk Düzenleme (Color Grading)",
+        "expectedCategorySlug": "video-renk-duzenleme-color-grading",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "video renk duzelneme (color grading)",
+        "canonical": "Video Renk Düzenleme (Color Grading)",
+        "expectedCategorySlug": "video-renk-duzenleme-color-grading",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "3d-urun-animasyonu-ve-tanitim": [
+      {
+        "input": "3d urun animayonu ve tanitim",
+        "canonical": "3D Ürün Animasyonu ve Tanıtım",
+        "expectedCategorySlug": "3d-urun-animasyonu-ve-tanitim",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "3d urun animaysonu ve tanitim",
+        "canonical": "3D Ürün Animasyonu ve Tanıtım",
+        "expectedCategorySlug": "3d-urun-animasyonu-ve-tanitim",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "altyazi-transkripsiyon-ve-dinamik-metinler": [
+      {
+        "input": "altyazi, transkrpsiyon ve dinamik metinler",
+        "canonical": "Altyazı, Transkripsiyon ve Dinamik Metinler",
+        "expectedCategorySlug": "altyazi-transkripsiyon-ve-dinamik-metinler",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "altyazi, transkrpisiyon ve dinamik metinler",
+        "canonical": "Altyazı, Transkripsiyon ve Dinamik Metinler",
+        "expectedCategorySlug": "altyazi-transkripsiyon-ve-dinamik-metinler",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "ses-tasarimi-ve-efektleri-sfx": [
+      {
+        "input": "ses tasarimi ve efekleri (sfx)",
+        "canonical": "Ses Tasarımı ve Efektleri (SFX)",
+        "expectedCategorySlug": "ses-tasarimi-ve-efektleri-sfx",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "ses tasarimi ve efeklteri (sfx)",
+        "canonical": "Ses Tasarımı ve Efektleri (SFX)",
+        "expectedCategorySlug": "ses-tasarimi-ve-efektleri-sfx",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "muzik-produksiyonu-ve-beatmaking": [
+      {
+        "input": "muzik produkiyonu ve beatmaking",
+        "canonical": "Müzik Prodüksiyonu ve Beatmaking",
+        "expectedCategorySlug": "muzik-produksiyonu-ve-beatmaking",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "muzik produkisyonu ve beatmaking",
+        "canonical": "Müzik Prodüksiyonu ve Beatmaking",
+        "expectedCategorySlug": "muzik-produksiyonu-ve-beatmaking",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "yazilim-ve-arayuz-yerellestirmesi-i18n": [
+      {
+        "input": "yazilim ve arayuz yerelletirmesi (i18n)",
+        "canonical": "Yazılım ve Arayüz Yerelleştirmesi (I18n)",
+        "expectedCategorySlug": "yazilim-ve-arayuz-yerellestirmesi-i18n",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "yazilim ve arayuz yerelletsirmesi (i18n)",
+        "canonical": "Yazılım ve Arayüz Yerelleştirmesi (I18n)",
+        "expectedCategorySlug": "yazilim-ve-arayuz-yerellestirmesi-i18n",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "hukuki-tibbi-ve-akademik-ceviri": [
+      {
+        "input": "hukuki, tibbi ve akadmik ceviri",
+        "canonical": "Hukuki, Tıbbi ve Akademik Çeviri",
+        "expectedCategorySlug": "hukuki-tibbi-ve-akademik-ceviri",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "hukuki, tibbi ve akadmeik ceviri",
+        "canonical": "Hukuki, Tıbbi ve Akademik Çeviri",
+        "expectedCategorySlug": "hukuki-tibbi-ve-akademik-ceviri",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "whitepaper-ve-e-kitap-yazimi": [
+      {
+        "input": "whiteaper ve e-kitap yazimi",
+        "canonical": "Whitepaper ve E-Kitap Yazımı",
+        "expectedCategorySlug": "whitepaper-ve-e-kitap-yazimi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "whiteapper ve e-kitap yazimi",
+        "canonical": "Whitepaper ve E-Kitap Yazımı",
+        "expectedCategorySlug": "whitepaper-ve-e-kitap-yazimi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "hayalet-yazarlik-ve-liderlik-makaleleri": [
+      {
+        "input": "hayalet yazarlik ve liderlik makalleri",
+        "canonical": "Hayalet Yazarlık ve Liderlik Makaleleri",
+        "expectedCategorySlug": "hayalet-yazarlik-ve-liderlik-makaleleri",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "hayalet yazarlik ve liderlik makalleeri",
+        "canonical": "Hayalet Yazarlık ve Liderlik Makaleleri",
+        "expectedCategorySlug": "hayalet-yazarlik-ve-liderlik-makaleleri",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "pazar-ve-rakip-arastirmasi": [
+      {
+        "input": "pazar ve rakip arastrmasi",
+        "canonical": "Pazar ve Rakip Araştırması",
+        "expectedCategorySlug": "pazar-ve-rakip-arastirmasi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "pazar ve rakip arastrimasi",
+        "canonical": "Pazar ve Rakip Araştırması",
+        "expectedCategorySlug": "pazar-ve-rakip-arastirmasi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "girisim-degerleme-ve-yatirimci-metrikleri": [
+      {
+        "input": "girisim degerleme ve yatirimci metrileri",
+        "canonical": "Girişim Değerleme ve Yatırımcı Metrikleri",
+        "expectedCategorySlug": "girisim-degerleme-ve-yatirimci-metrikleri",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "girisim degerleme ve yatirimci metrilkeri",
+        "canonical": "Girişim Değerleme ve Yatırımcı Metrikleri",
+        "expectedCategorySlug": "girisim-degerleme-ve-yatirimci-metrikleri",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "surec-ve-operasyon-optimizasyonu": [
+      {
+        "input": "surec ve operasyon optimiasyonu",
+        "canonical": "Süreç ve Operasyon Optimizasyonu",
+        "expectedCategorySlug": "surec-ve-operasyon-optimizasyonu",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "surec ve operasyon optimiazsyonu",
+        "canonical": "Süreç ve Operasyon Optimizasyonu",
+        "expectedCategorySlug": "surec-ve-operasyon-optimizasyonu",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "insan-kaynaklari-ve-yetenek-avciligi": [
+      {
+        "input": "i̇nsan kaynalari ve yetenek avciligi",
+        "canonical": "İnsan Kaynakları ve Yetenek Avcılığı",
+        "expectedCategorySlug": "insan-kaynaklari-ve-yetenek-avciligi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "i̇nsan kaynalkari ve yetenek avciligi",
+        "canonical": "İnsan Kaynakları ve Yetenek Avcılığı",
+        "expectedCategorySlug": "insan-kaynaklari-ve-yetenek-avciligi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "online-egitim-ozel-ders-ve-mentorluk": [
+      {
+        "input": "online egitim, ozel ders ve mentrluk",
+        "canonical": "Online Eğitim, Özel Ders ve Mentorluk",
+        "expectedCategorySlug": "online-egitim-ozel-ders-ve-mentorluk",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "online egitim, ozel ders ve mentroluk",
+        "canonical": "Online Eğitim, Özel Ders ve Mentorluk",
+        "expectedCategorySlug": "online-egitim-ozel-ders-ve-mentorluk",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "freelance-ve-yazilim-hizmet-sozlesmeleri": [
+      {
+        "input": "freelance ve yazilim hizmet sozleseleri",
+        "canonical": "Freelance ve Yazılım Hizmet Sözleşmeleri",
+        "expectedCategorySlug": "freelance-ve-yazilim-hizmet-sozlesmeleri",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "freelance ve yazilim hizmet sozlesemleri",
+        "canonical": "Freelance ve Yazılım Hizmet Sözleşmeleri",
+        "expectedCategorySlug": "freelance-ve-yazilim-hizmet-sozlesmeleri",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma": [
+      {
+        "input": "gizlilik sozlemesi (nda) ve ticari sir koruma",
+        "canonical": "Gizlilik Sözleşmesi (NDA) ve Ticari Sır Koruma",
+        "expectedCategorySlug": "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "gizlilik sozlemsesi (nda) ve ticari sir koruma",
+        "canonical": "Gizlilik Sözleşmesi (NDA) ve Ticari Sır Koruma",
+        "expectedCategorySlug": "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "saas-ve-uygulama-yasal-metinleri": [
+      {
+        "input": "saas ve uygulama yasal metileri",
+        "canonical": "SaaS ve Uygulama Yasal Metinleri",
+        "expectedCategorySlug": "saas-ve-uygulama-yasal-metinleri",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "saas ve uygulama yasal metilneri",
+        "canonical": "SaaS ve Uygulama Yasal Metinleri",
+        "expectedCategorySlug": "saas-ve-uygulama-yasal-metinleri",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "saas sozlemesi",
+        "canonical": "saas sözleşmesi",
+        "expectedCategorySlug": "saas-ve-uygulama-yasal-metinleri",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "saas sozlemsesi",
+        "canonical": "saas sözleşmesi",
+        "expectedCategorySlug": "saas-ve-uygulama-yasal-metinleri",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "unity-ile-oyun-gelistirme": [
+      {
+        "input": "unity ile oyun gelisirme",
+        "canonical": "Unity ile Oyun Geliştirme",
+        "expectedCategorySlug": "unity-ile-oyun-gelistirme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "unity ile oyun gelisitrme",
+        "canonical": "Unity ile Oyun Geliştirme",
+        "expectedCategorySlug": "unity-ile-oyun-gelistirme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "unreal-engine-ve-c-oyun-gelistirme": [
+      {
+        "input": "unreal engine & c++ oyun gelisirme",
+        "canonical": "Unreal Engine & C++ Oyun Geliştirme",
+        "expectedCategorySlug": "unreal-engine-ve-c-oyun-gelistirme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "unreal engine & c++ oyun gelisitrme",
+        "canonical": "Unreal Engine & C++ Oyun Geliştirme",
+        "expectedCategorySlug": "unreal-engine-ve-c-oyun-gelistirme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "mobil-oyun-gelistirme-hypercasual-casual": [
+      {
+        "input": "mobil oyun gelistirme (hyperasual / casual)",
+        "canonical": "Mobil Oyun Geliştirme (Hypercasual / Casual)",
+        "expectedCategorySlug": "mobil-oyun-gelistirme-hypercasual-casual",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "mobil oyun gelistirme (hyperacsual / casual)",
+        "canonical": "Mobil Oyun Geliştirme (Hypercasual / Casual)",
+        "expectedCategorySlug": "mobil-oyun-gelistirme-hypercasual-casual",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "2d-oyun-sanati-ve-piksel-cizim": [
+      {
+        "input": "2d oyun santi ve piksel cizim",
+        "canonical": "2D Oyun Sanatı ve Piksel Çizim",
+        "expectedCategorySlug": "2d-oyun-sanati-ve-piksel-cizim",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "2d oyun santai ve piksel cizim",
+        "canonical": "2D Oyun Sanatı ve Piksel Çizim",
+        "expectedCategorySlug": "2d-oyun-sanati-ve-piksel-cizim",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "3d-oyun-varliklari-ve-karakter-modelleme": [
+      {
+        "input": "3d oyun varlilari ve karakter modelleme",
+        "canonical": "3D Oyun Varlıkları ve Karakter Modelleme",
+        "expectedCategorySlug": "3d-oyun-varliklari-ve-karakter-modelleme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "3d oyun varlilkari ve karakter modelleme",
+        "canonical": "3D Oyun Varlıkları ve Karakter Modelleme",
+        "expectedCategorySlug": "3d-oyun-varliklari-ve-karakter-modelleme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "oyun-mekanigi-ve-seviye-level-tasarimi": [
+      {
+        "input": "oyun mekaigi ve seviye (level) tasarimi",
+        "canonical": "Oyun Mekaniği ve Seviye (Level) Tasarımı",
+        "expectedCategorySlug": "oyun-mekanigi-ve-seviye-level-tasarimi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "oyun mekaingi ve seviye (level) tasarimi",
+        "canonical": "Oyun Mekaniği ve Seviye (Level) Tasarımı",
+        "expectedCategorySlug": "oyun-mekanigi-ve-seviye-level-tasarimi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "oyun-sesleri-ve-muzik-produksiyonu": [
+      {
+        "input": "oyun sesleri ve muzik produkiyonu",
+        "canonical": "Oyun Sesleri ve Müzik Prodüksiyonu",
+        "expectedCategorySlug": "oyun-sesleri-ve-muzik-produksiyonu",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "oyun sesleri ve muzik produkisyonu",
+        "canonical": "Oyun Sesleri ve Müzik Prodüksiyonu",
+        "expectedCategorySlug": "oyun-sesleri-ve-muzik-produksiyonu",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "dis-cephe-ve-peyzaj-3d-gorsellestirme": [
+      {
+        "input": "dis cephe ve peyzaj 3d gorsellstirme",
+        "canonical": "Dış Cephe ve Peyzaj 3D Görselleştirme",
+        "expectedCategorySlug": "dis-cephe-ve-peyzaj-3d-gorsellestirme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "dis cephe ve peyzaj 3d gorsellsetirme",
+        "canonical": "Dış Cephe ve Peyzaj 3D Görselleştirme",
+        "expectedCategorySlug": "dis-cephe-ve-peyzaj-3d-gorsellestirme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "3d-baski-modelleme-ve-stl-hazirligi": [
+      {
+        "input": "3d baski modeleme ve stl hazirligi",
+        "canonical": "3D Baskı Modelleme ve STL Hazırlığı",
+        "expectedCategorySlug": "3d-baski-modelleme-ve-stl-hazirligi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "3d prining",
+        "canonical": "3d printing",
+        "expectedCategorySlug": "3d-baski-modelleme-ve-stl-hazirligi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "3d prinitng",
+        "canonical": "3d printing",
+        "expectedCategorySlug": "3d-baski-modelleme-ve-stl-hazirligi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "prinable model",
+        "canonical": "printable model",
+        "expectedCategorySlug": "3d-baski-modelleme-ve-stl-hazirligi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "prinatble model",
+        "canonical": "printable model",
+        "expectedCategorySlug": "3d-baski-modelleme-ve-stl-hazirligi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "mekansal-bilisim-vr-ve-ar-gelistirme": [
+      {
+        "input": "mekânsal bilisim, vr & ar gelisirme",
+        "canonical": "Mekânsal Bilişim, VR & AR Geliştirme",
+        "expectedCategorySlug": "mekansal-bilisim-vr-ve-ar-gelistirme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "mekânsal bilisim, vr & ar gelisitrme",
+        "canonical": "Mekânsal Bilişim, VR & AR Geliştirme",
+        "expectedCategorySlug": "mekansal-bilisim-vr-ve-ar-gelistirme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "e-ticaret-magaza-ve-siparis-operasyon-destegi": [
+      {
+        "input": "e-ticaret magaza ve siparis opersyon destegi",
+        "canonical": "E-Ticaret Mağaza ve Sipariş Operasyon Desteği",
+        "expectedCategorySlug": "e-ticaret-magaza-ve-siparis-operasyon-destegi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "e-ticaret magaza ve siparis opersayon destegi",
+        "canonical": "E-Ticaret Mağaza ve Sipariş Operasyon Desteği",
+        "expectedCategorySlug": "e-ticaret-magaza-ve-siparis-operasyon-destegi",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "potansiyel-musteri-ve-veri-zenginlestirme": [
+      {
+        "input": "potansiyel musteri ve veri zenginlstirme",
+        "canonical": "Potansiyel Müşteri ve Veri Zenginleştirme",
+        "expectedCategorySlug": "potansiyel-musteri-ve-veri-zenginlestirme",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "potansiyel musteri ve veri zenginlsetirme",
+        "canonical": "Potansiyel Müşteri ve Veri Zenginleştirme",
+        "expectedCategorySlug": "potansiyel-musteri-ve-veri-zenginlestirme",
+        "source": "synthetic-conservative"
+      }
+    ],
+    "ses-ve-video-desifre-destegi": [
+      {
+        "input": "ses ve video desfre destegi",
+        "canonical": "Ses ve Video Deşifre Desteği",
+        "expectedCategorySlug": "ses-ve-video-desifre-destegi",
+        "source": "synthetic-conservative"
+      },
+      {
+        "input": "ses ve video desfire destegi",
+        "canonical": "Ses ve Video Deşifre Desteği",
+        "expectedCategorySlug": "ses-ve-video-desifre-destegi",
+        "source": "synthetic-conservative"
+      }
+    ]
+  }
+}

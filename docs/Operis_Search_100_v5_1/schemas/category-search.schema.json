@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://operis.pro/schemas/category-search-v3.schema.json",
+  "title": "Operis Category Search Taxonomy v5",
+  "type": "object",
+  "required": [
+    "meta",
+    "categories"
+  ],
+  "properties": {
+    "meta": {
+      "type": "object"
+    },
+    "categories": {
+      "type": "array",
+      "minItems": 110,
+      "maxItems": 110,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "canonicalTerms",
+          "searchTerms",
+          "skillTags",
+          "aliases",
+          "serviceIntents",
+          "relatedCategories",
+          "weightedTermsRef",
+          "relationGraphRef",
+          "disambiguationRef",
+          "typoCorpusRef",
+          "longTailCorpusRef",
+          "problemLanguageRef",
+          "synonymRef"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 2
+          },
+          "name": {
+            "type": "string",
+            "minLength": 2
+          },
+          "canonicalTerms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "searchTerms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 3
+          },
+          "skillTags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "serviceIntents": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 8
+          },
+          "relatedCategories": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "slug",
+                "name",
+                "score",
+                "strength"
+              ],
+              "properties": {
+                "slug": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "score": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "strength": {
+                  "enum": [
+                    "strong",
+                    "medium",
+                    "weak"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "negativeTerms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "weightedTermsRef": {
+            "type": "string"
+          },
+          "relationGraphRef": {
+            "type": "string"
+          },
+          "disambiguationRef": {
+            "type": "string"
+          },
+          "typoCorpusRef": {
+            "type": "string"
+          },
+          "longTailCorpusRef": {
+            "type": "string"
+          },
+          "locale": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "searchBoost": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "problemLanguageRef": {
+            "type": "string"
+          },
+          "synonymRef": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

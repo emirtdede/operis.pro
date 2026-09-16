@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { setRequestLocale } from "next-intl/server";
-import { Search, PlusCircle, Clock, ShieldCheck } from "lucide-react";
+import { Search, PlusCircle, Clock, ShieldCheck, X } from "lucide-react";
 import { FeedService, FeedResult } from "@/src/modules/listings/feed/service";
 import { CategoryService } from "@/src/modules/categories/service";
 import { InteractiveListingsFeed } from "@/src/components/listings/interactive-listings-feed";
@@ -169,8 +169,18 @@ export default async function BrowseListingsPage({
               placeholder={
                 isTr ? "İlan başlığı veya teknoloji ara..." : "Search title or tech stack..."
               }
-              className="w-full rounded-xl bg-transparent pl-9 pr-3 py-2 text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none"
+              className={`w-full rounded-xl bg-transparent pl-9 ${searchQuery ? "pr-8" : "pr-3"} py-2 text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none`}
             />
+            {searchQuery && (
+              <Link
+                href={listingsPath + (selectedCategory ? `?category=${selectedCategory}` : "")}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-lg text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
+                title={isTr ? "Aramayı Temizle" : "Clear Search"}
+                aria-label={isTr ? "Aramayı Temizle" : "Clear Search"}
+              >
+                <X className="h-3.5 w-3.5" aria-hidden="true" />
+              </Link>
+            )}
           </div>
           <Button type="submit" variant="secondary" size="sm">
             {isTr ? "Ara" : "Search"}

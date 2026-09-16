@@ -1,0 +1,27 @@
+{
+  "version": "5.0.0",
+  "releaseThresholds": {
+    "lexicalRegression": {
+      "deterministicAssertionsPassRate": 1.0
+    },
+    "humanStyleGold": {
+      "highConfidencePreferredTop1AccuracyMin": 0.97,
+      "mediumConfidenceAllowedTop1AccuracyMin": 0.98,
+      "targetRecallAt3Min": 0.995,
+      "nDCGAt5Min": 0.97
+    },
+    "contrastive": {
+      "expectedTop1AccuracyMin": 1.0,
+      "mustRankAbovePairAccuracyMin": 1.0
+    },
+    "adversarial": {
+      "passRate": 1.0
+    }
+  },
+  "antiGamingRules": [
+    "Do not hard-code individual benchmark query strings.",
+    "Do not load test files into production ranking logic.",
+    "Fix benchmark failures through general taxonomy, normalization, retrieval or ranking rules.",
+    "Report metrics separately by query segment and confidence."
+  ]
+}

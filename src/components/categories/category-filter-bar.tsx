@@ -227,7 +227,7 @@ export function CategoryFilterBar({
                 : "border-[var(--color-border-subtle)] hover:border-blue-500/40"
             }`}
           >
-            <div className="h-7 w-7 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0">
+            <div className="h-7 w-7 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
               <ActiveQuickIcon className="h-4 w-4" aria-hidden="true" />
             </div>
 
@@ -273,7 +273,7 @@ export function CategoryFilterBar({
               <Link
                 href={buildHref(undefined)}
                 onClick={(e) => e.stopPropagation()}
-                className="p-1 rounded-md text-blue-400 hover:text-white hover:bg-blue-500/20 transition-colors"
+                className="p-1 rounded-md text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-white hover:bg-blue-500/20 transition-colors"
                 aria-label={isTr ? "Filtreyi kaldır" : "Clear filter"}
                 title={isTr ? "Filtreyi kaldır" : "Clear filter"}
               >
@@ -294,7 +294,7 @@ export function CategoryFilterBar({
             >
               <ChevronDown
                 className={`h-4 w-4 transition-transform duration-200 ${
-                  quickDropdownOpen ? "rotate-180 text-blue-400" : ""
+                  quickDropdownOpen ? "rotate-180 text-blue-600 dark:text-blue-400" : ""
                 }`}
               />
             </button>
@@ -313,9 +313,9 @@ export function CategoryFilterBar({
             <button
               type="button"
               onClick={() => setModalOpen(true)}
-              className="inline-flex items-center gap-2 h-11 px-4 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] text-xs font-semibold text-[var(--color-text-primary)] hover:border-blue-500/40 hover:text-blue-400 transition-all cursor-pointer shadow-xs whitespace-nowrap"
+              className="inline-flex items-center gap-2 h-11 px-4 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] text-xs font-semibold text-[var(--color-text-primary)] hover:border-blue-500/40 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer shadow-xs whitespace-nowrap"
             >
-              <LayoutGrid className="h-4 w-4 text-blue-400" aria-hidden="true" />
+              <LayoutGrid className="h-4 w-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
               <span>
                 {isTr
                   ? `Sektör Matrisi (${categories.length})`
@@ -347,12 +347,12 @@ export function CategoryFilterBar({
                 }}
                 className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs transition-colors cursor-pointer ${
                   !selectedCategory
-                    ? "bg-blue-600/15 text-blue-400 border border-blue-500/30 font-semibold"
+                    ? "bg-blue-500/10 dark:bg-blue-600/15 text-blue-700 dark:text-blue-400 border border-blue-500/30 font-semibold"
                     : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]"
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <div className="h-7 w-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0">
+                  <div className="h-7 w-7 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
                     <Globe className="h-3.5 w-3.5" aria-hidden="true" />
                   </div>
                   <div>
@@ -365,7 +365,7 @@ export function CategoryFilterBar({
                   </div>
                 </div>
                 {!selectedCategory && (
-                  <Check className="h-4 w-4 text-blue-400" aria-hidden="true" />
+                  <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
                 )}
               </Link>
 
@@ -380,7 +380,7 @@ export function CategoryFilterBar({
                   <button
                     type="button"
                     onClick={() => setQuickSearchQuery("")}
-                    className="text-xs text-blue-400 hover:underline cursor-pointer"
+                    className="text-xs text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
                   >
                     {isTr ? "Aramayı temizle" : "Clear search"}
                   </button>
@@ -406,7 +406,7 @@ export function CategoryFilterBar({
                       }}
                       className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs transition-colors cursor-pointer ${
                         isSelected
-                          ? "bg-blue-600/15 text-blue-400 border border-blue-500/30 font-semibold"
+                          ? "bg-blue-500/10 dark:bg-blue-600/15 text-blue-700 dark:text-blue-400 border border-blue-500/30 font-semibold"
                           : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]"
                       }`}
                     >
@@ -414,7 +414,7 @@ export function CategoryFilterBar({
                         <div
                           className={`h-7 w-7 rounded-lg flex items-center justify-center shrink-0 ${
                             isSelected
-                              ? "bg-blue-500/20 text-blue-400"
+                              ? "bg-blue-500/15 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400"
                               : "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)]"
                           }`}
                         >
@@ -435,7 +435,7 @@ export function CategoryFilterBar({
                           <span
                             className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${
                               cat.listingCount > 0
-                                ? "bg-blue-500/10 text-blue-400 border-blue-500/30"
+                                ? "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/30"
                                 : "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)] border-[var(--color-border-subtle)]"
                             }`}
                           >
@@ -446,7 +446,7 @@ export function CategoryFilterBar({
                           /{cat.slug}
                         </span>
                         {isSelected && (
-                          <Check className="h-4 w-4 text-blue-400" aria-hidden="true" />
+                          <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
                         )}
                       </div>
                     </Link>
@@ -477,7 +477,7 @@ export function CategoryFilterBar({
                   id="category-modal-title"
                   className="text-base font-bold text-[var(--color-text-primary)] flex items-center gap-2"
                 >
-                  <Sparkles className="h-4 w-4 text-blue-400" aria-hidden="true" />
+                  <Sparkles className="h-4 w-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
                   <span>
                     {isTr
                       ? "Tüm Sektör ve Uzmanlık Kategorileri"
@@ -563,13 +563,13 @@ export function CategoryFilterBar({
                             onClick={() => setModalOpen(false)}
                             className={`flex items-center justify-between p-3 rounded-2xl border transition-all cursor-pointer ${
                               isSelected
-                                ? "border-blue-500/60 bg-blue-500/10 text-blue-400 font-semibold shadow-xs"
+                                ? "border-blue-500/60 bg-blue-500/10 text-blue-700 dark:text-blue-400 font-semibold shadow-xs"
                                 : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)]"
                             }`}
                           >
                             <div className="space-y-0.5 pr-2">
                               {sectorName && (
-                                <div className="text-[10px] font-medium text-blue-400">
+                                <div className="text-[10px] font-medium text-blue-600 dark:text-blue-400">
                                   {sectorName}
                                 </div>
                               )}
@@ -580,7 +580,7 @@ export function CategoryFilterBar({
                                 </div>
                               )}
                             </div>
-                            {isSelected && <Check className="h-4 w-4 text-blue-400 shrink-0" />}
+                            {isSelected && <Check className="h-4 w-4 text-blue-600 dark:text-blue-400 shrink-0" />}
                           </Link>
                         );
                       })}
@@ -620,7 +620,7 @@ export function CategoryFilterBar({
                                 onClick={() => setModalOpen(false)}
                                 className={`flex items-center justify-between p-2.5 px-3 rounded-xl border transition-all cursor-pointer ${
                                   isSelected
-                                    ? "border-blue-500/60 bg-blue-500/10 text-blue-400 font-semibold shadow-xs"
+                                    ? "border-blue-500/60 bg-blue-500/10 text-blue-700 dark:text-blue-400 font-semibold shadow-xs"
                                     : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)]"
                                 }`}
                               >
@@ -628,7 +628,7 @@ export function CategoryFilterBar({
                                   <span className="font-medium text-xs">{cat.name}</span>
                                 </div>
                                 {isSelected && (
-                                  <Check className="h-3.5 w-3.5 text-blue-400 shrink-0" />
+                                  <Check className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
                                 )}
                               </Link>
                             );
@@ -641,7 +641,7 @@ export function CategoryFilterBar({
                   {fallbackCats.length > 0 && (
                     <div className="space-y-2.5">
                       <div className="flex items-center gap-2 border-b border-[var(--color-border-subtle)]/40 pb-1.5">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-lg border text-blue-400 bg-blue-500/10 border-blue-500/20">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-lg border text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20">
                           <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
                         </div>
                         <h3 className="font-bold text-xs text-[var(--color-text-primary)] uppercase tracking-wider">
@@ -658,7 +658,7 @@ export function CategoryFilterBar({
                               onClick={() => setModalOpen(false)}
                               className={`flex items-center justify-between p-2.5 px-3 rounded-xl border transition-all cursor-pointer ${
                                 isSelected
-                                  ? "border-blue-500/60 bg-blue-500/10 text-blue-400 font-semibold shadow-xs"
+                                  ? "border-blue-500/60 bg-blue-500/10 text-blue-700 dark:text-blue-400 font-semibold shadow-xs"
                                   : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)]"
                               }`}
                             >
@@ -666,7 +666,7 @@ export function CategoryFilterBar({
                                 <span className="font-medium text-xs">{cat.name}</span>
                               </div>
                               {isSelected && (
-                                <Check className="h-3.5 w-3.5 text-blue-400 shrink-0" />
+                                <Check className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
                               )}
                             </Link>
                           );

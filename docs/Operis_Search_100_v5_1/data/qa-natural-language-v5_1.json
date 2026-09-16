@@ -1,0 +1,18 @@
+{
+  "summary": {
+    "packageVersion": "5.1.0",
+    "scope": "synthetic-query naturalness only",
+    "categoryCount": 110,
+    "problemQueries": 660,
+    "goldQueries": 660,
+    "distinctGoldQueries": 660,
+    "duplicateGoldQueries": 0,
+    "bannedMechanicalPatternHits": 0,
+    "goldQueriesContainingCanonicalCategoryName": 0,
+    "tooShortQueryCount": 0,
+    "otherV5ArchitectureChanged": false,
+    "status": "PASS"
+  },
+  "issues": [],
+  "duplicates": []
+}

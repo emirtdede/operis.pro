@@ -1,0 +1,191 @@
+{
+  "package": "Operis Search v5.1 Natural Language Patch",
+  "version": "5.1.0",
+  "files": [
+    {
+      "path": "00_README.md",
+      "bytes": 1410,
+      "sha256": "f36fd43bbc18b5404d4d969ee88a5801f26592c3e19e694c9537500e07b5a8e1"
+    },
+    {
+      "path": "01_AGENT_PROMPT.md",
+      "bytes": 3472,
+      "sha256": "d194f6e0b14f7e3bd7dc80e96dea7f4a72f7109095da3e9809ec311f8628354e"
+    },
+    {
+      "path": "data/benchmark-metrics.json",
+      "bytes": 802,
+      "sha256": "81c686f87b74e28c1689e62038f34050fcbdde44c7df35cb282c77bcdc2387cb"
+    },
+    {
+      "path": "data/categories.search-taxonomy.json",
+      "bytes": 423386,
+      "sha256": "2cadd862cf14f73b87ae7d97c2a50235b8d2fd489f48c0fb3059f1de3ee7ed7b"
+    },
+    {
+      "path": "data/category-synonyms.json",
+      "bytes": 23292,
+      "sha256": "2d8e42c720ab4ac31b903ce1272ec16955a5e2742967ceda8c3a313fa35e7970"
+    },
+    {
+      "path": "data/collision-matrix.json",
+      "bytes": 50046,
+      "sha256": "d69ed1666a5a523b6e2ece332597f720c41b0b9abff537e2c4e76d9215b1cad3"
+    },
+    {
+      "path": "data/disambiguation-rules.json",
+      "bytes": 106707,
+      "sha256": "8b075ce9bfafa7f85db24106a7996e4a711e3857eb4cfe5a83dcb9d9172e96c2"
+    },
+    {
+      "path": "data/global-aliases.json",
+      "bytes": 1802,
+      "sha256": "e84c5278fd01602e679573e231a8d766ded0e61ac50a044ea3bd105742a8985b"
+    },
+    {
+      "path": "data/long-tail-query-corpus.json",
+      "bytes": 122874,
+      "sha256": "7ca705188203a399b181de73666778e01c832299b34f72616d247d588bf9171d"
+    },
+    {
+      "path": "data/normalization-rules.json",
+      "bytes": 1189,
+      "sha256": "a3ff504b930327b697401c1a8c012af339b84ee19995dae4a57a12034215783f"
+    },
+    {
+      "path": "data/problem-aliases.json",
+      "bytes": 1080,
+      "sha256": "58aa9236cd98eca15fda4fa242dbd1d51903fd4b79c7f8b79725317f29a7bf2d"
+    },
+    {
+      "path": "data/problem-language-corpus.json",
+      "bytes": 76233,
+      "sha256": "bf65a09a658fb635dd637ad22b9a41128cd56dbea387037646082187ec39528d"
+    },
+    {
+      "path": "data/qa-natural-language-v5_1.json",
+      "bytes": 460,
+      "sha256": "103afcac43952243afa8f40d2cf19332e217ac503d7a37ec7df7cbfcf257670b"
+    },
+    {
+      "path": "data/qa-summary-v5.json",
+      "bytes": 1212,
+      "sha256": "d5100b58fe9a9c0d6e18aba404b501c4bbeda0f87e5463fe88d7f68068bcb11f"
+    },
+    {
+      "path": "data/query-intents.json",
+      "bytes": 825,
+      "sha256": "6acd8f46372ae0a0350854cfcff2a87c8655e570d175f95f61298230aa3ac077"
+    },
+    {
+      "path": "data/ranking-config.json",
+      "bytes": 1659,
+      "sha256": "3632a77afb123e1da96f7829795ce2583b6040e6206665b03e276e4b51e4f842"
+    },
+    {
+      "path": "data/relation-graph.json",
+      "bytes": 121152,
+      "sha256": "4c93b1a5fb628a494ec187fa8766188398f18897385bea9058a5cbd63b660c22"
+    },
+    {
+      "path": "data/slug-corrections.json",
+      "bytes": 9696,
+      "sha256": "adef358c2d727121ff07dd1109ac74a4b90b9bc3bc77ce980be8e2b328403759"
+    },
+    {
+      "path": "data/term-weights.json",
+      "bytes": 614693,
+      "sha256": "9a913d38f43a635c839a1cfefeed12c9c93595d4e2579afadd84351bc52fd95b"
+    },
+    {
+      "path": "data/typo-corpus.json",
+      "bytes": 63743,
+      "sha256": "8597ba640789f43142b3eb79f3ca74441b8c8d686047195dab957697ab838875"
+    },
+    {
+      "path": "docs/02_SEARCH_ARCHITECTURE.md",
+      "bytes": 640,
+      "sha256": "db1cefcbebf1aa186785f77d57f6028df7282393c1f23d81b3ee819c230bb478"
+    },
+    {
+      "path": "docs/03_TAXONOMY_RULES.md",
+      "bytes": 694,
+      "sha256": "2022ceb6e30d990fb774d4c0b924fab313a2987021866e07a88a5ce9b4ce2387"
+    },
+    {
+      "path": "docs/04_NORMALIZATION_AND_TYPO.md",
+      "bytes": 544,
+      "sha256": "22013c156caa841cfb15aeb329f9937aa2ca69353e8cfdc6ce236cd0fea4ea80"
+    },
+    {
+      "path": "docs/05_RANKING_SPEC.md",
+      "bytes": 488,
+      "sha256": "47cc2733a96993d27d2e2ea21bd575abd69cc337dea861c1b4fbf44c0b31c79b"
+    },
+    {
+      "path": "docs/06_ANALYTICS_AND_LEARNING.md",
+      "bytes": 830,
+      "sha256": "c33c64c5d432757e9193cea33575343f4a82f6362e5ed0177a5abf2ae4708aa7"
+    },
+    {
+      "path": "docs/07_TEST_STRATEGY.md",
+      "bytes": 1150,
+      "sha256": "8efb1014eccabcc030e096955bf150d78a90536947229c8ef9c9b354e80f8a5a"
+    },
+    {
+      "path": "docs/08_ACCEPTANCE_CRITERIA.md",
+      "bytes": 2011,
+      "sha256": "935dc69965f5bd65d576c8b653b994d4a068fa81ca8be420ee2ad7354a9c8a3b"
+    },
+    {
+      "path": "docs/09_SEMANTIC_QA.md",
+      "bytes": 1027,
+      "sha256": "ab2c05c3041e20324bd9bdbae93076951b1ddb402ad14b395949f74796653d15"
+    },
+    {
+      "path": "docs/10_RELATION_GRAPH_POLICY.md",
+      "bytes": 672,
+      "sha256": "5dfea4b5cc3ab59ffc2badba108f3808f51abfe41b5f77212d8b7cc19cdb6110"
+    },
+    {
+      "path": "docs/11_GOLD_BENCHMARK.md",
+      "bytes": 747,
+      "sha256": "cd52c9494cf8c596b31b58b6f85c5d5e55a823c8889d2849bff4f9b190d6d706"
+    },
+    {
+      "path": "docs/12_BENCHMARK_METRICS.md",
+      "bytes": 759,
+      "sha256": "7662512d8df12ea495ecb3c5d7abdb8ba1e0d87801e320a9097bec403006c3f2"
+    },
+    {
+      "path": "docs/13_NATURAL_LANGUAGE_QA.md",
+      "bytes": 651,
+      "sha256": "4e599a11705c14ae2d30d39778899aea653af0b45b37217ca6f9a8e5a624da5f"
+    },
+    {
+      "path": "schemas/category-search.schema.json",
+      "bytes": 3788,
+      "sha256": "e6930f71242c0e70460365a0143451ab778fae2411dbe5123d8dfefa3954010b"
+    },
+    {
+      "path": "tests/adversarial-queries-v5.json",
+      "bytes": 14588,
+      "sha256": "e221e2683310f8a3cb03c29b950472e9d1ab9b8f1b98829cefe3a2e44147ecbb"
+    },
+    {
+      "path": "tests/contrastive-queries.json",
+      "bytes": 15055,
+      "sha256": "0b45f98daacb7c57e7c71c1a45cbbd95eaa2b5e0a130a28cb56f97ff455e398d"
+    },
+    {
+      "path": "tests/gold-human-style-queries.json",
+      "bytes": 415242,
+      "sha256": "679e0452b7bfa6260b04836b77a023bf2c42e9f11897c9533f954e8cc3778761"
+    },
+    {
+      "path": "tests/regression-queries.json",
+      "bytes": 1252929,
+      "sha256": "cde0cde2ed576b19910cc5e4f44d2849495112bd269958fe2dd3108723690595"
+    }
+  ]
+}

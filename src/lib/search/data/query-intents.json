@@ -1,0 +1,30 @@
+{
+  "version": "4.0.0",
+  "authoritative": true,
+  "intents": [
+    {
+      "id": "navigate_category",
+      "description": "User names a category, service, tool or technology."
+    },
+    {
+      "id": "hire_service",
+      "description": "User expresses intent to find a freelancer/receive a service."
+    },
+    {
+      "id": "problem_statement",
+      "description": "User describes a problem without knowing the category name."
+    },
+    {
+      "id": "deliverable_request",
+      "description": "User describes the output they want produced."
+    },
+    {
+      "id": "technology_lookup",
+      "description": "User searches with a technology/tool name."
+    },
+    {
+      "id": "ambiguous_short",
+      "description": "Short term plausibly maps to multiple categories; return multiple plausible results."
+    }
+  ]
+}

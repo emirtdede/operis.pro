@@ -794,19 +794,26 @@ export class PrivacyService {
         throw new Error("Failed to create export job record");
       }
 
-      // Trigger background processing via Inngest durable workflow (serverless)
+      // Trigger background processing via Inngest durable workflow (serverless) with fail-open fallback
       import("@/src/lib/inngest/client")
-        .then(({ sendInngestEvent }) => {
-          sendInngestEvent("operis/privacy.export-requested", {
+        .then(async ({ sendInngestEvent }) => {
+          const dispatched = await sendInngestEvent("operis/privacy.export-requested", {
             jobId: newJob.id,
             userId,
-          }).catch(() => {});
-        })
-        .catch(() => {});
+          });
 
-      PrivacyService.processExportJob(newJob.id, userId).catch((err) => {
-        console.error("[ExportJob] Background processing error:", err);
-      });
+          // Only fallback to in-process execution if Inngest is offline, unconfigured, or returned false
+          if (!dispatched) {
+            PrivacyService.processExportJob(newJob.id, userId).catch((err) => {
+              console.error("[ExportJob] Fallback in-process processing error:", err);
+            });
+          }
+        })
+        .catch(() => {
+          PrivacyService.processExportJob(newJob.id, userId).catch((err) => {
+            console.error("[ExportJob] Fallback in-process processing error:", err);
+          });
+        });
 
       return {
         id: newJob.id,
@@ -835,10 +842,17 @@ export class PrivacyService {
   static async processExportJob(jobId: string, userId: string): Promise<void> {
     const db = getDb();
     try {
-      await db
+      // Atomic idempotency fence: only proceed if the job is still PENDING
+      const claimed = await db
         .update(schema.exportJobs)
         .set({ status: "PROCESSING", progress: 20 })
-        .where(eq(schema.exportJobs.id, jobId));
+        .where(and(eq(schema.exportJobs.id, jobId), eq(schema.exportJobs.status, "PENDING")))
+        .returning({ id: schema.exportJobs.id });
+
+      if (claimed.length === 0) {
+        // Job was already claimed or processed by another worker/thread
+        return;
+      }
 
       const rawData = await PrivacyService.exportUserData(userId);
 
