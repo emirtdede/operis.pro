@@ -60,7 +60,7 @@ const getDefaultTemplates = (isTr: boolean): TemplateItem[] => [
     id: "default-1",
     name: isTr ? "Standart Teklif" : "Standard Offer",
     message: isTr
-      ? "Merhaba {{ilan_sahibi}}, '{{proje_basligi}}' projenizi detaylıca inceledim. {{kategori}} alanındaki teknik tecrübem ve referanslarımla kaliteli ve zamanında teslimat sağlayabilirim."
+      ? "Merhaba {{ilan_sahibi}}, '{{ilan_basligi}}' ilanınızı detaylıca inceledim. {{kategori}} alanındaki teknik tecrübem ve referanslarımla kaliteli ve zamanında teslimat sağlayabilirim."
       : "Hello {{owner_name}}, I have carefully reviewed the technical requirements for '{{project_title}}'. With my experience in {{category}} and relevant reference work, I can ensure high-quality delivery within your target timeline.",
     budgetCurrency: isTr ? "TRY" : "USD",
     budgetMin: isTr ? "15000" : "500",
@@ -72,7 +72,7 @@ const getDefaultTemplates = (isTr: boolean): TemplateItem[] => [
     id: "default-2",
     name: isTr ? "Hızlı Danışmanlık" : "Fast Advisory",
     message: isTr
-      ? "Merhaba, '{{proje_basligi}}' projeniz için doğrudan mimari ve geliştirme desteği sunabilirim. Gereksinimleri hızla netleştirip başlayabiliriz."
+      ? "Merhaba, '{{ilan_basligi}}' ilanınız için doğrudan mimari ve geliştirme desteği sunabilirim. Gereksinimleri hızla netleştirip başlayabiliriz."
       : "Hello, I can provide direct architectural guidance and development support for '{{project_title}}'. We can quickly clarify the requirements and begin immediately.",
     budgetCurrency: isTr ? "TRY" : "USD",
     budgetMin: isTr ? "5000" : "250",
@@ -117,17 +117,18 @@ export function QuickOfferDrawer({
     (tpl: TemplateItem) => {
       setSelectedTemplateId(tpl.id);
       let interpolated = tpl.message;
+      interpolated = interpolated.replace(/\{\{ilan_basligi\}\}/g, listing.title);
       interpolated = interpolated.replace(/\{\{proje_basligi\}\}/g, listing.title);
       interpolated = interpolated.replace(/\{\{project_title\}\}/g, listing.title);
       interpolated = interpolated.replace(/\{\{kategori\}\}/g, listing.categoryName);
       interpolated = interpolated.replace(/\{\{category\}\}/g, listing.categoryName);
       interpolated = interpolated.replace(
         /\{\{ilan_sahibi\}\}/g,
-        listing.ownerDisplayName || (isTr ? "Proje Sahibi" : "Project Owner")
+        listing.ownerDisplayName || (isTr ? "İlan Sahibi" : "Listing Owner")
       );
       interpolated = interpolated.replace(
         /\{\{owner_name\}\}/g,
-        listing.ownerDisplayName || (isTr ? "Proje Sahibi" : "Project Owner")
+        listing.ownerDisplayName || (isTr ? "İlan Sahibi" : "Listing Owner")
       );
 
       setMessage(interpolated);
@@ -419,8 +420,8 @@ export function QuickOfferDrawer({
               </h3>
               <p className="text-xs text-[var(--color-text-secondary)] max-w-sm mx-auto leading-relaxed">
                 {isTr
-                  ? `"${listing.title}" projesine teklifiniz AES-256 şifreli olarak ilan sahibine ulaştırıldı.`
-                  : `Your proposal for "${listing.title}" was securely transmitted to the project owner.`}
+                  ? `"${listing.title}" ilanına teklifiniz AES-256 şifreli olarak ilan sahibine ulaştırıldı.`
+                  : `Your proposal for "${listing.title}" was securely transmitted to the listing owner.`}
               </p>
               <div className="pt-4">
                 <Button variant="primary" size="md" onClick={onClose} className="w-full">
@@ -540,7 +541,7 @@ export function QuickOfferDrawer({
                   rows={5}
                   placeholder={
                     isTr
-                      ? "Proje sahibine uzmanlığınızı ve yaklaşımınızı anlatan net mesaj..."
+                      ? "İlan sahibine uzmanlığınızı ve yaklaşımınızı anlatan net mesaj..."
                       : "Describe your approach and technical capability..."
                   }
                   required
@@ -553,7 +554,7 @@ export function QuickOfferDrawer({
                   <label className="text-xs font-semibold text-[var(--color-text-primary)]">
                     {isTr ? "Bütçe Aralığı" : "Budget Range"}
                   </label>
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex flex-col xs:flex-row items-stretch xs:items-center gap-1.5">
                     <Select
                       value={budgetCurrency}
                       onChange={(e) => setBudgetCurrency(e.target.value)}
@@ -563,25 +564,27 @@ export function QuickOfferDrawer({
                         { value: "EUR", label: "EUR" },
                         { value: "GBP", label: "GBP" },
                       ]}
-                      className="w-24 shrink-0 text-xs"
+                      className="w-full xs:w-24 shrink-0 text-xs"
                     />
-                    <TextInput
-                      type="number"
-                      min="0"
-                      placeholder="Min"
-                      value={budgetMin}
-                      onChange={(e) => setBudgetMin(e.target.value)}
-                      className="text-xs"
-                    />
-                    <span className="text-[var(--color-text-tertiary)]">-</span>
-                    <TextInput
-                      type="number"
-                      min="0"
-                      placeholder="Max"
-                      value={budgetMax}
-                      onChange={(e) => setBudgetMax(e.target.value)}
-                      className="text-xs"
-                    />
+                    <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                      <TextInput
+                        type="number"
+                        min="0"
+                        placeholder="Min"
+                        value={budgetMin}
+                        onChange={(e) => setBudgetMin(e.target.value)}
+                        className="text-xs flex-1 min-w-0"
+                      />
+                      <span className="text-[var(--color-text-tertiary)] shrink-0">-</span>
+                      <TextInput
+                        type="number"
+                        min="0"
+                        placeholder="Max"
+                        value={budgetMax}
+                        onChange={(e) => setBudgetMax(e.target.value)}
+                        className="text-xs flex-1 min-w-0"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -708,7 +711,7 @@ export function QuickOfferDrawer({
               <TextInput
                 value={templateSaveName}
                 onChange={(e) => setTemplateSaveName(e.target.value)}
-                placeholder={isTr ? "Örn: React & Next.js Projeleri" : "e.g., Full Stack Web Apps"}
+                placeholder={isTr ? "Örn: React & Next.js İlanları" : "e.g., Full Stack Web Apps"}
                 required
                 className="text-xs"
               />

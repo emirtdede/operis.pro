@@ -198,7 +198,7 @@ export function CommandPalette({ locale, isOpen, onClose, userHandle }: CommandP
     {
       id: "nav-notifications",
       title: isTr ? "Bildirim Merkezi" : "Notification Center",
-      subtitle: isTr ? "Radar ve teklif güncellemeleri" : "Radar and project alerts",
+      subtitle: isTr ? "Radar ve teklif güncellemeleri" : "Radar and listing alerts",
       icon: <Bell className="h-4 w-4 text-blue-400" />,
       category: "navigation",
       onSelect: () => {
@@ -359,7 +359,7 @@ export function CommandPalette({ locale, isOpen, onClose, userHandle }: CommandP
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-[12vh] sm:pt-[15vh] px-4 bg-black/65 backdrop-blur-md animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-[5vh] sm:pt-[12vh] px-2.5 sm:px-4 bg-black/65 backdrop-blur-md animate-in fade-in duration-150"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -369,7 +369,7 @@ export function CommandPalette({ locale, isOpen, onClose, userHandle }: CommandP
     >
       <div
         ref={containerRef}
-        className="w-full max-w-xl rounded-3xl border border-[var(--color-border-subtle)] shadow-2xl shadow-blue-500/10 overflow-hidden flex flex-col max-h-[70vh] animate-in zoom-in-95 duration-150"
+        className="w-full max-w-xl rounded-3xl border border-[var(--color-border-subtle)] shadow-2xl shadow-blue-500/10 overflow-hidden flex flex-col max-h-[min(85dvh,620px)] animate-in zoom-in-95 duration-150"
         style={{
           backgroundColor: "var(--color-surface-base)",
           borderColor: "var(--color-border-subtle)",
@@ -661,7 +661,7 @@ export function CommandPalette({ locale, isOpen, onClose, userHandle }: CommandP
         </div>
 
         {/* Footer Navigation Hints */}
-        <div className="px-4 py-2.5 border-t border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/40 flex items-center justify-between text-[11px] text-[var(--color-text-tertiary)]">
+        <div className="px-3 sm:px-4 py-2 sm:py-2.5 border-t border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/40 flex items-center justify-between text-[10px] sm:text-[11px] text-[var(--color-text-tertiary)] shrink-0">
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
               <kbd className="px-1 py-0.2 rounded border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] text-[9px] font-mono">

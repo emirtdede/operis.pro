@@ -98,6 +98,8 @@ export function NotificationsView({ initialNotifications, locale }: Notification
         return <Handshake className="h-4 w-4 text-emerald-400" />;
       case "OFFER_REJECTED":
         return <Send className="h-4 w-4 text-amber-400" />;
+      case "COMMUNICATION_PING":
+        return <Bell className="h-4 w-4 text-sky-400" />;
       default:
         return <Bell className="h-4 w-4 text-blue-400" />;
     }
@@ -152,7 +154,7 @@ export function NotificationsView({ initialNotifications, locale }: Notification
             title={isTr ? "Henüz Bir Bildiriminiz Yok" : "No Notifications Yet"}
             description={
               isTr
-                ? "Projelerinize teklif geldiğinde, teklifleriniz sonuçlandığında veya takip ettiğiniz kategorilerde yeni ilanlar yayınlandığında burada listelenir."
+                ? "İlanlarınıza teklif geldiğinde, teklifleriniz sonuçlandığında veya takip ettiğiniz kategorilerde yeni ilanlar yayınlandığında burada listelenir."
                 : "When you receive offers or matching updates, they will be listed here."
             }
             action={
@@ -174,12 +176,25 @@ export function NotificationsView({ initialNotifications, locale }: Notification
             });
 
             const title = String(
-              item.payloadJson?.title || (isTr ? "Operis Bildirimi" : "Operis Alert")
+              item.payloadJson?.title ||
+                (item.type === "COMMUNICATION_PING"
+                  ? isTr
+                    ? `💬 İletişim Dürtmesi: ${item.payloadJson?.listingTitle || "Proje Çalışma Alanı"}`
+                    : `💬 Project Ping: ${item.payloadJson?.listingTitle || "Workspace"}`
+                  : isTr
+                    ? "Operis Bildirimi"
+                    : "Operis Alert")
             );
-            const message = item.payloadJson?.message ? String(item.payloadJson.message) : "";
+            const message = item.payloadJson?.message
+              ? String(item.payloadJson.message)
+              : item.payloadJson?.messageText
+                ? String(item.payloadJson.messageText)
+                : "";
             const rawActionUrl = item.payloadJson?.actionUrl
               ? String(item.payloadJson.actionUrl)
-              : null;
+              : item.payloadJson?.workspacePath
+                ? String(item.payloadJson.workspacePath)
+                : null;
             const actionUrl = rawActionUrl
               ? isTr
                 ? rawActionUrl

@@ -161,7 +161,7 @@ export function PlatformComparisonTable({
               </span>
               <h3 className="text-lg sm:text-xl font-bold text-[var(--color-text-primary)]">
                 {isTr
-                  ? "Tek Bir Projede Cebinizde Kalan Kazanç Farkı"
+                  ? "Tek Bir İlanda Cebinizde Kalan Kazanç Farkı"
                   : "Exact Savings on a Single Software Contract"}
               </h3>
               <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] max-w-xl">
@@ -175,7 +175,7 @@ export function PlatformComparisonTable({
             <div className="flex flex-col items-center md:items-end gap-3 shrink-0 w-full md:w-auto">
               <div className="w-full sm:w-72 space-y-1.5">
                 <div className="flex justify-between items-center text-[11px] font-medium text-[var(--color-text-secondary)]">
-                  <span>{isTr ? "Proje Bütçesi:" : "Project Budget:"}</span>
+                  <span>{isTr ? "İlan Bütçesi:" : "Listing Budget:"}</span>
                   <span className="font-bold text-[var(--color-text-primary)]">
                     {projectBudget.toLocaleString("tr-TR")} ₺
                   </span>
@@ -187,18 +187,18 @@ export function PlatformComparisonTable({
                   step="10000"
                   value={projectBudget}
                   onChange={(e) => setProjectBudget(Number(e.target.value))}
-                  aria-label={isTr ? "Proje bütçesi hesaplama çubuğu" : "Project budget slider"}
+                  aria-label={isTr ? "İlan bütçesi hesaplama çubuğu" : "Listing budget slider"}
                   className="w-full h-2 bg-[var(--color-border-subtle)] rounded-lg appearance-none cursor-pointer accent-emerald-500"
                 />
               </div>
 
-              <div className="flex items-center gap-1.5 p-1 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]">
+              <div className="grid grid-cols-2 sm:flex sm:items-center gap-1.5 p-1 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] w-full sm:w-auto">
                 {[50000, 100000, 250000, 500000].map((amt) => (
                   <button
                     key={amt}
                     type="button"
                     onClick={() => setProjectBudget(amt)}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    className={`px-2.5 py-1.5 sm:py-1 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
                       projectBudget === amt
                         ? "bg-emerald-500 text-slate-950 shadow-sm"
                         : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"

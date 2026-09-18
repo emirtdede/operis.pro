@@ -15,9 +15,9 @@ export default function Loading() {
       <span className="sr-only">{t("loading")}</span>
 
       {/* Header skeleton */}
-      <div className="space-y-3 border-b border-[var(--color-border-subtle)] pb-6">
-        <div className="h-8 w-64 rounded-lg bg-[var(--color-border-subtle)] opacity-70" />
-        <div className="h-4 w-96 rounded bg-[var(--color-border-subtle)] opacity-40" />
+      <div className="space-y-3 max-w-2xl mx-auto text-center pt-2 pb-2">
+        <div className="h-10 w-64 sm:w-80 rounded-2xl bg-[var(--color-border-subtle)] opacity-70 mx-auto" />
+        <div className="h-4 w-4/5 sm:w-96 rounded-lg bg-[var(--color-border-subtle)] opacity-40 mx-auto" />
       </div>
 
       {/* Grid skeletons */}

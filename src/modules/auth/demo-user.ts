@@ -18,6 +18,8 @@ export interface DemoUser {
     revealPhoneAfterMatch?: boolean;
     locale: string;
     theme: string;
+    preferredContactChannel?: string | null;
+    timeZone?: string | null;
     trackedSkills?: string[];
   };
 }
@@ -42,6 +44,8 @@ export const DEFAULT_USER: DemoUser = {
     revealPhoneAfterMatch: false,
     locale: "tr",
     theme: "dark",
+    preferredContactChannel: "whatsapp",
+    timeZone: "Europe/Istanbul",
     trackedSkills: ["Next.js", "TypeScript", "Tailwind CSS", "PostgreSQL", "React"],
   },
 };

@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   Eye,
   MousePointerClick,
+  ArrowRight,
 } from "lucide-react";
 import { FeedService } from "@/src/modules/listings/feed/service";
 import { ListingService } from "@/src/modules/listings/service";
@@ -57,7 +58,7 @@ export async function generateMetadata({
     };
   }
 
-  const title = isTr ? `${listing.title} — Proje Detayı` : `${listing.title} — Project Overview`;
+  const title = isTr ? `${listing.title} — İlan Detayı` : `${listing.title} — Listing Details`;
   const description = listing.summary;
 
   return {
@@ -257,11 +258,42 @@ export default async function ListingDetailPage({
       </nav>
 
       {/* 2-Column Responsive Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         {/* Left Main Content (Col 8) */}
-        <div className="lg:col-span-8 space-y-6">
+        <div className="lg:col-span-8 space-y-6 min-w-0">
+          {/* Mobile Quick Overview & Action Strip (< 1024px) */}
+          <div className="lg:hidden rounded-2xl sm:rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/90 p-4 sm:p-5 backdrop-blur-xl shadow-lg flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="flex items-center justify-between sm:justify-start gap-4">
+              <div>
+                <span className="text-[10px] text-[var(--color-text-tertiary)] uppercase font-semibold tracking-wider block">
+                  {isTr ? "İlan Bütçesi" : "Listing Budget"}
+                </span>
+                <span className="font-mono text-xl sm:text-2xl font-extrabold text-emerald-400 block">
+                  {budgetLabel}
+                </span>
+              </div>
+              <div className="border-l border-[var(--color-border-subtle)] pl-4">
+                <span className="text-[10px] text-[var(--color-text-tertiary)] block">
+                  {isTr ? "Tahmini Süre" : "Duration"}
+                </span>
+                <span className="font-semibold text-xs text-[var(--color-text-primary)] flex items-center gap-1 mt-0.5">
+                  <Clock className="h-3 w-3 text-cyan-400" />
+                  <span>{timelineLabel ?? (isTr ? "Esnek" : "Flexible")}</span>
+                </span>
+              </div>
+            </div>
+
+            <a
+              href="#listing-action-card"
+              className="inline-flex items-center justify-center gap-2 h-10 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs shadow-md shadow-blue-500/20 transition-all cursor-pointer"
+            >
+              <span>{isTr ? "Hemen Teklif Ver" : "Submit Proposal"}</span>
+              <ArrowRight className="h-3.5 w-3.5" />
+            </a>
+          </div>
+
           {/* Header Card: Title, Status, Summary */}
-          <article className="relative overflow-hidden rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 p-6 sm:p-8 backdrop-blur-xl shadow-xl space-y-5">
+          <article className="relative overflow-hidden rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 p-4 sm:p-6 md:p-8 backdrop-blur-xl shadow-xl space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <Badge
                 variant="secondary"
@@ -340,8 +372,8 @@ export default async function ListingDetailPage({
               <Layers className="h-4 w-4 text-blue-500" aria-hidden="true" />
               <span>
                 {isTr
-                  ? "Proje Kapsamı ve Teknik Gereksinimler"
-                  : "Project Scope & Technical Requirements"}
+                  ? "İlan Kapsamı ve Teknik Gereksinimler"
+                  : "Listing Scope & Technical Requirements"}
               </span>
             </div>
             <div className="prose prose-sm max-w-none text-[var(--color-text-secondary)] whitespace-pre-wrap leading-relaxed">
@@ -382,7 +414,7 @@ export default async function ListingDetailPage({
               <div>
                 <h2 className="text-base font-bold text-[var(--color-text-primary)]">
                   {isTr
-                    ? "Bu Projeye Teklif Verirken Nelere Dikkat Edilmeli?"
+                    ? "Bu İlana Teklif Verirken Nelere Dikkat Edilmeli?"
                     : "Guidelines for Submitting a Winning Proposal"}
                 </h2>
                 <p className="text-xs text-[var(--color-text-secondary)]">
@@ -454,11 +486,11 @@ export default async function ListingDetailPage({
         {/* Right Sticky Sidebar (Col 4) */}
         <aside className="lg:col-span-4 space-y-5 lg:sticky lg:top-24">
           {/* Key Metrics & Action Card */}
-          <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 p-6 backdrop-blur-xl shadow-xl space-y-5">
+          <div id="listing-action-card" className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 p-5 sm:p-6 backdrop-blur-xl shadow-xl space-y-5">
             <div className="space-y-3 border-b border-[var(--color-border-subtle)] pb-4">
               <div className="space-y-1">
                 <span className="text-[11px] text-[var(--color-text-tertiary)] uppercase font-semibold tracking-wider block">
-                  {isTr ? "Proje Bütçesi" : "Project Budget"}
+                  {isTr ? "İlan Bütçesi" : "Listing Budget"}
                 </span>
                 <span className="font-mono text-2xl font-extrabold text-emerald-400 block">
                   {budgetLabel}

@@ -14,7 +14,7 @@ export const inMemoryFallbackNotifications: InMemoryNotification[] = [
     type: "OFFER_RECEIVED",
     payloadJson: {
       title: "Yeni Teklif Alındı",
-      message: "Next.js Kurumsal E-Ticaret projeniz için 45.000 TL tutarında yeni teklif iletildi.",
+      message: "Next.js Kurumsal E-Ticaret ilanınız için 45.000 TL tutarında yeni teklif iletildi.",
       actionUrl: "/tr/panel/teklifler/gelen",
     },
     readAt: null,
@@ -38,7 +38,7 @@ export const inMemoryFallbackNotifications: InMemoryNotification[] = [
     payloadJson: {
       title: "Kategori Radarı: Yeni İlan",
       message:
-        "Takip ettiğiniz 'Mobil Uygulama' kategorisinde yeni bir teknoloji projesi yayınlandı.",
+        "Takip ettiğiniz 'Mobil Uygulama' kategorisinde yeni bir teknoloji ilanı yayınlandı.",
       actionUrl: "/tr/ilanlar",
     },
     readAt: null,

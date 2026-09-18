@@ -33,6 +33,11 @@
   "nav": {
     "feed": "Akış",
     "browse": "İlanlar",
+    "discover": "İlanları Keşfet",
+    "listingsAndFeed": "İlanlar & Akış",
+    "howItWorks": "Nasıl Çalışır?",
+    "streamView": "Akış Görünümü",
+    "catalogView": "Katalog Görünümü",
     "categories": "Kategoriler",
     "createListing": "İlan Ver",
     "dashboard": "Çalışma Alanım",

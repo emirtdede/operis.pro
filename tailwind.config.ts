@@ -6,9 +6,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        canvas: "var(--bg-canvas)",
-        surface: "var(--bg-surface)",
-        elevated: "var(--bg-elevated)",
+        canvas: "rgb(var(--canvas-rgb, 20 21 23) / <alpha-value>)",
+        surface: "rgb(var(--surface-rgb, 29 30 33) / <alpha-value>)",
+        elevated: "rgb(var(--elevated-rgb, 38 40 45) / <alpha-value>)",
         primary: {
           DEFAULT: "var(--accent)",
           contrast: "var(--accent-contrast)",

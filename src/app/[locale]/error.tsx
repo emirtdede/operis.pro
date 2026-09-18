@@ -158,7 +158,7 @@ export default function GlobalErrorBoundary({
           <Link href={isTr ? "/tr/akis" : "/en/feed"}>
             <Button type="button" variant="outline" size="sm" className="gap-2">
               <Compass className="h-4 w-4" aria-hidden="true" />
-              <span>{isTr ? "İlanlar" : "Projects"}</span>
+              <span>{isTr ? "İlanlar" : "Listings"}</span>
             </Button>
           </Link>
         </div>

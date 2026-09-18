@@ -166,7 +166,7 @@ export function ProfileActionsMenu({
                   : `Are you sure you want to unblock "${targetDisplayName}"? They will be able to submit proposals to your listings again.`
                 : isTr
                   ? `"${targetDisplayName}" kullanıcısını engellediğinizde sizin ilanlarınıza teklif gönderemez ve doğrudan iletişim kuramaz.`
-                  : `Blocking "${targetDisplayName}" prevents them from submitting offers to your projects and contacting you.`}
+                  : `Blocking "${targetDisplayName}" prevents them from submitting offers to your listings and contacting you.`}
             </p>
 
             <div className="flex items-center justify-end gap-2.5 pt-1">

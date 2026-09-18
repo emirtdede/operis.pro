@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSignIn } from "@clerk/nextjs/legacy";
+import { useAuth } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
 
 export interface SocialLoginButtonsProps {
@@ -26,12 +27,45 @@ function SocialLoginButtonsConnected({ locale, returnUrl, onError }: SocialLogin
   const isTr = locale === "tr";
   const [loadingProvider, setLoadingProvider] = useState<OAuthProvider | null>(null);
   const { isLoaded, signIn } = useSignIn();
+  const { isSignedIn, userId, isLoaded: authLoaded } = useAuth();
 
   const defaultRedirect = isTr ? "/tr/akis" : "/en/feed";
   const targetRedirect = returnUrl || defaultRedirect;
 
   const handleOAuth = async (strategy: OAuthProvider, providerName: string) => {
     if (loadingProvider) return;
+
+    // 1. If already authenticated via Clerk, synchronize directly with Operis
+    if (authLoaded && isSignedIn && userId) {
+      setLoadingProvider(strategy);
+      try {
+        const syncRes = await fetch("/api/auth/clerk-sync", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ clerkUserId: userId }),
+        });
+
+        if (syncRes.ok) {
+          window.location.href = targetRedirect;
+          return;
+        } else {
+          setLoadingProvider(null);
+          const errData = await syncRes.json().catch(() => ({}));
+          const msg = isTr
+            ? errData.error || `${providerName} oturumu senkronize edilemedi.`
+            : errData.error || `Could not sync ${providerName} session.`;
+          if (onError) onError(msg);
+          return;
+        }
+      } catch {
+        setLoadingProvider(null);
+        const msg = isTr
+          ? "Sunucuyla bağlantı kurulamadı. Lütfen tekrar deneyin."
+          : "Could not connect to server. Please try again.";
+        if (onError) onError(msg);
+        return;
+      }
+    }
 
     if (!isLoaded || !signIn) {
       const msg = isTr
@@ -49,13 +83,46 @@ function SocialLoginButtonsConnected({ locale, returnUrl, onError }: SocialLogin
         redirectUrlComplete: targetRedirect,
       });
     } catch (err: unknown) {
+      const rawMsg = err instanceof Error ? err.message : String(err);
+
+      // Check if user is already signed in on Clerk (session_exists)
+      const isAlreadySignedIn =
+        rawMsg.toLowerCase().includes("already signed in") ||
+        rawMsg.includes("session_exists") ||
+        (typeof err === "object" &&
+          err !== null &&
+          "errors" in err &&
+          Array.isArray((err as { errors: Array<{ code?: string }> }).errors) &&
+          (err as { errors: Array<{ code?: string }> }).errors.some(
+            (e) => e.code === "session_exists"
+          ));
+
+      if (isAlreadySignedIn) {
+        try {
+          const syncRes = await fetch("/api/auth/clerk-sync", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+          });
+          if (syncRes.ok) {
+            window.location.href = targetRedirect;
+            return;
+          }
+        } catch {
+          // Ignore
+        }
+
+        setLoadingProvider(null);
+        const msg = isTr
+          ? "Oturum senkronize edilemedi. Lütfen sayfayı yenileyip tekrar deneyiniz."
+          : "Session could not be synchronized. Please refresh and try again.";
+        if (onError) onError(msg);
+        return;
+      }
+
       setLoadingProvider(null);
-      const msg =
-        err instanceof Error
-          ? err.message
-          : isTr
-            ? `${providerName} ile bağlantı kurulamadı.`
-            : `Failed to connect with ${providerName}.`;
+      const msg = isTr
+        ? `${providerName} ile bağlantı kurulamadı. Lütfen tekrar deneyiniz.`
+        : `Failed to connect with ${providerName}. Please try again.`;
       if (onError) onError(msg);
     }
   };
@@ -185,7 +252,7 @@ function SocialButtonsView({ isTr, loadingProvider, onSelect }: SocialButtonsVie
         <div className="border-t border-[var(--color-border-subtle)] w-full" />
       </div>
 
-      <div className="flex items-center justify-center gap-3.5 sm:gap-4 py-1">
+      <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 py-1">
         {providers.map((p) => {
           const isLoadingThis = loadingProvider === p.id;
           return (
@@ -196,7 +263,7 @@ function SocialButtonsView({ isTr, loadingProvider, onSelect }: SocialButtonsVie
               disabled={!!loadingProvider}
               title={p.ariaLabel}
               aria-label={p.ariaLabel}
-              className="group relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-slate-800 bg-[#12141a] overflow-hidden transition-all duration-200 hover:scale-105 hover:border-blue-500/50 hover:bg-slate-800/80 hover:shadow-lg hover:shadow-blue-500/10 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+              className="group relative flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border border-slate-800 bg-[#12141a] overflow-hidden transition-all duration-200 hover:scale-105 hover:border-blue-500/50 hover:bg-slate-800/80 hover:shadow-lg hover:shadow-blue-500/10 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
             >
               {isLoadingThis ? <Loader2 className="h-5 w-5 animate-spin text-blue-400" /> : p.icon}
               <span className="absolute inset-0 rounded-full border border-transparent transition-colors group-hover:border-blue-500/20" />

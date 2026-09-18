@@ -89,10 +89,10 @@ const DEFAULT_STARTER_TEMPLATES = (userId: string, locale?: string): OfferTempla
     {
       id: "default-1",
       userId,
-      name: isEn ? "Standard Project Offer" : "Standart Proje Teklifi",
+      name: isEn ? "Standard Listing Offer" : "Standart İlan Teklifi",
       message: isEn
         ? "Hello {{owner_name}}, I have carefully reviewed the technical requirements for '{{project_title}}'. With my experience in {{category}} and relevant reference work, I can ensure high-quality delivery within your target timeline."
-        : "Merhaba {{ilan_sahibi}}, '{{proje_basligi}}' başlıklı projenizin teknik gereksinimlerini detaylıca inceledim. {{kategori}} alanındaki deneyimim ve benzer referans projelerimle hedeflenen takvim içerisinde yüksek kaliteli teslimat sağlayabilirim.",
+        : "Merhaba {{ilan_sahibi}}, '{{ilan_basligi}}' başlıklı ilanınızın teknik gereksinimlerini detaylıca inceledim. {{kategori}} alanındaki deneyimim ve benzer referanslarımla hedeflenen takvim içerisinde yüksek kaliteli teslimat sağlayabilirim.",
       budgetCurrency: isEn ? "USD" : "TRY",
       budgetMin: isEn ? "500" : "15000",
       budgetMax: isEn ? "1500" : "35000",
@@ -106,7 +106,7 @@ const DEFAULT_STARTER_TEMPLATES = (userId: string, locale?: string): OfferTempla
       name: isEn ? "Fast Advisory & Solution" : "Hızlı Danışmanlık & Çözüm",
       message: isEn
         ? "Hello, I can provide direct architectural guidance and development support for '{{project_title}}'. We can quickly clarify the requirements and begin immediately."
-        : "Merhaba, '{{proje_basligi}}' projeniz için teknik mimari ve uygulama sürecinde doğrudan danışmanlık ve geliştirme desteği sunabilirim. Gereksinimleri hızla netleştirip başlayabiliriz.",
+        : "Merhaba, '{{ilan_basligi}}' ilanınız için teknik mimari ve uygulama sürecinde doğrudan danışmanlık ve geliştirme desteği sunabilirim. Gereksinimleri hızla netleştirip başlayabiliriz.",
       budgetCurrency: isEn ? "USD" : "TRY",
       budgetMin: isEn ? "250" : "5000",
       budgetMax: isEn ? "600" : "15000",
@@ -368,8 +368,8 @@ export class OfferService {
             {
               title: isEn ? "New Proposal Received" : "Yeni Teklif Alındı",
               message: isEn
-                ? `A new proposal has been submitted for your project "${lockedListing.title || listing.title}".`
-                : `"${lockedListing.title || listing.title}" projeniz için yeni bir teklif iletildi.`,
+                ? `A new proposal has been submitted for your listing "${lockedListing.title || listing.title}".`
+                : `"${lockedListing.title || listing.title}" ilanınız için yeni bir teklif iletildi.`,
               actionUrl: isEn ? "/en/dashboard/offers/received" : "/tr/panel/teklifler/gelen",
               offerId: insertedOffer.id,
               listingId: lockedListing.id,
@@ -432,8 +432,8 @@ export class OfferService {
         {
           title: isEn ? "New Proposal Received" : "Yeni Teklif Alındı",
           message: isEn
-            ? `A new proposal has been submitted for your project "${listing.title}".`
-            : `"${listing.title}" projeniz için yeni bir teklif iletildi.`,
+            ? `A new proposal has been submitted for your listing "${listing.title}".`
+            : `"${listing.title}" ilanınız için yeni bir teklif iletildi.`,
           actionUrl: isEn ? "/en/dashboard/offers/received" : "/tr/panel/teklifler/gelen",
           offerId: newOffer.id,
           listingId: listing.id,
@@ -1298,7 +1298,7 @@ export class OfferService {
       throw new Error(
         isEn
           ? "You must confirm your delivery capacity when submitting multiple proposals simultaneously."
-          : "Birden fazla projeye aynı anda teklif verirken teslimat kapasitenizi onaylamanız gerekmektedir."
+          : "Birden fazla ilana aynı anda teklif verirken teslimat kapasitenizi onaylamanız gerekmektedir."
       );
     }
 

@@ -55,6 +55,7 @@ export function FooterQuickSettings() {
     try {
       localStorage.setItem("fp_locale", newLocale);
       document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+      document.cookie = `fp_locale=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
     } catch {
       // Ignored in restricted environments
     }

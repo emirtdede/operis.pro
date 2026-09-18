@@ -290,8 +290,8 @@ export class PrivacyService {
               {
                 title: isEn ? "Proposal Expired" : "Teklif Sona Erdi",
                 message: isEn
-                  ? `The project "${po.listingTitle}" was cancelled as the owner's account was closed. Your pending proposal has ended.`
-                  : `"${po.listingTitle}" projesi sahibinin hesabı kapatıldığı için bekleyen teklifiniz sona erdi.`,
+                  ? `The listing "${po.listingTitle}" was cancelled as the owner's account was closed. Your pending proposal has ended.`
+                  : `"${po.listingTitle}" ilanı sahibinin hesabı kapatıldığı için bekleyen teklifiniz sona erdi.`,
                 actionUrl: isEn ? "/en/dashboard/offers/sent" : "/tr/panel/teklifler/gonderilen",
               }
             );

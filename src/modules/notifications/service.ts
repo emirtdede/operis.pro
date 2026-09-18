@@ -28,6 +28,7 @@ export type NotificationType =
   | "MODERATION_ACTION"
   | "RADAR_MATCH"
   | "ENDORSEMENT_RECEIVED"
+  | "COMMUNICATION_PING"
   | "OFFER_WITHDRAWN";
 
 type TransactionContext = Parameters<Parameters<ReturnType<typeof getDb>["transaction"]>[0]>[0];

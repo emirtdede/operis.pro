@@ -207,8 +207,9 @@ export function ResetPasswordForm({ locale }: ResetPasswordFormProps) {
         startIcon={<Lock className="h-4 w-4" aria-hidden="true" />}
       />
 
-      {/* Cloudflare Turnstile Bot Defense */}
+      {/* Cloudflare Turnstile Bot Defense (Invisible / Interaction-Only) */}
       <TurnstileWidget
+        appearance="interaction-only"
         onVerify={(token) => setTurnstileToken(token)}
         onExpire={() => setTurnstileToken(null)}
       />

@@ -24,6 +24,7 @@ export function OperisClerkProvider({ children, locale = "tr" }: OperisClerkProv
       signUpUrl={isTr ? "/tr/kayit" : "/en/register"}
     >
       {children}
+      <div id="clerk-captcha" />
     </ClerkProvider>
   );
 }

@@ -22,8 +22,8 @@ export async function generateMetadata({
 
   const title = isTr ? "Yayınladığım İlanlar & Yaşam Döngüsü" : "My Published Listings & Lifecycle";
   const description = isTr
-    ? "Yayınladığınız teknoloji proje ilanlarını yönetin, teklifleri inceleyin ve 1 haftalık yaşam döngüsünü yenileyin."
-    : "Manage your published technology project listings, review incoming proposals, and renew 1-week lifecycles.";
+    ? "Yayınladığınız teknoloji ilanlarını yönetin, teklifleri inceleyin ve 1 haftalık yaşam döngüsünü yenileyin."
+    : "Manage your published technology listings, review incoming proposals, and renew 1-week lifecycles.";
 
   return {
     title,

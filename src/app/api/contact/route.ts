@@ -48,6 +48,9 @@ const createContactSchema = (isEn: boolean) =>
           : "Mesajınız topluluk kurallarımıza aykırı ifadeler içeremez."
       ),
     locale: z.enum(["tr", "en"]).optional().default("tr"),
+    attachmentName: z.string().max(255).optional(),
+    attachmentSize: z.string().max(50).optional(),
+    attachmentData: z.string().max(10 * 1024 * 1024).optional(),
   });
 
 export async function POST(req: Request) {
@@ -86,7 +89,14 @@ export async function POST(req: Request) {
     }
 
     isEn = body?.locale === "en" || isEnHeader;
-    const { name, email, subject, message: text } = createContactSchema(isEn).parse(body);
+    const { name, email, subject, message: rawText, attachmentName, attachmentSize } = createContactSchema(isEn).parse(body);
+
+    const attachmentNote = attachmentName
+      ? isEn
+        ? `\n\n[Attachment]: ${attachmentName} (${attachmentSize || "Verified < 5 MB"})`
+        : `\n\n[Ek Dosya]: ${attachmentName} (${attachmentSize || "Doğrulandı < 5 MB"})`
+      : "";
+    const text = rawText + attachmentNote;
 
     try {
       const db = getDb();

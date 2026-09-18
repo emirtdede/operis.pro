@@ -19,6 +19,7 @@ import { BrandLogo } from "@/src/components/layout/brand-logo";
 import { getAdminSession } from "@/src/modules/admin/auth-guard";
 import { AdminAccessDeniedClient } from "@/src/components/admin/admin-access-denied-client";
 import { AdminHeaderActions } from "@/src/components/admin/admin-header-actions";
+import { AdminMobileNav } from "@/src/components/admin/admin-mobile-nav";
 
 export const metadata: Metadata = {
   title: "Yönetim & Güvenlik Konsolu | Operis Enterprise Admin",
@@ -116,10 +117,44 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     },
   ];
 
+  const mobileNavItems = [
+    { href: "/admin", label: "Genel Bakış", iconName: "LayoutDashboard", badge: null },
+    { href: "/admin/users", label: "Kullanıcı Yönetimi", iconName: "Users", badge: `${metrics.totalUsers.toLocaleString()}` },
+    { href: "/admin/listings", label: "İlan Yönetimi", iconName: "Layers", badge: `${metrics.activeListings}` },
+    { href: "/admin/offers", label: "Teklif & Yanıtlar", iconName: "Send", badge: null },
+    { href: "/admin/logs", label: "Çok Kategorili Loglar", iconName: "ScrollText", badge: null },
+    { href: "/admin/monitoring", label: "Sistem & Performans", iconName: "Activity", badge: "99.9%" },
+    { href: "/admin/messages", label: "İletişim & Destek", iconName: "Mail", badge: null },
+  ];
+
+  const mobileAlertEngines = [
+    {
+      href: "/admin/engagements",
+      label: "Uyuşmazlık Hakemliği",
+      iconName: "Scale",
+      badge: metrics.disputedEngagements > 0 ? `${metrics.disputedEngagements}` : null,
+      badgeColor: "bg-red-500/20 text-red-400 border-red-500/30 animate-pulse",
+    },
+    {
+      href: "/admin/moderation/abuse",
+      label: "Kullanıcı İhlalleri (Küfür/Abuse)",
+      iconName: "AlertTriangle",
+      badge: `${metrics.openReports}`,
+      badgeColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+    },
+    {
+      href: "/admin/security/threats",
+      label: "Siber Tehditler & Saldırılar",
+      iconName: "ShieldAlert",
+      badge: `${metrics.activeThreats}`,
+      badgeColor: "bg-red-500/20 text-red-400 border-red-500/30 animate-pulse",
+    },
+  ];
+
   return (
     <div className="min-h-screen flex bg-[#0d0e12] text-slate-100 font-sans antialiased selection:bg-blue-600 selection:text-white">
       {/* High-Density Admin Sidebar */}
-      <aside className="w-64 shrink-0 border-r border-slate-800/80 bg-[#12141a] flex flex-col justify-between hidden md:flex">
+      <aside className="w-56 lg:w-64 shrink-0 border-r border-slate-800/80 bg-[#12141a] flex flex-col justify-between hidden md:flex">
         <div className="p-4 space-y-6">
           {/* Logo & Console Badge */}
           <div className="flex items-center justify-between pb-4 border-b border-slate-800/80">
@@ -221,19 +256,20 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       {/* Main Administrative Stage */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Control Bar */}
-        <header className="h-14 border-b border-slate-800/80 bg-[#12141a]/90 backdrop-blur px-4 sm:px-6 flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-3 flex-1 max-w-md">
+        <header className="h-14 border-b border-slate-800/80 bg-[#12141a]/90 backdrop-blur px-3 sm:px-6 flex items-center justify-between shrink-0 gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 flex-1 max-w-md">
+            <AdminMobileNav navItems={mobileNavItems} alertEngines={mobileAlertEngines} />
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
               <input
                 type="text"
-                placeholder="Global arama: Kullanıcı, İlan, Teklif, IP veya Log ID..."
+                placeholder="Global arama: Kullanıcı, İlan, IP..."
                 className="w-full bg-slate-900/90 border border-slate-800 rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-medium">
               <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
               <span>Sistem Aktif (10.420+ Kullanıcı)</span>
@@ -244,7 +280,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </header>
 
         {/* Scrollable Content Viewport */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">{children}</main>
+        <main className="flex-1 overflow-y-auto p-3 sm:p-6 lg:p-8 space-y-6">{children}</main>
       </div>
     </div>
   );

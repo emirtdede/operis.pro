@@ -530,7 +530,41 @@ export function CategoryListInteractive({
         }`}
       >
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-          {/* Sektör Seçici Combobox Tetikleyici (Sol Entegre) */}
+          {/* Akıcı Kategori ve Beceri Arama Girdisi (Sol Entegre) */}
+          <div className="relative flex-1">
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={
+                isTr
+                  ? "Kategori veya beceri ara (örn. Frontend, Unity, Next.js, SEO)..."
+                  : "Filter specializations (e.g. Frontend, Unity, Next.js, Cloud)..."
+              }
+              aria-label={isTr ? "Kategori filtrele" : "Filter categories"}
+              className="w-full h-10 rounded-xl bg-transparent border-none pl-9 pr-8 text-xs text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:outline-none transition-all [&::-webkit-search-cancel-button]:hidden"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-md text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                aria-label={isTr ? "Aramayı temizle" : "Clear search"}
+                title={isTr ? "Aramayı temizle" : "Clear search"}
+              >
+                <X className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+            )}
+          </div>
+
+          {/* Dikey İnce Ayraç (Masaüstü) */}
+          <div className="hidden sm:block h-6 w-px bg-[var(--color-border-subtle)]/70 mx-0.5" />
+
+          {/* Sektör Seçici Combobox Tetikleyici (Sağ Entegre) */}
           <div className="relative z-50 shrink-0 w-full sm:w-auto" ref={sectorDropdownRef}>
             <div
               className={`w-full sm:w-72 md:w-80 h-10 px-3 rounded-xl transition-all flex items-center justify-between gap-2 text-left cursor-pointer border select-none ${
@@ -556,7 +590,8 @@ export function CategoryListInteractive({
 
               <div className="flex items-center gap-1.5 shrink-0">
                 <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[var(--color-surface-base)] text-[var(--color-text-secondary)] border border-[var(--color-border-subtle)]">
-                  {currentSectorCount} {isTr ? "alan" : "areas"} • {currentSectorListingCount} {isTr ? "ilan" : "listings"}
+                  <span className="hidden min-[380px]:inline">{currentSectorCount} {isTr ? "alan" : "areas"} • </span>
+                  {currentSectorListingCount} {isTr ? "ilan" : "listings"}
                 </span>
                 <ChevronDown
                   className={`h-3.5 w-3.5 text-[var(--color-text-tertiary)] transition-transform duration-200 ${
@@ -566,10 +601,10 @@ export function CategoryListInteractive({
               </div>
             </div>
 
-            {/* Dropdown Menu (With Search Filter Inside Popover) */}
+            {/* Dropdown Menu (With Search Filter Inside Popover, Right Aligned) */}
             {isSectorDropdownOpen && (
               <div
-                className="absolute top-full left-0 mt-2 w-full min-w-[320px] sm:min-w-[440px] rounded-2xl border p-1.5 z-[100] animate-in fade-in zoom-in-95 duration-150"
+                className="absolute top-full right-0 mt-2 w-[calc(100vw-2rem)] sm:w-full min-w-0 max-w-[calc(100vw-2rem)] sm:max-w-[480px] sm:min-w-[420px] rounded-2xl border p-1.5 z-[100] animate-in fade-in zoom-in-95 duration-150"
                 style={{
                   backgroundColor: "var(--bg-elevated)",
                   borderColor: "var(--border-strong)",
@@ -600,7 +635,7 @@ export function CategoryListInteractive({
                   </div>
                 </div>
 
-                <div className="max-h-[380px] overflow-y-auto space-y-1 p-0.5 scrollbar-thin">
+                <div className="max-h-[min(55dvh,380px)] overflow-y-auto space-y-1 p-0.5 scrollbar-thin">
                   {sectorOptions.length === 0 ? (
                     <div className="p-6 text-center space-y-2">
                       <p className="text-xs text-[var(--color-text-tertiary)]">
@@ -664,7 +699,8 @@ export function CategoryListInteractive({
                                   : "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)]"
                               }`}
                             >
-                              {item.count} {isTr ? "uzmanlık" : "specializations"} • {item.listingCount} {isTr ? "ilan" : "listings"}
+                              <span className="hidden min-[360px]:inline">{item.count} {isTr ? "uzmanlık" : "specializations"} • </span>
+                              {item.listingCount} {isTr ? "ilan" : "listings"}
                             </span>
                             {isSelected && (
                               <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
@@ -676,40 +712,6 @@ export function CategoryListInteractive({
                   )}
                 </div>
               </div>
-            )}
-          </div>
-
-          {/* Dikey İnce Ayraç (Masaüstü) */}
-          <div className="hidden sm:block h-6 w-px bg-[var(--color-border-subtle)]/70 mx-0.5" />
-
-          {/* Akıcı Kategori ve Beceri Arama Girdisi */}
-          <div className="relative flex-1">
-            <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-text-tertiary)]"
-              aria-hidden="true"
-            />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={
-                isTr
-                  ? "Kategori veya beceri ara (örn. Frontend, Unity, Next.js, SEO)..."
-                  : "Filter specializations (e.g. Frontend, Unity, Next.js, Cloud)..."
-              }
-              aria-label={isTr ? "Kategori filtrele" : "Filter categories"}
-              className="w-full h-10 rounded-xl bg-transparent border-none pl-9 pr-8 text-xs text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:outline-none transition-all [&::-webkit-search-cancel-button]:hidden"
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery("")}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-md text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] transition-colors"
-                aria-label={isTr ? "Aramayı temizle" : "Clear search"}
-                title={isTr ? "Aramayı temizle" : "Clear search"}
-              >
-                <X className="h-3.5 w-3.5" aria-hidden="true" />
-              </button>
             )}
           </div>
 
@@ -896,7 +898,7 @@ export function CategoryListInteractive({
       ) : (
         /* Grid of Dynamic Category Spotlight Cards */
         <div
-          className={`relative z-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 transition-opacity duration-150 ${
+          className={`relative z-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 transition-opacity duration-150 ${
             isStale ? "opacity-75" : "opacity-100"
           }`}
         >
@@ -906,7 +908,7 @@ export function CategoryListInteractive({
             return (
               <SpotlightCard
                 key={cat.id}
-                className="h-full p-6 transition-all duration-300 hover:-translate-y-1 group"
+                className="h-full p-4 sm:p-6 transition-all duration-300 hover:-translate-y-1 group"
               >
                 <div className="flex flex-col flex-1">
                   <div className="flex items-start justify-between mb-3.5">

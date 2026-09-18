@@ -41,7 +41,6 @@ function isTurkishPreferred(acceptLanguage: string | null): boolean {
 
 const TR_EXACT_REDIRECTS: Record<string, string> = {
   "/tr/categories": "/tr/kategoriler",
-  "/tr/feed": "/tr/akis",
   "/tr/listings": "/tr/ilanlar",
   "/tr/listings/new": "/tr/ilanlar/yeni",
   "/tr/login": "/tr/giris",
@@ -81,7 +80,7 @@ const TR_EXACT_REDIRECTS: Record<string, string> = {
   "/tr/unauthorized": "/tr/yetkisiz",
 };
 
-export function proxy(request: NextRequest) {
+function baseProxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 1. Root route: Intelligent Locale Detection & Preference Persistence
@@ -108,6 +107,25 @@ export function proxy(request: NextRequest) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = `/${targetLocale}`;
     return NextResponse.redirect(redirectUrl, 302);
+  }
+
+  // 1.5 Feed to Unified Listings Hub: Permanent 301 Redirect
+  if (pathname === "/tr/feed" || pathname === "/tr/akis") {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = "/tr/ilanlar";
+    if (!redirectUrl.searchParams.has("view")) {
+      redirectUrl.searchParams.set("view", "stream");
+    }
+    return NextResponse.redirect(redirectUrl, 301);
+  }
+
+  if (pathname === "/en/feed") {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = "/en/listings";
+    if (!redirectUrl.searchParams.has("view")) {
+      redirectUrl.searchParams.set("view", "stream");
+    }
+    return NextResponse.redirect(redirectUrl, 301);
   }
 
   // 2. 301 Permanent Redirects for legacy English paths requested under /tr
@@ -171,15 +189,22 @@ export function proxy(request: NextRequest) {
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
 const clerkHandler = clerkMiddleware(async (_auth, req) => {
-  return proxy(req);
+  return baseProxy(req);
 });
 
-export default function middleware(request: NextRequest, event: NextFetchEvent) {
-  if (process.env.CLERK_SECRET_KEY && process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
+export async function proxy(request: NextRequest, event?: NextFetchEvent) {
+  if (
+    event &&
+    !process.env.VITEST &&
+    process.env.CLERK_SECRET_KEY &&
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+  ) {
     return clerkHandler(request, event);
   }
-  return proxy(request);
+  return baseProxy(request);
 }
+
+export default proxy;
 
 export const config = {
   // Match internationalized pathnames, API routes for Clerk auth, excluding admin, static files, and assets

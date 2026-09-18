@@ -16,8 +16,8 @@ export async function generateMetadata({
 
   const title = isTr ? "Giriş Yap — Güvenli Oturum" : "Sign In — Secure Portal Access";
   const description = isTr
-    ? "Hesabınıza güvenle giriş yaparak proje ilanlarını inceleyin, tekliflerinizi yönetin ve doğrudan iletişim kurun."
-    : "Log in securely to review technology projects, manage proposals, and access direct match workspaces.";
+    ? "Hesabınıza güvenle giriş yaparak teknoloji ilanlarını inceleyin, tekliflerinizi yönetin ve doğrudan iletişim kurun."
+    : "Log in securely to review technology listings, manage proposals, and access direct match workspaces.";
 
   return {
     title,
@@ -105,7 +105,7 @@ export default async function LoginPage({
         </div>
 
         {/* Right Column: Clean Login Form */}
-        <div className="lg:col-span-6 flex flex-col justify-center rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+        <div className="lg:col-span-6 flex flex-col justify-center h-full rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-8 lg:p-12 shadow-2xl relative overflow-hidden">
           {/* Background ambient glow */}
           <div
             className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-blue-500/10 blur-3xl"
@@ -117,14 +117,14 @@ export default async function LoginPage({
           />
 
           <div className="relative z-10 space-y-6">
-            <header className="space-y-2 text-center sm:text-left">
+            <header className="space-y-1.5 text-center sm:text-left">
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--color-text-primary)]">
                 {isTr ? "Hesabınıza Giriş Yapın" : "Welcome Back"}
               </h1>
               <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
                 {isTr
-                  ? "Teknoloji projelerinizi ve tekliflerinizi yönetmek için oturum açın."
-                  : "Sign in to manage your technology projects and proposals."}
+                  ? "Teknoloji ilanlarınızı ve tekliflerinizi yönetmek için oturum açın."
+                  : "Sign in to manage your technology listings and proposals."}
               </p>
             </header>
 

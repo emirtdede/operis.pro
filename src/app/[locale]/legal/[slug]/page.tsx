@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import { setRequestLocale } from "next-intl/server";
 
-import { ShieldCheck, Hash, CheckCircle2 } from "lucide-react";
+import { ShieldCheck, CheckCircle2 } from "lucide-react";
 import { LegalService } from "@/src/modules/legal/service";
 import { Locale } from "@/src/lib/i18n/config";
-import { Badge } from "@/src/components/ui/badge";
 import { ReadingProgressBar } from "@/src/components/ui/reading-progress-bar";
+import { LegalDocumentViewer } from "@/src/components/legal/legal-document-viewer";
 
 import { TR_TO_INTERNAL_LEGAL_SLUG, getLocalizedLegalPath } from "@/src/lib/i18n/routes";
 
@@ -351,17 +350,8 @@ export default async function LegalDocumentPage({
     ],
   };
 
-  const navDocKeys = [
-    "terms",
-    "privacy",
-    "matching-disclaimer",
-    "acceptable-use",
-    "cookies",
-    "contact",
-  ];
-
   return (
-    <main className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8 space-y-8">
+    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
       {/* Reading Progress Indicator */}
       <ReadingProgressBar />
 
@@ -371,51 +361,11 @@ export default async function LegalDocumentPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Header */}
-      <header className="border-b border-[var(--color-border-subtle)] pb-6 space-y-4">
-        <div className="flex flex-wrap items-center gap-3">
-          <Badge variant="secondary" size="md">
-            {doc.version}
-          </Badge>
-          <span className="text-xs font-mono text-[var(--color-text-tertiary)] flex items-center gap-1">
-            <Hash className="h-3 w-3" aria-hidden="true" />
-            <span>SHA-256: {doc.hash.slice(0, 16)}...</span>
-          </span>
-        </div>
-        <h1 className="text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">
-          {docTitle}
-        </h1>
-
-        {/* Quick Document Navigation Pills */}
-        <nav
-          aria-label={isTr ? "Yasal Dokümanlar" : "Legal Documents"}
-          className="flex flex-wrap gap-2 pt-2"
-        >
-          {navDocKeys.map((key) => {
-            const active = key === internalKey;
-            const label = isTr ? TITLES[key]?.tr : TITLES[key]?.en;
-            return (
-              <Link
-                key={key}
-                href={getLocalizedLegalPath(key, locale as Locale)}
-                className={`text-xs px-3 py-1.5 rounded-xl border transition-all ${
-                  active
-                    ? "bg-blue-500/10 border-blue-500/30 text-blue-400 font-semibold"
-                    : "border-[var(--color-border-subtle)] text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]"
-                }`}
-              >
-                {label}
-              </Link>
-            );
-          })}
-        </nav>
-      </header>
-
       {/* Plain Language Executive Summary */}
       {PLAIN_SUMMARIES[internalKey] && (
         <section
           aria-label={isTr ? "Yönetici Özeti" : "Executive Summary"}
-          className="rounded-3xl border border-blue-500/30 bg-blue-500/5 p-6 sm:p-8 space-y-4 shadow-sm"
+          className="rounded-3xl border border-blue-500/25 bg-gradient-to-r from-blue-500/5 via-indigo-500/5 to-purple-500/5 p-6 sm:p-8 space-y-4 shadow-sm"
         >
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-blue-400" aria-hidden="true" />
@@ -423,14 +373,14 @@ export default async function LegalDocumentPage({
               {isTr ? PLAIN_SUMMARIES[internalKey].tr.title : PLAIN_SUMMARIES[internalKey].en.title}
             </h2>
           </div>
-          <div className="grid grid-cols-1 gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {(isTr
               ? PLAIN_SUMMARIES[internalKey].tr.bullets
               : PLAIN_SUMMARIES[internalKey].en.bullets
             ).map((bullet, idx) => (
               <div
                 key={idx}
-                className="flex items-start gap-2.5 text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed"
+                className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs text-[var(--color-text-secondary)] leading-relaxed shadow-sm"
               >
                 <CheckCircle2
                   className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5"
@@ -443,21 +393,15 @@ export default async function LegalDocumentPage({
         </section>
       )}
 
-      {/* Document Content */}
-      <article className="relative overflow-hidden rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-8 sm:p-12 leading-relaxed text-sm text-[var(--color-text-secondary)] whitespace-pre-wrap font-sans space-y-4 shadow-xl">
-        <div className="pointer-events-none absolute -top-12 -right-12 h-44 w-44 rounded-full bg-blue-500/5 blur-3xl" />
-        {doc.content}
-      </article>
-
-      {/* Statutory Footer Disclaimer */}
-      <aside className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/70 backdrop-blur-md p-4 text-xs text-[var(--color-text-tertiary)] leading-relaxed flex items-start gap-3">
-        <ShieldCheck className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" aria-hidden="true" />
-        <p>
-          {isTr
-            ? "Yürürlükteki mevzuatın izin verdiği azami ölçüde, bu metin taraflar arasındaki hukuki ve operasyonel sınırları belirler. Tüm hakları saklıdır."
-            : "To the maximum extent permitted by applicable law, this document establishes the governing operational terms. All rights reserved."}
-        </p>
-      </aside>
+      {/* High-End Corporate Legal Document Reader */}
+      <LegalDocumentViewer
+        currentKey={internalKey}
+        locale={locale}
+        version={doc.version}
+        hash={doc.hash}
+        rawMarkdown={doc.content}
+        docTitle={docTitle}
+      />
     </main>
   );
 }

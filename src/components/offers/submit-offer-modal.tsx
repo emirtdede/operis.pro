@@ -212,7 +212,7 @@ export function SubmitOfferModal({
             ? `"${listingTitle}" ilanına sunduğunuz teklif parametrelerini güncelleyin.`
             : `Update your proposal parameters for "${listingTitle}".`
           : isTr
-            ? `"${listingTitle}" başlıklı projeye teklifinizi iletin. Teklifiniz yalnızca ilan sahibine açıktır.`
+            ? `"${listingTitle}" başlıklı ilana teklifinizi iletin. Teklifiniz yalnızca ilan sahibine açıktır.`
             : `Send your proposal for "${listingTitle}". Your offer is private and visible only to the listing owner.`
       }
     >
@@ -269,7 +269,7 @@ export function SubmitOfferModal({
             onChange={(e) => setMessage(e.target.value)}
             placeholder={
               isTr
-                ? "Bu proje için uzmanlığınızı, yaklaşımınızı ve yapabileceklerinizi detaylıca açıklayın (en az 50 karakter)..."
+                ? "Bu ilan için uzmanlığınızı, yaklaşımınızı ve yapabileceklerinizi detaylıca açıklayın (en az 50 karakter)..."
                 : "Explain your experience, approach, and how you will deliver this project (minimum 50 characters)..."
             }
             minLength={50}
@@ -284,7 +284,7 @@ export function SubmitOfferModal({
             <label className="text-xs font-medium text-[var(--color-text-secondary)]">
               {isTr ? "Önerilen Bütçe (İsteğe Bağlı)" : "Proposed Budget (Optional)"}
             </label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <Select
                 value={budgetCurrency}
                 onChange={(e) => setBudgetCurrency(e.target.value)}
@@ -294,21 +294,24 @@ export function SubmitOfferModal({
                   { value: "EUR", label: "EUR (€)" },
                   { value: "GBP", label: "GBP (£)" },
                 ]}
+                className="w-full"
               />
-              <TextInput
-                type="number"
-                min="0"
-                placeholder={isTr ? "Min Tutar" : "Min Amount"}
-                value={budgetMin}
-                onChange={(e) => setBudgetMin(e.target.value)}
-              />
-              <TextInput
-                type="number"
-                min="0"
-                placeholder={isTr ? "Maks Tutar" : "Max Amount"}
-                value={budgetMax}
-                onChange={(e) => setBudgetMax(e.target.value)}
-              />
+              <div className="grid grid-cols-2 gap-2 sm:col-span-2">
+                <TextInput
+                  type="number"
+                  min="0"
+                  placeholder={isTr ? "Min Tutar" : "Min Amount"}
+                  value={budgetMin}
+                  onChange={(e) => setBudgetMin(e.target.value)}
+                />
+                <TextInput
+                  type="number"
+                  min="0"
+                  placeholder={isTr ? "Maks Tutar" : "Max Amount"}
+                  value={budgetMax}
+                  onChange={(e) => setBudgetMax(e.target.value)}
+                />
+              </div>
             </div>
           </div>
 

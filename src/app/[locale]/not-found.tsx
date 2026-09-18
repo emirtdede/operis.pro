@@ -64,11 +64,11 @@ export default function NotFound() {
           <input
             type="search"
             name="q"
-            aria-label={isTr ? "İlan veya teknoloji ara" : "Search projects or tech"}
+            aria-label={isTr ? "İlan veya teknoloji ara" : "Search listings or tech"}
             placeholder={
               isTr
-                ? "Proje, teknoloji veya anahtar kelime ara..."
-                : "Search project, tech, or keyword..."
+                ? "İlan, teknoloji veya anahtar kelime ara..."
+                : "Search listing, tech, or keyword..."
             }
             className="w-full bg-transparent px-2 py-1.5 text-xs text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none"
           />
@@ -132,14 +132,14 @@ export default function NotFound() {
               className="gap-1.5 shadow-md shadow-blue-500/10"
             >
               <Compass className="h-4 w-4" aria-hidden="true" />
-              <span>{isTr ? "İlanları Keşfet" : "Browse Projects"}</span>
+              <span>{isTr ? "İlanları Keşfet" : "Browse Listings"}</span>
             </Button>
           </Link>
 
           <Link href={newListingPath}>
             <Button type="button" variant="secondary" size="sm" className="gap-1.5">
               <PlusCircle className="h-4 w-4" aria-hidden="true" />
-              <span>{isTr ? "İlan Ver" : "Post Project"}</span>
+              <span>{isTr ? "İlan Ver" : "Post Listing"}</span>
             </Button>
           </Link>
         </div>

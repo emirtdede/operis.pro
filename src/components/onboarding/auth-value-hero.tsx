@@ -22,8 +22,8 @@ export function AuthValueHero({ locale, isRegister = false }: AuthValueHeroProps
       icon: Layers,
       title: isTr ? "Tek Hesap, Çift Yetenek" : "One Account, Dual Capabilities",
       description: isTr
-        ? "Tek bir profille hem anında proje yayınlayabilir hem de projelere özel teklif verebilirsiniz."
-        : "Post projects or submit proposals from a single verified identity.",
+        ? "Tek bir profille hem anında ilan yayınlayabilir hem de ilanlara özel teklif verebilirsiniz."
+        : "Post listings or submit proposals from a single verified identity.",
     },
     {
       icon: Lock,
@@ -36,8 +36,8 @@ export function AuthValueHero({ locale, isRegister = false }: AuthValueHeroProps
       icon: Clock,
       title: isTr ? "7 Günlük Canlılık Radarı" : "7-Day Freshness Guarantee",
       description: isTr
-        ? "Terk edilmiş veya eski ilanlar otomatik pasife alınır. Yalnızca güncel projeler listelenir."
-        : "Stale listings expire automatically; connect only with active, verified projects.",
+        ? "Terk edilmiş veya eski ilanlar otomatik pasife alınır. Yalnızca güncel ilanlar listelenir."
+        : "Stale listings expire automatically; connect only with active, verified listings.",
     },
   ];
 

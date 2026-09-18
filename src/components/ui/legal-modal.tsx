@@ -168,14 +168,14 @@ export function LegalModal({
         </div>
 
         {/* Modal Footer */}
-        <div className="relative z-10 flex items-center justify-between gap-3 p-4 sm:px-6 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-          <div className="flex items-center gap-2">
+        <div className="relative z-10 flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-2.5 p-3.5 sm:p-4 sm:px-6 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] shrink-0">
+          <div className="flex items-center justify-between sm:justify-start gap-2 w-full sm:w-auto">
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={onClose}
-              className="text-xs cursor-pointer"
+              className="text-xs cursor-pointer w-full sm:w-auto justify-center"
             >
               {isTr ? "Kapat" : "Close"}
             </Button>
@@ -195,7 +195,7 @@ export function LegalModal({
               variant="primary"
               size="sm"
               onClick={handleAcceptClick}
-              className="text-xs font-semibold flex items-center gap-1.5 cursor-pointer shadow-md shadow-blue-500/20"
+              className="text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-blue-500/20 w-full sm:w-auto"
             >
               <Check className="h-3.5 w-3.5" aria-hidden="true" />
               <span>{isTr ? "Okudum ve Kabul Ediyorum" : "I Read and Accept"}</span>

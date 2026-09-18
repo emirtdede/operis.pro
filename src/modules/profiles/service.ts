@@ -45,6 +45,8 @@ export interface UpdateProfileInput {
   revealPhoneAfterMatch?: boolean;
   locale?: string;
   theme?: string;
+  preferredContactChannel?: string | null;
+  timeZone?: string | null;
   trackedSkills?: string[];
   links?: ProfileLinkInput[];
 }
@@ -334,6 +336,14 @@ export class ProfileService {
       updateData.theme = input.theme;
     }
 
+    if (input.preferredContactChannel !== undefined) {
+      updateData.preferredContactChannel = input.preferredContactChannel || "any";
+    }
+
+    if (input.timeZone !== undefined) {
+      updateData.timeZone = input.timeZone || "Europe/Istanbul";
+    }
+
     if (input.trackedSkills !== undefined) {
       const validSkills = input.trackedSkills
         .map((s) => s.trim())
@@ -375,6 +385,10 @@ export class ProfileService {
         DEFAULT_USER.profile.revealPhoneAfterMatch = input.revealPhoneAfterMatch;
       if (input.locale !== undefined) DEFAULT_USER.profile.locale = input.locale;
       if (input.theme !== undefined) DEFAULT_USER.profile.theme = input.theme;
+      if (input.preferredContactChannel !== undefined)
+        DEFAULT_USER.profile.preferredContactChannel = input.preferredContactChannel || "any";
+      if (input.timeZone !== undefined)
+        DEFAULT_USER.profile.timeZone = input.timeZone || "Europe/Istanbul";
       if (input.trackedSkills !== undefined)
         DEFAULT_USER.profile.trackedSkills = updateData.trackedSkills;
       if (validatedLinks !== undefined) {
@@ -502,6 +516,8 @@ export class ProfileService {
         revealPhoneAfterMatch: DEFAULT_USER.profile.revealPhoneAfterMatch ?? false,
         locale: DEFAULT_USER.profile.locale,
         theme: DEFAULT_USER.profile.theme,
+        preferredContactChannel: DEFAULT_USER.profile.preferredContactChannel || "whatsapp",
+        timeZone: DEFAULT_USER.profile.timeZone || "Europe/Istanbul",
         trackedSkills: DEFAULT_USER.profile.trackedSkills || [
           "Next.js",
           "TypeScript",

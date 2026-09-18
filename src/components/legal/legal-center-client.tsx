@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -17,7 +17,8 @@ import {
   UserCheck,
   ArrowRight,
   ExternalLink,
-  SlidersHorizontal,
+  ChevronDown,
+  Filter,
 } from "lucide-react";
 import { getLocalizedLegalPath, getLocalizedRoute } from "@/src/lib/i18n/routes";
 
@@ -42,6 +43,33 @@ export function LegalCenterClient({ locale }: LegalCenterClientProps) {
   const isTr = locale === "tr";
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
+  const filterDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        filterDropdownRef.current &&
+        !filterDropdownRef.current.contains(e.target as Node)
+      ) {
+        setFilterDropdownOpen(false);
+      }
+    }
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setFilterDropdownOpen(false);
+      }
+    }
+
+    if (filterDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [filterDropdownOpen]);
 
   const categories = useMemo(
     () => [
@@ -385,84 +413,152 @@ export function LegalCenterClient({ locale }: LegalCenterClientProps) {
       {/* Search & Filter Header Control Deck */}
       <section
         aria-label={isTr ? "Yasal Belge Arama ve Filtreleme" : "Legal Document Search"}
-        className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-6 sm:p-8 shadow-xl relative overflow-hidden backdrop-blur-xl"
-        style={{
-          backgroundColor: "var(--color-surface-base)",
-          borderColor: "var(--color-border-subtle)",
-        }}
+        className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/75 p-5 sm:p-6 shadow-xl relative backdrop-blur-xl z-20"
       >
-        <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+        <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
           {/* Interactive Search Bar */}
-          <div className="relative flex-1">
-            <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--color-text-tertiary)] pointer-events-none"
-              aria-hidden="true"
-            />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={
-                isTr
-                  ? "Yasal konu, madde, komisyon, telif veya anahtar kelime arayın..."
-                  : "Search legal topics, copyright, zero-commission, escrow, privacy..."
-              }
-              className="w-full pl-12 pr-10 py-3.5 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all shadow-inner"
-              aria-label={isTr ? "Yasal metinlerde arama yapın" : "Search legal documents"}
-            />
-            {searchQuery && (
+            <div className="relative flex-1">
+              <Search
+                className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--color-text-tertiary)] pointer-events-none"
+                aria-hidden="true"
+              />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={
+                  isTr
+                    ? "Yasal konu, madde, komisyon, telif veya anahtar kelime arayın..."
+                    : "Search legal topics, copyright, zero-commission, escrow, privacy..."
+                }
+                className="w-full pl-12 pr-10 py-3 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all shadow-inner"
+                aria-label={isTr ? "Yasal metinlerde arama yapın" : "Search legal documents"}
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 rounded-lg text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-base)] transition-colors"
+                  title={isTr ? "Aramayı Temizle" : "Clear search"}
+                >
+                  <X className="h-4 w-4" aria-hidden="true" />
+                </button>
+              )}
+            </div>
+
+            {/* Single Unified Category Filter Dropdown */}
+            <div className="relative shrink-0" ref={filterDropdownRef}>
               <button
                 type="button"
-                onClick={() => setSearchQuery("")}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 rounded-lg text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-base)] transition-colors"
-                title={isTr ? "Aramayı Temizle" : "Clear search"}
-              >
-                <X className="h-4 w-4" aria-hidden="true" />
-              </button>
-            )}
-          </div>
-
-          {/* Quick Counter Badge */}
-          <div className="shrink-0 flex items-center gap-2 self-center md:self-auto text-xs font-semibold text-[var(--color-text-secondary)] px-4 py-2 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]">
-            <SlidersHorizontal className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />
-            <span>
-              {isTr
-                ? `${filteredDocs.length} / ${documents.length} Yasal Belge Listelendi`
-                : `${filteredDocs.length} / ${documents.length} Documents Active`}
-            </span>
-          </div>
-        </div>
-
-        {/* Category Filter Chips */}
-        <div className="flex flex-wrap gap-2 pt-6 border-t border-[var(--color-border-subtle)] mt-6">
-          {categories.map((cat) => {
-            const isActive = activeCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => setActiveCategory(cat.id)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
-                  isActive
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/25 border border-blue-500"
-                    : "border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)]"
+                onClick={() => setFilterDropdownOpen((prev) => !prev)}
+                aria-expanded={filterDropdownOpen}
+                aria-haspopup="listbox"
+                className={`w-full sm:w-auto h-[46px] px-4 rounded-2xl border text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center justify-between sm:justify-start gap-2.5 select-none shadow-sm ${
+                  activeCategory !== "all"
+                    ? "bg-blue-600 text-white border-blue-500 shadow-blue-500/25"
+                    : "border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-base)]"
                 }`}
               >
-                <span>{cat.label}</span>
-                <span
-                  className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-                    isActive
-                      ? "bg-white/20 text-white"
-                      : "bg-[var(--color-surface-base)] text-[var(--color-text-tertiary)]"
-                  }`}
-                >
-                  {cat.id === "all"
-                    ? documents.length
-                    : documents.filter((d) => d.category === cat.id).length}
-                </span>
+                <div className="flex items-center gap-2">
+                  <Filter
+                    className={`h-4 w-4 ${activeCategory !== "all" ? "text-white" : "text-blue-500"}`}
+                    aria-hidden="true"
+                  />
+                  <span className="whitespace-nowrap">
+                    {categories.find((c) => c.id === activeCategory)?.label || categories[0]?.label || ""}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span
+                    className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
+                      activeCategory !== "all"
+                        ? "bg-white/20 text-white"
+                        : "bg-[var(--bg-surface)] text-[var(--color-text-secondary)] border border-[var(--color-border-subtle)]"
+                    }`}
+                  >
+                    {activeCategory === "all"
+                      ? documents.length
+                      : documents.filter((d) => d.category === activeCategory).length}
+                  </span>
+                  <ChevronDown
+                    className={`h-4 w-4 transition-transform duration-200 ${
+                      filterDropdownOpen ? "rotate-180" : ""
+                    } ${activeCategory !== "all" ? "text-white/80" : "text-[var(--color-text-tertiary)]"}`}
+                    aria-hidden="true"
+                  />
+                </div>
               </button>
-            );
-          })}
+
+              {/* Dropdown Options */}
+              {filterDropdownOpen && (
+                <div
+                  role="listbox"
+                  className="absolute left-0 sm:right-0 sm:left-auto mt-2 w-72 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-2 shadow-2xl z-50 animate-in fade-in-0 zoom-in-95 duration-150"
+                >
+                  <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-tertiary)] border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
+                    <span>{isTr ? "Kategori Filtresi" : "Category Filter"}</span>
+                    {activeCategory !== "all" && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveCategory("all");
+                          setFilterDropdownOpen(false);
+                        }}
+                        className="text-[10px] text-blue-500 hover:underline font-semibold cursor-pointer"
+                      >
+                        {isTr ? "Sıfırla" : "Reset"}
+                      </button>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    {categories.map((cat) => {
+                      const isSelected = activeCategory === cat.id;
+                      const count =
+                        cat.id === "all"
+                          ? documents.length
+                          : documents.filter((d) => d.category === cat.id).length;
+
+                      return (
+                        <button
+                          key={cat.id}
+                          type="button"
+                          role="option"
+                          aria-selected={isSelected}
+                          onClick={() => {
+                            setActiveCategory(cat.id);
+                            setFilterDropdownOpen(false);
+                          }}
+                          className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-left cursor-pointer ${
+                            isSelected
+                              ? "bg-blue-600 text-white font-semibold shadow-md shadow-blue-500/20"
+                              : "text-[var(--color-text-primary)] hover:bg-[var(--bg-elevated)]"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <div
+                              className={`h-2 w-2 rounded-full ${
+                                isSelected ? "bg-white" : "bg-transparent border border-[var(--border-subtle)]"
+                              }`}
+                            />
+                            <span>{cat.label}</span>
+                          </div>
+                          <span
+                            className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
+                              isSelected
+                                ? "bg-white/20 text-white"
+                                : "bg-[var(--bg-elevated)] text-[var(--color-text-secondary)] border border-[var(--border-subtle)]"
+                            }`}
+                          >
+                            {count}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
         </div>
       </section>
 

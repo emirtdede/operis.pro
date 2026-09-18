@@ -26,8 +26,8 @@ export async function generateMetadata({
 
   const isTr = locale === "tr";
   const title = isTr
-    ? "Doğrudan & Komisyonsuz Yazılım Projeleri | Operis"
-    : "Direct & Zero-Fee Tech Projects | Operis";
+    ? "Doğrudan & Komisyonsuz Yazılım İlanları | Operis"
+    : "Direct & Zero-Fee Tech Listings | Operis";
 
   const description = isTr
     ? "Türkiye ve küresel teknoloji profesyonelleri için doğrudan ve güvenli serbest çalışma platformu. Komisyon yok, aracı yok, %100 doğrudan iş birliği."
@@ -97,7 +97,7 @@ export default async function RootLocaleLayout({
     <OperisClerkProvider locale={locale}>
       <OperisPostHogProvider userId={session?.userId || null}>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <ThemeProvider defaultTheme="light">
+          <ThemeProvider defaultTheme="dark">
             <a
               href="#main-content"
               className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg focus:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm font-semibold transition-all"

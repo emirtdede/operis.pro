@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect, useMemo } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   X,
   ChevronRight,
@@ -60,6 +62,8 @@ export interface CategoryFilterBarProps {
   extraQuery?: Record<string, string>;
   locale: string;
   resultCount?: number;
+  showSearchInput?: boolean;
+  variant?: "horizontal" | "sidebar";
 }
 
 export function CategoryFilterBar({
@@ -69,13 +73,61 @@ export function CategoryFilterBar({
   searchQuery,
   extraQuery = {},
   locale,
-  resultCount,
+  resultCount: _resultCount,
+  showSearchInput = false,
+  variant = "horizontal",
 }: CategoryFilterBarProps) {
   const isTr = locale === "tr";
+  const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [modalView, setModalView] = useState<"all" | "sectors">("all");
   const [searchFilter, setSearchFilter] = useState("");
   const modalRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Parse multi-category slugs from comma-separated string
+  const selectedCategorySlugs = useMemo(() => {
+    if (!selectedCategory) return [];
+    return selectedCategory
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }, [selectedCategory]);
+
+  // Temporary selection state for the modal
+  const [tempSelectedSlugs, setTempSelectedSlugs] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (modalOpen) {
+      setTempSelectedSlugs(selectedCategorySlugs);
+    }
+  }, [modalOpen, selectedCategorySlugs]);
+
+  const toggleModalCategory = (slug: string) => {
+    setTempSelectedSlugs((prev) =>
+      prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]
+    );
+  };
+
+  const toggleSectorCategories = (sectorCatSlugs: string[]) => {
+    const allSelected = sectorCatSlugs.every((slug) => tempSelectedSlugs.includes(slug));
+    if (allSelected) {
+      setTempSelectedSlugs((prev) => prev.filter((s) => !sectorCatSlugs.includes(s)));
+    } else {
+      setTempSelectedSlugs((prev) => Array.from(new Set([...prev, ...sectorCatSlugs])));
+    }
+  };
+
+  const applyModalFilters = () => {
+    const slugParam = tempSelectedSlugs.length > 0 ? tempSelectedSlugs.join(",") : undefined;
+    router.push(buildHref(slugParam));
+    setModalOpen(false);
+  };
 
   // Group categories dynamically under the 10 official industry sectors
   const sectorGroups = useMemo(() => {
@@ -99,6 +151,11 @@ export function CategoryFilterBar({
     return categories.filter((c) => !c.sectorKey || !knownKeys.has(c.sectorKey));
   }, [categories]);
 
+  // Sorted list for All Categories view
+  const sortedAllCategories = useMemo(() => {
+    return [...categories].sort((a, b) => a.name.localeCompare(b.name, isTr ? "tr" : "en"));
+  }, [categories, isTr]);
+
   // Helper to build URLs preserving extra query params and search query
   const buildHref = (catSlug?: string) => {
     const params = new URLSearchParams();
@@ -113,45 +170,33 @@ export function CategoryFilterBar({
     return qs ? `${basePath}?${qs}` : basePath;
   };
 
-  const selectedCatObj = useMemo(
-    () => categories.find((c) => c.slug === selectedCategory),
-    [categories, selectedCategory]
-  );
+  const clearSearchHref = () => {
+    const params = new URLSearchParams();
+    Object.entries(extraQuery).forEach(([key, val]) => {
+      if (val) params.set(key, val);
+    });
+    if (selectedCategory) {
+      params.set("category", selectedCategory);
+    }
+    const qs = params.toString();
+    return qs ? `${basePath}?${qs}` : basePath;
+  };
 
-  const [quickDropdownOpen, setQuickDropdownOpen] = useState(false);
-  const [quickSearchQuery, setQuickSearchQuery] = useState("");
-  const quickDropdownRef = useRef<HTMLDivElement>(null);
-  const quickInputRef = useRef<HTMLInputElement>(null);
-
-  // Close quick dropdown on outside click
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (quickDropdownRef.current && !quickDropdownRef.current.contains(e.target as Node)) {
-        setQuickDropdownOpen(false);
-      }
+  const comboboxLabel = useMemo(() => {
+    if (selectedCategorySlugs.length === 0) {
+      return isTr
+        ? `Tüm Kategoriler (${categories.length})`
+        : `All Categories (${categories.length})`;
     }
-    if (quickDropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+    if (selectedCategorySlugs.length === 1) {
+      const cat = categories.find((c) => c.slug === selectedCategorySlugs[0]);
+      return cat ? cat.name : selectedCategorySlugs[0];
     }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [quickDropdownOpen]);
-
-  // Close quick dropdown on Escape
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        setQuickDropdownOpen(false);
-      }
-    }
-    if (quickDropdownOpen) {
-      document.addEventListener("keydown", handleKeyDown);
-    }
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [quickDropdownOpen]);
+    const firstCat = categories.find((c) => c.slug === selectedCategorySlugs[0]);
+    return isTr
+      ? `${firstCat?.name || "Kategori"} (+${selectedCategorySlugs.length - 1})`
+      : `${firstCat?.name || "Category"} (+${selectedCategorySlugs.length - 1})`;
+  }, [selectedCategorySlugs, categories, isTr]);
 
   // Categories filtered inside the popover/modal
   const filteredModalCategories = useMemo(() => {
@@ -164,25 +209,6 @@ export function CategoryFilterBar({
         (c.description && c.description.toLowerCase().includes(q))
     );
   }, [categories, searchFilter]);
-
-  // Categories filtered inside the quick combobox dropdown
-  const quickFilteredCategories = useMemo(() => {
-    const q = quickSearchQuery.toLowerCase().trim();
-    if (!q) return categories;
-    return categories.filter((c) => {
-      const sector = SEED_SECTORS.find((s) => s.key === c.sectorKey);
-      const sectorName = sector
-        ? isTr
-          ? sector.translations.tr.name
-          : sector.translations.en.name
-        : "";
-      return (
-        c.name.toLowerCase().includes(q) ||
-        c.slug.toLowerCase().includes(q) ||
-        sectorName.toLowerCase().includes(q)
-      );
-    });
-  }, [categories, quickSearchQuery, isTr]);
 
   // Close modal on Escape or outside click
   useEffect(() => {
@@ -205,273 +231,269 @@ export function CategoryFilterBar({
     };
   }, [modalOpen]);
 
-  const selectedSector = selectedCatObj
-    ? SEED_SECTORS.find((s) => s.key === selectedCatObj.sectorKey)
-    : null;
-  const ActiveQuickIcon = selectedSector
-    ? SECTOR_ICON_MAP[selectedSector.key] || Code2
-    : selectedCategory
-      ? Code2
-      : Globe;
-
   return (
     <div className="space-y-2.5">
-      {/* Searchable Quick Category Combobox Button (Replaces horizontal scroll rail) */}
-      <div className={`relative ${quickDropdownOpen ? "z-50" : "z-10"}`} ref={quickDropdownRef}>
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          {/* Combobox Trigger Button / Input */}
-          <div
-            className={`relative flex-1 max-w-xl h-11 px-3.5 rounded-2xl bg-[var(--color-surface-hover)] border transition-all flex items-center gap-2.5 shadow-xs ${
-              quickDropdownOpen
-                ? "border-blue-500 ring-2 ring-blue-500/20 bg-[var(--color-surface-base)]"
-                : "border-[var(--color-border-subtle)] hover:border-blue-500/40"
+      {variant === "sidebar" ? (
+        /* Vertical Sidebar Triggers (Twitter-style left column) */
+        <div className="space-y-2 w-full">
+          {/* 1. Tüm Kategoriler Butonu */}
+          <button
+            type="button"
+            onClick={() => {
+              setModalView("all");
+              setModalOpen(true);
+            }}
+            className={`w-full h-11 px-3.5 rounded-2xl border transition-all flex items-center justify-between shadow-xs cursor-pointer ${
+              selectedCategorySlugs.length > 0
+                ? "border-blue-500/50 bg-blue-500/15 text-blue-700 dark:text-sky-300 font-semibold ring-1 ring-blue-500/30"
+                : "border-[var(--color-border-subtle)] bg-surface/75 backdrop-blur-xl hover:bg-surface/90 hover:border-blue-500/40 text-[var(--color-text-primary)]"
             }`}
           >
-            <div className="h-7 w-7 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-              <ActiveQuickIcon className="h-4 w-4" aria-hidden="true" />
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="h-7 w-7 rounded-xl bg-blue-500/15 text-blue-600 dark:text-sky-300 flex items-center justify-center shrink-0">
+                <Globe className="h-4 w-4" aria-hidden="true" />
+              </div>
+              <span className="text-xs font-semibold truncate text-left">
+                {selectedCategorySlugs.length > 0 ? comboboxLabel : isTr ? "Tüm Kategoriler" : "All Categories"}
+              </span>
             </div>
 
-            <input
-              type="text"
-              ref={quickInputRef}
-              value={
-                quickDropdownOpen
-                  ? quickSearchQuery
-                  : selectedCatObj
-                    ? selectedCatObj.name
-                    : isTr
-                      ? `Tüm Alanlar & Kategoriler (${categories.length})`
-                      : `All Fields & Categories (${categories.length})`
-              }
-              onChange={(e) => {
-                setQuickSearchQuery(e.target.value);
-                if (!quickDropdownOpen) setQuickDropdownOpen(true);
-              }}
-              onFocus={() => setQuickDropdownOpen(true)}
-              placeholder={
-                isTr
-                  ? "Kategori ara veya yazın (örn: Unity, Frontend, UI/UX)..."
-                  : "Search or type category (e.g. Unity, Frontend)..."
-              }
-              aria-label={isTr ? "Kategori filtresi" : "Category filter"}
-              className="flex-1 min-w-0 bg-transparent text-xs text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:outline-none font-medium truncate"
-            />
+            <div className="flex items-center gap-1.5 shrink-0">
+              <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-surface/80 text-[var(--color-text-tertiary)] border border-[var(--color-border-subtle)]">
+                {categories.length}
+              </span>
+              {selectedCategorySlugs.length > 0 && (
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(buildHref(undefined));
+                  }}
+                  className="p-1 rounded-md text-blue-600 dark:text-sky-300 hover:bg-blue-500/20 transition-colors cursor-pointer"
+                  title={isTr ? "Temizle" : "Clear"}
+                >
+                  <X className="h-3 w-3" />
+                </span>
+              )}
+            </div>
+          </button>
 
-            {quickDropdownOpen && quickSearchQuery ? (
+          {/* 2. Sektör Matrisi Butonu */}
+          <button
+            type="button"
+            onClick={() => {
+              setModalView("sectors");
+              setModalOpen(true);
+            }}
+            className="w-full h-11 px-3.5 rounded-2xl border border-[var(--color-border-subtle)] bg-surface/75 backdrop-blur-xl hover:bg-surface/90 hover:border-blue-500/40 text-[var(--color-text-primary)] transition-all flex items-center justify-between shadow-xs cursor-pointer"
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="h-7 w-7 rounded-xl bg-purple-500/15 text-purple-600 dark:text-purple-300 flex items-center justify-center shrink-0">
+                <LayoutGrid className="h-4 w-4" aria-hidden="true" />
+              </div>
+              <span className="text-xs font-semibold">
+                {isTr ? "Sektör Matrisi" : "Sector Matrix"}
+              </span>
+            </div>
+
+            <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-purple-500/15 text-purple-700 dark:text-purple-300 border border-purple-500/25">
+              {sectorGroups.length}
+            </span>
+          </button>
+        </div>
+      ) : showSearchInput ? (
+        /* Unified Search & Category Command Bar */
+        <div className="relative z-20">
+          <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-surface/75 backdrop-blur-xl p-1.5 shadow-sm">
+            <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2">
+              {/* 1. Keyword Search Input Form */}
+              <form
+                method="GET"
+                action={basePath}
+                className="relative flex-1 flex items-center min-w-0"
+                role="search"
+              >
+                {selectedCategory && (
+                  <input type="hidden" name="category" value={selectedCategory} />
+                )}
+                {Object.entries(extraQuery).map(([k, v]) => (
+                  <input key={k} type="hidden" name={k} value={v} />
+                ))}
+                <Search
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-text-tertiary)] pointer-events-none"
+                  aria-hidden="true"
+                />
+                <input
+                  type="search"
+                  name="q"
+                  defaultValue={searchQuery ?? ""}
+                  maxLength={100}
+                  aria-label={isTr ? "İlan arama" : "Search listings"}
+                  placeholder={
+                    isTr
+                      ? "İlan başlığı, teknoloji veya anahtar kelime ara..."
+                      : "Search listing title, tech stack or keywords..."
+                  }
+                  className={`w-full rounded-xl bg-surface/40 hover:bg-surface/60 focus:bg-surface/80 border border-transparent focus:border-blue-500/30 pl-10 ${
+                    searchQuery ? "pr-9" : "pr-3"
+                  } py-2.5 text-xs sm:text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] transition-all outline-none`}
+                />
+                {searchQuery && (
+                  <Link
+                    href={clearSearchHref()}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
+                    title={isTr ? "Aramayı Temizle" : "Clear Search"}
+                    aria-label={isTr ? "Aramayı Temizle" : "Clear Search"}
+                  >
+                    <X className="h-3.5 w-3.5" aria-hidden="true" />
+                  </Link>
+                )}
+              </form>
+
+              {/* Dikey Ayrım Çizgisi (Desktop) */}
+              <div className="hidden md:block w-px h-7 bg-[var(--color-border-subtle)]" />
+
+              {/* 2. Tüm Kategoriler Butonu (Pop-up Modal Açar) */}
               <button
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setQuickSearchQuery("");
+                onClick={() => {
+                  setModalView("all");
+                  setModalOpen(true);
                 }}
-                className="p-1 rounded-md text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-base)]"
-                aria-label={isTr ? "Aramayı temizle" : "Clear search"}
+                className={`relative h-10 px-3 rounded-xl border transition-all flex items-center gap-2 shadow-xs cursor-pointer ${
+                  selectedCategorySlugs.length > 0
+                    ? "border-blue-500/40 bg-blue-500/10 text-blue-600 dark:text-blue-400 font-semibold"
+                    : "border-transparent bg-surface/40 hover:bg-surface/70 text-[var(--color-text-primary)]"
+                }`}
               >
-                <X className="h-3 w-3" />
-              </button>
-            ) : selectedCategory ? (
-              <Link
-                href={buildHref(undefined)}
-                onClick={(e) => e.stopPropagation()}
-                className="p-1 rounded-md text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-white hover:bg-blue-500/20 transition-colors"
-                aria-label={isTr ? "Filtreyi kaldır" : "Clear filter"}
-                title={isTr ? "Filtreyi kaldır" : "Clear filter"}
-              >
-                <X className="h-3 w-3" />
-              </Link>
-            ) : null}
+                <div className="h-6 w-6 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                  <Globe className="h-3.5 w-3.5" aria-hidden="true" />
+                </div>
 
+                <span className="text-xs font-medium truncate max-w-[130px] sm:max-w-[180px]">
+                  {comboboxLabel}
+                </span>
+
+                {selectedCategorySlugs.length > 0 ? (
+                  <span
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push(buildHref(undefined));
+                    }}
+                    className="p-1 rounded-md text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-white hover:bg-blue-500/20 transition-colors cursor-pointer"
+                    title={isTr ? "Filtreleri kaldır" : "Clear filters"}
+                    aria-label={isTr ? "Filtreleri kaldır" : "Clear filters"}
+                  >
+                    <X className="h-3 w-3" />
+                  </span>
+                ) : (
+                  <ChevronDown className="h-3.5 w-3.5 text-[var(--color-text-tertiary)] shrink-0" />
+                )}
+              </button>
+
+              {/* Dikey Ayrım Çizgisi (Desktop) */}
+              <div className="hidden md:block w-px h-7 bg-[var(--color-border-subtle)]" />
+
+              {/* 3. Sektör Matrisi Butonu (Pop-up Modal Açar) */}
+              <button
+                type="button"
+                onClick={() => {
+                  setModalView("sectors");
+                  setModalOpen(true);
+                }}
+                className="inline-flex items-center justify-center gap-2 h-10 px-3.5 rounded-xl border border-transparent hover:border-[var(--color-border-subtle)] bg-surface/40 hover:bg-surface/70 text-xs font-semibold text-[var(--color-text-primary)] hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer shrink-0 whitespace-nowrap"
+              >
+                <LayoutGrid className="h-4 w-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+                <span>{isTr ? "Sektör Matrisi" : "Sector Matrix"}</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-blue-500/10 text-blue-600 dark:text-blue-400 font-mono font-bold">
+                  {selectedCategorySlugs.length > 0
+                    ? `${selectedCategorySlugs.length} Seçili`
+                    : sectorGroups.length}
+                </span>
+                <ChevronRight className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* Standalone Combobox Trigger */
+        <div className="relative z-10">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            {/* Tüm Kategoriler Butonu */}
             <button
               type="button"
               onClick={() => {
-                setQuickDropdownOpen((prev) => !prev);
-                if (!quickDropdownOpen) {
-                  setTimeout(() => quickInputRef.current?.focus(), 50);
-                }
+                setModalView("all");
+                setModalOpen(true);
               }}
-              className="p-1 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
-              aria-label={isTr ? "Kategori menüsünü aç" : "Toggle category menu"}
+              className={`relative flex-1 max-w-xl h-11 px-3.5 rounded-2xl border transition-all flex items-center gap-2.5 shadow-xs cursor-pointer ${
+                selectedCategorySlugs.length > 0
+                  ? "border-blue-500/40 bg-blue-500/10 text-blue-600 dark:text-blue-400 font-semibold"
+                  : "border-[var(--color-border-subtle)] bg-surface/75 backdrop-blur-xl text-[var(--color-text-primary)] hover:border-blue-500/40"
+              }`}
             >
-              <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${
-                  quickDropdownOpen ? "rotate-180 text-blue-600 dark:text-blue-400" : ""
-                }`}
-              />
-            </button>
-          </div>
+              <div className="h-7 w-7 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                <Globe className="h-4 w-4" aria-hidden="true" />
+              </div>
 
-          {/* Action Buttons & Counter */}
-          <div className="flex items-center gap-2.5 self-end sm:self-center shrink-0">
-            {typeof resultCount === "number" && (
-              <span className="text-xs text-[var(--color-text-tertiary)] hidden sm:inline">
-                <strong className="text-[var(--color-text-primary)]">{resultCount}</strong>{" "}
-                {isTr ? "ilan" : "listings"}
+              <span className="flex-1 text-left text-xs font-medium truncate">
+                {comboboxLabel}
               </span>
-            )}
 
-            {/* Modal / Grid Matrix Trigger */}
+              {selectedCategorySlugs.length > 0 ? (
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(buildHref(undefined));
+                  }}
+                  className="p-1 rounded-md text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-white hover:bg-blue-500/20 transition-colors cursor-pointer"
+                  title={isTr ? "Filtreleri kaldır" : "Clear filters"}
+                  aria-label={isTr ? "Filtreleri kaldır" : "Clear filters"}
+                >
+                  <X className="h-3.5 w-3.5" />
+                </span>
+              ) : (
+                <ChevronDown className="h-4 w-4 text-[var(--color-text-tertiary)] shrink-0" />
+              )}
+            </button>
+
+            {/* Sektör Matrisi Butonu */}
             <button
               type="button"
-              onClick={() => setModalOpen(true)}
-              className="inline-flex items-center gap-2 h-11 px-4 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] text-xs font-semibold text-[var(--color-text-primary)] hover:border-blue-500/40 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer shadow-xs whitespace-nowrap"
+              onClick={() => {
+                setModalView("sectors");
+                setModalOpen(true);
+              }}
+              className="inline-flex items-center gap-2 h-11 px-4 rounded-2xl border border-[var(--color-border-subtle)] bg-surface/75 backdrop-blur-xl text-xs font-semibold text-[var(--color-text-primary)] hover:border-blue-500/40 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer shadow-xs whitespace-nowrap self-end sm:self-center shrink-0"
             >
               <LayoutGrid className="h-4 w-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
               <span>
-                {isTr
-                  ? `Sektör Matrisi (${categories.length})`
-                  : `Sector Matrix (${categories.length})`}
+                {isTr ? "Sektör Matrisi" : "Sector Matrix"}
+              </span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-blue-500/10 text-blue-600 dark:text-blue-400 font-mono font-bold">
+                {selectedCategorySlugs.length > 0
+                  ? `${selectedCategorySlugs.length} Seçili`
+                  : sectorGroups.length}
               </span>
               <ChevronRight className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
             </button>
           </div>
         </div>
+      )}
 
-        {/* Dropdown Menu (Shows 10 items in viewport, scrollable) */}
-        {quickDropdownOpen && (
-          <div
-            className="absolute top-full left-0 mt-2 w-full max-w-xl rounded-2xl border p-1.5 z-[100] animate-in fade-in zoom-in-95 duration-150"
-            style={{
-              backgroundColor: "var(--bg-elevated)",
-              borderColor: "var(--border-strong)",
-              boxShadow:
-                "0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border-subtle)",
-            }}
-          >
-            <div className="max-h-[415px] overflow-y-auto space-y-1 p-0.5 scrollbar-thin">
-              {/* Option 0: All Categories */}
-              <Link
-                href={buildHref(undefined)}
-                onClick={() => {
-                  setQuickDropdownOpen(false);
-                  setQuickSearchQuery("");
-                }}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs transition-colors cursor-pointer ${
-                  !selectedCategory
-                    ? "bg-blue-500/10 dark:bg-blue-600/15 text-blue-700 dark:text-blue-400 border border-blue-500/30 font-semibold"
-                    : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]"
-                }`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <div className="h-7 w-7 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-                    <Globe className="h-3.5 w-3.5" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <p className="font-semibold">{isTr ? "Tüm Alanlar" : "All Fields"}</p>
-                    <p className="text-[10px] text-[var(--color-text-tertiary)]">
-                      {isTr
-                        ? `10 sektördeki ${categories.length} uzmanlık kategorisi • ${categories.reduce((acc, c) => acc + (c.listingCount || 0), 0)} ilan`
-                        : `All ${categories.length} categories across 10 sectors • ${categories.reduce((acc, c) => acc + (c.listingCount || 0), 0)} listings`}
-                    </p>
-                  </div>
-                </div>
-                {!selectedCategory && (
-                  <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
-                )}
-              </Link>
-
-              {/* Matching Categories */}
-              {quickFilteredCategories.length === 0 ? (
-                <div className="p-6 text-center space-y-2">
-                  <p className="text-xs text-[var(--color-text-tertiary)]">
-                    {isTr
-                      ? "Aramanızla eşleşen kategori bulunamadı."
-                      : "No matching categories found."}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setQuickSearchQuery("")}
-                    className="text-xs text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
-                  >
-                    {isTr ? "Aramayı temizle" : "Clear search"}
-                  </button>
-                </div>
-              ) : (
-                quickFilteredCategories.map((cat) => {
-                  const isSelected = selectedCategory === cat.slug;
-                  const sector = SEED_SECTORS.find((s) => s.key === cat.sectorKey);
-                  const sectorName = sector
-                    ? isTr
-                      ? sector.translations.tr.name
-                      : sector.translations.en.name
-                    : "";
-                  const SectorIcon = (sector && SECTOR_ICON_MAP[sector.key]) || Code2;
-
-                  return (
-                    <Link
-                      key={cat.id}
-                      href={buildHref(cat.slug)}
-                      onClick={() => {
-                        setQuickDropdownOpen(false);
-                        setQuickSearchQuery("");
-                      }}
-                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs transition-colors cursor-pointer ${
-                        isSelected
-                          ? "bg-blue-500/10 dark:bg-blue-600/15 text-blue-700 dark:text-blue-400 border border-blue-500/30 font-semibold"
-                          : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                        <div
-                          className={`h-7 w-7 rounded-lg flex items-center justify-center shrink-0 ${
-                            isSelected
-                              ? "bg-blue-500/15 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400"
-                              : "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)]"
-                          }`}
-                        >
-                          <SectorIcon className="h-3.5 w-3.5" aria-hidden="true" />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="font-semibold truncate">{cat.name}</p>
-                          {sectorName && (
-                            <p className="text-[10px] text-[var(--color-text-tertiary)] truncate opacity-80">
-                              {sectorName}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 shrink-0">
-                        {typeof cat.listingCount === "number" && (
-                          <span
-                            className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${
-                              cat.listingCount > 0
-                                ? "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/30"
-                                : "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)] border-[var(--color-border-subtle)]"
-                            }`}
-                          >
-                            {cat.listingCount} {isTr ? "ilan" : "listings"}
-                          </span>
-                        )}
-                        <span className="font-mono text-[10px] text-[var(--color-text-tertiary)] bg-[var(--color-surface-hover)] px-1.5 py-0.5 rounded">
-                          /{cat.slug}
-                        </span>
-                        {isSelected && (
-                          <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
-                        )}
-                      </div>
-                    </Link>
-                  );
-                })
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Categorized Popover / Modal with Live Search */}
-      {modalOpen && (
+      {/* Categorized Popover / Modal with Live Search & Dual Views */}
+      {modalOpen && mounted && createPortal(
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-150"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-3 sm:p-6 animate-in fade-in duration-150"
           role="dialog"
           aria-modal="true"
           aria-labelledby="category-modal-title"
         >
           <div
             ref={modalRef}
-            className="relative w-full max-w-4xl max-h-[88vh] flex flex-col rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
+            className="relative w-full max-w-4xl max-h-[min(90dvh,850px)] flex flex-col rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] shadow-2xl shadow-black/50 overflow-hidden animate-in zoom-in-95 duration-200"
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] p-5 pb-4">
+            <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] p-5 pb-4 bg-[var(--color-surface-elevated)]">
               <div className="space-y-0.5">
                 <h2
                   id="category-modal-title"
@@ -486,24 +508,24 @@ export function CategoryFilterBar({
                 </h2>
                 <p className="text-xs text-[var(--color-text-secondary)]">
                   {isTr
-                    ? "İhtiyacınıza uygun sektör ve uzmanlık disiplinini seçin."
-                    : "Select your relevant industry sector and specialization."}
+                    ? "İhtiyacınıza uygun sektör ve uzmanlık disiplinlerini seçin. Birden fazla seçim yapabilirsiniz."
+                    : "Select your relevant industry sectors and specializations. You can select multiple."}
                 </p>
               </div>
 
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="rounded-xl p-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
+                className="rounded-xl p-2 text-[var(--color-text-secondary)] hover:bg-surface/60 hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
                 aria-label={isTr ? "Kapat" : "Close"}
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
             </div>
 
-            {/* Live Search Input */}
-            <div className="p-4 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/30">
-              <div className="relative">
+            {/* Modal Sub-Header: Live Search & View Switcher */}
+            <div className="p-4 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/40 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+              <div className="relative flex-1">
                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-text-tertiary)]" />
                 <input
                   ref={searchInputRef}
@@ -527,9 +549,37 @@ export function CategoryFilterBar({
                   </button>
                 )}
               </div>
+
+              {/* View Switcher Tabs */}
+              <div className="flex items-center p-1 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-semibold shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setModalView("all")}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                    modalView === "all"
+                      ? "bg-blue-600 text-white shadow-xs"
+                      : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+                  }`}
+                >
+                  <Globe className="h-3.5 w-3.5" />
+                  <span>{isTr ? `Tüm Kategoriler (${categories.length})` : `All Categories (${categories.length})`}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setModalView("sectors")}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                    modalView === "sectors"
+                      ? "bg-blue-600 text-white shadow-xs"
+                      : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+                  }`}
+                >
+                  <LayoutGrid className="h-3.5 w-3.5" />
+                  <span>{isTr ? `Sektör Matrisi (${sectorGroups.length})` : `Sector Matrix (${sectorGroups.length})`}</span>
+                </button>
+              </div>
             </div>
 
-            {/* Modal Body: Grouped Categories */}
+            {/* Modal Body: Grouped Categories or All Categories */}
             <div className="p-5 overflow-y-auto space-y-6 flex-1 text-xs">
               {searchFilter.trim() ? (
                 /* Search Results Flat Grid */
@@ -548,7 +598,7 @@ export function CategoryFilterBar({
                   ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                       {filteredModalCategories.map((cat) => {
-                        const isSelected = selectedCategory === cat.slug;
+                        const isSelected = tempSelectedSlugs.includes(cat.slug);
                         const sector = SEED_SECTORS.find((s) => s.key === cat.sectorKey);
                         const sectorName = sector
                           ? isTr
@@ -557,41 +607,122 @@ export function CategoryFilterBar({
                           : "";
 
                         return (
-                          <Link
+                          <button
                             key={cat.id}
-                            href={buildHref(cat.slug)}
-                            onClick={() => setModalOpen(false)}
-                            className={`flex items-center justify-between p-3 rounded-2xl border transition-all cursor-pointer ${
+                            type="button"
+                            onClick={() => toggleModalCategory(cat.slug)}
+                            className={`text-left w-full flex items-center justify-between p-3 rounded-2xl border transition-all cursor-pointer ${
                               isSelected
-                                ? "border-blue-500/60 bg-blue-500/10 text-blue-700 dark:text-blue-400 font-semibold shadow-xs"
-                                : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)]"
+                                ? "border-blue-500 bg-blue-500/15 text-blue-700 dark:text-blue-300 font-semibold shadow-xs ring-1 ring-blue-500/30"
+                                : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] shadow-2xs"
                             }`}
                           >
-                            <div className="space-y-0.5 pr-2">
+                            <div className="space-y-0.5 pr-2 min-w-0">
                               {sectorName && (
-                                <div className="text-[10px] font-medium text-blue-600 dark:text-blue-400">
+                                <div className="text-[11px] font-medium text-[var(--color-text-secondary)] dark:text-slate-300 truncate">
                                   {sectorName}
                                 </div>
                               )}
-                              <div className="font-semibold text-xs">{cat.name}</div>
+                              <div className="font-semibold text-xs truncate">{cat.name}</div>
                               {cat.description && (
                                 <div className="text-[11px] text-[var(--color-text-secondary)] line-clamp-1">
                                   {cat.description}
                                 </div>
                               )}
                             </div>
-                            {isSelected && <Check className="h-4 w-4 text-blue-600 dark:text-blue-400 shrink-0" />}
-                          </Link>
+                            <div
+                              className={`h-5 w-5 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
+                                isSelected
+                                  ? "bg-blue-600 border-blue-600 text-white"
+                                  : "border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-transparent"
+                              }`}
+                            >
+                              <Check className="h-3.5 w-3.5 stroke-[3]" />
+                            </div>
+                          </button>
                         );
                       })}
                     </div>
                   )}
+                </div>
+              ) : modalView === "all" ? (
+                /* All Categories Grid (Alphabetical with multi-select) */
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)]/40 pb-2">
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-tertiary)]">
+                      {isTr
+                        ? `Tüm Kategoriler (${sortedAllCategories.length})`
+                        : `All Categories (${sortedAllCategories.length})`}
+                    </span>
+                    <span className="text-[11px] text-[var(--color-text-secondary)]">
+                      {isTr ? "Birden fazla kategori seçebilirsiniz" : "You can select multiple categories"}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                    {sortedAllCategories.map((cat) => {
+                      const isSelected = tempSelectedSlugs.includes(cat.slug);
+                      const sector = SEED_SECTORS.find((s) => s.key === cat.sectorKey);
+                      const sectorName = sector
+                        ? isTr
+                          ? sector.translations.tr.name
+                          : sector.translations.en.name
+                        : "";
+
+                      return (
+                        <button
+                          key={cat.id}
+                          type="button"
+                          onClick={() => toggleModalCategory(cat.slug)}
+                          className={`text-left w-full flex items-center justify-between p-2.5 px-3 rounded-xl border transition-all cursor-pointer ${
+                            isSelected
+                              ? "border-blue-500 bg-blue-500/15 text-blue-700 dark:text-blue-300 font-semibold shadow-xs ring-1 ring-blue-500/30"
+                              : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] shadow-2xs"
+                          }`}
+                        >
+                          <div className="min-w-0 pr-2">
+                            <p className="font-medium text-xs truncate">{cat.name}</p>
+                            {sectorName && (
+                              <p className="text-[11px] font-medium text-[var(--color-text-secondary)] dark:text-slate-300 truncate">
+                                {sectorName}
+                              </p>
+                            )}
+                          </div>
+
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {typeof cat.listingCount === "number" && cat.listingCount > 0 && (
+                              <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-blue-500/15 text-blue-700 dark:text-sky-300 border border-blue-500/25">
+                                {cat.listingCount}
+                              </span>
+                            )}
+                            <div
+                              className={`h-4 w-4 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
+                                isSelected
+                                  ? "bg-blue-600 border-blue-600 text-white"
+                                  : "border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-transparent"
+                              }`}
+                            >
+                              <Check className="h-3 w-3 stroke-[3]" />
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               ) : (
                 /* Dynamic 10 Sector Groups */
                 <>
                   {sectorGroups.map((group) => {
                     const Icon = group.icon;
+                    const sectorSlugs = group.categories.map((c) => c.slug);
+                    const allSectorSelected =
+                      sectorSlugs.length > 0 &&
+                      sectorSlugs.every((slug) => tempSelectedSlugs.includes(slug));
+                    const selectedInSectorCount = sectorSlugs.filter((slug) =>
+                      tempSelectedSlugs.includes(slug)
+                    ).length;
+
                     return (
                       <div key={group.key} className="space-y-2.5">
                         <div className="flex items-center justify-between gap-2 border-b border-[var(--color-border-subtle)]/40 pb-1.5">
@@ -605,32 +736,55 @@ export function CategoryFilterBar({
                               {group.name}
                             </h3>
                           </div>
-                          <span className="text-[10px] font-mono text-[var(--color-text-tertiary)] bg-[var(--color-surface-hover)] px-2 py-0.5 rounded-full">
-                            {group.categories.length}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => toggleSectorCategories(sectorSlugs)}
+                              className="text-[11px] font-semibold text-blue-600 dark:text-sky-400 hover:underline cursor-pointer"
+                            >
+                              {allSectorSelected
+                                ? isTr
+                                  ? "Tümünü Bırak"
+                                  : "Deselect All"
+                                : isTr
+                                  ? "Tümünü Seç"
+                                  : "Select All"}
+                            </button>
+                            <span className="text-[10px] font-mono text-[var(--color-text-tertiary)] bg-[var(--color-surface-hover)] px-2 py-0.5 rounded-full">
+                              {selectedInSectorCount > 0
+                                ? `${selectedInSectorCount}/${group.categories.length}`
+                                : group.categories.length}
+                            </span>
+                          </div>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                           {group.categories.map((cat) => {
-                            const isSelected = selectedCategory === cat.slug;
+                            const isSelected = tempSelectedSlugs.includes(cat.slug);
                             return (
-                              <Link
+                              <button
                                 key={cat.id}
-                                href={buildHref(cat.slug)}
-                                onClick={() => setModalOpen(false)}
-                                className={`flex items-center justify-between p-2.5 px-3 rounded-xl border transition-all cursor-pointer ${
+                                type="button"
+                                onClick={() => toggleModalCategory(cat.slug)}
+                                className={`text-left w-full flex items-center justify-between p-2.5 px-3 rounded-xl border transition-all cursor-pointer ${
                                   isSelected
-                                    ? "border-blue-500/60 bg-blue-500/10 text-blue-700 dark:text-blue-400 font-semibold shadow-xs"
-                                    : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)]"
+                                    ? "border-blue-500 bg-blue-500/15 text-blue-700 dark:text-blue-300 font-semibold shadow-xs ring-1 ring-blue-500/30"
+                                    : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] shadow-2xs"
                                 }`}
                               >
-                                <div className="truncate pr-2">
-                                  <span className="font-medium text-xs">{cat.name}</span>
+                                <span className="truncate pr-2 font-medium text-xs">
+                                  {cat.name}
+                                </span>
+                                <div
+                                  className={`h-4 w-4 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
+                                    isSelected
+                                      ? "bg-blue-600 border-blue-600 text-white"
+                                      : "border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-transparent"
+                                  }`}
+                                >
+                                  <Check className="h-3 w-3 stroke-[3]" />
                                 </div>
-                                {isSelected && (
-                                  <Check className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
-                                )}
-                              </Link>
+                              </button>
                             );
                           })}
                         </div>
@@ -638,65 +792,129 @@ export function CategoryFilterBar({
                     );
                   })}
 
-                  {fallbackCats.length > 0 && (
-                    <div className="space-y-2.5">
-                      <div className="flex items-center gap-2 border-b border-[var(--color-border-subtle)]/40 pb-1.5">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-lg border text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20">
-                          <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
-                        </div>
-                        <h3 className="font-bold text-xs text-[var(--color-text-primary)] uppercase tracking-wider">
-                          {isTr ? "Diğer Kategoriler" : "Other Categories"}
-                        </h3>
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                        {fallbackCats.map((cat) => {
-                          const isSelected = selectedCategory === cat.slug;
-                          return (
-                            <Link
-                              key={cat.id}
-                              href={buildHref(cat.slug)}
-                              onClick={() => setModalOpen(false)}
-                              className={`flex items-center justify-between p-2.5 px-3 rounded-xl border transition-all cursor-pointer ${
-                                isSelected
-                                  ? "border-blue-500/60 bg-blue-500/10 text-blue-700 dark:text-blue-400 font-semibold shadow-xs"
-                                  : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)]"
-                              }`}
+                  {fallbackCats.length > 0 && (() => {
+                    const fallbackSlugs = fallbackCats.map((c) => c.slug);
+                    const allFallbackSelected =
+                      fallbackSlugs.length > 0 &&
+                      fallbackSlugs.every((slug) => tempSelectedSlugs.includes(slug));
+                    const selectedFallbackCount = fallbackSlugs.filter((slug) =>
+                      tempSelectedSlugs.includes(slug)
+                    ).length;
+
+                    return (
+                      <div className="space-y-2.5">
+                        <div className="flex items-center justify-between gap-2 border-b border-[var(--color-border-subtle)]/40 pb-1.5">
+                          <div className="flex items-center gap-2">
+                            <div className="flex h-6 w-6 items-center justify-center rounded-lg border text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20">
+                              <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
+                            </div>
+                            <h3 className="font-bold text-xs text-[var(--color-text-primary)] uppercase tracking-wider">
+                              {isTr ? "Diğer Kategoriler" : "Other Categories"}
+                            </h3>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => toggleSectorCategories(fallbackSlugs)}
+                              className="text-[11px] font-semibold text-blue-600 dark:text-sky-400 hover:underline cursor-pointer"
                             >
-                              <div className="truncate pr-2">
-                                <span className="font-medium text-xs">{cat.name}</span>
-                              </div>
-                              {isSelected && (
-                                <Check className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
-                              )}
-                            </Link>
-                          );
-                        })}
+                              {allFallbackSelected
+                                ? isTr
+                                  ? "Tümünü Bırak"
+                                  : "Deselect All"
+                                : isTr
+                                  ? "Tümünü Seç"
+                                  : "Select All"}
+                            </button>
+                            <span className="text-[10px] font-mono text-[var(--color-text-tertiary)] bg-surface/60 px-2 py-0.5 rounded-full">
+                              {selectedFallbackCount > 0
+                                ? `${selectedFallbackCount}/${fallbackCats.length}`
+                                : fallbackCats.length}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                          {fallbackCats.map((cat) => {
+                            const isSelected = tempSelectedSlugs.includes(cat.slug);
+                            return (
+                              <button
+                                key={cat.id}
+                                type="button"
+                                onClick={() => toggleModalCategory(cat.slug)}
+                                className={`text-left w-full flex items-center justify-between p-2.5 px-3 rounded-xl border transition-all cursor-pointer ${
+                                  isSelected
+                                    ? "border-blue-500 bg-blue-500/15 text-blue-700 dark:text-blue-300 font-semibold shadow-xs ring-1 ring-blue-500/30"
+                                    : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] shadow-2xs"
+                                }`}
+                              >
+                                <span className="truncate pr-2 font-medium text-xs">
+                                  {cat.name}
+                                </span>
+                                <div
+                                  className={`h-4 w-4 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
+                                    isSelected
+                                      ? "bg-blue-600 border-blue-600 text-white"
+                                      : "border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-transparent"
+                                  }`}
+                                >
+                                  <Check className="h-3 w-3 stroke-[3]" />
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    );
+                  })()}
                 </>
               )}
             </div>
 
-            {/* Modal Footer: Reset & Close */}
-            <div className="flex items-center justify-between border-t border-[var(--color-border-subtle)] p-4 bg-[var(--color-surface-hover)]/40 text-xs">
-              <Link
-                href={buildHref(undefined)}
-                onClick={() => setModalOpen(false)}
-                className="text-[var(--color-text-secondary)] hover:text-red-400 transition-colors"
-              >
-                {isTr ? "Filtreyi Sıfırla (Tümü)" : "Reset Filter (All)"}
-              </Link>
-              <button
-                type="button"
-                onClick={() => setModalOpen(false)}
-                className="rounded-xl bg-blue-600 px-4 py-1.5 font-semibold text-white hover:bg-blue-500 transition-all cursor-pointer"
-              >
-                {isTr ? "Kapat" : "Close"}
-              </button>
+            {/* Modal Footer: Reset & Apply */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-t border-[var(--color-border-subtle)] p-4 bg-[var(--color-surface-base)]/50 text-xs">
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setTempSelectedSlugs([])}
+                  disabled={tempSelectedSlugs.length === 0}
+                  className="text-[var(--color-text-secondary)] hover:text-red-400 disabled:opacity-40 disabled:hover:text-[var(--color-text-secondary)] transition-colors cursor-pointer disabled:cursor-not-allowed"
+                >
+                  {isTr ? "Seçimleri Temizle" : "Clear Selection"}
+                </button>
+                {tempSelectedSlugs.length > 0 && (
+                  <span className="text-[11px] font-semibold text-blue-700 dark:text-sky-300 bg-blue-500/15 border border-blue-500/30 px-2.5 py-0.5 rounded-full">
+                    {isTr
+                      ? `${tempSelectedSlugs.length} kategori seçildi`
+                      : `${tempSelectedSlugs.length} categories selected`}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2 justify-end">
+                <button
+                  type="button"
+                  onClick={() => setModalOpen(false)}
+                  className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:bg-[var(--color-surface-hover)] px-4 py-2 font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-all cursor-pointer"
+                >
+                  {isTr ? "İptal" : "Cancel"}
+                </button>
+                <button
+                  type="button"
+                  onClick={applyModalFilters}
+                  className="rounded-xl bg-blue-600 px-5 py-2 font-semibold text-white shadow-lg shadow-blue-500/20 hover:bg-blue-500 transition-all cursor-pointer flex items-center gap-1.5"
+                >
+                  <span>{isTr ? "Filtreleri Uygula" : "Apply Filters"}</span>
+                  {tempSelectedSlugs.length > 0 && (
+                    <span className="bg-white/20 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md">
+                      {tempSelectedSlugs.length}
+                    </span>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

@@ -33,6 +33,11 @@
   "nav": {
     "feed": "Feed",
     "browse": "Browse",
+    "discover": "Explore Listings",
+    "listingsAndFeed": "Listings & Feed",
+    "howItWorks": "How It Works",
+    "streamView": "Stream View",
+    "catalogView": "Catalog View",
     "categories": "Categories",
     "createListing": "Create Listing",
     "dashboard": "Workspace",

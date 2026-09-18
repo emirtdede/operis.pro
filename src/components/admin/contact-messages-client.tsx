@@ -215,58 +215,60 @@ export function ContactMessagesClient({
           onClick={() => setSelectedMessage(null)}
         >
           <div
-            className="w-full max-w-xl bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-5 animate-in zoom-in-95 duration-150"
+            className="w-full max-w-xl bg-slate-900 border border-slate-800 rounded-3xl p-4 sm:p-6 shadow-2xl max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden animate-in zoom-in-95 duration-150"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-start justify-between gap-4 border-b border-slate-800 pb-4">
-              <div>
+            <div className="flex items-start justify-between gap-4 border-b border-slate-800 pb-4 shrink-0">
+              <div className="min-w-0">
                 <span className="text-[10px] uppercase tracking-wider text-blue-400 font-mono">
                   İletişim Talebi • {selectedMessage.locale.toUpperCase()}
                 </span>
-                <h3 className="text-base font-bold text-white mt-1">{selectedMessage.subject}</h3>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <h3 className="text-base font-bold text-white mt-1 truncate">{selectedMessage.subject}</h3>
+                <p className="text-xs text-slate-400 mt-0.5 truncate">
                   {selectedMessage.name} &lt;{selectedMessage.email}&gt;
                 </p>
               </div>
               <button
                 onClick={() => setSelectedMessage(null)}
-                className="text-slate-400 hover:text-white text-lg leading-none"
+                className="text-slate-400 hover:text-white text-lg leading-none p-1 rounded-lg shrink-0"
               >
                 ✕
               </button>
             </div>
 
-            <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800/80 text-xs text-slate-200 leading-relaxed max-h-60 overflow-y-auto whitespace-pre-wrap font-sans">
-              {selectedMessage.message}
+            <div className="flex-1 overflow-y-auto min-h-0 py-3 space-y-4 pr-1">
+              <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800/80 text-xs text-slate-200 leading-relaxed whitespace-pre-wrap font-sans">
+                {selectedMessage.message}
+              </div>
+
+              <div className="text-[11px] text-slate-500 flex flex-wrap items-center justify-between gap-1 font-mono">
+                <span>IP: {selectedMessage.ipAddress || "Bilinmiyor"}</span>
+                <span>{new Date(selectedMessage.createdAt).toLocaleString("tr-TR")}</span>
+              </div>
             </div>
 
-            <div className="text-[11px] text-slate-500 flex items-center justify-between font-mono">
-              <span>IP: {selectedMessage.ipAddress || "Bilinmiyor"}</span>
-              <span>{new Date(selectedMessage.createdAt).toLocaleString("tr-TR")}</span>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800">
+            <div className="flex flex-wrap items-center justify-between gap-2.5 pt-3 border-t border-slate-800 shrink-0">
               <a
                 href={`mailto:${selectedMessage.email}?subject=Re: ${encodeURIComponent(selectedMessage.subject)}`}
                 onClick={() => handleStatusUpdate(selectedMessage.id, "REPLIED")}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition-colors"
+                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition-colors w-full sm:w-auto"
               >
                 <Reply className="h-3.5 w-3.5" /> E-posta ile Yanıtla{" "}
                 <ExternalLink className="h-3 w-3 opacity-70" />
               </a>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                 <button
                   disabled={isUpdating === selectedMessage.id}
                   onClick={() => handleStatusUpdate(selectedMessage.id, "REPLIED")}
-                  className="px-3 py-1.5 rounded-xl bg-emerald-600/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-600/30 text-xs font-medium transition-colors"
+                  className="px-3.5 py-2 rounded-xl bg-emerald-600/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-600/30 text-xs font-medium transition-colors flex-1 sm:flex-none"
                 >
                   Yanıtlandı Olarak İşaretle
                 </button>
                 <button
                   disabled={isUpdating === selectedMessage.id}
                   onClick={() => handleStatusUpdate(selectedMessage.id, "ARCHIVED")}
-                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition-colors"
+                  className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition-colors flex-1 sm:flex-none"
                 >
                   Arşivle
                 </button>

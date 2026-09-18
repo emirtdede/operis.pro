@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
+import { getSession } from "@/src/modules/auth/session";
+import { getLocalizedRoute } from "@/src/lib/i18n/routes";
 import {
   ArrowRight,
   Code2,
@@ -24,6 +27,7 @@ import { InteractiveArchitectureShowcase } from "@/src/components/diagrams/inter
 import { HowItWorksSection } from "@/src/components/onboarding/how-it-works-section";
 import { FaqAccordion } from "@/src/components/onboarding/faq-accordion";
 import { HeroInteractivePreview } from "@/src/components/landing/hero-interactive-preview";
+import { PlatformFeaturesGrid } from "@/src/components/landing/platform-features-grid";
 import { PlatformComparisonTable } from "@/src/components/landing/platform-comparison-table";
 import { PlatformTrustStrip } from "@/src/components/landing/platform-trust-strip";
 import { TestimonialsSection } from "@/src/components/landing/testimonials-section";
@@ -37,8 +41,8 @@ export async function generateMetadata({
   const isTr = locale === "tr";
 
   const title = isTr
-    ? "Doğrudan & Komisyonsuz Yazılım Projeleri | Operis"
-    : "Direct & Zero-Fee Tech Projects | Operis";
+    ? "Doğrudan & Komisyonsuz Yazılım İlanları | Operis"
+    : "Direct & Zero-Fee Tech Listings | Operis";
 
   const description = isTr
     ? "Türkiye ve küresel teknoloji profesyonelleri için doğrudan ve güvenli serbest çalışma platformu. Komisyon yok, aracı yok, %100 doğrudan iş birliği."
@@ -76,9 +80,21 @@ export async function generateMetadata({
   };
 }
 
-export default async function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function LandingPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams?: Promise<{ preview?: string }>;
+}) {
   const { locale } = await params;
+  const sp = searchParams ? await searchParams : {};
   setRequestLocale(locale);
+
+  const session = await getSession();
+  if (session?.userId && sp.preview !== "true") {
+    redirect(getLocalizedRoute("listings", locale));
+  }
 
   const isTr = locale === "tr";
 
@@ -216,7 +232,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-[var(--color-text-primary)] max-w-5xl mx-auto leading-[1.1]">
               {isTr ? (
                 <>
-                  Yazılım Projelerinde{" "}
+                  Yazılım İlanlarında{" "}
                   <span className="text-gradient-accent">Aracısız, Doğrudan</span> ve Komisyonsuz İş
                   Birliği
                 </>
@@ -238,7 +254,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
 
           {/* Living Reactive Dual-Role CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-1">
-            <Link href={isTr ? "/tr/akis" : "/en/feed"} className="w-full sm:w-auto">
+            <Link href={getLocalizedRoute("listings", locale)} className="w-full sm:w-auto">
               <Button variant="shimmer" size="lg" className="w-full sm:w-auto px-8 py-4 text-base">
                 <span>
                   {isTr ? "Yazılımcıyım: İlanları İncele" : "I'm a Developer: Browse Listings"}
@@ -306,7 +322,13 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
       {/* Verified Trust & Speed Proof Strip */}
       <PlatformTrustStrip isTr={isTr} />
 
-      {/* 2. Interactive SVG Architecture Showcase */}
+      {/* 3. Comprehensive Platform Capabilities & Features Grid (10 Core Features) */}
+      <PlatformFeaturesGrid isTr={isTr} locale={locale} />
+
+      {/* 4. End-to-End Engagement Workflow Guide (5 Phases from Start to Finish) */}
+      <HowItWorksSection locale={locale} />
+
+      {/* 5. Interactive SVG Architecture Showcase */}
       <section className="relative flex flex-col justify-center items-center w-full px-4 sm:px-6 lg:px-8 py-10 sm:py-14 snap-start scroll-mt-16">
         <div className="mx-auto max-w-7xl w-full space-y-8">
           <div className="text-center max-w-3xl mx-auto space-y-3">
@@ -442,19 +464,16 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
         </div>
       </section>
 
-      {/* 4. Comprehensive Platform Comparison Table */}
+      {/* 7. Comprehensive Platform Comparison Table */}
       <PlatformComparisonTable isTr={isTr} locale={locale} />
 
-      {/* 5. Interactive Dual-Role Onboarding (How It Works) */}
-      <HowItWorksSection locale={locale} />
-
-      {/* 6. Verified Community Testimonials & Social Proof */}
+      {/* 8. Verified Community Testimonials & Social Proof */}
       <TestimonialsSection isTr={isTr} />
 
-      {/* 7. Frequently Asked Questions (FAQ) */}
+      {/* 9. Frequently Asked Questions (FAQ) */}
       <FaqAccordion locale={locale} />
 
-      {/* 8. Legal & Final Closing CTA */}
+      {/* 10. Legal & Final Closing CTA */}
       <section className="relative flex flex-col justify-center items-center w-full px-4 sm:px-6 lg:px-8 py-10 sm:py-16 snap-start scroll-mt-16">
         <div className="mx-auto max-w-5xl w-full space-y-8">
           {/* Final High-Impact CTA Card */}
@@ -468,7 +487,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
               aria-hidden="true"
             />
             <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--color-text-primary)]">
-              {isTr ? "Yazılım Projenizi Bugün Başlatın" : "Launch Your Tech Project Today"}
+              {isTr ? "Yazılım İlanınızı Bugün Yayınlayın" : "Launch Your Tech Listing Today"}
             </h2>
             <p className="text-sm sm:text-base text-[var(--color-text-secondary)] max-w-2xl mx-auto leading-relaxed">
               {isTr
@@ -482,7 +501,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
                   size="lg"
                   className="w-full sm:w-auto px-8 py-4 text-base"
                 >
-                  <span>{isTr ? "İlanları Keşfet" : "Browse Projects"}</span>
+                  <span>{isTr ? "İlanları Keşfet" : "Browse Listings"}</span>
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Button>
               </Link>
@@ -495,7 +514,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
                   size="lg"
                   className="w-full sm:w-auto px-8 py-4 text-base cta-button-secondary shadow-sm transition-all"
                 >
-                  {isTr ? "Ücretsiz İlan Yayınla" : "Post a Project"}
+                  {isTr ? "Ücretsiz İlan Yayınla" : "Post a Free Listing"}
                 </Button>
               </Link>
             </div>

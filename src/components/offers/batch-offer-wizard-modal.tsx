@@ -65,7 +65,7 @@ export function BatchOfferWizardModal({
   // Template message with dynamic placeholders
   const [commonMessage, setCommonMessage] = useState(
     isTr
-      ? "Merhaba {{ilan_sahibi}}, '{{proje_basligi}}' projenizin teknik gereksinimlerini inceledim. {{kategori}} alanındaki tecrübem ve referanslarımla projenizi hedeflenen takvimde yüksek kalitede teslim edebilirim."
+      ? "Merhaba {{ilan_sahibi}}, '{{ilan_basligi}}' ilanınızın teknik gereksinimlerini inceledim. {{kategori}} alanındaki tecrübem ve referanslarımla ilanınızda hedeflenen teslimatı takviminde yüksek kalitede gerçekleştirebilirim."
       : "Hello {{owner_name}}, I have reviewed the technical requirements for '{{project_title}}'. With my experience in {{category}} and proven background, I can deliver your project with high quality on schedule."
   );
   const [budgetCurrency, setBudgetCurrency] = useState(isTr ? "TRY" : "USD");
@@ -164,17 +164,18 @@ export function BatchOfferWizardModal({
       return customMessages[listing.id]!;
     }
     let text = commonMessage;
+    text = text.replace(/\{\{ilan_basligi\}\}/g, listing.title);
     text = text.replace(/\{\{proje_basligi\}\}/g, listing.title);
     text = text.replace(/\{\{project_title\}\}/g, listing.title);
     text = text.replace(/\{\{kategori\}\}/g, listing.categoryName);
     text = text.replace(/\{\{category\}\}/g, listing.categoryName);
     text = text.replace(
       /\{\{ilan_sahibi\}\}/g,
-      listing.ownerDisplayName || (isTr ? "Proje Sahibi" : "Project Owner")
+      listing.ownerDisplayName || (isTr ? "İlan Sahibi" : "Listing Owner")
     );
     text = text.replace(
       /\{\{owner_name\}\}/g,
-      listing.ownerDisplayName || (isTr ? "Proje Sahibi" : "Project Owner")
+      listing.ownerDisplayName || (isTr ? "İlan Sahibi" : "Listing Owner")
     );
     return text;
   };
@@ -427,7 +428,7 @@ export function BatchOfferWizardModal({
                     : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
                 }`}
               >
-                <span>{isTr ? "Projeye Özel Düzenle" : "Customize Per Project"}</span>
+                <span>{isTr ? "İlana Özel Düzenle" : "Customize Per Listing"}</span>
               </button>
             </div>
 
@@ -478,7 +479,7 @@ export function BatchOfferWizardModal({
                   </label>
                   <span className="text-[10px] text-blue-400">
                     {isTr
-                      ? "{{proje_basligi}}, {{kategori}}, {{ilan_sahibi}} otomatik uyarlanır"
+                      ? "{{ilan_basligi}}, {{kategori}}, {{ilan_sahibi}} otomatik uyarlanır"
                       : "{{project_title}}, {{category}}, {{owner_name}} are auto-injected"}
                   </span>
                 </div>
@@ -629,7 +630,7 @@ export function BatchOfferWizardModal({
               </div>
               <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
                 {isTr
-                  ? `Seçtiğiniz ${selectedListings.length} projenin tamamı ilan sahipleri tarafından aynı gün kabul edilebilir. Operis doğrudan eşleştirme platformu olduğundan, kabul edilen tekliflerdeki teslimat takvimi ve teknik gereksinimleri eksiksiz karşılama sorumluluğu tamamen teklif sahibine aittir.`
+                  ? `Seçtiğiniz ${selectedListings.length} ilanın tamamı ilan sahipleri tarafından aynı gün kabul edilebilir. Operis doğrudan eşleştirme platformu olduğundan, kabul edilen tekliflerdeki teslimat takvimi ve teknik gereksinimleri eksiksiz karşılama sorumluluğu tamamen teklif sahibine aittir.`
                   : `All ${selectedListings.length} selected projects could potentially be accepted concurrently. You must ensure you have adequate bandwidth to honor all deliverables.`}
               </p>
             </div>
@@ -643,7 +644,7 @@ export function BatchOfferWizardModal({
               />
               <span className="text-xs text-[var(--color-text-primary)] leading-relaxed font-medium">
                 {isTr
-                  ? `Seçilen ${selectedListings.length} projenin tümü kabul edildiğinde teslimat takvimini ve taahhütlerimi eksiksiz yerine getirebilecek kapasiteye ve zamana sahip olduğumu beyan ederim.`
+                  ? `Seçilen ${selectedListings.length} ilanın tümü kabul edildiğinde teslimat takvimini ve taahhütlerimi eksiksiz yerine getirebilecek kapasiteye ve zamana sahip olduğumu beyan ederim.`
                   : `I certify that I have the technical capacity and availability to fulfill all ${selectedListings.length} projects if accepted.`}
               </span>
             </label>

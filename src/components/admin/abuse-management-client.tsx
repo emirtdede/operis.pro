@@ -148,15 +148,15 @@ export function AbuseManagementClient({ initialAbuseItems }: AbuseManagementClie
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Filter className="h-3.5 w-3.5 text-slate-400" />
-          <span className="text-xs text-slate-400">Durum:</span>
-          <div className="flex bg-[#0d0e12] p-1 rounded-xl border border-slate-800 text-xs">
+        <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto scrollbar-none max-w-full">
+          <Filter className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+          <span className="text-xs text-slate-400 shrink-0">Durum:</span>
+          <div className="flex bg-[#0d0e12] p-1 rounded-xl border border-slate-800 text-xs shrink-0">
             {["ALL", "OPEN", "RESOLVED", "DISMISSED"].map((st) => (
               <button
                 key={st}
                 onClick={() => setStatusFilter(st)}
-                className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
+                className={`px-3 py-1 rounded-lg text-xs font-medium transition-all shrink-0 ${
                   statusFilter === st
                     ? "bg-amber-500 text-slate-950 font-semibold"
                     : "text-slate-400 hover:text-white"
@@ -336,11 +336,11 @@ export function AbuseManagementClient({ initialAbuseItems }: AbuseManagementClie
       {/* Details Modal Drawer */}
       {selectedItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-[#12141a] border border-slate-800 rounded-3xl p-6 w-full max-w-xl space-y-5 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+          <div className="bg-[#12141a] border border-slate-800 rounded-3xl p-4 sm:p-6 w-full max-w-xl max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4 shrink-0">
               <div className="flex items-center gap-2">
-                <AlertTriangle className="h-5 w-5 text-amber-400" />
-                <h3 className="font-bold text-white text-base">İhlal Bildirimi Detayı</h3>
+                <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0" />
+                <h3 className="font-bold text-white text-base truncate">İhlal Bildirimi Detayı</h3>
               </div>
               <button
                 onClick={() => setSelectedItem(null)}
@@ -350,7 +350,7 @@ export function AbuseManagementClient({ initialAbuseItems }: AbuseManagementClie
               </button>
             </div>
 
-            <div className="space-y-4 text-xs">
+            <div className="flex-1 overflow-y-auto min-h-0 py-3 space-y-4 text-xs pr-1">
               <div className="p-3.5 rounded-xl bg-[#0d0e12] border border-slate-800/80 space-y-1.5">
                 <div className="text-slate-400 font-medium">Gerekçe & Kategori:</div>
                 <div className="font-mono text-amber-300 font-bold text-sm">
@@ -375,11 +375,11 @@ export function AbuseManagementClient({ initialAbuseItems }: AbuseManagementClie
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 xs:grid-cols-2 gap-3">
                 <div className="p-3 rounded-xl bg-[#0d0e12] border border-slate-800 space-y-1">
                   <span className="text-slate-500">Şikayet Edilen:</span>
                   <div className="font-semibold text-white">{selectedItem.offenderDisplayName}</div>
-                  <div className="font-mono text-[10px] text-slate-400">
+                  <div className="font-mono text-[10px] text-slate-400 break-all">
                     {selectedItem.offenderUserId}
                   </div>
                 </div>
@@ -388,13 +388,13 @@ export function AbuseManagementClient({ initialAbuseItems }: AbuseManagementClie
                   <div className="font-semibold text-white">
                     {selectedItem.reporterDisplayName || "Otomatik Filtre"}
                   </div>
-                  <div className="font-mono text-[10px] text-slate-400">
+                  <div className="font-mono text-[10px] text-slate-400 break-all">
                     {selectedItem.reporterUserId || "SYSTEM_SCAN"}
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between text-slate-400 p-2 border-t border-slate-800">
+              <div className="flex flex-wrap items-center justify-between gap-1 text-slate-400 p-2 border-t border-slate-800 text-[11px]">
                 <span>
                   Hedef Kaynak: {selectedItem.targetType} ({selectedItem.targetId})
                 </span>
@@ -402,28 +402,28 @@ export function AbuseManagementClient({ initialAbuseItems }: AbuseManagementClie
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-2 border-t border-slate-800">
+            <div className="flex flex-wrap items-center justify-between gap-2.5 pt-3 border-t border-slate-800 shrink-0">
               <button
                 onClick={() => {
                   setSuspendModalItem(selectedItem);
                   setSelectedItem(null);
                 }}
-                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs transition-colors flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 w-full sm:w-auto"
               >
                 <ShieldBan className="h-4 w-4" />
                 <span>Kullanıcıyı Askıya Al</span>
               </button>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                 <button
                   onClick={() => handleResolve(selectedItem.id, "DISMISSED")}
-                  className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium"
+                  className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex-1 sm:flex-none"
                 >
                   Geçersiz Say
                 </button>
                 <button
                   onClick={() => handleResolve(selectedItem.id, "RESOLVED")}
-                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold"
+                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex-1 sm:flex-none"
                 >
                   Şikayeti Çöz
                 </button>
@@ -436,33 +436,35 @@ export function AbuseManagementClient({ initialAbuseItems }: AbuseManagementClie
       {/* Suspend Confirmation Modal */}
       {suspendModalItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-[#12141a] border border-rose-500/30 rounded-3xl p-6 w-full max-w-md space-y-4 shadow-2xl">
-            <div className="flex items-center gap-3 text-rose-400">
-              <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20">
+          <div className="bg-[#12141a] border border-rose-500/30 rounded-3xl p-4 sm:p-6 w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden shadow-2xl">
+            <div className="flex items-center gap-3 text-rose-400 pb-3 border-b border-slate-800/80 shrink-0">
+              <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 shrink-0">
                 <ShieldBan className="h-6 w-6" />
               </div>
-              <div>
-                <h3 className="font-bold text-white text-sm">Kullanıcıyı Askıya Al</h3>
-                <p className="text-[11px] text-slate-400">
+              <div className="min-w-0">
+                <h3 className="font-bold text-white text-sm truncate">Kullanıcıyı Askıya Al</h3>
+                <p className="text-[11px] text-slate-400 truncate">
                   {suspendModalItem.offenderDisplayName} hesabının erişimi dondurulacak.
                 </p>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-xs text-slate-300 font-medium">
-                Askıya Alma Gerekçesi (Kullanıcıya ve Denetim Kaydına Yazılır):
-              </label>
-              <textarea
-                rows={3}
-                value={suspendReason}
-                onChange={(e) => setSuspendReason(e.target.value)}
-                placeholder="Örn: Topluluk kurallarına aykırı küfür ve hakaret içeren teklif sunulması sebebiyle hesabınız askıya alınmıştır."
-                className="w-full bg-[#0d0e12] border border-slate-800 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500"
-              />
+            <div className="flex-1 overflow-y-auto min-h-0 py-3 space-y-3 pr-1">
+              <div className="space-y-2">
+                <label className="text-xs text-slate-300 font-medium">
+                  Askıya Alma Gerekçesi (Kullanıcıya ve Denetim Kaydına Yazılır):
+                </label>
+                <textarea
+                  rows={3}
+                  value={suspendReason}
+                  onChange={(e) => setSuspendReason(e.target.value)}
+                  placeholder="Örn: Topluluk kurallarına aykırı küfür ve hakaret içeren teklif sunulması sebebiyle hesabınız askıya alınmıştır."
+                  className="w-full bg-[#0d0e12] border border-slate-800 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500"
+                />
+              </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2">
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-800 shrink-0">
               <button
                 onClick={() => {
                   setSuspendModalItem(null);

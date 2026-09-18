@@ -20,13 +20,10 @@ export function ThemeScript() {
       var cookieTheme = document.cookie.match(/(?:^|; )fp_theme=([^;]*)/);
       var theme = cookieTheme ? decodeURIComponent(cookieTheme[1]) : null;
       if (!theme) {
-        theme = localStorage.getItem("${THEME_STORAGE_KEY}");
+        theme = localStorage.getItem("${THEME_STORAGE_KEY}") || localStorage.getItem("fp_theme");
       }
-      if (!theme) {
-        theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-      }
-      if (theme !== "light" && theme !== "dark" && theme !== "black") {
-        theme = "light";
+      if (!theme || (theme !== "light" && theme !== "dark" && theme !== "black")) {
+        theme = "dark";
       }
       document.documentElement.setAttribute("data-theme", theme);
       if (theme === "dark" || theme === "black") {
@@ -42,7 +39,7 @@ export function ThemeScript() {
 
 export function ThemeProvider({
   children,
-  defaultTheme = "light",
+  defaultTheme = "dark",
 }: {
   children: React.ReactNode;
   defaultTheme?: Theme;
@@ -51,15 +48,16 @@ export function ThemeProvider({
 
   useEffect(() => {
     try {
-      const stored = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
-      if (stored && (stored === "light" || stored === "dark" || stored === "black")) {
-        setThemeState(stored);
-        document.documentElement.setAttribute("data-theme", stored);
-        if (stored === "dark" || stored === "black") {
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.classList.remove("dark");
-        }
+      const cookieMatch = document.cookie.match(/(?:^|; )fp_theme=([^;]*)/);
+      const cookieTheme = cookieMatch?.[1] ? (decodeURIComponent(cookieMatch[1]) as Theme) : null;
+      const stored = (cookieTheme || localStorage.getItem(THEME_STORAGE_KEY) || localStorage.getItem("fp_theme")) as Theme | null;
+      const finalTheme = stored && (stored === "light" || stored === "dark" || stored === "black") ? stored : "dark";
+      setThemeState(finalTheme);
+      document.documentElement.setAttribute("data-theme", finalTheme);
+      if (finalTheme === "dark" || finalTheme === "black") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
       }
     } catch {
       // Ignored in SSR or restricted storage environments
@@ -70,6 +68,7 @@ export function ThemeProvider({
     setThemeState(newTheme);
     try {
       localStorage.setItem(THEME_STORAGE_KEY, newTheme);
+      localStorage.setItem("fp_theme", newTheme);
       document.cookie = `${THEME_COOKIE_KEY}=${encodeURIComponent(newTheme)}; path=/; max-age=31536000; SameSite=Lax`;
       document.documentElement.setAttribute("data-theme", newTheme);
       if (newTheme === "dark" || newTheme === "black") {

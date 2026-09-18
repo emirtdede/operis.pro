@@ -35,7 +35,7 @@ export function ListingDetailActions({
   budgetMin = null,
   budgetMax = null,
   budgetCurrency = "TRY",
-  ownerDisplayName = "Proje Sahibi",
+  ownerDisplayName = "İlan Sahibi",
   currentUserId,
   isOwner,
   isActive,

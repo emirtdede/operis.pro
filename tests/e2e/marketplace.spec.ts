@@ -1,9 +1,43 @@
 import crypto from "node:crypto";
-import { test, expect } from "@playwright/test";
+import { test, expect, Page } from "@playwright/test";
 import { getDb, schema } from "@/src/lib/db";
 import { ExportJobManager } from "@/src/modules/privacy/export-jobs";
 import { eq } from "drizzle-orm";
 import { assertSafeE2ETestEnvironment } from "@/tests/helpers/test-database";
+import { createSessionToken, SESSION_COOKIE_NAME } from "@/src/modules/auth/session";
+
+async function loginTestUserViaCookie(page: Page) {
+  const token = createSessionToken({
+    id: "d0000000-0000-0000-0000-000000000001",
+    email: "kullanici@operis.pro",
+    role: "USER",
+    status: "ACTIVE",
+    authVersion: 1,
+  });
+  await page.context().addCookies([
+    {
+      name: SESSION_COOKIE_NAME,
+      value: token,
+      url: "http://localhost:5000",
+      httpOnly: true,
+      sameSite: "Lax",
+    },
+    {
+      name: SESSION_COOKIE_NAME,
+      value: token,
+      url: "http://localhost:8008",
+      httpOnly: true,
+      sameSite: "Lax",
+    },
+    {
+      name: SESSION_COOKIE_NAME,
+      value: token,
+      url: "http://localhost:3000",
+      httpOnly: true,
+      sameSite: "Lax",
+    },
+  ]);
+}
 
 test.describe("Operis Marketplace Critical Flows (E2E)", () => {
   test.beforeEach(async () => {
@@ -12,9 +46,23 @@ test.describe("Operis Marketplace Critical Flows (E2E)", () => {
     await db.delete(schema.rateLimits);
   });
 
+  test("redirects unauthenticated visitors trying to access feed to login page with returnUrl", async ({
+    page,
+  }) => {
+    await page.goto("/tr/ilanlar", { waitUntil: "domcontentloaded" });
+    await page.waitForURL(
+      (url: URL) => url.pathname.includes("/giris") || url.pathname.includes("/login"),
+      { timeout: 15000 }
+    );
+    expect(page.url()).toContain("/tr/giris");
+    expect(page.url()).toContain("returnUrl=");
+  });
+
   test("loads the listings feed and displays live freshness badges and quick chips", async ({
     page,
   }) => {
+    await loginTestUserViaCookie(page);
+
     // 1. Navigate to listings feed
     await page.goto("/tr/ilanlar", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveTitle(/Operis/i);
@@ -35,6 +83,7 @@ test.describe("Operis Marketplace Critical Flows (E2E)", () => {
   });
 
   test("opens command palette on keyboard shortcut and allows live search", async ({ page }) => {
+    await loginTestUserViaCookie(page);
     await page.goto("/tr/ilanlar");
     await page.waitForLoadState("networkidle");
 
@@ -75,6 +124,7 @@ test.describe("Operis Marketplace Critical Flows (E2E)", () => {
   });
 
   test("toggles theme across dark, light, and black modes", async ({ page }) => {
+    await loginTestUserViaCookie(page);
     await page.goto("/tr/listings", { waitUntil: "domcontentloaded" });
 
     // Check html has a theme attribute

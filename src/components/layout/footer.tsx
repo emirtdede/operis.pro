@@ -18,14 +18,26 @@ export function Footer() {
   const locale = ((params?.locale as string) || "tr") as Locale;
   const isTr = locale === "tr";
   const pathname = usePathname();
+  const listingsRoute = getLocalizedRoute("listings", locale);
+  const feedRoute = getLocalizedRoute("feed", locale);
+  const isFeedPage =
+    pathname === listingsRoute ||
+    pathname === feedRoute ||
+    pathname === `/${locale}/ilanlar` ||
+    pathname === `/${locale}/listings` ||
+    pathname === `/${locale}/akis` ||
+    pathname === `/${locale}/feed` ||
+    pathname?.startsWith(`/${locale}/akis/`) ||
+    pathname?.startsWith(`/${locale}/feed/`);
+
+  if (isFeedPage) {
+    return null;
+  }
+
   const isHomePage = pathname === `/${locale}` || pathname === `/${locale}/` || pathname === "/";
   const currentYear = new Date().getFullYear();
 
   const platformLinks = [
-    {
-      href: getLocalizedRoute("feed", locale),
-      label: isTr ? "İlan Akışı" : "Listings Feed",
-    },
     {
       href: getLocalizedRoute("listings", locale),
       label: isTr ? "İlanları Keşfet" : "Browse Listings",
@@ -36,34 +48,30 @@ export function Footer() {
     },
     {
       href: getLocalizedRoute("newListing", locale),
-      label: isTr ? "Proje İlanı Yayınla" : "Post a Project",
+      label: isTr ? "İlan Yayınla" : "Post a Listing",
     },
     {
-      href: getLocalizedRoute("help", locale),
-      label: isTr ? "Yardım & SSS" : "Help & FAQ",
+      href: `${getLocalizedRoute("help", locale)}#nasil-calisir`,
+      label: isTr ? "Nasıl Çalışır?" : "How It Works",
+    },
+    {
+      href: getLocalizedRoute("feed", locale),
+      label: isTr ? "Canlı Radar & Akış" : "Live Radar & Feed",
     },
   ];
 
-  const architectureLinks = [
+  const corporateLinks = [
     {
       href: getLocalizedRoute("about", locale),
       label: isTr ? "Hakkımızda & Manifesto" : "About & Manifesto",
     },
     {
+      href: getLocalizedRoute("help", locale),
+      label: isTr ? "Yardım Merkezi & SSS" : "Help Center & FAQ",
+    },
+    {
       href: getLocalizedRoute("contact", locale),
       label: isTr ? "İletişim & Destek" : "Contact & Support",
-    },
-    {
-      href: `${getLocalizedRoute("about", locale)}#zero-commission`,
-      label: isTr ? "%0 Komisyon Modeli" : "0% Escrow Cut Model",
-    },
-    {
-      href: `${getLocalizedRoute("about", locale)}#encrypted-offers`,
-      label: isTr ? "AES-256 Şifreli Teklifler" : "AES-256 Blind Offers",
-    },
-    {
-      href: `${getLocalizedRoute("about", locale)}#freshness-radar`,
-      label: isTr ? "1 Haftalık Canlılık Radarı" : "1-Week Freshness Radar",
     },
     {
       href: getLocalizedRoute("report", locale),
@@ -83,9 +91,7 @@ export function Footer() {
     { href: getLocalizedLegalPath("terms", locale), label: legal("terms.title") },
     { href: getLocalizedLegalPath("privacy", locale), label: legal("privacy.title") },
     { href: getLocalizedLegalPath("matching-disclaimer", locale), label: legal("matching.title") },
-    { href: getLocalizedLegalPath("acceptable-use", locale), label: legal("acceptableUse.title") },
     { href: getLocalizedLegalPath("cookies", locale), label: legal("cookies.title") },
-    { href: getLocalizedLegalPath("contact", locale), label: legal("contact.title") },
   ];
 
   return (
@@ -114,8 +120,8 @@ export function Footer() {
 
             <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
               {isTr
-                ? "Yazılım mühendisleri ve teknoloji ekipleri için doğrudan, şeffaf ve %100 komisyonsuz bağımsız eşleştirme ağı."
-                : "Direct, transparent, zero-commission software discovery network connecting verified engineers with modern teams."}
+                ? "110'u aşkın profesyonel kategoride bağımsız uzmanlar, ajanslar ve yenilikçi kurumlar için doğrudan, şeffaf ve %100 komisyonsuz yeni nesil iş birliği ağı."
+                : "A next-generation, zero-commission collaboration network connecting verified independent experts, agencies, and forward-thinking enterprises across 110+ professional categories."}
             </p>
           </div>
 
@@ -138,13 +144,13 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Col 3: Architecture & Security */}
+          {/* Col 3: Company & Support */}
           <div className="space-y-4">
             <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-              {isTr ? "Mimari & Güvenlik" : "Architecture"}
+              {isTr ? "Kurumsal & Destek" : "Company & Support"}
             </h3>
             <ul className="space-y-2.5 text-sm">
-              {architectureLinks.map((item) => (
+              {corporateLinks.map((item) => (
                 <li key={item.label}>
                   <Link
                     href={item.href}

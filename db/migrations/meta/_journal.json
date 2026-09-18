@@ -134,6 +134,13 @@
       "when": 1789220000000,
       "tag": "0018_add_clerk_user_id",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1789225000000,
+      "tag": "0019_add_profiles_contact_channel_and_timezone",
+      "breakpoints": true
     }
   ]
 }

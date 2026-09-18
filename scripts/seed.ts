@@ -314,7 +314,7 @@ export async function runSeed(customConnectionString?: string) {
     // 3. Listings
     console.info(`3. Seeding ${SEED_LISTINGS.length} real listings...`);
     const now = new Date();
-    const activeUntil = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    const activeUntil = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
     for (const l of SEED_LISTINGS) {
       const categoryId = categoryMap.get(l.categoryKey) || Array.from(categoryMap.values())[0]!;
@@ -382,6 +382,8 @@ export async function runSeed(customConnectionString?: string) {
             timelineUnit: l.timelineUnit,
             viewCount: l.viewCount,
             clickCount: l.clickCount,
+            activeUntil: l.status === "ACTIVE" ? activeUntil : null,
+            lastActivatedAt: now,
             matchedAt: l.matchedAt || null,
             completedAt: l.completedAt || null,
           })

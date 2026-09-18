@@ -263,16 +263,16 @@ ___________________________               ___________________________`;
           </div>
 
           {/* Action Controls */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[var(--color-border-subtle)]">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-2.5 sm:gap-3 pt-2 border-t border-[var(--color-border-subtle)]">
+            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
               <Button
                 type="button"
                 variant="primary"
                 size="sm"
                 onClick={handlePrint}
-                className="gap-2 shadow-md shadow-blue-500/20"
+                className="gap-2 shadow-md shadow-blue-500/20 w-full sm:w-auto justify-center text-xs"
               >
-                <Printer className="h-4 w-4" aria-hidden="true" />
+                <Printer className="h-4 w-4 shrink-0" aria-hidden="true" />
                 <span>
                   {isTr ? "Resmi PDF Sözleşmesi Oluştur & Yazdır" : "Generate & Print Official PDF"}
                 </span>
@@ -282,23 +282,23 @@ ___________________________               ___________________________`;
                 variant="outline"
                 size="sm"
                 onClick={handleCopy}
-                className="gap-2"
+                className="gap-2 w-full sm:w-auto justify-center text-xs"
               >
                 {copied ? (
                   <>
-                    <Check className="h-4 w-4 text-emerald-400" aria-hidden="true" />
+                    <Check className="h-4 w-4 text-emerald-400 shrink-0" aria-hidden="true" />
                     <span className="text-emerald-400">{isTr ? "Kopyalandı" : "Copied"}</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="h-4 w-4" aria-hidden="true" />
+                    <Copy className="h-4 w-4 shrink-0" aria-hidden="true" />
                     <span>{isTr ? "Metni Kopyala" : "Copy Text"}</span>
                   </>
                 )}
               </Button>
             </div>
 
-            <Button type="button" variant="ghost" size="sm" onClick={onClose}>
+            <Button type="button" variant="ghost" size="sm" onClick={onClose} className="w-full sm:w-auto justify-center text-xs">
               {isTr ? "Kapat" : "Close"}
             </Button>
           </div>

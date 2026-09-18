@@ -93,8 +93,8 @@ export default async function CategoriesPage({
             position: idx + 1,
             name: cat.name,
             url: isTr
-              ? `https://operis.pro/tr/akis?category=${cat.slug}`
-              : `https://operis.pro/en/feed?category=${cat.slug}`,
+              ? `https://operis.pro/tr/ilanlar?category=${cat.slug}`
+              : `https://operis.pro/en/listings?category=${cat.slug}`,
           })),
         },
       },

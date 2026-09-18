@@ -37,13 +37,13 @@ export function SortDropdown({ value, onChange, locale, className = "" }: SortDr
         id="operis-sort-select"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="h-9 appearance-none rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] pl-8 pr-8 text-xs font-medium text-[var(--color-text-primary)] shadow-sm hover:border-[var(--color-border-strong)] focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors cursor-pointer"
+        className="h-9 appearance-none rounded-xl border border-[var(--color-border-subtle)] bg-surface/75 backdrop-blur-xl pl-8 pr-8 text-xs font-medium text-[var(--color-text-primary)] shadow-sm hover:border-[var(--color-border-strong)] focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors cursor-pointer"
       >
         {options.map((opt) => (
           <option
             key={opt.value}
             value={opt.value}
-            className="bg-[var(--bg-surface)] text-[var(--color-text-primary)]"
+            className="bg-[#141517] text-[var(--color-text-primary)]"
           >
             {opt.label}
           </option>

@@ -190,6 +190,10 @@ export function ListingsTableClient({
 
       {/* Listings Table */}
       <div className="rounded-2xl border border-slate-800 bg-[#12141a] overflow-hidden">
+        <div className="sm:hidden px-3 py-1.5 bg-slate-900/50 border-b border-slate-800/80 text-[10px] text-slate-400 flex items-center justify-between">
+          <span>Yatay Kaydırılabilir Tablo</span>
+          <span className="text-blue-400 font-mono">Kaydırın →</span>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs text-slate-300">
             <thead className="bg-slate-900/90 border-b border-slate-800 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
@@ -343,45 +347,47 @@ export function ListingsTableClient({
       {/* Moderation Modal */}
       {modifyingListing && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-[#12141a] p-6 space-y-4 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-[#12141a] p-4 sm:p-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3 shrink-0">
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4 text-amber-400" />
-                <span>İlan Moderasyon Aksiyonu</span>
+                <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0" />
+                <span className="truncate">İlan Moderasyon Aksiyonu</span>
               </h3>
               <button
                 onClick={() => setModifyingListing(null)}
-                className="text-slate-400 hover:text-white"
+                className="text-slate-400 hover:text-white p-1 rounded-lg"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <p className="text-xs text-slate-300">
-              <span className="font-semibold text-white">'{modifyingListing.title}'</span> başlıklı
-              ilanı{" "}
-              {modifyingListing.status === "ACTIVE" ? "yayından kaldırmak" : "tekrar aktif etmek"}{" "}
-              üzeresiniz.
-            </p>
+            <div className="flex-1 overflow-y-auto min-h-0 py-3 space-y-3 pr-1">
+              <p className="text-xs text-slate-300">
+                <span className="font-semibold text-white">'{modifyingListing.title}'</span> başlıklı
+                ilanı{" "}
+                {modifyingListing.status === "ACTIVE" ? "yayından kaldırmak" : "tekrar aktif etmek"}{" "}
+                üzeresiniz.
+              </p>
 
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-semibold text-slate-400">
-                Gerekçe / Audit Log Açıklaması *
-              </label>
-              <textarea
-                rows={3}
-                value={moderationReason}
-                onChange={(e) => setModerationReason(e.target.value)}
-                placeholder="Örn: Topluluk kurallarına aykırı dış iletişim veya telif ihlali tespiti..."
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-blue-500"
-              />
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-semibold text-slate-400">
+                  Gerekçe / Audit Log Açıklaması *
+                </label>
+                <textarea
+                  rows={3}
+                  value={moderationReason}
+                  onChange={(e) => setModerationReason(e.target.value)}
+                  placeholder="Örn: Topluluk kurallarına aykırı dış iletişim veya telif ihlali tespiti..."
+                  className="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-blue-500"
+                />
+              </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-800 shrink-0">
               <button
                 type="button"
                 onClick={() => setModifyingListing(null)}
-                className="px-3 py-1.5 rounded-xl border border-slate-800 text-xs text-slate-400 hover:text-white"
+                className="px-3.5 py-2 rounded-xl border border-slate-800 text-xs text-slate-400 hover:text-white"
               >
                 İptal
               </button>
@@ -389,7 +395,7 @@ export function ListingsTableClient({
                 type="button"
                 onClick={handleApplyModeration}
                 disabled={!moderationReason.trim() || isSubmitting}
-                className="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 disabled:opacity-50 text-xs font-bold text-white transition-colors"
+                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 disabled:opacity-50 text-xs font-bold text-white transition-colors"
               >
                 {isSubmitting ? "İşleniyor..." : "Aksiyonu Onayla ve İşle"}
               </button>

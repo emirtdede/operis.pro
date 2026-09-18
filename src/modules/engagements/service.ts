@@ -10,6 +10,9 @@ export interface CounterpartyContactInfo {
   displayName: string;
   email: string;
   phone: string | null;
+  preferredContactChannel?: string | null;
+  timeZone?: string | null;
+  city?: string | null;
 }
 
 function getDemoEngagement(viewerUserId: string) {
@@ -61,6 +64,9 @@ function getDemoEngagement(viewerUserId: string) {
           displayName: "Ahmet Yılmaz",
           email: "ahmet@techcorp.com",
           phone: "+905321112233",
+          preferredContactChannel: "whatsapp",
+          timeZone: "Europe/Istanbul",
+          city: "İstanbul",
         }
       : {
           userId: DEFAULT_USER.id,
@@ -68,6 +74,9 @@ function getDemoEngagement(viewerUserId: string) {
           displayName: DEFAULT_USER.profile.displayName,
           email: DEFAULT_USER.email,
           phone: "+905329998877",
+          preferredContactChannel: DEFAULT_USER.profile.preferredContactChannel || "whatsapp",
+          timeZone: DEFAULT_USER.profile.timeZone || "Europe/Istanbul",
+          city: "İstanbul",
         },
     completionMarks: [
       {
@@ -393,7 +402,7 @@ export class EngagementService {
                 title: isEn ? "Proposal Accepted" : "Tebrikler! Teklifiniz Kabul Edildi",
                 message: isEn
                   ? `Your proposal for "${listingTitle}" has been accepted. The shared workspace is now open.`
-                  : `"${listingTitle}" projesi için verdiğiniz teklif kabul edildi. Ortak çalışma alanı açıldı.`,
+                  : `"${listingTitle}" ilanı için verdiğiniz teklif kabul edildi. Ortak çalışma alanı açıldı.`,
                 actionUrl: isEn
                   ? `/en/workspace/${engagement.id}`
                   : `/tr/calisma-alani/${engagement.id}`,
@@ -424,7 +433,7 @@ export class EngagementService {
                   title: isEn ? "Proposal Status Updated" : "Teklif Durumu Güncellendi",
                   message: isEn
                     ? `Another proposal was selected for "${listingTitle}", and your proposal has been concluded.`
-                    : `"${listingTitle}" projesinde başka bir teklif kabul edildiğinden teklifiniz sonuçlandırıldı.`,
+                    : `"${listingTitle}" ilanında başka bir teklif kabul edildiğinden teklifiniz sonuçlandırıldı.`,
                   actionUrl: isEn ? "/en/dashboard/offers/sent" : "/tr/panel/teklifler/gonderilen",
                 }
               );
@@ -486,7 +495,10 @@ export class EngagementService {
       Boolean(process.env.VITEST) ||
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(engagementId);
     if (!isEngUuid) {
-      if (Boolean(process.env.VITEST) && engagementId === "eng-demo-101") {
+      if (
+        (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+        engagementId === "eng-demo-101"
+      ) {
         return getDemoEngagement(viewerUserId);
       }
       return null;
@@ -509,7 +521,10 @@ export class EngagementService {
 
       const firstRow = rows[0];
       if (!firstRow) {
-        if (Boolean(process.env.VITEST) && engagementId === "eng-demo-101") {
+        if (
+          (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+          engagementId === "eng-demo-101"
+        ) {
           return getDemoEngagement(viewerUserId);
         }
         return null;
@@ -534,9 +549,12 @@ export class EngagementService {
           email: schema.users.email,
           handle: schema.profiles.handle,
           displayName: schema.profiles.displayName,
+          preferredContactChannel: schema.profiles.preferredContactChannel,
+          timeZone: schema.profiles.timeZone,
           revealPhoneAfterMatch: schema.profiles.revealPhoneAfterMatch,
           phoneE164Enc: schema.userPrivateIdentity.phoneE164Enc,
           phoneVerifiedAt: schema.userPrivateIdentity.phoneVerifiedAt,
+          city: schema.userPrivateIdentity.city,
         })
         .from(schema.users)
         .innerJoin(schema.profiles, eq(schema.users.id, schema.profiles.userId))
@@ -581,6 +599,9 @@ export class EngagementService {
           displayName: u.displayName,
           email: u.email,
           phone: revealedPhone,
+          preferredContactChannel: u.preferredContactChannel ?? "any",
+          timeZone: u.timeZone ?? "Europe/Istanbul",
+          city: u.city ?? null,
         };
       }
 

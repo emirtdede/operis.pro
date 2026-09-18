@@ -5,7 +5,7 @@ const prodPort = process.env.PLAYWRIGHT_PORT
   ? Number(process.env.PLAYWRIGHT_PORT)
   : isProd
     ? 8008
-    : 8000;
+    : 5000;
 const baseUrl = process.env.PLAYWRIGHT_BASE_URL || `http://localhost:${prodPort}`;
 
 // B25-ENTRY: Fail-closed — refuse to run if TEST_DATABASE_URL is invalid, missing, or runner token absent

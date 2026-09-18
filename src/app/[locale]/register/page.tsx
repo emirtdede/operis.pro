@@ -18,8 +18,8 @@ export async function generateMetadata({
     ? "Hesap Oluştur — Tek Hesap, Çift Yetenek"
     : "Join Network — Dual-Role Account";
   const description = isTr
-    ? "Ücretsiz hesap oluşturarak hem ilan yayınlayabilir hem de projelere teklif verebilirsiniz. Tek hesap, çift yetenek."
-    : "Create a free single account with dual capabilities to both post technology projects and submit direct proposals.";
+    ? "Ücretsiz hesap oluşturarak hem ilan yayınlayabilir hem de ilanlara teklif verebilirsiniz. Tek hesap, çift yetenek."
+    : "Create a free single account with dual capabilities to both post technology listings and submit direct proposals.";
 
   return {
     title,
@@ -125,7 +125,7 @@ export default async function RegisterPage({
               </h1>
               <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
                 {isTr
-                  ? "Tek hesap ile hem dilediğiniz zaman proje ilanı verin hem de teklif sunun."
+                  ? "Tek hesap ile hem dilediğiniz zaman ilan verin hem de teklif sunun."
                   : "One verified account gives you dual capabilities to both publish work and submit proposals."}
               </p>
             </header>

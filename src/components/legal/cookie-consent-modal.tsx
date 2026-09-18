@@ -2,7 +2,15 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Cookie, X, Check, ShieldCheck } from "lucide-react";
+import {
+  Cookie,
+  X,
+  Check,
+  ShieldCheck,
+  ChartColumn,
+  Megaphone,
+  SlidersHorizontal,
+} from "lucide-react";
 import { getLocalizedLegalPath } from "@/src/lib/i18n/routes";
 import { Locale } from "@/src/lib/i18n/config";
 
@@ -152,7 +160,7 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
         role="region"
         aria-label={isTr ? "Çerez Bildirimi" : "Cookie Notice"}
       >
-        <div className="relative rounded-[28px] sm:rounded-[32px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/98 backdrop-blur-2xl px-5 sm:px-6 pb-5 sm:pb-6 pt-8 shadow-2xl shadow-black/30 dark:shadow-black/80">
+        <div className="relative rounded-[28px] sm:rounded-[32px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/98 backdrop-blur-2xl px-4 sm:px-6 pb-4 sm:pb-6 pt-7 sm:pt-8 shadow-2xl shadow-black/30 dark:shadow-black/80">
           {/* Top Center Circular Cookie Badge (Exactly preserved original design) */}
           <div className="absolute -top-7 left-1/2 -translate-x-1/2 flex items-center justify-center h-14 w-14 rounded-full border-2 border-amber-500/40 bg-[var(--color-surface-base)] shadow-lg shadow-black/20 z-10">
             <div className="flex items-center justify-center h-10 w-10 rounded-full bg-amber-500/15">
@@ -212,12 +220,12 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
               )}
             </p>
 
-            {/* 3 Horizontal Action Buttons Row: Preserved original styling and radii */}
-            <div className="grid grid-cols-3 gap-2 pt-0.5">
+            {/* 3 Action Buttons: Responsive vertical stack on fold/mobile, 3-column on desktop */}
+            <div className="flex flex-col sm:grid sm:grid-cols-3 gap-2 pt-0.5">
               <button
                 type="button"
                 onClick={handleOnlyEssential}
-                className="whitespace-nowrap px-2 sm:px-2.5 py-2.5 rounded-xl sm:rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] hover:bg-[var(--color-surface-active)] text-xs font-semibold text-[var(--color-text-primary)] transition-all shadow-sm active:scale-[0.98] text-center cursor-pointer"
+                className="w-full whitespace-nowrap px-3 sm:px-2 py-2.5 rounded-xl sm:rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] hover:bg-[var(--color-surface-active)] text-xs font-semibold text-[var(--color-text-primary)] transition-all shadow-sm active:scale-[0.98] text-center cursor-pointer"
               >
                 {isTr ? "Yalnızca Gerekli" : "Only Essential"}
               </button>
@@ -225,7 +233,7 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
               <button
                 type="button"
                 onClick={() => setView("preferences")}
-                className="whitespace-nowrap px-2 sm:px-2.5 py-2.5 rounded-xl sm:rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] hover:bg-[var(--color-surface-active)] text-xs font-semibold text-[var(--color-text-primary)] transition-all shadow-sm active:scale-[0.98] text-center cursor-pointer"
+                className="w-full whitespace-nowrap px-3 sm:px-2 py-2.5 rounded-xl sm:rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] hover:bg-[var(--color-surface-active)] text-xs font-semibold text-[var(--color-text-primary)] transition-all shadow-sm active:scale-[0.98] text-center cursor-pointer"
               >
                 {isTr ? "Tercihler" : "Preferences"}
               </button>
@@ -233,7 +241,7 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
               <button
                 type="button"
                 onClick={handleAcceptAll}
-                className="whitespace-nowrap px-2 sm:px-2.5 py-2.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-blue-500/25 transition-all active:scale-[0.98] text-center cursor-pointer"
+                className="w-full whitespace-nowrap px-3 sm:px-2 py-2.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-blue-500/25 transition-all active:scale-[0.98] text-center cursor-pointer"
               >
                 {isTr ? "Tümünü Kabul Et" : "Accept All"}
               </button>
@@ -266,18 +274,18 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
       />
 
       {/* Center Pop-Up Modal Card */}
-      <div className="relative w-full max-w-[530px] rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-6 sm:p-7 shadow-2xl shadow-black/25 z-10 transition-all duration-200 animate-in fade-in-0 zoom-in-95 space-y-5">
+      <div className="relative w-full max-w-[530px] max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-4 sm:p-7 shadow-2xl shadow-black/25 z-10 transition-all duration-200 animate-in fade-in-0 zoom-in-95 overflow-hidden">
         {/* Header with Title and Close 'X' */}
-        <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border-subtle)]">
+        <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border-subtle)] shrink-0">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl border border-amber-500/30 bg-amber-500/10 flex items-center justify-center shrink-0">
               <Cookie className="h-4 w-4 text-amber-400" aria-hidden="true" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-[var(--color-text-primary)] tracking-tight">
+              <h2 className="text-sm sm:text-base font-bold text-[var(--color-text-primary)] tracking-tight">
                 {isTr ? "Çerez ve Gizlilik Tercihleri" : "Cookie & Privacy Preferences"}
               </h2>
-              <p className="text-[11px] text-[var(--color-text-tertiary)]">
+              <p className="text-[10px] sm:text-[11px] text-[var(--color-text-tertiary)]">
                 {isTr
                   ? "Tercihlerinizi dilediğiniz zaman güncelleyebilirsiniz"
                   : "You can adjust your preferences anytime"}
@@ -295,12 +303,12 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
         </div>
 
         {/* List of 4 Preference Cards */}
-        <div className="space-y-2.5 max-h-[52vh] overflow-y-auto pr-1">
+        <div className="space-y-2.5 flex-1 min-h-0 overflow-y-auto pr-1 py-3 overscroll-contain">
           {/* 1. Zorunlu Çerezler */}
-          <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)]/70 p-3.5 sm:p-4 flex items-start justify-between gap-4">
+          <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)]/70 p-3.5 sm:p-4 flex items-start justify-between gap-3">
             <div className="space-y-1">
               <div className="font-bold text-sm text-[var(--color-text-primary)] flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" aria-hidden="true" />
+                <ShieldCheck className="h-4 w-4 text-emerald-500 dark:text-emerald-400 shrink-0" aria-hidden="true" />
                 <span>{isTr ? "Zorunlu Çerezler" : "Strictly Necessary"}</span>
               </div>
               <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
@@ -309,16 +317,17 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
                   : "Required for basic security, session integrity, and vital platform operations."}
               </p>
             </div>
-            <span className="shrink-0 text-[11px] font-semibold text-amber-400/90 border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 rounded-lg">
+            <span className="shrink-0 text-[10px] sm:text-[11px] font-semibold text-amber-500 dark:text-amber-400 border border-amber-500/30 bg-amber-500/10 px-2 sm:px-2.5 py-1 rounded-lg">
               {isTr ? "Her Zaman Etkin" : "Always Active"}
             </span>
           </div>
 
           {/* 2. Analitik & Performans */}
-          <label className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)]/70 hover:bg-[var(--color-surface-hover)] p-3.5 sm:p-4 flex items-start justify-between gap-4 cursor-pointer transition-colors">
+          <label className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)]/70 hover:bg-[var(--color-surface-hover)] p-3.5 sm:p-4 flex items-start justify-between gap-3 cursor-pointer transition-colors">
             <div className="space-y-1">
-              <div className="font-bold text-sm text-[var(--color-text-primary)]">
-                {isTr ? "Analitik & Performans" : "Analytics & Performance"}
+              <div className="font-bold text-sm text-[var(--color-text-primary)] flex items-center gap-2">
+                <ChartColumn className="h-4 w-4 text-blue-500 dark:text-blue-400 shrink-0" aria-hidden="true" />
+                <span>{isTr ? "Analitik & Performans" : "Analytics & Performance"}</span>
               </div>
               <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
                 {isTr
@@ -337,10 +346,11 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
           </label>
 
           {/* 3. Pazarlama & Duyurular */}
-          <label className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)]/70 hover:bg-[var(--color-surface-hover)] p-3.5 sm:p-4 flex items-start justify-between gap-4 cursor-pointer transition-colors">
+          <label className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)]/70 hover:bg-[var(--color-surface-hover)] p-3.5 sm:p-4 flex items-start justify-between gap-3 cursor-pointer transition-colors">
             <div className="space-y-1">
-              <div className="font-bold text-sm text-[var(--color-text-primary)]">
-                {isTr ? "Pazarlama & Duyurular" : "Marketing & Updates"}
+              <div className="font-bold text-sm text-[var(--color-text-primary)] flex items-center gap-2">
+                <Megaphone className="h-4 w-4 text-purple-500 dark:text-purple-400 shrink-0" aria-hidden="true" />
+                <span>{isTr ? "Pazarlama & Duyurular" : "Marketing & Updates"}</span>
               </div>
               <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
                 {isTr
@@ -359,10 +369,11 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
           </label>
 
           {/* 4. İşlevsel & Yerel Tercihler */}
-          <label className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)]/70 hover:bg-[var(--color-surface-hover)] p-3.5 sm:p-4 flex items-start justify-between gap-4 cursor-pointer transition-colors">
+          <label className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)]/70 hover:bg-[var(--color-surface-hover)] p-3.5 sm:p-4 flex items-start justify-between gap-3 cursor-pointer transition-colors">
             <div className="space-y-1">
-              <div className="font-bold text-sm text-[var(--color-text-primary)]">
-                {isTr ? "İşlevsel & Yerel Tercihler" : "Functional & Regional Preferences"}
+              <div className="font-bold text-sm text-[var(--color-text-primary)] flex items-center gap-2">
+                <SlidersHorizontal className="h-4 w-4 text-amber-500 dark:text-amber-400 shrink-0" aria-hidden="true" />
+                <span>{isTr ? "İşlevsel & Yerel Tercihler" : "Functional & Regional Preferences"}</span>
               </div>
               <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
                 {isTr
@@ -381,8 +392,8 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
           </label>
         </div>
 
-        {/* Bottom Actions: Whitespace-nowrap to guarantee NO text wraps */}
-        <div className="grid grid-cols-2 gap-3 pt-2">
+        {/* Bottom Actions */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-3 border-t border-[var(--color-border-subtle)]/60 shrink-0">
           <button
             type="button"
             onClick={() => {
@@ -392,7 +403,7 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
                 setView("main");
               }
             }}
-            className="w-full whitespace-nowrap px-4 py-2.5 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] hover:bg-[var(--color-surface-hover)] text-xs sm:text-sm font-semibold text-[var(--color-text-primary)] transition-all shadow-sm active:scale-[0.98] text-center cursor-pointer"
+            className="w-full whitespace-nowrap px-4 py-2.5 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] hover:bg-[var(--color-surface-hover)] text-xs sm:text-sm font-semibold text-[var(--color-text-primary)] transition-all shadow-sm active:scale-[0.98] text-center cursor-pointer order-2 sm:order-1"
           >
             {isManualOpen ? (isTr ? "Kapat" : "Close") : isTr ? "Geri Dön" : "Back"}
           </button>
@@ -400,7 +411,7 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
           <button
             type="button"
             onClick={handleSavePreferences}
-            className="w-full whitespace-nowrap px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-blue-500/25 transition-all active:scale-[0.98] flex items-center justify-center gap-1.5 text-center cursor-pointer"
+            className="w-full whitespace-nowrap px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-blue-500/25 transition-all active:scale-[0.98] flex items-center justify-center gap-1.5 text-center cursor-pointer order-1 sm:order-2"
           >
             <Check className="h-4 w-4 stroke-[2.5]" aria-hidden="true" />
             <span>{isTr ? "Tercihleri Kaydet" : "Save Preferences"}</span>

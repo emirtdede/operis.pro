@@ -154,7 +154,7 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
             title={isTr ? "Teklif bulunamadı" : "No offers found"}
             description={
               isTr
-                ? "Henüz bir projeye teklif vermediniz veya bu filtrede teklif bulunmuyor."
+                ? "Henüz bir ilana teklif vermediniz veya bu filtrede teklif bulunmuyor."
                 : "You have not submitted proposals or none match this filter."
             }
             action={
@@ -310,47 +310,50 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
           aria-describedby="withdraw-dialog-description"
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150"
         >
-          <div className="relative w-full max-w-md rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-6 sm:p-8 shadow-2xl space-y-6">
-            <button
-              type="button"
-              onClick={() => {
-                setWithdrawingOffer(null);
-                setWithdrawError(null);
-              }}
-              className="absolute top-5 right-5 p-1.5 rounded-lg text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] transition-colors"
-              aria-label={isTr ? "Kapat" : "Close"}
-            >
-              <X className="h-4 w-4" aria-hidden="true" />
-            </button>
-
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
-                <AlertTriangle className="h-5 w-5" aria-hidden="true" />
+          <div className="relative w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl sm:rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-4 sm:p-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-3 shrink-0">
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl sm:rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+                  <AlertTriangle className="h-5 w-5" aria-hidden="true" />
+                </div>
+                <h2
+                  id="withdraw-dialog-title"
+                  className="text-sm sm:text-base font-bold text-[var(--color-text-primary)]"
+                >
+                  {isTr ? "Teklifi Geri Çekmek İstiyor Musunuz?" : "Withdraw Proposal?"}
+                </h2>
               </div>
-              <h2
-                id="withdraw-dialog-title"
-                className="text-base font-bold text-[var(--color-text-primary)]"
+              <button
+                type="button"
+                onClick={() => {
+                  setWithdrawingOffer(null);
+                  setWithdrawError(null);
+                }}
+                className="p-1 rounded-lg text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] transition-colors cursor-pointer"
+                aria-label={isTr ? "Kapat" : "Close"}
               >
-                {isTr ? "Teklifi Geri Çekmek İstiyor Musunuz?" : "Withdraw Proposal?"}
-              </h2>
+                <X className="h-4 w-4" aria-hidden="true" />
+              </button>
             </div>
 
-            <p
-              id="withdraw-dialog-description"
-              className="text-xs text-[var(--color-text-secondary)] leading-relaxed"
-            >
-              {isTr
-                ? `"${withdrawingOffer.listingTitle}" projesine verdiğiniz teklifi geri çekiyorsunuz. İlanın mevcut 7 günlük yayım döngüsü boyunca bu projeye tekrar teklif sunamazsınız.`
-                : `You are withdrawing your proposal for "${withdrawingOffer.listingTitle}". You will not be able to submit another offer for this project during its current 7-day cycle.`}
-            </p>
+            <div className="flex-1 overflow-y-auto min-h-0 py-3 space-y-4 pr-1">
+              <p
+                id="withdraw-dialog-description"
+                className="text-xs text-[var(--color-text-secondary)] leading-relaxed"
+              >
+                {isTr
+                  ? `"${withdrawingOffer.listingTitle}" projesine verdiğiniz teklifi geri çekiyorsunuz. İlanın mevcut 7 günlük yayım döngüsü boyunca bu projeye tekrar teklif sunamazsınız.`
+                  : `You are withdrawing your proposal for "${withdrawingOffer.listingTitle}". You will not be able to submit another offer for this project during its current 7-day cycle.`}
+              </p>
 
-            {withdrawError && (
-              <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-xs text-red-400">
-                {withdrawError}
-              </div>
-            )}
+              {withdrawError && (
+                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-xs text-red-400">
+                  {withdrawError}
+                </div>
+              )}
+            </div>
 
-            <div className="flex items-center justify-end gap-3 pt-2">
+            <div className="flex items-center justify-end gap-2.5 sm:gap-3 pt-3 border-t border-[var(--color-border-subtle)] shrink-0">
               <Button
                 type="button"
                 variant="outline"
@@ -369,7 +372,7 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
                 size="sm"
                 onClick={confirmWithdraw}
                 disabled={loadingId === withdrawingOffer.id}
-                className="bg-red-600 hover:bg-red-700 text-white"
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold cursor-pointer"
               >
                 {loadingId === withdrawingOffer.id
                   ? isTr

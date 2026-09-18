@@ -6,6 +6,9 @@
 
 :root,
 [data-theme="light"] {
+  --canvas-rgb: 247 247 245;
+  --surface-rgb: 255 255 255;
+  --elevated-rgb: 240 240 237;
   --bg-canvas: #f7f7f5;
   --bg-surface: #ffffff;
   --bg-elevated: #f0f0ed;
@@ -65,14 +68,17 @@
 }
 
 [data-theme="dark"] {
+  --canvas-rgb: 20 21 23;
+  --surface-rgb: 28 30 35;
+  --elevated-rgb: 42 45 53;
   --bg-canvas: #141517;
-  --bg-surface: #1d1e21;
-  --bg-elevated: #26282d;
+  --bg-surface: #1c1e23;
+  --bg-elevated: #2a2d35;
   --text-primary: #f2f3f5;
   --text-secondary: #a3a6af;
   --text-muted: #6e717a;
-  --border-subtle: #2d3036;
-  --border-strong: #3f424b;
+  --border-subtle: #333640;
+  --border-strong: #464a56;
   --accent: #3b82f6;
   --accent-contrast: #ffffff;
   --accent-hover: #2563eb;
@@ -124,6 +130,9 @@
 }
 
 [data-theme="black"] {
+  --canvas-rgb: 0 0 0;
+  --surface-rgb: 10 10 11;
+  --elevated-rgb: 20 20 22;
   --bg-canvas: #000000;
   --bg-surface: #0a0a0b;
   --bg-elevated: #141416;
@@ -267,6 +276,11 @@ html::-webkit-scrollbar {
   outline-offset: 2px;
 }
 
+/* Base form controls: prevent user-agent dark-mode solid grey rgb(59,59,59) */
+input, select, textarea {
+  background-color: transparent;
+}
+
 /* Respect user's reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -394,6 +408,28 @@ html::-webkit-scrollbar {
   animation: card-fade-cascade 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Smooth Accordion Content Expansion & Collapse */
+.accordion-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  pointer-events: none;
+  transition: grid-template-rows 340ms cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: grid-template-rows, opacity;
+}
+
+.accordion-wrapper.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.accordion-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
 /* Typography Gradient Masks */
 .text-gradient {
   background: linear-gradient(135deg, var(--text-primary) 30%, var(--text-secondary) 100%);
@@ -409,14 +445,14 @@ html::-webkit-scrollbar {
 
 /* Glassmorphic Surfaces */
 .glass-surface {
-  background: var(--color-surface-base);
+  background: color-mix(in srgb, var(--color-surface-base) 75%, transparent);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--color-border-subtle);
 }
 
 .glass-surface-elevated {
-  background: var(--color-surface-elevated);
+  background: color-mix(in srgb, var(--color-surface-elevated) 80%, transparent);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--color-border-subtle);

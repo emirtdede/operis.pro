@@ -135,18 +135,15 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
     };
   }, []);
 
-  const navLinks = [
-    { href: getLocalizedRoute("feed", locale), label: t("feed") },
-    { href: getLocalizedRoute("listings", locale), label: t("browse") },
-    { href: getLocalizedRoute("categories", locale), label: t("categories") },
-  ];
-
-  if (session) {
-    navLinks.push({
-      href: getLocalizedRoute("dashboardListings", locale),
-      label: isTr ? "Çalışma Alanım" : "Workspace",
-    });
-  }
+  const navLinks = session
+    ? [
+        {
+          href: getLocalizedRoute("dashboardListings", locale),
+          label: isTr ? "Çalışma Alanım" : "Workspace",
+          isActive: pathname.startsWith(`/${locale}/panel`) || pathname.startsWith(`/${locale}/dashboard`),
+        },
+      ]
+    : [];
 
   const handleLogout = async () => {
     try {
@@ -175,6 +172,7 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
     try {
       localStorage.setItem("fp_locale", newLocale);
       document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+      document.cookie = `fp_locale=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
     } catch {
       // Ignore in restricted environments
     }
@@ -189,11 +187,11 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
         backgroundColor: "color-mix(in srgb, var(--color-surface-base) 88%, transparent)",
       }}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8">
         {/* Left: Brand Logo */}
-        <div className="flex items-center lg:flex-1 justify-start shrink-0">
+        <div className="flex items-center md:flex-1 justify-start shrink-0">
           <Link
-            href={`/${locale}`}
+            href={session ? getLocalizedRoute("listings", locale) : `/${locale}`}
             className="flex items-center gap-2.5 transition-opacity hover:opacity-90"
             aria-label={common("appName")}
           >
@@ -202,30 +200,34 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
         </div>
 
         {/* Center: Main Navigation (Perfect Dead Center) */}
-        <nav
-          aria-label="Main Navigation"
-          className="hidden lg:flex shrink-0 items-center justify-center gap-1"
-        >
-          {navLinks.map((link) => {
-            const isActive = pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`min-w-[104px] whitespace-nowrap justify-center text-center rounded-xl px-4 py-1.5 text-sm font-medium transition-all flex items-center ${
-                  isActive
-                    ? "bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] shadow-sm font-semibold"
-                    : "text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text-primary)]"
-                }`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
+        {navLinks.length > 0 ? (
+          <nav
+            aria-label="Main Navigation"
+            className="hidden md:flex shrink-0 items-center justify-center gap-1"
+          >
+            {navLinks.map((link) => {
+              const isActive = link.isActive ?? pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`min-w-0 md:min-w-[76px] lg:min-w-[104px] whitespace-nowrap justify-center text-center rounded-xl px-2.5 lg:px-4 py-1.5 text-xs lg:text-sm font-medium transition-all flex items-center ${
+                    isActive
+                      ? "bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] shadow-sm font-semibold"
+                      : "text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text-primary)]"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
+        ) : (
+          <div className="hidden md:flex shrink-0" aria-hidden="true" />
+        )}
 
         {/* Right: Premium Auth / User Area */}
-        <div className="hidden lg:flex lg:flex-1 items-center justify-end gap-2 shrink-0">
+        <div className="hidden md:flex md:flex-1 items-center justify-end gap-1.5 lg:gap-2 shrink-0">
           {/* Command Palette / Quick Search Trigger Button */}
           <button
             type="button"
@@ -526,7 +528,7 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
         </div>
 
         {/* Mobile Action Buttons (Search + Hamburger) */}
-        <div className="flex lg:hidden items-center gap-1 ml-auto">
+        <div className="flex md:hidden items-center gap-1 ml-auto">
           <button
             type="button"
             onClick={() => setCommandPaletteOpen(true)}
@@ -565,7 +567,7 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
         <div
-          className="border-b border-[var(--color-border-subtle)] backdrop-blur-2xl px-4 pt-3 pb-6 lg:hidden animate-in fade-in-0 slide-in-from-top-2 duration-200"
+          className="border-b border-[var(--color-border-subtle)] backdrop-blur-2xl px-4 pt-3 pb-6 md:hidden animate-in fade-in-0 slide-in-from-top-2 duration-200"
           style={{
             backgroundColor: "var(--color-surface-base)",
           }}
@@ -590,16 +592,23 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
                 ⌘K
               </kbd>
             </button>
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="rounded-xl px-3.5 py-2.5 text-base font-medium text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = link.isActive ?? pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`rounded-xl px-3.5 py-2.5 text-base font-medium transition-colors ${
+                    isActive
+                      ? "bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] font-semibold"
+                      : "text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
             <div className="mt-4 flex flex-col gap-2.5 border-t border-[var(--color-border-subtle)] pt-4">
               {session ? (
                 <>

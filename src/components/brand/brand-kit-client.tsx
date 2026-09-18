@@ -100,9 +100,9 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
           {/* Dark Mode Logo Card */}
-          <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[#09090B] p-8 shadow-2xl relative overflow-hidden flex flex-col justify-between space-y-8">
+          <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[#09090B] p-5 sm:p-7 md:p-8 shadow-2xl relative overflow-hidden flex flex-col justify-between space-y-6 sm:space-y-8">
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono font-semibold text-zinc-400 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/80">
                 {isTr ? "Koyu Tema / Dark Mode (#FAFAFA)" : "Dark Theme (#FAFAFA)"}
@@ -124,7 +124,7 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
                 <a
                   href="/operis-logo-koyu.svg"
                   download="operis-logo-koyu.svg"
-                  className="flex-1 min-w-[140px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-md shadow-blue-500/20 transition-all"
+                  className="flex-1 min-w-0 sm:min-w-[140px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-md shadow-blue-500/20 transition-all"
                 >
                   <Download className="h-4 w-4" aria-hidden="true" />
                   <span>{isTr ? "SVG İndir" : "Download SVG"}</span>
@@ -164,7 +164,7 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
           </div>
 
           {/* Light Mode Logo Card */}
-          <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[#F8F9FA] p-8 shadow-2xl relative overflow-hidden flex flex-col justify-between space-y-8">
+          <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[#F8F9FA] p-5 sm:p-7 md:p-8 shadow-2xl relative overflow-hidden flex flex-col justify-between space-y-6 sm:space-y-8">
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono font-semibold text-zinc-600 px-3 py-1 rounded-full border border-zinc-300 bg-zinc-200/80">
                 {isTr ? "Açık Tema / Light Mode (#09090B)" : "Light Theme (#09090B)"}
@@ -186,7 +186,7 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
                 <a
                   href="/operis-logo-acik.svg"
                   download="operis-logo-acik.svg"
-                  className="flex-1 min-w-[140px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-black text-white text-xs font-semibold shadow-md transition-all"
+                  className="flex-1 min-w-0 sm:min-w-[140px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-black text-white text-xs font-semibold shadow-md transition-all"
                 >
                   <Download className="h-4 w-4" aria-hidden="true" />
                   <span>{isTr ? "SVG İndir" : "Download SVG"}</span>
@@ -227,8 +227,8 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
         </div>
 
         {/* Standalone Stream Mark Icon */}
-        <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-8 shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="flex items-center gap-6">
+        <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-5 sm:p-7 md:p-8 shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left">
             <div className="h-20 w-20 shrink-0 rounded-2xl bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] flex items-center justify-center shadow-lg p-3">
               <img
                 src="/operis-favicon.svg"
@@ -236,7 +236,7 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
                 className="h-full w-full object-contain"
               />
             </div>
-            <div className="space-y-1 text-center sm:text-left">
+            <div className="space-y-1">
               <h3 className="text-lg font-bold text-[var(--color-text-primary)]">
                 {isTr
                   ? "Operis Stream Mark Sembolü (İkon / Favicon)"
@@ -250,22 +250,22 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 shrink-0 w-full sm:w-auto">
             <a
               href="/operis-favicon.svg"
               download="operis-favicon.svg"
-              className="px-4 py-2.5 rounded-xl bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] hover:border-blue-500/40 text-xs font-semibold text-[var(--color-text-primary)] transition-all flex items-center gap-2"
+              className="px-4 py-2.5 rounded-xl bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] hover:border-blue-500/40 text-xs font-semibold text-[var(--color-text-primary)] transition-all flex items-center gap-2 shadow-xs"
             >
               <Download className="h-4 w-4 text-blue-400" aria-hidden="true" />
-              <span>{isTr ? "Favicon İndir (.svg)" : "Download Favicon"}</span>
+              <span>{isTr ? "Favicon İndir (.svg)" : "Download Favicon (.svg)"}</span>
             </a>
             <a
               href="/apple-touch-icon.png"
               download="apple-touch-icon.png"
-              className="px-4 py-2.5 rounded-xl bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] hover:border-blue-500/40 text-xs font-semibold text-[var(--color-text-primary)] transition-all flex items-center gap-2"
+              className="px-4 py-2.5 rounded-xl bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] hover:border-blue-500/40 text-xs font-semibold text-[var(--color-text-primary)] transition-all flex items-center gap-2 shadow-xs"
             >
               <Download className="h-4 w-4 text-indigo-400" aria-hidden="true" />
-              <span>Apple Icon (.png)</span>
+              <span>{isTr ? "Uygulama Simgesi İndir (.png)" : "Download App Icon (.png)"}</span>
             </a>
           </div>
         </div>
@@ -273,13 +273,11 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
 
       {/* 2. Logo Anatomy & Optical Kerning Standard */}
       <section
+        id="anatomy"
         aria-label={
           isTr ? "Logo Anatomisi ve Kalibrasyon Standartları" : "Logo Anatomy & Calibration"
         }
-        className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-8 sm:p-10 shadow-2xl relative overflow-hidden space-y-8"
-        style={{
-          backgroundColor: "var(--color-surface-base)",
-        }}
+        className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-5 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden space-y-8"
       >
         <div className="space-y-2">
           <span className="text-xs font-mono uppercase tracking-wider text-blue-400 font-bold">
@@ -503,7 +501,7 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* DO's */}
-          <div className="rounded-3xl border border-emerald-500/25 bg-emerald-500/5 p-8 space-y-6">
+          <div className="rounded-3xl border border-emerald-500/25 bg-emerald-500/5 p-5 sm:p-7 md:p-8 space-y-6">
             <div className="flex items-center gap-2.5 text-emerald-500 font-bold text-base">
               <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
               <span>{isTr ? "Yapılması Gerekenler (Do's)" : "Approved Usage (Do's)"}</span>
@@ -558,7 +556,7 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
           </div>
 
           {/* DON'Ts */}
-          <div className="rounded-3xl border border-rose-500/25 bg-rose-500/5 p-8 space-y-6">
+          <div className="rounded-3xl border border-rose-500/25 bg-rose-500/5 p-5 sm:p-7 md:p-8 space-y-6">
             <div className="flex items-center gap-2.5 text-rose-500 font-bold text-base">
               <XCircle className="h-5 w-5" aria-hidden="true" />
               <span>
@@ -605,7 +603,7 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
       </section>
 
       {/* Footer Navigation Back to Legal & Trust Center */}
-      <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+      <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-5 sm:p-7 md:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
         <div className="space-y-1 text-center sm:text-left">
           <div className="font-bold text-sm text-[var(--color-text-primary)]">
             {isTr ? "Hukuki Haklar ve Fikri Mülkiyet Politikası" : "Legal Rights & IP Policy"}

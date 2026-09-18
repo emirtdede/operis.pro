@@ -54,11 +54,11 @@ export function FaqAccordion({ locale }: FaqAccordionProps) {
     },
     {
       q: isTr
-        ? "Tek bir hesapla hem iş verip hem projelere teklif sunabilir miyim?"
+        ? "Tek bir hesapla hem iş verip hem ilanlara teklif sunabilir miyim?"
         : "Can I use a single account to both hire talent and submit proposals?",
       a: isTr
-        ? "Evet. Platformumuzda çift yetenek (dual-role) mimarisi geçerlidir. Ayrı işveren veya çalışan hesabı açmanıza gerek yoktur; tek bir profille hem dilediğiniz zaman proje yayınlayabilir hem de diğer projelere teklif verebilirsiniz."
-        : "Yes. Our architecture natively supports dual-capabilities on every account. You do not need separate accounts for client and freelancer; you can publish project listings and bid on others using the same verified identity.",
+        ? "Evet. Platformumuzda çift yetenek (dual-role) mimarisi geçerlidir. Ayrı işveren veya çalışan hesabı açmanıza gerek yoktur; tek bir profille hem dilediğiniz zaman ilan yayınlayabilir hem de diğer ilanlara teklif verebilirsiniz."
+        : "Yes. Our architecture natively supports dual-capabilities on every account. You do not need separate accounts for client and freelancer; you can publish listings and bid on others using the same verified identity.",
     },
   ];
 

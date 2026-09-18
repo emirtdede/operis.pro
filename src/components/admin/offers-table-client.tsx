@@ -227,21 +227,21 @@ export function OffersTableClient({
       {/* Offer Detail Inspection Modal */}
       {selectedOffer && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-xl rounded-2xl border border-slate-800 bg-[#12141a] p-6 space-y-5 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="w-full max-w-xl max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-[#12141a] p-4 sm:p-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3 shrink-0">
               <div className="flex items-center gap-2">
-                <FileText className="h-5 w-5 text-purple-400" />
-                <h3 className="text-sm font-bold text-white">Teklif & Eşleşme Denetim İzi</h3>
+                <FileText className="h-5 w-5 text-purple-400 shrink-0" />
+                <h3 className="text-sm font-bold text-white truncate">Teklif & Eşleşme Denetim İzi</h3>
               </div>
               <button
                 onClick={() => setSelectedOffer(null)}
-                className="text-slate-400 hover:text-white"
+                className="text-slate-400 hover:text-white p-1 rounded-lg"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="space-y-3 text-xs">
+            <div className="flex-1 overflow-y-auto min-h-0 py-3 space-y-3 text-xs pr-1">
               <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
                 <div className="text-slate-500 font-medium">İlgili Proje İlanı</div>
                 <div className="text-sm font-semibold text-white">{selectedOffer.listingTitle}</div>
@@ -250,7 +250,7 @@ export function OffersTableClient({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 xs:grid-cols-2 gap-3">
                 <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
                   <div className="text-slate-500 font-medium">Teklif Sunan Uzman</div>
                   <div className="font-semibold text-white">{selectedOffer.senderDisplayName}</div>
@@ -270,7 +270,7 @@ export function OffersTableClient({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 xs:grid-cols-2 gap-3">
                 <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
                   <div className="text-slate-500 font-medium">Teklif Bütçesi</div>
                   <div className="font-mono text-emerald-400 font-bold text-base">
@@ -304,11 +304,11 @@ export function OffersTableClient({
               </div>
             </div>
 
-            <div className="flex justify-end pt-2 border-t border-slate-800">
+            <div className="flex justify-end pt-3 border-t border-slate-800 shrink-0">
               <button
                 type="button"
                 onClick={() => setSelectedOffer(null)}
-                className="px-4 py-1.5 rounded-xl border border-slate-800 text-xs text-slate-300 hover:text-white"
+                className="px-4 py-2 rounded-xl border border-slate-800 text-xs text-slate-300 hover:text-white w-full sm:w-auto"
               >
                 Kapat
               </button>

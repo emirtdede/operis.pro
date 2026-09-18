@@ -141,7 +141,7 @@ export function ListingEditForm({ listing, locale }: ListingEditFormProps) {
 
       <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-6 sm:p-7 space-y-4">
         <TextInput
-          label={isTr ? "Proje Başlığı" : "Project Title"}
+          label={isTr ? "İlan Başlığı" : "Listing Title"}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required

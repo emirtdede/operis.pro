@@ -175,13 +175,13 @@ export function ThreatsConsoleClient({ initialThreats }: ThreatsConsoleClientPro
 
         <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
           {/* Severity Filter */}
-          <div className="flex items-center gap-1.5 bg-[#0d0e12] p-1 rounded-xl border border-slate-800 text-xs">
-            <span className="text-slate-500 text-[11px] px-2">Kritiklik:</span>
+          <div className="flex items-center gap-1.5 bg-[#0d0e12] p-1 rounded-xl border border-slate-800 text-xs overflow-x-auto scrollbar-none max-w-full">
+            <span className="text-slate-500 text-[11px] px-2 shrink-0">Kritiklik:</span>
             {["ALL", "CRITICAL", "HIGH", "MEDIUM", "LOW"].map((sev) => (
               <button
                 key={sev}
                 onClick={() => setSeverityFilter(sev)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all shrink-0 ${
                   severityFilter === sev
                     ? "bg-red-600 text-white font-semibold"
                     : "text-slate-400 hover:text-white"
@@ -193,13 +193,13 @@ export function ThreatsConsoleClient({ initialThreats }: ThreatsConsoleClientPro
           </div>
 
           {/* Status Filter */}
-          <div className="flex items-center gap-1.5 bg-[#0d0e12] p-1 rounded-xl border border-slate-800 text-xs">
-            <span className="text-slate-500 text-[11px] px-2">Durum:</span>
+          <div className="flex items-center gap-1.5 bg-[#0d0e12] p-1 rounded-xl border border-slate-800 text-xs overflow-x-auto scrollbar-none max-w-full">
+            <span className="text-slate-500 text-[11px] px-2 shrink-0">Durum:</span>
             {["ALL", "BLOCKED", "DETECTED", "MITIGATED", "INVESTIGATING"].map((st) => (
               <button
                 key={st}
                 onClick={() => setStatusFilter(st)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all shrink-0 ${
                   statusFilter === st
                     ? "bg-slate-700 text-white font-semibold"
                     : "text-slate-400 hover:text-white"
@@ -373,34 +373,36 @@ export function ThreatsConsoleClient({ initialThreats }: ThreatsConsoleClientPro
       {/* Block IP Modal */}
       {blockModalIp && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-[#12141a] border border-red-500/30 rounded-3xl p-6 w-full max-w-md space-y-4 shadow-2xl">
-            <div className="flex items-center gap-3 text-red-400">
-              <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20">
+          <div className="bg-[#12141a] border border-red-500/30 rounded-3xl p-4 sm:p-6 w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden shadow-2xl">
+            <div className="flex items-center gap-3 text-red-400 pb-3 border-b border-slate-800/80 shrink-0">
+              <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 shrink-0">
                 <Ban className="h-6 w-6" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <h3 className="font-bold text-white text-sm">IP Adresini Engelle</h3>
-                <p className="font-mono text-xs text-red-300 mt-0.5">{blockModalIp}</p>
+                <p className="font-mono text-xs text-red-300 mt-0.5 truncate">{blockModalIp}</p>
               </div>
             </div>
 
-            <div className="text-xs text-slate-400 leading-relaxed">
-              Bu IP adresinden gelen tüm API ve web istekleri WAF / Edge seviyesinde 403 Forbidden
-              ile engellenecek ve güvenlik denetim kaydına yazılacaktır.
+            <div className="flex-1 overflow-y-auto min-h-0 py-3 space-y-3 pr-1">
+              <div className="text-xs text-slate-400 leading-relaxed">
+                Bu IP adresinden gelen tüm API ve web istekleri WAF / Edge seviyesinde 403 Forbidden
+                ile engellenecek ve güvenlik denetim kaydına yazılacaktır.
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs text-slate-300 font-medium">Engelleme Gerekçesi:</label>
+                <textarea
+                  rows={3}
+                  value={blockReason}
+                  onChange={(e) => setBlockReason(e.target.value)}
+                  placeholder="Örn: 100+ başarısız brute-force parola denemesi ve SQL enjeksiyon taraması."
+                  className="w-full bg-[#0d0e12] border border-slate-800 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-red-500"
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-xs text-slate-300 font-medium">Engelleme Gerekçesi:</label>
-              <textarea
-                rows={3}
-                value={blockReason}
-                onChange={(e) => setBlockReason(e.target.value)}
-                placeholder="Örn: 100+ başarısız brute-force parola denemesi ve SQL enjeksiyon taraması."
-                className="w-full bg-[#0d0e12] border border-slate-800 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-red-500"
-              />
-            </div>
-
-            <div className="flex items-center justify-end gap-2 pt-2">
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-800 shrink-0">
               <button
                 onClick={() => {
                   setBlockModalIp(null);

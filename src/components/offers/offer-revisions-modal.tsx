@@ -110,7 +110,7 @@ export function OfferRevisionsModal({
         {/* Content Body */}
         <div className="flex-1 overflow-hidden flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-slate-800">
           {/* Revisions Sidebar List */}
-          <div className="w-full md:w-64 p-3 overflow-y-auto space-y-1.5 bg-slate-950/40 shrink-0">
+          <div className="w-full md:w-64 max-h-40 md:max-h-none p-3 overflow-y-auto space-y-1.5 bg-slate-950/40 shrink-0">
             <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-2 py-1">
               {isTr ? "Sürüm Listesi" : "Version History"}
             </div>

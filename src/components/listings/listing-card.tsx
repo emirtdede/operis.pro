@@ -6,8 +6,6 @@ import {
   Zap,
   CheckSquare,
   Square,
-  Eye,
-  MousePointerClick,
 } from "lucide-react";
 import { AvatarInitials } from "../ui/avatar-initials";
 import { Badge } from "../ui/badge";
@@ -68,8 +66,8 @@ export function ListingCard({
   firstPublishedAt,
   activeUntil,
   activationSeq,
-  viewCount = 0,
-  clickCount = 0,
+  viewCount: _viewCount = 0,
+  clickCount: _clickCount = 0,
   locale,
   isBatchMode,
   isSelected,
@@ -155,7 +153,7 @@ export function ListingCard({
       className={`group relative overflow-hidden rounded-2xl border p-6 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-500/5 ${
         isSelected
           ? "border-blue-500 ring-2 ring-blue-500/30 bg-blue-500/5"
-          : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/75 hover:border-blue-500/40"
+          : "border-[var(--color-border-subtle)] bg-surface/75 hover:border-blue-500/40"
       }`}
     >
       <div className="flex flex-col gap-4">
@@ -199,7 +197,7 @@ export function ListingCard({
 
             <Badge
               variant="secondary"
-              className="font-medium bg-blue-500/10 text-blue-400 border-blue-500/20"
+              className="font-semibold bg-blue-500/15 text-blue-700 dark:text-sky-300 border-blue-500/25 shadow-2xs"
             >
               {categoryName}
             </Badge>
@@ -250,30 +248,6 @@ export function ListingCard({
               <span>{timelineLabel}</span>
             </div>
           )}
-
-          {/* Views and Clicks Badge */}
-          <div className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-surface-hover)] px-2.5 py-1.5 text-[var(--color-text-secondary)] font-medium text-[11px] sm:text-xs">
-            <span
-              className="flex items-center gap-1 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
-              title={isTr ? `${viewCount} Görüntülenme` : `${viewCount} Views`}
-            >
-              <Eye className="h-3.5 w-3.5 text-blue-400 shrink-0" aria-hidden="true" />
-              <span>{viewCount}</span>
-            </span>
-            <span className="text-[var(--color-border-strong)] opacity-60" aria-hidden="true">
-              |
-            </span>
-            <span
-              className="flex items-center gap-1 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
-              title={isTr ? `${clickCount} Tıklanma` : `${clickCount} Clicks`}
-            >
-              <MousePointerClick
-                className="h-3.5 w-3.5 text-emerald-400 shrink-0"
-                aria-hidden="true"
-              />
-              <span>{clickCount}</span>
-            </span>
-          </div>
 
           {/* Quick Offer Button */}
           {onQuickOffer && diffDays > 0 && !isBatchMode && (

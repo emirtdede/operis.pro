@@ -320,13 +320,13 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
     setError(null);
     if (currentStep === 1) {
       if (!categoryId) {
-        setError(isTr ? "Lütfen bir proje kategorisi seçin." : "Please select a project category.");
+        setError(isTr ? "Lütfen bir ilan kategorisi seçin." : "Please select a listing category.");
         return false;
       }
       if (title.trim().length < 20 || title.trim().length > 120) {
         setError(
           isTr
-            ? "Proje başlığı en az 20, en fazla 120 karakter olmalıdır."
+            ? "İlan başlığı en az 20, en fazla 120 karakter olmalıdır."
             : "Title must be between 20 and 120 characters."
         );
         return false;
@@ -353,10 +353,10 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
       if (scope.trim().length < 200 || scope.trim().length > 6000) {
         setError(
           isTr
-            ? "Proje kapsamı en az 200, en fazla 6000 karakter olmalıdır (şu an: " +
+            ? "İlan kapsamı en az 200, en fazla 6000 karakter olmalıdır (şu an: " +
                 scope.trim().length +
                 " karakter)."
-            : "Project scope must be between 200 and 6000 characters."
+            : "Listing scope must be between 200 and 6000 characters."
         );
         return false;
       }
@@ -497,7 +497,7 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
   const stageTitles = [
     {
       step: 1,
-      title: isTr ? "Proje Tanımı & Kategori" : "Project Info & Category",
+      title: isTr ? "İlan Tanımı & Kategori" : "Listing Info & Category",
       desc: isTr ? "Kategori, başlık ve kısa özet" : "Category, title & summary",
       icon: FolderTree,
     },
@@ -540,7 +540,7 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
 
         {/* 3-Stage Visual Stepper Header */}
         <div className="space-y-4">
-          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          <div className="grid grid-cols-3 gap-1.5 sm:gap-3">
             {stageTitles.map((st) => {
               const Icon = st.icon;
               const isActive = step === st.step;
@@ -553,7 +553,7 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
                     if (isDone) setStep(st.step);
                   }}
                   disabled={!isDone && !isActive}
-                  className={`flex flex-col items-start p-3 sm:p-3.5 rounded-2xl border text-left transition-all ${
+                  className={`flex flex-col items-start p-2 sm:p-3.5 rounded-xl sm:rounded-2xl border text-left transition-all ${
                     isActive
                       ? "border-blue-500/60 bg-blue-500/10 text-blue-400 shadow-xs"
                       : isDone
@@ -561,15 +561,15 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
                         : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/40 text-[var(--color-text-tertiary)] opacity-60"
                   }`}
                 >
-                  <div className="flex items-center gap-1.5 text-xs font-bold mb-1">
+                  <div className="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-bold mb-0.5 sm:mb-1">
                     {isDone ? (
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+                      <CheckCircle2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-400 shrink-0" />
                     ) : (
-                      <Icon className="h-3.5 w-3.5" />
+                      <Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0" />
                     )}
-                    <span>{isTr ? `${st.step}. Aşama` : `Stage ${st.step}`}</span>
+                    <span className="truncate">{isTr ? `${st.step}. Aşama` : `Stage ${st.step}`}</span>
                   </div>
-                  <div className="text-[11px] font-semibold text-[var(--color-text-primary)] truncate w-full">
+                  <div className="text-[10px] sm:text-[11px] font-semibold text-[var(--color-text-primary)] truncate w-full">
                     {st.title}
                   </div>
                 </button>
@@ -605,11 +605,11 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
             <div className="space-y-1">
               <h2 className="text-xl font-bold text-[var(--color-text-primary)] flex items-center gap-2">
                 <FolderTree className="h-5 w-5 text-blue-400" />
-                <span>{isTr ? "1. Proje Tanımı ve Kategori" : "1. Project Info & Category"}</span>
+                <span>{isTr ? "1. İlan Tanımı ve Kategori" : "1. Listing Info & Category"}</span>
               </h2>
               <p className="text-xs sm:text-sm text-[var(--color-text-secondary)]">
                 {isTr
-                  ? "Projenizin ana disiplinini seçin, net bir başlık ve kısa bir özet belirleyin."
+                  ? "İlanınızın ana disiplinini seçin, net bir başlık ve kısa bir özet belirleyin."
                   : "Choose the technology category, clear title, and concise preview summary."}
               </p>
             </div>
@@ -617,7 +617,7 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
             {/* Category Select (Clean Dropdown instead of 21 raw buttons) */}
             <div className="space-y-2">
               <label className="text-xs font-semibold text-[var(--color-text-primary)] block">
-                {isTr ? "Proje Kategorisi *" : "Project Category *"}
+                {isTr ? "İlan Kategorisi *" : "Listing Category *"}
               </label>
               <Select
                 value={categoryId}
@@ -651,7 +651,7 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
                 <label className="font-semibold text-[var(--color-text-primary)]">
-                  {isTr ? "Proje Başlığı *" : "Project Title *"}
+                  {isTr ? "İlan Başlığı *" : "Listing Title *"}
                 </label>
                 <span
                   className={`font-mono text-[11px] ${
@@ -739,7 +739,7 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
             <div className="space-y-2">
               <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                 <label className="font-semibold text-[var(--color-text-primary)]">
-                  {isTr ? "Detaylı Proje Kapsamı *" : "Detailed Project Scope *"}
+                  {isTr ? "Detaylı İlan Kapsamı *" : "Detailed Listing Scope *"}
                 </label>
                 <div className="flex items-center gap-3">
                   <button
@@ -766,7 +766,7 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
                 onChange={(e) => setScope(e.target.value)}
                 placeholder={
                   isTr
-                    ? "Projenin hedefleri, mimarisi, teslim aşamaları, API entegrasyonları veya kod kalitesi beklentilerinizi ayrıntılı yazın..."
+                    ? "İlanın hedefleri, mimarisi, teslim aşamaları, API entegrasyonları veya kod kalitesi beklentilerinizi ayrıntılı yazın..."
                     : "Describe project objectives, architecture, milestone deliverables, API expectations..."
                 }
                 minLength={200}
@@ -843,7 +843,7 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
             {/* Special Parameters Checkboxes */}
             <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/30 p-4 space-y-3">
               <div className="text-xs font-bold text-[var(--color-text-primary)] uppercase tracking-wider">
-                {isTr ? "Proje Özellikleri" : "Project Attributes"}
+                {isTr ? "İlan Özellikleri" : "Listing Attributes"}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <Checkbox
@@ -868,7 +868,7 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-xs font-semibold text-[var(--color-text-primary)] block">
-                  {isTr ? "Proje Türü" : "Project Type"}
+                  {isTr ? "İş / İlan Türü" : "Job / Listing Type"}
                 </label>
                 <Select
                   value={projectType}
@@ -876,11 +876,11 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
                   options={[
                     {
                       value: "new_build",
-                      label: isTr ? "Sıfırdan Yeni Proje" : "New Build / Green-field",
+                      label: isTr ? "Sıfırdan Yeni İş / Ürün" : "New Build / Green-field",
                     },
                     {
                       value: "improvement",
-                      label: isTr ? "Mevcut Projeyi Geliştirme" : "Feature Improvement",
+                      label: isTr ? "Mevcut Sistemi Geliştirme" : "Feature Improvement",
                     },
                     {
                       value: "bug_fix",
@@ -912,7 +912,7 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
 
               <div className="space-y-2">
                 <label className="text-xs font-semibold text-[var(--color-text-primary)] block">
-                  {isTr ? "Proje Aşaması" : "Project Stage"}
+                  {isTr ? "İşin / İlanın Aşaması" : "Listing Stage"}
                 </label>
                 <Select
                   value={projectStage}
@@ -1046,7 +1046,13 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
                 </div>
 
                 {budgetMode !== "NEGOTIABLE" && (
-                  <div className="grid grid-cols-3 gap-2 pt-1">
+                  <div
+                    className={`grid gap-2 pt-1 ${
+                      budgetMode === "RANGE"
+                        ? "grid-cols-1 sm:grid-cols-3"
+                        : "grid-cols-1 sm:grid-cols-2"
+                    }`}
+                  >
                     <Select
                       value={budgetCurrency}
                       onChange={(e) => setBudgetCurrency(e.target.value)}
@@ -1059,7 +1065,15 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
                     />
                     <TextInput
                       type="number"
-                      placeholder={isTr ? "Min Tutar" : "Min"}
+                      placeholder={
+                        isTr
+                          ? budgetMode === "FIXED"
+                            ? "Tutar"
+                            : "Min Tutar"
+                          : budgetMode === "FIXED"
+                            ? "Amount"
+                            : "Min"
+                      }
                       value={budgetMin}
                       onChange={(e) => setBudgetMin(e.target.value)}
                     />
@@ -1275,13 +1289,13 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
               slug="onizleme-ilani"
               title={
                 title.trim() ||
-                (isTr ? "Örnek Proje Başlığı (En Az 20 Karakter)" : "Sample Project Title")
+                (isTr ? "Örnek İlan Başlığı (En Az 20 Karakter)" : "Sample Listing Title")
               }
               summary={
                 summary.trim() ||
                 (isTr
-                  ? "Bu proje için belirtilen kısa özet bilgisi burada yer alacaktır. Serbest çalışanlar projenizin detaylarına karar vermeden önce ilk olarak bu özeti okuyacaklardır."
-                  : "Short summary of the project will appear here for freelancers to evaluate.")
+                  ? "Bu ilan için belirtilen kısa özet bilgisi burada yer alacaktır. Serbest çalışanlar ilanınızın detaylarına karar vermeden önce ilk olarak bu özeti okuyacaklardır."
+                  : "Short summary of the listing will appear here for freelancers to evaluate.")
               }
               categoryName={selectedCategory?.name || (isTr ? "Web Geliştirme" : "Web Development")}
               budgetMode={budgetMode}
@@ -1293,7 +1307,7 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
               timelineValue={timelineValue ? parseInt(timelineValue, 10) : 2}
               timelineUnit={timelineUnit}
               ownerHandle="is-sahibi"
-              ownerDisplayName={isTr ? "İlan Sahibi (Siz)" : "Project Owner (You)"}
+              ownerDisplayName={isTr ? "İlan Sahibi (Siz)" : "Listing Owner (You)"}
               firstPublishedAt={new Date()}
               lastActivatedAt={new Date()}
               activeUntil={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)}

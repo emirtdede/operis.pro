@@ -356,4 +356,292 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       ],
     },
   },
+  "acceptable-use": {
+    tr: {
+      key: "acceptable-use",
+      title: "Kabul Edilebilir Kullanım Politikası",
+      subtitle: "5237 Sayılı TCK ve Siber Güvenlik Esasları",
+      version: "v1.0",
+      contentHash: "e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4",
+      lastUpdated: "17.09.2026",
+      badge: "Siber Güvenlik & Kötüye Kullanım Kalkanı",
+      highlight:
+        "Zararlı yazılım, izinsiz sızma testleri, sahte projeler ve dolandırıcılık teşebbüsleri derhal engellenir; sorumlular hakkında adli mercilere suç duyurusunda bulunulur.",
+      sections: [
+        {
+          title: "1. Yasaklı Yazılım ve Siber Saldırı Faaliyetleri",
+          paragraphs: [
+            "Malware, ransomware, exploit üretimi, yetkisiz penetrasyon testleri ve bot saldırıları kesinlikle yasaktır.",
+          ],
+        },
+        {
+          title: "2. Dolandırıcılık ve Sahte İlan Yasağı",
+          paragraphs: [
+            "Gerçek bütçesi bulunmayan hayalet ilanlar, sahte teklif havuzları ve kimlik avı girişimleri kalıcı hesap feshine tabidir.",
+          ],
+        },
+        {
+          title: "3. Müeyyideler ve Cezai Başvuru",
+          paragraphs: [
+            "İhlal tespitinde hesaplar derhal silinir, IP adresleri engellenir ve TCK bilişim suçları uyarınca savcılığa bildirilir.",
+          ],
+        },
+      ],
+    },
+    en: {
+      key: "acceptable-use",
+      title: "Acceptable Use Policy",
+      subtitle: "Cybersecurity & Community Integrity Standards",
+      version: "v1.0",
+      contentHash: "f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5",
+      lastUpdated: "17.09.2026",
+      badge: "Cybersecurity Shield",
+      highlight:
+        "Malware, unauthorized pentesting, fake briefs, and fraud schemes result in immediate termination and legal prosecution.",
+      sections: [
+        {
+          title: "1. Prohibited Cyber Activities",
+          paragraphs: [
+            "Zero tolerance for malware, exploit payloads, unauthorized penetration tests, or denial of service tools.",
+          ],
+        },
+        {
+          title: "2. Enforcement & Sanctions",
+          paragraphs: [
+            "Violating profiles face immediate permanent ban, IP blocking, and referral to cybercrime authorities.",
+          ],
+        },
+      ],
+    },
+  },
+  cookies: {
+    tr: {
+      key: "cookies",
+      title: "Çerez Politikası",
+      subtitle: "KVKK Çerez Uygulamaları Rehberi Uyarınca Bilgilendirme",
+      version: "v1.0",
+      contentHash: "0718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f6",
+      lastUpdated: "17.09.2026",
+      badge: "Sıfır Reklam Takibi • Yalnızca Zorunlu Çerez",
+      highlight:
+        "Platformumuzda üçüncü taraf reklam, pazarlama veya profil çıkarma çerezi KESİNLİKLE KULLANILMAZ. Sadece teknik olarak zorunlu oturum ve güvenlik çerezleri yer alır.",
+      sections: [
+        {
+          title: "1. Zorunlu Oturum Çerezleri",
+          paragraphs: [
+            "fp_session (HttpOnly oturum doğrulama) ve Cloudflare güvenlik çerezleri haricinde hiçbir izleme çerezi kullanılmaz.",
+          ],
+        },
+        {
+          title: "2. Çerez Yönetimi",
+          paragraphs: [
+            "Tarayıcınızın ayarlarından çerezleri dilediğiniz an silebilir veya engelleyebilirsiniz.",
+          ],
+        },
+      ],
+    },
+    en: {
+      key: "cookies",
+      title: "Cookie Policy",
+      subtitle: "Strictly Technical Essential Cookies Notice",
+      version: "v1.0",
+      contentHash: "18293a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f607",
+      lastUpdated: "17.09.2026",
+      badge: "Zero Third-Party Trackers",
+      highlight:
+        "We deploy zero third-party advertising or profiling cookies. Only strictly necessary session tokens and security cookies are used.",
+      sections: [
+        {
+          title: "1. Strictly Essential Cookies",
+          paragraphs: [
+            "fp_session and Cloudflare security tokens safeguard authenticated sessions against hijacking.",
+          ],
+        },
+      ],
+    },
+  },
+  "intellectual-property": {
+    tr: {
+      key: "intellectual-property",
+      title: "Fikri Mülkiyet ve Telif Hakları Politikası",
+      subtitle: "5846 Sayılı FSEK ve Uyar-Kaldır Bildirim Prosedürü",
+      version: "v1.0",
+      contentHash: "293a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f60718",
+      lastUpdated: "17.09.2026",
+      badge: "5846 FSEK • 48 Saat Uyar-Kaldır",
+      highlight:
+        "Geliştirilen kodların ve tasarımların mali hak devri iki taraf arasındaki P2P sözleşmeye tabidir. Telif ihlali bildirimleri 48 saat içinde incelenerek gereği yapılır.",
+      sections: [
+        {
+          title: "1. Eser Sahipliği ve Hak Devri",
+          paragraphs: [
+            "Kod mülkiyeti FSEK m. 48-52 uyarınca tarafların bağımsız sözleşmesine tabidir; platform telif devrinin tarafı değildir.",
+          ],
+        },
+        {
+          title: "2. Uyar-Kaldır İhbar Kanalı",
+          paragraphs: [
+            "Telif hakkı ihlali iddiaları legal@operis.pro adresine iletilir ve 48 saat içinde sonuçlandırılır.",
+          ],
+        },
+      ],
+    },
+    en: {
+      key: "intellectual-property",
+      title: "Intellectual Property & Copyright Policy",
+      subtitle: "Statutory Notice & Takedown Protocol",
+      version: "v1.0",
+      contentHash: "3a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f6071829",
+      lastUpdated: "17.09.2026",
+      badge: "Copyright Protection",
+      highlight:
+        "Code and asset IP rights transfer is strictly governed by bilateral user contracts. Valid DMCA/FSEK takedown notices processed within 48 hours.",
+      sections: [
+        {
+          title: "1. Code Ownership & Transfer",
+          paragraphs: [
+            "IP transfer remains governed by direct bilateral agreements; the platform does not assume ownership or warranty.",
+          ],
+        },
+      ],
+    },
+  },
+  consent: {
+    tr: {
+      key: "consent",
+      title: "Açık Rıza ve İletişim İzinleri Metni",
+      subtitle: "6698 Sayılı KVKK m. 5/1 Uyarınca İsteğe Bağlı Onaylar",
+      version: "v1.0",
+      contentHash: "4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f60718293a",
+      lastUpdated: "17.09.2026",
+      badge: "Ayrık Açık Rıza • Dilediğiniz An İptal",
+      highlight:
+        "Aydınlatma metninden ayrılmış, özgür iradeye dayalı rıza metnidir. Teklif kabul edildiğinde doğrudan iletişim kanallarının açılmasını kapsar; dilediğiniz an tek tıkla geri alabilirsiniz.",
+      sections: [
+        {
+          title: "1. Açık Rıza Kapsamı",
+          paragraphs: [
+            "Yalnızca karşılıklı eşleşme halinde doğrudan iletişim verilerinin karşı tarafa açılması ve isteğe bağlı bülten izinlerini kapsar.",
+          ],
+        },
+        {
+          title: "2. Rızanın Geri Alınması",
+          paragraphs: [
+            "Hesap ayarlarından veya kvkk@operis.pro üzerinden rızanızı dilediğiniz an geri alabilirsiniz.",
+          ],
+        },
+      ],
+    },
+    en: {
+      key: "consent",
+      title: "Explicit Consent & Communications",
+      subtitle: "Discretionary Privacy & Direct Handshake Consent",
+      version: "v1.0",
+      contentHash: "5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f60718293a4b",
+      lastUpdated: "17.09.2026",
+      badge: "Revocable Consent",
+      highlight:
+        "Covers bilateral contact disclosure upon offer acceptance and optional news updates. Freely revocable anytime via settings.",
+      sections: [
+        {
+          title: "1. Scope of Consent",
+          paragraphs: [
+            "Unlocks phone and email exclusively to the verified matched counterparty upon bilateral agreement.",
+          ],
+        },
+      ],
+    },
+  },
+  "dispute-resolution": {
+    tr: {
+      key: "dispute-resolution",
+      title: "Uyuşmazlık Çözümü ve Arabuluculuk İlkeleri",
+      subtitle: "6325 Sayılı Kanun ve Doğrudan Çözüm Kılavuzu",
+      version: "v1.0",
+      contentHash: "6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f60718293a4b5c",
+      lastUpdated: "17.09.2026",
+      badge: "Arabuluculuk & Kesin Dava Muafiyeti",
+      highlight:
+        "Platform ticari veya teknik uyuşmazlıklarda hakem veya mahkeme değildir. Taraflar önce 14 gün doğrudan müzakere eder, ardından resmi arabuluculuk yoluna başvurur; Operis davalı gösterilemez.",
+      sections: [
+        {
+          title: "1. Platform Hakem Değildir",
+          paragraphs: [
+            "Operis emanet hesabı tutmaz, ifa denetlemez. Taraflar ihtilaflarını münhasıran birbirleriyle çözer.",
+          ],
+        },
+        {
+          title: "2. Kademeli Çözüm Yolu",
+          paragraphs: [
+            "Önce 14 gün doğrudan müzakere, ardından 6325 sayılı Kanun uyarınca resmi arabuluculuk yolu önerilir.",
+          ],
+        },
+      ],
+    },
+    en: {
+      key: "dispute-resolution",
+      title: "Dispute Resolution & Mediation Principles",
+      subtitle: "Autonomous Dispute Protocol & Mediation Framework",
+      version: "v1.0",
+      contentHash: "7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f60718293a4b5c6d",
+      lastUpdated: "17.09.2026",
+      badge: "Direct Mediation",
+      highlight:
+        "The platform is not an arbitrator. Counterparties negotiate directly for 14 days then proceed to independent mediation; Operis holds lawsuit immunity.",
+      sections: [
+        {
+          title: "1. No Platform Adjudication",
+          paragraphs: [
+            "Operis holds zero escrow and acts as neither court nor arbiter.",
+          ],
+        },
+      ],
+    },
+  },
+  contact: {
+    tr: {
+      key: "contact",
+      title: "Kurumsal Bilgiler, Yasal Künye ve İletişim",
+      subtitle: "TTK m. 1524 ve 6563 Sayılı ETK Uyarınca Resmi Şirket Bilgileri",
+      version: "v1.0",
+      contentHash: "8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f60718293a4b5c6d7e",
+      lastUpdated: "17.09.2026",
+      badge: "Resmi Şirket Künyesi • ETBİS Kayıtlı",
+      highlight:
+        "Operis Teknoloji Anonim Şirketi tüzel kişiliği altında işletilmektedir. MERSİS, KEP ve resmi tebligat kanalları aşağıda yer almaktadır.",
+      sections: [
+        {
+          title: "1. Şirket Bilgileri",
+          paragraphs: [
+            "Unvan: Operis Teknoloji Anonim Şirketi | MERSİS: 0123456789000001 | Şişli V.D. 1234567890 | Adres: Büyükdere Cad. No: 100 Şişli, İstanbul.",
+          ],
+        },
+        {
+          title: "2. Resmi İletişim ve KEP",
+          paragraphs: [
+            "Resmi KEP: operis@hs01.kep.tr | Hukuk Masası: legal@operis.pro | Telefon: +90 (212) 555 0100",
+          ],
+        },
+      ],
+    },
+    en: {
+      key: "contact",
+      title: "Corporate Legal Identity & Contact",
+      subtitle: "Official Disclosures Pursuant to Commercial Statutes",
+      version: "v1.0",
+      contentHash: "90123456789abcdef0123456789abcdef0a1b2c3d4e5f60718293a4b5c6d7e8f",
+      lastUpdated: "17.09.2026",
+      badge: "Official Corporate Entity",
+      highlight:
+        "Operated under Operis Teknoloji Anonim Sirketi. Registered address, corporate ID, and legal compliance channels.",
+      sections: [
+        {
+          title: "1. Entity Details",
+          paragraphs: [
+            "Company: Operis Teknoloji A.S. | Address: Buyukdere Cad. No: 100 Sisli, Istanbul, Turkey | KEP: operis@hs01.kep.tr",
+          ],
+        },
+      ],
+    },
+  },
 };

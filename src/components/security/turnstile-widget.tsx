@@ -7,6 +7,8 @@ export interface TurnstileWidgetProps {
   onError?: (error: string) => void;
   onExpire?: () => void;
   theme?: "light" | "dark" | "auto";
+  size?: "normal" | "compact" | "flexible";
+  appearance?: "always" | "execute" | "interaction-only";
 }
 
 declare global {
@@ -20,6 +22,8 @@ declare global {
           "error-callback"?: (error: string) => void;
           "expired-callback"?: () => void;
           theme?: string;
+          size?: "normal" | "compact" | "flexible";
+          appearance?: "always" | "execute" | "interaction-only";
         }
       ) => string;
       reset: (widgetId?: string) => void;
@@ -34,6 +38,8 @@ export function TurnstileWidget({
   onError,
   onExpire,
   theme = "auto",
+  size = "flexible",
+  appearance = "interaction-only",
 }: TurnstileWidgetProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
@@ -57,9 +63,21 @@ export function TurnstileWidget({
         widgetIdRef.current = window.turnstile.render(containerRef.current, {
           sitekey: siteKey,
           theme,
+          size,
+          appearance,
           callback: (token) => onVerifyRef.current(token),
           "error-callback": (err) => onErrorRef.current?.(err),
-          "expired-callback": () => onExpireRef.current?.(),
+          "expired-callback": () => {
+            onExpireRef.current?.();
+            // Automatically reset so token remains ready
+            if (widgetIdRef.current && window.turnstile) {
+              try {
+                window.turnstile.reset(widgetIdRef.current);
+              } catch {
+                // Ignore
+              }
+            }
+          },
         });
       } catch {
         // Ignore render race condition
@@ -104,7 +122,7 @@ export function TurnstileWidget({
         }
       }
     };
-  }, [siteKey, theme]);
+  }, [siteKey, theme, size, appearance]);
 
   // If site key is not configured, silently render nothing (graceful fallback)
   if (!siteKey) {
@@ -112,7 +130,14 @@ export function TurnstileWidget({
   }
 
   return (
-    <div className="flex justify-center my-2">
+    <div
+      className={
+        appearance === "interaction-only"
+          ? "sr-only pointer-events-none absolute -z-50 h-0 w-0 overflow-hidden"
+          : "my-2 flex justify-center"
+      }
+      aria-hidden={appearance === "interaction-only"}
+    >
       <div ref={containerRef} />
     </div>
   );

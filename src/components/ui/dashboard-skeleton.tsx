@@ -30,7 +30,7 @@ export function DashboardSkeleton({ cardsCount = 4 }: DashboardSkeletonProps) {
         {Array.from({ length: cardsCount }).map((_, idx) => (
           <div
             key={idx}
-            className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-5 sm:p-6 space-y-4"
+            className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/75 backdrop-blur-xl p-5 sm:p-6 space-y-4"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-2 flex-1">

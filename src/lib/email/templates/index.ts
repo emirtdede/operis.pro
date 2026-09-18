@@ -232,7 +232,7 @@ export function renderEmailTemplate({
         <p style="margin: 0 0 24px 0; font-size: 14px; line-height: 1.6; color: #94a3b8; text-align: center;">
           ${
             isTr
-              ? "Proje sahibi teklifinizi onayladı ve Çalışma Odası erişime açıldı. Detayları incelemek ve projeyi başlatmak için odaya giriş yapabilirsiniz:"
+              ? "İlan sahibi teklifinizi onayladı ve Çalışma Odası erişime açıldı. Detayları incelemek ve iş birliğini başlatmak için odaya giriş yapabilirsiniz:"
               : "The client accepted your proposal. The Work Room has been unlocked. You can now coordinate directly and initiate the project delivery:"
           }
         </p>

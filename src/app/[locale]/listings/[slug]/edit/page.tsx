@@ -18,8 +18,8 @@ export async function generateMetadata({
   return {
     title: isTr ? "İlanı Düzenle" : "Edit Listing",
     description: isTr
-      ? "Proje ilanınızın kapsamını, bütçesini ve detaylarını güncelleyin."
-      : "Update your project listing scope, budget, and details.",
+      ? "İlanınızın kapsamını, bütçesini ve detaylarını güncelleyin."
+      : "Update your listing scope, budget, and details.",
     robots: {
       index: false,
       follow: false,
@@ -81,12 +81,12 @@ export default async function EditListingPage({
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-text-primary)] flex items-center gap-2.5">
             <Layers className="h-6 w-6 text-blue-400" aria-hidden="true" />
-            <span>{isTr ? "Proje İlanını Düzenle" : "Edit Project Listing"}</span>
+            <span>{isTr ? "İlanı Düzenle" : "Edit Listing"}</span>
           </h1>
           <p className="text-sm text-[var(--color-text-secondary)]">
             {isTr
-              ? "Yayındaki veya taslak projenizin detaylarını revize edin. Değişiklikler geçmişe kaydedilir."
-              : "Revise project scope, tags, and budget. Revisions are safely versioned."}
+              ? "Yayındaki veya taslak ilanınızın detaylarını revize edin. Değişiklikler geçmişe kaydedilir."
+              : "Revise listing scope, tags, and budget. Revisions are safely versioned."}
           </p>
         </div>
       </header>

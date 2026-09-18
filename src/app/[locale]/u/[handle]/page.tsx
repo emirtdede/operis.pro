@@ -268,10 +268,12 @@ export default async function PublicProfilePage({
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer nofollow"
-                    className={`inline-flex items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-medium transition-all hover:scale-[1.02] shadow-sm ${badgeColor}`}
+                    className={`inline-flex items-center gap-2 max-w-full rounded-xl border px-3.5 py-2 text-xs font-medium transition-all hover:scale-[1.02] shadow-sm ${badgeColor}`}
                   >
-                    <span>{link.label || link.url}</span>
-                    <ExternalLink className="h-3 w-3 opacity-70" aria-hidden="true" />
+                    <span className="truncate max-w-[200px] xs:max-w-[260px] sm:max-w-[340px]">
+                      {link.label || link.url}
+                    </span>
+                    <ExternalLink className="h-3 w-3 opacity-70 shrink-0" aria-hidden="true" />
                   </a>
                 );
               })}
@@ -315,8 +317,8 @@ export default async function PublicProfilePage({
             </span>
             <p className="text-xs text-[var(--color-text-secondary)]">
               {isTr
-                ? "Yeni bir proje ilanı oluşturarak uzmanın doğrudan teklif sunmasını sağlayabilirsiniz."
-                : "Post a project listing to receive a direct 1-to-1 proposal."}
+                ? "Yeni bir ilan oluşturarak uzmanın doğrudan teklif sunmasını sağlayabilirsiniz."
+                : "Post a listing to receive a direct 1-to-1 proposal."}
             </p>
           </div>
           <Link
@@ -324,7 +326,7 @@ export default async function PublicProfilePage({
             className="shrink-0 w-full sm:w-auto"
           >
             <Button variant="shimmer" size="sm" className="w-full sm:w-auto">
-              <span>{isTr ? "Proje İlanı Yayınla" : "Post a Project"}</span>
+              <span>{isTr ? "İlan Yayınla" : "Post a Listing"}</span>
             </Button>
           </Link>
         </div>
@@ -451,13 +453,13 @@ export default async function PublicProfilePage({
             }
             description={
               isTr
-                ? "Bu uzman platformda yeni veya projeleri şu an aktif geliştirme aşamasında. Hemen ücretsiz bir proje ilanı oluşturarak ilk iş birliğini siz başlatabilirsiniz."
-                : "This specialist is active on the platform. Publish a free project listing to start the first direct collaboration."
+                ? "Bu uzman platformda yeni veya işleri şu an aktif geliştirme aşamasında. Hemen ücretsiz bir ilan oluşturarak ilk iş birliğini siz başlatabilirsiniz."
+                : "This specialist is active on the platform. Publish a free listing to start the first direct collaboration."
             }
             action={
               <Link href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"}>
                 <Button variant="secondary" size="sm">
-                  {isTr ? "İlan Oluştur" : "Post a Project"}
+                  {isTr ? "İlan Oluştur" : "Post a Listing"}
                 </Button>
               </Link>
             }

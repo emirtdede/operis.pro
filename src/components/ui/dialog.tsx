@@ -63,7 +63,7 @@ export function Dialog({ isOpen, onClose, title, description, children, classNam
         tabIndex={-1}
         className={twMerge(
           clsx(
-            "relative w-full max-w-lg rounded-3xl bg-[var(--color-surface-base)]/90 backdrop-blur-2xl p-6 sm:p-8 shadow-2xl border border-[var(--color-border-subtle)] overflow-hidden focus:outline-none z-10",
+            "relative w-full max-w-lg max-h-[min(90dvh,calc(100vh-2rem))] flex flex-col rounded-3xl bg-[var(--color-surface-elevated)] p-5 sm:p-8 shadow-2xl border border-[var(--color-border-subtle)] overflow-hidden focus:outline-none z-10",
             "animate-in fade-in-0 zoom-in-95 duration-200",
             className
           )
@@ -83,11 +83,11 @@ export function Dialog({ isOpen, onClose, title, description, children, classNam
           aria-hidden="true"
         />
 
-        <div className="relative z-10 flex items-start justify-between gap-4 mb-5">
+        <div className="relative z-10 flex items-start justify-between gap-4 mb-4 shrink-0">
           <div>
             <h2
               id="dialog-title"
-              className="text-xl font-bold tracking-tight text-[var(--color-text-primary)]"
+              className="text-lg sm:text-xl font-bold tracking-tight text-[var(--color-text-primary)]"
             >
               {title}
             </h2>
@@ -123,7 +123,7 @@ export function Dialog({ isOpen, onClose, title, description, children, classNam
           </button>
         </div>
 
-        <div className="relative z-10 mt-2">{children}</div>
+        <div className="relative z-10 mt-1 flex-1 overflow-y-auto min-h-0 pr-1 overscroll-contain">{children}</div>
       </div>
     </div>
   );

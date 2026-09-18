@@ -71,6 +71,8 @@ export const profiles = pgTable("profiles", {
   revealPhoneAfterMatch: boolean("reveal_phone_after_match").default(false).notNull(),
   locale: varchar("locale", { length: 5 }).default("tr").notNull(),
   theme: varchar("theme", { length: 10 }).default("light").notNull(),
+  preferredContactChannel: varchar("preferred_contact_channel", { length: 30 }).default("any"),
+  timeZone: varchar("time_zone", { length: 60 }).default("Europe/Istanbul"),
   trackedSkills: text("tracked_skills")
     .array()
     .default(sql`'{}'::text[]`)

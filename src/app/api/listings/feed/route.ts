@@ -18,10 +18,21 @@ export async function GET(req: NextRequest) {
     const timelineMode = searchParams.get("timelineMode") as
       "TARGET_DATE" | "ESTIMATED_DURATION" | "FLEXIBLE" | "IN_NEGOTIATION" | null;
     const session = await getSession();
+    if (!session?.userId) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
 
     const feedResult = await FeedService.getFeedListings({
       mode,
-      categorySlugs: category ? [category] : undefined,
+      categorySlugs: category
+        ? category
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : undefined,
       search: search || undefined,
       cursor: cursor || undefined,
       locale,

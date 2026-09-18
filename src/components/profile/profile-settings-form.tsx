@@ -17,6 +17,8 @@ import {
   Key,
   RefreshCw,
   X,
+  Clock,
+  MessageSquare,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { TextInput } from "../ui/text-input";
@@ -37,6 +39,8 @@ export interface ProfileSettingsFormProps {
     avatarUrl?: string | null;
     showLocation: boolean;
     revealPhoneAfterMatch: boolean;
+    preferredContactChannel?: string | null;
+    timeZone?: string | null;
     emailVerified?: boolean;
     phoneVerified?: boolean;
     email?: string;
@@ -91,6 +95,23 @@ export function ProfileSettingsForm({ initialProfile, locale }: ProfileSettingsF
   const [revealPhoneAfterMatch, setRevealPhoneAfterMatch] = useState(
     initialProfile.revealPhoneAfterMatch ?? false
   );
+  const [preferredContactChannel, setPreferredContactChannel] = useState(
+    initialProfile.preferredContactChannel || "any"
+  );
+  const [timeZone, setTimeZone] = useState(
+    initialProfile.timeZone || "Europe/Istanbul"
+  );
+
+  useEffect(() => {
+    if (!initialProfile.timeZone) {
+      try {
+        const detected = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (detected) setTimeZone(detected);
+      } catch {
+        // Fallback to default
+      }
+    }
+  }, [initialProfile.timeZone]);
 
   const [emailVerified] = useState(initialProfile.emailVerified ?? false);
   const [phoneVerified, setPhoneVerified] = useState(initialProfile.phoneVerified ?? false);
@@ -411,6 +432,8 @@ export function ProfileSettingsForm({ initialProfile, locale }: ProfileSettingsF
           avatarUrl: avatarUrl.trim() || null,
           showLocation,
           revealPhoneAfterMatch,
+          preferredContactChannel,
+          timeZone,
           locale,
         }),
       });
@@ -884,6 +907,65 @@ export function ProfileSettingsForm({ initialProfile, locale }: ProfileSettingsF
             disabled={loadingMarketingConsent || isUpdatingConsent}
             onChange={(e) => handleMarketingConsentChange(e.target.checked)}
           />
+
+          {/* Preferred Contact Channel & Timezone */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-[var(--color-border-subtle)]">
+            <div className="space-y-1.5">
+              <label htmlFor="preferred-channel-select" className="text-xs font-semibold text-[var(--color-text-primary)] flex items-center gap-1.5">
+                <MessageSquare className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />
+                <span>{isTr ? "Öncelikli İletişim Tercihi" : "Preferred Contact Channel"}</span>
+              </label>
+              <select
+                id="preferred-channel-select"
+                value={preferredContactChannel}
+                onChange={(e) => setPreferredContactChannel(e.target.value)}
+                className="w-full h-10 px-3 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] text-xs text-[var(--color-text-primary)] focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
+              >
+                <option value="any">{isTr ? "Fark Etmez / Tümü (Varsayılan)" : "Any / All Channels (Default)"}</option>
+                <option value="whatsapp">WhatsApp</option>
+                <option value="meet">Google Meet</option>
+                <option value="zoom">Zoom</option>
+                <option value="teams">Microsoft Teams</option>
+                <option value="slack">Slack</option>
+                <option value="email">{isTr ? "Kurumsal E-Posta" : "Corporate Email"}</option>
+                <option value="phone">{isTr ? "Telefonla Doğrudan Arama" : "Direct Phone Call"}</option>
+              </select>
+              <p className="text-[11px] text-[var(--color-text-tertiary)]">
+                {isTr
+                  ? "Eşleşme çalışma alanında bu kanalınıza '⭐ Tercih Edilen' rozeti eklenir."
+                  : "Counterparties will see a '⭐ Preferred' badge on this channel in the workspace."}
+              </p>
+            </div>
+
+            <div className="space-y-1.5">
+              <label htmlFor="timezone-select" className="text-xs font-semibold text-[var(--color-text-primary)] flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5 text-amber-400" aria-hidden="true" />
+                <span>{isTr ? "Saat Dilimi (Zaman Dilimi)" : "Primary Timezone"}</span>
+              </label>
+              <select
+                id="timezone-select"
+                value={timeZone}
+                onChange={(e) => setTimeZone(e.target.value)}
+                className="w-full h-10 px-3 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] text-xs text-[var(--color-text-primary)] focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
+              >
+                <option value="Europe/Istanbul">{isTr ? "Europe/Istanbul (Türkiye • UTC+3)" : "Europe/Istanbul (Turkey • UTC+3)"}</option>
+                <option value="Europe/London">Europe/London (UK • UTC+0/+1)</option>
+                <option value="Europe/Berlin">Europe/Berlin (Central Europe • UTC+1/+2)</option>
+                <option value="America/New_York">America/New_York (US East • UTC-5/-4)</option>
+                <option value="America/Los_Angeles">America/Los_Angeles (US Pacific • UTC-8/-7)</option>
+                <option value="Asia/Dubai">Asia/Dubai (Gulf • UTC+4)</option>
+                <option value="Asia/Singapore">Asia/Singapore (SGT • UTC+8)</option>
+                {timeZone && !["Europe/Istanbul", "Europe/London", "Europe/Berlin", "America/New_York", "America/Los_Angeles", "Asia/Dubai", "Asia/Singapore"].includes(timeZone) && (
+                  <option value={timeZone}>{timeZone}</option>
+                )}
+              </select>
+              <p className="text-[11px] text-[var(--color-text-tertiary)]">
+                {isTr
+                  ? "İş ortaklarınızın canlı yerel saatinizi görüp mesai saatlerinize saygı duymasını sağlar."
+                  : "Helps counterparties respect your local business and resting hours."}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1007,11 +1089,11 @@ export function ProfileSettingsForm({ initialProfile, locale }: ProfileSettingsF
           aria-modal="true"
           aria-label={isTr ? "Telefon Numarası Güncelleme" : "Update Phone Number"}
         >
-          <div className="relative w-full max-w-md rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-3">
+          <div className="relative w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-4 sm:p-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-3 shrink-0">
               <div className="flex items-center gap-2 text-blue-400">
-                <Phone className="h-4 w-4" aria-hidden="true" />
-                <h3 className="font-semibold text-sm text-[var(--color-text-primary)]">
+                <Phone className="h-4 w-4 shrink-0" aria-hidden="true" />
+                <h3 className="font-semibold text-sm text-[var(--color-text-primary)] truncate">
                   {isTr ? "Telefon Numarası Güncelleme" : "Update Phone Number"}
                 </h3>
               </div>
@@ -1024,104 +1106,106 @@ export function ProfileSettingsForm({ initialProfile, locale }: ProfileSettingsF
               </button>
             </div>
 
-            {phoneChangeError && (
-              <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-xs text-red-400">
-                {phoneChangeError}
-              </div>
-            )}
+            <div className="flex-1 overflow-y-auto min-h-0 py-3 space-y-4 pr-1">
+              {phoneChangeError && (
+                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-xs text-red-400">
+                  {phoneChangeError}
+                </div>
+              )}
 
-            {phoneChangeSuccess && (
-              <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                <span>{phoneChangeSuccess}</span>
-              </div>
-            )}
+              {phoneChangeSuccess && (
+                <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                  <span>{phoneChangeSuccess}</span>
+                </div>
+              )}
 
-            {phoneChangeStep === 1 ? (
-              <form onSubmit={handleRequestPhoneChange} className="space-y-4">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-[var(--color-text-secondary)]">
-                    {isTr ? "Yeni Telefon Numarası" : "New Phone Number"}
-                  </label>
-                  <input
-                    type="tel"
-                    value={newPhone}
-                    onChange={(e) => setNewPhone(e.target.value.trim())}
-                    placeholder="+905551234567"
-                    required
-                    className="w-full h-10 px-3 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] text-xs text-[var(--color-text-primary)] font-mono focus:outline-none focus:border-blue-500"
-                  />
-                  <p className="text-[11px] text-[var(--color-text-tertiary)]">
+              {phoneChangeStep === 1 ? (
+                <form onSubmit={handleRequestPhoneChange} className="space-y-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-[var(--color-text-secondary)]">
+                      {isTr ? "Yeni Telefon Numarası" : "New Phone Number"}
+                    </label>
+                    <input
+                      type="tel"
+                      value={newPhone}
+                      onChange={(e) => setNewPhone(e.target.value.trim())}
+                      placeholder="+905551234567"
+                      required
+                      className="w-full h-10 px-3 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] text-xs text-[var(--color-text-primary)] font-mono focus:outline-none focus:border-blue-500"
+                    />
+                    <p className="text-[11px] text-[var(--color-text-tertiary)]">
+                      {isTr
+                        ? "Uluslararası E.164 formatında (ülke kodu ile) giriniz. Örn: +905551234567"
+                        : "Enter in international E.164 format with country code. E.g. +905551234567"}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2 pt-3 border-t border-[var(--color-border-subtle)]">
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setShowPhoneChangeModal(false)}
+                      disabled={isPhoneChanging}
+                    >
+                      {isTr ? "Vazgeç" : "Cancel"}
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      size="sm"
+                      disabled={!newPhone.trim()}
+                      isLoading={isPhoneChanging}
+                    >
+                      {isTr ? "SMS Kodu Gönder" : "Send SMS Code"}
+                    </Button>
+                  </div>
+                </form>
+              ) : (
+                <form onSubmit={handleVerifyPhoneChange} className="space-y-4">
+                  <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+                    <strong className="text-white">{newPhone}</strong>{" "}
                     {isTr
-                      ? "Uluslararası E.164 formatında (ülke kodu ile) giriniz. Örn: +905551234567"
-                      : "Enter in international E.164 format with country code. E.g. +905551234567"}
+                      ? "numarasına gönderilen 6 haneli doğrulama kodunu giriniz:"
+                      : "enter the 6-digit verification code sent to this number:"}
                   </p>
-                </div>
 
-                <div className="flex items-center justify-end gap-2 pt-2 border-t border-[var(--color-border-subtle)]">
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => setShowPhoneChangeModal(false)}
-                    disabled={isPhoneChanging}
-                  >
-                    {isTr ? "Vazgeç" : "Cancel"}
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    size="sm"
-                    disabled={!newPhone.trim()}
-                    isLoading={isPhoneChanging}
-                  >
-                    {isTr ? "SMS Kodu Gönder" : "Send SMS Code"}
-                  </Button>
-                </div>
-              </form>
-            ) : (
-              <form onSubmit={handleVerifyPhoneChange} className="space-y-4">
-                <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
-                  <strong className="text-white">{newPhone}</strong>{" "}
-                  {isTr
-                    ? "numarasına gönderilen 6 haneli doğrulama kodunu giriniz:"
-                    : "enter the 6-digit verification code sent to this number:"}
-                </p>
+                  <div className="space-y-1.5">
+                    <input
+                      type="text"
+                      maxLength={6}
+                      value={phoneChangeOtp}
+                      onChange={(e) =>
+                        setPhoneChangeOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+                      }
+                      placeholder="000000"
+                      required
+                      className="w-full h-11 text-center tracking-widest text-lg font-mono font-bold rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] text-[var(--color-text-primary)] focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
 
-                <div className="space-y-1.5">
-                  <input
-                    type="text"
-                    maxLength={6}
-                    value={phoneChangeOtp}
-                    onChange={(e) =>
-                      setPhoneChangeOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
-                    }
-                    placeholder="000000"
-                    required
-                    className="w-full h-11 text-center tracking-widest text-lg font-mono font-bold rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] text-[var(--color-text-primary)] focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-
-                <div className="flex items-center justify-between gap-2 pt-2 border-t border-[var(--color-border-subtle)]">
-                  <button
-                    type="button"
-                    onClick={() => setPhoneChangeStep(1)}
-                    className="text-xs text-blue-400 hover:underline"
-                  >
-                    {isTr ? "Numarayı Değiştir" : "Change Number"}
-                  </button>
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    size="sm"
-                    disabled={phoneChangeOtp.length !== 6}
-                    isLoading={isPhoneChanging}
-                  >
-                    {isTr ? "Doğrula ve Güncelle" : "Verify & Update"}
-                  </Button>
-                </div>
-              </form>
-            )}
+                  <div className="flex items-center justify-between gap-2 pt-3 border-t border-[var(--color-border-subtle)]">
+                    <button
+                      type="button"
+                      onClick={() => setPhoneChangeStep(1)}
+                      className="text-xs text-blue-400 hover:underline"
+                    >
+                      {isTr ? "Numarayı Değiştir" : "Change Number"}
+                    </button>
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      size="sm"
+                      disabled={phoneChangeOtp.length !== 6}
+                      isLoading={isPhoneChanging}
+                    >
+                      {isTr ? "Doğrula ve Güncelle" : "Verify & Update"}
+                    </Button>
+                  </div>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       )}

@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Mail, Lock, ShieldAlert, KeyRound, Eye, EyeOff, Zap } from "lucide-react";
+import { Mail, Lock, ShieldAlert, KeyRound, Eye, EyeOff } from "lucide-react";
 import { Button } from "../ui/button";
 import { TextInput } from "../ui/text-input";
 import { SocialLoginButtons } from "./social-login-buttons";
@@ -33,12 +33,35 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
   const [requires2FA, setRequires2FA] = useState(false);
   const [useBackupCode, setUseBackupCode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isQuickLoggingIn, setIsQuickLoggingIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   const defaultRedirect = isTr ? "/tr/akis" : "/en/feed";
   const targetRedirect = getSafeReturnUrl(returnUrl, defaultRedirect);
+
+  useEffect(() => {
+    // If already logged in, silently forward to target page without any intrusive banners
+    if (
+      typeof window !== "undefined" &&
+      (window as unknown as { Clerk?: { session?: unknown } }).Clerk?.session
+    ) {
+      fetch("/api/auth/clerk-sync", { method: "POST" })
+        .then((res) => {
+          if (res.ok) {
+            window.location.href = targetRedirect;
+          }
+        })
+        .catch(() => {});
+    }
+  }, [targetRedirect]);
+
+  const handleSocialError = (msg: string) => {
+    if (msg.toLowerCase().includes("already signed in") || msg.includes("session_exists")) {
+      window.location.href = targetRedirect;
+      return;
+    }
+    setError(msg);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,46 +107,8 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
     }
   };
 
-  const handleQuickLogin = async () => {
-    setIsQuickLoggingIn(true);
-    setError(null);
-
-    try {
-      const res = await fetch("/api/auth/quick-login", {
-        method: "POST",
-        headers: {
-          "x-locale": locale,
-        },
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || (isTr ? "Hızlı giriş başarısız oldu" : "Quick login failed"));
-      }
-
-      router.push(targetRedirect);
-      router.refresh();
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : isTr
-            ? "Hızlı giriş yapılamadı. Lütfen tekrar deneyiniz."
-            : "Quick login failed. Please try again."
-      );
-    } finally {
-      setIsQuickLoggingIn(false);
-    }
-  };
-
-  const handleFillDemo = () => {
-    setEmail("kullanici@operis.pro");
-    setPassword("OperisUser2026!");
-    setError(null);
-  };
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       {error && (
         <div className="flex items-center gap-2.5 rounded-xl border border-red-500/20 bg-red-500/10 p-3.5 text-xs text-red-400">
           <ShieldAlert className="h-4 w-4 shrink-0 text-red-400" aria-hidden="true" />
@@ -157,7 +142,7 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="p-1 rounded-md text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                className="text-slate-400 hover:text-slate-200 focus:outline-none cursor-pointer"
                 aria-label={
                   showPassword
                     ? isTr
@@ -177,55 +162,81 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
             }
           />
 
-          <div className="flex justify-end">
+          {/* Symmetrical Action Row: Hesap Oluştur (Left) & Şifremi Unuttum (Right) */}
+          <div className="flex items-center justify-between text-xs pt-1 px-1">
             <Link
-              href={`/${locale}/forgot-password`}
-              className="text-xs text-[var(--color-text-secondary)] hover:text-blue-400 transition-colors"
+              href={isTr ? "/tr/kayit" : "/en/register"}
+              className="font-medium text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
+            >
+              {isTr ? "Hesap Oluştur" : "Create an Account"}
+            </Link>
+            <Link
+              href={isTr ? "/tr/sifremi-unuttum" : "/en/forgot-password"}
+              className="font-normal text-[var(--color-text-secondary)] hover:text-slate-200 transition-colors"
             >
               {isTr ? "Şifremi unuttum" : "Forgot password?"}
             </Link>
           </div>
         </>
       ) : (
-        <div className="space-y-2">
+        <div className="flex flex-col gap-3 rounded-2xl border border-blue-500/20 bg-blue-500/5 p-4">
+          <div className="flex items-center gap-2 text-xs font-semibold text-blue-400">
+            <KeyRound className="h-4 w-4" aria-hidden="true" />
+            <span>
+              {isTr
+                ? "İki Adımlı Doğrulama (2FA) Gerekli"
+                : "Two-Factor Authentication Required"}
+            </span>
+          </div>
+          <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+            {useBackupCode
+              ? isTr
+                ? "Hesabınızı oluştururken kaydedilen 8 karakterli yedek kodunuzu giriniz."
+                : "Enter your 8-character backup recovery code saved during 2FA setup."
+              : isTr
+                ? "Kimlik doğrulama (Authenticator) uygulamanızdaki 6 haneli kodu giriniz."
+                : "Enter the 6-digit code from your authenticator application."}
+          </p>
+
           {!useBackupCode ? (
             <>
               <TextInput
-                label={isTr ? "İki aşamalı doğrulama kodu (2FA)" : "Two-factor code (2FA)"}
+                label={isTr ? "6 Haneli Doğrulama Kodu" : "6-Digit Verification Code"}
                 type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 value={totpCode}
-                onChange={(e) => setTotpCode(e.target.value.replace(/\s+/g, ""))}
-                placeholder="6 haneli kod"
+                onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                placeholder="123456"
                 required
                 maxLength={6}
                 autoFocus
                 startIcon={<KeyRound className="h-4 w-4" aria-hidden="true" />}
               />
-              <div className="flex justify-end pt-0.5">
+              <div className="flex justify-between items-center pt-0.5 text-xs">
+                <span className="text-[var(--color-text-tertiary)] text-[11px]">
+                  {isTr ? "30 saniyede bir yenilenir" : "Refreshes every 30 seconds"}
+                </span>
                 <button
                   type="button"
                   onClick={() => {
                     setUseBackupCode(true);
                     setTotpCode("");
                   }}
-                  className="text-xs text-blue-400 hover:text-blue-300 hover:underline transition-colors cursor-pointer"
+                  className="text-blue-400 hover:text-blue-300 hover:underline transition-colors cursor-pointer"
                 >
-                  {isTr
-                    ? "Telefonunuza erişemiyor musunuz? Kurtarma kodu kullanın"
-                    : "Can't access your phone? Use a backup code"}
+                  {isTr ? "Yedek kod kullan" : "Use a backup code"}
                 </button>
               </div>
             </>
           ) : (
             <>
               <TextInput
-                label={isTr ? "Acil Durum Kurtarma Kodu" : "Emergency Backup Code"}
+                label={isTr ? "8 Karakterli Yedek Kod" : "8-Character Backup Code"}
                 type="text"
                 value={totpCode}
-                onChange={(e) =>
-                  setTotpCode(e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, ""))
-                }
-                placeholder="XXXX-XXXX"
+                onChange={(e) => setTotpCode(e.target.value.toUpperCase().slice(0, 10))}
+                placeholder="A1B2C3D4"
                 required
                 maxLength={10}
                 autoFocus
@@ -251,8 +262,9 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
         </div>
       )}
 
-      {/* Cloudflare Turnstile Bot Defense */}
+      {/* Cloudflare Turnstile Bot Defense (Invisible / Interaction-Only) */}
       <TurnstileWidget
+        appearance="interaction-only"
         onVerify={(token) => setTurnstileToken(token)}
         onExpire={() => setTurnstileToken(null)}
       />
@@ -262,7 +274,7 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
         type="submit"
         variant="primary"
         size="lg"
-        className="w-full text-sm font-semibold mt-2 cursor-pointer"
+        className="w-full text-sm font-semibold mt-1 cursor-pointer"
         isLoading={isLoading}
       >
         {requires2FA
@@ -276,70 +288,14 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
 
       {/* 5 Circular Social Login Buttons */}
       {!requires2FA && (
-        <div className="pt-1">
+        <div className="pt-2">
           <SocialLoginButtons
             locale={locale}
             returnUrl={targetRedirect}
-            onError={(msg) => setError(msg)}
+            onError={handleSocialError}
           />
         </div>
       )}
-
-      {/* Quick Login Section directly under Giriş Yap */}
-      <div className="pt-2 space-y-3">
-        <div className="relative flex items-center justify-center">
-          <div className="border-t border-[var(--color-border-subtle)] w-full" />
-          <span className="bg-[var(--color-surface-base)] px-3 text-[11px] font-medium text-[var(--color-text-tertiary)] uppercase tracking-wider shrink-0">
-            {isTr ? "veya tek tıkla" : "or quick access"}
-          </span>
-          <div className="border-t border-[var(--color-border-subtle)] w-full" />
-        </div>
-
-        <Button
-          type="button"
-          variant="secondary"
-          size="lg"
-          onClick={handleQuickLogin}
-          isLoading={isQuickLoggingIn}
-          className="w-full gap-2.5 font-semibold text-sm rounded-xl border border-blue-500/30 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 transition-all cursor-pointer shadow-sm"
-        >
-          <Zap className="h-4 w-4 fill-blue-400 text-blue-400" aria-hidden="true" />
-          <span>{isTr ? "Hızlı Giriş Yap (Normal Kullanıcı)" : "Quick Sign In (Normal User)"}</span>
-        </Button>
-
-        {/* Demo Account Info & Pre-fill Shortcut */}
-        <div className="flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 text-[11px] text-[var(--color-text-tertiary)]">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 truncate">
-            <span className="font-medium text-[var(--color-text-secondary)]">
-              {isTr ? "Kullanıcı:" : "User:"}
-            </span>
-            <span className="font-mono text-blue-400">kullanici@operis.pro</span>
-            <span className="hidden sm:inline text-[var(--color-border-subtle)]">•</span>
-            <span className="font-mono">OperisUser2026!</span>
-          </div>
-          <button
-            type="button"
-            onClick={handleFillDemo}
-            className="shrink-0 text-blue-400 hover:text-blue-300 hover:underline font-medium cursor-pointer"
-          >
-            {isTr ? "Forma Yaz" : "Pre-fill"}
-          </button>
-        </div>
-      </div>
-
-      <div className="pt-2 text-center text-xs text-[var(--color-text-secondary)]">
-        {isTr ? "Henüz bir hesabınız yok mu?" : "Do not have an account?"}{" "}
-        <Link
-          href={
-            returnUrl
-              ? `/${locale}/register?returnUrl=${encodeURIComponent(returnUrl)}`
-              : `/${locale}/register`
-          }
-          className="font-medium text-blue-400 hover:text-blue-300 transition-colors hover:underline"
-        >
-          {isTr ? "Hemen Kaydolun" : "Sign Up"}
-        </Link>
-      </div>
     </form>
   );
 }

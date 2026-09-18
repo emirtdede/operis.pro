@@ -30,7 +30,7 @@ export function LifecycleRadarDiagram() {
   }));
 
   return (
-    <div className="relative w-full overflow-hidden rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 p-6 sm:p-8 backdrop-blur-xl shadow-2xl">
+    <div className="relative w-full overflow-hidden rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 p-4 sm:p-8 backdrop-blur-xl shadow-2xl">
       {/* Top Header */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-4">
         <div className="flex items-center gap-3">
@@ -55,7 +55,7 @@ export function LifecycleRadarDiagram() {
       {/* Main Interactive Radar Area */}
       <div className="relative flex flex-col lg:flex-row items-center justify-around gap-8 py-4">
         {/* Radar SVG Visualizer */}
-        <div className="relative flex h-64 w-64 items-center justify-center shrink-0">
+        <div className="relative flex w-full max-w-[256px] aspect-square items-center justify-center shrink-0 mx-auto">
           {/* Rotating Radar Sweep Cone (7s duration matching 7 days) */}
           <div
             aria-hidden="true"

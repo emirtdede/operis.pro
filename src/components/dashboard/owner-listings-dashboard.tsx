@@ -235,10 +235,10 @@ export function OwnerListingsDashboard({
             />
           ) : tab === "active" ? (
             <EmptyState
-              title={isTr ? "Aktif Proje İlanı Bulunmuyor" : "No Active Listings"}
+              title={isTr ? "Aktif İlan Bulunmuyor" : "No Active Listings"}
               description={
                 isTr
-                  ? "Şu anda radarımızda canlı olan bir ilanınız yok. Yeni bir proje ilanı yayınlayarak bağımsız mühendislerden doğrudan teklif alabilirsiniz."
+                  ? "Şu anda radarımızda canlı olan bir ilanınız yok. Yeni bir ilan yayınlayarak bağımsız mühendislerden doğrudan teklif alabilirsiniz."
                   : "You currently have no active listings on our radar. Post a listing to get direct proposals."
               }
               action={
@@ -253,12 +253,12 @@ export function OwnerListingsDashboard({
             <EmptyState
               title={
                 isTr
-                  ? "Henüz Bir Proje İlanı Yayınlamadınız"
+                  ? "Henüz Bir İlan Yayınlamadınız"
                   : "You Haven't Published Any Listings Yet"
               }
               description={
                 isTr
-                  ? "%100 komisyonsuz ve doğrudan iletişimle projeniz için bağımsız mühendis arayışınızı hemen başlatabilirsiniz."
+                  ? "%100 komisyonsuz ve doğrudan iletişimle ilanınız için bağımsız mühendis arayışınızı hemen başlatabilirsiniz."
                   : "Start finding independent engineers directly with 0% commission cut."
               }
               action={

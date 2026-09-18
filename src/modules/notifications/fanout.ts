@@ -174,8 +174,8 @@ export async function processFanoutEvent(
                   ? `Radar Match: [${matchingTag || "Skill"}]`
                   : `Radarın Eşleşti: [${matchingTag || "Yetenek"}]`,
                 message: isEn
-                  ? `A new project matching your tracked skill "${matchingTag || ""}" was published: "${title}"`
-                  : `Takip ettiğin "${matchingTag || ""}" teknolojisiyle yeni bir proje yayınlandı: "${title}"`,
+                  ? `A new listing matching your tracked skill "${matchingTag || ""}" was published: "${title}"`
+                  : `Takip ettiğin "${matchingTag || ""}" teknolojisiyle yeni bir ilan yayınlandı: "${title}"`,
                 actionUrl: isEn ? `/en/listings/${slug}` : `/tr/ilanlar/${slug}`,
               },
               tx,
@@ -249,10 +249,10 @@ export async function processFanoutEvent(
                 listingId,
                 activationSeq,
                 title: isEn
-                  ? "New Project in Followed Category"
+                  ? "New Listing in Followed Category"
                   : "Takip Ettiğin Kategoride Yeni İlan",
                 message: isEn
-                  ? `A new project was published in a category you follow: "${title}"`
+                  ? `A new listing was published in a category you follow: "${title}"`
                   : `Takip ettiğin kategoride yeni bir ilan yayınlandı: "${title}"`,
                 actionUrl: isEn ? `/en/listings/${slug}` : `/tr/ilanlar/${slug}`,
               },

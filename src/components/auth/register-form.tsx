@@ -453,8 +453,9 @@ export function RegisterForm({ locale, returnUrl }: RegisterFormProps) {
         />
       </div>
 
-      {/* Cloudflare Turnstile Bot Defense */}
+      {/* Cloudflare Turnstile Bot Defense (Invisible / Interaction-Only) */}
       <TurnstileWidget
+        appearance="interaction-only"
         onVerify={(token) => setTurnstileToken(token)}
         onExpire={() => setTurnstileToken(null)}
       />

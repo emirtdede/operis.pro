@@ -102,7 +102,7 @@ export function HeroInteractivePreview({ isTr = true }: HeroInteractivePreviewPr
 
           <div className="text-left sm:text-right shrink-0">
             <div className="text-xs uppercase font-semibold text-[var(--color-text-tertiary)] tracking-wider">
-              {isTr ? "Proje Bütçesi" : "Fixed Budget"}
+              {isTr ? "İlan Bütçesi" : "Fixed Budget"}
             </div>
             <div className="text-2xl font-black font-display text-emerald-400">65.000 ₺</div>
             <div className="text-[11px] font-medium text-[var(--color-text-secondary)]">

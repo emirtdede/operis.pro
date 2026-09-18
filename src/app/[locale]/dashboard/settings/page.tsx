@@ -78,6 +78,9 @@ export default async function DashboardSettingsPage({
     avatarUrl: profile?.avatarUrl || "",
     showLocation: profile?.showLocation ?? true,
     revealPhoneAfterMatch: profile?.revealPhoneAfterMatch ?? false,
+    preferredContactChannel:
+      (profile as { preferredContactChannel?: string | null })?.preferredContactChannel || "any",
+    timeZone: (profile as { timeZone?: string | null })?.timeZone || "Europe/Istanbul",
     emailVerified,
     phoneVerified,
     email: session.email || "",

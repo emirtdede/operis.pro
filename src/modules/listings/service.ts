@@ -499,8 +499,8 @@ export class ListingService {
                     ? `Radar Match: [${n.matchingTag}]`
                     : `Radarın Eşleşti: [${n.matchingTag}]`,
                   message: n.isEn
-                    ? `A new project matching your tracked skill "${n.matchingTag}" was published: "${title}"`
-                    : `Takip ettiğin "${n.matchingTag}" teknolojisiyle yeni bir proje yayınlandı: "${title}"`,
+                    ? `A new listing matching your tracked skill "${n.matchingTag}" was published: "${title}"`
+                    : `Takip ettiğin "${n.matchingTag}" teknolojisiyle yeni bir ilan yayınlandı: "${title}"`,
                   actionUrl: n.isEn ? `/en/listings/${slug}` : `/tr/ilanlar/${slug}`,
                 },
                 undefined,
@@ -550,8 +550,8 @@ export class ListingService {
                 activationSeq,
                 title: isEn ? `Radar Match: [${matchingTag}]` : `Radarın Eşleşti: [${matchingTag}]`,
                 message: isEn
-                  ? `A new project matching your tracked skill "${matchingTag}" was published: "${title}"`
-                  : `Takip ettiğin "${matchingTag}" teknolojisiyle yeni bir proje yayınlandı: "${title}"`,
+                  ? `A new listing matching your tracked skill "${matchingTag}" was published: "${title}"`
+                  : `Takip ettiğin "${matchingTag}" teknolojisiyle yeni bir ilan yayınlandı: "${title}"`,
                 actionUrl: isEn ? `/en/listings/${slug}` : `/tr/ilanlar/${slug}`,
               },
               undefined,
@@ -663,9 +663,9 @@ export class ListingService {
             {
               listingId,
               activationSeq,
-              title: isEn ? `New Project in [${catKey}]` : `[${catKey}] Kategorisinde Yeni İlan`,
+              title: isEn ? `New Listing in [${catKey}]` : `[${catKey}] Kategorisinde Yeni İlan`,
               message: isEn
-                ? `A new project was published in a category you follow: "${title}"`
+                ? `A new listing was published in a category you follow: "${title}"`
                 : `Takip ettiğiniz kategoride yeni bir ilan yayınlandı: "${title}"`,
               actionUrl: isEn ? `/en/listings/${slug}` : `/tr/ilanlar/${slug}`,
             },
@@ -1042,8 +1042,8 @@ export class ListingService {
                 {
                   title: isEn ? "Proposal Expired" : "Teklif Sona Erdi",
                   message: isEn
-                    ? `The project "${listing.title}" was deactivated by its owner. Your pending proposal has ended.`
-                    : `"${listing.title}" projesi sahibi tarafından yayından kaldırıldığı için bekleyen teklifiniz sona erdi.`,
+                    ? `The listing "${listing.title}" was deactivated by its owner. Your pending proposal has ended.`
+                    : `"${listing.title}" ilanı sahibi tarafından yayından kaldırıldığı için bekleyen teklifiniz sona erdi.`,
                   actionUrl: isEn ? "/en/dashboard/offers/sent" : "/tr/panel/teklifler/gonderilen",
                 }
               );

@@ -40,28 +40,7 @@ export default function CategoriesLoading() {
         {/* Single Unified Modern Command Bar İskeleti (Tam Olarak y: 421, Yükseklik: 62px) */}
         <div className="relative rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/85 backdrop-blur-xl p-2 sm:p-2.5 shadow-sm">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-            {/* Sektör Seçici Tetikleyici İskeleti (Genişlik: 320px, Yükseklik: 40px) */}
-            <div className="w-full sm:w-72 md:w-80 h-10 px-3 rounded-xl bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)]/70 flex items-center justify-between gap-2 shrink-0 select-none">
-              <div className="flex items-center gap-2 min-w-0">
-                <div className="h-6 w-6 rounded-lg bg-blue-500/15 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-                  <Layers className="h-3.5 w-3.5" />
-                </div>
-                <span className="text-xs font-semibold text-[var(--color-text-primary)] truncate">
-                  {isTr ? "Tüm Sektörler" : "All Sectors"}
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5 shrink-0">
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[var(--color-surface-base)] text-[var(--color-text-secondary)] border border-[var(--color-border-subtle)]">
-                  {isTr ? "110 alan • 0 ilan" : "110 areas • 0 listings"}
-                </span>
-                <ChevronDown className="h-3.5 w-3.5 text-[var(--color-text-tertiary)]" />
-              </div>
-            </div>
-
-            {/* Dikey İnce Ayraç (Masaüstü) */}
-            <div className="hidden sm:block h-6 w-px bg-[var(--color-border-subtle)]/70 mx-0.5" />
-
-            {/* Akıcı Kategori ve Beceri Arama Girdisi İskeleti */}
+            {/* Akıcı Kategori ve Beceri Arama Girdisi İskeleti (Sol Entegre) */}
             <div className="relative flex-1">
               <Search
                 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-text-tertiary)]"
@@ -77,6 +56,27 @@ export default function CategoriesLoading() {
                 }
                 className="w-full h-10 rounded-xl bg-transparent border-none pl-9 pr-8 text-xs text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:outline-none transition-all select-none"
               />
+            </div>
+
+            {/* Dikey İnce Ayraç (Masaüstü) */}
+            <div className="hidden sm:block h-6 w-px bg-[var(--color-border-subtle)]/70 mx-0.5" />
+
+            {/* Sektör Seçici Tetikleyici İskeleti (Sağ Entegre, Genişlik: 320px, Yükseklik: 40px) */}
+            <div className="w-full sm:w-72 md:w-80 h-10 px-3 rounded-xl bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)]/70 flex items-center justify-between gap-2 shrink-0 select-none">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="h-6 w-6 rounded-lg bg-blue-500/15 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                  <Layers className="h-3.5 w-3.5" />
+                </div>
+                <span className="text-xs font-semibold text-[var(--color-text-primary)] truncate">
+                  {isTr ? "Tüm Sektörler" : "All Sectors"}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[var(--color-surface-base)] text-[var(--color-text-secondary)] border border-[var(--color-border-subtle)]">
+                  {isTr ? "110 alan • 0 ilan" : "110 areas • 0 listings"}
+                </span>
+                <ChevronDown className="h-3.5 w-3.5 text-[var(--color-text-tertiary)]" />
+              </div>
             </div>
           </div>
         </div>

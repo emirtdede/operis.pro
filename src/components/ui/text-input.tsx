@@ -5,6 +5,7 @@ import { twMerge } from "tailwind-merge";
 export interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   badge?: React.ReactNode;
+  cornerAction?: React.ReactNode;
   hint?: string;
   error?: string;
   startIcon?: React.ReactNode;
@@ -12,7 +13,7 @@ export interface TextInputProps extends React.InputHTMLAttributes<HTMLInputEleme
 }
 
 export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
-  ({ className, label, badge, hint, error, id, startIcon, endIcon, ...props }, ref) => {
+  ({ className, label, badge, cornerAction, hint, error, id, startIcon, endIcon, ...props }, ref) => {
     const generatedId = useId();
     const inputId = id || generatedId;
     const hintId = `${inputId}-hint`;
@@ -33,11 +34,13 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
                 </span>
               )}
             </label>
-            {badge && (
+            {cornerAction ? (
+              cornerAction
+            ) : badge ? (
               <span className="text-[10px] font-mono font-medium text-slate-400/80 px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/[0.08] shadow-sm select-none">
                 {badge}
               </span>
-            )}
+            ) : null}
           </div>
         )}
         <div className="relative flex items-center group">

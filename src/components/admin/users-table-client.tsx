@@ -219,6 +219,10 @@ export function UsersTableClient({
 
       {/* Users High-Density Table */}
       <div className="rounded-2xl border border-slate-800 bg-[#12141a] overflow-hidden">
+        <div className="sm:hidden px-3 py-1.5 bg-slate-900/50 border-b border-slate-800/80 text-[10px] text-slate-400 flex items-center justify-between">
+          <span>Yatay Kaydırılabilir Tablo</span>
+          <span className="text-blue-400 font-mono">Kaydırın →</span>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs text-slate-300">
             <thead className="bg-slate-900/90 border-b border-slate-800 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
@@ -403,71 +407,73 @@ export function UsersTableClient({
       {/* User Details Modal / Drawer */}
       {selectedUser && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in-0 duration-200">
-          <div className="w-full max-w-xl rounded-2xl border border-slate-800 bg-[#12141a] p-6 space-y-6 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+          <div className="w-full max-w-xl max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-[#12141a] p-4 sm:p-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4 shrink-0">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-bold text-sm flex items-center justify-center">
+                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-bold text-sm flex items-center justify-center shrink-0">
                   {selectedUser.displayName.slice(0, 2).toUpperCase()}
                 </div>
-                <div>
-                  <h3 className="text-base font-bold text-white">{selectedUser.displayName}</h3>
-                  <div className="text-xs font-mono text-slate-400">
+                <div className="min-w-0">
+                  <h3 className="text-base font-bold text-white truncate">{selectedUser.displayName}</h3>
+                  <div className="text-xs font-mono text-slate-400 truncate">
                     @{selectedUser.handle} • ID: {selectedUser.id}
                   </div>
                 </div>
               </div>
               <button
                 onClick={() => setSelectedUser(null)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors shrink-0"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 text-xs">
-              <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
-                <div className="text-slate-500 font-medium">E-Posta Adresi</div>
-                <div className="font-mono text-slate-200 font-semibold">{selectedUser.email}</div>
-                <div className="text-[10px] text-emerald-400">
-                  {selectedUser.emailVerified ? "✓ Doğrulanmış" : "⚠ Doğrulanmamış"}
+            <div className="flex-1 overflow-y-auto min-h-0 py-3 space-y-4 pr-1">
+              <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 text-xs">
+                <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                  <div className="text-slate-500 font-medium">E-Posta Adresi</div>
+                  <div className="font-mono text-slate-200 font-semibold break-all">{selectedUser.email}</div>
+                  <div className="text-[10px] text-emerald-400">
+                    {selectedUser.emailVerified ? "✓ Doğrulanmış" : "⚠ Doğrulanmamış"}
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                  <div className="text-slate-500 font-medium">Hesap Rolü & Statü</div>
+                  <div className="font-mono text-blue-400 font-semibold">{selectedUser.role}</div>
+                  <div className="text-[10px] text-slate-400">Durum: {selectedUser.status}</div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                  <div className="text-slate-500 font-medium">Yayınlanan İlanlar</div>
+                  <div className="font-mono text-white text-lg font-bold">
+                    {selectedUser.listingsCount} İlan
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                  <div className="text-slate-500 font-medium">Sunulan Teklifler</div>
+                  <div className="font-mono text-white text-lg font-bold">
+                    {selectedUser.offersCount} Teklif
+                  </div>
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
-                <div className="text-slate-500 font-medium">Hesap Rolü & Statü</div>
-                <div className="font-mono text-blue-400 font-semibold">{selectedUser.role}</div>
-                <div className="text-[10px] text-slate-400">Durum: {selectedUser.status}</div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
-                <div className="text-slate-500 font-medium">Yayınlanan İlanlar</div>
-                <div className="font-mono text-white text-lg font-bold">
-                  {selectedUser.listingsCount} İlan
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
-                <div className="text-slate-500 font-medium">Sunulan Teklifler</div>
-                <div className="font-mono text-white text-lg font-bold">
-                  {selectedUser.offersCount} Teklif
-                </div>
+              <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1 text-xs">
+                <div className="text-slate-400 font-semibold">Gizlilik & Kimlik Güvencesi:</div>
+                <p className="text-[11px] text-slate-500 leading-relaxed">
+                  Operis kuralları uyarınca kullanıcının telefon ve kimlik PII verileri veritabanında
+                  AES-256 ile şifreli tutulmakta olup yönetici ekranına doğrudan açık metin olarak
+                  gösterilmez (Zero-Knowledge Audit).
+                </p>
               </div>
             </div>
 
-            <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1 text-xs">
-              <div className="text-slate-400 font-semibold">Gizlilik & Kimlik Güvencesi:</div>
-              <p className="text-[11px] text-slate-500 leading-relaxed">
-                Operis kuralları uyarınca kullanıcının telefon ve kimlik PII verileri veritabanında
-                AES-256 ile şifreli tutulmakta olup yönetici ekranına doğrudan açık metin olarak
-                gösterilmez (Zero-Knowledge Audit).
-              </p>
-            </div>
-
-            <div className="flex items-center justify-between pt-2 border-t border-slate-800 text-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2.5 pt-3 border-t border-slate-800 text-xs shrink-0">
               <button
                 type="button"
                 onClick={() => setSelectedUser(null)}
-                className="px-4 py-2 rounded-xl border border-slate-800 text-slate-400 hover:text-white"
+                className="px-4 py-2 rounded-xl border border-slate-800 text-slate-400 hover:text-white w-full sm:w-auto"
               >
                 Kapat
               </button>
@@ -475,7 +481,7 @@ export function UsersTableClient({
               <button
                 type="button"
                 onClick={() => handleToggleSuspend(selectedUser)}
-                className={`px-4 py-2 rounded-xl font-bold transition-all ${
+                className={`px-4 py-2 rounded-xl font-bold transition-all w-full sm:w-auto ${
                   selectedUser.status === "ACTIVE"
                     ? "bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-600/20"
                     : "bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/20"

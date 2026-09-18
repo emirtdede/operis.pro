@@ -17,11 +17,11 @@ export async function generateMetadata({
   const isTr = locale === "tr";
 
   const title = isTr
-    ? "Proje İlanı Yayınla — Ücretsiz Sihirbaz"
-    : "Post a Project — Free 5-Step Wizard";
+    ? "İlan Yayınla — Ücretsiz Sihirbaz"
+    : "Post a Listing — Free 5-Step Wizard";
   const description = isTr
-    ? "5 adımlı güvenli sihirbaz ile yazılım ve teknoloji projenizi ücretsiz yayınlayın, 7 gün boyunca doğrulanmış uzmanlardan doğrudan teklif alın."
-    : "Publish your technology project for free with our 5-step guided wizard and receive direct 1-to-1 proposals for 7 days.";
+    ? "5 adımlı güvenli sihirbaz ile yazılım ve teknoloji ilanınızı ücretsiz yayınlayın, 7 gün boyunca doğrulanmış uzmanlardan doğrudan teklif alın."
+    : "Publish your technology listing for free with our 5-step guided wizard and receive direct 1-to-1 proposals for 7 days.";
 
   return {
     title,
@@ -123,7 +123,7 @@ export default async function NewListingPage({ params }: { params: Promise<{ loc
       {/* Header with Guidance */}
       <header className="space-y-4 max-w-3xl mx-auto text-center">
         <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--color-text-primary)]">
-          {isTr ? "Yeni Proje İlanı Yayınlayın" : "Publish a New Project Listing"}
+          {isTr ? "Yeni İlan Yayınlayın" : "Publish a New Listing"}
         </h1>
         <p className="text-sm sm:text-base text-[var(--color-text-secondary)] leading-relaxed">
           {isTr

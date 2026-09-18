@@ -1360,7 +1360,7 @@ export class AdminService {
                 payload: {
                   title: isPoEn ? "Listing Closed by Moderation" : "Teklif Verilen İlan Kapatıldı",
                   message: isPoEn
-                    ? `The project "${currentListing.title}" was closed due to a moderation action. Your pending proposal has ended.`
+                    ? `The listing "${currentListing.title}" was closed due to a moderation action. Your pending proposal has ended.`
                     : `"${currentListing.title}" başlıklı ilan moderasyon işlemi sebebiyle kapatıldığı için bekleyen teklifiniz sona erdi.`,
                   actionUrl: isPoEn
                     ? "/en/dashboard/offers/sent"
