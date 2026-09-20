@@ -53,22 +53,50 @@ export function ProfileActionsMenu({
 
       setIsBlocked(!isBlocked);
       setIsBlockModalOpen(false);
-      setMessage(
-        !isBlocked
-          ? isTr
-            ? "Kullanıcı engellendi."
-            : "User has been blocked."
-          : isTr
-            ? "Kullanıcı engeli kaldırıldı."
-            : "User has been unblocked."
-      );
+      let successMsg: string;
+      if (!isBlocked) {
+        successMsg = isTr ? "Kullanıcı engellendi." : "User has been blocked.";
+      } else {
+        successMsg = isTr ? "Kullanıcı engeli kaldırıldı." : "User has been unblocked.";
+      }
+      setMessage(successMsg);
       setTimeout(() => setMessage(null), 4000);
     } catch (err: unknown) {
-      setMessage(err instanceof Error ? err.message : isTr ? "Hata oluştu." : "Error occurred.");
+      let errMsg = isTr ? "Hata oluştu." : "Error occurred.";
+      if (err instanceof Error) {
+        errMsg = err.message;
+      }
+      setMessage(errMsg);
     } finally {
       setIsLoading(false);
     }
   };
+
+  let blockActionLabel = isTr ? "Kullanıcıyı Engelle" : "Block User";
+  if (isBlocked) {
+    blockActionLabel = isTr ? "Engeli Kaldır" : "Unblock User";
+  }
+
+  let blockModalTitle = isTr ? "Kullanıcıyı Engelle" : "Block User";
+  if (isBlocked) {
+    blockModalTitle = isTr ? "Kullanıcı Engelini Kaldır" : "Unblock User";
+  }
+
+  let blockModalDesc = isTr
+    ? `"${targetDisplayName}" kullanıcısını engellediğinizde sizin ilanlarınıza teklif gönderemez ve doğrudan iletişim kuramaz.`
+    : `Blocking "${targetDisplayName}" prevents them from submitting offers to your listings and contacting you.`;
+  if (isBlocked) {
+    blockModalDesc = isTr
+      ? `"${targetDisplayName}" kullanıcısının engelini kaldırmak istediğinize emin misiniz? Kullanıcı ilanlarınıza tekrar teklif verebilecektir.`
+      : `Are you sure you want to unblock "${targetDisplayName}"? They will be able to submit proposals to your listings again.`;
+  }
+
+  let blockButtonText = isTr ? "Engelle" : "Block";
+  if (isLoading) {
+    blockButtonText = isTr ? "İşleniyor..." : "Processing...";
+  } else if (isBlocked) {
+    blockButtonText = isTr ? "Engeli Kaldır" : "Unblock";
+  }
 
   return (
     <div className="relative inline-block text-left">
@@ -114,15 +142,7 @@ export function ProfileActionsMenu({
               className="w-full flex items-center gap-2 px-3 py-2 text-xs rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors cursor-pointer"
             >
               <ShieldBan className="h-3.5 w-3.5" />
-              <span>
-                {isBlocked
-                  ? isTr
-                    ? "Engeli Kaldır"
-                    : "Unblock User"
-                  : isTr
-                    ? "Kullanıcıyı Engelle"
-                    : "Block User"}
-              </span>
+              <span>{blockActionLabel}</span>
             </button>
           </div>
         </>
@@ -149,24 +169,12 @@ export function ProfileActionsMenu({
                 <AlertTriangle className="h-5 w-5" />
               </div>
               <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
-                {isBlocked
-                  ? isTr
-                    ? "Kullanıcı Engelini Kaldır"
-                    : "Unblock User"
-                  : isTr
-                    ? "Kullanıcıyı Engelle"
-                    : "Block User"}
+                {blockModalTitle}
               </h3>
             </div>
 
             <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
-              {isBlocked
-                ? isTr
-                  ? `"${targetDisplayName}" kullanıcısının engelini kaldırmak istediğinize emin misiniz? Kullanıcı ilanlarınıza tekrar teklif verebilecektir.`
-                  : `Are you sure you want to unblock "${targetDisplayName}"? They will be able to submit proposals to your listings again.`
-                : isTr
-                  ? `"${targetDisplayName}" kullanıcısını engellediğinizde sizin ilanlarınıza teklif gönderemez ve doğrudan iletişim kuramaz.`
-                  : `Blocking "${targetDisplayName}" prevents them from submitting offers to your listings and contacting you.`}
+              {blockModalDesc}
             </p>
 
             <div className="flex items-center justify-end gap-2.5 pt-1">
@@ -189,17 +197,7 @@ export function ProfileActionsMenu({
                   isBlocked ? "bg-blue-600 hover:bg-blue-700" : "bg-red-600 hover:bg-red-700"
                 }
               >
-                {isLoading
-                  ? isTr
-                    ? "İşleniyor..."
-                    : "Processing..."
-                  : isBlocked
-                    ? isTr
-                      ? "Engeli Kaldır"
-                      : "Unblock"
-                    : isTr
-                      ? "Engelle"
-                      : "Block"}
+                {blockButtonText}
               </Button>
             </div>
           </div>

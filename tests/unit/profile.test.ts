@@ -83,4 +83,64 @@ describe("Avatar Picture URL Security & Management", () => {
     const clearedProfile = await ProfileService.getProfileByUserId(DEFAULT_USER.id);
     expect(clearedProfile?.avatarUrl).toBeNull();
   });
+
+  it("handles avatarSource updates correctly", async () => {
+    const { ProfileService } = await import("@/src/modules/profiles/service");
+    const { DEFAULT_USER } = await import("@/src/modules/auth/demo-user");
+
+    // When updating avatarUrl without specifying avatarSource, defaults to custom
+    await ProfileService.updateProfile(DEFAULT_USER.id, {
+      avatarUrl: "https://images.unsplash.com/custom-photo.webp",
+    });
+
+    // Revert to oauth
+    await ProfileService.updateProfile(DEFAULT_USER.id, {
+      avatarUrl: "",
+      avatarSource: "oauth",
+    });
+    const profile = await ProfileService.getProfileByUserId(DEFAULT_USER.id);
+    expect(profile?.avatarUrl).toBeNull();
+  });
 });
+
+describe("Multi-Sector Portfolio Platforms & Branding", () => {
+  it("validates all new platform link types across 10 sectors", () => {
+    const platforms = [
+      { type: "artstation" as const, url: "https://artstation.com/artist", label: "ArtStation 3D" },
+      { type: "sketchfab" as const, url: "https://sketchfab.com/model3d", label: "Sketchfab Model" },
+      { type: "kaggle" as const, url: "https://kaggle.com/datascience", label: "Kaggle Profile" },
+      { type: "huggingface" as const, url: "https://huggingface.co/ai-model", label: "Hugging Face Space" },
+      { type: "substack" as const, url: "https://author.substack.com", label: "Substack Newsletter" },
+      { type: "spotify" as const, url: "https://open.spotify.com/artist/123", label: "Spotify Artist" },
+      { type: "soundcloud" as const, url: "https://soundcloud.com/producer", label: "SoundCloud Audio" },
+      { type: "vimeo" as const, url: "https://vimeo.com/director", label: "Vimeo Showreel" },
+    ];
+
+    for (const p of platforms) {
+      const parsed = profileLinkSchema.safeParse(p);
+      expect(parsed.success).toBe(true);
+    }
+  });
+
+  it("matches platform configurations and icons correctly", async () => {
+    const { getPlatformConfig } = await import("@/src/components/profile/platform-icons");
+
+    // Match by explicit type
+    expect(getPlatformConfig("github").label).toBe("GitHub");
+    expect(getPlatformConfig("artstation").label).toBe("ArtStation");
+    expect(getPlatformConfig("sketchfab").label).toBe("Sketchfab (3D)");
+    expect(getPlatformConfig("huggingface").label).toBe("Hugging Face");
+
+    // Match by URL auto-detection
+    expect(getPlatformConfig(undefined, "https://github.com/torvalds").label).toBe("GitHub");
+    expect(getPlatformConfig(undefined, "https://artstation.com/artwork/123").label).toBe("ArtStation");
+    expect(getPlatformConfig(undefined, "https://open.spotify.com/track/abc").label).toBe("Spotify");
+  });
+
+  it("handles R2 storage configuration gracefully when env is missing", async () => {
+    const { isR2Configured } = await import("@/src/modules/storage/r2-client");
+    // In local dev without credentials, should return a boolean without throwing
+    expect(typeof isR2Configured()).toBe("boolean");
+  });
+});
+

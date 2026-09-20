@@ -95,17 +95,33 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
       router.push(targetRedirect);
       router.refresh();
     } catch (err: unknown) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : isTr
-            ? "Giriş yapılamadı. Bilgilerinizi kontrol ediniz."
-            : "Invalid email or password."
-      );
+      const defaultErrMsg = isTr
+        ? "Giriş yapılamadı. Bilgilerinizi kontrol ediniz."
+        : "Invalid email or password.";
+      setError(err instanceof Error ? err.message : defaultErrMsg);
     } finally {
       setIsLoading(false);
     }
   };
+
+  let passwordToggleLabel = isTr ? "Şifreyi göster" : "Show password";
+  if (showPassword) {
+    passwordToggleLabel = isTr ? "Şifreyi gizle" : "Hide password";
+  }
+
+  let backupHelpText = isTr
+    ? "Kimlik doğrulama (Authenticator) uygulamanızdaki 6 haneli kodu giriniz."
+    : "Enter the 6-digit code from your authenticator application.";
+  if (useBackupCode) {
+    backupHelpText = isTr
+      ? "Hesabınızı oluştururken kaydedilen 8 karakterli yedek kodunuzu giriniz."
+      : "Enter your 8-character backup recovery code saved during 2FA setup.";
+  }
+
+  let submitButtonText = isTr ? "Giriş Yap" : "Sign In";
+  if (requires2FA) {
+    submitButtonText = isTr ? "Doğrula ve Giriş Yap" : "Verify & Sign In";
+  }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -143,15 +159,7 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="text-slate-400 hover:text-slate-200 focus:outline-none cursor-pointer"
-                aria-label={
-                  showPassword
-                    ? isTr
-                      ? "Şifreyi gizle"
-                      : "Hide password"
-                    : isTr
-                      ? "Şifreyi göster"
-                      : "Show password"
-                }
+                aria-label={passwordToggleLabel}
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" aria-hidden="true" />
@@ -189,13 +197,7 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
             </span>
           </div>
           <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
-            {useBackupCode
-              ? isTr
-                ? "Hesabınızı oluştururken kaydedilen 8 karakterli yedek kodunuzu giriniz."
-                : "Enter your 8-character backup recovery code saved during 2FA setup."
-              : isTr
-                ? "Kimlik doğrulama (Authenticator) uygulamanızdaki 6 haneli kodu giriniz."
-                : "Enter the 6-digit code from your authenticator application."}
+            {backupHelpText}
           </p>
 
           {!useBackupCode ? (
@@ -277,13 +279,7 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
         className="w-full text-sm font-semibold mt-1 cursor-pointer"
         isLoading={isLoading}
       >
-        {requires2FA
-          ? isTr
-            ? "Doğrula ve Giriş Yap"
-            : "Verify & Sign In"
-          : isTr
-            ? "Giriş Yap"
-            : "Sign In"}
+        {submitButtonText}
       </Button>
 
       {/* 5 Circular Social Login Buttons */}

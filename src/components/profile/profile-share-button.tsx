@@ -4,6 +4,13 @@ import { useState } from "react";
 import { Share2, Check } from "lucide-react";
 import { Button } from "../ui/button";
 
+function getProfileShareAriaLabel(copied: boolean, isTr: boolean): string {
+  if (copied) {
+    return isTr ? "Profil bağlantısı kopyalandı" : "Profile link copied";
+  }
+  return isTr ? "Profili paylaş" : "Share profile";
+}
+
 export function ProfileShareButton({ locale }: { locale: string }) {
   const isTr = locale === "tr";
   const [copied, setCopied] = useState(false);
@@ -27,15 +34,7 @@ export function ProfileShareButton({ locale }: { locale: string }) {
       size="sm"
       onClick={handleCopy}
       className="gap-1.5 transition-all text-xs cursor-pointer"
-      aria-label={
-        copied
-          ? isTr
-            ? "Profil bağlantısı kopyalandı"
-            : "Profile link copied"
-          : isTr
-            ? "Profili paylaş"
-            : "Share profile"
-      }
+      aria-label={getProfileShareAriaLabel(copied, isTr)}
     >
       {copied ? (
         <>

@@ -12,6 +12,19 @@ interface UsersTableClientProps {
   totalPages?: number;
 }
 
+function getUserRoleBadgeClass(role: string): string {
+  if (role === "SECURITY_ADMIN") {
+    return "bg-red-500/10 text-red-400 border-red-500/20";
+  }
+  if (role === "ADMIN") {
+    return "bg-purple-500/10 text-purple-400 border-purple-500/20";
+  }
+  if (role === "MODERATOR") {
+    return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+  }
+  return "bg-slate-800 text-slate-400 border-slate-700";
+}
+
 export function UsersTableClient({
   initialUsers,
   total,
@@ -305,15 +318,7 @@ export function UsersTableClient({
 
                     <td className="py-3 px-4">
                       <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-mono font-medium border ${
-                          user.role === "SECURITY_ADMIN"
-                            ? "bg-red-500/10 text-red-400 border-red-500/20"
-                            : user.role === "ADMIN"
-                              ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
-                              : user.role === "MODERATOR"
-                                ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                                : "bg-slate-800 text-slate-400 border-slate-700"
-                        }`}
+                        className={`px-2 py-0.5 rounded text-[10px] font-mono font-medium border ${getUserRoleBadgeClass(user.role)}`}
                       >
                         {user.role}
                       </span>

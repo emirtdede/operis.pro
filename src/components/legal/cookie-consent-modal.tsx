@@ -44,6 +44,13 @@ interface CookieConsentModalProps {
   locale: string;
 }
 
+function getPreferencesBackButtonLabel(isManualOpen: boolean, isTr: boolean): string {
+  if (isManualOpen) {
+    return isTr ? "Kapat" : "Close";
+  }
+  return isTr ? "Geri Dön" : "Back";
+}
+
 export function CookieConsentModal({ locale }: CookieConsentModalProps) {
   const isTr = locale === "tr";
   const [isOpen, setIsOpen] = useState(false);
@@ -405,7 +412,7 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
             }}
             className="w-full whitespace-nowrap px-4 py-2.5 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] hover:bg-[var(--color-surface-hover)] text-xs sm:text-sm font-semibold text-[var(--color-text-primary)] transition-all shadow-sm active:scale-[0.98] text-center cursor-pointer order-2 sm:order-1"
           >
-            {isManualOpen ? (isTr ? "Kapat" : "Close") : isTr ? "Geri Dön" : "Back"}
+            {getPreferencesBackButtonLabel(isManualOpen, isTr)}
           </button>
 
           <button

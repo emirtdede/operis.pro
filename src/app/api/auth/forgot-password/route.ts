@@ -146,12 +146,13 @@ export async function POST(req: Request) {
     );
   } catch (err: unknown) {
     const isEn = headerLocale === "en";
-    const message =
-      err instanceof z.ZodError
-        ? err.issues[0]?.message || (isEn ? "Invalid email." : "Geçersiz e-posta.")
-        : isEn
-          ? "An error occurred during request."
-          : "İşlem sırasında bir hata oluştu.";
+    let message = isEn
+      ? "An error occurred during request."
+      : "İşlem sırasında bir hata oluştu.";
+    if (err instanceof z.ZodError) {
+      const fallbackFormat = isEn ? "Invalid email." : "Geçersiz e-posta.";
+      message = err.issues[0]?.message || fallbackFormat;
+    }
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

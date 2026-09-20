@@ -95,7 +95,7 @@ export default async function ReportPage({
     {
       icon: ShieldAlert,
       title: isTr ? "Dolandırıcılık & Sahte İlan Masası" : "Fraud & Scam Investigation",
-      email: "dolandiricilik@operis.pro",
+      email: "security@vellium.dev",
       sla: isTr ? "< 2 - 4 Saat" : "< 2 - 4 Hours",
       color: "text-rose-400 bg-rose-500/10 border-rose-500/20",
       desc: isTr
@@ -105,7 +105,7 @@ export default async function ReportPage({
     {
       icon: Scale,
       title: isTr ? "Fikri Mülkiyet & Telif Masası (FSEK)" : "Intellectual Property & Copyright",
-      email: "telif@operis.pro",
+      email: "legal@vellium.dev",
       sla: isTr ? "< 12 İş Saati" : "< 12 Business Hours",
       color: "text-purple-400 bg-purple-500/10 border-purple-500/20",
       desc: isTr
@@ -115,7 +115,7 @@ export default async function ReportPage({
     {
       icon: ShieldCheck,
       title: isTr ? "Kişisel Veri, Taciz & Etik Masası" : "Privacy, Harassment & Conduct",
-      email: "uyum@operis.pro",
+      email: "privacy@vellium.dev",
       sla: isTr ? "< 6 İş Saati" : "< 6 Business Hours",
       color: "text-blue-400 bg-blue-500/10 border-blue-500/20",
       desc: isTr
@@ -125,7 +125,7 @@ export default async function ReportPage({
     {
       icon: Briefcase,
       title: isTr ? "Sözleşme & Emanet Hesap Uyuşmazlıkları" : "Milestone & Escrow Dispute Board",
-      email: "hakemlik@operis.pro",
+      email: "support@vellium.dev",
       sla: isTr ? "< 24 İş Saati" : "< 24 Business Hours",
       color: "text-amber-400 bg-amber-500/10 border-amber-500/20",
       desc: isTr
@@ -428,8 +428,8 @@ export default async function ReportPage({
 
         <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
           {isTr
-            ? "Operis Teknoloji ve Yazılım Çözümleri A.Ş., 5651 Sayılı Kanun kapsamında 'Yetkili Yer Sağlayıcı' sıfatını haizdir. Platformda yer alan kullanıcı içeriklerinden doğan hak ihlallerinde, Fikir ve Sanat Eserleri Kanunu (FSEK) Ek Madde 4 gereğince 'Uyar-Kaldır' (Notice & Takedown) mekanizması işletilir."
-            : "Operis Teknoloji ve Yazılım Çözümleri A.Ş. operates as a certified Hosting Provider under Law No. 5651. For intellectual property violations, statutory Notice & Takedown procedures are strictly executed under relevant copyright statutes."}
+            ? "Vellium, 5651 Sayılı Kanun kapsamında 'Yetkili Yer Sağlayıcı' sıfatıyla Operis platformunu işletmektedir. Platformda yer alan kullanıcı içeriklerinden doğan hak ihlallerinde, Fikir ve Sanat Eserleri Kanunu (FSEK) Ek Madde 4 gereğince 'Uyar-Kaldır' (Notice & Takedown) mekanizması işletilir. Operis bir Vellium ürünüdür."
+            : "Vellium operates the Operis platform as a certified Hosting Provider under Law No. 5651. Operis is a product of Vellium. For intellectual property violations, statutory Notice & Takedown procedures are strictly executed under relevant copyright statutes."}
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs pt-2">
@@ -441,11 +441,11 @@ export default async function ReportPage({
             <ul className="space-y-1.5 text-[11px] text-[var(--color-text-tertiary)]">
               <li>
                 <strong className="text-[var(--color-text-secondary)]">{isTr ? "Ticari Unvan:" : "Entity:"}</strong>{" "}
-                Operis Teknoloji ve Yazılım Çözümleri A.Ş.
+                Vellium (Operis bir Vellium ürünüdür)
               </li>
               <li>
                 <strong className="text-[var(--color-text-secondary)]">KEP:</strong>{" "}
-                <code className="text-purple-400 font-mono">operis.teknoloji@hs01.kep.tr</code>
+                <code className="text-purple-400 font-mono">vellium@hs01.kep.tr</code>
               </li>
               <li>
                 <strong className="text-[var(--color-text-secondary)]">UETS:</strong>{" "}
@@ -453,8 +453,8 @@ export default async function ReportPage({
               </li>
               <li>
                 <strong className="text-[var(--color-text-secondary)]">{isTr ? "E-Posta:" : "Legal Email:"}</strong>{" "}
-                <a href="mailto:hukuk@operis.pro" className="text-purple-400 hover:underline">
-                  hukuk@operis.pro
+                <a href="mailto:legal@vellium.dev" className="text-purple-400 hover:underline">
+                  legal@vellium.dev
                 </a>
               </li>
             </ul>
@@ -527,10 +527,10 @@ export default async function ReportPage({
 
         <div className="flex items-center gap-3 shrink-0">
           <a
-            href="mailto:adli@operis.pro"
+            href="mailto:legal@vellium.dev"
             className="font-mono text-xs font-semibold px-4 py-2 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] hover:border-blue-500/40 text-blue-400 hover:text-blue-300 transition-colors"
           >
-            adli@operis.pro
+            legal@vellium.dev
           </a>
         </div>
       </section>

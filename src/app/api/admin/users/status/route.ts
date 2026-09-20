@@ -86,12 +86,12 @@ export async function POST(req: Request) {
       });
     }
 
-    const mappedAction: "SUSPEND" | "UNSUSPEND" | "WARN" =
-      action === "ACTIVATE" || action === "UNSUSPEND"
-        ? "UNSUSPEND"
-        : action === "SUSPEND"
-          ? "SUSPEND"
-          : "WARN";
+    let mappedAction: "SUSPEND" | "UNSUSPEND" | "WARN" = "WARN";
+    if (action === "ACTIVATE" || action === "UNSUSPEND") {
+      mappedAction = "UNSUSPEND";
+    } else if (action === "SUSPEND") {
+      mappedAction = "SUSPEND";
+    }
 
     const updatedUser = await AdminService.moderateUser(
       auth.session.userId,

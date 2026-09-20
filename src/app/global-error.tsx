@@ -3,6 +3,13 @@
 import { useEffect, useState } from "react";
 import * as Sentry from "@sentry/nextjs";
 
+function getCopyButtonLabel(copied: boolean, isTr: boolean): string {
+  if (copied) {
+    return isTr ? "Kopyalandı" : "Copied";
+  }
+  return isTr ? "Kopyala" : "Copy";
+}
+
 export default function GlobalError({
   error,
   reset,
@@ -174,7 +181,7 @@ export default function GlobalError({
               }}
               title={isTr ? "Kopyala" : "Copy"}
             >
-              {copied ? (isTr ? "Kopyalandı" : "Copied") : isTr ? "Kopyala" : "Copy"}
+              {getCopyButtonLabel(copied, isTr)}
             </button>
           </div>
 

@@ -105,6 +105,13 @@ export interface ContactFormProps {
   onDepartmentChange?: (deptId: string) => void;
 }
 
+function getFileUploadPrompt(isDragging: boolean, isTr: boolean): string {
+  if (isDragging) {
+    return isTr ? "Dosyayı yüklemek için şimdi buraya bırakın" : "Drop your file here to attach";
+  }
+  return isTr ? "Dosyayı buraya sürükleyip bırakın veya tıklayın" : "Drag and drop your file here, or click to browse";
+}
+
 export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: ContactFormProps) {
   const isTr = locale === "tr";
 
@@ -309,7 +316,6 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
           locale: isTr ? "tr" : "en",
           attachmentName: attachedFile?.name,
           attachmentSize: attachedFile?.size,
-          attachmentData: attachedFile?.data,
         }),
       });
 
@@ -329,13 +335,10 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
       setFileError(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (err: unknown) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : isTr
-            ? "İşlem başarısız oldu. Lütfen tekrar deneyiniz."
-            : "Failed to dispatch inquiry. Please try again."
-      );
+      const fallbackMsg = isTr
+        ? "İşlem başarısız oldu. Lütfen tekrar deneyiniz."
+        : "Failed to dispatch inquiry. Please try again.";
+      setError(err instanceof Error ? err.message : fallbackMsg);
     } finally {
       setIsLoading(false);
     }
@@ -631,9 +634,7 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
 
               <div className="space-y-0.5">
                 <p className="text-xs sm:text-sm font-bold text-[var(--color-text-primary)] group-hover:text-blue-400 transition-colors">
-                  {isDragging
-                    ? (isTr ? "Dosyayı yüklemek için şimdi buraya bırakın" : "Drop your file here to attach")
-                    : (isTr ? "Dosyayı buraya sürükleyip bırakın veya tıklayın" : "Drag and drop your file here, or click to browse")}
+                  {getFileUploadPrompt(isDragging, isTr)}
                 </p>
                 <p className="text-[11px] text-[var(--color-text-tertiary)]">
                   {isTr

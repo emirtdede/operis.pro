@@ -66,12 +66,12 @@ export async function GET(req: Request) {
       { status: 200 }
     );
   } catch (err: unknown) {
-    const message =
-      err instanceof Error
-        ? err.message
-        : isEn
-          ? "Failed to fetch notifications."
-          : "Bildirimler alınamadı.";
+    let message = isEn
+      ? "Failed to fetch notifications."
+      : "Bildirimler alınamadı.";
+    if (err instanceof Error) {
+      message = err.message;
+    }
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
@@ -134,12 +134,12 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err: unknown) {
-    const message =
-      err instanceof Error
-        ? err.message
-        : isEn
-          ? "Failed to update notification."
-          : "Bildirim güncellenemedi.";
+    let message = isEn
+      ? "Failed to update notification."
+      : "Bildirim güncellenemedi.";
+    if (err instanceof Error) {
+      message = err.message;
+    }
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

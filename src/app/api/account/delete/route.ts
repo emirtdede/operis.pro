@@ -173,8 +173,10 @@ export async function POST(req: Request) {
 
     return response;
   } catch (err: unknown) {
-    let message =
-      err instanceof Error ? err.message : isEn ? "Failed to delete account." : "Hesap silinemedi.";
+    let message = isEn ? "Failed to delete account." : "Hesap silinemedi.";
+    if (err instanceof Error) {
+      message = err.message;
+    }
 
     if (isEn && message.includes("iş birlikleriniz bulunurken")) {
       message =

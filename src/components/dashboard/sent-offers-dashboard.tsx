@@ -1,14 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
-import { AlertTriangle, X, History } from "lucide-react";
+import { AlertTriangle, X, History, Search, CheckSquare, Undo2, ArrowRightLeft } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { EmptyState } from "../ui/empty-state";
-import { SubmitOfferModal } from "../offers/submit-offer-modal";
+import { SubmitOfferModal, type SubmitOfferModalProps } from "../offers/submit-offer-modal";
 import { OfferRevisionsModal } from "../offers/offer-revisions-modal";
+import { NegotiationTimelineModal } from "../offers/negotiation-timeline";
+import { SquadProposalBadge } from "../offers/squad/squad-proposal-badge";
 import { getLocalizedListingPath, getLocalizedWorkspacePath } from "@/src/lib/i18n/routes";
+import { filterAndSortByRelevance, computeRangeSelection } from "@/src/lib/search/token-matcher";
 
 export interface SentOfferItem {
   id: string;
@@ -22,9 +25,23 @@ export interface SentOfferItem {
   budgetMax: string | null;
   estimatedDurationValue: number | null;
   estimatedDurationUnit: string | null;
+  isCountered?: boolean;
+  counterRound?: number;
+  currentTurnUserId?: string | null;
   createdAt: string | Date;
   updatedAt: string | Date;
   engagementId?: string | null;
+  isSquadOffer?: boolean | null;
+  squadTitle?: string | null;
+  squadMembers?: Array<{
+    id?: string;
+    displayName: string;
+    roleTitle: string;
+    revenueSharePercentage: number;
+    scopeSummary?: string | null;
+    isLead?: boolean;
+    handleOrEmail?: string | null;
+  }>;
 }
 
 export interface SentOffersDashboardProps {
@@ -32,44 +49,199 @@ export interface SentOffersDashboardProps {
   locale: string;
 }
 
+const FILTER_LABELS: Record<string, { tr: string; en: string }> = {
+  all: { tr: "Tümü", en: "All" },
+  pending: { tr: "Beklemede", en: "Pending" },
+  accepted: { tr: "Kabul Edilenler", en: "Accepted" },
+  rejected: { tr: "Reddedilenler", en: "Rejected" },
+  cancelled: { tr: "İptal Edilenler", en: "Cancelled" },
+  withdrawn: { tr: "Geri Çekilenler", en: "Withdrawn" },
+};
+
+function getFilterLabel(filterKey: string, isTr: boolean): string {
+  const item = FILTER_LABELS[filterKey];
+  if (!item) return filterKey;
+  return isTr ? item.tr : item.en;
+}
+
+function getErrorMessage(err: unknown, defaultMessage: string): string {
+  if (err instanceof Error) return err.message;
+  return defaultMessage;
+}
+
+function getEmptyStateTitle(hasSearchQuery: boolean, isTr: boolean): string {
+  if (hasSearchQuery) {
+    return isTr ? "Aramanıza uygun teklif bulunamadı" : "No proposals match your search";
+  }
+  return isTr ? "Teklif bulunamadı" : "No proposals found";
+}
+
+function getEmptyStateDescription(hasSearchQuery: boolean, isTr: boolean): string {
+  if (hasSearchQuery) {
+    return isTr
+      ? "Farklı bir arama terimi deneyebilir veya filtreyi 'Tümü' olarak değiştirebilirsiniz."
+      : "Try searching with different terms or changing your status filter.";
+  }
+  return isTr
+    ? "Henüz bir ilana teklif vermediniz veya bu filtrede teklif bulunmuyor."
+    : "You have not submitted proposals or none match this filter.";
+}
+
+function getNegotiationButtonLabel(isCountered: boolean, counterRound: number | undefined, isTr: boolean): string {
+  if (isCountered) {
+    const round = counterRound || 1;
+    return isTr ? `Pazarlık (${round}. Tur)` : `Negotiation (R${round})`;
+  }
+  return isTr ? "Pazarlık" : "Negotiate";
+}
+
+function getWithdrawButtonLabel(isWithdrawing: boolean, isTr: boolean): string {
+  if (isWithdrawing) return isTr ? "Geri Çekiliyor..." : "Withdrawing...";
+  return isTr ? "Evet, Geri Çek" : "Yes, Withdraw";
+}
+
+function getBulkWithdrawButtonLabel(isWithdrawing: boolean, isTr: boolean): string {
+  if (isWithdrawing) return isTr ? "Geri Çekiliyor..." : "Withdrawing...";
+  return isTr ? "Evet, Hepsini Geri Çek" : "Yes, Withdraw All";
+}
+
 export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboardProps) {
   const isTr = locale === "tr";
   const [offers, setOffers] = useState<SentOfferItem[]>(initialOffers);
   const [filter, setFilter] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [withdrawingOffer, setWithdrawingOffer] = useState<SentOfferItem | null>(null);
   const [withdrawError, setWithdrawError] = useState<string | null>(null);
   const [selectedOfferForRevisions, setSelectedOfferForRevisions] = useState<string | null>(null);
+  const [selectedOfferForNegotiation, setSelectedOfferForNegotiation] = useState<string | null>(null);
   const [editingOffer, setEditingOffer] = useState<SentOfferItem | null>(null);
+
+  // Bulk withdraw state
+  const [selectedOfferIds, setSelectedOfferIds] = useState<Set<string>>(new Set());
+  const [lastSelectedOfferId, setLastSelectedOfferId] = useState<string | null>(null);
+  const [isBulkWithdrawModalOpen, setIsBulkWithdrawModalOpen] = useState(false);
+  const [isBulkWithdrawing, setIsBulkWithdrawing] = useState(false);
+  const [bulkWithdrawError, setBulkWithdrawError] = useState<string | null>(null);
+
+  const selectAllRef = useRef<HTMLInputElement | null>(null);
 
   // Close modal on Escape
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape" && withdrawingOffer) {
-        setWithdrawingOffer(null);
-        setWithdrawError(null);
+      if (e.key === "Escape") {
+        if (withdrawingOffer) {
+          setWithdrawingOffer(null);
+          setWithdrawError(null);
+        }
+        if (isBulkWithdrawModalOpen) {
+          setIsBulkWithdrawModalOpen(false);
+          setBulkWithdrawError(null);
+        }
       }
     }
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [withdrawingOffer]);
+  }, [withdrawingOffer, isBulkWithdrawModalOpen]);
 
-  const filteredOffers = offers.filter((o) => {
-    if (filter === "all") return true;
-    if (filter === "cancelled") {
-      return (
-        o.status === "CANCELLED_ENGAGEMENT" ||
-        o.status === "CANCELLED" ||
-        o.status === "EXPIRED_LISTING" ||
-        o.status === "EXPIRED_LISTING_INACTIVE" ||
-        o.status === "VOID_MODERATION"
+  // 1. Status Filter
+  const statusFiltered = useMemo(() => {
+    return offers.filter((o) => {
+      if (filter === "all") return true;
+      if (filter === "cancelled") {
+        return (
+          o.status === "CANCELLED_ENGAGEMENT" ||
+          o.status === "CANCELLED" ||
+          o.status === "EXPIRED_LISTING" ||
+          o.status === "EXPIRED_LISTING_INACTIVE" ||
+          o.status === "VOID_MODERATION"
+        );
+      }
+      if (filter === "rejected") {
+        return o.status.toLowerCase().startsWith("rejected");
+      }
+      return o.status.toLowerCase() === filter.toLowerCase();
+    });
+  }, [offers, filter]);
+
+  // 2. Search Filter with Turkish token weighting
+  const displayedOffers = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return statusFiltered;
+    }
+    return filterAndSortByRelevance(statusFiltered, searchQuery, (offer) => [
+      { text: offer.listingTitle, weight: 10 },
+      { text: offer.message, weight: 5 },
+      { text: offer.status, weight: 2 },
+    ]);
+  }, [statusFiltered, searchQuery]);
+
+  // Only PENDING offers can be selected for bulk withdraw
+  const selectableOffers = useMemo(() => {
+    return displayedOffers.filter((o) => o.status === "PENDING");
+  }, [displayedOffers]);
+
+  // Tri-state checkbox handling
+  const selectedPendingCount = useMemo(() => {
+    let count = 0;
+    for (const o of selectableOffers) {
+      if (selectedOfferIds.has(o.id)) count++;
+    }
+    return count;
+  }, [selectableOffers, selectedOfferIds]);
+
+  const isAllPendingSelected =
+    selectableOffers.length > 0 && selectedPendingCount === selectableOffers.length;
+  const isPartiallyPendingSelected =
+    selectedPendingCount > 0 && selectedPendingCount < selectableOffers.length;
+
+  useEffect(() => {
+    if (selectAllRef.current) {
+      selectAllRef.current.indeterminate = isPartiallyPendingSelected;
+    }
+  }, [isPartiallyPendingSelected]);
+
+  const handleToggleSelectAll = () => {
+    if (isAllPendingSelected) {
+      const next = new Set(selectedOfferIds);
+      for (const o of selectableOffers) {
+        next.delete(o.id);
+      }
+      setSelectedOfferIds(next);
+      setLastSelectedOfferId(null);
+    } else {
+      const next = new Set(selectedOfferIds);
+      for (const o of selectableOffers) {
+        next.add(o.id);
+      }
+      setSelectedOfferIds(next);
+    }
+  };
+
+  const handleOfferSelect = (offerId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    if (e.shiftKey && lastSelectedOfferId) {
+      const itemsForSelection = selectableOffers.map((o) => ({ id: o.id }));
+      const next = computeRangeSelection(
+        itemsForSelection,
+        lastSelectedOfferId,
+        offerId,
+        selectedOfferIds
       );
+      setSelectedOfferIds(next);
+      setLastSelectedOfferId(offerId);
+    } else {
+      const next = new Set(selectedOfferIds);
+      if (next.has(offerId)) {
+        next.delete(offerId);
+      } else {
+        next.add(offerId);
+      }
+      setSelectedOfferIds(next);
+      setLastSelectedOfferId(offerId);
     }
-    if (filter === "rejected") {
-      return o.status.toLowerCase().startsWith("rejected");
-    }
-    return o.status.toLowerCase() === filter.toLowerCase();
-  });
+  };
 
   const confirmWithdraw = async () => {
     if (!withdrawingOffer) return;
@@ -95,87 +267,216 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
         prev.map((o) => (o.id === withdrawingOffer.id ? { ...o, status: "WITHDRAWN" } : o))
       );
       setWithdrawingOffer(null);
+      setSelectedOfferIds((prev) => {
+        const next = new Set(prev);
+        next.delete(withdrawingOffer.id);
+        return next;
+      });
     } catch (err: unknown) {
       setWithdrawError(
-        err instanceof Error ? err.message : isTr ? "İşlem başarısız oldu." : "Operation failed."
+        getErrorMessage(err, isTr ? "İşlem başarısız oldu." : "Operation failed.")
       );
     } finally {
       setLoadingId(null);
     }
   };
 
+  // Bulk withdraw execution
+  const confirmBulkWithdraw = async () => {
+    if (selectedOfferIds.size === 0) return;
+
+    setIsBulkWithdrawing(true);
+    setBulkWithdrawError(null);
+
+    const idsToWithdraw = Array.from(selectedOfferIds);
+
+    try {
+      const res = await fetch("/api/offers/sent/bulk-withdraw", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ offerIds: idsToWithdraw }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(
+          data.error || (isTr ? "Toplu geri çekme başarısız oldu." : "Bulk withdraw failed.")
+        );
+      }
+
+      const withdrawnSet = new Set(data.offerIds || idsToWithdraw);
+      setOffers((prev) =>
+        prev.map((o) => (withdrawnSet.has(o.id) ? { ...o, status: "WITHDRAWN" } : o))
+      );
+      setSelectedOfferIds(new Set());
+      setLastSelectedOfferId(null);
+      setIsBulkWithdrawModalOpen(false);
+    } catch (err: unknown) {
+      setBulkWithdrawError(
+        getErrorMessage(err, isTr ? "Bir hata oluştu." : "An unexpected error occurred.")
+      );
+    } finally {
+      setIsBulkWithdrawing(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
-      {/* Filter Tabs */}
-      <div className="flex flex-wrap items-center gap-1.5 border-b border-[var(--color-border-subtle)] pb-4">
-        {(["all", "pending", "accepted", "rejected", "cancelled", "withdrawn"] as const).map(
-          (f) => (
+      {/* Search and Status Filter Bar */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[var(--color-surface-card)] border border-[var(--color-border-subtle)] p-4 rounded-2xl shadow-sm">
+        {/* Search */}
+        <div className="relative flex-1 min-w-[240px]">
+          <Search
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-text-tertiary)]"
+            aria-hidden="true"
+          />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={
+              isTr
+                ? "Başvurulan ilanlarda ara (başlık veya teklif metni)..."
+                : "Search proposals (listing title or message)..."
+            }
+            className="w-full pl-10 pr-9 py-2 rounded-xl text-xs sm:text-sm bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+          />
+          {searchQuery && (
             <button
-              key={f}
               type="button"
-              onClick={() => setFilter(f)}
-              className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
-                filter === f
-                  ? "bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] font-semibold"
-                  : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
-              }`}
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]"
+              aria-label={isTr ? "Aramayı Temizle" : "Clear Search"}
             >
-              {f === "all"
-                ? isTr
-                  ? "Tümü"
-                  : "All"
-                : f === "pending"
-                  ? isTr
-                    ? "Beklemede"
-                    : "Pending"
-                  : f === "accepted"
-                    ? isTr
-                      ? "Kabul Edilenler"
-                      : "Accepted"
-                    : f === "rejected"
-                      ? isTr
-                        ? "Reddedilenler"
-                        : "Rejected"
-                      : f === "cancelled"
-                        ? isTr
-                          ? "İptal Edilenler"
-                          : "Cancelled"
-                        : isTr
-                          ? "Geri Çekilenler"
-                          : "Withdrawn"}
+              <X className="h-4 w-4" />
             </button>
-          )
-        )}
+          )}
+        </div>
+
+        {/* Filter Tabs */}
+        <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
+          {(["all", "pending", "accepted", "rejected", "cancelled", "withdrawn"] as const).map(
+            (f) => (
+              <button
+                key={f}
+                type="button"
+                onClick={() => setFilter(f)}
+                className={`rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
+                  filter === f
+                    ? "bg-blue-600 text-white shadow-sm font-semibold"
+                    : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]"
+                }`}
+              >
+                {getFilterLabel(f, isTr)}
+              </button>
+            )
+          )}
+        </div>
       </div>
 
-      {filteredOffers.length === 0 ? (
+      {/* Bulk Action Sticky Bar */}
+      {selectedOfferIds.size > 0 && (
+        <div className="sticky top-4 z-20 flex items-center justify-between gap-4 p-3.5 rounded-2xl bg-indigo-600 text-white shadow-xl shadow-indigo-500/20 border border-indigo-400/30 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center gap-2 text-xs sm:text-sm font-medium">
+            <CheckSquare className="h-4 w-4" />
+            <span>
+              {isTr
+                ? `${selectedOfferIds.size} teklif seçildi (Aralık seçimi için Shift tuşuna basabilirsiniz)`
+                : `${selectedOfferIds.size} proposal(s) selected (Hold Shift to select range)`}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setSelectedOfferIds(new Set())}
+              className="px-3 py-1.5 rounded-xl text-xs font-medium bg-white/10 hover:bg-white/20 transition-colors"
+            >
+              {isTr ? "Seçimi Temizle" : "Clear Selection"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsBulkWithdrawModalOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-500 hover:bg-rose-600 text-white shadow transition-all"
+            >
+              <Undo2 className="h-3.5 w-3.5" />
+              <span>{isTr ? "Seçilenleri Geri Çek" : "Withdraw Selected"}</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Select All Row for Pending Offers */}
+      {selectableOffers.length > 0 && (
+        <div className="flex items-center justify-between px-2 py-1 text-xs text-[var(--color-text-secondary)]">
+          <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+            <input
+              ref={selectAllRef}
+              type="checkbox"
+              checked={isAllPendingSelected}
+              onChange={handleToggleSelectAll}
+              className="h-4 w-4 rounded border-[var(--color-border-subtle)] text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+            />
+            <span className="font-medium">
+              {isTr
+                ? `Beklemedeki Tümünü Seç (${selectableOffers.length})`
+                : `Select All Pending (${selectableOffers.length})`}
+            </span>
+          </label>
+
+          <span className="text-[11px] text-[var(--color-text-tertiary)] hidden sm:inline">
+            {isTr
+              ? "Sadece henüz yanıtlanmamış (beklemedeki) teklifler geri çekilebilir."
+              : "Only proposals currently pending review can be withdrawn."}
+          </span>
+        </div>
+      )}
+
+      {/* Offers List */}
+      {displayedOffers.length === 0 ? (
         <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-8 sm:p-12 text-center shadow-sm">
           <EmptyState
-            title={isTr ? "Teklif bulunamadı" : "No offers found"}
-            description={
-              isTr
-                ? "Henüz bir ilana teklif vermediniz veya bu filtrede teklif bulunmuyor."
-                : "You have not submitted proposals or none match this filter."
-            }
+            title={getEmptyStateTitle(Boolean(searchQuery), isTr)}
+            description={getEmptyStateDescription(Boolean(searchQuery), isTr)}
             action={
-              <Link href={isTr ? "/tr/ilanlar" : "/en/listings"}>
-                <Button variant="primary">{isTr ? "İlanları Keşfet" : "Explore Listings"}</Button>
-              </Link>
+              !searchQuery && (
+                <Link href={isTr ? "/tr/ilanlar" : "/en/listings"}>
+                  <Button variant="primary">{isTr ? "İlanları Keşfet" : "Explore Listings"}</Button>
+                </Link>
+              )
             }
           />
         </div>
       ) : (
         <div className="space-y-4">
-          {filteredOffers.map((offer) => {
+          {displayedOffers.map((offer) => {
             const dateStr = new Date(offer.createdAt).toLocaleDateString(isTr ? "tr-TR" : "en-US");
+            const isPending = offer.status === "PENDING";
+            const isSelected = selectedOfferIds.has(offer.id);
 
             return (
               <div
                 key={offer.id}
-                className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-5 sm:p-6 space-y-3 shadow-sm transition-all duration-300 hover:border-blue-500/30 hover:shadow-lg"
+                className={`rounded-2xl border transition-all duration-200 p-5 sm:p-6 space-y-3 shadow-sm ${
+                  isSelected
+                    ? "border-indigo-500/50 bg-indigo-500/5 shadow-md shadow-indigo-500/10"
+                    : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl hover:border-indigo-500/30 hover:shadow-md"
+                }`}
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
+                    {/* Checkbox for pending offers */}
+                    {isPending && (
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={(e) => handleOfferSelect(offer.id, e as unknown as React.MouseEvent)}
+                        onClick={(e) => handleOfferSelect(offer.id, e)}
+                        className="h-4 w-4 rounded border-[var(--color-border-subtle)] text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                        aria-label={isTr ? "Teklifi seç" : "Select offer"}
+                      />
+                    )}
+
                     {(() => {
                       let badgeVariant: "success" | "secondary" | "danger" | "neutral" | "outline" =
                         "outline";
@@ -185,8 +486,15 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
                         badgeVariant = "success";
                         badgeLabel = isTr ? "Kabul Edildi" : "Accepted";
                       } else if (offer.status === "PENDING") {
-                        badgeVariant = "secondary";
-                        badgeLabel = isTr ? "Beklemede" : "Pending";
+                        if (offer.isCountered) {
+                          badgeVariant = "outline";
+                          badgeLabel = isTr
+                            ? `Pazarlıkta (${offer.counterRound || 1}. Tur)`
+                            : `Negotiating (R${offer.counterRound || 1})`;
+                        } else {
+                          badgeVariant = "secondary";
+                          badgeLabel = isTr ? "Beklemede" : "Pending";
+                        }
                       } else if (
                         offer.status === "CANCELLED_ENGAGEMENT" ||
                         offer.status === "CANCELLED"
@@ -219,51 +527,73 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
                         </Badge>
                       );
                     })()}
+                    {offer.isSquadOffer && (
+                      <SquadProposalBadge
+                        memberCount={offer.squadMembers?.length}
+                        squadTitle={offer.squadTitle}
+                        locale={locale}
+                        size="sm"
+                      />
+                    )}
                     <span className="text-xs text-[var(--color-text-tertiary)]">{dateStr}</span>
                   </div>
+
                   <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSelectedOfferForNegotiation(offer.id)}
+                      title={isTr ? "Karşı Teklif & Pazarlık" : "Counter-Offer & Negotiation"}
+                      className={`cursor-pointer text-xs ${
+                        offer.isCountered ? "text-blue-400 font-semibold bg-blue-500/10" : ""
+                      }`}
+                    >
+                      <ArrowRightLeft className="h-3.5 w-3.5 mr-1" />
+                      {getNegotiationButtonLabel(Boolean(offer.isCountered), offer.counterRound, isTr)}
+                    </Button>
+
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setSelectedOfferForRevisions(offer.id)}
                       title={isTr ? "Revizyon Geçmişi" : "Revision History"}
-                      className="cursor-pointer"
+                      className="cursor-pointer text-xs"
                     >
                       <History className="h-3.5 w-3.5 mr-1" />
                       {isTr ? "Geçmiş" : "History"}
                     </Button>
+
+                    {offer.status === "PENDING" && (
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setEditingOffer(offer)}
+                          disabled={loadingId === offer.id}
+                          className="cursor-pointer text-xs"
+                        >
+                          {isTr ? "Düzenle" : "Edit"}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setWithdrawingOffer(offer)}
+                          disabled={loadingId === offer.id}
+                          className="text-[var(--color-danger)] hover:bg-[var(--color-danger)]/10 cursor-pointer text-xs"
+                        >
+                          {isTr ? "Geri Çek" : "Withdraw"}
+                        </Button>
+                      </div>
+                    )}
+
+                    {offer.status === "ACCEPTED" && offer.engagementId && (
+                      <Link href={getLocalizedWorkspacePath(offer.engagementId, locale)}>
+                        <Button variant="primary" size="sm" className="text-xs">
+                          {isTr ? "Çalışma Alanı & İletişim →" : "Workspace & Contact →"}
+                        </Button>
+                      </Link>
+                    )}
                   </div>
-
-                  {offer.status === "PENDING" && (
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setEditingOffer(offer)}
-                        disabled={loadingId === offer.id}
-                        className="cursor-pointer"
-                      >
-                        {isTr ? "Düzenle" : "Edit"}
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setWithdrawingOffer(offer)}
-                        disabled={loadingId === offer.id}
-                        className="text-[var(--color-danger)] hover:bg-[var(--color-danger)]/10 cursor-pointer"
-                      >
-                        {isTr ? "Teklifi Geri Çek" : "Withdraw"}
-                      </Button>
-                    </div>
-                  )}
-
-                  {offer.status === "ACCEPTED" && offer.engagementId && (
-                    <Link href={getLocalizedWorkspacePath(offer.engagementId, locale)}>
-                      <Button variant="primary" size="sm">
-                        {isTr ? "Eşleşme ve İletişim Detayları →" : "View Match & Contact →"}
-                      </Button>
-                    </Link>
-                  )}
                 </div>
 
                 <h3 className="font-semibold text-base text-[var(--color-text-primary)]">
@@ -301,27 +631,16 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
         </div>
       )}
 
-      {/* Accessible Withdrawal Confirmation Modal Dialog */}
+      {/* Single Withdraw Modal */}
       {withdrawingOffer && (
-        <div
-          role="alertdialog"
-          aria-modal="true"
-          aria-labelledby="withdraw-dialog-title"
-          aria-describedby="withdraw-dialog-description"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150"
-        >
-          <div className="relative w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl sm:rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-4 sm:p-6 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-3 shrink-0">
-              <div className="flex items-center gap-2.5 sm:gap-3">
-                <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl sm:rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
-                  <AlertTriangle className="h-5 w-5" aria-hidden="true" />
-                </div>
-                <h2
-                  id="withdraw-dialog-title"
-                  className="text-sm sm:text-base font-bold text-[var(--color-text-primary)]"
-                >
-                  {isTr ? "Teklifi Geri Çekmek İstiyor Musunuz?" : "Withdraw Proposal?"}
-                </h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] p-6 space-y-4 shadow-xl">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-2 text-[var(--color-danger)]">
+                <AlertTriangle className="h-5 w-5" />
+                <h3 className="font-semibold text-base text-[var(--color-text-primary)]">
+                  {isTr ? "Teklifi Geri Çek" : "Withdraw Proposal"}
+                </h3>
               </div>
               <button
                 type="button"
@@ -329,33 +648,26 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
                   setWithdrawingOffer(null);
                   setWithdrawError(null);
                 }}
-                className="p-1 rounded-lg text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] transition-colors cursor-pointer"
-                aria-label={isTr ? "Kapat" : "Close"}
+                className="text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] cursor-pointer"
               >
-                <X className="h-4 w-4" aria-hidden="true" />
+                <X className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto min-h-0 py-3 space-y-4 pr-1">
-              <p
-                id="withdraw-dialog-description"
-                className="text-xs text-[var(--color-text-secondary)] leading-relaxed"
-              >
-                {isTr
-                  ? `"${withdrawingOffer.listingTitle}" projesine verdiğiniz teklifi geri çekiyorsunuz. İlanın mevcut 7 günlük yayım döngüsü boyunca bu projeye tekrar teklif sunamazsınız.`
-                  : `You are withdrawing your proposal for "${withdrawingOffer.listingTitle}". You will not be able to submit another offer for this project during its current 7-day cycle.`}
+            <p className="text-sm text-[var(--color-text-secondary)]">
+              {isTr
+                ? `"${withdrawingOffer.listingTitle}" ilanına verdiğiniz teklifi geri çekmek istediğinizden emin misiniz?`
+                : `Are you sure you want to withdraw your proposal for "${withdrawingOffer.listingTitle}"?`}
+            </p>
+
+            {withdrawError && (
+              <p className="text-xs text-[var(--color-danger)] bg-[var(--color-danger)]/10 p-2 rounded">
+                {withdrawError}
               </p>
+            )}
 
-              {withdrawError && (
-                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-xs text-red-400">
-                  {withdrawError}
-                </div>
-              )}
-            </div>
-
-            <div className="flex items-center justify-end gap-2.5 sm:gap-3 pt-3 border-t border-[var(--color-border-subtle)] shrink-0">
+            <div className="flex items-center justify-end gap-3 pt-2">
               <Button
-                type="button"
                 variant="outline"
                 size="sm"
                 onClick={() => {
@@ -363,34 +675,86 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
                   setWithdrawError(null);
                 }}
                 disabled={loadingId === withdrawingOffer.id}
+                className="cursor-pointer"
               >
                 {isTr ? "Vazgeç" : "Cancel"}
               </Button>
               <Button
-                type="button"
-                variant="primary"
+                variant="danger"
                 size="sm"
                 onClick={confirmWithdraw}
                 disabled={loadingId === withdrawingOffer.id}
-                className="bg-red-600 hover:bg-red-700 text-white font-semibold cursor-pointer"
+                className="cursor-pointer"
               >
-                {loadingId === withdrawingOffer.id
-                  ? isTr
-                    ? "Geri Çekiliyor..."
-                    : "Withdrawing..."
-                  : isTr
-                    ? "Evet, Teklifi Geri Çek"
-                    : "Confirm Withdrawal"}
+                {getWithdrawButtonLabel(loadingId === withdrawingOffer.id, isTr)}
               </Button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Proposal Edit Modal */}
+      {/* Bulk Withdraw Modal */}
+      {isBulkWithdrawModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-md rounded-2xl bg-[var(--color-surface-card)] border border-[var(--color-border-subtle)] p-6 shadow-2xl space-y-4">
+            <div className="flex items-start gap-3">
+              <div className="p-2 rounded-xl bg-rose-500/10 text-rose-500 shrink-0">
+                <Undo2 className="h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-[var(--color-text-primary)]">
+                  {isTr ? "Toplu Teklif Geri Çekme" : "Bulk Withdraw Proposals"}
+                </h3>
+                <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] mt-1 leading-relaxed">
+                  {isTr
+                    ? `Seçilen ${selectedOfferIds.size} adet beklemedeki teklifi geri çekmek istediğinize emin misiniz? İlan sahipleri tekliflerinizi artık değerlendiremeyecektir.`
+                    : `Are you sure you want to withdraw ${selectedOfferIds.size} pending proposals? Listing owners will no longer be able to accept them.`}
+                </p>
+              </div>
+            </div>
+
+            {bulkWithdrawError && (
+              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-400">
+                {bulkWithdrawError}
+              </div>
+            )}
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={isBulkWithdrawing}
+                onClick={() => setIsBulkWithdrawModalOpen(false)}
+              >
+                {isTr ? "Vazgeç" : "Cancel"}
+              </Button>
+              <Button
+                variant="danger"
+                size="sm"
+                disabled={isBulkWithdrawing}
+                onClick={confirmBulkWithdraw}
+              >
+                {getBulkWithdrawButtonLabel(isBulkWithdrawing, isTr)}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Revision History Modal */}
+      {selectedOfferForRevisions && (
+        <OfferRevisionsModal
+          offerId={selectedOfferForRevisions}
+          locale={locale}
+          isOpen={true}
+          onClose={() => setSelectedOfferForRevisions(null)}
+        />
+      )}
+
+      {/* Edit Offer Modal */}
       {editingOffer && (
         <SubmitOfferModal
-          isOpen={Boolean(editingOffer)}
+          isOpen={true}
           onClose={() => setEditingOffer(null)}
           listingId={editingOffer.listingId}
           listingTitle={editingOffer.listingTitle}
@@ -398,34 +762,28 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
           offerId={editingOffer.id}
           initialData={{
             message: editingOffer.message,
-            budgetCurrency: editingOffer.budgetCurrency ?? (isTr ? "TRY" : "USD"),
-            budgetMin: editingOffer.budgetMin ?? "",
-            budgetMax: editingOffer.budgetMax ?? "",
-            timelineValue: editingOffer.estimatedDurationValue
-              ? String(editingOffer.estimatedDurationValue)
-              : "",
-            timelineUnit:
-              (editingOffer.estimatedDurationUnit as "DAYS" | "WEEKS" | "MONTHS") ?? "WEEKS",
+            budgetCurrency: editingOffer.budgetCurrency || "TRY",
+            budgetMin: editingOffer.budgetMin || undefined,
+            budgetMax: editingOffer.budgetMax || undefined,
+            timelineValue: editingOffer.estimatedDurationValue?.toString(),
+            timelineUnit: (editingOffer.estimatedDurationUnit as "DAYS" | "WEEKS" | "MONTHS") || undefined,
+            isSquadOffer: editingOffer.isSquadOffer ?? undefined,
+            squadTitle: editingOffer.squadTitle ?? undefined,
+            squadMembers: (editingOffer.squadMembers as NonNullable<SubmitOfferModalProps["initialData"]>["squadMembers"]) || undefined,
           }}
-          onSuccess={(updatedData) => {
-            if (updatedData) {
+          onSuccess={(updated) => {
+            if (updated) {
               setOffers((prev) =>
                 prev.map((o) =>
                   o.id === editingOffer.id
                     ? {
                         ...o,
-                        message: updatedData.message ?? o.message,
-                        budgetCurrency: updatedData.budgetCurrency ?? o.budgetCurrency,
-                        budgetMin: updatedData.budgetMin ?? o.budgetMin,
-                        budgetMax: updatedData.budgetMax ?? o.budgetMax,
-                        estimatedDurationValue:
-                          updatedData.estimatedDurationValue !== undefined
-                            ? updatedData.estimatedDurationValue
-                            : o.estimatedDurationValue,
-                        estimatedDurationUnit:
-                          updatedData.estimatedDurationUnit !== undefined
-                            ? updatedData.estimatedDurationUnit
-                            : o.estimatedDurationUnit,
+                        message: updated.message,
+                        budgetCurrency: updated.budgetCurrency ?? o.budgetCurrency,
+                        budgetMin: updated.budgetMin ?? o.budgetMin,
+                        budgetMax: updated.budgetMax ?? o.budgetMax,
+                        estimatedDurationValue: updated.estimatedDurationValue ?? o.estimatedDurationValue,
+                        estimatedDurationUnit: updated.estimatedDurationUnit ?? o.estimatedDurationUnit,
                         updatedAt: new Date(),
                       }
                     : o
@@ -436,13 +794,16 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
           }}
         />
       )}
-      {/* Proposal Revisions Modal */}
-      {selectedOfferForRevisions && (
-        <OfferRevisionsModal
-          offerId={selectedOfferForRevisions}
-          isOpen={Boolean(selectedOfferForRevisions)}
-          onClose={() => setSelectedOfferForRevisions(null)}
+      {/* Negotiation Timeline Modal */}
+      {selectedOfferForNegotiation && (
+        <NegotiationTimelineModal
+          offerId={selectedOfferForNegotiation}
+          isOpen={Boolean(selectedOfferForNegotiation)}
+          onClose={() => setSelectedOfferForNegotiation(null)}
           locale={locale}
+          onOfferUpdated={() => {
+            window.location.reload();
+          }}
         />
       )}
     </div>

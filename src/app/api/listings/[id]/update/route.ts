@@ -43,14 +43,15 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err: unknown) {
-    const message =
-      err instanceof z.ZodError
-        ? err.issues[0]?.message || (isEn ? "Form validation error" : "Form doğrulama hatası")
-        : err instanceof Error
-          ? err.message
-          : isEn
-            ? "Failed to update listing"
-            : "İlan güncellenemedi";
+    let message = isEn
+      ? "Failed to update listing"
+      : "İlan güncellenemedi";
+    if (err instanceof z.ZodError) {
+      const fallbackMsg = isEn ? "Form validation error" : "Form doğrulama hatası";
+      message = err.issues[0]?.message || fallbackMsg;
+    } else if (err instanceof Error) {
+      message = err.message;
+    }
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

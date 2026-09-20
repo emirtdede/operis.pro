@@ -12,6 +12,26 @@ interface OffersTableClientProps {
   totalPages?: number;
 }
 
+function getOfferStatusBadgeClass(status: string): string {
+  if (status === "ACCEPTED") {
+    return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+  }
+  if (status === "PENDING") {
+    return "bg-purple-500/10 text-purple-400 border-purple-500/20";
+  }
+  return "bg-red-500/10 text-red-400 border-red-500/20";
+}
+
+function getOfferStatusLabel(status: string): string {
+  if (status === "ACCEPTED") {
+    return "KABUL EDİLDİ";
+  }
+  if (status === "PENDING") {
+    return "BEKLİYOR";
+  }
+  return "REDDEDİLDİ";
+}
+
 export function OffersTableClient({
   initialOffers,
   total,
@@ -152,19 +172,9 @@ export function OffersTableClient({
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-1.5">
                       <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${
-                          item.status === "ACCEPTED"
-                            ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                            : item.status === "PENDING"
-                              ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
-                              : "bg-red-500/10 text-red-400 border-red-500/20"
-                        }`}
+                        className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${getOfferStatusBadgeClass(item.status)}`}
                       >
-                        {item.status === "ACCEPTED"
-                          ? "KABUL EDİLDİ"
-                          : item.status === "PENDING"
-                            ? "BEKLİYOR"
-                            : "REDDEDİLDİ"}
+                        {getOfferStatusLabel(item.status)}
                       </span>
                       {item.rejectionReasonCode && (
                         <span className="text-[9px] font-mono text-slate-500">

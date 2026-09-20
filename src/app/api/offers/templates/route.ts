@@ -29,12 +29,12 @@ export async function GET(req: Request) {
     const templates = await OfferService.getUserOfferTemplates(session.userId);
     return NextResponse.json({ templates }, { status: 200 });
   } catch (err: unknown) {
-    const message =
-      err instanceof Error
-        ? err.message
-        : isEn
-          ? "Failed to fetch templates."
-          : "Şablonlar yüklenirken bir sorun oluştu.";
+    let message = isEn
+      ? "Failed to fetch templates."
+      : "Şablonlar yüklenirken bir sorun oluştu.";
+    if (err instanceof Error) {
+      message = err.message;
+    }
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
@@ -160,12 +160,12 @@ export async function DELETE(req: Request) {
     }
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err: unknown) {
-    const message =
-      err instanceof Error
-        ? err.message
-        : isEn
-          ? "Failed to delete template."
-          : "Şablon silinemedi.";
+    let message = isEn
+      ? "Failed to delete template."
+      : "Şablon silinemedi.";
+    if (err instanceof Error) {
+      message = err.message;
+    }
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

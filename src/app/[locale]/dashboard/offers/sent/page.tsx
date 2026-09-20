@@ -11,6 +11,7 @@ import {
 } from "@/src/components/dashboard/sent-offers-dashboard";
 import { DashboardTabs } from "@/src/components/dashboard/dashboard-tabs";
 import { Button } from "@/src/components/ui/button";
+import { serializeJsonLd } from "@/src/lib/security/json-ld";
 
 export async function generateMetadata({
   params,
@@ -93,6 +94,9 @@ export default async function SentOffersPage({ params }: { params: Promise<{ loc
       createdAt: r.offer.createdAt,
       updatedAt: r.offer.updatedAt,
       engagementId: r.engagementId || null,
+      isSquadOffer: r.offer.isSquadOffer ?? false,
+      squadTitle: r.offer.squadTitle ?? null,
+      squadMembers: r.squadMembers ?? [],
     }));
   } catch {
     fetchError = true;
@@ -127,7 +131,7 @@ export default async function SentOffersPage({ params }: { params: Promise<{ loc
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       {/* Header */}

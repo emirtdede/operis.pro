@@ -126,8 +126,10 @@ export async function POST(req: Request) {
         { status: 403 }
       );
     }
-    const message =
-      err instanceof Error ? err.message : isEn ? "Login failed" : "Giriş işlemi başarısız oldu";
+    let message = isEn ? "Login failed" : "Giriş işlemi başarısız oldu";
+    if (err instanceof Error) {
+      message = err.message;
+    }
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

@@ -153,6 +153,21 @@ export function validateContentAppropriateness(rawText: string): ModerationResul
     }
   }
 
+  // Contact leakage & off-platform solicitation guards
+  const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/i;
+  const PHONE_REGEX = /(?:\+?90\s*|\b0\s*)[5][0-9]{2}[\s.-]*[0-9]{3}[\s.-]*[0-9]{2}[\s.-]*[0-9]{2}\b/;
+  const CONTACT_INVITE_REGEX = /(?:wa\.me\/|t\.me\/|discord\.gg\/|instagram\.com\/[a-zA-Z0-9_.]+|wp(?:'den|\s*tan|\s*den)?\s*(?:yaz|ulas|ara)|dm(?:'den|\s*den)?\s*(?:yaz|ulas))/i;
+
+  if (EMAIL_REGEX.test(rawText) || PHONE_REGEX.test(rawText) || CONTACT_INVITE_REGEX.test(rawText)) {
+    return {
+      isValid: false,
+      flaggedTerms: ["CONTACT_LEAK"],
+      category: "CONTACT_LEAK",
+      reason:
+        "Platform dışı iletişim ve gizli anlaşmaları önlemek amacıyla e-posta adresi, telefon numarası veya harici iletişim bağlantısı paylaşılamaz.",
+    };
+  }
+
   if (flagged.size > 0) {
     return {
       isValid: false,

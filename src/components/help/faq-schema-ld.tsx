@@ -1,4 +1,5 @@
 import { FAQ_ITEMS } from "./faq-data";
+import { serializeJsonLd } from "@/src/lib/security/json-ld";
 
 interface FaqSchemaLdProps {
   locale: "tr" | "en";
@@ -23,7 +24,7 @@ export function FaqSchemaLd({ locale }: FaqSchemaLdProps) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
     />
   );
 }

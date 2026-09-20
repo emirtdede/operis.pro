@@ -18,6 +18,7 @@ import {
   Briefcase,
   Contrast,
   Search,
+  Compass,
 } from "lucide-react";
 import { Locale } from "@/src/lib/i18n/config";
 import {
@@ -62,6 +63,26 @@ export function getInitials(name?: string | null, email?: string | null): string
   return "DY";
 }
 
+function resolveFallbackDisplayName(email?: string | null): string {
+  if (email === "kullanici@operis.pro") {
+    return "Demir Yıldız";
+  }
+  if (email) {
+    return email.split("@")[0] ?? "";
+  }
+  return "";
+}
+
+function renderThemeIcon(theme: string) {
+  if (theme === "light") {
+    return <Sun className="h-3.5 w-3.5 text-amber-400" aria-hidden="true" />;
+  }
+  if (theme === "black") {
+    return <Contrast className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />;
+  }
+  return <Moon className="h-3.5 w-3.5 text-indigo-400" aria-hidden="true" />;
+}
+
 export function Header({ initialSession, initialProfile }: HeaderProps) {
   const t = useTranslations("nav");
   const common = useTranslations("common");
@@ -89,12 +110,7 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
 
   // Resolve clean display name & handle
   const displayName =
-    initialProfile?.displayName ||
-    (session?.email === "kullanici@operis.pro"
-      ? "Demir Yıldız"
-      : session?.email
-        ? session.email.split("@")[0]
-        : "");
+    initialProfile?.displayName || resolveFallbackDisplayName(session?.email);
   const handle =
     initialProfile?.handle || (session?.email === "kullanici@operis.pro" ? "demokullanici" : "");
   const initials = getInitials(displayName, session?.email);
@@ -135,12 +151,23 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
     };
   }, []);
 
+  const isWorkspaceActive =
+    pathname.startsWith(`/${locale}/panel`) || pathname.startsWith(`/${locale}/dashboard`);
+
+  const isListingsActive =
+    pathname === `/${locale}/ilanlar` ||
+    pathname.startsWith(`/${locale}/ilanlar`) ||
+    pathname === `/${locale}/listings` ||
+    pathname.startsWith(`/${locale}/listings`) ||
+    pathname.startsWith(`/${locale}/feed`) ||
+    pathname.startsWith(`/${locale}/akis`);
+
   const navLinks = session
     ? [
         {
           href: getLocalizedRoute("dashboardListings", locale),
           label: isTr ? "Çalışma Alanım" : "Workspace",
-          isActive: pathname.startsWith(`/${locale}/panel`) || pathname.startsWith(`/${locale}/dashboard`),
+          isActive: isWorkspaceActive,
         },
       ]
     : [];
@@ -189,7 +216,7 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8">
         {/* Left: Brand Logo */}
-        <div className="flex items-center md:flex-1 justify-start shrink-0">
+        <div className="flex items-center shrink-0">
           <Link
             href={session ? getLocalizedRoute("listings", locale) : `/${locale}`}
             className="flex items-center gap-2.5 transition-opacity hover:opacity-90"
@@ -199,49 +226,68 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
           </Link>
         </div>
 
-        {/* Center: Main Navigation (Perfect Dead Center) */}
-        {navLinks.length > 0 ? (
-          <nav
-            aria-label="Main Navigation"
-            className="hidden md:flex shrink-0 items-center justify-center gap-1"
-          >
-            {navLinks.map((link) => {
-              const isActive = link.isActive ?? pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`min-w-0 md:min-w-[76px] lg:min-w-[104px] whitespace-nowrap justify-center text-center rounded-xl px-2.5 lg:px-4 py-1.5 text-xs lg:text-sm font-medium transition-all flex items-center ${
-                    isActive
-                      ? "bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] shadow-sm font-semibold"
-                      : "text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text-primary)]"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </nav>
-        ) : (
-          <div className="hidden md:flex shrink-0" aria-hidden="true" />
-        )}
-
-        {/* Right: Premium Auth / User Area */}
-        <div className="hidden md:flex md:flex-1 items-center justify-end gap-1.5 lg:gap-2 shrink-0">
-          {/* Command Palette / Quick Search Trigger Button */}
+        {/* Center: Wide Interactive Search Bar */}
+        <div className="hidden md:flex flex-1 max-w-md lg:max-w-lg xl:max-w-xl mx-4 lg:mx-8 items-center justify-center">
           <button
             type="button"
             onClick={() => setCommandPaletteOpen(true)}
-            className="relative p-2 rounded-xl text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] border border-transparent hover:border-[var(--color-border-subtle)] transition-all cursor-pointer focus:outline-none flex items-center justify-center"
+            className="w-full flex items-center justify-between gap-3 px-3.5 py-2 rounded-xl text-xs bg-[var(--color-surface-hover)] hover:bg-[var(--color-surface-subtle,#181b24)] border border-[var(--color-border-subtle)] hover:border-blue-500/50 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)] transition-all cursor-pointer shadow-xs group focus:outline-none focus:ring-2 focus:ring-blue-500/30"
             title={isTr ? "Hızlı Arama (⌘K / Ctrl+K)" : "Quick Search (⌘K / Ctrl+K)"}
             aria-label={isTr ? "Hızlı Arama" : "Quick Search"}
           >
-            <Search className="h-4 w-4" aria-hidden="true" />
+            <div className="flex items-center gap-2.5 min-w-0">
+              <Search className="h-4 w-4 text-[var(--color-text-tertiary)] group-hover:text-blue-400 transition-colors shrink-0" aria-hidden="true" />
+              <span className="truncate select-none font-normal text-xs lg:text-[13px]">
+                {isTr ? "İlan, teknoloji veya kategori ara..." : "Search listings, skills, or categories..."}
+              </span>
+            </div>
+            <div className="flex items-center gap-1 shrink-0">
+              <kbd className="hidden sm:inline-flex items-center gap-0.5 px-2 py-0.5 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] text-[10px] font-mono text-[var(--color-text-tertiary)] shadow-xs">
+                <span className="text-[11px]">⌘</span>K
+              </kbd>
+            </div>
           </button>
+        </div>
 
+        {/* Right: Premium Auth / User Area */}
+        <div className="hidden md:flex items-center justify-end gap-2 shrink-0">
           {session ? (
-            <div className="flex items-center gap-2">
-              {/* Quick Notification Bell Dropdown */}
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              {/* 1. İlanlar Butonu (İkon + Alt Metin) */}
+              <Link
+                href={getLocalizedRoute("listings", locale)}
+                className={`relative px-2.5 py-1 rounded-xl border transition-all cursor-pointer focus:outline-none flex flex-col items-center justify-center gap-0.5 ${
+                  isListingsActive
+                    ? "text-[var(--color-text-primary)] bg-[var(--color-surface-hover)] border-[var(--color-border-subtle)] shadow-xs font-semibold"
+                    : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] border-transparent hover:border-[var(--color-border-subtle)]"
+                }`}
+                title={isTr ? "İlanlar" : "Listings"}
+                aria-label={isTr ? "İlanlar" : "Listings"}
+              >
+                <Compass className="h-4 w-4" aria-hidden="true" />
+                <span className="text-[10px] font-medium leading-tight whitespace-nowrap select-none">
+                  {isTr ? "İlanlar" : "Listings"}
+                </span>
+              </Link>
+
+              {/* 2. Panel Butonu (İkon + Alt Metin) */}
+              <Link
+                href={getLocalizedRoute("dashboardListings", locale)}
+                className={`relative px-2.5 py-1 rounded-xl border transition-all cursor-pointer focus:outline-none flex flex-col items-center justify-center gap-0.5 ${
+                  isWorkspaceActive
+                    ? "text-[var(--color-text-primary)] bg-[var(--color-surface-hover)] border-[var(--color-border-subtle)] shadow-xs font-semibold"
+                    : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] border-transparent hover:border-[var(--color-border-subtle)]"
+                }`}
+                title={isTr ? "Panel" : "Dashboard"}
+                aria-label={isTr ? "Panel" : "Dashboard"}
+              >
+                <Briefcase className="h-4 w-4" aria-hidden="true" />
+                <span className="text-[10px] font-medium leading-tight whitespace-nowrap select-none">
+                  {isTr ? "Panel" : "Dashboard"}
+                </span>
+              </Link>
+
+              {/* 2. Bildirimler İkonu */}
               <div className="relative" ref={notificationMenuRef}>
                 <NotificationPopover
                   locale={locale}
@@ -325,17 +371,6 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
 
                     {/* Group 1: Navigation Links */}
                     <div className="space-y-0.5 border-b border-[var(--color-border-subtle)] pb-2 mb-2">
-                      {/* Çalışma Alanım */}
-                      <Link
-                        href={getLocalizedRoute("dashboardListings", locale)}
-                        onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] transition-colors"
-                        role="menuitem"
-                      >
-                        <Briefcase className="h-4 w-4 text-indigo-400" aria-hidden="true" />
-                        <span className="font-medium">{isTr ? "Çalışma Alanım" : "Workspace"}</span>
-                      </Link>
-
                       {/* Profil */}
                       <Link
                         href={getLocalizedProfilePath(handle || "demokullanici", locale)}
@@ -347,6 +382,17 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
                         <span className="font-medium">
                           {isTr ? "Profilimi Gör" : "View Profile"}
                         </span>
+                      </Link>
+
+                      {/* Çalışma Alanım */}
+                      <Link
+                        href={getLocalizedRoute("dashboardListings", locale)}
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                        role="menuitem"
+                      >
+                        <Briefcase className="h-4 w-4 text-indigo-400" aria-hidden="true" />
+                        <span className="font-medium">{isTr ? "Çalışma Alanım" : "Workspace"}</span>
                       </Link>
 
                       {/* Bildirimler */}
@@ -364,7 +410,7 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
 
                       {/* Ayarlar */}
                       <Link
-                        href={getLocalizedRoute("dashboardSettings", locale)}
+                        href={getLocalizedRoute("settings", locale)}
                         onClick={() => setUserMenuOpen(false)}
                         className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] transition-colors"
                         role="menuitem"
@@ -431,13 +477,7 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
                       {/* Tema Seçimi */}
                       <div className="flex items-center justify-between px-2 text-[11px] text-[var(--color-text-tertiary)]">
                         <div className="flex items-center gap-1.5 font-medium">
-                          {theme === "light" ? (
-                            <Sun className="h-3.5 w-3.5 text-amber-400" aria-hidden="true" />
-                          ) : theme === "black" ? (
-                            <Contrast className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />
-                          ) : (
-                            <Moon className="h-3.5 w-3.5 text-indigo-400" aria-hidden="true" />
-                          )}
+                          {renderThemeIcon(theme)}
                           <span>{isTr ? "Tema" : "Theme"}</span>
                         </div>
                         <div
@@ -501,7 +541,23 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
               </div>
             </div>
           ) : (
-            <>
+            <div className="flex items-center gap-2">
+              <Link
+                href={getLocalizedRoute("listings", locale)}
+                className={`relative px-2.5 py-1 rounded-xl border transition-all cursor-pointer focus:outline-none flex flex-col items-center justify-center gap-0.5 ${
+                  isListingsActive
+                    ? "text-[var(--color-text-primary)] bg-[var(--color-surface-hover)] border-[var(--color-border-subtle)] shadow-xs font-semibold"
+                    : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] border-transparent hover:border-[var(--color-border-subtle)]"
+                }`}
+                title={isTr ? "İlanlar" : "Listings"}
+                aria-label={isTr ? "İlanlar" : "Listings"}
+              >
+                <Compass className="h-4 w-4" aria-hidden="true" />
+                <span className="text-[10px] font-medium leading-tight whitespace-nowrap select-none">
+                  {isTr ? "İlanlar" : "Listings"}
+                </span>
+              </Link>
+
               <Link href={getLocalizedRoute("login", locale)}>
                 <Button
                   variant="ghost"
@@ -523,7 +579,7 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
                   {t("register")}
                 </Button>
               </Link>
-            </>
+            </div>
           )}
         </div>
 

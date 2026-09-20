@@ -292,6 +292,127 @@ export function renderEmailTemplate({
       };
     }
 
+    case "category_follow_match": {
+      const categoryName = variables.categoryName || (isTr ? "Teknoloji" : "Technology");
+      const listingTitle = variables.listingTitle || variables.title || (isTr ? "Yeni İlan" : "New Listing");
+      const budgetText = variables.budget || (isTr ? "Görüşülebilir" : "Negotiable");
+      const timelineText = variables.timeline || (isTr ? "Esnek" : "Flexible");
+      const summaryText = variables.summary || "";
+      const tagsText = variables.tags || "";
+      const relevanceBadge = variables.relevanceBadge || "";
+      const actionUrl = variables.actionUrl || `${appUrl}/${isTr ? "tr/ilanlar" : "en/listings"}`;
+      const settingsUrl = `${appUrl}/${isTr ? "tr/panel/kategorilerim" : "en/dashboard/categories"}`;
+
+      const subject =
+        variables.subject ||
+        (isTr
+          ? `⚡ [${categoryName}] Yeni İlan: "${listingTitle}" (${budgetText})`
+          : `⚡ [${categoryName}] New Listing: "${listingTitle}" (${budgetText})`);
+
+      const tagsHtml = tagsText
+        ? `<div style="margin-top: 14px; text-align: center;">` +
+          tagsText
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean)
+            .map(
+              (tag) =>
+                `<span style="display: inline-block; background-color: #1e293b; color: #94a3b8; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 6px; margin: 2px 3px; border: 1px solid #334155;">#${tag}</span>`
+            )
+            .join("") +
+          `</div>`
+        : "";
+
+      const relevanceBadgeHtml = relevanceBadge
+        ? `<div style="margin-bottom: 16px; text-align: center;">
+            <span style="display: inline-block; background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(239, 68, 68, 0.15)); border: 1px solid rgba(245, 158, 11, 0.4); color: #fbbf24; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 9999px;">
+              ${relevanceBadge}
+            </span>
+          </div>`
+        : "";
+
+      const contentHtml = `
+        ${relevanceBadgeHtml}
+
+        <div style="text-align: center; margin-bottom: 6px;">
+          <span style="color: #38bdf8; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;">
+            ⚡ ${categoryName}
+          </span>
+        </div>
+
+        <h1 style="margin: 0 0 16px 0; font-size: 20px; font-weight: 700; color: #f8fafc; text-align: center; letter-spacing: -0.3px; line-height: 1.4;">
+          ${listingTitle}
+        </h1>
+
+        <div style="background-color: #0b1120; border: 1px solid #1e293b; border-radius: 12px; padding: 18px 20px; margin: 20px 0;">
+          <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+              <td style="font-size: 12px; color: #64748b; padding-bottom: 4px; text-transform: uppercase; font-weight: 600;">
+                ${isTr ? "Proje Bütçesi" : "Project Budget"}
+              </td>
+              <td align="right" style="font-size: 12px; color: #64748b; padding-bottom: 4px; text-transform: uppercase; font-weight: 600;">
+                ${isTr ? "Teslimat Süresi" : "Timeline"}
+              </td>
+            </tr>
+            <tr>
+              <td style="font-size: 16px; font-weight: 700; color: #38bdf8;">
+                ${budgetText}
+              </td>
+              <td align="right" style="font-size: 14px; font-weight: 600; color: #e2e8f0;">
+                ${timelineText}
+              </td>
+            </tr>
+          </table>
+
+          ${
+            summaryText
+              ? `<div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #1e293b/80; font-size: 13px; line-height: 1.6; color: #94a3b8;">
+                  ${summaryText}
+                </div>`
+              : ""
+          }
+
+          ${tagsHtml}
+        </div>
+
+        <p style="margin: 0 0 20px 0; font-size: 13px; line-height: 1.5; color: #94a3b8; text-align: center;">
+          ${
+            isTr
+              ? "İlk 1 saat içinde verilen tekliflerin kabul edilme şansı %60 daha yüksektir. İlan detaylarını inceleyip hemen ilk teklifinizi sunun."
+              : "Proposals submitted within the first hour have a 60% higher acceptance rate. Review the scope and be among the first to apply."
+          }
+        </p>
+
+        ${renderButton(actionUrl, isTr ? "İlanı İncele ve Teklif Ver" : "View Listing & Submit Proposal")}
+
+        <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #1e293b; text-align: center;">
+          <p style="margin: 0 0 6px 0; font-size: 11px; color: #64748b; line-height: 1.4;">
+            ${
+              isTr
+                ? `Bu canlı alarmı, Operis'te "${categoryName}" kategorisini takip ettiğiniz için aldınız.`
+                : `You received this live job alert because you follow "${categoryName}" on Operis.`
+            }
+          </p>
+          <a href="${settingsUrl}" style="color: #38bdf8; font-size: 11px; text-decoration: underline;">
+            ${isTr ? "Kategori Alarm Ayarlarını Yönet veya Kapat" : "Manage or Mute Category Alert Settings"}
+          </a>
+        </div>
+      `;
+
+      return {
+        html: wrapInEmailLayout({
+          title: subject,
+          previewText: isTr
+            ? `[${categoryName}] ${budgetText} - ${listingTitle}`
+            : `[${categoryName}] ${budgetText} - ${listingTitle}`,
+          contentHtml,
+          locale,
+        }),
+        text: variables.body || `${subject}\n\n${summaryText}\n\n${actionUrl}`,
+        subject,
+      };
+    }
+
     default: {
       // Generic branded platform notification
       const subject = variables.subject || (isTr ? "Operis Bildirimi" : "Operis Notification");

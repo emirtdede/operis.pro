@@ -1,8 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Briefcase, Send, Inbox, Bell, FolderTree, Settings } from "lucide-react";
+import { Briefcase, Send, Inbox, Bell, FolderTree, Bookmark, Rocket } from "lucide-react";
 
 export interface DashboardTabsProps {
   locale: string;
@@ -11,12 +12,39 @@ export interface DashboardTabsProps {
     sentOffers?: number;
     receivedOffers?: number;
     notifications?: number;
+    savedListings?: number;
+    activeEngagements?: number;
   };
 }
 
 export function DashboardTabs({ locale, counts }: DashboardTabsProps) {
   const pathname = usePathname();
   const isTr = locale === "tr";
+  const [badgeCounts, setBadgeCounts] = useState(counts || {});
+
+  useEffect(() => {
+    setBadgeCounts(counts || {});
+  }, [counts]);
+
+  // Reactive badge count updates from child components
+  useEffect(() => {
+    function handleBadgeUpdate(
+      e: Event & { detail?: { key: keyof NonNullable<DashboardTabsProps["counts"]>; delta?: number; value?: number } }
+    ) {
+      if (!e.detail) return;
+      const { key, delta, value } = e.detail;
+      setBadgeCounts((prev) => {
+        const current = prev[key] ?? 0;
+        const nextVal = typeof value === "number" ? value : Math.max(0, current + (delta ?? 0));
+        return { ...prev, [key]: nextVal };
+      });
+    }
+
+    window.addEventListener("operis:badge-update" as unknown as keyof WindowEventMap, handleBadgeUpdate as EventListener);
+    return () => {
+      window.removeEventListener("operis:badge-update" as unknown as keyof WindowEventMap, handleBadgeUpdate as EventListener);
+    };
+  }, []);
 
   const tabs = [
     {
@@ -25,7 +53,23 @@ export function DashboardTabs({ locale, counts }: DashboardTabsProps) {
       href: isTr ? "/tr/panel/ilanlarim" : "/en/dashboard/listings",
       matchPrefixes: ["/tr/panel/ilanlarim", "/en/dashboard/listings", "/tr/dashboard/listings"],
       icon: Briefcase,
-      count: counts?.listings,
+      count: badgeCounts.listings,
+    },
+    {
+      id: "saved",
+      label: isTr ? "Kaydedilenler" : "Saved Jobs",
+      href: isTr ? "/tr/panel/kaydedilenler" : "/en/dashboard/saved",
+      matchPrefixes: ["/tr/panel/kaydedilenler", "/en/dashboard/saved", "/tr/dashboard/saved"],
+      icon: Bookmark,
+      count: badgeCounts.savedListings,
+    },
+    {
+      id: "active-work",
+      label: isTr ? "Aktif Projelerim" : "Active Projects",
+      href: isTr ? "/tr/panel/aktif-isler" : "/en/dashboard/work",
+      matchPrefixes: ["/tr/panel/aktif-isler", "/en/dashboard/work", "/tr/dashboard/work"],
+      icon: Rocket,
+      count: badgeCounts.activeEngagements,
     },
     {
       id: "sent-offers",
@@ -37,7 +81,7 @@ export function DashboardTabs({ locale, counts }: DashboardTabsProps) {
         "/tr/dashboard/offers/sent",
       ],
       icon: Send,
-      count: counts?.sentOffers,
+      count: badgeCounts.sentOffers,
     },
     {
       id: "received-offers",
@@ -49,7 +93,7 @@ export function DashboardTabs({ locale, counts }: DashboardTabsProps) {
         "/tr/dashboard/offers/received",
       ],
       icon: Inbox,
-      count: counts?.receivedOffers,
+      count: badgeCounts.receivedOffers,
     },
     {
       id: "notifications",
@@ -61,7 +105,7 @@ export function DashboardTabs({ locale, counts }: DashboardTabsProps) {
         "/tr/dashboard/notifications",
       ],
       icon: Bell,
-      count: counts?.notifications,
+      count: badgeCounts.notifications,
     },
     {
       id: "categories",
@@ -73,19 +117,6 @@ export function DashboardTabs({ locale, counts }: DashboardTabsProps) {
         "/tr/dashboard/categories",
       ],
       icon: FolderTree,
-    },
-    {
-      id: "settings",
-      label: isTr ? "Ayarlar" : "Settings",
-      href: isTr ? "/tr/panel/ayarlar" : "/en/dashboard/settings",
-      matchPrefixes: [
-        "/tr/panel/ayarlar",
-        "/en/dashboard/settings",
-        "/tr/dashboard/settings",
-        "/tr/panel/guvenlik",
-        "/en/dashboard/security",
-      ],
-      icon: Settings,
     },
   ];
 

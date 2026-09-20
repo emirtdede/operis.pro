@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { BrandKitClient } from "@/src/components/brand/brand-kit-client";
+import { serializeJsonLd } from "@/src/lib/security/json-ld";
 
 export async function generateMetadata({
   params,
@@ -59,8 +60,8 @@ export default async function BrandPage({ params }: { params: Promise<{ locale: 
       : "Official vector assets, color palette, and design guidelines for Operis.",
     publisher: {
       "@type": "Organization",
-      name: "Operis Teknoloji Anonim Şirketi",
-      url: "https://operis.pro",
+      name: "Vellium",
+      url: "https://vellium.dev",
       logo: "https://operis.pro/operis-logo-acik.svg",
     },
   };
@@ -70,7 +71,7 @@ export default async function BrandPage({ params }: { params: Promise<{ locale: 
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       {/* Hero Header Section */}

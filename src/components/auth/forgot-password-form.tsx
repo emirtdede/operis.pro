@@ -42,13 +42,10 @@ export function ForgotPasswordForm({ locale }: ForgotPasswordFormProps) {
 
       setIsSuccess(true);
     } catch (err: unknown) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : isTr
-            ? "Talep iletilemedi. Lütfen tekrar deneyiniz."
-            : "Could not send reset instructions."
-      );
+      const fallbackMsg = isTr
+        ? "Talep iletilemedi. Lütfen tekrar deneyiniz."
+        : "Could not send reset instructions.";
+      setError(err instanceof Error ? err.message : fallbackMsg);
     } finally {
       setIsLoading(false);
     }

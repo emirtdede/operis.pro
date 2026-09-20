@@ -54,6 +54,21 @@ const SECTOR_COLOR_MAP: Record<string, string> = {
   "sector-operations-support": "text-fuchsia-400 bg-fuchsia-500/10 border-fuchsia-500/20",
 };
 
+function getSectorName(
+  sector: (typeof SEED_SECTORS)[number] | undefined,
+  isTr: boolean
+): string {
+  if (!sector) return "";
+  return isTr ? sector.translations.tr.name : sector.translations.en.name;
+}
+
+function getSelectAllLabel(allSelected: boolean, isTr: boolean): string {
+  if (allSelected) {
+    return isTr ? "Tümünü Bırak" : "Deselect All";
+  }
+  return isTr ? "Tümünü Seç" : "Select All";
+}
+
 export interface CategoryFilterBarProps {
   categories: CategoryDto[];
   selectedCategory?: string;
@@ -231,9 +246,290 @@ export function CategoryFilterBar({
     };
   }, [modalOpen]);
 
-  return (
-    <div className="space-y-2.5">
-      {variant === "sidebar" ? (
+  const defaultCategoryComboboxLabel = isTr ? "Tüm Kategoriler" : "All Categories";
+
+  const renderModalBody = () => {
+    if (searchFilter.trim()) {
+      return (
+        /* Search Results Flat Grid */
+        <div>
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-tertiary)] mb-3">
+            {isTr
+              ? `${filteredModalCategories.length} sonuç bulundu`
+              : `${filteredModalCategories.length} results found`}
+          </div>
+          {filteredModalCategories.length === 0 ? (
+            <div className="p-8 text-center text-[var(--color-text-secondary)]">
+              {isTr
+                ? "Aramanızla eşleşen kategori bulunamadı."
+                : "No matching categories found."}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+              {filteredModalCategories.map((cat) => {
+                const isSelected = tempSelectedSlugs.includes(cat.slug);
+                const sector = SEED_SECTORS.find((s) => s.key === cat.sectorKey);
+                const sectorName = getSectorName(sector, isTr);
+
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => toggleModalCategory(cat.slug)}
+                    className={`text-left w-full flex items-center justify-between p-3 rounded-2xl border transition-all cursor-pointer ${
+                      isSelected
+                        ? "border-blue-500 bg-blue-500/15 text-blue-700 dark:text-blue-300 font-semibold shadow-xs ring-1 ring-blue-500/30"
+                        : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] shadow-2xs"
+                    }`}
+                  >
+                    <div className="space-y-0.5 pr-2 min-w-0">
+                      {sectorName && (
+                        <div className="text-[11px] font-medium text-[var(--color-text-secondary)] dark:text-slate-300 truncate">
+                          {sectorName}
+                        </div>
+                      )}
+                      <div className="font-semibold text-xs truncate">{cat.name}</div>
+                      {cat.description && (
+                        <div className="text-[11px] text-[var(--color-text-secondary)] line-clamp-1">
+                          {cat.description}
+                        </div>
+                      )}
+                    </div>
+                    <div
+                      className={`h-5 w-5 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
+                        isSelected
+                          ? "bg-blue-600 border-blue-600 text-white"
+                          : "border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-transparent"
+                      }`}
+                    >
+                      <Check className="h-3.5 w-3.5 stroke-[3]" />
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (modalView === "all") {
+      return (
+        /* All Categories Grid (Alphabetical with multi-select) */
+        <div className="space-y-3">
+          <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)]/40 pb-2">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-tertiary)]">
+              {isTr
+                ? `Tüm Kategoriler (${sortedAllCategories.length})`
+                : `All Categories (${sortedAllCategories.length})`}
+            </span>
+            <span className="text-[11px] text-[var(--color-text-secondary)]">
+              {isTr ? "Birden fazla kategori seçebilirsiniz" : "You can select multiple categories"}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+            {sortedAllCategories.map((cat) => {
+              const isSelected = tempSelectedSlugs.includes(cat.slug);
+              const sector = SEED_SECTORS.find((s) => s.key === cat.sectorKey);
+              const sectorName = getSectorName(sector, isTr);
+
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => toggleModalCategory(cat.slug)}
+                  className={`text-left w-full flex items-center justify-between p-2.5 px-3 rounded-xl border transition-all cursor-pointer ${
+                    isSelected
+                      ? "border-blue-500 bg-blue-500/15 text-blue-700 dark:text-blue-300 font-semibold shadow-xs ring-1 ring-blue-500/30"
+                      : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] shadow-2xs"
+                  }`}
+                >
+                  <div className="min-w-0 pr-2">
+                    <p className="font-medium text-xs truncate">{cat.name}</p>
+                    {sectorName && (
+                      <p className="text-[11px] font-medium text-[var(--color-text-secondary)] dark:text-slate-300 truncate">
+                        {sectorName}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {typeof cat.listingCount === "number" && cat.listingCount > 0 && (
+                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-blue-500/15 text-blue-700 dark:text-sky-300 border border-blue-500/25">
+                        {cat.listingCount}
+                      </span>
+                    )}
+                    <div
+                      className={`h-4 w-4 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
+                        isSelected
+                          ? "bg-blue-600 border-blue-600 text-white"
+                          : "border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-transparent"
+                      }`}
+                    >
+                      <Check className="h-3 w-3 stroke-[3]" />
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      /* Dynamic 10 Sector Groups */
+      <>
+        {sectorGroups.map((group) => {
+          const Icon = group.icon;
+          const sectorSlugs = group.categories.map((c) => c.slug);
+          const allSectorSelected =
+            sectorSlugs.length > 0 &&
+            sectorSlugs.every((slug) => tempSelectedSlugs.includes(slug));
+          const selectedInSectorCount = sectorSlugs.filter((slug) =>
+            tempSelectedSlugs.includes(slug)
+          ).length;
+
+          return (
+            <div key={group.key} className="space-y-2.5">
+              <div className="flex items-center justify-between gap-2 border-b border-[var(--color-border-subtle)]/40 pb-1.5">
+                <div className="flex items-center gap-2 min-w-0">
+                  <div
+                    className={`flex h-6 w-6 items-center justify-center rounded-lg border shrink-0 ${group.color}`}
+                  >
+                    <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+                  </div>
+                  <h3 className="font-bold text-xs text-[var(--color-text-primary)] uppercase tracking-wider truncate">
+                    {group.name}
+                  </h3>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => toggleSectorCategories(sectorSlugs)}
+                    className="text-[11px] font-semibold text-blue-600 dark:text-sky-400 hover:underline cursor-pointer"
+                  >
+                    {getSelectAllLabel(allSectorSelected, isTr)}
+                  </button>
+                  <span className="text-[10px] font-mono text-[var(--color-text-tertiary)] bg-[var(--color-surface-hover)] px-2 py-0.5 rounded-full">
+                    {selectedInSectorCount > 0
+                      ? `${selectedInSectorCount}/${group.categories.length}`
+                      : group.categories.length}
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                {group.categories.map((cat) => {
+                  const isSelected = tempSelectedSlugs.includes(cat.slug);
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => toggleModalCategory(cat.slug)}
+                      className={`text-left w-full flex items-center justify-between p-2.5 px-3 rounded-xl border transition-all cursor-pointer ${
+                        isSelected
+                          ? "border-blue-500 bg-blue-500/15 text-blue-700 dark:text-blue-300 font-semibold shadow-xs ring-1 ring-blue-500/30"
+                          : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] shadow-2xs"
+                      }`}
+                    >
+                      <span className="truncate pr-2 font-medium text-xs">
+                        {cat.name}
+                      </span>
+                      <div
+                        className={`h-4 w-4 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
+                          isSelected
+                            ? "bg-blue-600 border-blue-600 text-white"
+                            : "border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-transparent"
+                        }`}
+                      >
+                        <Check className="h-3 w-3 stroke-[3]" />
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+
+        {fallbackCats.length > 0 && (() => {
+          const fallbackSlugs = fallbackCats.map((c) => c.slug);
+          const allFallbackSelected =
+            fallbackSlugs.length > 0 &&
+            fallbackSlugs.every((slug) => tempSelectedSlugs.includes(slug));
+          const selectedFallbackCount = fallbackSlugs.filter((slug) =>
+            tempSelectedSlugs.includes(slug)
+          ).length;
+
+          return (
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between gap-2 border-b border-[var(--color-border-subtle)]/40 pb-1.5">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-lg border text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20">
+                    <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
+                  </div>
+                  <h3 className="font-bold text-xs text-[var(--color-text-primary)] uppercase tracking-wider">
+                    {isTr ? "Diğer Kategoriler" : "Other Categories"}
+                  </h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => toggleSectorCategories(fallbackSlugs)}
+                    className="text-[11px] font-semibold text-blue-600 dark:text-sky-400 hover:underline cursor-pointer"
+                  >
+                    {getSelectAllLabel(allFallbackSelected, isTr)}
+                  </button>
+                  <span className="text-[10px] font-mono text-[var(--color-text-tertiary)] bg-surface/60 px-2 py-0.5 rounded-full">
+                    {selectedFallbackCount > 0
+                      ? `${selectedFallbackCount}/${fallbackCats.length}`
+                      : fallbackCats.length}
+                  </span>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                {fallbackCats.map((cat) => {
+                  const isSelected = tempSelectedSlugs.includes(cat.slug);
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => toggleModalCategory(cat.slug)}
+                      className={`text-left w-full flex items-center justify-between p-2.5 px-3 rounded-xl border transition-all cursor-pointer ${
+                        isSelected
+                          ? "border-blue-500 bg-blue-500/15 text-blue-700 dark:text-blue-300 font-semibold shadow-xs ring-1 ring-blue-500/30"
+                          : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] shadow-2xs"
+                      }`}
+                    >
+                      <span className="truncate pr-2 font-medium text-xs">
+                        {cat.name}
+                      </span>
+                      <div
+                        className={`h-4 w-4 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
+                          isSelected
+                            ? "bg-blue-600 border-blue-600 text-white"
+                            : "border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-transparent"
+                        }`}
+                      >
+                        <Check className="h-3 w-3 stroke-[3]" />
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
+      </>
+    );
+  };
+
+  const renderTriggerContent = () => {
+    if (variant === "sidebar") {
+      return (
         /* Vertical Sidebar Triggers (Twitter-style left column) */
         <div className="space-y-2 w-full">
           {/* 1. Tüm Kategoriler Butonu */}
@@ -254,7 +550,7 @@ export function CategoryFilterBar({
                 <Globe className="h-4 w-4" aria-hidden="true" />
               </div>
               <span className="text-xs font-semibold truncate text-left">
-                {selectedCategorySlugs.length > 0 ? comboboxLabel : isTr ? "Tüm Kategoriler" : "All Categories"}
+                {selectedCategorySlugs.length > 0 ? comboboxLabel : defaultCategoryComboboxLabel}
               </span>
             </div>
 
@@ -300,7 +596,11 @@ export function CategoryFilterBar({
             </span>
           </button>
         </div>
-      ) : showSearchInput ? (
+      );
+    }
+
+    if (showSearchInput) {
+      return (
         /* Unified Search & Category Command Bar */
         <div className="relative z-20">
           <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-surface/75 backdrop-blur-xl p-1.5 shadow-sm">
@@ -414,71 +714,79 @@ export function CategoryFilterBar({
             </div>
           </div>
         </div>
-      ) : (
-        /* Standalone Combobox Trigger */
-        <div className="relative z-10">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-            {/* Tüm Kategoriler Butonu */}
-            <button
-              type="button"
-              onClick={() => {
-                setModalView("all");
-                setModalOpen(true);
-              }}
-              className={`relative flex-1 max-w-xl h-11 px-3.5 rounded-2xl border transition-all flex items-center gap-2.5 shadow-xs cursor-pointer ${
-                selectedCategorySlugs.length > 0
-                  ? "border-blue-500/40 bg-blue-500/10 text-blue-600 dark:text-blue-400 font-semibold"
-                  : "border-[var(--color-border-subtle)] bg-surface/75 backdrop-blur-xl text-[var(--color-text-primary)] hover:border-blue-500/40"
-              }`}
-            >
-              <div className="h-7 w-7 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-                <Globe className="h-4 w-4" aria-hidden="true" />
-              </div>
+      );
+    }
 
-              <span className="flex-1 text-left text-xs font-medium truncate">
-                {comboboxLabel}
-              </span>
+    return (
+      /* Standalone Combobox Trigger */
+      <div className="relative z-10">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          {/* Tüm Kategoriler Butonu */}
+          <button
+            type="button"
+            onClick={() => {
+              setModalView("all");
+              setModalOpen(true);
+            }}
+            className={`relative flex-1 max-w-xl h-11 px-3.5 rounded-2xl border transition-all flex items-center gap-2.5 shadow-xs cursor-pointer ${
+              selectedCategorySlugs.length > 0
+                ? "border-blue-500/40 bg-blue-500/10 text-blue-600 dark:text-blue-400 font-semibold"
+                : "border-[var(--color-border-subtle)] bg-surface/75 backdrop-blur-xl text-[var(--color-text-primary)] hover:border-blue-500/40"
+            }`}
+          >
+            <div className="h-7 w-7 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+              <Globe className="h-4 w-4" aria-hidden="true" />
+            </div>
 
-              {selectedCategorySlugs.length > 0 ? (
-                <span
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    router.push(buildHref(undefined));
-                  }}
-                  className="p-1 rounded-md text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-white hover:bg-blue-500/20 transition-colors cursor-pointer"
-                  title={isTr ? "Filtreleri kaldır" : "Clear filters"}
-                  aria-label={isTr ? "Filtreleri kaldır" : "Clear filters"}
-                >
-                  <X className="h-3.5 w-3.5" />
-                </span>
-              ) : (
-                <ChevronDown className="h-4 w-4 text-[var(--color-text-tertiary)] shrink-0" />
-              )}
-            </button>
+            <span className="flex-1 text-left text-xs font-medium truncate">
+              {comboboxLabel}
+            </span>
 
-            {/* Sektör Matrisi Butonu */}
-            <button
-              type="button"
-              onClick={() => {
-                setModalView("sectors");
-                setModalOpen(true);
-              }}
-              className="inline-flex items-center gap-2 h-11 px-4 rounded-2xl border border-[var(--color-border-subtle)] bg-surface/75 backdrop-blur-xl text-xs font-semibold text-[var(--color-text-primary)] hover:border-blue-500/40 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer shadow-xs whitespace-nowrap self-end sm:self-center shrink-0"
-            >
-              <LayoutGrid className="h-4 w-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
-              <span>
-                {isTr ? "Sektör Matrisi" : "Sector Matrix"}
+            {selectedCategorySlugs.length > 0 ? (
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push(buildHref(undefined));
+                }}
+                className="p-1 rounded-md text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-white hover:bg-blue-500/20 transition-colors cursor-pointer"
+                title={isTr ? "Filtreleri kaldır" : "Clear filters"}
+                aria-label={isTr ? "Filtreleri kaldır" : "Clear filters"}
+              >
+                <X className="h-3.5 w-3.5" />
               </span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-blue-500/10 text-blue-600 dark:text-blue-400 font-mono font-bold">
-                {selectedCategorySlugs.length > 0
-                  ? `${selectedCategorySlugs.length} Seçili`
-                  : sectorGroups.length}
-              </span>
-              <ChevronRight className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
-            </button>
-          </div>
+            ) : (
+              <ChevronDown className="h-4 w-4 text-[var(--color-text-tertiary)] shrink-0" />
+            )}
+          </button>
+
+          {/* Sektör Matrisi Butonu */}
+          <button
+            type="button"
+            onClick={() => {
+              setModalView("sectors");
+              setModalOpen(true);
+            }}
+            className="inline-flex items-center gap-2 h-11 px-4 rounded-2xl border border-[var(--color-border-subtle)] bg-surface/75 backdrop-blur-xl text-xs font-semibold text-[var(--color-text-primary)] hover:border-blue-500/40 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer shadow-xs whitespace-nowrap self-end sm:self-center shrink-0"
+          >
+            <LayoutGrid className="h-4 w-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+            <span>
+              {isTr ? "Sektör Matrisi" : "Sector Matrix"}
+            </span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-blue-500/10 text-blue-600 dark:text-blue-400 font-mono font-bold">
+              {selectedCategorySlugs.length > 0
+                ? `${selectedCategorySlugs.length} Seçili`
+                : sectorGroups.length}
+            </span>
+            <ChevronRight className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
+          </button>
         </div>
-      )}
+      </div>
+    );
+  };
+
+  return (
+    <div className="space-y-2.5">
+      {renderTriggerContent()}
 
       {/* Categorized Popover / Modal with Live Search & Dual Views */}
       {modalOpen && mounted && createPortal(
@@ -581,293 +889,7 @@ export function CategoryFilterBar({
 
             {/* Modal Body: Grouped Categories or All Categories */}
             <div className="p-5 overflow-y-auto space-y-6 flex-1 text-xs">
-              {searchFilter.trim() ? (
-                /* Search Results Flat Grid */
-                <div>
-                  <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-tertiary)] mb-3">
-                    {isTr
-                      ? `${filteredModalCategories.length} sonuç bulundu`
-                      : `${filteredModalCategories.length} results found`}
-                  </div>
-                  {filteredModalCategories.length === 0 ? (
-                    <div className="p-8 text-center text-[var(--color-text-secondary)]">
-                      {isTr
-                        ? "Aramanızla eşleşen kategori bulunamadı."
-                        : "No matching categories found."}
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                      {filteredModalCategories.map((cat) => {
-                        const isSelected = tempSelectedSlugs.includes(cat.slug);
-                        const sector = SEED_SECTORS.find((s) => s.key === cat.sectorKey);
-                        const sectorName = sector
-                          ? isTr
-                            ? sector.translations.tr.name
-                            : sector.translations.en.name
-                          : "";
-
-                        return (
-                          <button
-                            key={cat.id}
-                            type="button"
-                            onClick={() => toggleModalCategory(cat.slug)}
-                            className={`text-left w-full flex items-center justify-between p-3 rounded-2xl border transition-all cursor-pointer ${
-                              isSelected
-                                ? "border-blue-500 bg-blue-500/15 text-blue-700 dark:text-blue-300 font-semibold shadow-xs ring-1 ring-blue-500/30"
-                                : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] shadow-2xs"
-                            }`}
-                          >
-                            <div className="space-y-0.5 pr-2 min-w-0">
-                              {sectorName && (
-                                <div className="text-[11px] font-medium text-[var(--color-text-secondary)] dark:text-slate-300 truncate">
-                                  {sectorName}
-                                </div>
-                              )}
-                              <div className="font-semibold text-xs truncate">{cat.name}</div>
-                              {cat.description && (
-                                <div className="text-[11px] text-[var(--color-text-secondary)] line-clamp-1">
-                                  {cat.description}
-                                </div>
-                              )}
-                            </div>
-                            <div
-                              className={`h-5 w-5 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
-                                isSelected
-                                  ? "bg-blue-600 border-blue-600 text-white"
-                                  : "border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-transparent"
-                              }`}
-                            >
-                              <Check className="h-3.5 w-3.5 stroke-[3]" />
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              ) : modalView === "all" ? (
-                /* All Categories Grid (Alphabetical with multi-select) */
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)]/40 pb-2">
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-tertiary)]">
-                      {isTr
-                        ? `Tüm Kategoriler (${sortedAllCategories.length})`
-                        : `All Categories (${sortedAllCategories.length})`}
-                    </span>
-                    <span className="text-[11px] text-[var(--color-text-secondary)]">
-                      {isTr ? "Birden fazla kategori seçebilirsiniz" : "You can select multiple categories"}
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                    {sortedAllCategories.map((cat) => {
-                      const isSelected = tempSelectedSlugs.includes(cat.slug);
-                      const sector = SEED_SECTORS.find((s) => s.key === cat.sectorKey);
-                      const sectorName = sector
-                        ? isTr
-                          ? sector.translations.tr.name
-                          : sector.translations.en.name
-                        : "";
-
-                      return (
-                        <button
-                          key={cat.id}
-                          type="button"
-                          onClick={() => toggleModalCategory(cat.slug)}
-                          className={`text-left w-full flex items-center justify-between p-2.5 px-3 rounded-xl border transition-all cursor-pointer ${
-                            isSelected
-                              ? "border-blue-500 bg-blue-500/15 text-blue-700 dark:text-blue-300 font-semibold shadow-xs ring-1 ring-blue-500/30"
-                              : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] shadow-2xs"
-                          }`}
-                        >
-                          <div className="min-w-0 pr-2">
-                            <p className="font-medium text-xs truncate">{cat.name}</p>
-                            {sectorName && (
-                              <p className="text-[11px] font-medium text-[var(--color-text-secondary)] dark:text-slate-300 truncate">
-                                {sectorName}
-                              </p>
-                            )}
-                          </div>
-
-                          <div className="flex items-center gap-1.5 shrink-0">
-                            {typeof cat.listingCount === "number" && cat.listingCount > 0 && (
-                              <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-blue-500/15 text-blue-700 dark:text-sky-300 border border-blue-500/25">
-                                {cat.listingCount}
-                              </span>
-                            )}
-                            <div
-                              className={`h-4 w-4 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
-                                isSelected
-                                  ? "bg-blue-600 border-blue-600 text-white"
-                                  : "border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-transparent"
-                              }`}
-                            >
-                              <Check className="h-3 w-3 stroke-[3]" />
-                            </div>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              ) : (
-                /* Dynamic 10 Sector Groups */
-                <>
-                  {sectorGroups.map((group) => {
-                    const Icon = group.icon;
-                    const sectorSlugs = group.categories.map((c) => c.slug);
-                    const allSectorSelected =
-                      sectorSlugs.length > 0 &&
-                      sectorSlugs.every((slug) => tempSelectedSlugs.includes(slug));
-                    const selectedInSectorCount = sectorSlugs.filter((slug) =>
-                      tempSelectedSlugs.includes(slug)
-                    ).length;
-
-                    return (
-                      <div key={group.key} className="space-y-2.5">
-                        <div className="flex items-center justify-between gap-2 border-b border-[var(--color-border-subtle)]/40 pb-1.5">
-                          <div className="flex items-center gap-2">
-                            <div
-                              className={`flex h-6 w-6 items-center justify-center rounded-lg border ${group.color}`}
-                            >
-                              <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                            </div>
-                            <h3 className="font-bold text-xs text-[var(--color-text-primary)] uppercase tracking-wider">
-                              {group.name}
-                            </h3>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <button
-                              type="button"
-                              onClick={() => toggleSectorCategories(sectorSlugs)}
-                              className="text-[11px] font-semibold text-blue-600 dark:text-sky-400 hover:underline cursor-pointer"
-                            >
-                              {allSectorSelected
-                                ? isTr
-                                  ? "Tümünü Bırak"
-                                  : "Deselect All"
-                                : isTr
-                                  ? "Tümünü Seç"
-                                  : "Select All"}
-                            </button>
-                            <span className="text-[10px] font-mono text-[var(--color-text-tertiary)] bg-[var(--color-surface-hover)] px-2 py-0.5 rounded-full">
-                              {selectedInSectorCount > 0
-                                ? `${selectedInSectorCount}/${group.categories.length}`
-                                : group.categories.length}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                          {group.categories.map((cat) => {
-                            const isSelected = tempSelectedSlugs.includes(cat.slug);
-                            return (
-                              <button
-                                key={cat.id}
-                                type="button"
-                                onClick={() => toggleModalCategory(cat.slug)}
-                                className={`text-left w-full flex items-center justify-between p-2.5 px-3 rounded-xl border transition-all cursor-pointer ${
-                                  isSelected
-                                    ? "border-blue-500 bg-blue-500/15 text-blue-700 dark:text-blue-300 font-semibold shadow-xs ring-1 ring-blue-500/30"
-                                    : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] shadow-2xs"
-                                }`}
-                              >
-                                <span className="truncate pr-2 font-medium text-xs">
-                                  {cat.name}
-                                </span>
-                                <div
-                                  className={`h-4 w-4 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
-                                    isSelected
-                                      ? "bg-blue-600 border-blue-600 text-white"
-                                      : "border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-transparent"
-                                  }`}
-                                >
-                                  <Check className="h-3 w-3 stroke-[3]" />
-                                </div>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })}
-
-                  {fallbackCats.length > 0 && (() => {
-                    const fallbackSlugs = fallbackCats.map((c) => c.slug);
-                    const allFallbackSelected =
-                      fallbackSlugs.length > 0 &&
-                      fallbackSlugs.every((slug) => tempSelectedSlugs.includes(slug));
-                    const selectedFallbackCount = fallbackSlugs.filter((slug) =>
-                      tempSelectedSlugs.includes(slug)
-                    ).length;
-
-                    return (
-                      <div className="space-y-2.5">
-                        <div className="flex items-center justify-between gap-2 border-b border-[var(--color-border-subtle)]/40 pb-1.5">
-                          <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-lg border text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20">
-                              <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
-                            </div>
-                            <h3 className="font-bold text-xs text-[var(--color-text-primary)] uppercase tracking-wider">
-                              {isTr ? "Diğer Kategoriler" : "Other Categories"}
-                            </h3>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <button
-                              type="button"
-                              onClick={() => toggleSectorCategories(fallbackSlugs)}
-                              className="text-[11px] font-semibold text-blue-600 dark:text-sky-400 hover:underline cursor-pointer"
-                            >
-                              {allFallbackSelected
-                                ? isTr
-                                  ? "Tümünü Bırak"
-                                  : "Deselect All"
-                                : isTr
-                                  ? "Tümünü Seç"
-                                  : "Select All"}
-                            </button>
-                            <span className="text-[10px] font-mono text-[var(--color-text-tertiary)] bg-surface/60 px-2 py-0.5 rounded-full">
-                              {selectedFallbackCount > 0
-                                ? `${selectedFallbackCount}/${fallbackCats.length}`
-                                : fallbackCats.length}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                          {fallbackCats.map((cat) => {
-                            const isSelected = tempSelectedSlugs.includes(cat.slug);
-                            return (
-                              <button
-                                key={cat.id}
-                                type="button"
-                                onClick={() => toggleModalCategory(cat.slug)}
-                                className={`text-left w-full flex items-center justify-between p-2.5 px-3 rounded-xl border transition-all cursor-pointer ${
-                                  isSelected
-                                    ? "border-blue-500 bg-blue-500/15 text-blue-700 dark:text-blue-300 font-semibold shadow-xs ring-1 ring-blue-500/30"
-                                    : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:border-blue-500/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] shadow-2xs"
-                                }`}
-                              >
-                                <span className="truncate pr-2 font-medium text-xs">
-                                  {cat.name}
-                                </span>
-                                <div
-                                  className={`h-4 w-4 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
-                                    isSelected
-                                      ? "bg-blue-600 border-blue-600 text-white"
-                                      : "border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-transparent"
-                                  }`}
-                                >
-                                  <Check className="h-3 w-3 stroke-[3]" />
-                                </div>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })()}
-                </>
-              )}
+              {renderModalBody()}
             </div>
 
             {/* Modal Footer: Reset & Apply */}

@@ -335,12 +335,12 @@ export function LegalCenterClient({ locale }: LegalCenterClientProps) {
         summaryTitle: isTr ? "Önemli Güvenceler" : "Key Guarantees",
         bullets: isTr
           ? [
-              "Operis Teknoloji Anonim Şirketi resmi künye ve sicil bilgileri şeffaftır.",
+              "Vellium resmi künye ve sicil bilgileri şeffaftır (Operis bir Vellium ürünüdür).",
               "Yasal tebligatlar ve resmi mahkeme müzekkereleri öncelikli kanaldan takip edilir.",
               "KVKK ve veri güvenliği bildirimleri için özel iletişim masası mevcuttur.",
             ]
           : [
-              "Transparent corporate registration under Operis Teknoloji Anonim Şirketi.",
+              "Transparent corporate registration under Vellium (Operis is a product of Vellium).",
               "Expedited triage for official court subpoenas and legal notices.",
               "Dedicated data protection desk for GDPR and KVKK compliance.",
             ],
@@ -757,10 +757,10 @@ export function LegalCenterClient({ locale }: LegalCenterClientProps) {
             {isTr ? "İhlal / Şikayet Bildir" : "Report Abuse"}
           </Link>
           <a
-            href="mailto:legal@operis.pro"
+            href="mailto:legal@vellium.dev"
             className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-md shadow-blue-500/25 transition-all flex items-center gap-1.5"
           >
-            <span>legal@operis.pro</span>
+            <span>legal@vellium.dev</span>
             <ExternalLink className="h-3 w-3" aria-hidden="true" />
           </a>
         </div>

@@ -107,21 +107,30 @@ export function ListingRevisionsModal({
               {isTr ? "Sürüm Listesi" : "Version History"}
             </div>
 
-            {isLoading ? (
-              <div className="p-4 text-center text-xs text-slate-500">
-                {isTr ? "Yükleniyor..." : "Loading..."}
-              </div>
-            ) : error ? (
-              <div className="p-3 text-xs text-red-400 flex items-center gap-1.5">
-                <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-                <span>{error}</span>
-              </div>
-            ) : revisions.length === 0 ? (
-              <div className="p-4 text-center text-xs text-slate-500">
-                {isTr ? "Henüz kayıtlı bir revizyon bulunmuyor." : "No revisions recorded yet."}
-              </div>
-            ) : (
-              revisions.map((rev) => {
+            {(() => {
+              if (isLoading) {
+                return (
+                  <div className="p-4 text-center text-xs text-slate-500">
+                    {isTr ? "Yükleniyor..." : "Loading..."}
+                  </div>
+                );
+              }
+              if (error) {
+                return (
+                  <div className="p-3 text-xs text-red-400 flex items-center gap-1.5">
+                    <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                    <span>{error}</span>
+                  </div>
+                );
+              }
+              if (revisions.length === 0) {
+                return (
+                  <div className="p-4 text-center text-xs text-slate-500">
+                    {isTr ? "Henüz kayıtlı bir revizyon bulunmuyor." : "No revisions recorded yet."}
+                  </div>
+                );
+              }
+              return revisions.map((rev) => {
                 const isSelected = selectedRevision?.id === rev.id;
                 return (
                   <button
@@ -155,8 +164,8 @@ export function ListingRevisionsModal({
                     <ChevronRight className="h-3.5 w-3.5 opacity-50" />
                   </button>
                 );
-              })
-            )}
+              });
+            })()}
           </div>
 
           {/* Selected Revision Snapshot Preview */}

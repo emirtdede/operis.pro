@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import {
   Clock,
@@ -9,6 +12,15 @@ import {
 } from "lucide-react";
 import { AvatarInitials } from "../ui/avatar-initials";
 import { Badge } from "../ui/badge";
+import { BookmarkButton } from "./bookmark-button";
+import { VerifiedCompanyBadge } from "../ui/verified-company-badge";
+import { HiringIntentBadge } from "./hiring-intent-badge";
+import { HiringIntentModal } from "./hiring-intent-modal";
+import { HiringIntentEngine } from "@/src/modules/listings/hiring-intent/hiring-intent-engine";
+import type {
+  HiringIntentBreakdown,
+  HiringIntentLevel,
+} from "@/src/modules/listings/hiring-intent/hiring-intent-types";
 
 export interface ListingCardProps {
   id: string;
@@ -26,6 +38,11 @@ export interface ListingCardProps {
   timelineUnit: string | null;
   ownerHandle: string;
   ownerDisplayName: string;
+  ownerIsCompanyVerified?: boolean;
+  ownerCompanyName?: string | null;
+  ownerCompanyType?: string | null;
+  ownerTaxOffice?: string | null;
+  ownerVknMasked?: string | null;
   firstPublishedAt: Date | string;
   lastActivatedAt: Date | string;
   activeUntil: Date | string;
@@ -33,6 +50,9 @@ export interface ListingCardProps {
   viewCount?: number;
   clickCount?: number;
   locale: string;
+  hiringIntentScore?: number;
+  hiringIntentLevel?: HiringIntentLevel;
+  hiringIntentBreakdown?: HiringIntentBreakdown | null;
   // Batch and Quick offer enhancements
   isBatchMode?: boolean;
   isSelected?: boolean;
@@ -49,6 +69,22 @@ export interface ListingCardProps {
   }) => void;
 }
 
+function getTimelineUnitLabel(unit: string, isTr: boolean): string {
+  if (unit === "DAYS") return isTr ? "gün" : "days";
+  if (unit === "WEEKS") return isTr ? "hafta" : "weeks";
+  return isTr ? "ay" : "months";
+}
+
+function getBatchButtonClass(isSelected?: boolean, isExpired: boolean = false): string {
+  if (isSelected) {
+    return "bg-blue-500 text-white shadow-md shadow-blue-500/25";
+  }
+  if (isExpired) {
+    return "opacity-50 cursor-not-allowed bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)]";
+  }
+  return "bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] border border-[var(--color-border-subtle)]";
+}
+
 export function ListingCard({
   id,
   slug,
@@ -63,18 +99,64 @@ export function ListingCard({
   timelineUnit,
   ownerHandle,
   ownerDisplayName,
+  ownerIsCompanyVerified,
+  ownerCompanyName,
+  ownerCompanyType,
+  ownerTaxOffice,
+  ownerVknMasked,
   firstPublishedAt,
   activeUntil,
   activationSeq,
   viewCount: _viewCount = 0,
   clickCount: _clickCount = 0,
   locale,
+  hiringIntentScore,
+  hiringIntentLevel,
+  hiringIntentBreakdown,
   isBatchMode,
   isSelected,
   onToggleSelect,
   onQuickOffer,
 }: ListingCardProps) {
   const isTr = locale === "tr";
+  const [isIntentModalOpen, setIsIntentModalOpen] = useState(false);
+
+  const effectiveIntent = useMemo(() => {
+    if (hiringIntentBreakdown) return hiringIntentBreakdown;
+    return HiringIntentEngine.evaluateHiringIntent({
+      listingId: id,
+      title,
+      summary,
+      scope: summary,
+      budgetMin,
+      budgetMax,
+      budgetCurrency,
+      budgetMode,
+      ownerProfile: {
+        isCompanyVerified: ownerIsCompanyVerified,
+        companyName: ownerCompanyName,
+        companyType: ownerCompanyType,
+        taxOffice: ownerTaxOffice,
+        vknMasked: ownerVknMasked,
+      },
+      locale,
+    });
+  }, [
+    hiringIntentBreakdown,
+    id,
+    title,
+    summary,
+    budgetMin,
+    budgetMax,
+    budgetCurrency,
+    budgetMode,
+    ownerIsCompanyVerified,
+    ownerCompanyName,
+    ownerCompanyType,
+    ownerTaxOffice,
+    ownerVknMasked,
+    locale,
+  ]);
 
   // Calculate remaining active time & Freshness Radar
   const now = new Date();
@@ -122,19 +204,17 @@ export function ListingCard({
   // Timeline label formatting
   let timelineLabel: string | null = null;
   if (timelineValue && timelineUnit) {
-    const unitLabel =
-      timelineUnit === "DAYS"
-        ? isTr
-          ? "gün"
-          : "days"
-        : timelineUnit === "WEEKS"
-          ? isTr
-            ? "hafta"
-            : "weeks"
-          : isTr
-            ? "ay"
-            : "months";
+    const unitLabel = getTimelineUnitLabel(timelineUnit, isTr);
     timelineLabel = `~${timelineValue} ${unitLabel}`;
+  }
+
+  const expiredListingTitle = isTr
+    ? "Süresi dolmuş ilana toplu teklif verilemez"
+    : "Cannot select expired listing";
+
+  let selectButtonLabel = isTr ? "Seç" : "Select";
+  if (isSelected) {
+    selectButtonLabel = isTr ? "Seçildi" : "Selected";
   }
 
   const handleCardClick = () => {
@@ -169,29 +249,15 @@ export function ListingCard({
                   if (diffDays > 0 && onToggleSelect) onToggleSelect(id);
                 }}
                 disabled={diffDays <= 0}
-                className={`relative z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
-                  isSelected
-                    ? "bg-blue-500 text-white shadow-md shadow-blue-500/25"
-                    : diffDays <= 0
-                      ? "opacity-50 cursor-not-allowed bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)]"
-                      : "bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] border border-[var(--color-border-subtle)]"
-                }`}
-                title={
-                  diffDays <= 0
-                    ? isTr
-                      ? "Süresi dolmuş ilana toplu teklif verilemez"
-                      : "Cannot select expired listing"
-                    : undefined
-                }
+                className={`relative z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold cursor-pointer transition-all ${getBatchButtonClass(isSelected, diffDays <= 0)}`}
+                title={diffDays <= 0 ? expiredListingTitle : undefined}
               >
                 {isSelected ? (
                   <CheckSquare className="h-3.5 w-3.5" />
                 ) : (
                   <Square className="h-3.5 w-3.5" />
                 )}
-                <span>
-                  {isSelected ? (isTr ? "Seçildi" : "Selected") : isTr ? "Seç" : "Select"}
-                </span>
+                <span>{selectButtonLabel}</span>
               </button>
             )}
 
@@ -201,6 +267,26 @@ export function ListingCard({
             >
               {categoryName}
             </Badge>
+
+            {ownerIsCompanyVerified && (
+              <VerifiedCompanyBadge
+                size="xs"
+                companyName={ownerCompanyName}
+                taxOffice={ownerTaxOffice}
+                vknMasked={ownerVknMasked}
+                companyType={ownerCompanyType}
+                isEn={!isTr}
+              />
+            )}
+
+            <HiringIntentBadge
+              score={hiringIntentScore ?? effectiveIntent.overallScore}
+              level={hiringIntentLevel ?? effectiveIntent.level}
+              breakdown={effectiveIntent}
+              compact={true}
+              locale={locale}
+              onClick={() => setIsIntentModalOpen(true)}
+            />
           </div>
 
           <div
@@ -223,8 +309,16 @@ export function ListingCard({
               {title}
             </Link>
           </h3>
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)] group-hover:bg-blue-500/10 group-hover:text-blue-400 transition-colors">
-            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+          <div className="relative z-10 flex items-center gap-1.5 shrink-0">
+            <BookmarkButton
+              listingId={id}
+              locale={locale}
+              size="sm"
+              variant="icon"
+            />
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)] group-hover:bg-blue-500/10 group-hover:text-blue-400 transition-colors">
+              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            </div>
           </div>
         </div>
 
@@ -280,12 +374,23 @@ export function ListingCard({
         <div className="relative z-10 mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-[var(--color-border-subtle)]/60 pt-4 text-xs text-[var(--color-text-secondary)]">
           <Link
             href={isTr ? `/tr/profil/${ownerHandle}` : `/en/profile/${ownerHandle}`}
-            className="flex items-center gap-2.5 hover:text-[var(--color-text-primary)] transition-colors"
+            className="flex items-center gap-2 hover:text-[var(--color-text-primary)] transition-colors"
           >
             <AvatarInitials name={ownerDisplayName} size="sm" />
             <span className="font-semibold text-[var(--color-text-primary)]">
               {ownerDisplayName}
             </span>
+            {ownerIsCompanyVerified && (
+              <VerifiedCompanyBadge
+                size="xs"
+                companyName={ownerCompanyName}
+                taxOffice={ownerTaxOffice}
+                vknMasked={ownerVknMasked}
+                companyType={ownerCompanyType}
+                isEn={!isTr}
+                showPopover={false}
+              />
+            )}
           </Link>
 
           <div className="flex items-center gap-2 text-[var(--color-text-tertiary)]">
@@ -301,6 +406,14 @@ export function ListingCard({
           </div>
         </div>
       </div>
+
+      <HiringIntentModal
+        isOpen={isIntentModalOpen}
+        onClose={() => setIsIntentModalOpen(false)}
+        breakdown={effectiveIntent}
+        listingTitle={title}
+        locale={locale}
+      />
     </article>
   );
 }

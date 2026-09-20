@@ -298,11 +298,10 @@ export class EndorsementService {
       // Generic fallback for offline demo
       const isDemoEng = input.engagementId === "eng-demo-101";
       const isAuthorDefault = input.authorUserId === DEFAULT_USER.id;
-      const recipientUserId = isDemoEng
-        ? isAuthorDefault
-          ? "u-techcorp-1"
-          : DEFAULT_USER.id
-        : "u-counterparty";
+      let recipientUserId = "u-counterparty";
+      if (isDemoEng) {
+        recipientUserId = isAuthorDefault ? "u-techcorp-1" : DEFAULT_USER.id;
+      }
       const authorDisplayName = isAuthorDefault ? DEFAULT_USER.profile.displayName : "Ahmet Yılmaz";
       const authorHandle = isAuthorDefault ? DEFAULT_USER.profile.handle : "ahmetyilmaz";
 

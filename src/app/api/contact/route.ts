@@ -50,7 +50,6 @@ const createContactSchema = (isEn: boolean) =>
     locale: z.enum(["tr", "en"]).optional().default("tr"),
     attachmentName: z.string().max(255).optional(),
     attachmentSize: z.string().max(50).optional(),
-    attachmentData: z.string().max(10 * 1024 * 1024).optional(),
   });
 
 export async function POST(req: Request) {
@@ -91,11 +90,15 @@ export async function POST(req: Request) {
     isEn = body?.locale === "en" || isEnHeader;
     const { name, email, subject, message: rawText, attachmentName, attachmentSize } = createContactSchema(isEn).parse(body);
 
-    const attachmentNote = attachmentName
-      ? isEn
-        ? `\n\n[Attachment]: ${attachmentName} (${attachmentSize || "Verified < 5 MB"})`
-        : `\n\n[Ek Dosya]: ${attachmentName} (${attachmentSize || "Doğrulandı < 5 MB"})`
-      : "";
+    let attachmentNote = "";
+    if (attachmentName) {
+      const cleanName = attachmentName.replace(/[\r\n]+/g, " ").trim();
+      const defaultSize = isEn ? "Verified < 5 MB" : "Doğrulandı < 5 MB";
+      const cleanSize = (attachmentSize || defaultSize).replace(/[\r\n]+/g, " ").trim();
+      attachmentNote = isEn
+        ? `\n\n[Attachment]: ${cleanName} (${cleanSize})`
+        : `\n\n[Ek Dosya]: ${cleanName} (${cleanSize})`;
+    }
     const text = rawText + attachmentNote;
 
     try {
@@ -109,8 +112,8 @@ export async function POST(req: Request) {
         ipAddress: ip,
         status: "NEW",
       });
-    } catch {
-      // Non-blocking fallback
+    } catch (dbErr: unknown) {
+      console.error("[Contact API] Database persistence error (non-blocking):", dbErr);
     }
 
     const supportEmail = process.env.LEGAL_SUPPORT_EMAIL || "destek@operis.pro";
@@ -148,15 +151,17 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (err: unknown) {
-    const message =
-      err instanceof z.ZodError
-        ? err.issues[0]?.message ||
-          (isEn
-            ? "Please fill in all form fields correctly."
-            : "Lütfen form alanlarını eksiksiz doldurunuz.")
-        : isEn
-          ? "Failed to send message."
-          : "Mesaj gönderilemedi.";
-    return NextResponse.json({ error: message }, { status: 400 });
+    if (err instanceof z.ZodError) {
+      const validationMessage =
+        err.issues[0]?.message ||
+        (isEn
+          ? "Please fill in all form fields correctly."
+          : "Lütfen form alanlarını eksiksiz doldurunuz.");
+      return NextResponse.json({ error: validationMessage }, { status: 400 });
+    }
+
+    console.error("[Contact API] Unexpected error processing request:", err);
+    const errorMessage = isEn ? "Failed to send message." : "Mesaj gönderilemedi.";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

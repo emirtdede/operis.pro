@@ -180,12 +180,13 @@ export async function POST(req: Request) {
     return response;
   } catch (err: unknown) {
     const isEn = req.headers.get("x-locale") === "en";
-    const message =
-      err instanceof z.ZodError
-        ? err.issues[0]?.message || (isEn ? "Invalid password format." : "Geçersiz şifre formatı.")
-        : isEn
-          ? "Failed to change password."
-          : "Şifre değiştirme işlemi başarısız oldu.";
+    let message = isEn
+      ? "Failed to change password."
+      : "Şifre değiştirme işlemi başarısız oldu.";
+    if (err instanceof z.ZodError) {
+      const fallbackFormat = isEn ? "Invalid password format." : "Geçersiz şifre formatı.";
+      message = err.issues[0]?.message || fallbackFormat;
+    }
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

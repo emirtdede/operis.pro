@@ -19,7 +19,10 @@ import { ListingService } from "@/src/modules/listings/service";
 import { getSession } from "@/src/modules/auth/session";
 import { AvatarInitials } from "@/src/components/ui/avatar-initials";
 import { Badge } from "@/src/components/ui/badge";
+import { VerifiedCompanyBadge } from "@/src/components/ui/verified-company-badge";
 import { ListingDetailActions } from "@/src/components/listings/listing-detail-actions";
+import { HiringIntentBadge } from "@/src/components/listings/hiring-intent-badge";
+import { HiringIntentService } from "@/src/modules/listings/hiring-intent/hiring-intent-service";
 import {
   getLocalizedListingPath,
   getLocalizedProfilePath,
@@ -95,6 +98,23 @@ export async function generateMetadata({
 
 export const dynamic = "force-dynamic";
 
+function getTimelineUnitLabel(unit: string, isTr: boolean): string {
+  if (unit === "DAYS") {
+    return isTr ? "gün" : "days";
+  }
+  if (unit === "WEEKS") {
+    return isTr ? "hafta" : "weeks";
+  }
+  return isTr ? "ay" : "months";
+}
+
+function getActiveStatusBadgeText(isActive: boolean, diffDays: number, isTr: boolean): string {
+  if (isActive) {
+    return isTr ? `${diffDays} gün aktif` : `Active for ${diffDays} days`;
+  }
+  return isTr ? "Süresi doldu" : "Expired";
+}
+
 export default async function ListingDetailPage({
   params,
 }: {
@@ -136,6 +156,8 @@ export default async function ListingDetailPage({
     ? Math.max(0, Math.ceil((until.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)))
     : 0;
 
+  const hiringIntent = await HiringIntentService.getListingHiringIntent(listing.id, locale);
+
   // Format first published date
   const firstDate = listing.firstPublishedAt
     ? new Date(listing.firstPublishedAt)
@@ -159,18 +181,7 @@ export default async function ListingDetailPage({
   // Format timeline
   let timelineLabel: string | null = null;
   if (listing.timelineValue && listing.timelineUnit) {
-    const unitLabel =
-      listing.timelineUnit === "DAYS"
-        ? isTr
-          ? "gün"
-          : "days"
-        : listing.timelineUnit === "WEEKS"
-          ? isTr
-            ? "hafta"
-            : "weeks"
-          : isTr
-            ? "ay"
-            : "months";
+    const unitLabel = getTimelineUnitLabel(listing.timelineUnit, isTr);
     timelineLabel = `~${listing.timelineValue} ${unitLabel}`;
   }
 
@@ -295,28 +306,28 @@ export default async function ListingDetailPage({
           {/* Header Card: Title, Status, Summary */}
           <article className="relative overflow-hidden rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 p-4 sm:p-6 md:p-8 backdrop-blur-xl shadow-xl space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <Badge
-                variant="secondary"
-                size="md"
-                className="font-medium bg-blue-500/10 text-blue-400 border-blue-500/20"
-              >
-                {category.key}
-              </Badge>
+              <div className="flex items-center gap-2">
+                <Badge
+                  variant="secondary"
+                  size="md"
+                  className="font-medium bg-blue-500/10 text-blue-400 border-blue-500/20"
+                >
+                  {category.key}
+                </Badge>
+                <HiringIntentBadge
+                  score={hiringIntent.overallScore}
+                  level={hiringIntent.level}
+                  breakdown={hiringIntent}
+                  locale={locale}
+                />
+              </div>
 
               <div className="flex items-center gap-3 text-xs">
                 <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3.5 py-1 text-cyan-400 font-medium">
                   <span
                     className={`h-2 w-2 rounded-full ${isCurrentlyActive ? "bg-cyan-400 animate-pulse" : "bg-red-500"}`}
                   />
-                  <span>
-                    {isCurrentlyActive
-                      ? isTr
-                        ? `${diffDays} gün aktif`
-                        : `Active for ${diffDays} days`
-                      : isTr
-                        ? "Süresi doldu"
-                        : "Expired"}
-                  </span>
+                  <span>{getActiveStatusBadgeText(isCurrentlyActive, diffDays, isTr)}</span>
                 </div>
 
                 {listing.activationSeq > 1 && (
@@ -588,6 +599,103 @@ export default async function ListingDetailPage({
                 <div className="font-mono text-xs text-blue-400">@{ownerProfile.handle}</div>
               </div>
             </Link>
+
+            {ownerProfile.isCompanyVerified && (
+              <div className="pt-2 border-t border-[var(--color-border-subtle)]/70">
+                <VerifiedCompanyBadge
+                  size="sm"
+                  companyName={ownerProfile.companyName}
+                  taxOffice={ownerProfile.taxOffice}
+                  vknMasked={ownerProfile.vknMasked}
+                  companyType={ownerProfile.companyType}
+                  isEn={!isTr}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Hiring Intent Index Card */}
+          <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 p-5 backdrop-blur-xl shadow-sm space-y-4 text-xs">
+            <div className="flex items-center justify-between gap-2 border-b border-[var(--color-border-subtle)] pb-3">
+              <div className="space-y-0.5">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-tertiary)] block">
+                  {isTr ? "İşe Alım Niyet Endeksi" : "Hiring Intent Index"}
+                </span>
+                <span className="font-extrabold text-sm text-[var(--color-text-primary)]">
+                  {isTr ? hiringIntent.badgeLabelTr : hiringIntent.badgeLabelEn}
+                </span>
+              </div>
+              <span className="text-2xl font-black font-mono text-emerald-400">
+                %{hiringIntent.overallScore}
+              </span>
+            </div>
+
+            <p className="text-[11px] text-[var(--color-text-secondary)] leading-relaxed">
+              {isTr ? hiringIntent.summaryTr : hiringIntent.summaryEn}
+            </p>
+
+            {/* Pillar Breakdown Meters */}
+            <div className="space-y-2.5 pt-1">
+              <div className="space-y-1">
+                <div className="flex justify-between text-[11px] text-[var(--color-text-secondary)]">
+                  <span>{isTr ? "Kurumsal & VKN Doğrulama" : "Corporate Tax Verification"}</span>
+                  <span className="font-mono font-bold">{hiringIntent.pillars.CORPORATE_VERIFICATION.score}/30</span>
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-[var(--color-surface-hover)] overflow-hidden">
+                  <div
+                    className="h-full bg-emerald-500 rounded-full"
+                    style={{ width: `${(hiringIntent.pillars.CORPORATE_VERIFICATION.score / 30) * 100}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex justify-between text-[11px] text-[var(--color-text-secondary)]">
+                  <span>{isTr ? "Piyasa Benchmark Uyumu" : "Market Benchmark Alignment"}</span>
+                  <span className="font-mono font-bold">{hiringIntent.pillars.BUDGET_BENCHMARK.score}/25</span>
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-[var(--color-surface-hover)] overflow-hidden">
+                  <div
+                    className="h-full bg-sky-500 rounded-full"
+                    style={{ width: `${(hiringIntent.pillars.BUDGET_BENCHMARK.score / 25) * 100}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex justify-between text-[11px] text-[var(--color-text-secondary)]">
+                  <span>{isTr ? "Teknik Kapsam & Şartname" : "Scope & Specification"}</span>
+                  <span className="font-mono font-bold">{hiringIntent.pillars.SCOPE_CLARITY.score}/25</span>
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-[var(--color-surface-hover)] overflow-hidden">
+                  <div
+                    className="h-full bg-indigo-500 rounded-full"
+                    style={{ width: `${(hiringIntent.pillars.SCOPE_CLARITY.score / 25) * 100}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex justify-between text-[11px] text-[var(--color-text-secondary)]">
+                  <span>{isTr ? "İşe Alım Geçmişi (Bayesian)" : "Hire Rate (Bayesian)"}</span>
+                  <span className="font-mono font-bold">{hiringIntent.pillars.HISTORICAL_RELIABILITY.score}/20</span>
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-[var(--color-surface-hover)] overflow-hidden">
+                  <div
+                    className="h-full bg-cyan-500 rounded-full"
+                    style={{ width: `${(hiringIntent.pillars.HISTORICAL_RELIABILITY.score / 20) * 100}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Freelancer advice badge */}
+            <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-3 text-[11px] text-[var(--color-text-secondary)] leading-relaxed">
+              <strong className="text-blue-400 block mb-0.5">
+                {isTr ? "💡 Uzman Tavsiyesi:" : "💡 Specialist Tip:"}
+              </strong>
+              {isTr ? hiringIntent.freelancerGuidanceTr : hiringIntent.freelancerGuidanceEn}
+            </div>
           </div>
         </aside>
       </div>

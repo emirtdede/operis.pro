@@ -10,6 +10,16 @@ interface AdminAccessDeniedClientProps {
   errorReason?: string;
 }
 
+function getAdminLoginButtonLabel(isPending: boolean, requires2FA: boolean): string {
+  if (isPending) {
+    return "Doğrulanıyor...";
+  }
+  if (requires2FA) {
+    return "2FA Kodu ile Konsola Gir (Süper Admin)";
+  }
+  return "Demir Yıldız (Süper Admin) Olarak Konsola Gir";
+}
+
 export function AdminAccessDeniedClient({
   currentRole = "USER",
   errorReason = "Standart kullanıcı hesaplarının bu yönetim konsoluna erişim izni bulunmamaktadır.",
@@ -166,11 +176,7 @@ export function AdminAccessDeniedClient({
               >
                 <UserCheck className="h-4 w-4" />
                 <span>
-                  {isPending
-                    ? "Doğrulanıyor..."
-                    : requires2FA
-                      ? "2FA Kodu ile Konsola Gir (Süper Admin)"
-                      : "Demir Yıldız (Süper Admin) Olarak Konsola Gir"}
+                  {getAdminLoginButtonLabel(isPending, requires2FA)}
                 </span>
               </button>
 

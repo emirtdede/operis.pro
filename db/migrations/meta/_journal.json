@@ -141,6 +141,90 @@
       "when": 1789225000000,
       "tag": "0019_add_profiles_contact_channel_and_timezone",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1789230000000,
+      "tag": "0020_add_profile_roles_headline_and_status",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1789743271053,
+      "tag": "0021_free_franklin_richards",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1789744782179,
+      "tag": "0022_outgoing_baron_strucker",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1789748000000,
+      "tag": "0023_counter_offer_negotiation",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1789752000000,
+      "tag": "0024_bilateral_reviews",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1789756000000,
+      "tag": "0025_category_job_alerts",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1789760000000,
+      "tag": "0026_profile_availability_and_contract_snapshots",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1789764000000,
+      "tag": "0027_engagements_benchmark_idx",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1789768000000,
+      "tag": "0028_engagement_handover_protocol",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1789772000000,
+      "tag": "0029_handover_delivery_health",
+      "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1789776000000,
+      "tag": "0030_engagement_contract_packages",
+      "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1789780000000,
+      "tag": "0031_contract_packages_version_cas",
+      "breakpoints": true
     }
   ]
 }

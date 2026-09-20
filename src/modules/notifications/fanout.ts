@@ -10,6 +10,14 @@ export interface FanoutEventPayload {
   ownerUserId: string;
   categoryId?: string;
   activationSeq?: number;
+  budgetMode?: string;
+  budgetCurrency?: string;
+  budgetMin?: string | null;
+  budgetMax?: string | null;
+  summary?: string;
+  timelineMode?: string;
+  timelineValue?: number | null;
+  timelineUnit?: string | null;
 }
 
 export type FanoutResult = "COMPLETED" | "LEASE_LOST" | "ERROR";
@@ -211,8 +219,57 @@ export async function processFanoutEvent(
             return { phase: "DONE" as const };
           }
 
+          // Fetch category key/name if not in payload
+          let catKey = "Teknoloji";
+          if (categoryId) {
+            const isCatUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+              categoryId
+            );
+            const catRows = await tx
+              .select({ key: schema.categories.key })
+              .from(schema.categories)
+              .where(isCatUuid ? eq(schema.categories.id, categoryId) : eq(schema.categories.key, categoryId))
+              .limit(1);
+            if (catRows[0]?.key) {
+              catKey = catRows[0].key;
+            }
+          }
+
+          const formatBudgetStr = (isEn: boolean) => {
+            const mode = payload.budgetMode;
+            const cur = payload.budgetCurrency || "TRY";
+            const symMap: Record<string, string> = { USD: "$", EUR: "€", TRY: "₺" };
+            const sym = symMap[cur] ?? "₺";
+            if (!mode || mode === "DYNAMIC") return isEn ? "Negotiable" : "Görüşülebilir";
+            const minN = payload.budgetMin ? Number(payload.budgetMin) : null;
+            const maxN = payload.budgetMax ? Number(payload.budgetMax) : null;
+            if (minN && maxN && minN !== maxN) {
+              return `${minN.toLocaleString()} - ${maxN.toLocaleString()} ${sym}`;
+            }
+            if (minN) return `${minN.toLocaleString()} ${sym}`;
+            if (maxN) return `${maxN.toLocaleString()} ${sym}`;
+            return isEn ? "Negotiable" : "Görüşülebilir";
+          };
+
+          const formatTimelineStr = (isEn: boolean) => {
+            if (!payload.timelineMode || payload.timelineMode === "FLEXIBLE") {
+              return isEn ? "Flexible" : "Esnek";
+            }
+            if (payload.timelineValue && payload.timelineUnit) {
+              const unitMap: Record<string, { tr: string; en: string }> = {
+                DAYS: { tr: "Gün", en: "Days" },
+                WEEKS: { tr: "Hafta", en: "Weeks" },
+                MONTHS: { tr: "Ay", en: "Months" },
+              };
+              const u = unitMap[payload.timelineUnit] || { tr: payload.timelineUnit, en: payload.timelineUnit };
+              return `${payload.timelineValue} ${isEn ? u.en : u.tr}`;
+            }
+            return isEn ? "Flexible" : "Esnek";
+          };
+
           const conditions = [
             eq(schema.categoryFollows.categoryId, categoryId),
+            eq(schema.categoryFollows.emailAlerts, true),
             sql`${schema.categoryFollows.userId} != ${ownerUserId}`,
             sql`NOT EXISTS (
               SELECT 1 FROM ${schema.blocks}
@@ -229,6 +286,8 @@ export async function processFanoutEvent(
             .select({
               userId: schema.categoryFollows.userId,
               locale: schema.profiles.locale,
+              minBudget: schema.categoryFollows.minBudget,
+              trackedSkills: schema.profiles.trackedSkills,
             })
             .from(schema.categoryFollows)
             .leftJoin(schema.profiles, eq(schema.categoryFollows.userId, schema.profiles.userId))
@@ -237,8 +296,30 @@ export async function processFanoutEvent(
             .limit(batchSize);
 
           for (const f of followers) {
+            // Check minBudget filter
+            if (f.minBudget && payload.budgetMax) {
+              const maxVal = Number(payload.budgetMax);
+              if (maxVal < f.minBudget) {
+                continue; // Below user's min budget threshold
+              }
+            }
+
             const isEn = f.locale === "en";
+            const budgetText = formatBudgetStr(isEn);
+            const timelineText = formatTimelineStr(isEn);
             const deliveryKey = `listing:${listingId}:act:${activationSeq}:cat:user:${f.userId}`;
+
+            // Calculate smart relevance score
+            const lowerTags = (tags || []).map((t) => t.toLowerCase().trim());
+            const hasSkillMatch = (f.trackedSkills || []).some((s) =>
+              lowerTags.includes(s.toLowerCase().trim())
+            );
+            let relevanceBadge = "";
+            if (hasSkillMatch) {
+              relevanceBadge = isEn
+                ? "🔥 95% Match: Verified Skill"
+                : "🔥 %95 Eşleşme: Uzmanlık Yeteneğinizle Uyumlu";
+            }
 
             await NotificationService.createNotification(
               f.userId,
@@ -249,12 +330,18 @@ export async function processFanoutEvent(
                 listingId,
                 activationSeq,
                 title: isEn
-                  ? "New Listing in Followed Category"
-                  : "Takip Ettiğin Kategoride Yeni İlan",
+                  ? `[${catKey}] New Listing: "${title}" (${budgetText})`
+                  : `[${catKey}] ${budgetText} Bütçeli Yeni İlan`,
                 message: isEn
-                  ? `A new listing was published in a category you follow: "${title}"`
-                  : `Takip ettiğin kategoride yeni bir ilan yayınlandı: "${title}"`,
+                  ? `A new listing was published in a category you follow: "${title}" (${budgetText})`
+                  : `Takip ettiğin "${catKey}" kategorisinde ${budgetText} bütçeli yeni bir ilan yayınlandı: "${title}"`,
                 actionUrl: isEn ? `/en/listings/${slug}` : `/tr/ilanlar/${slug}`,
+                budget: budgetText,
+                categoryName: catKey,
+                summary: payload.summary || "",
+                tags: (tags || []).join(", "),
+                timeline: timelineText,
+                relevanceBadge,
               },
               tx,
               deliveryKey

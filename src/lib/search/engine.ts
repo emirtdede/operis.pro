@@ -644,16 +644,7 @@ export function searchCategories(
     let finalScore: number;
 
     if (acc.isWholeQueryMatch) {
-      const baseScore =
-        acc.matchClass === 'exactCategoryName'
-          ? 1.0
-          : acc.matchClass === 'exactCanonicalTerm'
-          ? 0.98
-          : acc.matchClass === 'exactSearchTerm'
-          ? 0.94
-          : acc.matchClass === 'exactSkillTag'
-          ? 0.90
-          : 0.85;
+      const baseScore = MATCH_CLASS_CEILINGS[acc.matchClass] ?? 0.85;
 
       const specBonus = Math.min(0.18, (acc.highestSpecificity || 1.0) * 0.18);
       const ctxAdj = Math.max(-0.25, Math.min(0.20, acc.contextBoost));

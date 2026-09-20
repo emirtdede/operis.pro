@@ -167,6 +167,18 @@ const URGENCY_LEVELS = [
 const EMOJI_REGEX =
   /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/u;
 
+function getTargetPlaceholder(targetType: string, isTr: boolean): string {
+  if (targetType === "profile") {
+    return isTr ? "@kullaniciadi veya profil bağlantısı" : "@username or profile link";
+  }
+  if (targetType === "listing") {
+    return isTr
+      ? "https://operis.pro/tr/ilanlar/... veya ilan başlığı"
+      : "https://operis.pro/en/listings/... or listing title";
+  }
+  return isTr ? "İlgili teklif, mesaj veya sayfa URL'si" : "Offer ID, message snippet or URL";
+}
+
 export function ReportForm({
   locale,
   defaultTargetType = "listing",
@@ -222,12 +234,11 @@ export function ReportForm({
 
     try {
       // Build structured details without emojis
-      const urgencyLabel =
-        urgency === "CRITICAL"
-          ? "ACIL-FINANSAL"
-          : urgency === "HIGH"
-            ? "YUKSEK-ONCELIK"
-            : "STANDART";
+      const urgencyLabelMap: Record<string, string> = {
+        CRITICAL: "ACIL-FINANSAL",
+        HIGH: "YUKSEK-ONCELIK",
+      };
+      const urgencyLabel = urgencyLabelMap[urgency] || "STANDART";
 
       let composedDetails = `[Oncelik: ${urgencyLabel}]`;
       if (evidenceUrl.trim()) {
@@ -267,13 +278,10 @@ export function ReportForm({
       setTrackingCode(generatedCode);
       setIsSuccess(true);
     } catch (err: unknown) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : isTr
-            ? "İşlem başarısız oldu. Lütfen tekrar deneyiniz."
-            : "Report could not be submitted."
-      );
+      const defaultErr = isTr
+        ? "İşlem başarısız oldu. Lütfen tekrar deneyiniz."
+        : "Report could not be submitted.";
+      setError(err instanceof Error ? err.message : defaultErr);
     } finally {
       setIsLoading(false);
     }
@@ -454,10 +462,10 @@ export function ReportForm({
                     {isTr ? "Telif & Fikri Hak Masası:" : "Copyright & IP Desk:"}
                   </span>
                   <a
-                    href="mailto:telif@operis.pro"
+                    href="mailto:legal@vellium.dev"
                     className="font-mono font-semibold text-purple-400 hover:underline"
                   >
-                    telif@operis.pro
+                    legal@vellium.dev
                   </a>
                 </div>
                 <div className="p-2.5 rounded-xl bg-[var(--color-surface-hover)]/60 border border-[var(--color-border-subtle)] flex items-center justify-between">
@@ -465,7 +473,7 @@ export function ReportForm({
                     {isTr ? "Resmi KEP Tebligatı:" : "Registered KEP:"}
                   </span>
                   <span className="font-mono text-[11px] text-[var(--color-text-primary)]">
-                    operis.teknoloji@hs01.kep.tr
+                    vellium@hs01.kep.tr
                   </span>
                 </div>
               </div>
@@ -473,7 +481,7 @@ export function ReportForm({
 
             <div className="pt-2">
               <a
-                href="mailto:uyum@operis.pro?subject=Resmi%20Ihlal%20Bildirimi"
+                href="mailto:legal@vellium.dev?subject=Resmi%20Ihlal%20Bildirimi"
                 className="w-full block"
               >
                 <Button variant="outline" size="md" className="w-full gap-2 text-xs font-semibold">
@@ -555,19 +563,7 @@ export function ReportForm({
         }
         value={targetIdentifier}
         onChange={(e) => setTargetIdentifier(e.target.value)}
-        placeholder={
-          targetType === "profile"
-            ? isTr
-              ? "@kullaniciadi veya profil bağlantısı"
-              : "@username or profile link"
-            : targetType === "listing"
-              ? isTr
-                ? "https://operis.pro/tr/ilanlar/... veya ilan başlığı"
-                : "https://operis.pro/en/listings/... or listing title"
-              : isTr
-                ? "İlgili teklif, mesaj veya sayfa URL'si"
-                : "Offer ID, message snippet or URL"
-        }
+        placeholder={getTargetPlaceholder(targetType, isTr)}
         required
       />
 

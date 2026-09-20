@@ -9,6 +9,13 @@ interface BrandKitClientProps {
   locale: string;
 }
 
+function getCodeCopyButtonLabel(isCopied: boolean, isTr: boolean): string {
+  if (isCopied) {
+    return isTr ? "Kopyalandı" : "Copied";
+  }
+  return isTr ? "HTML Kodu" : "HTML Snippet";
+}
+
 export function BrandKitClient({ locale }: BrandKitClientProps) {
   const isTr = locale === "tr";
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
@@ -145,13 +152,7 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
                     <Copy className="h-4 w-4" aria-hidden="true" />
                   )}
                   <span>
-                    {copiedCode === "dark-html"
-                      ? isTr
-                        ? "Kopyalandı"
-                        : "Copied"
-                      : isTr
-                        ? "HTML Kodu"
-                        : "HTML Snippet"}
+                    {getCodeCopyButtonLabel(copiedCode === "dark-html", isTr)}
                   </span>
                 </button>
               </div>
@@ -207,13 +208,7 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
                     <Copy className="h-4 w-4" aria-hidden="true" />
                   )}
                   <span>
-                    {copiedCode === "light-html"
-                      ? isTr
-                        ? "Kopyalandı"
-                        : "Copied"
-                      : isTr
-                        ? "HTML Kodu"
-                        : "HTML Snippet"}
+                    {getCodeCopyButtonLabel(copiedCode === "light-html", isTr)}
                   </span>
                 </button>
               </div>

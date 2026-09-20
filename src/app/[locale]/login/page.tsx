@@ -5,6 +5,7 @@ import { LoginForm } from "@/src/components/auth/login-form";
 import { AuthValueHero } from "@/src/components/onboarding/auth-value-hero";
 import { getSession } from "@/src/modules/auth/session";
 import { getLocalizedRoute } from "@/src/lib/i18n/routes";
+import { serializeJsonLd } from "@/src/lib/security/json-ld";
 
 export async function generateMetadata({
   params,
@@ -96,7 +97,7 @@ export default async function LoginPage({
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
         {/* Left Column: Value Proposition & Guarantees */}

@@ -2,16 +2,19 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { History } from "lucide-react";
+import { History, ArrowRightLeft } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { OfferRevisionsModal } from "../offers/offer-revisions-modal";
+import { NegotiationTimelineModal } from "../offers/negotiation-timeline";
 import { AvatarInitials } from "../ui/avatar-initials";
 import { Dialog } from "../ui/dialog";
 import { Select } from "../ui/select";
 import { TextArea } from "../ui/text-area";
 import { EmptyState } from "../ui/empty-state";
 import { getLocalizedWorkspacePath, getLocalizedProfilePath } from "@/src/lib/i18n/routes";
+import { SquadProposalBadge } from "../offers/squad/squad-proposal-badge";
+import { SquadExplainerCard } from "../offers/squad/squad-explainer-card";
 
 export interface ReceivedOfferItem {
   id: string;
@@ -27,8 +30,22 @@ export interface ReceivedOfferItem {
   budgetMax: string | null;
   estimatedDurationValue: number | null;
   estimatedDurationUnit: string | null;
+  isCountered?: boolean;
+  counterRound?: number;
+  currentTurnUserId?: string | null;
   createdAt: string | Date;
   engagementId?: string | null;
+  isSquadOffer?: boolean | null;
+  squadTitle?: string | null;
+  squadMembers?: Array<{
+    id?: string;
+    displayName: string;
+    roleTitle: string;
+    revenueSharePercentage: number;
+    scopeSummary?: string | null;
+    isLead?: boolean;
+    handleOrEmail?: string | null;
+  }>;
 }
 
 export interface ReceivedOffersDashboardProps {
@@ -36,11 +53,39 @@ export interface ReceivedOffersDashboardProps {
   locale: string;
 }
 
+function getReceivedFilterLabel(f: string, isTr: boolean): string {
+  const LABELS: Record<string, { tr: string; en: string }> = {
+    all: { tr: "Tümü", en: "All" },
+    pending: { tr: "Beklemede", en: "Pending" },
+    accepted: { tr: "Kabul Edilenler", en: "Accepted" },
+    rejected: { tr: "Reddedilenler", en: "Rejected" },
+    cancelled: { tr: "İptal Edilenler", en: "Cancelled" },
+  };
+  const item = LABELS[f];
+  if (item) {
+    return isTr ? item.tr : item.en;
+  }
+  return isTr ? "Geri Çekilenler" : "Withdrawn";
+}
+
+function getNegotiationButtonLabel(
+  isCountered: boolean | undefined,
+  counterRound: number | undefined,
+  isTr: boolean
+): string {
+  const round = counterRound || 1;
+  if (isCountered) {
+    return isTr ? `Pazarlık (${round}. Tur)` : `Negotiation (R${round})`;
+  }
+  return isTr ? "Pazarlık / Karşı Teklif" : "Counter-Offer";
+}
+
 export function ReceivedOffersDashboard({ initialOffers, locale }: ReceivedOffersDashboardProps) {
   const isTr = locale === "tr";
   const [offers, setOffers] = useState<ReceivedOfferItem[]>(initialOffers);
   const [filter, setFilter] = useState<string>("all");
   const [selectedOfferForRevisions, setSelectedOfferForRevisions] = useState<string | null>(null);
+  const [selectedOfferForNegotiation, setSelectedOfferForNegotiation] = useState<string | null>(null);
 
   // Accept Modal State
   const [acceptingOffer, setAcceptingOffer] = useState<ReceivedOfferItem | null>(null);
@@ -162,29 +207,7 @@ export function ReceivedOffersDashboard({ initialOffers, locale }: ReceivedOffer
                   : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
               }`}
             >
-              {f === "all"
-                ? isTr
-                  ? "Tümü"
-                  : "All"
-                : f === "pending"
-                  ? isTr
-                    ? "Beklemede"
-                    : "Pending"
-                  : f === "accepted"
-                    ? isTr
-                      ? "Kabul Edilenler"
-                      : "Accepted"
-                    : f === "rejected"
-                      ? isTr
-                        ? "Reddedilenler"
-                        : "Rejected"
-                      : f === "cancelled"
-                        ? isTr
-                          ? "İptal Edilenler"
-                          : "Cancelled"
-                        : isTr
-                          ? "Geri Çekilenler"
-                          : "Withdrawn"}
+              {getReceivedFilterLabel(f, isTr)}
             </button>
           )
         )}
@@ -252,6 +275,14 @@ export function ReceivedOffersDashboard({ initialOffers, locale }: ReceivedOffer
                   </Link>
 
                   <div className="flex items-center gap-2">
+                    {offer.isSquadOffer && (
+                      <SquadProposalBadge
+                        memberCount={offer.squadMembers?.length}
+                        squadTitle={offer.squadTitle}
+                        locale={locale}
+                        size="sm"
+                      />
+                    )}
                     {(() => {
                       let badgeVariant: "success" | "secondary" | "danger" | "neutral" | "outline" =
                         "outline";
@@ -312,6 +343,56 @@ export function ReceivedOffersDashboard({ initialOffers, locale }: ReceivedOffer
                   {offer.message}
                 </div>
 
+                {/* Squad Consortium Breakdown & Explainer */}
+                {offer.isSquadOffer && offer.squadMembers && offer.squadMembers.length > 0 && (
+                  <div className="space-y-3 rounded-xl border border-indigo-500/25 bg-indigo-950/20 p-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="text-xs font-semibold text-indigo-300">
+                        {isTr
+                          ? "👥 Çevik Konsorsiyum Ekip Yapısı & Hakediş Dağılımı"
+                          : "👥 Squad Roster & Revenue Allocation"}
+                      </span>
+                      <span className="text-[11px] text-indigo-400 font-mono">
+                        {offer.squadMembers.length}{" "}
+                        {isTr ? "Uzman / %100 Konsorsiyum" : "Specialists / 100% Total"}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                      {offer.squadMembers.map((sm, smIdx) => (
+                        <div
+                          key={smIdx}
+                          className="rounded-lg border border-indigo-500/20 bg-[var(--color-surface-base)]/80 p-2.5 text-xs space-y-1"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="font-semibold text-[var(--color-text-primary)] truncate">
+                              {sm.displayName}
+                            </span>
+                            <span className="font-mono text-emerald-400 font-bold">
+                              %{sm.revenueSharePercentage}
+                            </span>
+                          </div>
+                          <div className="text-[11px] text-indigo-300 font-medium">
+                            {sm.roleTitle}
+                            {sm.isLead && (
+                              <span className="ml-1 text-[10px] text-cyan-300">
+                                ({isTr ? "Lider Muhatap" : "Lead"})
+                              </span>
+                            )}
+                          </div>
+                          {sm.scopeSummary && (
+                            <p className="text-[10px] text-[var(--color-text-tertiary)] line-clamp-2">
+                              {sm.scopeSummary}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    <SquadExplainerCard locale={locale} />
+                  </div>
+                )}
+
                 {/* Budget & Timeline */}
                 <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
                   <div className="flex items-center gap-4 text-xs text-[var(--color-text-tertiary)]">
@@ -330,6 +411,16 @@ export function ReceivedOffersDashboard({ initialOffers, locale }: ReceivedOffer
                   </div>
 
                   <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedOfferForNegotiation(offer.id)}
+                      title={isTr ? "Karşı Teklif & Pazarlık" : "Counter-Offer & Negotiation"}
+                      className={offer.isCountered ? "border-blue-500/50 text-blue-400 hover:bg-blue-500/10" : ""}
+                    >
+                      <ArrowRightLeft className="h-3.5 w-3.5 mr-1" />
+                      {getNegotiationButtonLabel(offer.isCountered, offer.counterRound, isTr)}
+                    </Button>
                     <Button
                       variant="outline"
                       size="sm"
@@ -492,6 +583,18 @@ export function ReceivedOffersDashboard({ initialOffers, locale }: ReceivedOffer
           isOpen={Boolean(selectedOfferForRevisions)}
           onClose={() => setSelectedOfferForRevisions(null)}
           locale={locale}
+        />
+      )}
+      {/* Negotiation Timeline Modal */}
+      {selectedOfferForNegotiation && (
+        <NegotiationTimelineModal
+          offerId={selectedOfferForNegotiation}
+          isOpen={Boolean(selectedOfferForNegotiation)}
+          onClose={() => setSelectedOfferForNegotiation(null)}
+          locale={locale}
+          onOfferUpdated={() => {
+            window.location.reload();
+          }}
         />
       )}
     </div>

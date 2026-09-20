@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SÖZLEŞME EKİ-4: YAPAY ZEKA KULLANIMI VE TELİF DEVİR PROTOKOLÜ | Operis Legal Hub</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm;
+      @bottom-right {
+        content: counter(page) "/" counter(pages);
+        font-size: 8pt;
+        color: #94a3b8;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #0f172a;
+      line-height: 1.55;
+      padding: 32px;
+      margin: 0 auto;
+      max-width: 900px;
+      background: #ffffff;
+      font-size: 10pt;
+    }
+    .header-bar {
+      border-bottom: 2px solid #0284c7;
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .brand-title {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      color: #0f172a;
+      margin: 0;
+    }
+    .brand-title span { color: #0284c7; }
+    .brand-sub {
+      font-size: 8.5pt;
+      color: #64748b;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+    .header-meta {
+      font-size: 8.5pt;
+      color: #475569;
+      text-align: right;
+      line-height: 1.4;
+    }
+    h1 {
+      font-size: 16pt;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 14px 0 6px 0;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      break-after: avoid-page;
+      page-break-after: avoid;
+    }
+    h2, h3, h4, h5, h6 {
+      break-after: avoid-page;
+      page-break-after: avoid;
+    }
+    h1, h2, h3, h4, h5, h6,
+    .brand-title, .party-title, .section-title, .clause-title {
+      break-after: avoid-page !important;
+      page-break-after: avoid !important;
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+    h1 + *, h2 + *, h3 + *, h4 + *, h5 + *, h6 + *,
+    .clause-title + *, .section-title + * {
+      break-before: avoid-page !important;
+      page-break-before: avoid !important;
+    }
+    p, li {
+      orphans: 3;
+      widows: 3;
+    }
+    .doc-subtitle {
+      font-size: 9pt;
+      color: #64748b;
+      margin-bottom: 16px;
+      line-height: 1.4;
+      break-after: avoid-page;
+      page-break-after: avoid;
+    }
+    .badge-pill {
+      display: inline-block;
+      background: #f0fdf4;
+      color: #166534;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 8.5pt;
+      border: 1px solid #bbf7d0;
+      margin-bottom: 18px;
+      break-after: avoid-page;
+      page-break-after: avoid;
+    }
+    .parties-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 18px 0;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .party-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 9pt;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .party-title {
+      font-size: 8pt;
+      font-weight: 700;
+      color: #0284c7;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 9pt;
+    }
+    tr {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    th {
+      background: #f1f5f9;
+      text-align: left;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      font-weight: 700;
+      color: #334155;
+    }
+    td {
+      padding: 8px 10px;
+      border: 1px solid #e2e8f0;
+      color: #1e293b;
+    }
+    .highlight-box {
+      background: #f8fafc;
+      padding: 12px 16px;
+      border-left: 4px solid #0284c7;
+      border-radius: 0 6px 6px 0;
+      margin: 16px 0;
+      font-size: 9pt;
+      color: #1e293b;
+      line-height: 1.5;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .legal-alert {
+      background: #fffbeb;
+      border: 1px solid #fef3c7;
+      border-left: 4px solid #f59e0b;
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      margin: 16px 0;
+      font-size: 8.5pt;
+      color: #92400e;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .legal-section {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+      margin-bottom: 16px;
+    }
+    .footer-bar {
+      margin-top: 36px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 14px;
+      font-size: 8.5pt;
+      color: #64748b;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .hash-seal {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: #0284c7;
+      font-size: 8pt;
+      word-break: break-all;
+      background: #f8fafc;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      margin-top: 12px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .print-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0284c7;
+      color: #ffffff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 13px;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .print-btn:hover {
+      background: #0369a1;
+      transform: translateY(-2px);
+    }
+    @media print {
+      body { padding: 0; max-width: 100%; }
+      .print-btn { display: none !important; }
+      h1, h2, h3, h4, h5, h6,
+      .brand-title, .party-title, .section-title, .clause-title {
+        break-after: avoid-page !important;
+        page-break-after: avoid !important;
+      }
+      .party-card, .parties-grid, .highlight-box, .legal-alert,
+      .safe-harbor-item, .safe-harbor-header, .safe-harbor-summary,
+      .clause-block, .legal-section, .dpa-annex, .safe-harbor-annex,
+      .inflation-shield-box, .tax-breakdown-table,
+      .hash-seal, .footer-bar, .sha-seal, .signature-box, .signature-grid,
+      table, tr {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="print-btn" onclick="window.print()">
+    🖨️ PDF Olarak Kaydet / Yazdır
+  </button>
+
+  <div class="header-bar">
+    <div>
+      <h2 class="brand-title">OPERIS <span>LEGAL</span></h2>
+      <div class="brand-sub">Bağımsız Yazılım ve Teknoloji Sözleşme Altyapısı</div>
+    </div>
+    <div class="header-meta">
+      <div><strong>Sözleşme No:</strong> OPR-AI-GOV-2026</div>
+      <div><strong>Tarih:</strong> 01 Eylül 2026</div>
+      <div><strong>Hukuki Statü:</strong> Bağlayıcı Resmi Belge</div>
+    </div>
+  </div>
+
+  <h1>SÖZLEŞME EKİ-4: YAPAY ZEKA KULLANIMI VE TELİF DEVİR PROTOKOLÜ</h1>
+  <div class="doc-subtitle">5846 Sayılı FSEK m. 52 & AB Yapay Zeka Yasası (EU AI Act) Şeffaflık Protokolü</div>
+  <div class="badge-pill">✓ HUMAN-IN-THE-LOOP ONAYLI • ANTİ-COPYLEFT KORUMASI</div>
+
+  
+  <div class="parties-grid">
+    <div class="party-card">
+      <div class="party-title">İŞ SAHİBİ (MÜŞTERİ)</div>
+      <strong>Acme Teknoloji ve Girişim A.Ş.</strong>
+    </div>
+    <div class="party-card">
+      <div class="party-title">YÜKLENİCİ (GELİŞTİRİCİ)</div>
+      <strong>Can Demir (Kıdemli Yazılım Mimarı)</strong>
+    </div>
+  </div>
+
+  <div class="content-body">
+    
+    <div style="page-break-before: always; break-before: page; margin-top: 40px; padding-top: 24px; border-top: 2px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; break-after: avoid-page; page-break-after: avoid;">
+        <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a; break-after: avoid-page; page-break-after: avoid;">
+          EK-4: YAPAY ZEKA TELİF DEVRİ VE LİSANS TEMİZLİĞİ ŞARTNAMESİ
+        </h3>
+        <span style="background: #059669; color: #ffffff; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600; text-transform: uppercase; white-space: nowrap;">
+          KUSURSUZ TELİF GÜVENCESİ (10/100)
+        </span>
+      </div>
+
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 14px; margin-bottom: 20px; font-size: 12px; color: #334155; line-height: 1.6; break-after: avoid-page; page-break-after: avoid; break-inside: avoid; page-break-inside: avoid;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div><strong>Mevzuat:</strong> 5846 s. FSEK m. 52, EU AI Act m. 50/53, 6098 s. TBK m. 474</div>
+          <div><strong>Delil Statüsü:</strong> 6100 s. HMK m. 193 Münhasır Delil</div>
+          <div><strong>Beyan Edilen Araçlar:</strong> GITHUB_COPILOT, CLAUDE_CODE, CURSOR</div>
+          <div><strong>FSEK İnsani Hususiyet:</strong> Onaylandı (Geçerli Devir)</div>
+        </div>
+      </div>
+
+      <div class="ai-governance-clauses" style="font-size: 12px; color: #1e293b; line-height: 1.7;">
+        <div class="ai-governance-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 12px;">
+          <p style="margin: 0; text-align: justify;"><strong>1. ŞEFFAFLIK VE YASAL BEYAN:</strong> Yüklenici, projede kullanılan yapay zeka araçlarını ve kullanım düzeyini şeffafça beyan etmiş olup EU AI Act m. 50 uyarınca makine tarafından üretilen bileşenlerin insan mimarisiyle denetlendiğini teyit eder.</p>
+        </div>
+
+        <div class="ai-governance-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 12px;">
+          <p style="margin: 0; text-align: justify;"><strong>2. FSEK m. 52 İNSANİ HUSUSİYET VE TELİF DEVRİ:</strong> Yazılım mimarisi ve iş mantığı insan mühendis aklıyla şekillendirilmiş olup FSEK m. 1/B uyarınca sahibinin hususiyetini taşır. FSEK m. 52 uyarınca tüm mali haklar münhasıran İş Sahibi'ne devredilmiştir; kamu malı kod bırakılamaz.</p>
+        </div>
+
+        <div class="ai-governance-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 12px;">
+          <p style="margin: 0; text-align: justify;"><strong>3. COPYLEFT (GPL/AGPL) LİSANS BULAŞMA YASAĞI:</strong> Kod tabanına viral açık kaynak lisansları (GPL, AGPL) bulaştırılmadığı kesin olarak garanti edilmiştir.</p>
+        </div>
+
+        <div class="ai-governance-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 12px;">
+          <p style="margin: 0; text-align: justify;"><strong>4. SIFIR VERİ SAKLAMA (ZERO-TRAINING):</strong> Müşteri verileri ve ticari sırları halka açık AI modellerinin genel eğitim havuzuna aktarılmamıştır.</p>
+        </div>
+
+        <div class="ai-governance-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 6px;">
+          <p style="margin: 0; text-align: justify;"><strong>5. HALÜSİNASYON VE AYIP SORUMLULUĞU (TBK m. 474):</strong> AI halüsinasyonları ve güvenlik açıkları doğrudan Yüklenici ayıbı sayılır; Yüklenici bila-ücret gidermekle mükelleftir.</p>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="footer-bar">
+    <div><strong>Referans Kodu:</strong> OPR-AI-GOV-2026</div>
+    <div>Operis P2P Doğrudan Eşleşme &amp; Sözleşme Altyapısı</div>
+  </div>
+  <div class="hash-seal">
+    <strong>SHA-256 Dijital Mühür (HMK m. 193):</strong> e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5
+  </div>
+</body>
+</html>

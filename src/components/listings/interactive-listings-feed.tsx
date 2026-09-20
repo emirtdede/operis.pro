@@ -20,6 +20,13 @@ export interface InteractiveListingsFeedProps {
   mode?: "following" | "all";
 }
 
+function getBatchModeButtonLabel(isBatchMode: boolean, isTr: boolean): string {
+  if (isBatchMode) {
+    return isTr ? "Toplu Modu Kapat" : "Exit Batch Mode";
+  }
+  return isTr ? "Toplu Teklif Modu" : "Batch Offer Mode";
+}
+
 export function InteractiveListingsFeed({
   items,
   locale,
@@ -344,13 +351,7 @@ export function InteractiveListingsFeed({
           >
             <Layers className="h-3.5 w-3.5" />
             <span>
-              {isBatchMode
-                ? isTr
-                  ? "Toplu Modu Kapat"
-                  : "Exit Batch Mode"
-                : isTr
-                  ? "Toplu Teklif Modu"
-                  : "Batch Offer Mode"}
+              {getBatchModeButtonLabel(isBatchMode, isTr)}
             </span>
           </button>
         </div>
@@ -371,71 +372,86 @@ export function InteractiveListingsFeed({
       )}
 
       {/* Listings Grid */}
-      {isFilterLoading && feedItems.length === 0 ? (
-        <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/60 p-12 text-center space-y-2">
-          <Loader2 className="h-6 w-6 animate-spin text-blue-500 mx-auto mb-2" />
-          <p className="text-sm font-semibold text-[var(--color-text-primary)]">
-            {isTr ? "İlanlar filtreleniyor..." : "Filtering listings..."}
-          </p>
-        </div>
-      ) : feedItems.length === 0 ? (
-        <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/60 p-12 text-center space-y-2">
-          <p className="text-sm font-semibold text-[var(--color-text-primary)]">
-            {isTr
-              ? "Seçilen filtrelere uygun ilan bulunamadı"
-              : "No listings match the selected filters"}
-          </p>
-          <p className="text-xs text-[var(--color-text-secondary)]">
-            {isTr
-              ? "Daha fazla sonuç görmek için filtreleri sıfırlayabilirsiniz."
-              : "Reset filters to view all active listings."}
-          </p>
-          <button
-            type="button"
-            onClick={() => {
-              setChipLast24h(false);
-              setChipFixedBudget(false);
-            }}
-            className="text-xs font-semibold text-blue-400 hover:underline pt-2 cursor-pointer"
-          >
-            {isTr ? "Tüm Filtreleri Temizle" : "Reset All Filters"}
-          </button>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {sortedItems.map((item) => (
-            <ListingCard
-              key={item.id}
-              id={item.id}
-              slug={item.slug}
-              title={item.title}
-              summary={item.summary}
-              categoryName={item.categoryName}
-              budgetMode={item.budgetMode}
-              budgetCurrency={item.budgetCurrency}
-              budgetMin={item.budgetMin}
-              budgetMax={item.budgetMax}
-              timelineMode={item.timelineMode}
-              targetDate={item.targetDate}
-              timelineValue={item.timelineValue}
-              timelineUnit={item.timelineUnit}
-              ownerHandle={item.ownerHandle}
-              ownerDisplayName={item.ownerDisplayName}
-              firstPublishedAt={item.firstPublishedAt}
-              lastActivatedAt={item.lastActivatedAt}
-              activeUntil={item.activeUntil}
-              activationSeq={item.activationSeq}
-              viewCount={item.viewCount}
-              clickCount={item.clickCount}
-              locale={locale}
-              isBatchMode={isBatchMode}
-              isSelected={selectedListingIds.includes(item.id)}
-              onToggleSelect={toggleSelectListing}
-              onQuickOffer={(target) => setQuickOfferListing(target)}
-            />
-          ))}
-        </div>
-      )}
+      {(() => {
+        if (isFilterLoading && feedItems.length === 0) {
+          return (
+            <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/60 p-12 text-center space-y-2">
+              <Loader2 className="h-6 w-6 animate-spin text-blue-500 mx-auto mb-2" />
+              <p className="text-sm font-semibold text-[var(--color-text-primary)]">
+                {isTr ? "İlanlar filtreleniyor..." : "Filtering listings..."}
+              </p>
+            </div>
+          );
+        }
+
+        if (feedItems.length === 0) {
+          return (
+            <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/60 p-12 text-center space-y-2">
+              <p className="text-sm font-semibold text-[var(--color-text-primary)]">
+                {isTr
+                  ? "Seçilen filtrelere uygun ilan bulunamadı"
+                  : "No listings match the selected filters"}
+              </p>
+              <p className="text-xs text-[var(--color-text-secondary)]">
+                {isTr
+                  ? "Daha fazla sonuç görmek için filtreleri sıfırlayabilirsiniz."
+                  : "Reset filters to view all active listings."}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setChipLast24h(false);
+                  setChipFixedBudget(false);
+                }}
+                className="text-xs font-semibold text-blue-400 hover:underline pt-2 cursor-pointer"
+              >
+                {isTr ? "Tüm Filtreleri Temizle" : "Reset All Filters"}
+              </button>
+            </div>
+          );
+        }
+
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {sortedItems.map((item) => (
+              <ListingCard
+                key={item.id}
+                id={item.id}
+                slug={item.slug}
+                title={item.title}
+                summary={item.summary}
+                categoryName={item.categoryName}
+                budgetMode={item.budgetMode}
+                budgetCurrency={item.budgetCurrency}
+                budgetMin={item.budgetMin}
+                budgetMax={item.budgetMax}
+                timelineMode={item.timelineMode}
+                targetDate={item.targetDate}
+                timelineValue={item.timelineValue}
+                timelineUnit={item.timelineUnit}
+                ownerHandle={item.ownerHandle}
+                ownerDisplayName={item.ownerDisplayName}
+                ownerIsCompanyVerified={item.ownerIsCompanyVerified}
+                ownerCompanyName={item.ownerCompanyName}
+                ownerCompanyType={item.ownerCompanyType}
+                ownerTaxOffice={item.ownerTaxOffice}
+                ownerVknMasked={item.ownerVknMasked}
+                firstPublishedAt={item.firstPublishedAt}
+                lastActivatedAt={item.lastActivatedAt}
+                activeUntil={item.activeUntil}
+                activationSeq={item.activationSeq}
+                viewCount={item.viewCount}
+                clickCount={item.clickCount}
+                locale={locale}
+                isBatchMode={isBatchMode}
+                isSelected={selectedListingIds.includes(item.id)}
+                onToggleSelect={toggleSelectListing}
+                onQuickOffer={(target) => setQuickOfferListing(target)}
+              />
+            ))}
+          </div>
+        );
+      })()}
 
       {/* Dynamic Cursor Pagination / Load More */}
       {hasMore && (

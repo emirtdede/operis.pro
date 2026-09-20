@@ -7,6 +7,13 @@ interface AuthValueHeroProps {
   isRegister?: boolean;
 }
 
+function getAuthHeroHeadline(isRegister: boolean, isTr: boolean): string {
+  if (isRegister) {
+    return isTr ? "Yazılım Dünyasında Aracısız Yeni Bir Dönem" : "Autonomous Software Collaboration";
+  }
+  return isTr ? "Güvenli ve Aracısız Yazılım Ağı" : "Direct & Secure Tech Network";
+}
+
 export function AuthValueHero({ locale, isRegister = false }: AuthValueHeroProps) {
   const isTr = locale === "tr";
 
@@ -56,13 +63,7 @@ export function AuthValueHero({ locale, isRegister = false }: AuthValueHeroProps
       <div className="space-y-8 relative z-10">
         <div className="space-y-3">
           <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--color-text-primary)]">
-            {isRegister
-              ? isTr
-                ? "Yazılım Dünyasında Aracısız Yeni Bir Dönem"
-                : "Autonomous Software Collaboration"
-              : isTr
-                ? "Güvenli ve Aracısız Yazılım Ağı"
-                : "Direct & Secure Tech Network"}
+            {getAuthHeroHeadline(isRegister, isTr)}
           </h2>
           <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
             {isTr

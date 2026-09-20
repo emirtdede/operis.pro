@@ -37,13 +37,14 @@ export async function POST(req: Request) {
       // empty body
     }
 
+    const ROLE_DEFAULT_EMAILS: Record<string, string> = {
+      freelancer: "freelancer@operis.pro",
+      admin: "admin@operis.pro",
+    };
     const targetEmail =
       body.email ||
-      (body.role === "freelancer"
-        ? "freelancer@operis.pro"
-        : body.role === "admin"
-          ? "admin@operis.pro"
-          : DEFAULT_USER.email);
+      (body.role ? ROLE_DEFAULT_EMAILS[body.role] : undefined) ||
+      DEFAULT_USER.email;
 
     let userRecord = {
       id: DEFAULT_USER.id,

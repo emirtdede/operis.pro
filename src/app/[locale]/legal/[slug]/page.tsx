@@ -7,6 +7,7 @@ import { LegalService } from "@/src/modules/legal/service";
 import { Locale } from "@/src/lib/i18n/config";
 import { ReadingProgressBar } from "@/src/components/ui/reading-progress-bar";
 import { LegalDocumentViewer } from "@/src/components/legal/legal-document-viewer";
+import { serializeJsonLd } from "@/src/lib/security/json-ld";
 
 import { TR_TO_INTERNAL_LEGAL_SLUG, getLocalizedLegalPath } from "@/src/lib/i18n/routes";
 
@@ -163,7 +164,7 @@ const PLAIN_SUMMARIES: Record<
     tr: {
       title: "Özetle: Kurumsal Bilgiler ve Destek",
       bullets: [
-        "Yasal Şirket Bilgileri: Operis Teknoloji Anonim Şirketi tüzel kişiliği altında faaliyet gösterilir.",
+        "Yasal Şirket Bilgileri: Operis bir Vellium ürünüdür ve platform Vellium tüzel kişiliği altında işletilmektedir.",
         "Resmi Destek Kanalları: Hukuki talepleriniz ve güvenlik bildirimleriniz için resmi kanallarımız 7/24 açıktır.",
         "Veri Sorumlusu İletişimi: KVKK / GDPR başvurularınız yasal süreler içerisinde yanıtlanır.",
       ],
@@ -171,7 +172,7 @@ const PLAIN_SUMMARIES: Record<
     en: {
       title: "In Brief: Corporate Identity & Support",
       bullets: [
-        "Registered Entity: Operated under Operis Teknoloji Anonim Şirketi.",
+        "Registered Entity: Operis is a product of Vellium and operated under Vellium.",
         "Official Channels: Security disclosures and legal inquiries are monitored 24/7.",
         "Data Protection Officer: KVKK & GDPR rights requests are resolved within statutory timeframes.",
       ],
@@ -320,8 +321,8 @@ export default async function LegalDocumentPage({
         inLanguage: locale,
         publisher: {
           "@type": "Organization",
-          name: "Operis Teknoloji Anonim Şirketi",
-          url: "https://operis.pro",
+          name: "Vellium",
+          url: "https://vellium.dev",
         },
       },
       {
@@ -358,7 +359,7 @@ export default async function LegalDocumentPage({
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       {/* Plain Language Executive Summary */}

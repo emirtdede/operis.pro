@@ -74,14 +74,14 @@ function getSafeExportError(
     };
 
     const mapped = errorMap[err.code];
+    let errorMessage = isEn
+      ? "An export processing error occurred."
+      : "Veri aktarım işleminde bir hata oluştu.";
+    if (mapped) {
+      errorMessage = isEn ? mapped.en : mapped.tr;
+    }
     return {
-      error: mapped
-        ? isEn
-          ? mapped.en
-          : mapped.tr
-        : isEn
-          ? "An export processing error occurred."
-          : "Veri aktarım işleminde bir hata oluştu.",
+      error: errorMessage,
       errorCode: err.code,
       status: err.status,
     };
@@ -246,15 +246,17 @@ export async function GET(req: Request) {
         completedAt: job.completedAt ? job.completedAt.toISOString() : null,
       };
 
+      let pendingMessage: string | undefined;
+      if (job.status === "PENDING" || job.status === "PROCESSING") {
+        pendingMessage = isEn
+          ? "Export package is being generated. Please wait."
+          : "Veri aktarım paketi hazırlanıyor. Lütfen bekleyiniz.";
+      }
+
       return NextResponse.json({
         ...jobDto,
         job: jobDto,
-        message:
-          job.status === "PENDING" || job.status === "PROCESSING"
-            ? isEn
-              ? "Export package is being generated. Please wait."
-              : "Veri aktarım paketi hazırlanıyor. Lütfen bekleyiniz."
-            : undefined,
+        message: pendingMessage,
       });
     }
 

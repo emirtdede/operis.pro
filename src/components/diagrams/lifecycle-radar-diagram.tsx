@@ -3,6 +3,18 @@
 import { useState, useEffect } from "react";
 import { Clock, RefreshCw, Archive, CheckCircle2, Calendar } from "lucide-react";
 
+function getLifecyclePointRadius(current: boolean, passed: boolean): string {
+  if (current) return "6.5";
+  if (passed) return "5.5";
+  return "4";
+}
+
+function getLifecyclePointStroke(current: boolean, passed: boolean): string {
+  if (current) return "#ffffff";
+  if (passed) return "#22d3ee";
+  return "var(--color-border-strong)";
+}
+
 export function LifecycleRadarDiagram() {
   const [activeDay, setActiveDay] = useState(1);
 
@@ -222,15 +234,9 @@ export function LifecycleRadarDiagram() {
                   <circle
                     cx={cx}
                     cy={cy}
-                    r={item.current ? "6.5" : item.passed ? "5.5" : "4"}
+                    r={getLifecyclePointRadius(item.current, item.passed)}
                     fill={item.passed ? "#06b6d4" : "var(--color-surface-elevated)"}
-                    stroke={
-                      item.current
-                        ? "#ffffff"
-                        : item.passed
-                          ? "#22d3ee"
-                          : "var(--color-border-strong)"
-                    }
+                    stroke={getLifecyclePointStroke(item.current, item.passed)}
                     strokeWidth={item.current ? "2" : "1.5"}
                     className="transition-all duration-500 ease-out"
                     style={{

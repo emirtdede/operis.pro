@@ -204,9 +204,15 @@ describe("Batch and Quick Offers Module — Architecture & Fallbacks", () => {
         estimatedDurationUnit: null,
         rejectionCode: null,
         rejectionNote: null,
+        isCountered: false,
+        currentTurnUserId: null,
+        counterRound: 0,
+        activeCounterProposalId: null,
         createdAt: new Date(),
         updatedAt: new Date(),
         resolvedAt: null,
+        isSquadOffer: false,
+        squadTitle: null,
       });
 
       const res = await OfferService.batchSubmitOffers(userA, {
@@ -243,9 +249,15 @@ describe("Batch and Quick Offers Module — Architecture & Fallbacks", () => {
               estimatedDurationUnit: null,
               rejectionCode: null,
               rejectionNote: null,
+              isCountered: false,
+              currentTurnUserId: null,
+              counterRound: 0,
+              activeCounterProposalId: null,
               createdAt: new Date(),
               updatedAt: new Date(),
               resolvedAt: null,
+              isSquadOffer: false,
+              squadTitle: null,
             };
           }
           throw new Error("You cannot submit an offer on your own listing");
@@ -287,9 +299,15 @@ describe("Batch and Quick Offers Module — Architecture & Fallbacks", () => {
         estimatedDurationUnit: null,
         rejectionCode: null,
         rejectionNote: null,
+        isCountered: false,
+        currentTurnUserId: null,
+        counterRound: 0,
+        activeCounterProposalId: null,
         createdAt: new Date(),
         updatedAt: new Date(),
         resolvedAt: null,
+        isSquadOffer: false,
+        squadTitle: null,
       });
 
       const idempotencyKey = "unique-key-12345";
@@ -314,7 +332,7 @@ describe("Batch and Quick Offers Module — Architecture & Fallbacks", () => {
     it("provides default starter templates for new users", () => {
       const templates = OfferService.getUserOfferTemplates(userA);
       expect(templates.length).toBeGreaterThanOrEqual(2);
-      expect(templates[0]?.name).toBe("Standart Proje Teklifi");
+      expect(templates[0]?.name).toBe("Standart İlan Teklifi");
     });
 
     it("saves, retrieves, and deletes custom offer templates", () => {

@@ -22,6 +22,13 @@ export interface FeedSidebarProps {
   onToggleCategoryFollow?: (categoryId: string) => Promise<void> | void;
 }
 
+function getFollowCategoryButtonTitle(isFollowed: boolean, isTr: boolean): string {
+  if (isFollowed) {
+    return isTr ? "Takipten çık" : "Unfollow";
+  }
+  return isTr ? "Kategoriyi takip et" : "Follow";
+}
+
 export function FeedSidebar({
   categories,
   locale,
@@ -153,15 +160,7 @@ export function FeedSidebar({
                       ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/25"
                       : "bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] hover:bg-blue-500/10 hover:text-blue-400 border border-[var(--color-border-subtle)]"
                   }`}
-                  title={
-                    isFollowed
-                      ? isTr
-                        ? "Takipten çık"
-                        : "Unfollow"
-                      : isTr
-                        ? "Kategoriyi takip et"
-                        : "Follow"
-                  }
+                  title={getFollowCategoryButtonTitle(isFollowed, isTr)}
                 >
                   {isFollowed ? (
                     <>

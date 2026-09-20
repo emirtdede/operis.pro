@@ -48,14 +48,15 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, isFollowed }, { status: 200 });
   } catch (err: unknown) {
-    const message =
-      err instanceof z.ZodError
-        ? err.issues[0]?.message || (isEn ? "Invalid category ID." : "Geçersiz kategori kimliği.")
-        : err instanceof Error
-          ? err.message
-          : isEn
-            ? "Failed to toggle category follow."
-            : "Kategori takip durumu değiştirilemedi.";
+    let message = isEn
+      ? "Failed to toggle category follow."
+      : "Kategori takip durumu değiştirilemedi.";
+    if (err instanceof z.ZodError) {
+      const fallbackMsg = isEn ? "Invalid category ID." : "Geçersiz kategori kimliği.";
+      message = err.issues[0]?.message || fallbackMsg;
+    } else if (err instanceof Error) {
+      message = err.message;
+    }
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

@@ -38,8 +38,10 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err: unknown) {
-    let message =
-      err instanceof Error ? err.message : isEn ? "Failed to delete listing" : "İlan silinemedi";
+    let message = isEn ? "Failed to delete listing" : "İlan silinemedi";
+    if (err instanceof Error) {
+      message = err.message;
+    }
 
     if (!isEn) {
       if (message.includes("Listing not found") || message.includes("not authorized")) {

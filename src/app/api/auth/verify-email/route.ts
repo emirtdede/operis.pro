@@ -126,13 +126,14 @@ export async function GET(request: NextRequest) {
 
     // Redirect to login or home with verified notice if requested in browser
     if (isHtml) {
-      const redirectPath = freshToken
-        ? userIsEn
+      let redirectPath = userIsEn
+        ? "/en/login?verified=email"
+        : "/tr/giris?verified=email";
+      if (freshToken) {
+        redirectPath = userIsEn
           ? "/en/dashboard/listings"
-          : "/tr/panel/ilanlarim"
-        : userIsEn
-          ? "/en/login?verified=email"
-          : "/tr/giris?verified=email";
+          : "/tr/panel/ilanlarim";
+      }
       const redirectUrl = new URL(redirectPath, request.url);
       const res = NextResponse.redirect(redirectUrl);
       if (freshToken) {

@@ -31,6 +31,7 @@ export type EmailTemplateKey =
   | "listing_expired"
   | "platform_notification"
   | "contact_form"
+  | "category_follow_match"
   | (string & {});
 
 export interface TransactionalEmailProvider {

@@ -55,6 +55,29 @@ interface TemplateItem {
   estimatedDurationUnit?: "DAYS" | "WEEKS" | "MONTHS" | null;
 }
 
+function getPresetButtonTitle(messageLength: number, isTr: boolean): string {
+  if (messageLength < 50) {
+    return isTr
+      ? "Şablon kaydetmek için en az 50 karakter yazınız"
+      : "Write at least 50 characters to save as preset";
+  }
+  return isTr ? "Bu teklifi yeni şablon olarak kaydet" : "Save this offer as new preset";
+}
+
+function getSubmitOfferLabel(isSubmitting: boolean, isTr: boolean): string {
+  if (isSubmitting) {
+    return isTr ? "İletiliyor..." : "Submitting...";
+  }
+  return isTr ? "Teklifi İlet" : "Send Proposal";
+}
+
+function getSaveTemplateLabel(isSaving: boolean, isTr: boolean): string {
+  if (isSaving) {
+    return isTr ? "Kaydediliyor..." : "Saving...";
+  }
+  return isTr ? "Kaydet" : "Save";
+}
+
 const getDefaultTemplates = (isTr: boolean): TemplateItem[] => [
   {
     id: "default-1",
@@ -346,13 +369,10 @@ export function QuickOfferDrawer({
       setIsSuccess(true);
       if (onSuccess) onSuccess();
     } catch (err: unknown) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : isTr
-            ? "Teklif iletilemedi. Lütfen tekrar deneyin."
-            : "Failed to submit offer. Please try again."
-      );
+      const defaultErr = isTr
+        ? "Teklif iletilemedi. Lütfen tekrar deneyin."
+        : "Failed to submit offer. Please try again.";
+      setError(err instanceof Error ? err.message : defaultErr);
     } finally {
       setIsSubmitting(false);
     }
@@ -499,15 +519,7 @@ export function QuickOfferDrawer({
                     type="button"
                     onClick={() => setShowSaveModal(true)}
                     disabled={message.length < 50}
-                    title={
-                      message.length < 50
-                        ? isTr
-                          ? "Şablon kaydetmek için en az 50 karakter yazınız"
-                          : "Write at least 50 characters to save as preset"
-                        : isTr
-                          ? "Bu teklifi yeni şablon olarak kaydet"
-                          : "Save this offer as new preset"
-                    }
+                    title={getPresetButtonTitle(message.length, isTr)}
                     className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs border border-dashed border-blue-500/40 text-blue-400 hover:bg-blue-500/10 disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
                   >
                     <BookmarkPlus className="h-3.5 w-3.5" />
@@ -652,15 +664,7 @@ export function QuickOfferDrawer({
                   disabled={isSubmitting || message.trim().length < 50}
                 >
                   <Zap className="h-3.5 w-3.5 fill-current" />
-                  <span>
-                    {isSubmitting
-                      ? isTr
-                        ? "İletiliyor..."
-                        : "Submitting..."
-                      : isTr
-                        ? "Teklifi İlet"
-                        : "Send Proposal"}
-                  </span>
+                  <span>{getSubmitOfferLabel(isSubmitting, isTr)}</span>
                 </Button>
               </div>
             </form>
@@ -733,13 +737,7 @@ export function QuickOfferDrawer({
                 size="sm"
                 disabled={isSavingTemplate || !templateSaveName.trim()}
               >
-                {isSavingTemplate
-                  ? isTr
-                    ? "Kaydediliyor..."
-                    : "Saving..."
-                  : isTr
-                    ? "Kaydet"
-                    : "Save"}
+                {getSaveTemplateLabel(isSavingTemplate, isTr)}
               </Button>
             </div>
           </form>

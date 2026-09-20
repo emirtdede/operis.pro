@@ -27,9 +27,16 @@
     "worker": "tsx scripts/worker-daemon.ts",
     "worker:daemon": "tsx scripts/worker-daemon.ts",
     "backfill:pii": "tsx scripts/backfill-pii-keys.ts",
-    "inngest:dev": "npx inngest-cli@latest dev -u http://localhost:8000/api/inngest"
+    "inngest:dev": "npx inngest-cli@latest dev -u http://localhost:8000/api/inngest",
+    "review": "ocr review",
+    "review:delegate": "ocr delegate preview",
+    "review:rules": "ocr delegate rule",
+    "review:api": "ocr scan --path src/app/api",
+    "review:preview": "ocr delegate preview"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1134.0",
+    "@aws-sdk/s3-request-presigner": "^3.1134.0",
     "@clerk/nextjs": "^7.9.2",
     "@sentry/nextjs": "^10.74.0",
     "@upstash/ratelimit": "^2.0.8",

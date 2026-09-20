@@ -42,6 +42,12 @@ const REPORT_REASONS = [
   },
   { value: "OTHER", tr: "Diğer İhlaller", en: "Other Violations" },
 ];
+function getReportSubmitButtonLabel(isSubmitting: boolean, isTr: boolean): string {
+  if (isSubmitting) {
+    return isTr ? "İletiliyor..." : "Submitting...";
+  }
+  return isTr ? "Şikayeti İlet" : "Submit Report";
+}
 
 export function ContextualReportModal({
   targetType,
@@ -105,9 +111,8 @@ export function ContextualReportModal({
         onClose();
       }, 2500);
     } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : isTr ? "Bir hata oluştu." : "An error occurred."
-      );
+      const fallback = isTr ? "Bir hata oluştu." : "An error occurred.";
+      setError(err instanceof Error ? err.message : fallback);
     } finally {
       setIsSubmitting(false);
     }
@@ -235,13 +240,7 @@ export function ContextualReportModal({
                 className="bg-amber-600 hover:bg-amber-700 text-white shadow-sm"
               >
                 <Flag className="h-3.5 w-3.5 mr-1" />
-                {isSubmitting
-                  ? isTr
-                    ? "İletiliyor..."
-                    : "Submitting..."
-                  : isTr
-                    ? "Şikayeti İlet"
-                    : "Submit Report"}
+                {getReportSubmitButtonLabel(isSubmitting, isTr)}
               </Button>
             </div>
           </form>

@@ -9,6 +9,19 @@ interface LogsConsoleClientProps {
   total: number;
 }
 
+function getLogLevelBadgeClass(level: string): string {
+  if (level === "CRITICAL") {
+    return "bg-red-500/20 text-red-400 border-red-500/40 animate-pulse";
+  }
+  if (level === "WARN") {
+    return "bg-amber-500/10 text-amber-400 border-amber-500/30";
+  }
+  if (level === "ERROR") {
+    return "bg-orange-500/20 text-orange-400 border-orange-500/30";
+  }
+  return "bg-blue-500/10 text-blue-400 border-blue-500/20";
+}
+
 export function LogsConsoleClient({ initialLogs, total: _total }: LogsConsoleClientProps) {
   const [logs] = useState<AdminLogItem[]>(initialLogs);
   const [activeCategory, setActiveCategory] = useState<string>("all");
@@ -127,15 +140,7 @@ export function LogsConsoleClient({ initialLogs, total: _total }: LogsConsoleCli
                 <tr key={log.id} className="hover:bg-slate-800/40 transition-colors">
                   <td className="py-3 px-4">
                     <span
-                      className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
-                        log.level === "CRITICAL"
-                          ? "bg-red-500/20 text-red-400 border-red-500/40 animate-pulse"
-                          : log.level === "WARN"
-                            ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
-                            : log.level === "ERROR"
-                              ? "bg-orange-500/20 text-orange-400 border-orange-500/30"
-                              : "bg-blue-500/10 text-blue-400 border-blue-500/20"
-                      }`}
+                      className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getLogLevelBadgeClass(log.level)}`}
                     >
                       {log.level}
                     </span>

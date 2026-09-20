@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <title>OPR-CONTR-ENG2026B - Kurumsal B2B Finansal Raporlama ve Analitik Platformu</title>
+  <style>
+    @page { size: A4; margin: 18mm; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.55;
+      color: #1a1a1a;
+      background: #ffffff;
+      margin: 0;
+      padding: 24px;
+    }
+    .header {
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .brand { font-size: 18pt; font-weight: 900; color: #0f172a; letter-spacing: -0.5px; }
+    .meta { font-size: 9pt; color: #64748b; text-align: right; }
+    h1 { font-size: 14pt; margin: 16px 0 8px; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; break-after: avoid-page; page-break-after: avoid; }
+    h2 { font-size: 12pt; margin: 16px 0 6px; color: #1e293b; break-after: avoid-page; page-break-after: avoid; }
+    h3 { font-size: 10.5pt; margin: 12px 0 4px; color: #334155; break-after: avoid-page; page-break-after: avoid; }
+    h4, h5, h6 { break-after: avoid-page; page-break-after: avoid; }
+    h1, h2, h3, h4, h5, h6,
+    .brand, .party-title, .clause-title, .section-title {
+      break-after: avoid-page !important;
+      page-break-after: avoid !important;
+    }
+    h1 + *, h2 + *, h3 + *, h4 + *, h5 + *, h6 + *,
+    .clause-title + *, .section-title + * {
+      break-before: avoid-page !important;
+      page-break-before: avoid !important;
+    }
+    p { margin: 6px 0; text-align: justify; }
+    p, li {
+      orphans: 3;
+      widows: 3;
+    }
+    .parties { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 14px 0; break-inside: avoid; page-break-inside: avoid; }
+    .party-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; font-size: 9.5pt; break-inside: avoid; page-break-inside: avoid; }
+    .party-title { font-weight: 700; color: #1e293b; margin-bottom: 4px; text-transform: uppercase; font-size: 8.5pt; letter-spacing: 0.5px; }
+    .clause-block { break-inside: avoid !important; page-break-inside: avoid !important; margin: 14px 0; }
+    .sha-seal {
+      margin-top: 24px;
+      background: #f1f5f9;
+      border: 1px dashed #94a3b8;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-family: monospace;
+      font-size: 8.5pt;
+      word-break: break-all;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .signature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 36px; page-break-inside: avoid; break-inside: avoid; }
+    .signature-box { border-top: 1px solid #0f172a; padding-top: 8px; font-size: 9pt; break-inside: avoid; page-break-inside: avoid; }
+    ul { margin: 4px 0; padding-left: 20px; }
+    li { margin: 2px 0; }
+    @media print {
+      body { padding: 0; }
+      .no-print { display: none; }
+      h1, h2, h3, h4, h5, h6 { break-after: avoid-page !important; page-break-after: avoid !important; }
+      .clause-block, .safe-harbor-item, .safe-harbor-header, .safe-harbor-summary,
+      .party-card, .parties, .sha-seal, .signature-grid, .signature-box, table, tr {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <div class="brand">OPERIS</div>
+      <div style="font-size: 8pt; color: #64748b; margin-top: 2px;">Bağımsız Yazılım ve Teknoloji Sözleşme Altyapısı</div>
+    </div>
+    <div class="meta">
+      <div><strong>Ref:</strong> OPR-CONTR-ENG2026B</div>
+      <div><strong>Tarih:</strong> 1 Eylül 2026</div>
+      <div><strong>Durum:</strong> Hukuken Bağlayıcı Belge</div>
+    </div>
+  </div>
+
+  <h1>BAĞIMSIZ YAZILIM VE TEKNOLOJİ HİZMET SÖZLEŞMESİ</h1>
+  <p style="font-size: 9pt; color: #64748b;">
+    6098 sayılı Türk Borçlar Kanunu (m. 470 vd.) ve 5846 sayılı Fikir ve Sanat Eserleri Kanunu (m. 52) uyarınca düzenlenmiştir.
+  </p>
+
+  <div class="parties">
+    <div class="party-card">
+      <div class="party-title">İŞ SAHİBİ (MÜŞTERİ)</div>
+      <div><strong>Acme Teknoloji ve Girişim A.Ş.</strong></div>
+      <div>hukuk@acmeteknoloji.com.tr</div>
+      <div>+90 (212) 555 8899</div>
+    </div>
+    <div class="party-card">
+      <div class="party-title">YÜKLENİCİ (FREELANCER / UZMAN)</div>
+      <div><strong>Can Demir (Kıdemli Yazılım Mimarı)</strong></div>
+      <div>can.demir@devmail.com</div>
+      <div>+90 (532) 555 1234</div>
+    </div>
+  </div>
+
+  
+
+  <div class="clause-block">
+    <h3>1. Hizmet Kapsamı ve İş Tanımı</h3>
+    <p><strong>Kurumsal B2B Finansal Raporlama ve Analitik Platformu</strong>: Next.js 16, PostgreSQL ve TailwindCSS kullanılarak çok kiracılı (multi-tenant), yüksek güvenlikli kurumsal finansal raporlama platformu geliştirilmesi ve anahtar teslim devreye alınması işidir.</p>
+  </div>
+
+  <div class="clause-block">
+    <h3>2. Hakediş ve Kilometre Taşları</h3>
+    <ul>
+      <li><strong>%30 (1. Aşama):</strong> Sistem Mimarisi, Veri Modeli ve Kimlik Doğrulama Katmanı (PostgreSQL şema tasarımı, Next.js 16 altyapısı, AES-256 şifreleme ve RBAC yetkilendirme.)</li>
+      <li><strong>%40 (2. Aşama):</strong> Finansal Analitik Motoru ve Raporlama API'leri (Yüksek performanslı veri işleme hattı, webhook bildirimleri ve PDF/CSV dışa aktarım motoru.)</li>
+      <li><strong>%30 (3. Aşama):</strong> Kullanıcı Kabul Testleri (UAT), CI/CD Dağıtımı ve Telif Devri (Staging ve canlı ortam dağıtımı, FSEK m. 52 telif devir senedi ve kaynak kod teslimi.)</li>
+    </ul>
+    
+<div class="tax-breakdown-table" style="margin: 14px 0; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; break-inside: avoid; page-break-inside: avoid;">
+  <div style="background-color: #f1f5f9; padding: 8px 12px; font-weight: 700; font-size: 11px; color: #0f172a; border-bottom: 1px solid #cbd5e1; display: flex; justify-content: space-between; break-after: avoid-page; page-break-after: avoid;">
+    <span>YASAL VERGİ VE ÖDEME DAĞILIM TABLOSU (GVK m. 94 & KDVK)</span>
+    <span style="font-family: monospace; color: #0284c7;">RESMİ HESAPLAMA</span>
+  </div>
+  <table style="width: 100%; border-collapse: collapse; font-size: 11px; line-height: 1.4;">
+    <thead style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+      <tr>
+        <th style="padding: 6px 10px; text-align: left; color: #475569;">Finansal Kalem</th>
+        <th style="padding: 6px 10px; text-align: center; color: #475569;">Oran</th>
+        <th style="padding: 6px 10px; text-align: right; color: #475569;">Tutar</th>
+        <th style="padding: 6px 10px; text-align: left; color: #475569;">Açıklama</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid #e2e8f0; background-color: #ffffff;">
+        <td style="padding: 6px 10px; font-weight: 600; color: #0f172a;">1. Brüt Hizmet Bedeli</td>
+        <td style="padding: 6px 10px; text-align: center; color: #64748b;">Brüt</td>
+        <td style="padding: 6px 10px; text-align: right; font-weight: 700; font-family: monospace; color: #0f172a;">150.000,00 ₺</td>
+        <td style="padding: 6px 10px; color: #64748b;">Sözleşmede kararlaştırılan brüt bedel</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #e2e8f0; background-color: #fffbeb;">
+        <td style="padding: 6px 10px; font-weight: 600; color: #b45309;">2. GVK m. 94/2-b Stopaj Tevkifatı</td>
+        <td style="padding: 6px 10px; text-align: center; color: #b45309;">%20</td>
+        <td style="padding: 6px 10px; text-align: right; font-weight: 700; font-family: monospace; color: #b45309;">-30.000,00 ₺</td>
+        <td style="padding: 6px 10px; color: #92400e;">İş Sahibi muhtasar ile doğrudan vergi dairesine öder</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #e2e8f0; background-color: #f0fdf4;">
+        <td style="padding: 6px 10px; font-weight: 600; color: #15803d;">3. Net Serbest Meslek Kazancı</td>
+        <td style="padding: 6px 10px; text-align: center; color: #15803d;">Net</td>
+        <td style="padding: 6px 10px; text-align: right; font-weight: 700; font-family: monospace; color: #15803d;">120.000,00 ₺</td>
+        <td style="padding: 6px 10px; color: #166534;">Yüklenicinin harcanabilir net kazancı (Brüt - Stopaj)</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #e2e8f0; background-color: #eff6ff;">
+        <td style="padding: 6px 10px; font-weight: 600; color: #1d4ed8;">4. Katma Değer Vergisi (KDV)</td>
+        <td style="padding: 6px 10px; text-align: center; color: #1d4ed8;">%20</td>
+        <td style="padding: 6px 10px; text-align: right; font-weight: 700; font-family: monospace; color: #1d4ed8;">+30.000,00 ₺</td>
+        <td style="padding: 6px 10px; color: #1e40af;">Yükleniciye emanet ödenir; KDV-1 ile devlete iletilir</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #cbd5e1; background-color: #f8fafc;">
+        <td style="padding: 8px 10px; font-weight: 700; color: #0f172a;">5. Banka Havalesi ile Ödenecek Tutar</td>
+        <td style="padding: 8px 10px; text-align: center; font-weight: 600;">Net + KDV</td>
+        <td style="padding: 8px 10px; text-align: right; font-weight: 700; font-family: monospace; font-size: 12px; color: #0f172a;">150.000,00 ₺</td>
+        <td style="padding: 8px 10px; font-weight: 600; color: #334155;">İş Sahibinin Yüklenici IBAN'ına göndereceği nakit</td>
+      </tr>
+      <tr style="background-color: #f1f5f9;">
+        <td style="padding: 6px 10px; font-weight: 600; color: #475569;">6. İş Sahibinin Toplam Maliyeti</td>
+        <td style="padding: 6px 10px; text-align: center; color: #64748b;">Brüt + KDV</td>
+        <td style="padding: 6px 10px; text-align: right; font-weight: 700; font-family: monospace; color: #475569;">180.000,00 ₺</td>
+        <td style="padding: 6px 10px; color: #64748b;">Banka Havalesi + Vergi Dairesi Stopajı</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+  
+<div class="inflation-shield-box" style="margin: 16px 0; border: 1px solid #fed7aa; background: #fffbeb; border-radius: 8px; padding: 14px; font-size: 9pt; break-inside: avoid; page-break-inside: avoid;">
+  <div style="font-weight: 700; color: #9a3412; font-size: 10pt; margin-bottom: 6px; break-after: avoid-page; page-break-after: avoid;">
+    📈 TBK m. 138 & 32 Sayılı Karar Uyumlu Enflasyon ve TÜFE Endeksleme Klozu
+  </div>
+  <p style="margin: 4px 0 8px; color: #78350f; line-height: 1.4;">
+    Sözleşme bedeli Türk Parasının Kıymetini Koruma mevzuatına uygun olarak TL kalmak kaydıyla; TBK m. 138 (Aşırı İfa Güçlüğü) gereğince hakediş tarihinde resmi <strong>TÜİK Yurt İçi Üretici Fiyat Endeksi (Yİ-ÜFE)</strong> değişimine göre güncellenecektir.
+  </p>
+  <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 8.5pt;">
+    <tbody>
+      <tr style="background: #fef3c7;">
+        <td style="border: 1px solid #fde68a; padding: 4px 8px;"><strong>Endeks Modeli:</strong></td>
+        <td style="border: 1px solid #fde68a; padding: 4px 8px;">TÜİK Yurt İçi Üretici Fiyat Endeksi (Yİ-ÜFE)</td>
+        <td style="border: 1px solid #fde68a; padding: 4px 8px;"><strong>Tavan Sınırı (Cap):</strong></td>
+        <td style="border: 1px solid #fde68a; padding: 4px 8px;">%40</td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #fde68a; padding: 4px 8px;"><strong>Baz Dönem (T₀):</strong></td>
+        <td style="border: 1px solid #fde68a; padding: 4px 8px;">2026-01 (Endeks: 5310.08)</td>
+        <td style="border: 1px solid #fde68a; padding: 4px 8px;"><strong>Taban Güvencesi:</strong></td>
+        <td style="border: 1px solid #fde68a; padding: 4px 8px;">%0 (Nominal TL altına inemez)</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+  </div>
+
+  
+  <div class="clause-block" style="margin: 20px 0; border: 1px solid #cbd5e1; background: #f8fafc; border-radius: 8px; padding: 14px; break-inside: avoid; page-break-inside: avoid;">
+    <div style="font-weight: 700; color: #0f172a; font-size: 10pt; margin-bottom: 8px; break-after: avoid-page; page-break-after: avoid;">
+      📋 EK-1: Objektif Kabul Kriterleri & Definition of Done (TBK m. 470/474)
+    </div>
+    <div style="font-size: 8.5pt; color: #475569; margin-bottom: 10px;">
+      TBK m. 474 uyarınca teslimat ayıpsızlık muayenesi aşağıdaki objektif şartlara bağlanmıştır. Keyfi ret yapılamaz.
+    </div>
+    <table style="width: 100%; border-collapse: collapse; font-size: 8.5pt;">
+      <thead>
+        <tr style="background: #e2e8f0; text-align: left;">
+          <th style="border: 1px solid #cbd5e1; padding: 6px 8px; width: 60px;">Aşama</th>
+          <th style="border: 1px solid #cbd5e1; padding: 6px 8px;">Kabul Şartı (Sade Dil)</th>
+          <th style="border: 1px solid #cbd5e1; padding: 6px 8px;">Teknik BDD Kuralı</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; font-weight: 600;">Faz 1</td>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px;"><strong>Kullanıcı kimlik doğrulama, MFA ve rol tabanlı yetkilendirme (RBAC) uçtan uca çalışmalıdır.</strong></td>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px; font-family: monospace; font-size: 8pt; color: #334155;">GIVEN Kullanıcı geçerli e-posta ve şifreyle 2FA kodunu girdiğinde<br>WHEN Giriş butonuna tıkladığında<br>THEN JWT oturum token'ı oluşturulmalı ve yetkili dashboard ekranına yönlendirilmelidir.</td>
+        </tr><tr>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; font-weight: 600;">Faz 2</td>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px;"><strong>Finansal raporlama modülü 100.000 satır veriyi 1.5 saniye altında CSV ve PDF formatında dışa aktarmalıdır.</strong></td>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px; font-family: monospace; font-size: 8pt; color: #334155;">GIVEN Sistemde 100.000 satır işlem kaydı bulunduğunda<br>WHEN Kullanıcı 'Dönem Sonu Raporu İndir' butonuna bastığında<br>THEN Sistem CPU tüketimi %40'ı aşmadan, 1.5 saniye içinde imzalı PDF dosyasını üretmelidir.</td>
+        </tr><tr>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; font-weight: 600;">Faz 3</td>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px;"><strong>Tüm kaynak kodlar %85+ test kapsamı ile GitHub Actions CI/CD hattında yeşil geçmelidir.</strong></td>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px; font-family: monospace; font-size: 8pt; color: #334155;">GIVEN Ana dala (main) yeni sürüm etiketi (tag) atıldığında<br>WHEN Otomatik linter ve test paketleri koşturulduğunda<br>THEN 0 kritik güvenlik zafiyeti ve %85 üzeri kapsama ile staging sunucusuna otomatik deploy olmalıdır.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+<div class="dpa-annex" style="margin: 20px 0; border: 1px solid #c7d2fe; background: #eef2ff; border-radius: 8px; padding: 14px; font-size: 8.5pt; break-inside: avoid; page-break-inside: avoid;">
+  <div style="font-weight: 700; color: #3730a3; font-size: 10pt; margin-bottom: 6px; break-after: avoid-page; page-break-after: avoid;">
+    🛡️ EK-2: 6698 Sayılı KVKK m. 12 & GDPR m. 28 Bilişim Veri İşleme Protokolü (DPA)
+  </div>
+  <div style="font-size: 8pt; color: #4338ca; margin-bottom: 8px;">
+    Risk Seviyesi: <strong>MEDIUM (39/100)</strong> | İhlal Bildirim Süresi: <strong>24 Saat</strong> | Alt İşleyen İzni: <strong>Yazılı Onaya Tabi</strong>
+  </div>
+  <table style="width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 8pt; background: #ffffff;">
+    <thead>
+      <tr style="background: #e0e7ff; text-align: left;">
+        <th style="border: 1px solid #c7d2fe; padding: 5px 8px; width: 45%;">İşlenen Veri Kategorileri</th>
+        <th style="border: 1px solid #c7d2fe; padding: 5px 8px; width: 55%;">Uygulanacak Teknik & İdari Tedbirler</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="border: 1px solid #c7d2fe; padding: 6px 8px; vertical-align: top;">
+          • Kimlik & İletişim<br>• Hesap & Sistem Logları<br>• Finans & İşlem Geçmişi
+        </td>
+        <td style="border: 1px solid #c7d2fe; padding: 6px 8px; vertical-align: top;">
+          ✓ TLS 1.3 Şifreleme<br>✓ AES-256 Durağan Şifreleme<br>✓ 2FA/MFA Doğrulama<br>✓ İşlem Denetim Logları
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+  
+<div class="safe-harbor-annex" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e293b; margin-top: 32px; padding: 24px; border: 1px solid #cbd5e1; border-radius: 8px; background-color: #ffffff;">
+  <div class="safe-harbor-header" style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #e2e8f0; padding-bottom: 16px; margin-bottom: 20px; break-after: avoid-page; page-break-after: avoid;">
+    <div>
+      <h3 style="margin: 0; font-size: 18px; color: #0f172a; break-after: avoid-page; page-break-after: avoid;">
+        EK-3: 4857 Sayılı İş Kanunu m. 8 Uyumlu Bağımsız Yüklenici Güvenli Liman Şartnamesi
+      </h3>
+      <p style="margin: 4px 0 0 0; font-size: 12px; color: #64748b;">
+        6098 s. TBK m. 470, 4857 s. İş K. m. 8, 5510 s. SGK K. m. 4/b & HMK m. 193 Uyumlu
+      </p>
+    </div>
+    <div style="background-color: #059669; color: #ffffff; padding: 6px 12px; border-radius: 9999px; font-size: 12px; font-weight: 700; text-align: right; white-space: nowrap;">
+      GÜVENLİ LİMAN (DÜŞÜK RİSK) (0/100)
+    </div>
+  </div>
+
+  <div class="safe-harbor-summary" style="background-color: #f8fafc; border-left: 4px solid #059669; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; line-height: 1.5; color: #334155; break-after: avoid-page; page-break-after: avoid; break-inside: avoid; page-break-inside: avoid;">
+    <strong>Yargıtay Risk Özeti:</strong> Güvenli Liman (Skor: 0/100): Taraflar arasındaki ilişki 6098 sayılı TBK m. 470 Eser Sözleşmesi ve bağımsız yüklenici standartlarıyla tam uyumludur. 4857 sayılı İş Kanunu m. 8 kapsamında gizli hizmet sözleşmesi iddiası riski asgari düzeydedir.
+  </div>
+
+  <div class="safe-harbor-clauses" style="font-size: 13px; line-height: 1.6; color: #334155;">
+    <div class="safe-harbor-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 14px;">
+      <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 14px; break-after: avoid-page; page-break-after: avoid;">
+        1. Tarafların Hukuki Sıfatı ve Hizmet Akdinin Reddi
+      </h4>
+      <p style="margin: 0; text-align: justify;">
+        Taraflar, aralarındaki ilişkinin 6098 sayılı TBK m. 470 uyarınca bağımsız bir Eser Sözleşmesi olduğunu, 4857 sayılı İş Kanunu anlamında hiçbir surette işçi-işveren ilişkisi doğurmadığını peşinen kabul ve taahhüt ederler.
+      </p>
+    </div>
+
+    <div class="safe-harbor-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 14px;">
+      <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 14px; break-after: avoid-page; page-break-after: avoid;">
+        2. Zaman, Yer ve Çalışma Metodolojisi Serbestisi
+      </h4>
+      <p style="margin: 0; text-align: justify;">
+        Yüklenici, işbu eseri günün hangi saatlerinde ve nerede yapacağını münhasıran kendisi belirler. İşveren mesai takibi, günlük devam kontrolü veya tuş kaydedici dayatamaz.
+      </p>
+    </div>
+
+    <div class="safe-harbor-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 14px;">
+      <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 14px; break-after: avoid-page; page-break-after: avoid;">
+        3. Araç, Gereç ve Lisans Bağımsızlığı (BYOD)
+      </h4>
+      <p style="margin: 0; text-align: justify;">
+        Yüklenici kendi donanım, bilgisayar ve yazılım lisanslarını bizzat temin eder (Bring Your Own Device). İşveren ortamları yalnızca kabul testi amacıyla erişime açılır.
+      </p>
+    </div>
+
+    <div class="safe-harbor-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 14px;">
+      <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 14px; break-after: avoid-page; page-break-after: avoid;">
+        4. Hiyerarşik Amir Yokluğu ve Çıktı Odaklılık
+      </h4>
+      <p style="margin: 0; text-align: justify;">
+        İşveren, Yüklenici'ye idari amir sıfatıyla emir veremez. Denetim yalnızca teslim edilen eserin BDD/DoD kabul kriterlerine uygunluğuyla sınırlıdır.
+      </p>
+    </div>
+
+    <div class="safe-harbor-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 14px;">
+      <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 14px; break-after: avoid-page; page-break-after: avoid;">
+        5. Münhasırlık Yokluğu ve Çoklu Müşteri Özgürlüğü
+      </h4>
+      <p style="margin: 0; text-align: justify;">
+        Yüklenici üçüncü şahıslara serbestçe hizmet vermekte muhtardır. İşveren münhasırlık veya genel çalışma yasağı uygulayamaz.
+      </p>
+    </div>
+
+    <div class="safe-harbor-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 14px;">
+      <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 14px; break-after: avoid-page; page-break-after: avoid;">
+        6. SGK 4/b, Vergi ve Sosyal Haklar Muafiyeti
+      </h4>
+      <p style="margin: 0; text-align: justify;">
+        Yüklenici 5510 sayılı Kanun m. 4/b (Bağ-Kur) ve vergi yükümlülüklerinden bizzat sorumludur. Kıdem tazminatı, ihbar tazminatı ve yıllık izin talebinde bulunulamaz.
+      </p>
+    </div>
+
+    <div class="safe-harbor-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 6px;">
+      <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 14px; break-after: avoid-page; page-break-after: avoid;">
+        7. Delil Sözleşmesi ve Yetkili Mahkeme
+      </h4>
+      <p style="margin: 0; text-align: justify;">
+        HMK m. 193 uyarınca münhasır delil teşkil eden işbu şartnameden doğan ihtilaflarda <strong>İstanbul Mahkemeleri</strong> yetkilidir.
+      </p>
+    </div>
+  </div>
+</div>
+
+  
+    <div style="page-break-before: always; break-before: page; margin-top: 40px; padding-top: 24px; border-top: 2px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; break-after: avoid-page; page-break-after: avoid;">
+        <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a; break-after: avoid-page; page-break-after: avoid;">
+          EK-4: YAPAY ZEKA TELİF DEVRİ VE LİSANS TEMİZLİĞİ ŞARTNAMESİ
+        </h3>
+        <span style="background: #059669; color: #ffffff; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600; text-transform: uppercase; white-space: nowrap;">
+          KUSURSUZ TELİF GÜVENCESİ (10/100)
+        </span>
+      </div>
+
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 14px; margin-bottom: 20px; font-size: 12px; color: #334155; line-height: 1.6; break-after: avoid-page; page-break-after: avoid; break-inside: avoid; page-break-inside: avoid;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div><strong>Mevzuat:</strong> 5846 s. FSEK m. 52, EU AI Act m. 50/53, 6098 s. TBK m. 474</div>
+          <div><strong>Delil Statüsü:</strong> 6100 s. HMK m. 193 Münhasır Delil</div>
+          <div><strong>Beyan Edilen Araçlar:</strong> GITHUB_COPILOT, CLAUDE_CODE, CURSOR</div>
+          <div><strong>FSEK İnsani Hususiyet:</strong> Onaylandı (Geçerli Devir)</div>
+        </div>
+      </div>
+
+      <div class="ai-governance-clauses" style="font-size: 12px; color: #1e293b; line-height: 1.7;">
+        <div class="ai-governance-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 12px;">
+          <p style="margin: 0; text-align: justify;"><strong>1. ŞEFFAFLIK VE YASAL BEYAN:</strong> Yüklenici, projede kullanılan yapay zeka araçlarını ve kullanım düzeyini şeffafça beyan etmiş olup EU AI Act m. 50 uyarınca makine tarafından üretilen bileşenlerin insan mimarisiyle denetlendiğini teyit eder.</p>
+        </div>
+
+        <div class="ai-governance-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 12px;">
+          <p style="margin: 0; text-align: justify;"><strong>2. FSEK m. 52 İNSANİ HUSUSİYET VE TELİF DEVRİ:</strong> Yazılım mimarisi ve iş mantığı insan mühendis aklıyla şekillendirilmiş olup FSEK m. 1/B uyarınca sahibinin hususiyetini taşır. FSEK m. 52 uyarınca tüm mali haklar münhasıran İş Sahibi'ne devredilmiştir; kamu malı kod bırakılamaz.</p>
+        </div>
+
+        <div class="ai-governance-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 12px;">
+          <p style="margin: 0; text-align: justify;"><strong>3. COPYLEFT (GPL/AGPL) LİSANS BULAŞMA YASAĞI:</strong> Kod tabanına viral açık kaynak lisansları (GPL, AGPL) bulaştırılmadığı kesin olarak garanti edilmiştir.</p>
+        </div>
+
+        <div class="ai-governance-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 12px;">
+          <p style="margin: 0; text-align: justify;"><strong>4. SIFIR VERİ SAKLAMA (ZERO-TRAINING):</strong> Müşteri verileri ve ticari sırları halka açık AI modellerinin genel eğitim havuzuna aktarılmamıştır.</p>
+        </div>
+
+        <div class="ai-governance-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 6px;">
+          <p style="margin: 0; text-align: justify;"><strong>5. HALÜSİNASYON VE AYIP SORUMLULUĞU (TBK m. 474):</strong> AI halüsinasyonları ve güvenlik açıkları doğrudan Yüklenici ayıbı sayılır; Yüklenici bila-ücret gidermekle mükelleftir.</p>
+        </div>
+      </div>
+    </div>
+    
+  
+  <div style="margin-top: 20px; border-top: 1px solid #e2e8f0; padding-top: 12px;">
+          <h3>EK-6: Temiz Kod ve Siber Güvenlik Taahhütnamesi (TCK m. 243-245)</h3>
+          <p style="font-size: 9pt; color: #334155;">Yüklenici; işbu sözleşme kapsamında geliştirdiği ve işverene teslim ettiği kaynak kodların, konfigürasyon dosyalarının ve derleme betiklerinin hiçbir surette arka kapı (backdoor), gizli yönetici erişim kapısı, mantık bombası (logic bomb), truva atı veya yetkisiz veri aktarımı sağlayan zararlı kod parçacığı içermediğini; teslimatın iyi niyet ve uluslararası bilgi güvenliği mühendislik standartlarına tam uyum içinde gerçekleştirildiğini peşinen ve gayrikabili rücu garanti eder.</p>
+          <div style="font-size: 8.5pt; color: #64748b; font-family: monospace;">SHA-256: c3bea6f0bf4b7f983171e3face4c2870b8f1a4f988da4a2b872e42e634b7abd8</div>
+        </div>
+  <div style="margin-top: 20px; border-top: 1px solid #e2e8f0; padding-top: 12px;">
+          <h3>EK-7: Açık Kaynak Lisans Saflığı ve Copyleft Bulaşmama Şartnamesi</h3>
+          <p style="font-size: 9pt; color: #334155;">Yüklenici; projede kullanılan tüm üçüncü şahıs ve açık kaynaklı kütüphanelerin yalnızca izin verilen ticari lisanslar (MIT, Apache 2.0, BSD vb.) olduğunu; işverenin mülkiyetindeki kaynak kodları kamuya açık kaynak haline getirme zorunluluğu doğuran viral copyleft (GPL, AGPL, SSPL vb.) lisanslı hiçbir bileşeni projeye dahil etmediğini gayrikabili rücu garanti eder.</p>
+          <div style="font-size: 8.5pt; color: #64748b; font-family: monospace;">SHA-256: 4927811381504c2d4364ab24f2a45dc64a5c7e857304a8716c0706c2f0ed6d4c</div>
+        </div>
+  <div style="margin-top: 20px; border-top: 1px solid #e2e8f0; padding-top: 12px;">
+          <h3>EK-8: Müşteri ve Personel Ayartmama Protokolü (TTK m. 55)</h3>
+          <p style="font-size: 9pt; color: #334155;">Yüklenici; işbu sözleşme ifası esnasında doğrudan veya dolaylı olarak tanıştığı işverenin kurumsal müşterilerine, iştiraklerine veya iş ortaklarına proje süresince ve sözleşmenin sona ermesinden itibaren 12 (on iki) ay boyunca işverenin yazılı onayı olmaksızın doğrudan teklif vermeyeceğini veya işvereni baypas ederek aynı/benzer hizmetleri sunmayacağını taahhüt eder.</p>
+          <div style="font-size: 8.5pt; color: #64748b; font-family: monospace;">SHA-256: 2acad33deb1c2a1547f963d8204bb9a89d1f6315718a57afdd187844104e1b5c</div>
+        </div>
+
+  <div class="clause-block">
+    <h3>3. 5846 Sayılı FSEK m. 52 Uyarınca Fikri Mülkiyet Devri</h3>
+    <p>Bedelin ödenmesi şartıyla; FSEK m.21 (İşleme), m.22 (Çoğaltma), m.23 (Yayma), m.24 (Temsil) ve m.25 (Umuma İletim) mali hakları münhasıran ve sınırsız olarak İş Sahibi'ne devredilmiştir.</p>
+  </div>
+
+  <div class="clause-block">
+    <h3>4. Muayene, Kabul ve Revizyon Sınırları</h3>
+    <p>İş Sahibi teslimden itibaren 7 iş günü içinde incelemeyi tamamlar. Azami 2 tur revizyon dahildir. Kapsam dışı talepler ek ücrete tabidir.</p>
+  </div>
+
+  <div class="clause-block">
+    <h3>5. Gizlilik (NDA), Garanti ve Uyuşmazlık Çözümü</h3>
+    <p>Ticari sırlar 3 yıl gizlidir. Kritik hatalar 30 gün ücretsiz giderilir. Uyuşmazlıklarda 6325 sayılı kanun gereği dava öncesi arabuluculuk zorunludur. Yetkili merci İstanbul Mahkemeleridir.</p>
+  </div>
+
+  <div class="sha-seal">
+    <div><strong>DİJİTAL SÖZLEŞME GÜVENLİK MÜHRÜ (SHA-256):</strong></div>
+    <div>fea1a4fcefcd676ba1c52cbe13bad6f1764f46f261c32e476f48471357c920ac</div>
+    <div style="font-size: 7.5pt; margin-top: 2px;">Metin bütünlüğü Operis platformu tarafından doğrulanabilir deterministik algoritmayla tanzim edilmiştir.</div>
+  </div>
+
+  <div class="signature-grid">
+    <div class="signature-box">
+      <div><strong>İŞ SAHİBİ (MÜŞTERİ)</strong></div>
+      <div style="margin-top: 4px; font-weight: 600;">Acme Teknoloji ve Girişim A.Ş.</div>
+      <div style="margin-top: 24px; color: #94a3b8;">İmza / Kaşe: ____________________</div>
+      <div style="font-size: 7.5pt; color: #64748b; margin-top: 6px;">
+        Tarih: 1 Eylül 2026
+      </div>
+    </div>
+    <div class="signature-box">
+      <div><strong>YÜKLENİCİ (GELİŞTİRİCİ)</strong></div>
+      <div style="margin-top: 4px; font-weight: 600;">Can Demir (Kıdemli Yazılım Mimarı)</div>
+      <div style="margin-top: 24px; color: #94a3b8;">İmza / Kaşe: ____________________</div>
+      <div style="font-size: 7.5pt; color: #64748b; margin-top: 6px;">
+        Tarih: 1 Eylül 2026
+      </div>
+    </div>
+  </div>
+</body>
+</html>

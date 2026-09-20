@@ -20,6 +20,20 @@ export interface NotificationsViewProps {
   locale: string;
 }
 
+function getNotificationTitle(item: NotificationItem, isTr: boolean): string {
+  if (item.payloadJson?.title) {
+    return String(item.payloadJson.title);
+  }
+  if (item.type === "COMMUNICATION_PING") {
+    const listingTitle = item.payloadJson?.listingTitle;
+    if (isTr) {
+      return `💬 İletişim Dürtmesi: ${listingTitle || "Proje Çalışma Alanı"}`;
+    }
+    return `💬 Project Ping: ${listingTitle || "Workspace"}`;
+  }
+  return isTr ? "Operis Bildirimi" : "Operis Alert";
+}
+
 export function NotificationsView({ initialNotifications, locale }: NotificationsViewProps) {
   const isTr = locale === "tr";
   const [notifications, setNotifications] = useState<NotificationItem[]>(initialNotifications);
@@ -175,31 +189,15 @@ export function NotificationsView({ initialNotifications, locale }: Notification
               timeStyle: "short",
             });
 
-            const title = String(
-              item.payloadJson?.title ||
-                (item.type === "COMMUNICATION_PING"
-                  ? isTr
-                    ? `💬 İletişim Dürtmesi: ${item.payloadJson?.listingTitle || "Proje Çalışma Alanı"}`
-                    : `💬 Project Ping: ${item.payloadJson?.listingTitle || "Workspace"}`
-                  : isTr
-                    ? "Operis Bildirimi"
-                    : "Operis Alert")
-            );
-            const message = item.payloadJson?.message
-              ? String(item.payloadJson.message)
-              : item.payloadJson?.messageText
-                ? String(item.payloadJson.messageText)
-                : "";
-            const rawActionUrl = item.payloadJson?.actionUrl
-              ? String(item.payloadJson.actionUrl)
-              : item.payloadJson?.workspacePath
-                ? String(item.payloadJson.workspacePath)
-                : null;
-            const actionUrl = rawActionUrl
-              ? isTr
-                ? rawActionUrl
-                : getAlternateLocalePath(rawActionUrl, "en")
-              : null;
+            const title = getNotificationTitle(item, isTr);
+            const rawMessage = item.payloadJson?.message || item.payloadJson?.messageText || "";
+            const message = String(rawMessage);
+            const rawUrl = item.payloadJson?.actionUrl || item.payloadJson?.workspacePath;
+            const rawActionUrl = rawUrl ? String(rawUrl) : null;
+            let actionUrl: string | null = null;
+            if (rawActionUrl) {
+              actionUrl = isTr ? rawActionUrl : getAlternateLocalePath(rawActionUrl, "en");
+            }
 
             return (
               <div

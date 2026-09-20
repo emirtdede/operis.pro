@@ -3,6 +3,11 @@
 import { useLocale, useTranslations } from "next-intl";
 import { Search, ChevronDown, Layers, BookmarkCheck, ArrowRight, Plus } from "lucide-react";
 
+function getSkeletonWidthPercent(idx: number): number {
+  const widths = [65, 78, 52];
+  return widths[idx % 3] ?? 65;
+}
+
 export default function CategoriesLoading() {
   const t = useTranslations("common");
   const locale = useLocale();
@@ -143,7 +148,7 @@ export default function CategoriesLoading() {
                 <div className="min-h-[2.75rem] flex items-center">
                   <div
                     className="h-5 rounded-lg bg-[var(--color-surface-hover)] animate-pulse"
-                    style={{ width: `${idx % 3 === 0 ? 65 : idx % 3 === 1 ? 78 : 52}%` }}
+                    style={{ width: `${getSkeletonWidthPercent(idx)}%` }}
                   />
                 </div>
 

@@ -177,12 +177,13 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (err: unknown) {
-    const message =
-      err instanceof z.ZodError
-        ? err.issues[0]?.message || (isEn ? "Invalid password format." : "Geçersiz şifre formatı.")
-        : isEn
-          ? "Password reset failed. Please try again."
-          : "Şifre sıfırlama işlemi başarısız oldu.";
+    let message = isEn
+      ? "Password reset failed. Please try again."
+      : "Şifre sıfırlama işlemi başarısız oldu.";
+    if (err instanceof z.ZodError) {
+      const fallbackFormat = isEn ? "Invalid password format." : "Geçersiz şifre formatı.";
+      message = err.issues[0]?.message || fallbackFormat;
+    }
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

@@ -5,6 +5,23 @@ import { locales, Locale } from "@/src/lib/i18n/config";
 
 import { getAlternateLocalePath } from "@/src/lib/i18n/routes";
 
+function resolveActiveLocale(
+  currentLocale?: Locale,
+  paramLocale?: unknown,
+  pathname = ""
+): Locale {
+  if (currentLocale) {
+    return currentLocale;
+  }
+  if (paramLocale && locales.includes(paramLocale as Locale)) {
+    return paramLocale as Locale;
+  }
+  if (pathname.startsWith("/en")) {
+    return "en";
+  }
+  return "tr";
+}
+
 export function LanguageSwitcher({
   currentLocale,
   className = "",
@@ -15,13 +32,7 @@ export function LanguageSwitcher({
   const pathname = usePathname();
   const router = useRouter();
   const params = useParams();
-  const activeLocale: Locale =
-    currentLocale ||
-    ((params?.locale as Locale) && locales.includes(params?.locale as Locale)
-      ? (params.locale as Locale)
-      : pathname.startsWith("/en")
-        ? "en"
-        : "tr");
+  const activeLocale: Locale = resolveActiveLocale(currentLocale, params?.locale, pathname);
 
   const switchLocale = (newLocale: Locale) => {
     if (newLocale === activeLocale) return;

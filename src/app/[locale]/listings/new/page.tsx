@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
@@ -7,6 +8,7 @@ import { CategoryService } from "@/src/modules/categories/service";
 import { ListingWizardForm } from "@/src/components/listings/listing-wizard-form";
 import { getLocalizedRoute } from "@/src/lib/i18n/routes";
 import { getSession } from "@/src/modules/auth/session";
+import { serializeJsonLd } from "@/src/lib/security/json-ld";
 
 export async function generateMetadata({
   params,
@@ -16,9 +18,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const isTr = locale === "tr";
 
-  const title = isTr
-    ? "İlan Yayınla — Ücretsiz Sihirbaz"
-    : "Post a Listing — Free 5-Step Wizard";
+  const title = isTr ? "İlan Yayınla — Ücretsiz Sihirbaz" : "Post a Listing — Free 5-Step Wizard";
   const description = isTr
     ? "5 adımlı güvenli sihirbaz ile yazılım ve teknoloji ilanınızı ücretsiz yayınlayın, 7 gün boyunca doğrulanmış uzmanlardan doğrudan teklif alın."
     : "Publish your technology listing for free with our 5-step guided wizard and receive direct 1-to-1 proposals for 7 days.";
@@ -99,7 +99,7 @@ export default async function NewListingPage({ params }: { params: Promise<{ loc
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       {/* Navigation Breadcrumb */}
@@ -209,7 +209,15 @@ export default async function NewListingPage({ params }: { params: Promise<{ loc
 
       {/* Wizard Form */}
       <section aria-label={isTr ? "İlan Oluşturma Sihirbazı" : "Listing Creation Wizard"}>
-        <ListingWizardForm categories={categories} locale={locale} userId={session.userId} />
+        <Suspense
+          fallback={
+            <div className="mx-auto max-w-3xl rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 p-12 text-center text-sm text-[var(--color-text-secondary)] animate-pulse">
+              {isTr ? "İlan sihirbazı hazırlanıyor..." : "Preparing listing wizard..."}
+            </div>
+          }
+        >
+          <ListingWizardForm categories={categories} locale={locale} userId={session.userId} />
+        </Suspense>
       </section>
     </main>
   );

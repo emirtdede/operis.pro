@@ -43,12 +43,12 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     return NextResponse.json({ success: true, ...result }, { status: 200 });
   } catch (err: unknown) {
-    const message =
-      err instanceof Error
-        ? err.message
-        : isEn
-          ? "Failed to update project completion status."
-          : "İş birliği tamamlama durumu güncellenemedi.";
+    let message = isEn
+      ? "Failed to update project completion status."
+      : "İş birliği tamamlama durumu güncellenemedi.";
+    if (err instanceof Error) {
+      message = err.message;
+    }
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

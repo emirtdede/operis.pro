@@ -49,6 +49,27 @@ interface BatchResultItem {
   message?: string;
 }
 
+function getBatchSubmitButtonLabel(isSubmitting: boolean, count: number, isTr: boolean): string {
+  if (isSubmitting) {
+    return isTr ? "Teklifler İletiliyor..." : "Transmitting Proposals...";
+  }
+  return isTr ? `${count} Teklifi Gönder` : `Submit ${count} Proposals`;
+}
+
+function getResultDeliveryNote(isSuccess: boolean, fallbackMsg: string | undefined, isTr: boolean): string {
+  if (isSuccess) {
+    return isTr ? "AES-256 şifreli olarak ilan sahibine iletildi" : "Securely delivered to client";
+  }
+  return fallbackMsg || "";
+}
+
+function getResultStatusLabel(isSuccess: boolean, isTr: boolean): string {
+  if (isSuccess) {
+    return isTr ? "Başarılı" : "Success";
+  }
+  return isTr ? "Hata" : "Failed";
+}
+
 export function BatchOfferWizardModal({
   isOpen,
   onClose,
@@ -238,13 +259,10 @@ export function BatchOfferWizardModal({
       setFailedCount(data.failedCount || 0);
       setStep(3);
     } catch (err: unknown) {
-      setSubmitError(
-        err instanceof Error
-          ? err.message
-          : isTr
-            ? "Toplu işlem sırasında bir hata oluştu."
-            : "An error occurred during batch submission."
-      );
+      const defaultErr = isTr
+        ? "Toplu işlem sırasında bir hata oluştu."
+        : "An error occurred during batch submission.";
+      setSubmitError(err instanceof Error ? err.message : defaultErr);
     } finally {
       setIsSubmitting(false);
     }
@@ -674,15 +692,7 @@ export function BatchOfferWizardModal({
                 className="flex items-center gap-2 font-semibold shadow-lg shadow-blue-500/20"
               >
                 <Send className="h-4 w-4" />
-                <span>
-                  {isSubmitting
-                    ? isTr
-                      ? "Teklifler İletiliyor..."
-                      : "Transmitting Proposals..."
-                    : isTr
-                      ? `${selectedListings.length} Teklifi Gönder`
-                      : `Submit ${selectedListings.length} Proposals`}
-                </span>
+                <span>{getBatchSubmitButtonLabel(isSubmitting, selectedListings.length, isTr)}</span>
               </Button>
             </div>
           </div>
@@ -732,11 +742,7 @@ export function BatchOfferWizardModal({
                           {targetListing?.title || r.listingId}
                         </div>
                         <div className="text-[10px] text-[var(--color-text-tertiary)]">
-                          {isSuccess
-                            ? isTr
-                              ? "AES-256 şifreli olarak ilan sahibine iletildi"
-                              : "Securely delivered to client"
-                            : r.message || r.code}
+                          {getResultDeliveryNote(isSuccess, r.message || r.code, isTr)}
                         </div>
                       </div>
                     </div>
@@ -745,7 +751,7 @@ export function BatchOfferWizardModal({
                       variant={isSuccess ? "success" : "danger"}
                       className="text-[10px] shrink-0"
                     >
-                      {isSuccess ? (isTr ? "Başarılı" : "Success") : isTr ? "Hata" : "Failed"}
+                      {getResultStatusLabel(isSuccess, isTr)}
                     </Badge>
                   </div>
                 );

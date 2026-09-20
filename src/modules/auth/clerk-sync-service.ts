@@ -199,11 +199,20 @@ export class ClerkSyncService {
           .where(eq(schema.users.id, existingByClerkId.user.id));
       }
 
-      // Update avatar or display name if new avatar is provided and profile has none
-      if (input.avatarUrl && !existingByClerkId.profile?.avatarUrl) {
+      // Sync avatar from Google/Clerk whenever avatarSource is not 'custom'
+      if (
+        input.avatarUrl &&
+        existingByClerkId.profile &&
+        existingByClerkId.profile.avatarSource !== "custom" &&
+        existingByClerkId.profile.avatarUrl !== input.avatarUrl
+      ) {
         await db
           .update(schema.profiles)
-          .set({ avatarUrl: input.avatarUrl, updatedAt: new Date() })
+          .set({
+            avatarUrl: input.avatarUrl,
+            avatarSource: "oauth",
+            updatedAt: new Date(),
+          })
           .where(eq(schema.profiles.userId, existingByClerkId.user.id));
       }
 
@@ -257,10 +266,19 @@ export class ClerkSyncService {
         .set(userUpdates)
         .where(eq(schema.users.id, existingByEmail.user.id));
 
-      if (input.avatarUrl && !existingByEmail.profile?.avatarUrl) {
+      if (
+        input.avatarUrl &&
+        existingByEmail.profile &&
+        existingByEmail.profile.avatarSource !== "custom" &&
+        existingByEmail.profile.avatarUrl !== input.avatarUrl
+      ) {
         await db
           .update(schema.profiles)
-          .set({ avatarUrl: input.avatarUrl, updatedAt: new Date() })
+          .set({
+            avatarUrl: input.avatarUrl,
+            avatarSource: "oauth",
+            updatedAt: new Date(),
+          })
           .where(eq(schema.profiles.userId, existingByEmail.user.id));
       }
 
@@ -319,6 +337,7 @@ export class ClerkSyncService {
       handle: uniqueHandle,
       displayName,
       avatarUrl: input.avatarUrl || null,
+      avatarSource: "oauth",
       locale: "tr",
       theme: "dark",
     });

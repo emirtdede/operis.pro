@@ -87,8 +87,8 @@ describe("i18n Foundation & Catalogs", () => {
     expect(getAlternateLocalePath("/tr/work/eng-123", "en")).toBe("/en/workspace/eng-123");
 
     // Regional locales (en-US, tr-TR)
-    expect(getAlternateLocalePath("/tr/panel/ayarlar", "en-US")).toBe("/en/dashboard/settings");
-    expect(getAlternateLocalePath("/en/dashboard/settings", "tr-TR")).toBe("/tr/panel/ayarlar");
+    expect(getAlternateLocalePath("/tr/ayarlar", "en-US")).toBe("/en/settings");
+    expect(getAlternateLocalePath("/en/settings", "tr-TR")).toBe("/tr/ayarlar");
 
     // Legal
     expect(getAlternateLocalePath("/tr/yasal/kullanim-kosullari", "en")).toBe("/en/legal/terms");

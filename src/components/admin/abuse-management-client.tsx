@@ -17,6 +17,33 @@ import {
 import type { AdminAbuseItem } from "@/src/modules/admin/service";
 import { resolveReportAction, moderateUserAction } from "@/src/modules/admin/actions";
 
+const STATUS_TAB_LABELS: Record<string, string> = {
+  ALL: "Tümü",
+  OPEN: "Açık",
+  RESOLVED: "Çözüldü",
+  DISMISSED: "Geçersiz",
+};
+
+const STATUS_BADGE_CLASSES: Record<string, string> = {
+  OPEN: "bg-amber-500/10 text-amber-400 border-amber-500/30 animate-pulse",
+  RESOLVED: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
+};
+
+const ITEM_STATUS_LABELS: Record<string, string> = {
+  OPEN: "Açık / İncelemede",
+  RESOLVED: "Çözüldü",
+};
+
+function getReasonBadgeClass(reasonCode: string): string {
+  if (reasonCode.includes("PROFANITY")) {
+    return "bg-rose-500/10 text-rose-400 border border-rose-500/20";
+  }
+  if (reasonCode.includes("SPAM")) {
+    return "bg-amber-500/10 text-amber-400 border border-amber-500/20";
+  }
+  return "bg-blue-500/10 text-blue-400 border border-blue-500/20";
+}
+
 interface AbuseManagementClientProps {
   initialAbuseItems: AdminAbuseItem[];
 }
@@ -162,13 +189,7 @@ export function AbuseManagementClient({ initialAbuseItems }: AbuseManagementClie
                     : "text-slate-400 hover:text-white"
                 }`}
               >
-                {st === "ALL"
-                  ? "Tümü"
-                  : st === "OPEN"
-                    ? "Açık"
-                    : st === "RESOLVED"
-                      ? "Çözüldü"
-                      : "Geçersiz"}
+                {STATUS_TAB_LABELS[st] ?? "Geçersiz"}
               </button>
             ))}
           </div>
@@ -203,13 +224,7 @@ export function AbuseManagementClient({ initialAbuseItems }: AbuseManagementClie
                     <td className="px-4 py-3.5">
                       <div className="flex items-center gap-2">
                         <div
-                          className={`p-1.5 rounded-lg ${
-                            item.reasonCode.includes("PROFANITY")
-                              ? "bg-rose-500/10 text-rose-400 border border-rose-500/20"
-                              : item.reasonCode.includes("SPAM")
-                                ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                                : "bg-blue-500/10 text-blue-400 border border-blue-500/20"
-                          }`}
+                          className={`p-1.5 rounded-lg ${getReasonBadgeClass(item.reasonCode)}`}
                         >
                           <AlertTriangle className="h-3.5 w-3.5" />
                         </div>
@@ -263,18 +278,10 @@ export function AbuseManagementClient({ initialAbuseItems }: AbuseManagementClie
                     <td className="px-4 py-3.5">
                       <span
                         className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
-                          item.status === "OPEN"
-                            ? "bg-amber-500/10 text-amber-400 border-amber-500/30 animate-pulse"
-                            : item.status === "RESOLVED"
-                              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
-                              : "bg-slate-700/30 text-slate-400 border-slate-700"
+                          STATUS_BADGE_CLASSES[item.status] ?? "bg-slate-700/30 text-slate-400 border-slate-700"
                         }`}
                       >
-                        {item.status === "OPEN"
-                          ? "Açık / İncelemede"
-                          : item.status === "RESOLVED"
-                            ? "Çözüldü"
-                            : "Geçersiz"}
+                        {ITEM_STATUS_LABELS[item.status] ?? "Geçersiz"}
                       </span>
                     </td>
 

@@ -11,6 +11,7 @@ import {
 } from "@/src/components/dashboard/received-offers-dashboard";
 import { DashboardTabs } from "@/src/components/dashboard/dashboard-tabs";
 import { Button } from "@/src/components/ui/button";
+import { serializeJsonLd } from "@/src/lib/security/json-ld";
 
 export async function generateMetadata({
   params,
@@ -100,6 +101,9 @@ export default async function ReceivedOffersPage({
       estimatedDurationUnit: r.offer.estimatedDurationUnit,
       createdAt: r.offer.createdAt,
       engagementId: r.engagementId ?? null,
+      isSquadOffer: r.offer.isSquadOffer ?? false,
+      squadTitle: r.offer.squadTitle ?? null,
+      squadMembers: r.squadMembers ?? [],
     }));
 
     if (filterListingId) {
@@ -144,7 +148,7 @@ export default async function ReceivedOffersPage({
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       {/* Header */}

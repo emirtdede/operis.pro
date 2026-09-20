@@ -23,6 +23,7 @@ import {
 import { SEED_SECTORS, SEED_CATEGORIES } from "@/db/seeds/categories";
 import { Button } from "@/src/components/ui/button";
 import { SpotlightCard } from "@/src/components/ui/spotlight-card";
+import { serializeJsonLd } from "@/src/lib/security/json-ld";
 import { InteractiveArchitectureShowcase } from "@/src/components/diagrams/interactive-architecture-showcase";
 import { HowItWorksSection } from "@/src/components/onboarding/how-it-works-section";
 import { FaqAccordion } from "@/src/components/onboarding/faq-accordion";
@@ -191,9 +192,9 @@ export default async function LandingPage({
       },
       {
         "@type": "Organization",
-        "@id": "https://operis.pro/#organization",
-        name: "Operis Teknoloji Anonim Şirketi",
-        url: "https://operis.pro",
+        "@id": "https://vellium.dev/#organization",
+        name: "Vellium",
+        url: "https://vellium.dev",
         logo: "https://operis.pro/operis.svg",
         contactPoint: {
           "@type": "ContactPoint",
@@ -221,7 +222,7 @@ export default async function LandingPage({
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       {/* 1. Expansive Hero Section (Full Viewport Height & Centered) */}

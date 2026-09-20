@@ -3,6 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import { getSession } from "@/src/modules/auth/session";
 import { CategoryService } from "@/src/modules/categories/service";
 import { CategoryListInteractive } from "@/src/components/categories/category-list-interactive";
+import { serializeJsonLd } from "@/src/lib/security/json-ld";
 
 export async function generateMetadata({
   params,
@@ -123,7 +124,7 @@ export default async function CategoriesPage({
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       {/* Centered Hero Header */}

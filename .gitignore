@@ -43,3 +43,8 @@ next-env.d.ts
 
 .vercel
 .env*
+
+# Strix AI pentest artifacts & PoC logs
+strix_runs/
+.strix/
+strix.log

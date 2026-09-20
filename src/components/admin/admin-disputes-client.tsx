@@ -20,12 +20,23 @@ import {
   Briefcase,
 } from "lucide-react";
 import type { AdminDisputeItem } from "@/src/modules/admin/service";
+import { DisputeArbiterCard } from "./dispute-arbiter-card";
 
 interface AdminDisputesClientProps {
   initialDisputes: AdminDisputeItem[];
   total: number;
   currentPage?: number;
   totalPages?: number;
+}
+
+function getArbitrateButtonLabel(isSubmitting: boolean, decisionModal: string | null): string {
+  if (isSubmitting) {
+    return "Karar İşleniyor...";
+  }
+  if (decisionModal === "FORCE_COMPLETE") {
+    return "Hakem Kararıyla Tamamla";
+  }
+  return "Hakem Kararıyla İptal Et";
 }
 
 export function AdminDisputesClient({
@@ -491,6 +502,17 @@ export function AdminDisputesClient({
                 </div>
               </div>
 
+              {/* AI Dispute Arbiter & Evidence Report */}
+              <DisputeArbiterCard
+                engagementId={selectedDispute.id}
+                isAdmin={true}
+                locale="tr"
+                onAutofillDecision={(decision, suggestedNotes) => {
+                  setDecisionModal(decision);
+                  setAdminNotes(suggestedNotes);
+                }}
+              />
+
               {/* Arbitration Form */}
               <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-3">
                 <div className="flex items-center gap-2 text-xs font-semibold text-slate-200">
@@ -589,11 +611,7 @@ export function AdminDisputesClient({
                           : "bg-red-600 hover:bg-red-500"
                       }`}
                     >
-                      {isSubmitting
-                        ? "Karar İşleniyor..."
-                        : decisionModal === "FORCE_COMPLETE"
-                          ? "Hakem Kararıyla Tamamla"
-                          : "Hakem Kararıyla İptal Et"}
+                      {getArbitrateButtonLabel(isSubmitting, decisionModal)}
                     </button>
                   </>
                 )}

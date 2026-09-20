@@ -52,12 +52,12 @@ export async function POST(req: Request) {
 
     return NextResponse.json(batchResponse, { status });
   } catch (err: unknown) {
-    const message =
-      err instanceof Error
-        ? err.message
-        : isEn
-          ? "Batch proposal operation failed."
-          : "Toplu teklif işlemi başarısız oldu.";
+    let message = isEn
+      ? "Batch proposal operation failed."
+      : "Toplu teklif işlemi başarısız oldu.";
+    if (err instanceof Error) {
+      message = err.message;
+    }
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { LegalCenterClient } from "@/src/components/legal/legal-center-client";
+import { serializeJsonLd } from "@/src/lib/security/json-ld";
 
 export async function generateMetadata({
   params,
@@ -59,8 +60,8 @@ export default async function LegalCenterPage({ params }: { params: Promise<{ lo
       : "Directory of Operis platform user agreements, privacy notices, and trust guarantees.",
     publisher: {
       "@type": "Organization",
-      name: "Operis Teknoloji Anonim Şirketi",
-      url: "https://operis.pro",
+      name: "Vellium",
+      url: "https://vellium.dev",
     },
   };
 
@@ -69,7 +70,7 @@ export default async function LegalCenterPage({ params }: { params: Promise<{ lo
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       {/* Hero Header Section */}

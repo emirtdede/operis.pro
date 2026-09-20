@@ -195,7 +195,7 @@ export function Footer() {
         {/* Clean Sub-Footer Bar Without Duplicated Legal Links */}
         <div className="border-t border-[var(--color-border-subtle)] pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--color-text-tertiary)]">
           <p className="order-1 text-center sm:text-left">
-            © {currentYear} {common("appName")}. {t("rights")}
+            © {currentYear} Vellium. {common("appName")} {isTr ? "bir Vellium ürünüdür." : "is a product of Vellium."} {t("rights")}
           </p>
 
           <div className="order-2 flex flex-wrap items-center justify-center sm:justify-end gap-3 sm:gap-5">

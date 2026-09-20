@@ -26,12 +26,10 @@ export async function GET(req: Request) {
       trackedSkills: profile?.trackedSkills ?? [],
     });
   } catch (err: unknown) {
-    const message =
-      err instanceof Error
-        ? err.message
-        : isEn
-          ? "Failed to fetch radar skills"
-          : "Radar teknolojileri alınamadı";
+    let message = isEn ? "Failed to fetch radar skills" : "Radar teknolojileri alınamadı";
+    if (err instanceof Error) {
+      message = err.message;
+    }
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
@@ -119,8 +117,10 @@ export async function POST(req: Request) {
     });
   } catch (err: unknown) {
     const isEn = headerLocale === "en";
-    const message =
-      err instanceof Error ? err.message : isEn ? "Could not update radar" : "Radar güncellenemedi";
+    let message = isEn ? "Could not update radar" : "Radar güncellenemedi";
+    if (err instanceof Error) {
+      message = err.message;
+    }
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

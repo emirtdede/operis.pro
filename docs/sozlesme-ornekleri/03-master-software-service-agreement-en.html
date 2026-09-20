@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>OPR-CONTR-ENG2026G - Cross-Border FinTech Payment Gateway & Microservices Platform</title>
+  <style>
+    @page { size: A4; margin: 18mm; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.55;
+      color: #1a1a1a;
+      background: #ffffff;
+      margin: 0;
+      padding: 24px;
+    }
+    .header {
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .brand { font-size: 18pt; font-weight: 900; color: #0f172a; letter-spacing: -0.5px; }
+    .meta { font-size: 9pt; color: #64748b; text-align: right; }
+    h1 { font-size: 14pt; margin: 16px 0 8px; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; break-after: avoid-page; page-break-after: avoid; }
+    h2 { font-size: 12pt; margin: 16px 0 6px; color: #1e293b; break-after: avoid-page; page-break-after: avoid; }
+    h3 { font-size: 10.5pt; margin: 12px 0 4px; color: #334155; break-after: avoid-page; page-break-after: avoid; }
+    h4, h5, h6 { break-after: avoid-page; page-break-after: avoid; }
+    h1, h2, h3, h4, h5, h6,
+    .brand, .party-title, .clause-title, .section-title {
+      break-after: avoid-page !important;
+      page-break-after: avoid !important;
+    }
+    h1 + *, h2 + *, h3 + *, h4 + *, h5 + *, h6 + *,
+    .clause-title + *, .section-title + * {
+      break-before: avoid-page !important;
+      page-break-before: avoid !important;
+    }
+    p { margin: 6px 0; text-align: justify; }
+    p, li {
+      orphans: 3;
+      widows: 3;
+    }
+    .parties { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 14px 0; break-inside: avoid; page-break-inside: avoid; }
+    .party-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; font-size: 9.5pt; break-inside: avoid; page-break-inside: avoid; }
+    .party-title { font-weight: 700; color: #1e293b; margin-bottom: 4px; text-transform: uppercase; font-size: 8.5pt; letter-spacing: 0.5px; }
+    .clause-block { break-inside: avoid !important; page-break-inside: avoid !important; margin: 14px 0; }
+    .sha-seal {
+      margin-top: 24px;
+      background: #f1f5f9;
+      border: 1px dashed #94a3b8;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-family: monospace;
+      font-size: 8.5pt;
+      word-break: break-all;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .signature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 36px; page-break-inside: avoid; break-inside: avoid; }
+    .signature-box { border-top: 1px solid #0f172a; padding-top: 8px; font-size: 9pt; break-inside: avoid; page-break-inside: avoid; }
+    ul { margin: 4px 0; padding-left: 20px; }
+    li { margin: 2px 0; }
+    @media print {
+      body { padding: 0; }
+      .no-print { display: none; }
+      h1, h2, h3, h4, h5, h6 { break-after: avoid-page !important; page-break-after: avoid !important; }
+      .clause-block, .safe-harbor-item, .safe-harbor-header, .safe-harbor-summary,
+      .party-card, .parties, .sha-seal, .signature-grid, .signature-box, table, tr {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <div class="brand">OPERIS</div>
+      <div style="font-size: 8pt; color: #64748b; margin-top: 2px;">Independent Software & Technology Services Agreement Infrastructure</div>
+    </div>
+    <div class="meta">
+      <div><strong>Ref:</strong> OPR-CONTR-ENG2026G</div>
+      <div><strong>Tarih:</strong> September 10, 2026</div>
+      <div><strong>Durum:</strong> Hukuken Bağlayıcı Belge</div>
+    </div>
+  </div>
+
+  <h1>INDEPENDENT SOFTWARE & TECHNOLOGY SERVICES AGREEMENT</h1>
+  <p style="font-size: 9pt; color: #64748b;">
+    Executed pursuant to Turkish Code of Obligations (Art. 470 et seq.) and Law on Intellectual Property (Art. 52).
+  </p>
+
+  <div class="parties">
+    <div class="party-card">
+      <div class="party-title">CLIENT</div>
+      <div><strong>VentureWave Capital Ltd.</strong></div>
+      <div>legal@venturewave.io</div>
+      <div>+44 20 7946 0912</div>
+    </div>
+    <div class="party-card">
+      <div class="party-title">CONTRACTOR</div>
+      <div><strong>Can Demir (Kıdemli Yazılım Mimarı)</strong></div>
+      <div>can.demir@devmail.com</div>
+      <div>+90 (532) 555 1234</div>
+    </div>
+  </div>
+
+  
+
+  <div class="clause-block">
+    <h3>1. Scope & Deliverables</h3>
+    <p><strong>Cross-Border FinTech Payment Gateway & Microservices Platform</strong>: Design, development, and production rollout of PCI-DSS compliant cross-border payment gateway microservices.</p>
+  </div>
+
+  <div class="clause-block">
+    <h3>2. Milestone Schedule</h3>
+    <ul>
+      <li><strong>%30 (1. Aşama):</strong> System Architecture, Database Modeling & Auth Layer (PostgreSQL schema design, Next.js 16 scaffolding, AES-256 data protection and RBAC auth.)</li>
+      <li><strong>%40 (2. Aşama):</strong> Financial Analytics Engine & Reporting APIs (High-throughput data pipeline, webhook dispatchers and automated PDF/CSV export engine.)</li>
+      <li><strong>%30 (3. Aşama):</strong> User Acceptance Testing (UAT), CI/CD Deployment & IP Transfer (Production deployment, FSEK Art. 52 statutory IP transfer deed and full repository handover.)</li>
+    </ul>
+    
+<div class="tax-breakdown-table" style="margin: 14px 0; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; break-inside: avoid; page-break-inside: avoid;">
+  <div style="background-color: #f1f5f9; padding: 8px 12px; font-weight: 700; font-size: 11px; color: #0f172a; border-bottom: 1px solid #cbd5e1; display: flex; justify-content: space-between; break-after: avoid-page; page-break-after: avoid;">
+    <span>STATUTORY TAX & PAYMENT BREAKDOWN TABLE</span>
+    <span style="font-family: monospace; color: #0284c7;">OFFICIAL SETTLEMENT</span>
+  </div>
+  <table style="width: 100%; border-collapse: collapse; font-size: 11px; line-height: 1.4;">
+    <thead style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+      <tr>
+        <th style="padding: 6px 10px; text-align: left; color: #475569;">Financial Item</th>
+        <th style="padding: 6px 10px; text-align: center; color: #475569;">Rate</th>
+        <th style="padding: 6px 10px; text-align: right; color: #475569;">Amount</th>
+        <th style="padding: 6px 10px; text-align: left; color: #475569;">Notice</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid #e2e8f0; background-color: #ffffff;">
+        <td style="padding: 6px 10px; font-weight: 600; color: #0f172a;">1. Agreed Gross Service Fee</td>
+        <td style="padding: 6px 10px; text-align: center; color: #64748b;">Gross</td>
+        <td style="padding: 6px 10px; text-align: right; font-weight: 700; font-family: monospace; color: #0f172a;">18,500.00 $</td>
+        <td style="padding: 6px 10px; color: #64748b;">Contractually agreed gross consideration</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #e2e8f0; background-color: #fffbeb;">
+        <td style="padding: 6px 10px; font-weight: 600; color: #b45309;">2. Income Tax Withholding (GVK 94)</td>
+        <td style="padding: 6px 10px; text-align: center; color: #b45309;">0%</td>
+        <td style="padding: 6px 10px; text-align: right; font-weight: 700; font-family: monospace; color: #b45309;">-0.00 $</td>
+        <td style="padding: 6px 10px; color: #92400e;">Remitted directly to tax office by Client</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #e2e8f0; background-color: #f0fdf4;">
+        <td style="padding: 6px 10px; font-weight: 600; color: #15803d;">3. Net Professional Earnings</td>
+        <td style="padding: 6px 10px; text-align: center; color: #15803d;">Net</td>
+        <td style="padding: 6px 10px; text-align: right; font-weight: 700; font-family: monospace; color: #15803d;">18,500.00 $</td>
+        <td style="padding: 6px 10px; color: #166534;">Contractor net take-home earnings (Gross - Tax)</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #e2e8f0; background-color: #eff6ff;">
+        <td style="padding: 6px 10px; font-weight: 600; color: #1d4ed8;">4. Value Added Tax (VAT)</td>
+        <td style="padding: 6px 10px; text-align: center; color: #1d4ed8;">0%</td>
+        <td style="padding: 6px 10px; text-align: right; font-weight: 700; font-family: monospace; color: #1d4ed8;">+0.00 $</td>
+        <td style="padding: 6px 10px; color: #1e40af;">Fiduciary payment; remitted via VAT return</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #cbd5e1; background-color: #f8fafc;">
+        <td style="padding: 8px 10px; font-weight: 700; color: #0f172a;">5. Direct Bank Wire Settlement</td>
+        <td style="padding: 8px 10px; text-align: center; font-weight: 600;">Net + VAT</td>
+        <td style="padding: 8px 10px; text-align: right; font-weight: 700; font-family: monospace; font-size: 12px; color: #0f172a;">18,500.00 $</td>
+        <td style="padding: 8px 10px; font-weight: 600; color: #334155;">Net cash wired to Contractor IBAN account</td>
+      </tr>
+      <tr style="background-color: #f1f5f9;">
+        <td style="padding: 6px 10px; font-weight: 600; color: #475569;">6. Total Client Cash Outflow</td>
+        <td style="padding: 6px 10px; text-align: center; color: #64748b;">Gross + VAT</td>
+        <td style="padding: 6px 10px; text-align: right; font-weight: 700; font-family: monospace; color: #475569;">18,500.00 $</td>
+        <td style="padding: 6px 10px; color: #64748b;">Direct Wire + Tax Withholding Remittance</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+  </div>
+
+  
+  <div class="clause-block" style="margin: 20px 0; border: 1px solid #cbd5e1; background: #f8fafc; border-radius: 8px; padding: 14px; break-inside: avoid; page-break-inside: avoid;">
+    <div style="font-weight: 700; color: #0f172a; font-size: 10pt; margin-bottom: 8px; break-after: avoid-page; page-break-after: avoid;">
+      📋 ANNEX-1: Objective Acceptance Criteria (TBK Art. 470/474)
+    </div>
+    <div style="font-size: 8.5pt; color: #475569; margin-bottom: 10px;">
+      Pursuant to TBK Art. 474, non-defective acceptance is bound to the following objective conditions. Subjective rejection is barred.
+    </div>
+    <table style="width: 100%; border-collapse: collapse; font-size: 8.5pt;">
+      <thead>
+        <tr style="background: #e2e8f0; text-align: left;">
+          <th style="border: 1px solid #cbd5e1; padding: 6px 8px; width: 60px;">Phase</th>
+          <th style="border: 1px solid #cbd5e1; padding: 6px 8px;">Acceptance Requirement</th>
+          <th style="border: 1px solid #cbd5e1; padding: 6px 8px;">BDD Scenario</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; font-weight: 600;">Faz 1</td>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px;"><strong>User authentication, MFA, and RBAC must function end-to-end.</strong></td>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px; font-family: monospace; font-size: 8pt; color: #334155;">GIVEN Given a user enters valid email, password, and 2FA token<br>WHEN When the user clicks the login button<br>THEN Then a signed JWT session must be created and user redirected to authorized dashboard.</td>
+        </tr><tr>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; font-weight: 600;">Faz 2</td>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px;"><strong>Financial reporting engine must export 100k records to CSV/PDF under 1.5s.</strong></td>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px; font-family: monospace; font-size: 8pt; color: #334155;">GIVEN Given the database holds 100,000 transaction records<br>WHEN When the user triggers 'Download Period Report'<br>THEN Then a digitally signed PDF must stream within 1.5s without exceeding 40% CPU.</td>
+        </tr><tr>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; font-weight: 600;">Faz 3</td>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px;"><strong>All source code must achieve 85%+ unit test coverage passing green on CI/CD.</strong></td>
+          <td style="border: 1px solid #cbd5e1; padding: 6px 8px; font-family: monospace; font-size: 8pt; color: #334155;">GIVEN Given a release tag is pushed to the main branch<br>WHEN When lint and integration test suites run<br>THEN Then zero critical vulnerabilities must be detected and automated staging deployment succeed.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+<div class="dpa-annex" style="margin: 20px 0; border: 1px solid #c7d2fe; background: #eef2ff; border-radius: 8px; padding: 14px; font-size: 8.5pt; break-inside: avoid; page-break-inside: avoid;">
+  <div style="font-weight: 700; color: #3730a3; font-size: 10pt; margin-bottom: 6px; break-after: avoid-page; page-break-after: avoid;">
+    🛡️ ANNEX-2: Data Processing Addendum (KVKK Art. 12 & GDPR Art. 28 Compliant)
+  </div>
+  <div style="font-size: 8pt; color: #4338ca; margin-bottom: 8px;">
+    Risk Tier: <strong>MEDIUM (39/100)</strong> | Breach SLA: <strong>24h</strong> | Sub-processor: <strong>Written Consent Required</strong>
+  </div>
+  <table style="width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 8pt; background: #ffffff;">
+    <thead>
+      <tr style="background: #e0e7ff; text-align: left;">
+        <th style="border: 1px solid #c7d2fe; padding: 5px 8px; width: 45%;">Data Categories</th>
+        <th style="border: 1px solid #c7d2fe; padding: 5px 8px; width: 55%;">Technical Safeguards</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="border: 1px solid #c7d2fe; padding: 6px 8px; vertical-align: top;">
+          • Identity & Contact<br>• Account & Logs<br>• Financial & Orders
+        </td>
+        <td style="border: 1px solid #c7d2fe; padding: 6px 8px; vertical-align: top;">
+          ✓ TLS 1.3 In-Transit<br>✓ AES-256 At-Rest<br>✓ 2FA/MFA Required<br>✓ Audit Logging
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+  
+<div class="safe-harbor-annex" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e293b; margin-top: 32px; padding: 24px; border: 1px solid #cbd5e1; border-radius: 8px; background-color: #ffffff;">
+  <div class="safe-harbor-header" style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #e2e8f0; padding-bottom: 16px; margin-bottom: 20px; break-after: avoid-page; page-break-after: avoid;">
+    <div>
+      <h3 style="margin: 0; font-size: 18px; color: #0f172a; break-after: avoid-page; page-break-after: avoid;">
+        ANNEX-3: Independent Contractor Safe Harbor Protocol
+      </h3>
+      <p style="margin: 4px 0 0 0; font-size: 12px; color: #64748b;">
+        Compliant with TBK Art. 470, Labor Law No. 4857 Art. 8 & SGK Law No. 5510
+      </p>
+    </div>
+    <div style="background-color: #059669; color: #ffffff; padding: 6px 12px; border-radius: 9999px; font-size: 12px; font-weight: 700; text-align: right; white-space: nowrap;">
+      SAFE HARBOR (LOW RISK) (0/100)
+    </div>
+  </div>
+
+  <div class="safe-harbor-summary" style="background-color: #f8fafc; border-left: 4px solid #059669; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; line-height: 1.5; color: #334155; break-after: avoid-page; page-break-after: avoid; break-inside: avoid; page-break-inside: avoid;">
+    <strong>Court of Cassation Risk Assessment:</strong> Safe Harbor (Score: 0/100): The commercial relationship strictly conforms to TBK Art. 470 independent contract standards. Risk of disguised employment under Labor Law No. 4857 is minimal.
+  </div>
+
+  <div class="safe-harbor-clauses" style="font-size: 13px; line-height: 1.6; color: #334155;">
+    <div class="safe-harbor-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 14px;">
+      <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 14px; break-after: avoid-page; page-break-after: avoid;">
+        1. Legal Status & Rejection of Employment
+      </h4>
+      <p style="margin: 0; text-align: justify;">
+        The parties confirm this contract constitutes an independent Contract for Work under TBK Art. 470, strictly excluding any employment relationship under Labor Law No. 4857.
+      </p>
+    </div>
+
+    <div class="safe-harbor-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 14px;">
+      <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 14px; break-after: avoid-page; page-break-after: avoid;">
+        2. Schedule, Location & Methodology Autonomy
+      </h4>
+      <p style="margin: 0; text-align: justify;">
+        The Contractor autonomously dictates working hours and physical location. The Client shall not mandate daily schedules or surveillance software.
+      </p>
+    </div>
+
+    <div class="safe-harbor-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 14px;">
+      <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 14px; break-after: avoid-page; page-break-after: avoid;">
+        3. Equipment & Tool Autonomy (BYOD)
+      </h4>
+      <p style="margin: 0; text-align: justify;">
+        The Contractor provides all developer hardware and software independently (BYOD). Client environments serve exclusively for acceptance testing.
+      </p>
+    </div>
+
+    <div class="safe-harbor-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 14px;">
+      <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 14px; break-after: avoid-page; page-break-after: avoid;">
+        4. Absence of Managerial Hierarchy
+      </h4>
+      <p style="margin: 0; text-align: justify;">
+        The Client possesses no supervisory hierarchy over the Contractor. Oversight is strictly confined to deliverable BDD/DoD acceptance criteria.
+      </p>
+    </div>
+
+    <div class="safe-harbor-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 14px;">
+      <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 14px; break-after: avoid-page; page-break-after: avoid;">
+        5. Non-Exclusivity & Concurrent Client Freedom
+      </h4>
+      <p style="margin: 0; text-align: justify;">
+        The Contractor is entirely free to perform technical services for third parties concurrently without restriction.
+      </p>
+    </div>
+
+    <div class="safe-harbor-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 14px;">
+      <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 14px; break-after: avoid-page; page-break-after: avoid;">
+        6. Social Security (SGK 4/b) & Severance Exclusions
+      </h4>
+      <p style="margin: 0; text-align: justify;">
+        Contractor bears sole responsibility for SGK 4/b self-employed coverage and taxes. Claims for severance, notice pay, or paid leave are expressly waived.
+      </p>
+    </div>
+
+    <div class="safe-harbor-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 6px;">
+      <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 14px; break-after: avoid-page; page-break-after: avoid;">
+        7. Evidence Agreement & Jurisdiction
+      </h4>
+      <p style="margin: 0; text-align: justify;">
+        Pursuant to HMK Art. 193, disputes shall be submitted exclusively to the competent <strong>Courts of İstanbul</strong>.
+      </p>
+    </div>
+  </div>
+</div>
+
+  
+    <div style="page-break-before: always; break-before: page; margin-top: 40px; padding-top: 24px; border-top: 2px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; break-after: avoid-page; page-break-after: avoid;">
+        <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a; break-after: avoid-page; page-break-after: avoid;">
+          ANNEX-4: AI-ASSISTED CODE IP & WARRANTY PROTOCOL
+        </h3>
+        <span style="background: #059669; color: #ffffff; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600; text-transform: uppercase; white-space: nowrap;">
+          PRISTINE_IP_SAFE (10/100)
+        </span>
+      </div>
+
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 14px; margin-bottom: 20px; font-size: 12px; color: #334155; line-height: 1.6; break-after: avoid-page; page-break-after: avoid; break-inside: avoid; page-break-inside: avoid;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div><strong>Statutory Bases:</strong> 5846 s. FSEK m. 52, EU AI Act m. 50/53, 6098 s. TBK m. 474</div>
+          <div><strong>Evidence Status:</strong> 6100 s. HMK m. 193 Münhasır Delil</div>
+          <div><strong>Declared AI Tools:</strong> GITHUB_COPILOT, CLAUDE_CODE, CURSOR</div>
+          <div><strong>Human-in-the-Loop:</strong> Affirmed (Valid Assignment)</div>
+        </div>
+      </div>
+
+      <div class="ai-governance-clauses" style="font-size: 12px; color: #1e293b; line-height: 1.7;">
+        <div class="ai-governance-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 12px;">
+          <p style="margin: 0; text-align: justify;"><strong>1. TRANSPARENCY & STATUTORY DISCLOSURE:</strong> The Contractor warrants full disclosure of all generative AI tooling deployed in accordance with EU AI Act Art. 50 transparency obligations.</p>
+        </div>
+
+        <div class="ai-governance-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 12px;">
+          <p style="margin: 0; text-align: justify;"><strong>2. HUMAN-IN-THE-LOOP & VALID IP ASSIGNMENT:</strong> The architectural design and logic originate from human engineer intellect under FSEK Art. 1/B. All economic rights are irrevocably transferred pursuant to FSEK Art. 52.</p>
+        </div>
+
+        <div class="ai-governance-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 12px;">
+          <p style="margin: 0; text-align: justify;"><strong>3. ANTI-COPYLEFT LICENSE HYGIENE:</strong> The Contractor warrants the proprietary codebase free of viral copyleft (GPL/AGPL) contamination.</p>
+        </div>
+
+        <div class="ai-governance-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 12px;">
+          <p style="margin: 0; text-align: justify;"><strong>4. ZERO DATA RETENTION (NO TRAINING):</strong> Client trade secrets and schemas are strictly excluded from public AI training corpuses.</p>
+        </div>
+
+        <div class="ai-governance-item" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 6px;">
+          <p style="margin: 0; text-align: justify;"><strong>5. DEFECT & HALLUCINATION WARRANTY (TBK ART. 474):</strong> AI hallucinations and defects constitute contractor defects under statutory law, remediable at contractor cost.</p>
+        </div>
+      </div>
+    </div>
+    
+  
+  <div style="margin: 20px 0; border: 1px solid #0d9488; background: #f0fdfa; border-radius: 8px; padding: 14px; page-break-inside: avoid;">
+    <div style="font-weight: 700; color: #0f766e; font-size: 10pt; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+      <span>🌍 ANNEX-5: Cross-Border Software Export 100% Tax Incentive & Zero-VAT Protocol</span>
+      <span style="background: #ccfbf1; color: #0f766e; padding: 2px 8px; border-radius: 4px; font-size: 8pt; font-family: monospace;">GİB Kod 302</span>
+    </div>
+    <div style="font-size: 8.5pt; color: #115e59; margin-bottom: 10px; line-height: 1.5;">
+      Pursuant to Law No. 7491 and Decree No. 11257, 100% of export revenues are deductible from taxable income, and invoiced at 0% VAT.
+    </div>
+    <table style="width: 100%; border-collapse: collapse; font-size: 8.5pt; margin-bottom: 8px;">
+      <tbody>
+        <tr style="border-bottom: 1px solid #99f6e4;">
+          <td style="padding: 4px 6px; font-weight: 600; width: 35%;">Client Country:</td>
+          <td style="padding: 4px 6px;">Almanya (Yurt Dışı / Non-Resident)</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #99f6e4;">
+          <td style="padding: 4px 6px; font-weight: 600;">Place of Utilization:</td>
+          <td style="padding: 4px 6px;">Exclusively Outside Turkey (Export of Services)</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #99f6e4;">
+          <td style="padding: 4px 6px; font-weight: 600;">Tax Exemption Code:</td>
+          <td style="padding: 4px 6px;"><strong>302 - Hizmet İhracatı</strong> (%0 KDV & %0 Stopaj)</td>
+        </tr>
+        <tr>
+          <td style="padding: 4px 6px; font-weight: 600;">FX Repatriation & Evidentiary Proof:</td>
+          <td style="padding: 4px 6px;">Repatriation to Turkish bank verified prior to annual tax filing.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  
+  
+
+  <div class="clause-block">
+    <h3>3. Statutory IP Rights Transfer (FSEK Art. 52)</h3>
+    <p>Subject to full payment, all economic rights under FSEK Art. 21 (Adaptation), Art. 22 (Reproduction), Art. 23 (Distribution), Art. 24 (Performance), and Art. 25 (Communication to the Public) are exclusively transferred to the Client.</p>
+  </div>
+
+  <div class="clause-block">
+    <h3>4. Inspection & Revisions</h3>
+    <p>The Client shall complete inspection within 7 business days. Up to 2 revision rounds are included; scope creep requires a separate addendum.</p>
+  </div>
+
+  <div class="clause-block">
+    <h3>5. Confidentiality, Warranty & Mediation</h3>
+    <p>Confidentiality persists for 3 years. Defect warranty covers 30 days. Mandatory mediation applies prior to litigation; jurisdiction is Istanbul.</p>
+  </div>
+
+  <div class="sha-seal">
+    <div><strong>DİJİTAL SÖZLEŞME GÜVENLİK MÜHRÜ (SHA-256):</strong></div>
+    <div>8e47d82965b9c99b67e4bd594c2513ad00d6b06e1a55ea5c1befb9cc93bff91e</div>
+    <div style="font-size: 7.5pt; margin-top: 2px;">Document integrity verified via Operis deterministic cryptographic seal.</div>
+  </div>
+
+  <div class="signature-grid">
+    <div class="signature-box">
+      <div><strong>İŞ SAHİBİ (MÜŞTERİ)</strong></div>
+      <div style="margin-top: 4px; font-weight: 600;">VentureWave Capital Ltd.</div>
+      <div style="margin-top: 24px; color: #94a3b8;">İmza / Kaşe: ____________________</div>
+      <div style="font-size: 7.5pt; color: #64748b; margin-top: 6px;">
+        Tarih: September 10, 2026
+      </div>
+    </div>
+    <div class="signature-box">
+      <div><strong>YÜKLENİCİ (GELİŞTİRİCİ)</strong></div>
+      <div style="margin-top: 4px; font-weight: 600;">Can Demir (Kıdemli Yazılım Mimarı)</div>
+      <div style="margin-top: 24px; color: #94a3b8;">İmza / Kaşe: ____________________</div>
+      <div style="font-size: 7.5pt; color: #64748b; margin-top: 6px;">
+        Tarih: September 10, 2026
+      </div>
+    </div>
+  </div>
+</body>
+</html>

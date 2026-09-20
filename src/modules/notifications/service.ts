@@ -1,9 +1,10 @@
 import crypto from "node:crypto";
-import { and, desc, eq, inArray, isNull, lte, or, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, isNull, lte, or, sql, gt } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
 import { EmailAdapter } from "@/src/lib/email";
 
 import { inMemoryFallbackNotifications } from "./in-memory";
+import { notificationPubSub } from "./pubsub";
 
 export type NotificationType =
   | "EMAIL_VERIFIED"
@@ -29,7 +30,22 @@ export type NotificationType =
   | "RADAR_MATCH"
   | "ENDORSEMENT_RECEIVED"
   | "COMMUNICATION_PING"
-  | "OFFER_WITHDRAWN";
+  | "OFFER_WITHDRAWN"
+  | "OFFER_COUNTERED"
+  | "REVIEWS_REVEALED"
+  | "REVIEW_PENDING_COUNTERPARTY"
+  | "HANDOVER_DELIVERED"
+  | "HANDOVER_ACCEPTED"
+  | "HANDOVER_REVISION_REQUESTED"
+  | "CHANGE_REQUEST_CREATED"
+  | "CHANGE_REQUEST_APPROVED"
+  | "CHANGE_REQUEST_REJECTED"
+  | "PAYMENT_DECLARED"
+  | "PAYMENT_REVERTED"
+  | "PAYMENT_CONFIRMED"
+  | "PAYMENT_DISPUTED"
+  | "CONTRACT_PACKAGE_SIGNED"
+  | "CONTRACT_PACKAGE_FULLY_EXECUTED";
 
 type TransactionContext = Parameters<Parameters<ReturnType<typeof getDb>["transaction"]>[0]>[0];
 
@@ -143,6 +159,16 @@ export class NotificationService {
           })
           .catch(() => {});
       }
+      if (result) {
+        notificationPubSub.emitNotification(userId, {
+          id: result.id,
+          userId: result.userId,
+          type: result.type,
+          payloadJson: (result.payloadJson as Record<string, unknown>) || {},
+          readAt: result.readAt ? result.readAt.toISOString() : null,
+          createdAt: result.createdAt instanceof Date ? result.createdAt.toISOString() : String(result.createdAt),
+        });
+      }
       return result;
     } catch (err) {
       if (txContext || process.env.NODE_ENV === "production") {
@@ -157,6 +183,14 @@ export class NotificationService {
         createdAt: new Date().toISOString(),
       };
       inMemoryFallbackNotifications.unshift(newNotif);
+      notificationPubSub.emitNotification(userId, {
+        id: newNotif.id,
+        userId: newNotif.userId,
+        type: newNotif.type,
+        payloadJson: (newNotif.payloadJson as Record<string, unknown>) || {},
+        readAt: null,
+        createdAt: newNotif.createdAt,
+      });
       return {
         id: newNotif.id,
         userId,
@@ -445,13 +479,59 @@ export class NotificationService {
               ? `Platform Bildirimi: ${event.type}`
               : `Platform Notification: ${event.type}`);
 
-          const body = customMessage
-            ? locale === "tr"
+          const isTr = locale === "tr";
+          let body = "";
+          if (customMessage) {
+            body = isTr
               ? `Merhaba,\n\n${customMessage}\n\nDetayları Operis platformu üzerinden görüntüleyebilirsiniz.`
-              : `Hello,\n\n${customMessage}\n\nYou can view full details on the Operis platform.`
-            : locale === "tr"
+              : `Hello,\n\n${customMessage}\n\nYou can view full details on the Operis platform.`;
+          } else {
+            body = isTr
               ? `Merhaba,\n\nHesabınızda yeni bir işlem gerçekleşti: ${event.type}.\nDetayları platform üzerinden görüntüleyebilirsiniz.`
               : `Hello,\n\nA new activity occurred on your account: ${event.type}.\nYou can view details on the platform.`;
+          }
+
+          // Sliding-Window Frequency Capping for CATEGORY_FOLLOW_MATCH job alerts
+          if (event.type === "CATEGORY_FOLLOW_MATCH") {
+            const fourHoursAgo = new Date(Date.now() - 4 * 60 * 60 * 1000);
+            const recentSentRows = await db
+              .select({ id: schema.outboxEvents.id })
+              .from(schema.outboxEvents)
+              .where(
+                and(
+                  eq(schema.outboxEvents.type, "CATEGORY_FOLLOW_MATCH"),
+                  eq(schema.outboxEvents.status, "SENT"),
+                  sql`(${schema.outboxEvents.payloadJson}->>'recipientUserId') = ${recipientUserId}`,
+                  sql`COALESCE((${schema.outboxEvents.payloadJson}->>'skippedReason'), '') = ''`,
+                  gt(schema.outboxEvents.createdAt, fourHoursAgo)
+                )
+              )
+              .limit(3);
+
+            if (recentSentRows.length >= 3) {
+              // Frequency capped: skip email delivery, retain in-app notification
+              await db
+                .update(schema.outboxEvents)
+                .set({
+                  status: "SENT",
+                  attemptCount: event.attemptCount + 1,
+                  leaseToken: null,
+                  leaseUntil: null,
+                  payloadJson: {
+                    ...payload,
+                    skippedReason: "FREQUENCY_CAPPED_4H",
+                  },
+                })
+                .where(
+                  and(
+                    eq(schema.outboxEvents.id, event.id),
+                    eq(schema.outboxEvents.leaseToken, workerLeaseToken)
+                  )
+                );
+              processedCount++;
+              continue;
+            }
+          }
 
           const sentOk = await EmailAdapter.sendTransactionalEmail({
             to: recipientEmail,
@@ -462,6 +542,19 @@ export class NotificationService {
             idempotencyKey: event.deliveryKey
               ? `outbox_${event.deliveryKey}`
               : `outbox_${event.id}`,
+            variables: {
+              subject,
+              body,
+              title: customTitle || subject,
+              listingTitle: typeof payload.title === "string" ? payload.title : "",
+              categoryName: typeof payload.categoryName === "string" ? payload.categoryName : "",
+              budget: typeof payload.budget === "string" ? payload.budget : "",
+              timeline: typeof payload.timeline === "string" ? payload.timeline : "",
+              summary: typeof payload.summary === "string" ? payload.summary : "",
+              tags: typeof payload.tags === "string" ? payload.tags : "",
+              relevanceBadge: typeof payload.relevanceBadge === "string" ? payload.relevanceBadge : "",
+              actionUrl: typeof payload.actionUrl === "string" ? payload.actionUrl : "",
+            },
           });
 
           if (!sentOk) {

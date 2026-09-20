@@ -4,9 +4,21 @@ interface BrandLogoProps {
   showText?: boolean;
 }
 
+function getLogoNumericHeight(size: number | "sm" | "md" | "lg"): number {
+  if (typeof size === "number") {
+    return size;
+  }
+  if (size === "sm") {
+    return 24;
+  }
+  if (size === "lg") {
+    return 40;
+  }
+  return 32;
+}
+
 export function BrandLogo({ className = "", size = "md", showText = true }: BrandLogoProps) {
-  const numericHeight =
-    typeof size === "number" ? size : size === "sm" ? 24 : size === "lg" ? 40 : 32;
+  const numericHeight = getLogoNumericHeight(size);
 
   const numericWidth = Math.round(numericHeight * (350 / 112));
 

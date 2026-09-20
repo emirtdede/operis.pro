@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var m=document.cookie.match(/(?:^|; )fp_theme=([^;]*)/);var t=m?decodeURIComponent(m[1]):(localStorage.getItem('fp_theme_pref')||localStorage.getItem('fp_theme')||'dark');if(t!=='light'&&t!=='dark'&&t!=='black'){t='dark';}document.documentElement.setAttribute('data-theme',t);if(t==='dark'||t==='black'){document.documentElement.classList.add('dark');}else{document.documentElement.classList.remove('dark');}}catch(e){}})();`,
+            __html: `(function(){try{const m=document.cookie.match(/(?:^|; )fp_theme=([^;]*)/);let t=m?decodeURIComponent(m[1]):(localStorage.getItem('fp_theme_pref')||localStorage.getItem('fp_theme')||'dark');if(t!=='light'&&t!=='dark'&&t!=='black'){t='dark';}document.documentElement.setAttribute('data-theme',t);if(t==='dark'||t==='black'){document.documentElement.classList.add('dark');}else{document.documentElement.classList.remove('dark');}}catch(e){}})();`,
           }}
         />
       </head>

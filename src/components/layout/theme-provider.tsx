@@ -17,8 +17,8 @@ const THEME_COOKIE_KEY = "fp_theme";
 export function ThemeScript() {
   const code = `(function() {
     try {
-      var cookieTheme = document.cookie.match(/(?:^|; )fp_theme=([^;]*)/);
-      var theme = cookieTheme ? decodeURIComponent(cookieTheme[1]) : null;
+      const cookieTheme = document.cookie.match(/(?:^|; )fp_theme=([^;]*)/);
+      let theme = cookieTheme ? decodeURIComponent(cookieTheme[1]) : null;
       if (!theme) {
         theme = localStorage.getItem("${THEME_STORAGE_KEY}") || localStorage.getItem("fp_theme");
       }
@@ -50,8 +50,11 @@ export function ThemeProvider({
     try {
       const cookieMatch = document.cookie.match(/(?:^|; )fp_theme=([^;]*)/);
       const cookieTheme = cookieMatch?.[1] ? (decodeURIComponent(cookieMatch[1]) as Theme) : null;
-      const stored = (cookieTheme || localStorage.getItem(THEME_STORAGE_KEY) || localStorage.getItem("fp_theme")) as Theme | null;
-      const finalTheme = stored && (stored === "light" || stored === "dark" || stored === "black") ? stored : "dark";
+      const stored = (cookieTheme ||
+        localStorage.getItem(THEME_STORAGE_KEY) ||
+        localStorage.getItem("fp_theme")) as Theme | null;
+      const finalTheme =
+        stored && (stored === "light" || stored === "dark" || stored === "black") ? stored : "dark";
       setThemeState(finalTheme);
       document.documentElement.setAttribute("data-theme", finalTheme);
       if (finalTheme === "dark" || finalTheme === "black") {

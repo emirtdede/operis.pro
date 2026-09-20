@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Eye, MousePointerClick, History } from "lucide-react";
+import { Eye, MousePointerClick, History, Copy } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { EmptyState } from "../ui/empty-state";
@@ -32,6 +32,25 @@ export interface OwnerListingsDashboardProps {
   initialListings: OwnerListingItem[];
   locale: string;
   hasLoadError?: boolean;
+}
+
+const LISTING_STATUS_BADGE_VARIANTS: Record<string, "primary" | "secondary" | "outline"> = {
+  ACTIVE: "primary",
+  MATCHED: "secondary",
+};
+
+function getOwnerTabLabel(
+  tabKey: "all" | "active" | "inactive" | "matched",
+  isTr: boolean
+): string {
+  const LABELS: Record<"all" | "active" | "inactive" | "matched", { tr: string; en: string }> = {
+    all: { tr: "Tümü", en: "All" },
+    active: { tr: "Aktif (1 Hafta)", en: "Active (1-Week)" },
+    inactive: { tr: "Pasif / Süresi Dolanlar", en: "Inactive / Expired" },
+    matched: { tr: "Eşleşenler", en: "Matched" },
+  };
+  const item = LABELS[tabKey];
+  return isTr ? item.tr : item.en;
 }
 
 export function OwnerListingsDashboard({
@@ -147,6 +166,85 @@ export function OwnerListingsDashboard({
     }
   };
 
+  const renderEmptyState = () => {
+    if (tab === "inactive") {
+      return (
+        <EmptyState
+          title={isTr ? "Süresi Dolan veya Pasif İlan Yok" : "No Inactive or Expired Listings"}
+          description={
+            isTr
+              ? "Süresi dolmuş veya durdurulmuş bir ilanınız bulunmuyor. Aktif ilanlarınızı 'Aktif' sekmesinden inceleyebilirsiniz."
+              : "You have no expired or paused listings. Check active listings to see your live projects."
+          }
+          action={
+            <Button variant="secondary" onClick={() => setTab("active")}>
+              {isTr ? "Aktif İlanları Gör" : "View Active Listings"}
+            </Button>
+          }
+        />
+      );
+    }
+    if (tab === "matched") {
+      return (
+        <EmptyState
+          title={isTr ? "Eşleşen İlan Bulunmuyor" : "No Matched Listings"}
+          description={
+            isTr
+              ? "Henüz bir bağımsız profesyonelle eşleşen projeniz yok. İlanlarınıza gelen teklifleri 'Gelen Teklifler' alanından değerlendirebilirsiniz."
+              : "No listings have matched with a professional yet. Review proposals in incoming offers."
+          }
+          action={
+            <Link href={isTr ? "/tr/panel/teklifler/gelen" : "/en/dashboard/offers/received"}>
+              <Button variant="secondary">
+                {isTr ? "Gelen Teklifleri İncele" : "Review Incoming Offers"}
+              </Button>
+            </Link>
+          }
+        />
+      );
+    }
+    if (tab === "active") {
+      return (
+        <EmptyState
+          title={isTr ? "Aktif İlan Bulunmuyor" : "No Active Listings"}
+          description={
+            isTr
+              ? "Şu anda radarımızda canlı olan bir ilanınız yok. Yeni bir ilan yayınlayarak bağımsız mühendislerden doğrudan teklif alabilirsiniz."
+              : "You currently have no active listings on our radar. Post a listing to get direct proposals."
+          }
+          action={
+            <Link href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"}>
+              <Button variant="primary">
+                {isTr ? "Yeni İlan Yayınla" : "Publish Listing"}
+              </Button>
+            </Link>
+          }
+        />
+      );
+    }
+    return (
+      <EmptyState
+        title={
+          isTr
+            ? "Henüz Bir İlan Yayınlamadınız"
+            : "You Haven't Published Any Listings Yet"
+        }
+        description={
+          isTr
+            ? "%100 komisyonsuz ve doğrudan iletişimle ilanınız için bağımsız mühendis arayışınızı hemen başlatabilirsiniz."
+            : "Start finding independent engineers directly with 0% commission cut."
+        }
+        action={
+          <Link href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"}>
+            <Button variant="primary">
+              {isTr ? "+ İlk İlanınızı Yayınlayın" : "+ Post Your First Listing"}
+            </Button>
+          </Link>
+        }
+      />
+    );
+  };
+
   return (
     <div className="space-y-6">
       {hasLoadError && (
@@ -175,21 +273,7 @@ export function OwnerListingsDashboard({
                 : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
             }`}
           >
-            {t === "all"
-              ? isTr
-                ? "Tümü"
-                : "All"
-              : t === "active"
-                ? isTr
-                  ? "Aktif (1 Hafta)"
-                  : "Active (1-Week)"
-                : t === "inactive"
-                  ? isTr
-                    ? "Pasif / Süresi Dolanlar"
-                    : "Inactive / Expired"
-                  : isTr
-                    ? "Eşleşenler"
-                    : "Matched"}
+            {getOwnerTabLabel(t, isTr)}
           </button>
         ))}
       </div>
@@ -203,73 +287,7 @@ export function OwnerListingsDashboard({
       {/* Listings Table / Cards */}
       {filteredListings.length === 0 ? (
         <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-8 sm:p-12 text-center shadow-sm">
-          {tab === "inactive" ? (
-            <EmptyState
-              title={isTr ? "Süresi Dolan veya Pasif İlan Yok" : "No Inactive or Expired Listings"}
-              description={
-                isTr
-                  ? "Süresi dolmuş veya durdurulmuş bir ilanınız bulunmuyor. Aktif ilanlarınızı 'Aktif' sekmesinden inceleyebilirsiniz."
-                  : "You have no expired or paused listings. Check active listings to see your live projects."
-              }
-              action={
-                <Button variant="secondary" onClick={() => setTab("active")}>
-                  {isTr ? "Aktif İlanları Gör" : "View Active Listings"}
-                </Button>
-              }
-            />
-          ) : tab === "matched" ? (
-            <EmptyState
-              title={isTr ? "Eşleşen İlan Bulunmuyor" : "No Matched Listings"}
-              description={
-                isTr
-                  ? "Henüz bir bağımsız profesyonelle eşleşen projeniz yok. İlanlarınıza gelen teklifleri 'Gelen Teklifler' alanından değerlendirebilirsiniz."
-                  : "No listings have matched with a professional yet. Review proposals in incoming offers."
-              }
-              action={
-                <Link href={isTr ? "/tr/panel/teklifler/gelen" : "/en/dashboard/offers/received"}>
-                  <Button variant="secondary">
-                    {isTr ? "Gelen Teklifleri İncele" : "Review Incoming Offers"}
-                  </Button>
-                </Link>
-              }
-            />
-          ) : tab === "active" ? (
-            <EmptyState
-              title={isTr ? "Aktif İlan Bulunmuyor" : "No Active Listings"}
-              description={
-                isTr
-                  ? "Şu anda radarımızda canlı olan bir ilanınız yok. Yeni bir ilan yayınlayarak bağımsız mühendislerden doğrudan teklif alabilirsiniz."
-                  : "You currently have no active listings on our radar. Post a listing to get direct proposals."
-              }
-              action={
-                <Link href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"}>
-                  <Button variant="primary">
-                    {isTr ? "Yeni İlan Yayınla" : "Publish Listing"}
-                  </Button>
-                </Link>
-              }
-            />
-          ) : (
-            <EmptyState
-              title={
-                isTr
-                  ? "Henüz Bir İlan Yayınlamadınız"
-                  : "You Haven't Published Any Listings Yet"
-              }
-              description={
-                isTr
-                  ? "%100 komisyonsuz ve doğrudan iletişimle ilanınız için bağımsız mühendis arayışınızı hemen başlatabilirsiniz."
-                  : "Start finding independent engineers directly with 0% commission cut."
-              }
-              action={
-                <Link href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"}>
-                  <Button variant="primary">
-                    {isTr ? "+ İlk İlanınızı Yayınlayın" : "+ Post Your First Listing"}
-                  </Button>
-                </Link>
-              }
-            />
-          )}
+          {renderEmptyState()}
         </div>
       ) : (
         <div className="space-y-4">
@@ -286,13 +304,7 @@ export function OwnerListingsDashboard({
                 <div className="space-y-1.5 flex-1">
                   <div className="flex items-center gap-2">
                     <Badge
-                      variant={
-                        listing.status === "ACTIVE"
-                          ? "primary"
-                          : listing.status === "MATCHED"
-                            ? "secondary"
-                            : "outline"
-                      }
+                      variant={LISTING_STATUS_BADGE_VARIANTS[listing.status] ?? "outline"}
                       size="sm"
                     >
                       {listing.status}
@@ -390,6 +402,24 @@ export function OwnerListingsDashboard({
                     <History className="mr-1.5 h-3.5 w-3.5" />
                     {isTr ? "Revizyonlar" : "Revisions"}
                   </Button>
+
+                  <Link
+                    href={
+                      isTr
+                        ? `/tr/ilanlar/yeni?cloneFrom=${listing.id}`
+                        : `/en/listings/new?cloneFrom=${listing.id}`
+                    }
+                  >
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      title={isTr ? "İlanı Klonla & Yeni Taslak Aç" : "Duplicate & Edit Listing"}
+                      className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10 cursor-pointer"
+                    >
+                      <Copy className="mr-1.5 h-3.5 w-3.5 text-cyan-400" />
+                      {isTr ? "Klonla" : "Duplicate"}
+                    </Button>
+                  </Link>
 
                   {listing.status === "ACTIVE" && (
                     <Button

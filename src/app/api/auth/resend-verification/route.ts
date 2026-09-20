@@ -61,11 +61,12 @@ export async function POST(req: Request) {
 
     // Target-specific shared rate limiting (1 request per 60s per user or email via Postgres)
     const targetPurpose = "auth:resend:target";
-    const targetSubject = session?.userId
-      ? `usr_${session.userId}`
-      : email
-        ? `email_${email.toLowerCase().trim()}`
-        : `ip_${ip}`;
+    let targetSubject = `ip_${ip}`;
+    if (session?.userId) {
+      targetSubject = `usr_${session.userId}`;
+    } else if (email) {
+      targetSubject = `email_${email.toLowerCase().trim()}`;
+    }
 
     const limitCheck = await checkRateLimitAsync(targetPurpose, targetSubject, 1, 60 * 1000);
     if (!limitCheck.success) {
@@ -309,14 +310,15 @@ export async function POST(req: Request) {
     const isEn = isEnHeader;
 
     if (err instanceof PhoneVerificationError) {
+      let errMessage = err.message;
+      if (err.code === "DB_UNAVAILABLE") {
+        errMessage = isEn
+          ? "Database service temporarily unavailable."
+          : "Veritabanı servisine geçici olarak erişilemiyor.";
+      }
       return NextResponse.json(
         {
-          error:
-            err.code === "DB_UNAVAILABLE"
-              ? isEn
-                ? "Database service temporarily unavailable."
-                : "Veritabanı servisine geçici olarak erişilemiyor."
-              : err.message,
+          error: errMessage,
         },
         { status: err.status }
       );

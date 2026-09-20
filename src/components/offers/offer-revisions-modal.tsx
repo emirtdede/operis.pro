@@ -28,6 +28,20 @@ interface OfferRevisionsModalProps {
   locale?: string;
 }
 
+function formatRevisionBudget(snapshot: Record<string, unknown>, isTr: boolean): string {
+  if (snapshot.budgetMin) {
+    return `${snapshot.budgetMin} - ${snapshot.budgetMax} ${snapshot.budgetCurrency || "TRY"}`;
+  }
+  return isTr ? "Belirtilmemiş" : "Not specified";
+}
+
+function formatRevisionDuration(snapshot: Record<string, unknown>, isTr: boolean): string {
+  if (snapshot.estimatedDurationValue) {
+    return `${snapshot.estimatedDurationValue} ${snapshot.estimatedDurationUnit || ""}`;
+  }
+  return isTr ? "Belirtilmemiş" : "Not specified";
+}
+
 export function OfferRevisionsModal({
   offerId,
   isOpen,
@@ -75,6 +89,66 @@ export function OfferRevisionsModal({
 
   if (!isOpen) return null;
 
+  const renderSidebarContent = () => {
+    if (isLoading) {
+      return (
+        <div className="p-4 text-center text-xs text-slate-500">
+          {isTr ? "Yükleniyor..." : "Loading..."}
+        </div>
+      );
+    }
+    if (error) {
+      return (
+        <div className="p-3 text-xs text-red-400 flex items-center gap-1.5">
+          <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+          <span>{error}</span>
+        </div>
+      );
+    }
+    if (revisions.length === 0) {
+      return (
+        <div className="p-4 text-center text-xs text-slate-500">
+          {isTr ? "Henüz kayıtlı bir teklif revizyonu yok." : "No offer revisions recorded."}
+        </div>
+      );
+    }
+    return revisions.map((rev) => {
+      const isSelected = selectedRevision?.id === rev.id;
+      return (
+        <button
+          key={rev.id}
+          type="button"
+          onClick={() => setSelectedRevision(rev)}
+          className={`w-full text-left p-2.5 rounded-xl transition-all flex items-center justify-between text-xs ${
+            isSelected
+              ? "bg-blue-600/20 text-blue-300 border border-blue-500/30 font-medium"
+              : "text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent"
+          }`}
+        >
+          <div className="space-y-0.5">
+            <div className="font-semibold text-white flex items-center gap-1.5">
+              <span className="font-mono text-[11px] px-1.5 py-0.2 rounded bg-slate-800 text-blue-400">
+                v{rev.revisionNo}
+              </span>
+              <span>
+                {isTr ? "Sürüm" : "Version"} #{rev.revisionNo}
+              </span>
+            </div>
+            <div className="text-[10px] text-slate-500 flex items-center gap-1">
+              <Clock className="h-2.5 w-2.5" />
+              <span>
+                {new Date(rev.createdAt).toLocaleDateString(
+                  locale === "tr" ? "tr-TR" : "en-US"
+                )}
+              </span>
+            </div>
+          </div>
+          <ChevronRight className="h-3.5 w-3.5 opacity-50" />
+        </button>
+      );
+    });
+  };
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200"
@@ -94,16 +168,17 @@ export function OfferRevisionsModal({
               <p className="text-[11px] text-slate-400">
                 {isTr
                   ? "Bu teklifte zaman içinde yapılan bütçe, süre ve mesaj değişikliklerini inceleyin."
-                  : "Review changes made to proposal budget, timeline, and message."}
+                  : "Review historical budget, timeline, and message adjustments made to this offer."}
               </p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
+            className="text-slate-400 hover:text-white p-1 rounded-lg transition-colors cursor-pointer"
+            aria-label={isTr ? "Kapat" : "Close"}
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
@@ -115,56 +190,7 @@ export function OfferRevisionsModal({
               {isTr ? "Sürüm Listesi" : "Version History"}
             </div>
 
-            {isLoading ? (
-              <div className="p-4 text-center text-xs text-slate-500">
-                {isTr ? "Yükleniyor..." : "Loading..."}
-              </div>
-            ) : error ? (
-              <div className="p-3 text-xs text-red-400 flex items-center gap-1.5">
-                <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-                <span>{error}</span>
-              </div>
-            ) : revisions.length === 0 ? (
-              <div className="p-4 text-center text-xs text-slate-500">
-                {isTr ? "Henüz kayıtlı bir teklif revizyonu yok." : "No offer revisions recorded."}
-              </div>
-            ) : (
-              revisions.map((rev) => {
-                const isSelected = selectedRevision?.id === rev.id;
-                return (
-                  <button
-                    key={rev.id}
-                    type="button"
-                    onClick={() => setSelectedRevision(rev)}
-                    className={`w-full text-left p-2.5 rounded-xl transition-all flex items-center justify-between text-xs ${
-                      isSelected
-                        ? "bg-blue-600/20 text-blue-300 border border-blue-500/30 font-medium"
-                        : "text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent"
-                    }`}
-                  >
-                    <div className="space-y-0.5">
-                      <div className="font-semibold text-white flex items-center gap-1.5">
-                        <span className="font-mono text-[11px] px-1.5 py-0.2 rounded bg-slate-800 text-blue-400">
-                          v{rev.revisionNo}
-                        </span>
-                        <span>
-                          {isTr ? "Sürüm" : "Version"} #{rev.revisionNo}
-                        </span>
-                      </div>
-                      <div className="text-[10px] text-slate-500 flex items-center gap-1">
-                        <Clock className="h-2.5 w-2.5" />
-                        <span>
-                          {new Date(rev.createdAt).toLocaleDateString(
-                            locale === "tr" ? "tr-TR" : "en-US"
-                          )}
-                        </span>
-                      </div>
-                    </div>
-                    <ChevronRight className="h-3.5 w-3.5 opacity-50" />
-                  </button>
-                );
-              })
-            )}
+            {renderSidebarContent()}
           </div>
 
           {/* Selected Revision Snapshot Preview */}
@@ -195,11 +221,7 @@ export function OfferRevisionsModal({
                       {isTr ? "Teklif Edilen Bütçe" : "Proposed Budget"}
                     </span>
                     <div className="text-sm font-bold text-white font-mono">
-                      {selectedRevision.snapshotJson.budgetMin
-                        ? `${selectedRevision.snapshotJson.budgetMin} - ${selectedRevision.snapshotJson.budgetMax} ${selectedRevision.snapshotJson.budgetCurrency || "TRY"}`
-                        : isTr
-                          ? "Belirtilmemiş"
-                          : "Not specified"}
+                      {formatRevisionBudget(selectedRevision.snapshotJson, isTr)}
                     </div>
                   </div>
 
@@ -209,11 +231,7 @@ export function OfferRevisionsModal({
                       {isTr ? "Tahmini Teslim Süresi" : "Estimated Duration"}
                     </span>
                     <div className="text-sm font-bold text-white font-mono">
-                      {selectedRevision.snapshotJson.estimatedDurationValue
-                        ? `${selectedRevision.snapshotJson.estimatedDurationValue} ${selectedRevision.snapshotJson.estimatedDurationUnit || ""}`
-                        : isTr
-                          ? "Belirtilmemiş"
-                          : "Not specified"}
+                      {formatRevisionDuration(selectedRevision.snapshotJson, isTr)}
                     </div>
                   </div>
                 </div>

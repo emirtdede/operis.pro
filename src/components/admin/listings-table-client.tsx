@@ -23,6 +23,49 @@ interface ListingsTableClientProps {
   totalPages?: number;
 }
 
+function renderListingStatusBadge(status: string) {
+  if (status === "ACTIVE") {
+    return (
+      <span className="px-2 py-0.5 rounded text-[10px] font-semibold border bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+        AKTİF
+      </span>
+    );
+  }
+  if (status === "HIDDEN_MODERATION") {
+    return (
+      <span className="px-2 py-0.5 rounded text-[10px] font-semibold border bg-amber-500/10 text-amber-400 border-amber-500/20">
+        GİZLENDİ
+      </span>
+    );
+  }
+  if (status === "DELETED") {
+    return (
+      <span className="px-2 py-0.5 rounded text-[10px] font-semibold border bg-rose-500/10 text-rose-400 border-rose-500/20">
+        SİLİNDİ (SOFT)
+      </span>
+    );
+  }
+  if (status === "MATCHED") {
+    return (
+      <span className="px-2 py-0.5 rounded text-[10px] font-semibold border bg-purple-500/10 text-purple-400 border-purple-500/20">
+        EŞLEŞTİ
+      </span>
+    );
+  }
+  if (status === "COMPLETED") {
+    return (
+      <span className="px-2 py-0.5 rounded text-[10px] font-semibold border bg-blue-500/10 text-blue-400 border-blue-500/20">
+        TAMAMLANDI
+      </span>
+    );
+  }
+  return (
+    <span className="px-2 py-0.5 rounded text-[10px] font-semibold border bg-slate-800 text-slate-400 border-slate-700">
+      SÜRESİ DOLDU
+    </span>
+  );
+}
+
 export function ListingsTableClient({
   initialListings,
   total,
@@ -227,31 +270,7 @@ export function ListingsTableClient({
                   </td>
 
                   <td className="py-3 px-4">
-                    {item.status === "ACTIVE" ? (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold border bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
-                        AKTİF
-                      </span>
-                    ) : item.status === "HIDDEN_MODERATION" ? (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold border bg-amber-500/10 text-amber-400 border-amber-500/20">
-                        GİZLENDİ
-                      </span>
-                    ) : item.status === "DELETED" ? (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold border bg-rose-500/10 text-rose-400 border-rose-500/20">
-                        SİLİNDİ (SOFT)
-                      </span>
-                    ) : item.status === "MATCHED" ? (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold border bg-purple-500/10 text-purple-400 border-purple-500/20">
-                        EŞLEŞTİ
-                      </span>
-                    ) : item.status === "COMPLETED" ? (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold border bg-blue-500/10 text-blue-400 border-blue-500/20">
-                        TAMAMLANDI
-                      </span>
-                    ) : (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold border bg-slate-800 text-slate-400 border-slate-700">
-                        SÜRESİ DOLDU
-                      </span>
-                    )}
+                    {renderListingStatusBadge(item.status)}
                   </td>
 
                   <td className="py-3 px-4">

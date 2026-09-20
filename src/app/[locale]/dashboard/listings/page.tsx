@@ -10,7 +10,9 @@ import {
   OwnerListingItem,
 } from "@/src/components/dashboard/owner-listings-dashboard";
 import { DashboardTabs } from "@/src/components/dashboard/dashboard-tabs";
+import { MandatoryReviewBanner } from "@/src/components/dashboard/mandatory-review-banner";
 import { Button } from "@/src/components/ui/button";
+import { serializeJsonLd } from "@/src/lib/security/json-ld";
 
 export async function generateMetadata({
   params,
@@ -131,7 +133,7 @@ export default async function DashboardListingsPage({
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       {/* Header */}
@@ -154,6 +156,9 @@ export default async function DashboardListingsPage({
           </Button>
         </Link>
       </header>
+
+      {/* Mandatory Review Prompt for Completed Engagements */}
+      <MandatoryReviewBanner locale={locale} />
 
       {/* Unified Dashboard Navigation Tabs */}
       <DashboardTabs locale={locale} counts={{ listings: initialListings.length }} />

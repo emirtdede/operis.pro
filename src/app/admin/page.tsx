@@ -17,7 +17,15 @@ export const metadata: Metadata = {
   description: "Operis operasyonel yönetim, moderasyon merkezi ve siber güvenlik denetim konsolu.",
 };
 
-export const dynamic = "force-dynamic";
+function getThreatSeverityBadgeClass(severity: string): string {
+  if (severity === "CRITICAL") {
+    return "bg-red-500/20 text-red-400 border-red-500/40";
+  }
+  if (severity === "HIGH") {
+    return "bg-orange-500/20 text-orange-400 border-orange-500/40";
+  }
+  return "bg-blue-500/20 text-blue-400 border-blue-500/40";
+}
 
 export default async function AdminDashboardPage() {
   const metrics = await AdminService.getDashboardMetrics();
@@ -234,13 +242,7 @@ export default async function AdminDashboardPage() {
                   <div className="flex items-center gap-2">
                     <span className="font-mono font-bold text-red-400">{threat.sourceIp}</span>
                     <span
-                      className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold border ${
-                        threat.severity === "CRITICAL"
-                          ? "bg-red-500/20 text-red-400 border-red-500/40"
-                          : threat.severity === "HIGH"
-                            ? "bg-orange-500/20 text-orange-400 border-orange-500/40"
-                            : "bg-blue-500/20 text-blue-400 border-blue-500/40"
-                      }`}
+                      className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold border ${getThreatSeverityBadgeClass(threat.severity)}`}
                     >
                       {threat.severity}
                     </span>

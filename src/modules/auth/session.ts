@@ -286,8 +286,8 @@ export async function bumpUserAuthVersion(userId: string, tx?: unknown): Promise
   try {
     const { getDb, schema } = await import("@/src/lib/db");
     const { eq, sql } = await import("drizzle-orm");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const client = (tx as any) || getDb();
+    const db = getDb();
+    const client = (tx as ReturnType<typeof getDb>) || db;
     const [updated] = await client
       .update(schema.users)
       .set({

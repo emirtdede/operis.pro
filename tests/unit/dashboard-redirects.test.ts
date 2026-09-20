@@ -23,12 +23,12 @@ describe("Dashboard and Panel Redirects & Aliases in Proxy", () => {
     expect(res?.headers.get("location")).toBe("https://operis.com/tr/panel/ilanlarim");
   });
 
-  it("redirects /tr/ayarlar to /tr/panel/ayarlar with 301", async () => {
-    const req = makeRequest("https://operis.com/tr/ayarlar");
+  it("redirects /tr/panel/ayarlar to /tr/ayarlar with 301", async () => {
+    const req = makeRequest("https://operis.com/tr/panel/ayarlar");
     const res = await proxy(req);
     expect(res).toBeDefined();
     expect(res?.status).toBe(301);
-    expect(res?.headers.get("location")).toBe("https://operis.com/tr/panel/ayarlar");
+    expect(res?.headers.get("location")).toBe("https://operis.com/tr/ayarlar");
   });
 
   it("redirects /tr/guvenlik to /tr/panel/guvenlik with 301", async () => {
@@ -53,5 +53,21 @@ describe("Dashboard and Panel Redirects & Aliases in Proxy", () => {
     expect(res).toBeDefined();
     expect(res?.status).toBe(301);
     expect(res?.headers.get("location")).toBe("https://operis.com/tr/panel/kategorilerim");
+  });
+
+  it("redirects /tr/dashboard/saved to /tr/panel/kaydedilenler with 301", async () => {
+    const req = makeRequest("https://operis.com/tr/dashboard/saved");
+    const res = await proxy(req);
+    expect(res).toBeDefined();
+    expect(res?.status).toBe(301);
+    expect(res?.headers.get("location")).toBe("https://operis.com/tr/panel/kaydedilenler");
+  });
+
+  it("redirects /tr/dashboard/work to /tr/panel/aktif-isler with 301", async () => {
+    const req = makeRequest("https://operis.com/tr/dashboard/work");
+    const res = await proxy(req);
+    expect(res).toBeDefined();
+    expect(res?.status).toBe(301);
+    expect(res?.headers.get("location")).toBe("https://operis.com/tr/panel/aktif-isler");
   });
 });

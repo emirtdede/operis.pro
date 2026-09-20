@@ -108,12 +108,10 @@ export async function POST(req: Request) {
     return response;
   } catch (err: unknown) {
     const isEn = (req.headers.get("x-locale") || "tr") === "en";
-    let message =
-      err instanceof Error
-        ? err.message
-        : isEn
-          ? "Registration failed"
-          : "Kayıt işlemi başarısız oldu";
+    let message = isEn ? "Registration failed" : "Kayıt işlemi başarısız oldu";
+    if (err instanceof Error) {
+      message = err.message;
+    }
 
     if (!isEn) {
       if (message.includes("email address already exists")) {

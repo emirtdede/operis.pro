@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, memo } from "react";
+import { useState, useMemo, memo } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -10,7 +10,11 @@ import {
   Check,
 } from "lucide-react";
 import { AvatarInitials } from "../ui/avatar-initials";
+import { VerifiedCompanyBadge } from "../ui/verified-company-badge";
 import { FeedListingItem } from "@/src/modules/listings/feed/service";
+import { HiringIntentBadge } from "../listings/hiring-intent-badge";
+import { HiringIntentModal } from "../listings/hiring-intent-modal";
+import { HiringIntentEngine } from "@/src/modules/listings/hiring-intent/hiring-intent-engine";
 
 export interface SocialListingCardProps {
   item: FeedListingItem;
@@ -57,6 +61,28 @@ export const SocialListingCard = memo(function SocialListingCard({
 }: SocialListingCardProps) {
   const isTr = locale === "tr";
   const [copied, setCopied] = useState(false);
+  const [isIntentModalOpen, setIsIntentModalOpen] = useState(false);
+
+  const intentBreakdown = useMemo(() => {
+    return HiringIntentEngine.evaluateHiringIntent({
+      listingId: item.id,
+      title: item.title,
+      summary: item.summary,
+      scope: item.summary,
+      budgetMin: item.budgetMin,
+      budgetMax: item.budgetMax,
+      budgetCurrency: item.budgetCurrency,
+      budgetMode: item.budgetMode,
+      ownerProfile: {
+        isCompanyVerified: item.ownerIsCompanyVerified,
+        companyName: item.ownerCompanyName,
+        companyType: item.ownerCompanyType,
+        taxOffice: item.ownerTaxOffice,
+        vknMasked: item.ownerVknMasked,
+      },
+      locale,
+    });
+  }, [item, locale]);
 
   // Freshness calculation
   const now = new Date();
@@ -147,6 +173,16 @@ export const SocialListingCard = memo(function SocialListingCard({
               <span className="font-semibold text-sm text-[var(--color-text-primary)] truncate">
                 {item.ownerDisplayName}
               </span>
+              {item.ownerIsCompanyVerified && (
+                <VerifiedCompanyBadge
+                  size="xs"
+                  companyName={item.ownerCompanyName}
+                  taxOffice={item.ownerTaxOffice}
+                  vknMasked={item.ownerVknMasked}
+                  companyType={item.ownerCompanyType}
+                  isEn={!isTr}
+                />
+              )}
               <span className="text-[var(--color-text-tertiary)] truncate">
                 @{item.ownerHandle}
               </span>
@@ -158,6 +194,14 @@ export const SocialListingCard = memo(function SocialListingCard({
               <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-blue-500/10 text-sky-400 border border-blue-500/20">
                 {item.categoryName}
               </span>
+              <HiringIntentBadge
+                score={intentBreakdown.overallScore}
+                level={intentBreakdown.level}
+                breakdown={intentBreakdown}
+                compact={true}
+                locale={locale}
+                onClick={() => setIsIntentModalOpen(true)}
+              />
             </div>
 
             {/* Freshness indicator */}
@@ -260,6 +304,14 @@ export const SocialListingCard = memo(function SocialListingCard({
           </div>
         </div>
       </div>
+
+      <HiringIntentModal
+        isOpen={isIntentModalOpen}
+        onClose={() => setIsIntentModalOpen(false)}
+        breakdown={intentBreakdown}
+        listingTitle={item.title}
+        locale={locale}
+      />
     </article>
   );
 });

@@ -15,6 +15,8 @@ export interface CategoryDto {
   sectorKey?: string;
   parentId?: string | null;
   isFollowed?: boolean;
+  emailAlerts?: boolean;
+  minBudget?: number | null;
   listingCount?: number;
 }
 
@@ -33,6 +35,11 @@ export interface SectorDto {
 
 // In-memory fallback follows when DB is offline or unseeded
 const inMemoryFollows = new Map<string, Set<string>>();
+interface InMemoAlertPrefs {
+  emailAlerts: boolean;
+  minBudget: number | null;
+}
+const inMemoryAlertPrefs = new Map<string, Map<string, InMemoAlertPrefs>>();
 
 export function getDeterministicUuid(key: string): string {
   const hash = crypto.createHash("md5").update(`operis-cat-${key}`).digest("hex");
@@ -57,6 +64,8 @@ function getFallbackCategories(locale: Locale, userId?: string, countMap?: Map<s
       isActive: true,
       listingCount: countMap?.get(catId) || countMap?.get(cat.key) || 0,
       isFollowed: userFollows ? userFollows.has(catId) || userFollows.has(cat.key) : false,
+      emailAlerts: userFollows ? userFollows.has(catId) || userFollows.has(cat.key) : undefined,
+      minBudget: null,
     };
   });
 }
@@ -206,14 +215,23 @@ export class CategoryService {
           }
         }
 
-        // 3. If authenticated user, fetch private follows
-        let followedSet = new Set<string>();
+        // 3. If authenticated user, fetch private follows and alert prefs
+        const followedMap = new Map<string, { emailAlerts: boolean; minBudget: number | null }>();
         if (userId) {
           const followRows = await db
-            .select({ categoryId: schema.categoryFollows.categoryId })
+            .select({
+              categoryId: schema.categoryFollows.categoryId,
+              emailAlerts: schema.categoryFollows.emailAlerts,
+              minBudget: schema.categoryFollows.minBudget,
+            })
             .from(schema.categoryFollows)
             .where(eq(schema.categoryFollows.userId, userId));
-          followedSet = new Set(followRows.map((f) => f.categoryId));
+          for (const f of followRows) {
+            followedMap.set(f.categoryId, {
+              emailAlerts: f.emailAlerts,
+              minBudget: f.minBudget,
+            });
+          }
         }
 
         const seedCategoryMap = new Map<string, string>();
@@ -224,6 +242,7 @@ export class CategoryService {
         return categoryRows.map((cat) => {
           const trans = transMap.get(cat.id) ||
             trFallbackMap.get(cat.id) || { name: cat.key, description: null };
+          const followData = userId ? followedMap.get(cat.id) : undefined;
           return {
             id: cat.id,
             key: cat.key,
@@ -234,7 +253,9 @@ export class CategoryService {
             sortOrder: cat.sortOrder,
             isActive: cat.isActive,
             listingCount: countMap.get(cat.id) || countMap.get(cat.key) || 0,
-            isFollowed: userId ? followedSet.has(cat.id) : undefined,
+            isFollowed: followData !== undefined,
+            emailAlerts: followData?.emailAlerts,
+            minBudget: followData?.minBudget,
           };
         });
       }
@@ -323,6 +344,97 @@ export class CategoryService {
         userSet.add(catUuid);
         return true;
       }
+    }
+  }
+
+  /**
+   * Updates job alert preferences for a followed category (email alerts on/off, min budget threshold).
+   */
+  static async updateAlertPreferences(
+    userId: string,
+    categoryId: string,
+    preferences: { emailAlerts?: boolean; minBudget?: number | null }
+  ): Promise<{ success: boolean; emailAlerts: boolean; minBudget: number | null }> {
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(categoryId);
+    try {
+      const db = getDb();
+      const categoryRows = await db
+        .select({ id: schema.categories.id })
+        .from(schema.categories)
+        .where(isUuid ? eq(schema.categories.id, categoryId) : eq(schema.categories.key, categoryId))
+        .limit(1);
+
+      if (categoryRows.length === 0) {
+        throw new Error("Category not found");
+      }
+
+      const targetId = categoryRows[0]!.id;
+      const updateData: { emailAlerts?: boolean; minBudget?: number | null } = {};
+      if (typeof preferences.emailAlerts === "boolean") {
+        updateData.emailAlerts = preferences.emailAlerts;
+      }
+      if (preferences.minBudget !== undefined) {
+        updateData.minBudget = preferences.minBudget;
+      }
+
+      const existing = await db
+        .select()
+        .from(schema.categoryFollows)
+        .where(
+          and(
+            eq(schema.categoryFollows.userId, userId),
+            eq(schema.categoryFollows.categoryId, targetId)
+          )
+        )
+        .limit(1);
+
+      if (existing.length === 0) {
+        await db.insert(schema.categoryFollows).values({
+          userId,
+          categoryId: targetId,
+          emailAlerts: preferences.emailAlerts ?? true,
+          minBudget: preferences.minBudget ?? null,
+        });
+        return {
+          success: true,
+          emailAlerts: preferences.emailAlerts ?? true,
+          minBudget: preferences.minBudget ?? null,
+        };
+      } else {
+        await db
+          .update(schema.categoryFollows)
+          .set(updateData)
+          .where(
+            and(
+              eq(schema.categoryFollows.userId, userId),
+              eq(schema.categoryFollows.categoryId, targetId)
+            )
+          );
+
+        return {
+          success: true,
+          emailAlerts: preferences.emailAlerts !== undefined ? preferences.emailAlerts : existing[0]!.emailAlerts,
+          minBudget: preferences.minBudget !== undefined ? preferences.minBudget : existing[0]!.minBudget,
+        };
+      }
+    } catch (err) {
+      if (process.env.NODE_ENV === "production") {
+        throw err;
+      }
+      let userPrefs = inMemoryAlertPrefs.get(userId);
+      if (!userPrefs) {
+        userPrefs = new Map<string, InMemoAlertPrefs>();
+        inMemoryAlertPrefs.set(userId, userPrefs);
+      }
+      const catUuid = isUuid ? categoryId : getDeterministicUuid(categoryId);
+      const curr = userPrefs.get(catUuid) || { emailAlerts: true, minBudget: null };
+      const updated: InMemoAlertPrefs = {
+        emailAlerts: preferences.emailAlerts !== undefined ? preferences.emailAlerts : curr.emailAlerts,
+        minBudget: preferences.minBudget !== undefined ? preferences.minBudget : curr.minBudget,
+      };
+      userPrefs.set(catUuid, updated);
+      userPrefs.set(categoryId, updated);
+      return { success: true, ...updated };
     }
   }
 

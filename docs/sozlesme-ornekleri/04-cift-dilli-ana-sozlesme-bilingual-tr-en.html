@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OPR-CONTR-ENG2026B - Uluslararası E-Ticaret ve Pazar Yeri Altyapısı / Global E-Commerce Core (Bilingual Parallel Contract)</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 14mm 12mm 16mm 12mm;
+      @bottom-right {
+        content: counter(page) " / " counter(pages);
+        font-size: 8pt;
+        color: #64748b;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+    }
+    *, *:before, *:after { box-sizing: border-box; }
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 9pt;
+      line-height: 1.5;
+      color: #0f172a;
+      background: #ffffff;
+      margin: 0;
+      padding: 16px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .header {
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .brand-title {
+      font-size: 16pt;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-sub {
+      font-size: 7.5pt;
+      color: #475569;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+    .meta-box {
+      font-size: 8pt;
+      color: #475569;
+      text-align: right;
+      line-height: 1.4;
+    }
+    .prevalence-banner {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-left: 4px solid #2563eb;
+      border-radius: 4px;
+      padding: 6px 12px;
+      margin-bottom: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      font-size: 8pt;
+      font-weight: 700;
+      color: #1e293b;
+    }
+    .document-title-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #cbd5e1;
+    }
+    .doc-col-title {
+      font-size: 11pt;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.3;
+    }
+    .doc-col-sub {
+      font-size: 7.5pt;
+      color: #64748b;
+      margin-top: 3px;
+    }
+    /* SYNCHRONIZED CLAUSE ROW GRID */
+    .bilingual-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 10px 0;
+      border-bottom: 1px solid #e2e8f0;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      align-items: stretch;
+    }
+    .col-tr {
+      border-right: 1px solid #e2e8f0;
+      padding-right: 14px;
+      text-align: justify;
+    }
+    .col-en {
+      padding-left: 6px;
+      color: #334155;
+      text-align: justify;
+    }
+    .clause-number {
+      font-size: 7.5pt;
+      font-weight: 700;
+      color: #2563eb;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+    .clause-title {
+      font-size: 9.5pt;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 6px;
+      line-height: 1.3;
+      break-after: avoid-page;
+      page-break-after: avoid;
+    }
+    .clause-body {
+      font-size: 8.5pt;
+      line-height: 1.5;
+      white-space: pre-line;
+      orphans: 3;
+      widows: 3;
+    }
+    .clause-badge {
+      display: inline-block;
+      font-size: 7pt;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      margin-bottom: 6px;
+    }
+    /* SIGNATURE BLOCKS */
+    .signature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 24px;
+      padding-top: 14px;
+      border-top: 2px solid #0f172a;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .sig-card {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 8pt;
+    }
+    .sig-role {
+      font-size: 7.5pt;
+      font-weight: 800;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .sig-name {
+      font-size: 9.5pt;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+    .sig-stamp {
+      font-family: monospace;
+      font-size: 7.5pt;
+      color: #059669;
+      margin-top: 4px;
+    }
+    .footer-seal {
+      margin-top: 20px;
+      background: #f1f5f9;
+      border: 1px dashed #94a3b8;
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-family: monospace;
+      font-size: 7.5pt;
+      color: #475569;
+      word-break: break-all;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    @media print {
+      body { padding: 0; }
+      .no-print { display: none !important; }
+      .clause-title, .clause-number, .brand-title, .doc-col-title {
+        break-after: avoid-page !important;
+        page-break-after: avoid !important;
+      }
+      .bilingual-row, .signature-grid, .footer-seal, .meta-box, .sig-card {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <div class="brand-title">OPERIS</div>
+      <div class="brand-sub">Bilingual Parallel-Column Legal Infrastructure • Çift Dilli Paralel Sözleşme</div>
+    </div>
+    <div class="meta-box">
+      <div><strong>Ref:</strong> OPR-CONTR-ENG2026B</div>
+      <div><strong>Tarih / Date:</strong> 12 Eylül 2026</div>
+      <div><strong>Statü:</strong> Hukuken Bağlayıcı / Legally Binding</div>
+    </div>
+  </div>
+
+  <div class="prevalence-banner">
+    <div>⚖️ Resmi Hüküm Önceliği: TÜRKÇE METİN (TBK / Türk Hukuku)</div>
+    <div>⚖️ Prevalence: TURKISH VERSION (Governing under TBK)</div>
+  </div>
+
+  <div class="document-title-row">
+    <div>
+      <div class="doc-col-title">BAĞIMSIZ YAZILIM VE TEKNOLOJİ HİZMET SÖZLEŞMESİ</div>
+      <div class="doc-col-sub">6098 sayılı TBK m. 470 (Eser Sözleşmesi) ve 5846 sayılı FSEK m. 52 Uyarınca</div>
+    </div>
+    <div>
+      <div class="doc-col-title">INDEPENDENT SOFTWARE & TECHNOLOGY SERVICES AGREEMENT</div>
+      <div class="doc-col-sub">Statutory Contract for Work pursuant to TBK Art. 470 and FSEK Art. 52</div>
+    </div>
+  </div>
+
+  <!-- CLAUSES ACCORDION -->
+  
+  <div class="bilingual-row" id="preamble-prevalence">
+    <div class="col-tr">
+      <div class="clause-number">ÖN PROTOKOL / PREAMBLE</div>
+      <div class="clause-title">DİL, ŞEKİL VE HÜKÜM ÖNCELİĞİ (PREVALENCE RULE)</div>
+      <span class="clause-badge">Türkçe Metin Esastır</span><br>
+      <div class="clause-body">İşbu Sözleşme, Türkçe ve İngilizce dillerinde çift sütunlu paralel metin (Parallel-Column) olarak tanzim edilmiştir. Her iki dil versiyonu aynı hukuki iradeyi yansıtmak üzere düzenlenmiştir. Bununla birlikte, iki metin arasında herhangi bir kelime, anlam, çeviri veya yorum uyuşmazlığı bulunması durumunda; tarafların tabi olduğu Türk Borçlar Kanunu ve yetkili İstanbul Mahkemeleri nezdinde **TÜRKÇE METİN** esas alınacak ve nihai bağlayıcı kabul edilecektir.</div>
+    </div>
+    <div class="col-en">
+      <div class="clause-number">ÖN PROTOKOL / PREAMBLE</div>
+      <div class="clause-title">LANGUAGE, DUAL-COLUMN FORMAT & PREVALENCE CLAUSE</div>
+      <span class="clause-badge">Turkish Text Prevails</span><br>
+      <div class="clause-body">This Agreement is executed in synchronized parallel dual-columns in both Turkish and English languages. Both language columns reflect identical mutual legal intent. However, in the event of any semantic ambiguity, translation discrepancy, or interpretive conflict between the two texts, the **TURKISH VERSION** shall govern and prevail in all respects before designated courts and arbitration tribunals.</div>
+    </div>
+  </div>
+  <div class="bilingual-row" id="article-1-parties">
+    <div class="col-tr">
+      <div class="clause-number">MADDE 1 / ARTICLE 1</div>
+      <div class="clause-title">TARAFLAR VE HUKUKİ NİTELİK</div>
+      
+      <div class="clause-body">İşbu Sözleşme, aşağıda bilgileri kayıtlı taraflar arasında akdedilmiştir:
+1. **İŞ SAHİBİ (MÜŞTERİ):** Acme Teknoloji ve Girişim A.Ş. (hukuk@acmeteknoloji.com.tr)
+2. **YÜKLENİCİ (FREELANCER / UZMAN):** Can Demir (Kıdemli Yazılım Mimarı) (can.demir@devmail.com)</div>
+    </div>
+    <div class="col-en">
+      <div class="clause-number">MADDE 1 / ARTICLE 1</div>
+      <div class="clause-title">PARTIES & LEGAL CAPACITY</div>
+      
+      <div class="clause-body">This Agreement is entered into between the following parties:
+1. **CLIENT:** Acme Teknoloji ve Girişim A.Ş. (hukuk@acmeteknoloji.com.tr)
+2. **CONTRACTOR (DEVELOPER / SPECIALIST):** Can Demir (Kıdemli Yazılım Mimarı) (can.demir@devmail.com)</div>
+    </div>
+  </div>
+  <div class="bilingual-row" id="article-2-scope">
+    <div class="col-tr">
+      <div class="clause-number">MADDE 2 / ARTICLE 2</div>
+      <div class="clause-title">SÖZLEŞMENİN KONUSU VE TEKNİK KAPSAMI (TBK m. 470)</div>
+      
+      <div class="clause-body">İşbu Sözleşmenin konusu; Yüklenici tarafından İş Sahibi için aşağıda teknik özellikleri belirtilen **"Uluslararası E-Ticaret ve Pazar Yeri Altyapısı / Global E-Commerce Core"** projesine ilişkin yazılım geliştirme, tasarım ve teknoloji hizmetlerinin TBK m. 470 anlamında bağımsız bir "eser" olarak meydana getirilmesi ve teslimidir.
+- **Kategori:** Full-Stack Enterprise
+- **Teknik Kapsam:** Çok dilli ve çok para birimli küresel e-ticaret altyapısının geliştirilmesi / Engineering of multi-currency global marketplace backend.</div>
+    </div>
+    <div class="col-en">
+      <div class="clause-number">MADDE 2 / ARTICLE 2</div>
+      <div class="clause-title">SUBJECT MATTER & TECHNICAL SCOPE (TBK Art. 470)</div>
+      
+      <div class="clause-body">The subject matter of this Agreement is the development, design, and delivery of **"Uluslararası E-Ticaret ve Pazar Yeri Altyapısı / Global E-Commerce Core"** as an independent statutory "work" under Article 470 of the Turkish Code of Obligations (TBK).
+- **Category:** Full-Stack Enterprise
+- **Agreed Technical Scope:** Çok dilli ve çok para birimli küresel e-ticaret altyapısının geliştirilmesi / Engineering of multi-currency global marketplace backend.</div>
+    </div>
+  </div>
+  <div class="bilingual-row" id="article-3-price">
+    <div class="col-tr">
+      <div class="clause-number">MADDE 3 / ARTICLE 3</div>
+      <div class="clause-title">PROJE BEDELİ, VERGİ VE KİLOMETRE TAŞLARI</div>
+      
+      <div class="clause-body">3.1. **Kararlaştırılan Bedel:** €12,000 EUR
+3.2. **Faturalandırma ve Vergi Rejimi:**
+• **3.2.1. Ödeme Şekli:** Bedel, Yüklenici IBAN hesabına havale/EFT veya SMM / e-fatura mukabilinde ödenir.
+• **3.2.2. Tevkifat (GVK m. 94):** Kurumsal işveren kanuni stopajı (%20) kesip muhtasar ile beyan eder.
+• **3.2.3. KDV:** Yasal orandaki Katma Değer Vergisi Yüklenici'ye ödenir; bireysel müşteride stopaj doğmaz.
+3.3. **Platform Sorumsuzluğu:** Operis emanet havuzu tutmaz, ödeme garantörü değildir.
+3.4. **Hakediş Takvimi:**
+• Aşama 1 (%30): Sistem Mimarisi, Veri Modeli ve Kimlik Doğrulama Katmanı — PostgreSQL şema tasarımı, Next.js 16 altyapısı, AES-256 şifreleme ve RBAC yetkilendirme.
+• Aşama 2 (%40): Finansal Analitik Motoru ve Raporlama API'leri — Yüksek performanslı veri işleme hattı, webhook bildirimleri ve PDF/CSV dışa aktarım motoru.
+• Aşama 3 (%30): Kullanıcı Kabul Testleri (UAT), CI/CD Dağıtımı ve Telif Devri — Staging ve canlı ortam dağıtımı, FSEK m. 52 telif devir senedi ve kaynak kod teslimi.</div>
+    </div>
+    <div class="col-en">
+      <div class="clause-number">MADDE 3 / ARTICLE 3</div>
+      <div class="clause-title">PROJECT FEE, TAX REGIME & MILESTONE SCHEDULE</div>
+      
+      <div class="clause-body">3.1. **Agreed Fee:** €12,000 EUR
+3.2. **Invoicing & Tax Regime:**
+• **3.2.1. Payment:** Remitted to Contractor IBAN or against freelance invoice (SMM).
+• **3.2.2. Withholding (GVK Art. 94):** Corporate client remits statutory 20% tax withholding.
+• **3.2.3. VAT:** Applicable VAT is remitted to Contractor; individual consumers are exempt from withholding.
+3.3. **Platform Disclaimer:** Operis does not hold escrow and provides no financial payment guarantee.
+3.4. **Milestone Schedule:**
+• Phase 1 (30%): System Architecture, Database Modeling & Auth Layer — PostgreSQL schema design, Next.js 16 scaffolding, AES-256 data protection and RBAC auth.
+• Phase 2 (40%): Financial Analytics Engine & Reporting APIs — High-throughput data pipeline, webhook dispatchers and automated PDF/CSV export engine.
+• Phase 3 (30%): User Acceptance Testing (UAT), CI/CD Deployment & IP Transfer — Production deployment, FSEK Art. 52 statutory IP transfer deed and full repository handover.</div>
+    </div>
+  </div>
+  <div class="bilingual-row" id="article-4-delivery">
+    <div class="col-tr">
+      <div class="clause-number">MADDE 4 / ARTICLE 4</div>
+      <div class="clause-title">TESLİMAT, KABUL MUAYENESİ VE SÜRE HESABI (TBK m. 474)</div>
+      
+      <div class="clause-body">4.1. **Teslim Süresi:** 45 İş Günü / Business Days
+4.2. **Muayene ve Kabul:** İş Sahibi teslimatı takip eden 7 (yedi) iş günü içinde incelemekle yükümlüdür. Bu sürede yazılı itiraz yapılmazsa eser zımnen eksiksiz kabul edilmiş sayılır.
+4.3. **Revizyon Sınırı:** Azami 2 tur revizyon hakkı bulunmaktadır; kapsam dışı talepler ayrı hakedişe tabidir.
+4.4. **Sürelerin Hesabı:** "İş günü" resmi tatil ve hafta sonlarını hariç tutar; "takvim günü" kesintisiz işler.</div>
+    </div>
+    <div class="col-en">
+      <div class="clause-number">MADDE 4 / ARTICLE 4</div>
+      <div class="clause-title">DELIVERY, INSPECTION & TIME COMPUTATION (TBK Art. 474)</div>
+      
+      <div class="clause-body">4.1. **Delivery Timeline:** 45 İş Günü / Business Days
+4.2. **Inspection & Acceptance:** The Client shall inspect deliverables within 7 business days. Failure to object in writing constitutes formal deemed acceptance.
+4.3. **Revision Cap:** Maximum 2 rounds of revisions are included; out-of-scope requests require separate compensation.
+4.4. **Computation of Time:** "Business days" exclude holidays and weekends; "calendar days" run continuously.</div>
+    </div>
+  </div>
+  <div class="bilingual-row" id="article-5-ip-transfer">
+    <div class="col-tr">
+      <div class="clause-number">MADDE 5 / ARTICLE 5</div>
+      <div class="clause-title">FİKRİ MÜLKİYET VE MALİ HAKLARIN DEVRİ (FSEK m. 48-52)</div>
+      
+      <div class="clause-body">Yüklenici; meydana getirilen yazılım, kaynak kodları ve tasarımlar üzerindeki 5846 sayılı FSEK m. 21 (İşleme), m. 22 (Çoğaltma), m. 23 (Yayma), m. 24 (Temsil) ve m. 25 (Umuma İletim) mali haklarını, kararlaştırılan hakedişin tam ödenmesi koşuluyla, münhasıran ve geri dönülemez şekilde İş Sahibi'ne devretmeyi kabul ve taahhüt eder. Manevi haklar saklıdır; Yüklenici portfolyo referansı gösterme hakkını korur.</div>
+    </div>
+    <div class="col-en">
+      <div class="clause-number">MADDE 5 / ARTICLE 5</div>
+      <div class="clause-title">INTELLECTUAL PROPERTY & ECONOMIC RIGHTS TRANSFER (FSEK Art. 48-52)</div>
+      
+      <div class="clause-body">Subject to full payment of the agreed fee, the Contractor irrevocably assigns to the Client all statutory economic rights under FSEK Articles 21 (Processing), 22 (Reproduction), 23 (Distribution), 24 (Representation), and 25 (Public Transmission). Moral rights remain reserved; Contractor retains portfolio showcase rights.</div>
+    </div>
+  </div>
+  <div class="bilingual-row" id="article-6-nda">
+    <div class="col-tr">
+      <div class="clause-number">MADDE 6 / ARTICLE 6</div>
+      <div class="clause-title">GİZLİLİK VE TİCARİ SIRLARIN KORUNMASI (NDA)</div>
+      
+      <div class="clause-body">Taraflar edindikleri tüm kaynak kodları, ticari sırlar ve teknik verileri kesin bir gizlilikle koruyacak olup bu yükümlülük sözleşmenin sona ermesinden itibaren 3 yıl boyunca yürürlükte kalacaktır.</div>
+    </div>
+    <div class="col-en">
+      <div class="clause-number">MADDE 6 / ARTICLE 6</div>
+      <div class="clause-title">CONFIDENTIALITY & TRADE SECRETS (NDA)</div>
+      
+      <div class="clause-body">Both parties agree to hold all source codes, trade secrets, and technical data in strict confidence for a period of 3 years following completion.</div>
+    </div>
+  </div>
+  <div class="bilingual-row" id="article-7-warranty">
+    <div class="col-tr">
+      <div class="clause-number">MADDE 7 / ARTICLE 7</div>
+      <div class="clause-title">AYIP GARANTİSİ VE TEKNİK DESTEK (TBK m. 477/2)</div>
+      
+      <div class="clause-body">7.1. **Garanti Süresi:** Yüklenici, nihai teslimatı takip eden 30 (otuz) takvim günü boyunca eserin teknik gereksinimlere uygunluğunu garanti eder.
+7.2. **Müdahale Süresi:** Bu sürede ortaya çıkan kritik hatalar azami 3 iş günü içinde ek bedelsiz düzeltilir. Ağır kusur ve hileli ayıplara karşı haklar süresiz saklıdır.</div>
+    </div>
+    <div class="col-en">
+      <div class="clause-number">MADDE 7 / ARTICLE 7</div>
+      <div class="clause-title">DEFECT WARRANTY & REMEDIATION (TBK Art. 477/2)</div>
+      
+      <div class="clause-body">7.1. **Warranty Period:** The Contractor warrants conformity with specifications for 30 calendar days following final handover.
+7.2. **Remediation Window:** Critical bugs shall be rectified without extra charge within 3 business days. Concealed defects remain covered under TBK Art. 477/2.</div>
+    </div>
+  </div>
+  <div class="bilingual-row" id="article-8-safe-harbor">
+    <div class="col-tr">
+      <div class="clause-number">MADDE 8 / ARTICLE 8</div>
+      <div class="clause-title">BAĞIMSIZ YÜKLENİCİ STATÜSÜ (İŞ KANUNU m. 8)</div>
+      
+      <div class="clause-body">Taraflar arasında 4857 sayılı İş Kanunu anlamında herhangi bir işçi-işveren, hizmet akdi veya vekalet bağı kurulmamıştır. Yüklenici bağımsız statüde olup kendi vergi ve SGK yükümlülüklerinden bizzat sorumludur.</div>
+    </div>
+    <div class="col-en">
+      <div class="clause-number">MADDE 8 / ARTICLE 8</div>
+      <div class="clause-title">INDEPENDENT CONTRACTOR STATUS (LABOR ACT Art. 8)</div>
+      
+      <div class="clause-body">No employer-employee, agency, or partnership relationship is created under Labor Act No. 4857. The Contractor operates autonomously and remains solely responsible for their own tax and social security filings.</div>
+    </div>
+  </div>
+  <div class="bilingual-row" id="article-9-platform-exemption">
+    <div class="col-tr">
+      <div class="clause-number">MADDE 9 / ARTICLE 9</div>
+      <div class="clause-title">OPERİS PLATFORMUNUN HUKUKİ SORUMSUZLUĞU (TBK m. 26/115 & 5651)</div>
+      
+      <div class="clause-body">İşbu Sözleşme münhasıran İş Sahibi ile Yüklenici arasında akdedilmiştir. Operis bağımsız bir yer sağlayıcıdır; sözleşmenin tarafı, garantörü, vekili veya hakemi değildir. Her türlü uyuşmazlık doğrudan taraflar arasında çözülür; taraflar Operis aleyhine dava ve icra takibi haklarından peşinen feragat eder (HMK m. 193).</div>
+    </div>
+    <div class="col-en">
+      <div class="clause-number">MADDE 9 / ARTICLE 9</div>
+      <div class="clause-title">OPERIS PLATFORM EXEMPTION & SAFE HARBOR (TBK Art. 26/115 & 5651)</div>
+      
+      <div class="clause-body">This Agreement is executed exclusively between Client and Contractor. Operis is an independent hosting intermediary and is not a party, guarantor, or arbiter. Any dispute shall be resolved solely between the parties; parties irrevocably waive all claims against Operis (HMK Art. 193).</div>
+    </div>
+  </div>
+  <div class="bilingual-row" id="article-10-dispute-resolution">
+    <div class="col-tr">
+      <div class="clause-number">MADDE 10 / ARTICLE 10</div>
+      <div class="clause-title">ARABULUCULUK, TAHKİM VE UYUŞMAZLIK ÇÖZÜMÜ</div>
+      
+      <div class="clause-body">10.1. **Zorunlu Arabuluculuk:** Taraflar dava açmadan önce 6325 sayılı Kanun uyarınca zorunlu arabuluculuğa başvurmayı taahhüt eder.
+10.2. **Tahkim ve Mahkeme:** Çözülemeyen ihtilaflarda tarafların mutabakatıyla ISTAC Hızlı Tahkim Kuralları (tek hakem) veya İstanbul (Çağlayan) Mahkemeleri yetkilidir.
+10.3. **Münhasır Delil (HMK m. 193):** Dijital kayıtlar, e-postalar, Git commit kayıtları ve SHA-256 mühürleri kesin delildir.</div>
+    </div>
+    <div class="col-en">
+      <div class="clause-number">MADDE 10 / ARTICLE 10</div>
+      <div class="clause-title">MANDATORY MEDIATION, ISTAC ARBITRATION & JURISDICTION</div>
+      
+      <div class="clause-body">10.1. **Mandatory Mediation:** Parties submit to mandatory mediation under Law No. 6325 before filing legal claims.
+10.2. **Arbitration & Courts:** Unresolved disputes shall be resolved by ISTAC Fast-Track Arbitration (sole arbitrator) or exclusively before Istanbul (Caglayan) Courts.
+10.3. **Statutory Evidence (HMK Art. 193):** Digital logs, emails, Git commit records, and SHA-256 seals constitute conclusive evidence.</div>
+    </div>
+  </div>
+  <div class="bilingual-row" id="annex-1-acceptance">
+    <div class="col-tr">
+      <div class="clause-number">EK-1 / ANNEX-1</div>
+      <div class="clause-title">OBJEKTİF KABUL KRİTERLERİ & DEFINITION OF DONE</div>
+      
+      <div class="clause-body">1. [AUTH_SECURITY] Kullanıcı kimlik doğrulama, MFA ve rol tabanlı yetkilendirme (RBAC) uçtan uca çalışmalıdır.
+2. [OUTPUT_REPORTING] Finansal raporlama modülü 100.000 satır veriyi 1.5 saniye altında CSV ve PDF formatında dışa aktarmalıdır.
+3. [DELIVERY_QUALITY] Tüm kaynak kodlar %85+ test kapsamı ile GitHub Actions CI/CD hattında yeşil geçmelidir.</div>
+    </div>
+    <div class="col-en">
+      <div class="clause-number">EK-1 / ANNEX-1</div>
+      <div class="clause-title">OBJECTIVE ACCEPTANCE CRITERIA & DEFINITION OF DONE</div>
+      
+      <div class="clause-body">1. [AUTH_SECURITY] User authentication, MFA, and RBAC must function end-to-end.
+2. [OUTPUT_REPORTING] Financial reporting engine must export 100k records to CSV/PDF under 1.5s.
+3. [DELIVERY_QUALITY] All source code must achieve 85%+ unit test coverage passing green on CI/CD.</div>
+    </div>
+  </div>
+
+  <!-- SIGNATURES -->
+  <div class="signature-grid">
+    <div class="sig-card">
+      <div class="sig-role">İŞ SAHİBİ / CLIENT</div>
+      <div class="sig-name">Acme Teknoloji ve Girişim A.Ş.</div>
+      <div>İmza / Kaşe: ____________________</div><div>Tarih: 12 Eylül 2026</div>
+    </div>
+    <div class="sig-card">
+      <div class="sig-role">YÜKLENİCİ / CONTRACTOR</div>
+      <div class="sig-name">Can Demir (Kıdemli Yazılım Mimarı)</div>
+      <div>İmza / Kaşe: ____________________</div><div>Tarih: 12 Eylül 2026</div>
+    </div>
+  </div>
+
+  <div class="footer-seal">
+    <div>🔒 HMK m. 199 E-Mühür SHA-256: <strong>41ffce5beae8249cd63111270fa43bd9f0f563b2a9d755034633298032215541</strong></div>
+    <div>Operis Verified • 20 Eylül 2026 05:56</div>
+  </div>
+</body>
+</html>

@@ -21,12 +21,27 @@ export interface DemoUser {
     preferredContactChannel?: string | null;
     timeZone?: string | null;
     trackedSkills?: string[];
+    headline?: string | null;
+    roles?: string[];
+    isAvailableForHire?: boolean;
+    isActivelyHiring?: boolean;
+    availabilityStatus?: "AVAILABLE_NOW" | "PARTIALLY_AVAILABLE" | "BUSY";
+    availabilityHoursPerWeek?: number;
+    availableFromDate?: string | null;
+    availabilityNotice?: string | null;
+    availabilityUpdatedAt?: Date;
+    isCompanyVerified?: boolean;
+    companyName?: string | null;
+    companyType?: string | null;
+    taxOffice?: string | null;
+    vknMasked?: string | null;
+    companyVerifiedAt?: Date | null;
   };
 }
 
 export const DEFAULT_USER: DemoUser = {
-  id: "d0000000-0000-0000-0000-000000000001",
-  email: "kullanici@operis.pro",
+  id: "00000000-0000-0000-0000-000000000001",
+  email: "demo@operis.pro",
   password: "OperisUser2026!",
   role: "USER",
   status: "ACTIVE",
@@ -47,5 +62,20 @@ export const DEFAULT_USER: DemoUser = {
     preferredContactChannel: "whatsapp",
     timeZone: "Europe/Istanbul",
     trackedSkills: ["Next.js", "TypeScript", "Tailwind CSS", "PostgreSQL", "React"],
+    headline: "Kıdemli Dağıtık Sistemler Mimarı & Girişimci",
+    roles: ["employer", "freelancer"],
+    isAvailableForHire: true,
+    isActivelyHiring: true,
+    isCompanyVerified: true,
+    companyName: "Operis Teknoloji ve Yazılım A.Ş.",
+    companyType: "AS",
+    taxOffice: "Maslak V.D.",
+    vknMasked: "879***7566",
+    companyVerifiedAt: new Date("2026-01-15"),
+    availabilityStatus: "AVAILABLE_NOW",
+    availabilityHoursPerWeek: 40,
+    availableFromDate: null,
+    availabilityNotice: null,
+    availabilityUpdatedAt: new Date("2026-09-01T00:00:00Z"),
   },
 };

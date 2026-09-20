@@ -12,6 +12,20 @@ export interface TextInputProps extends React.InputHTMLAttributes<HTMLInputEleme
   endIcon?: React.ReactNode;
 }
 
+function renderCornerContent(cornerAction?: React.ReactNode, badge?: React.ReactNode) {
+  if (cornerAction) {
+    return cornerAction;
+  }
+  if (badge) {
+    return (
+      <span className="text-[10px] font-mono font-medium text-slate-400/80 px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/[0.08] shadow-sm select-none">
+        {badge}
+      </span>
+    );
+  }
+  return null;
+}
+
 export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
   ({ className, label, badge, cornerAction, hint, error, id, startIcon, endIcon, ...props }, ref) => {
     const generatedId = useId();
@@ -34,13 +48,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
                 </span>
               )}
             </label>
-            {cornerAction ? (
-              cornerAction
-            ) : badge ? (
-              <span className="text-[10px] font-mono font-medium text-slate-400/80 px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/[0.08] shadow-sm select-none">
-                {badge}
-              </span>
-            ) : null}
+            {renderCornerContent(cornerAction, badge)}
           </div>
         )}
         <div className="relative flex items-center group">

@@ -11,6 +11,13 @@ export interface ResetPasswordFormProps {
   locale: string;
 }
 
+function getTogglePasswordAriaLabel(showPassword: boolean, isTr: boolean): string {
+  if (showPassword) {
+    return isTr ? "Şifreyi gizle" : "Hide password";
+  }
+  return isTr ? "Şifreyi göster" : "Show password";
+}
+
 export function ResetPasswordForm({ locale }: ResetPasswordFormProps) {
   const isTr = locale === "tr";
   const router = useRouter();
@@ -111,13 +118,10 @@ export function ResetPasswordForm({ locale }: ResetPasswordFormProps) {
         router.push(isTr ? "/tr/giris" : "/en/login");
       }, 2500);
     } catch (err: unknown) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : isTr
-            ? "Şifre güncellenemedi. Lütfen bağlantınızı kontrol edip tekrar deneyiniz."
-            : "Failed to reset password."
-      );
+      const fallbackMsg = isTr
+        ? "Şifre güncellenemedi. Lütfen bağlantınızı kontrol edip tekrar deneyiniz."
+        : "Failed to reset password.";
+      setError(err instanceof Error ? err.message : fallbackMsg);
     } finally {
       setIsLoading(false);
     }
@@ -175,15 +179,7 @@ export function ResetPasswordForm({ locale }: ResetPasswordFormProps) {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              aria-label={
-                showPassword
-                  ? isTr
-                    ? "Şifreyi gizle"
-                    : "Hide password"
-                  : isTr
-                    ? "Şifreyi göster"
-                    : "Show password"
-              }
+              aria-label={getTogglePasswordAriaLabel(showPassword, isTr)}
               className="text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] cursor-pointer"
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}

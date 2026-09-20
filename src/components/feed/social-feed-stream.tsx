@@ -13,7 +13,7 @@ import { FeedListingItem } from "@/src/modules/listings/feed/service";
 import { CategoryDto } from "@/src/modules/categories/service";
 import { SocialListingCard } from "./social-listing-card";
 import { QuickOfferDrawer } from "../offers/quick-offer-drawer";
-import { SubmitOfferModal } from "../offers/submit-offer-modal";
+import { SubmitOfferModal, type SubmitOfferModalProps } from "../offers/submit-offer-modal";
 import { EmptyState } from "../ui/empty-state";
 import { Button } from "../ui/button";
 import { getLocalizedRoute } from "@/src/lib/i18n/routes";
@@ -73,7 +73,7 @@ export function SocialFeedStream({
     id: string;
     title: string;
   } | null>(null);
-  const [fullModalInitialData, setFullModalInitialData] = useState<any>(undefined);
+  const [fullModalInitialData, setFullModalInitialData] = useState<SubmitOfferModalProps["initialData"]>(undefined);
 
   // Sentinel ref & performance refs for infinite scroll
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -299,139 +299,153 @@ export function SocialFeedStream({
       </div>
 
       {/* Stream Content */}
-      {isTabLoading ? (
-        <div className="py-16 text-center space-y-2">
-          <Loader2 className="h-6 w-6 animate-spin text-blue-500 mx-auto" />
-          <p className="text-xs text-[var(--color-text-secondary)]">
-            {isTr ? "İlanlar yükleniyor..." : "Loading listings..."}
-          </p>
-        </div>
-      ) : mode === "following" && !hasFollowed ? (
-        /* Empty State for Following Mode */
-        <div className="py-12 px-4 space-y-5 text-center">
-          <div className="max-w-md mx-auto space-y-1.5">
-            <h3 className="text-base font-bold text-[var(--color-text-primary)]">
-              {isTr ? "Henüz Takip Ettiğiniz Bir Kategori Yok" : "No Categories Followed Yet"}
-            </h3>
-            <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
-              {isTr
-                ? "İlgilendiğiniz kategorileri takip ederek sadece uzmanlaştığınız alanlardaki ilanları akışınızda görün."
-                : "Follow categories to see listings only in areas relevant to you."}
-            </p>
-          </div>
+      {(() => {
+        if (isTabLoading) {
+          return (
+            <div className="py-16 text-center space-y-2">
+              <Loader2 className="h-6 w-6 animate-spin text-blue-500 mx-auto" />
+              <p className="text-xs text-[var(--color-text-secondary)]">
+                {isTr ? "İlanlar yükleniyor..." : "Loading listings..."}
+              </p>
+            </div>
+          );
+        }
 
-          {/* Quick Category Follow Pills */}
-          <div className="flex flex-wrap items-center justify-center gap-2 max-w-lg mx-auto pt-1">
-            {categories.slice(0, 6).map((cat) => {
-              const isFollowed = followedCategoryIds.has(cat.id);
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => handleToggleCategoryFollow(cat.id)}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer ${
-                    isFollowed
-                      ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/25"
-                      : "bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] hover:border-blue-500/40 border border-[var(--color-border-subtle)]"
-                  }`}
-                >
-                  {isFollowed ? (
-                    <>
-                      <Check className="h-3 w-3 text-emerald-400" />
-                      <span>{cat.name}</span>
-                    </>
-                  ) : (
-                    <>
-                      <Plus className="h-3 w-3 text-blue-400" />
-                      <span>{cat.name}</span>
-                    </>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="pt-2">
-            <button
-              type="button"
-              onClick={() => handleSwitchMode("all")}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-blue-500 hover:text-blue-400 cursor-pointer"
-            >
-              <span>{isTr ? "Tüm güncel ilanları keşfet" : "Explore all listings"}</span>
-              <ArrowRight className="h-3 w-3" />
-            </button>
-          </div>
-        </div>
-      ) : items.length === 0 ? (
-        /* Empty State when no listings */
-        <div className="py-16 text-center">
-          <EmptyState
-            title={
-              isTr
-                ? "Bu akışta henüz aktif ilan bulunmuyor"
-                : "No active listings in this feed yet"
-            }
-            description={
-              isTr
-                ? "Takip ettiğiniz alanlarda yeni bir ilan yayınlandığında burada görünecektir."
-                : "New listings will appear here as they are published."
-            }
-            action={
-              <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
-                {mode === "following" && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleSwitchMode("all")}
-                  >
-                    {isTr ? "Tüm İlanları Gör" : "View All Listings"}
-                  </Button>
-                )}
-                <Link href={getLocalizedRoute("newListing", locale)}>
-                  <Button variant="shimmer" size="sm">
-                    {isTr ? "Hemen İlan Ver" : "Post a Listing"}
-                  </Button>
-                </Link>
-              </div>
-            }
-          />
-        </div>
-      ) : (
-        /* Continuous Stream with Cards */
-        <div className="flex flex-col gap-4">
-          {items.map((item) => (
-            <SocialListingCard
-              key={item.id}
-              item={item}
-              locale={locale}
-              isCategoryFollowed={followedCategoryIds.has(item.categoryId)}
-              onToggleFollowCategory={handleToggleCategoryFollow}
-              onQuickOffer={handleQuickOffer}
-            />
-          ))}
-
-          {/* Infinite Scroll Sentinel */}
-          <div ref={sentinelRef} className="py-5 text-center">
-            {isLoadingMore && (
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-surface-base)]/75 backdrop-blur-xl border border-[var(--color-border-subtle)] text-xs text-[var(--color-text-secondary)]">
-                <Loader2 className="h-3.5 w-3.5 animate-spin text-blue-500" />
-                <span>{isTr ? "Daha fazla ilan yükleniyor..." : "Loading more listings..."}</span>
-              </div>
-            )}
-
-            {!hasMore && items.length > 0 && (
-              <div className="py-4 text-xs text-[var(--color-text-tertiary)] flex items-center justify-center gap-1.5">
-                <Sparkles className="h-3.5 w-3.5 text-blue-400" />
-                <span>
+        if (mode === "following" && !hasFollowed) {
+          return (
+            /* Empty State for Following Mode */
+            <div className="py-12 px-4 space-y-5 text-center">
+              <div className="max-w-md mx-auto space-y-1.5">
+                <h3 className="text-base font-bold text-[var(--color-text-primary)]">
+                  {isTr ? "Henüz Takip Ettiğiniz Bir Kategori Yok" : "No Categories Followed Yet"}
+                </h3>
+                <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
                   {isTr
-                    ? "Tüm güncel ilanları gördünüz."
-                    : "You're all caught up."}
-                </span>
+                    ? "İlgilendiğiniz kategorileri takip ederek sadece uzmanlaştığınız alanlardaki ilanları akışınızda görün."
+                    : "Follow categories to see listings only in areas relevant to you."}
+                </p>
               </div>
-            )}
+
+              {/* Quick Category Follow Pills */}
+              <div className="flex flex-wrap items-center justify-center gap-2 max-w-lg mx-auto pt-1">
+                {categories.slice(0, 6).map((cat) => {
+                  const isFollowed = followedCategoryIds.has(cat.id);
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => handleToggleCategoryFollow(cat.id)}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer ${
+                        isFollowed
+                          ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/25"
+                          : "bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] hover:border-blue-500/40 border border-[var(--color-border-subtle)]"
+                      }`}
+                    >
+                      {isFollowed ? (
+                        <>
+                          <Check className="h-3 w-3 text-emerald-400" />
+                          <span>{cat.name}</span>
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="h-3 w-3 text-blue-400" />
+                          <span>{cat.name}</span>
+                        </>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => handleSwitchMode("all")}
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-blue-500 hover:text-blue-400 cursor-pointer"
+                >
+                  <span>{isTr ? "Tüm güncel ilanları keşfet" : "Explore all listings"}</span>
+                  <ArrowRight className="h-3 w-3" />
+                </button>
+              </div>
+            </div>
+          );
+        }
+
+        if (items.length === 0) {
+          return (
+            /* Empty State when no listings */
+            <div className="py-16 text-center">
+              <EmptyState
+                title={
+                  isTr
+                    ? "Bu akışta henüz aktif ilan bulunmuyor"
+                    : "No active listings in this feed yet"
+                }
+                description={
+                  isTr
+                    ? "Takip ettiğiniz alanlarda yeni bir ilan yayınlandığında burada görünecektir."
+                    : "New listings will appear here as they are published."
+                }
+                action={
+                  <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
+                    {mode === "following" && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleSwitchMode("all")}
+                      >
+                        {isTr ? "Tüm İlanları Gör" : "View All Listings"}
+                      </Button>
+                    )}
+                    <Link href={getLocalizedRoute("newListing", locale)}>
+                      <Button variant="shimmer" size="sm">
+                        {isTr ? "Hemen İlan Ver" : "Post a Listing"}
+                      </Button>
+                    </Link>
+                  </div>
+                }
+              />
+            </div>
+          );
+        }
+
+        return (
+          /* Continuous Stream with Cards */
+          <div className="flex flex-col gap-4">
+            {items.map((item) => (
+              <SocialListingCard
+                key={item.id}
+                item={item}
+                locale={locale}
+                isCategoryFollowed={followedCategoryIds.has(item.categoryId)}
+                onToggleFollowCategory={handleToggleCategoryFollow}
+                onQuickOffer={handleQuickOffer}
+              />
+            ))}
+
+            {/* Infinite Scroll Sentinel */}
+            <div ref={sentinelRef} className="py-5 text-center">
+              {isLoadingMore && (
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-surface-base)]/75 backdrop-blur-xl border border-[var(--color-border-subtle)] text-xs text-[var(--color-text-secondary)]">
+                  <Loader2 className="h-3.5 w-3.5 animate-spin text-blue-500" />
+                  <span>{isTr ? "Daha fazla ilan yükleniyor..." : "Loading more listings..."}</span>
+                </div>
+              )}
+
+              {!hasMore && items.length > 0 && (
+                <div className="py-4 text-xs text-[var(--color-text-tertiary)] flex items-center justify-center gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5 text-blue-400" />
+                  <span>
+                    {isTr
+                      ? "Tüm güncel ilanları gördünüz."
+                      : "You're all caught up."}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Quick Offer Drawer */}
       {quickOfferTarget && (

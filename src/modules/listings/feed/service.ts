@@ -43,6 +43,11 @@ export interface FeedListingItem {
   timelineUnit: string | null;
   ownerHandle: string;
   ownerDisplayName: string;
+  ownerIsCompanyVerified?: boolean;
+  ownerCompanyName?: string | null;
+  ownerCompanyType?: string | null;
+  ownerTaxOffice?: string | null;
+  ownerVknMasked?: string | null;
   firstPublishedAt: Date;
   lastActivatedAt: Date;
   activeUntil: Date;
@@ -292,6 +297,11 @@ export class FeedService {
           tags: schema.listings.tags,
           ownerHandle: schema.profiles.handle,
           ownerDisplayName: schema.profiles.displayName,
+          ownerIsCompanyVerified: schema.profiles.isCompanyVerified,
+          ownerCompanyName: schema.profiles.companyName,
+          ownerCompanyType: schema.profiles.companyType,
+          ownerTaxOffice: schema.profiles.taxOffice,
+          ownerVknMasked: schema.profiles.vknMasked,
         })
         .from(schema.listings)
         .innerJoin(schema.categories, eq(schema.listings.categoryId, schema.categories.id))
@@ -343,6 +353,11 @@ export class FeedService {
         timelineUnit: r.timelineUnit,
         ownerHandle: r.ownerHandle,
         ownerDisplayName: r.ownerDisplayName,
+        ownerIsCompanyVerified: r.ownerIsCompanyVerified ?? false,
+        ownerCompanyName: r.ownerCompanyName ?? null,
+        ownerCompanyType: r.ownerCompanyType ?? null,
+        ownerTaxOffice: r.ownerTaxOffice ?? null,
+        ownerVknMasked: r.ownerVknMasked ?? null,
         firstPublishedAt: r.firstPublishedAt ?? new Date(),
         lastActivatedAt: r.lastActivatedAt ?? new Date(),
         activeUntil: r.activeUntil ?? new Date(),

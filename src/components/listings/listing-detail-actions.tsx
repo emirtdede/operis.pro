@@ -3,12 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Share2, Check, LogIn, Zap, SlidersHorizontal, Flag, History } from "lucide-react";
+import { Share2, Check, LogIn, Zap, SlidersHorizontal, Flag, History, Copy } from "lucide-react";
 import { Button } from "../ui/button";
 import { SubmitOfferModal } from "../offers/submit-offer-modal";
 import { QuickOfferDrawer } from "../offers/quick-offer-drawer";
 import { ListingRevisionsModal } from "./listing-revisions-modal";
 import { ContextualReportModal } from "../moderation/contextual-report-modal";
+import { BookmarkButton } from "./bookmark-button";
 import { getLocalizedRoute } from "@/src/lib/i18n/routes";
 
 export interface ListingDetailActionsProps {
@@ -25,6 +26,20 @@ export interface ListingDetailActionsProps {
   isOwner: boolean;
   isActive: boolean;
   locale: string;
+}
+
+function getCopyLinkAriaLabel(copied: boolean, isTr: boolean): string {
+  if (copied) {
+    return isTr ? "Bağlantı kopyalandı" : "Link copied";
+  }
+  return isTr ? "Bağlantıyı kopyala" : "Copy link";
+}
+
+function getOfferButtonLabel(hasUser: boolean, isTr: boolean): string {
+  if (!hasUser) {
+    return isTr ? "Giriş Yaparak Teklif Ver" : "Sign In to Submit Offer";
+  }
+  return isTr ? "Hızlı Teklif Ver" : "Quick Proposal";
 }
 
 export function ListingDetailActions({
@@ -106,15 +121,7 @@ export function ListingDetailActions({
       size={isOwner ? "md" : "lg"}
       onClick={handleCopyLink}
       className="gap-2 transition-all"
-      aria-label={
-        copied
-          ? isTr
-            ? "Bağlantı kopyalandı"
-            : "Link copied"
-          : isTr
-            ? "Bağlantıyı kopyala"
-            : "Copy link"
-      }
+      aria-label={getCopyLinkAriaLabel(copied, isTr)}
     >
       {copied ? (
         <>
@@ -159,6 +166,18 @@ export function ListingDetailActions({
           <History className="h-4 w-4 mr-1.5 text-blue-400" />
           <span>{isTr ? "Revizyon Geçmişi" : "Revision History"}</span>
         </Button>
+        <Link
+          href={
+            isTr
+              ? `/tr/ilanlar/yeni?cloneFrom=${listingSlug || listingId}`
+              : `/en/listings/new?cloneFrom=${listingSlug || listingId}`
+          }
+        >
+          <Button variant="outline" className="gap-1.5 cursor-pointer">
+            <Copy className="h-4 w-4 text-cyan-400" />
+            <span>{isTr ? "Klonla & Düzenle" : "Duplicate & Edit"}</span>
+          </Button>
+        </Link>
         {copyButton}
 
         <ListingRevisionsModal
@@ -210,13 +229,7 @@ export function ListingDetailActions({
             <Zap className="h-4 w-4 fill-current text-amber-400" aria-hidden="true" />
           )}
           <span>
-            {!currentUserId
-              ? isTr
-                ? "Giriş Yaparak Teklif Ver"
-                : "Sign In to Submit Offer"
-              : isTr
-                ? "Hızlı Teklif Ver"
-                : "Quick Proposal"}
+            {getOfferButtonLabel(Boolean(currentUserId), isTr)}
           </span>
         </Button>
 
@@ -232,6 +245,13 @@ export function ListingDetailActions({
             <span>{isTr ? "Detaylı Teklif" : "Detailed Proposal"}</span>
           </Button>
         )}
+
+        <BookmarkButton
+          listingId={listingId}
+          locale={locale}
+          variant="button"
+          size="md"
+        />
 
         {copyButton}
 

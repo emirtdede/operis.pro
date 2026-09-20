@@ -6,6 +6,7 @@ import { getSession } from "@/src/modules/auth/session";
 import { ProfileService } from "@/src/modules/profiles/service";
 import { EngagementService } from "@/src/modules/engagements/service";
 import { MatchDetailsView } from "@/src/components/engagements/match-details-view";
+import { serializeJsonLd } from "@/src/lib/security/json-ld";
 
 export async function generateMetadata({
   params,
@@ -35,6 +36,16 @@ export async function generateMetadata({
 }
 
 export const dynamic = "force-dynamic";
+
+function getEstimatedDurationUnitLabel(unit: string, isTr: boolean): string {
+  if (unit === "DAYS") {
+    return isTr ? "gün" : "days";
+  }
+  if (unit === "WEEKS") {
+    return isTr ? "hafta" : "weeks";
+  }
+  return isTr ? "ay" : "months";
+}
 
 export default async function MatchPage({
   params,
@@ -86,18 +97,7 @@ export default async function MatchPage({
   // Format timeline label
   let timelineLabel: string | null = null;
   if (acceptedOffer.estimatedDurationValue && acceptedOffer.estimatedDurationUnit) {
-    const unitLabel =
-      acceptedOffer.estimatedDurationUnit === "DAYS"
-        ? isTr
-          ? "gün"
-          : "days"
-        : acceptedOffer.estimatedDurationUnit === "WEEKS"
-          ? isTr
-            ? "hafta"
-            : "weeks"
-          : isTr
-            ? "ay"
-            : "months";
+    const unitLabel = getEstimatedDurationUnitLabel(acceptedOffer.estimatedDurationUnit, isTr);
     timelineLabel = `~${acceptedOffer.estimatedDurationValue} ${unitLabel}`;
   }
 
@@ -143,7 +143,7 @@ export default async function MatchPage({
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       {/* Bilateral Engagement Guidance Banner */}

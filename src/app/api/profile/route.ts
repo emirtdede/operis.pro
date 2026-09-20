@@ -23,12 +23,10 @@ export async function GET(req: Request) {
     const profile = await ProfileService.getProfileByUserId(session.userId);
     return NextResponse.json({ profile }, { status: 200 });
   } catch (err: unknown) {
-    const message =
-      err instanceof Error
-        ? err.message
-        : isEn
-          ? "Failed to get profile"
-          : "Profil bilgileri alınamadı";
+    let message = isEn ? "Failed to get profile" : "Profil bilgileri alınamadı";
+    if (err instanceof Error) {
+      message = err.message;
+    }
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
@@ -74,12 +72,10 @@ export async function PATCH(req: Request) {
   } catch (err: unknown) {
     const locale = headerLocale || "tr";
     const isEn = locale === "en";
-    let message =
-      err instanceof Error
-        ? err.message
-        : isEn
-          ? "Failed to update profile"
-          : "Güncelleme başarısız oldu";
+    let message = isEn ? "Failed to update profile" : "Güncelleme başarısız oldu";
+    if (err instanceof Error) {
+      message = err.message;
+    }
 
     if (!isEn) {
       if (message.includes("Display name must be 2-80 characters")) {

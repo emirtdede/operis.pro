@@ -7,6 +7,11 @@ import { TextArea } from "../ui/text-area";
 import { TextInput } from "../ui/text-input";
 import { Select } from "../ui/select";
 import { EMOJI_REGEX, validateContentAppropriateness } from "@/src/lib/security/content-moderator";
+import { TaxCalculatorWidget } from "../finance/tax-calculator-widget";
+import { Calculator, Sparkles } from "lucide-react";
+import { ProposalPitchDoctorCard } from "./proposal-pitch-doctor-card";
+import { SquadBuilderSection, SquadMemberDraft } from "./squad/squad-builder-section";
+import { SquadRevenueEngine } from "@/src/modules/offers/squad-engine";
 
 export interface SubmitOfferModalProps {
   isOpen: boolean;
@@ -22,6 +27,9 @@ export interface SubmitOfferModalProps {
     budgetMax?: string;
     timelineValue?: string;
     timelineUnit?: "DAYS" | "WEEKS" | "MONTHS";
+    isSquadOffer?: boolean;
+    squadTitle?: string;
+    squadMembers?: SquadMemberDraft[];
   };
   onSuccess?: (updatedData?: {
     message: string;
@@ -31,6 +39,58 @@ export interface SubmitOfferModalProps {
     estimatedDurationValue?: number | null;
     estimatedDurationUnit?: string | null;
   }) => void;
+}
+
+function getDialogTitle(isEditing: boolean, isTr: boolean): string {
+  if (isEditing) {
+    return isTr ? "Teklifi Düzenle" : "Edit Proposal";
+  }
+  return isTr ? "Gizli Teklif Ver" : "Submit Private Offer";
+}
+
+function getDialogDescription(isEditing: boolean, listingTitle: string, isTr: boolean): string {
+  if (isEditing) {
+    return isTr
+      ? `"${listingTitle}" ilanına sunduğunuz teklif parametrelerini güncelleyin.`
+      : `Update your proposal parameters for "${listingTitle}".`;
+  }
+  return isTr
+    ? `"${listingTitle}" başlıklı ilana teklifinizi iletin. Teklifiniz yalnızca ilan sahibine açıktır.`
+    : `Send your proposal for "${listingTitle}". Your offer is private and visible only to the listing owner.`;
+}
+
+function getSuccessMessage(isEditing: boolean, isTr: boolean): string {
+  if (isEditing) {
+    return isTr
+      ? "Teklifiniz başarıyla güncellendi ve revizyon kaydedildi."
+      : "Your proposal has been successfully updated and recorded.";
+  }
+  return isTr
+    ? "Teklifiniz başarıyla ilan sahibine iletildi. İlan sahibi teklifinizi değerlendirdikten sonra size bildirim gelecektir."
+    : "Your offer has been submitted to the listing owner. You will be notified when they review it.";
+}
+
+function getPitchDoctorToggleLabel(show: boolean, isTr: boolean): string {
+  if (show) {
+    return isTr ? "Asistanı Gizle" : "Hide Assistant";
+  }
+  return isTr
+    ? "🤖 Operis AI: Teklifi Değerlendir & Güçlendir"
+    : "🤖 Operis AI: Review & Enhance Pitch";
+}
+
+function getTaxCalculatorToggleLabel(show: boolean, isTr: boolean): string {
+  if (show) {
+    return isTr ? "Hesaplayıcıyı Gizle" : "Hide Calculator";
+  }
+  return isTr ? "Stopaj & SMM Hesaplayıcı" : "Tax & SMM Calculator";
+}
+
+function getSubmitButtonLabel(isEditing: boolean, isTr: boolean): string {
+  if (isEditing) {
+    return isTr ? "Değişiklikleri Kaydet" : "Save Changes";
+  }
+  return isTr ? "Teklifi Gönder" : "Send Offer";
 }
 
 export function SubmitOfferModal({
@@ -58,9 +118,17 @@ export function SubmitOfferModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [showTaxCalculator, setShowTaxCalculator] = useState(false);
+  const [showPitchDoctor, setShowPitchDoctor] = useState(false);
+  const [isSquadOffer, setIsSquadOffer] = useState(initialData?.isSquadOffer ?? false);
+  const [squadTitle, setSquadTitle] = useState(initialData?.squadTitle ?? "");
+  const [squadMembers, setSquadMembers] = useState<SquadMemberDraft[]>(
+    initialData?.squadMembers ?? []
+  );
 
   useEffect(() => {
     if (isOpen) {
+      setShowPitchDoctor(false);
       if (initialData) {
         if (initialData.message !== undefined) setMessage(initialData.message);
         if (initialData.budgetCurrency !== undefined) setBudgetCurrency(initialData.budgetCurrency);
@@ -68,6 +136,9 @@ export function SubmitOfferModal({
         if (initialData.budgetMax !== undefined) setBudgetMax(initialData.budgetMax);
         if (initialData.timelineValue !== undefined) setTimelineValue(initialData.timelineValue);
         if (initialData.timelineUnit !== undefined) setTimelineUnit(initialData.timelineUnit);
+        if (initialData.isSquadOffer !== undefined) setIsSquadOffer(initialData.isSquadOffer);
+        if (initialData.squadTitle !== undefined) setSquadTitle(initialData.squadTitle);
+        if (initialData.squadMembers !== undefined) setSquadMembers(initialData.squadMembers);
       }
       setSuccess(false);
       setError(null);
@@ -126,6 +197,25 @@ export function SubmitOfferModal({
       return;
     }
 
+    if (isSquadOffer) {
+      if (squadMembers.length < 2) {
+        setError(
+          isTr
+            ? "Çevik ekip (kolektif) teklifi en az 2 üyeden oluşmalıdır."
+            : "Squad proposal must include at least 2 team members."
+        );
+        return;
+      }
+      const validation = SquadRevenueEngine.validateSquadDistribution(squadMembers);
+      if (!validation.isValid) {
+        setError(
+          validation.error ||
+            (isTr ? "Hakediş dağılımı geçersizdir." : "Invalid squad distribution.")
+        );
+        return;
+      }
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -138,6 +228,9 @@ export function SubmitOfferModal({
             budgetMax: budgetMax || null,
             estimatedDurationValue: timelineValue ? parseInt(timelineValue, 10) : null,
             estimatedDurationUnit: timelineValue ? timelineUnit : null,
+            isSquadOffer,
+            squadTitle: isSquadOffer ? squadTitle || null : null,
+            squadMembers: isSquadOffer ? squadMembers : undefined,
           }
         : {
             listingId,
@@ -147,6 +240,9 @@ export function SubmitOfferModal({
             budgetMax: budgetMax || null,
             estimatedDurationValue: timelineValue ? parseInt(timelineValue, 10) : null,
             estimatedDurationUnit: timelineValue ? timelineUnit : null,
+            isSquadOffer,
+            squadTitle: isSquadOffer ? squadTitle || null : null,
+            squadMembers: isSquadOffer ? squadMembers : undefined,
           };
 
       const res = await fetch(endpoint, {
@@ -177,17 +273,15 @@ export function SubmitOfferModal({
         });
       }
     } catch (err: unknown) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : isTr
-            ? isEditing
-              ? "Teklif güncellenemedi. Lütfen tekrar deneyin."
-              : "Teklif gönderilemedi. Lütfen tekrar deneyin."
-            : isEditing
-              ? "Could not update offer. Please try again."
-              : "Could not submit offer. Please try again."
-      );
+      let defaultErr = isTr
+        ? "Teklif gönderilemedi. Lütfen tekrar deneyin."
+        : "Could not submit offer. Please try again.";
+      if (isEditing) {
+        defaultErr = isTr
+          ? "Teklif güncellenemedi. Lütfen tekrar deneyin."
+          : "Could not update offer. Please try again.";
+      }
+      setError(err instanceof Error ? err.message : defaultErr);
     } finally {
       setIsSubmitting(false);
     }
@@ -197,24 +291,8 @@ export function SubmitOfferModal({
     <Dialog
       isOpen={isOpen}
       onClose={onClose}
-      title={
-        isEditing
-          ? isTr
-            ? "Teklifi Düzenle"
-            : "Edit Proposal"
-          : isTr
-            ? "Gizli Teklif Ver"
-            : "Submit Private Offer"
-      }
-      description={
-        isEditing
-          ? isTr
-            ? `"${listingTitle}" ilanına sunduğunuz teklif parametrelerini güncelleyin.`
-            : `Update your proposal parameters for "${listingTitle}".`
-          : isTr
-            ? `"${listingTitle}" başlıklı ilana teklifinizi iletin. Teklifiniz yalnızca ilan sahibine açıktır.`
-            : `Send your proposal for "${listingTitle}". Your offer is private and visible only to the listing owner.`
-      }
+      title={getDialogTitle(Boolean(isEditing), isTr)}
+      description={getDialogDescription(Boolean(isEditing), listingTitle, isTr)}
     >
       {success ? (
         <div className="space-y-5 py-4 text-center">
@@ -235,13 +313,7 @@ export function SubmitOfferModal({
             </svg>
           </div>
           <div className="rounded-2xl border border-emerald-500/25 bg-emerald-500/5 p-4 text-sm text-[var(--color-text-primary)] leading-relaxed">
-            {isEditing
-              ? isTr
-                ? "Teklifiniz başarıyla güncellendi ve revizyon kaydedildi."
-                : "Your proposal has been successfully updated and recorded."
-              : isTr
-                ? "Teklifiniz başarıyla ilan sahibine iletildi. İlan sahibi teklifinizi değerlendirdikten sonra size bildirim gelecektir."
-                : "Your offer has been submitted to the listing owner. You will be notified when they review it."}
+            {getSuccessMessage(Boolean(isEditing), isTr)}
           </div>
           <Button
             variant="primary"
@@ -263,27 +335,97 @@ export function SubmitOfferModal({
             </div>
           )}
 
-          <TextArea
-            label={isTr ? "Teklif açıklaması" : "Proposal message"}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder={
-              isTr
-                ? "Bu ilan için uzmanlığınızı, yaklaşımınızı ve yapabileceklerinizi detaylıca açıklayın (en az 50 karakter)..."
-                : "Explain your experience, approach, and how you will deliver this project (minimum 50 characters)..."
-            }
-            minLength={50}
-            maxLength={3000}
-            showCount
-            required
-            rows={5}
-          />
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-semibold text-[var(--color-text-secondary)]">
+                {isTr ? "Teklif açıklaması" : "Proposal message"}
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowPitchDoctor((prev) => !prev)}
+                className={`inline-flex items-center gap-1.5 text-[11px] font-semibold transition-all px-2.5 py-1 rounded-lg border cursor-pointer ${
+                  showPitchDoctor
+                    ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/40 shadow-xs"
+                    : "bg-indigo-500/10 hover:bg-indigo-500/15 text-indigo-400 hover:text-indigo-300 border-indigo-500/25"
+                }`}
+              >
+                <Sparkles className="h-3.5 w-3.5 fill-indigo-400/30 text-indigo-400" />
+                <span>{getPitchDoctorToggleLabel(showPitchDoctor, isTr)}</span>
+              </button>
+            </div>
+
+            {showPitchDoctor && (
+              <div className="pt-1 pb-1">
+                <ProposalPitchDoctorCard
+                  listingId={listingId}
+                  listingTitle={listingTitle}
+                  proposalMessage={message}
+                  proposedBudgetMin={budgetMin}
+                  proposedBudgetMax={budgetMax}
+                  proposedCurrency={budgetCurrency}
+                  proposedTimelineValue={timelineValue}
+                  proposedTimelineUnit={timelineUnit}
+                  locale={locale}
+                  onClose={() => setShowPitchDoctor(false)}
+                  onApplyEnhancement={(enhancedText) => {
+                    setMessage(enhancedText);
+                  }}
+                />
+              </div>
+            )}
+
+            <TextArea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder={
+                isTr
+                  ? "Bu ilan için uzmanlığınızı, yaklaşımınızı ve yapabileceklerinizi detaylıca açıklayın (en az 50 karakter)..."
+                  : "Explain your experience, approach, and how you will deliver this project (minimum 50 characters)..."
+              }
+              minLength={50}
+              maxLength={3000}
+              showCount
+              required
+              rows={5}
+            />
+          </div>
 
           {/* Budget section */}
           <div className="space-y-2">
-            <label className="text-xs font-medium text-[var(--color-text-secondary)]">
-              {isTr ? "Önerilen Bütçe (İsteğe Bağlı)" : "Proposed Budget (Optional)"}
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-medium text-[var(--color-text-secondary)]">
+                {isTr ? "Önerilen Bütçe (İsteğe Bağlı)" : "Proposed Budget (Optional)"}
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowTaxCalculator((prev) => !prev)}
+                className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-cyan-400 hover:text-cyan-300 transition-colors cursor-pointer"
+              >
+                <Calculator className="h-3.5 w-3.5" />
+                <span>{getTaxCalculatorToggleLabel(showTaxCalculator, isTr)}</span>
+              </button>
+            </div>
+
+            {showTaxCalculator && (
+              <div className="pt-1 pb-2">
+                <TaxCalculatorWidget
+                  initialAmount={budgetMax || budgetMin || "50000"}
+                  currency={budgetCurrency}
+                  locale={locale}
+                  compactMode
+                  onClose={() => setShowTaxCalculator(false)}
+                  onApplyToProposal={(grossAmount, proposalNote) => {
+                    setBudgetMin(String(grossAmount));
+                    setBudgetMax(String(grossAmount));
+                    if (proposalNote && !message.includes("[Bütçe")) {
+                      setMessage((prev) => (prev ? `${prev}\n\n${proposalNote}` : proposalNote));
+                    }
+                    setShowTaxCalculator(false);
+                  }}
+                />
+              </div>
+            )}
+
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <Select
                 value={budgetCurrency}
@@ -340,6 +482,19 @@ export function SubmitOfferModal({
             </div>
           </div>
 
+          {/* Squad / Agile Consortium Section */}
+          <SquadBuilderSection
+            enabled={isSquadOffer}
+            onToggle={setIsSquadOffer}
+            squadTitle={squadTitle}
+            onTitleChange={setSquadTitle}
+            members={squadMembers}
+            onChangeMembers={setSquadMembers}
+            totalBudget={parseFloat(budgetMax || budgetMin || "0") || undefined}
+            currency={budgetCurrency}
+            locale={locale}
+          />
+
           {/* Statutory disclaimer */}
           <div className="rounded-2xl border border-blue-500/20 bg-blue-500/5 p-3.5 text-xs text-[var(--color-text-secondary)] leading-relaxed">
             {isTr
@@ -358,13 +513,7 @@ export function SubmitOfferModal({
               className="font-semibold"
               isLoading={isSubmitting}
             >
-              {isEditing
-                ? isTr
-                  ? "Değişiklikleri Kaydet"
-                  : "Save Changes"
-                : isTr
-                  ? "Teklifi Gönder"
-                  : "Send Offer"}
+              {getSubmitButtonLabel(Boolean(isEditing), isTr)}
             </Button>
           </div>
         </form>

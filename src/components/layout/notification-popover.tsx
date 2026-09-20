@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -15,9 +15,12 @@ import {
   Sparkles,
   Radar,
   Award,
+  FileCheck2,
 } from "lucide-react";
 import { getLocalizedRoute, getAlternateLocalePath } from "@/src/lib/i18n/routes";
 import { Locale } from "@/src/lib/i18n/config";
+import { useRealtimeNotifications } from "@/src/hooks/use-realtime-notifications";
+import { LiveNotificationToast } from "./live-notification-toast";
 
 export interface NotificationItem {
   id: string;
@@ -62,13 +65,18 @@ function formatRelativeTime(dateStr: string | Date, isTr: boolean): string {
 
 function getNotificationIcon(type: string) {
   switch (type) {
+    case "CONTRACT_PACKAGE_SIGNED":
+    case "CONTRACT_PACKAGE_FULLY_EXECUTED":
+      return <FileCheck2 className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />;
     case "OFFER_RECEIVED":
     case "OFFER_UPDATED":
+    case "OFFER_COUNTERED":
       return <Inbox className="h-3.5 w-3.5 text-purple-400" aria-hidden="true" />;
     case "OFFER_ACCEPTED":
     case "MATCHED":
       return <Handshake className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />;
     case "OFFER_REJECTED":
+    case "OFFER_WITHDRAWN":
       return <Send className="h-3.5 w-3.5 text-amber-400" aria-hidden="true" />;
     case "SECURITY_EVENT":
       return <ShieldAlert className="h-3.5 w-3.5 text-rose-400" aria-hidden="true" />;
@@ -77,8 +85,11 @@ function getNotificationIcon(type: string) {
     case "MODERATION_ACTION":
       return <Sparkles className="h-3.5 w-3.5 text-cyan-400" aria-hidden="true" />;
     case "RADAR_MATCH":
+    case "CATEGORY_FOLLOW_MATCH":
       return <Radar className="h-3.5 w-3.5 text-cyan-400 animate-pulse" aria-hidden="true" />;
     case "ENDORSEMENT_RECEIVED":
+    case "REVIEWS_REVEALED":
+    case "REVIEW_PENDING_COUNTERPARTY":
       return <Award className="h-3.5 w-3.5 text-amber-400" aria-hidden="true" />;
     default:
       return <Bell className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />;
@@ -95,52 +106,22 @@ export function NotificationPopover({
   const router = useRouter();
   const listRef = useRef<HTMLDivElement>(null);
 
-  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
+  const {
+    notifications,
+    unreadCount,
+    isRinging,
+    liveToast,
+    dismissToast,
+    markAllRead,
+    markAsRead,
+    fetchNotifications,
+  } = useRealtimeNotifications({ locale });
+
   const [displayedCount, setDisplayedCount] = useState(5);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isMarkingAll, setIsMarkingAll] = useState(false);
 
-  // Fetch initial notifications
-  const fetchNotifications = useCallback(async () => {
-    try {
-      const res = await fetch(`/api/notifications?limit=50&locale=${locale}`, {
-        headers: { "x-locale": locale },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const items: NotificationItem[] = data.notifications || [];
-        setNotifications(items);
-        setUnreadCount(data.unreadCount ?? items.filter((n) => !n.readAt).length);
-      }
-    } catch {
-      // Handled gracefully
-    }
-  }, [locale]);
-
-  useEffect(() => {
-    fetchNotifications();
-
-    const interval = setInterval(() => {
-      if (document.visibilityState === "visible") {
-        fetchNotifications();
-      }
-    }, 45000);
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        fetchNotifications();
-      }
-    };
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      clearInterval(interval);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [fetchNotifications]);
-
-  // When dropdown opens, reset displayed count to 5
+  // When dropdown opens, reset displayed count to 5 and sync最新
   useEffect(() => {
     if (isOpen) {
       setDisplayedCount(5);
@@ -166,40 +147,18 @@ export function NotificationPopover({
   const handleMarkAllRead = async () => {
     setIsMarkingAll(true);
     try {
-      const res = await fetch("/api/notifications", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-locale": locale },
-        body: JSON.stringify({ action: "markAllRead", locale }),
-      });
-      if (res.ok) {
-        const nowIso = new Date().toISOString();
-        setNotifications((prev) => prev.map((n) => ({ ...n, readAt: n.readAt ?? nowIso })));
-        setUnreadCount(0);
-      }
-    } catch {
-      // Fallback
+      await markAllRead();
     } finally {
       setIsMarkingAll(false);
     }
   };
 
-  const handleNotificationClick = async (item: NotificationItem) => {
+  const handleNotificationClick = (item: NotificationItem) => {
     if (!item.readAt) {
-      try {
-        const res = await fetch("/api/notifications", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "x-locale": locale },
-          body: JSON.stringify({ notificationId: item.id, locale }),
-        });
-        if (res.ok) {
-          setNotifications((prev) =>
-            prev.map((n) => (n.id === item.id ? { ...n, readAt: new Date().toISOString() } : n))
-          );
-          setUnreadCount((prev) => Math.max(prev - 1, 0));
-        }
-      } catch {
-        // Continue navigation anyway
-      }
+      markAsRead(item.id);
+    }
+    if (liveToast?.id === item.id) {
+      dismissToast();
     }
 
     onClose();
@@ -220,22 +179,34 @@ export function NotificationPopover({
       <button
         type="button"
         onClick={onToggle}
-        className="relative p-2 rounded-xl text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] border border-transparent hover:border-[var(--color-border-subtle)] transition-all cursor-pointer focus:outline-none flex items-center justify-center"
+        className={`relative px-2.5 py-1 rounded-xl transition-all cursor-pointer focus:outline-none flex flex-col items-center justify-center gap-0.5 ${
+          isOpen
+            ? "text-[var(--color-text-primary)] bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] shadow-xs"
+            : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] border border-transparent hover:border-[var(--color-border-subtle)]"
+        }`}
         title={isTr ? "Bildirimler" : "Notifications"}
         aria-label={isTr ? "Bildirim Menüsü" : "Notifications Menu"}
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <Bell className="h-4 w-4" aria-hidden="true" />
-        {unreadCount > 0 && (
-          <span
-            className="absolute top-1.5 right-1.5 flex h-2 w-2"
-            aria-label={isTr ? `${unreadCount} okunmamış bildirim` : `${unreadCount} unread`}
-          >
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500" />
-          </span>
-        )}
+        <div className="relative flex items-center justify-center">
+          <Bell
+            className={`h-4 w-4 transition-transform ${isRinging ? "animate-bell-ring text-blue-400" : ""}`}
+            aria-hidden="true"
+          />
+          {unreadCount > 0 && (
+            <span
+              className="absolute -top-1 -right-1 flex h-2.5 w-2.5"
+              aria-label={isTr ? `${unreadCount} okunmamış bildirim` : `${unreadCount} unread`}
+            >
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500 animate-badge-glow ring-2 ring-[var(--color-surface-base)]" />
+            </span>
+          )}
+        </div>
+        <span className="text-[10px] font-medium leading-tight whitespace-nowrap select-none">
+          {isTr ? "Bildirim" : "Alerts"}
+        </span>
       </button>
 
       {/* Notification Dropdown Popover */}
@@ -389,6 +360,14 @@ export function NotificationPopover({
           </div>
         </div>
       )}
+
+      {/* Floating Real-time Toast Notification Preview */}
+      <LiveNotificationToast
+        notification={liveToast}
+        locale={locale}
+        onDismiss={dismissToast}
+        onSelect={handleNotificationClick}
+      />
     </div>
   );
 }

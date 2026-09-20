@@ -27,7 +27,9 @@ export function RegistryInteractive({ locale }: RegistryInteractiveProps) {
     {
       key: "title",
       label: isTr ? "Ticari Unvan" : "Corporate Title",
-      value: "Operis Teknoloji ve Yazılım Çözümleri A.Ş.",
+      value: isTr
+        ? "Vellium (Operis bir Vellium ürünüdür)"
+        : "Vellium (Operis is a product of Vellium)",
       canCopy: true,
     },
     {
@@ -45,7 +47,7 @@ export function RegistryInteractive({ locale }: RegistryInteractiveProps) {
     {
       key: "kep",
       label: isTr ? "Kayıtlı E-Posta (KEP)" : "Registered KEP",
-      value: "operis.teknoloji@hs01.kep.tr",
+      value: "vellium@hs01.kep.tr",
       canCopy: true,
     },
     {

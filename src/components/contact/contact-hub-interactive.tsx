@@ -30,8 +30,8 @@ export function ContactHubInteractive({ locale }: ContactHubInteractiveProps) {
     {
       id: "general",
       icon: Headphones,
-      title: isTr ? "Teknik Destek & Platform Operasyonları" : "Technical Support & Platform Ops",
-      email: "destek@operis.pro",
+      title: isTr ? "Teknik Destek & Müşteri Masası" : "Customer Support & Technical Ops",
+      email: "support@vellium.dev",
       sla: isTr ? "< 6 İş Saati" : "< 6 Business Hours",
       color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
       description: isTr
@@ -42,7 +42,7 @@ export function ContactHubInteractive({ locale }: ContactHubInteractiveProps) {
       id: "enterprise",
       icon: Briefcase,
       title: isTr ? "Kurumsal & Girişim Çözümleri" : "Enterprise & Strategic Partnerships",
-      email: "kurumsal@operis.pro",
+      email: "contact@vellium.dev",
       sla: isTr ? "< 4 İş Saati" : "< 4 Business Hours",
       color: "text-blue-400 bg-blue-500/10 border-blue-500/20",
       description: isTr
@@ -53,7 +53,7 @@ export function ContactHubInteractive({ locale }: ContactHubInteractiveProps) {
       id: "security",
       icon: ShieldAlert,
       title: isTr ? "Güvenlik & Bug Bounty Masası" : "Security & Vulnerability Disclosure",
-      email: "guvenlik@operis.pro",
+      email: "security@vellium.dev",
       sla: isTr ? "< 2 Saat (7/24 Kesintisiz)" : "< 2 Hours (24/7 Priority)",
       color: "text-rose-400 bg-rose-500/10 border-rose-500/20",
       description: isTr
@@ -64,7 +64,7 @@ export function ContactHubInteractive({ locale }: ContactHubInteractiveProps) {
       id: "legal",
       icon: Scale,
       title: isTr ? "Hukuk & Uyuşmazlık Müşavirliği" : "Legal Counsel & Statutory Disputes",
-      email: "hukuk@operis.pro",
+      email: "legal@vellium.dev",
       sla: isTr ? "< 12 İş Saati" : "< 12 Business Hours",
       color: "text-purple-400 bg-purple-500/10 border-purple-500/20",
       description: isTr
@@ -74,8 +74,8 @@ export function ContactHubInteractive({ locale }: ContactHubInteractiveProps) {
     {
       id: "press",
       icon: Newspaper,
-      title: isTr ? "Basın & Medya İletişimi" : "Press & Media Relations",
-      email: "basin@operis.pro",
+      title: isTr ? "Genel İletişim & Basın" : "General Contact & Media Relations",
+      email: "contact@vellium.dev",
       sla: isTr ? "< 24 İş Saati" : "< 24 Business Hours",
       color: "text-amber-400 bg-amber-500/10 border-amber-500/20",
       description: isTr

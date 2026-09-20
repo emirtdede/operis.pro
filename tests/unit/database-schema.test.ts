@@ -38,6 +38,7 @@ describe("Database Foundation & Schema Invariants", () => {
       expect(schema.userPrivateIdentity).toBeDefined();
       expect(schema.profiles).toBeDefined();
       expect(schema.profileLinks).toBeDefined();
+      expect(schema.companyVerifications).toBeDefined();
       expect(schema.categories).toBeDefined();
       expect(schema.categoryTranslations).toBeDefined();
       expect(schema.categoryFollows).toBeDefined();

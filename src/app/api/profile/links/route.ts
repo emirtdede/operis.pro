@@ -61,14 +61,13 @@ export async function POST(req: Request) {
   } catch (err: unknown) {
     const locale = headerLocale || "tr";
     const isEn = locale === "en";
-    const message =
-      err instanceof z.ZodError
-        ? err.issues[0]?.message || (isEn ? "Invalid link format." : "Geçersiz bağlantı formatı.")
-        : err instanceof Error
-          ? err.message
-          : isEn
-            ? "Failed to save links"
-            : "Bağlantılar kaydedilemedi";
+    let message = isEn ? "Failed to save links" : "Bağlantılar kaydedilemedi";
+    if (err instanceof z.ZodError) {
+      const fallbackFormat = isEn ? "Invalid link format." : "Geçersiz bağlantı formatı.";
+      message = err.issues[0]?.message || fallbackFormat;
+    } else if (err instanceof Error) {
+      message = err.message;
+    }
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

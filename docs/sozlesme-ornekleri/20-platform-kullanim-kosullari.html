@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KULLANIM KOŞULLARI | Operis Legal Hub</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm;
+      @bottom-right {
+        content: counter(page) "/" counter(pages);
+        font-size: 8pt;
+        color: #94a3b8;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #0f172a;
+      line-height: 1.55;
+      padding: 32px;
+      margin: 0 auto;
+      max-width: 900px;
+      background: #ffffff;
+      font-size: 10pt;
+    }
+    .header-bar {
+      border-bottom: 2px solid #0284c7;
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .brand-title {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      color: #0f172a;
+      margin: 0;
+    }
+    .brand-title span { color: #0284c7; }
+    .brand-sub {
+      font-size: 8.5pt;
+      color: #64748b;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+    .header-meta {
+      font-size: 8.5pt;
+      color: #475569;
+      text-align: right;
+      line-height: 1.4;
+    }
+    h1 {
+      font-size: 16pt;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 14px 0 6px 0;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      break-after: avoid-page;
+      page-break-after: avoid;
+    }
+    h2, h3, h4, h5, h6 {
+      break-after: avoid-page;
+      page-break-after: avoid;
+    }
+    h1, h2, h3, h4, h5, h6,
+    .brand-title, .party-title, .section-title, .clause-title {
+      break-after: avoid-page !important;
+      page-break-after: avoid !important;
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+    h1 + *, h2 + *, h3 + *, h4 + *, h5 + *, h6 + *,
+    .clause-title + *, .section-title + * {
+      break-before: avoid-page !important;
+      page-break-before: avoid !important;
+    }
+    p, li {
+      orphans: 3;
+      widows: 3;
+    }
+    .doc-subtitle {
+      font-size: 9pt;
+      color: #64748b;
+      margin-bottom: 16px;
+      line-height: 1.4;
+      break-after: avoid-page;
+      page-break-after: avoid;
+    }
+    .badge-pill {
+      display: inline-block;
+      background: #f0fdf4;
+      color: #166534;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 8.5pt;
+      border: 1px solid #bbf7d0;
+      margin-bottom: 18px;
+      break-after: avoid-page;
+      page-break-after: avoid;
+    }
+    .parties-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 18px 0;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .party-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 9pt;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .party-title {
+      font-size: 8pt;
+      font-weight: 700;
+      color: #0284c7;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 9pt;
+    }
+    tr {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    th {
+      background: #f1f5f9;
+      text-align: left;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      font-weight: 700;
+      color: #334155;
+    }
+    td {
+      padding: 8px 10px;
+      border: 1px solid #e2e8f0;
+      color: #1e293b;
+    }
+    .highlight-box {
+      background: #f8fafc;
+      padding: 12px 16px;
+      border-left: 4px solid #0284c7;
+      border-radius: 0 6px 6px 0;
+      margin: 16px 0;
+      font-size: 9pt;
+      color: #1e293b;
+      line-height: 1.5;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .legal-alert {
+      background: #fffbeb;
+      border: 1px solid #fef3c7;
+      border-left: 4px solid #f59e0b;
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      margin: 16px 0;
+      font-size: 8.5pt;
+      color: #92400e;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .legal-section {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+      margin-bottom: 16px;
+    }
+    .footer-bar {
+      margin-top: 36px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 14px;
+      font-size: 8.5pt;
+      color: #64748b;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .hash-seal {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: #0284c7;
+      font-size: 8pt;
+      word-break: break-all;
+      background: #f8fafc;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      margin-top: 12px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .print-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0284c7;
+      color: #ffffff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 13px;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .print-btn:hover {
+      background: #0369a1;
+      transform: translateY(-2px);
+    }
+    @media print {
+      body { padding: 0; max-width: 100%; }
+      .print-btn { display: none !important; }
+      h1, h2, h3, h4, h5, h6,
+      .brand-title, .party-title, .section-title, .clause-title {
+        break-after: avoid-page !important;
+        page-break-after: avoid !important;
+      }
+      .party-card, .parties-grid, .highlight-box, .legal-alert,
+      .safe-harbor-item, .safe-harbor-header, .safe-harbor-summary,
+      .clause-block, .legal-section, .dpa-annex, .safe-harbor-annex,
+      .inflation-shield-box, .tax-breakdown-table,
+      .hash-seal, .footer-bar, .sha-seal, .signature-box, .signature-grid,
+      table, tr {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="print-btn" onclick="window.print()">
+    🖨️ PDF Olarak Kaydet / Yazdır
+  </button>
+
+  <div class="header-bar">
+    <div>
+      <h2 class="brand-title">OPERIS <span>LEGAL</span></h2>
+      <div class="brand-sub">Bağımsız Yazılım ve Teknoloji Sözleşme Altyapısı</div>
+    </div>
+    <div class="header-meta">
+      <div><strong>Sözleşme No:</strong> OPR-LEGAL-TERMS-v1.0</div>
+      <div><strong>Tarih:</strong> 07.09.2026</div>
+      <div><strong>Hukuki Statü:</strong> Bağlayıcı Resmi Belge</div>
+    </div>
+  </div>
+
+  <h1>KULLANIM KOŞULLARI</h1>
+  <div class="doc-subtitle">Vellium — Yasal Kullanım Şartları (Operis bir Vellium ürünüdür)</div>
+  <div class="badge-pill">Hukuki Güvence & Aracı Hizmet Sağlayıcı</div>
+
+  
+
+  <div class="content-body">
+    <div class="highlight-box" style="break-inside: avoid; page-break-inside: avoid;"><strong>Önemli Yasal Vurgu:</strong> Platform yalnızca tarafları bir araya getiren bağımsız bir keşif ağıdır. Komisyon kesmez (%0 komisyon), emanetçi (escrow) veya ödeme kuruluşu değildir, taraflar arasındaki sözleşmenin tarafı ve garantörü olamaz.</div><div class="legal-section" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 16px;"><h3 style="margin-top: 20px; font-size: 11pt; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; break-after: avoid-page; page-break-after: avoid;">1. Taraflar ve Hizmetin Hukuki Niteliği</h3><p style="font-size: 9pt; color: #334155; margin: 6px 0; text-align: justify;">İşbu Kullanım Koşulları ("Sözleşme"), Operis platformunun işleticisi olan Vellium ("Şirket") ile sisteme üye olan kullanıcı ("Kullanıcı") arasında akdedilmiştir. Operis bir Vellium ürünüdür.</p><p style="font-size: 9pt; color: #334155; margin: 6px 0; text-align: justify;">Platform; 6563 sayılı Elektronik Ticaretin Düzenlenmesi Hakkında Kanun ve 5651 sayılı Kanun uyarınca münhasıran bir 'Aracı Hizmet Sağlayıcı' ve 'Yer Sağlayıcı' niteliğindedir.</p><ul style="margin: 6px 0; padding-left: 20px; font-size: 9pt; color: #334155;"><li>Platform, Kullanıcılar tarafından paylaşılan proje veya teklif içeriklerinin doğruluğunu araştırmakla yükümlü değildir.</li><li>Kullanıcılar sisteme girdikleri tüm verilerin hukuki ve cezai sorumluluğunu şahsen üstlenir.</li></ul></div><div class="legal-section" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 16px;"><h3 style="margin-top: 20px; font-size: 11pt; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; break-after: avoid-page; page-break-after: avoid;">2. İş İlişkisinin ve Temsilciliğin Kesin Reddi</h3><p style="font-size: 9pt; color: #334155; margin: 6px 0; text-align: justify;">Platform ile Kullanıcılar arasında veya Kullanıcıların kendi aralarında hiçbir surette 4857 sayılı İş Kanunu veya 5510 sayılı Sosyal Sigortalar Kanunu kapsamında işçi-işveren, alt işveren veya asıl işveren ilişkisi kurulamaz.</p><ul style="margin: 6px 0; padding-left: 20px; font-size: 9pt; color: #334155;"><li>Platform, bir özel istihdam bürosu (İŞKUR aracısı) veya iş bulma ajansı değildir.</li><li>Kullanıcılar bağımsız girişimci / yüklenici statüsündedir; hiçbir vekalet, temsilcilik veya adi ortaklık doğmaz.</li></ul></div><div class="legal-section" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 16px;"><h3 style="margin-top: 20px; font-size: 11pt; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; break-after: avoid-page; page-break-after: avoid;">3. Emanet (Escrow), Ödeme ve Vergi Sorumsuzluğu</h3><p style="font-size: 9pt; color: #334155; margin: 6px 0; text-align: justify;">Platform para tutmaz, emanet hesabı (escrow) sunmaz, hakediş dağıtmaz ve komisyon kesintisi yapmaz (%0 Komisyon).</p><p style="font-size: 9pt; color: #334155; margin: 6px 0; text-align: justify;">Mali ve vergisel yükümlülükler tamamen tarafların uhdesindedir:</p><ul style="margin: 6px 0; padding-left: 20px; font-size: 9pt; color: #334155;"><li>Her türlü ödeme doğrudan tarafların kendi aralarında kararlaştıracağı banka veya yasal finans kanalları üzerinden yapılır.</li><li>Faturalandırma, KDV, stopaj, serbest meslek makbuzu (SMM) ve gelir vergisi beyanları tarafların şahsi mükellefiyetindedir.</li></ul></div><div class="legal-section" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 16px;"><h3 style="margin-top: 20px; font-size: 11pt; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; break-after: avoid-page; page-break-after: avoid;">4. Yazılım Kalitesi, Güvenlik Zafiyetleri ve Siber Olaylar</h3><p style="font-size: 9pt; color: #334155; margin: 6px 0; text-align: justify;">Freelancer tarafından teslim edilen yazılımların çalışabilirliği, kalitesi, performans düzeyi veya siber güvenlik zafiyeti (backdoor, zero-day, malware vb.) içermemesi hususunda Platform hiçbir garanti vermez.</p><p style="font-size: 9pt; color: #334155; margin: 6px 0; text-align: justify;">Kaynak kod denetimi, penetrasyon testleri ve kabul testlerinin (UAT) yürütülmesi münhasıran İşveren'in sorumluluğundadır.</p></div><div class="legal-section" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 16px;"><h3 style="margin-top: 20px; font-size: 11pt; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; break-after: avoid-page; page-break-after: avoid;">5. Fikri Mülkiyet Hakları (5846 Sayılı FSEK)</h3><p style="font-size: 9pt; color: #334155; margin: 6px 0; text-align: justify;">Kod, tasarım ve mimari üzerindeki telif ve fikri hakların devri, 5846 sayılı FSEK uyarınca tarafların kendi aralarında bağımsız olarak akdedeceği yazılı sözleşmelere tabidir. Platform telif uyuşmazlıklarının tarafı değildir.</p></div><div class="legal-section" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 16px;"><h3 style="margin-top: 20px; font-size: 11pt; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; break-after: avoid-page; page-break-after: avoid;">6. Azami Sorumsuzluk ve Tazminat Sınırı</h3><p style="font-size: 9pt; color: #334155; margin: 6px 0; text-align: justify;">Yürürlükteki mevzuatın izin verdiği azami ölçüde; ağır kusur ve kasıt halleri müstesna olmak üzere, Platform kâr kaybı, veri kaybı veya iş kesintisinden kaynaklanan hiçbir dolaylı veya arızi zarardan sorumlu tutulamaz.</p><p style="font-size: 9pt; color: #334155; margin: 6px 0; text-align: justify;">Platformun herhangi bir sebeple sorumlu tutulması halinde azami mali mesuliyeti, uyuşmazlık konusu işlem için Platform'a fiilen ödenen tutarla (0 TL) veya her halükarda azami 100 Türk Lirası ile sınırlıdır.</p></div><div class="legal-section" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 16px;"><h3 style="margin-top: 20px; font-size: 11pt; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; break-after: avoid-page; page-break-after: avoid;">7. Kullanıcının Rücu ve Tazmin Yükümlülüğü (Indemnity)</h3><p style="font-size: 9pt; color: #334155; margin: 6px 0; text-align: justify;">Kullanıcı; kanunları veya üçüncü kişi haklarını ihlal etmesi sebebiyle Platform aleyhine doğabilecek her türlü idari para cezası, tazminat ve dava masraflarını Platform'un ilk talebi üzerine faiziyle birlikte nakden ve defaten ödemeyi kabul ve taahhüt eder.</p></div><div class="legal-section" style="break-inside: avoid; page-break-inside: avoid; margin-bottom: 16px;"><h3 style="margin-top: 20px; font-size: 11pt; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; break-after: avoid-page; page-break-after: avoid;">8. Yetkili Mahkeme ve Delil Sözleşmesi</h3><p style="font-size: 9pt; color: #334155; margin: 6px 0; text-align: justify;">İşbu Sözleşme Türkiye Cumhuriyeti Kanunlarına tabidir. Doğabilecek her türlü uyuşmazlıkta İstanbul (Çağlayan) Mahkemeleri ve İcra Daireleri münhasıran yetkilidir.</p><p style="font-size: 9pt; color: #334155; margin: 6px 0; text-align: justify;">HMK m. 193 uyarınca; Platformun sunucu kayıtları, kriptografik SHA-256 onay özetleri ve veri tabanı logları kesin ve bağlayıcı delil niteliğindedir.</p></div>
+  </div>
+
+  <div class="footer-bar">
+    <div><strong>Referans Kodu:</strong> OPR-LEGAL-TERMS-v1.0</div>
+    <div>Operis P2P Doğrudan Eşleşme &amp; Sözleşme Altyapısı</div>
+  </div>
+  <div class="hash-seal">
+    <strong>SHA-256 Dijital Mühür (HMK m. 193):</strong> c9a1d84f932e5b7194f1c93a401b2fe0f7e8a9c3b2e5d8f4a1c6e9b2d5f8a3c7
+  </div>
+</body>
+</html>

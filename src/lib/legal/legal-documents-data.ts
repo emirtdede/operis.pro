@@ -21,7 +21,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
     tr: {
       key: "terms",
       title: "Kullanım Koşulları",
-      subtitle: "Operis Teknoloji Anonim Şirketi — Yasal Kullanım Şartları",
+      subtitle: "Vellium — Yasal Kullanım Şartları (Operis bir Vellium ürünüdür)",
       version: "v1.0",
       contentHash: "c9a1d84f932e5b7194f1c93a401b2fe0f7e8a9c3b2e5d8f4a1c6e9b2d5f8a3c7",
       lastUpdated: "07.09.2026",
@@ -32,7 +32,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
         {
           title: "1. Taraflar ve Hizmetin Hukuki Niteliği",
           paragraphs: [
-            'İşbu Kullanım Koşulları ("Sözleşme"), Operis Teknoloji A.Ş. ("Platform") ile sisteme üye olan kullanıcı ("Kullanıcı") arasında akdedilmiştir.',
+            'İşbu Kullanım Koşulları ("Sözleşme"), Operis platformunun işleticisi olan Vellium ("Şirket") ile sisteme üye olan kullanıcı ("Kullanıcı") arasında akdedilmiştir. Operis bir Vellium ürünüdür.',
             "Platform; 6563 sayılı Elektronik Ticaretin Düzenlenmesi Hakkında Kanun ve 5651 sayılı Kanun uyarınca münhasıran bir 'Aracı Hizmet Sağlayıcı' ve 'Yer Sağlayıcı' niteliğindedir.",
           ],
           bullets: [
@@ -99,7 +99,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
     en: {
       key: "terms",
       title: "Terms of Service",
-      subtitle: "Operis Teknoloji Anonim Sirketi — Binding User Terms",
+      subtitle: "Vellium — Binding User Terms (Operis is a product of Vellium)",
       version: "v1.0",
       contentHash: "f7e8a9c3b2e5d8f4a1c6e9b2d5f8a3c7c9a1d84f932e5b7194f1c93a401b2fe0",
       lastUpdated: "07.09.2026",
@@ -110,7 +110,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
         {
           title: "1. Parties and Intermediary Status",
           paragraphs: [
-            "This Agreement is between Operis Teknoloji A.S. ('Platform') and the registered user ('User').",
+            "This Agreement is between Vellium ('Company', operator of the Operis platform; Operis is a product of Vellium) and the registered user ('User').",
             "The Platform operates exclusively as an intermediary service and hosting provider under applicable digital commerce statutes.",
           ],
           bullets: [
@@ -171,7 +171,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
         {
           title: "1. Veri Sorumlusunun Kimliği",
           paragraphs: [
-            "6698 sayılı Kişisel Verilerin Korunması Kanunu ('KVKK') uyarınca veri sorumlusu Operis Teknoloji Anonim Şirketi'dir.",
+            "6698 sayılı Kişisel Verilerin Korunması Kanunu ('KVKK') uyarınca veri sorumlusu Vellium'dur (Operis bir Vellium ürünüdür).",
           ],
         },
         {
@@ -207,7 +207,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
           title: "6. İlgili Kişinin Hakları (KVKK Madde 11)",
           paragraphs: [
             "Verilerinizin işlenip işlenmediğini öğrenme, düzeltilmesini isteme, silinmesini veya yok edilmesini talep etme haklarına sahipsiniz.",
-            "Taleplerinizi kvkk@operis.pro adresine iletebilirsiniz. Başvurular 30 gün içinde ücretsiz sonuçlandırılır.",
+            "Taleplerinizi privacy@vellium.dev adresine iletebilirsiniz. Başvurular 30 gün içinde ücretsiz sonuçlandırılır.",
           ],
         },
       ],
@@ -226,7 +226,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
         {
           title: "1. Data Controller",
           paragraphs: [
-            "Operis Teknoloji Anonim Sirketi acts as data controller under applicable privacy statutes.",
+            "Vellium acts as data controller under applicable privacy statutes (Operis is a product of Vellium).",
           ],
         },
         {
@@ -253,7 +253,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
         {
           title: "5. Data Subject Rights",
           paragraphs: [
-            "You may exercise your rights to access, rectification, and erasure by emailing kvkk@operis.pro.",
+            "You may exercise your rights to access, rectification, and erasure by emailing privacy@vellium.dev.",
           ],
         },
       ],
@@ -481,7 +481,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
         {
           title: "2. Uyar-Kaldır İhbar Kanalı",
           paragraphs: [
-            "Telif hakkı ihlali iddiaları legal@operis.pro adresine iletilir ve 48 saat içinde sonuçlandırılır.",
+            "Telif hakkı ihlali iddiaları legal@vellium.dev adresine iletilir ve 48 saat içinde sonuçlandırılır.",
           ],
         },
       ],
@@ -527,7 +527,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
         {
           title: "2. Rızanın Geri Alınması",
           paragraphs: [
-            "Hesap ayarlarından veya kvkk@operis.pro üzerinden rızanızı dilediğiniz an geri alabilirsiniz.",
+            "Hesap ayarlarından veya privacy@vellium.dev üzerinden rızanızı dilediğiniz an geri alabilirsiniz.",
           ],
         },
       ],
@@ -608,18 +608,18 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       lastUpdated: "17.09.2026",
       badge: "Resmi Şirket Künyesi • ETBİS Kayıtlı",
       highlight:
-        "Operis Teknoloji Anonim Şirketi tüzel kişiliği altında işletilmektedir. MERSİS, KEP ve resmi tebligat kanalları aşağıda yer almaktadır.",
+        "Vellium tarafından işletilmektedir. Operis bir Vellium ürünüdür. MERSİS, KEP ve resmi tebligat kanalları aşağıda yer almaktadır.",
       sections: [
         {
           title: "1. Şirket Bilgileri",
           paragraphs: [
-            "Unvan: Operis Teknoloji Anonim Şirketi | MERSİS: 0123456789000001 | Şişli V.D. 1234567890 | Adres: Büyükdere Cad. No: 100 Şişli, İstanbul.",
+            "Unvan: Vellium (Operis bir Vellium ürünüdür) | MERSİS: 0123456789000001 | Şişli V.D. 1234567890 | Adres: Büyükdere Cad. No: 100 Şişli, İstanbul.",
           ],
         },
         {
           title: "2. Resmi İletişim ve KEP",
           paragraphs: [
-            "Resmi KEP: operis@hs01.kep.tr | Hukuk Masası: legal@operis.pro | Telefon: +90 (212) 555 0100",
+            "Resmi KEP: vellium@hs01.kep.tr | Hukuk Masası: legal@vellium.dev | Müşteri Desteği: support@vellium.dev | Genel İletişim: contact@vellium.dev | Telefon: +90 (212) 555 0100",
           ],
         },
       ],
@@ -633,12 +633,12 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       lastUpdated: "17.09.2026",
       badge: "Official Corporate Entity",
       highlight:
-        "Operated under Operis Teknoloji Anonim Sirketi. Registered address, corporate ID, and legal compliance channels.",
+        "Operated under Vellium. Operis is a proprietary product of Vellium. Registered address, corporate ID, and legal compliance channels.",
       sections: [
         {
           title: "1. Entity Details",
           paragraphs: [
-            "Company: Operis Teknoloji A.S. | Address: Buyukdere Cad. No: 100 Sisli, Istanbul, Turkey | KEP: operis@hs01.kep.tr",
+            "Company: Vellium (Operis is a product of Vellium) | Address: Buyukdere Cad. No: 100 Sisli, Istanbul, Turkey | Support: support@vellium.dev | Legal: legal@vellium.dev | Contact: contact@vellium.dev | KEP: vellium@hs01.kep.tr",
           ],
         },
       ],

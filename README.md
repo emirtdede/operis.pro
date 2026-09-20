@@ -164,10 +164,14 @@ operis-platform/
 ├── deploy/                         # Production systemd daemon services & timers
 │   ├── operis-worker.service       # Standalone background worker daemon service
 │   └── operis-worker-check.timer   # Worker health check timer
-├── docs/                           # Master specifications & operational guides
-│   ├── FREELANCE_PLATFORM_MASTER_SPEC.md # Core functional specifications
-│   ├── AUDIT_AND_COMPLIANCE.md     # Security, privacy & KVKK compliance audit
-│   └── OPERIS_WORKER_DAEMON_OPERATIONS.md # Standalone worker daemon operations
+├── docs/                           # Master specifications, architecture & operations
+│   ├── README.md                   # Central documentation index & navigation map
+│   ├── architecture/               # Master functional spec & build manifest
+│   ├── operations/                 # Worker daemon runbook & go-live checklists
+│   ├── security/                   # Key rotation protocol & cryptosystem docs
+│   ├── audit/                      # Security & compliance audit remediation reports
+│   ├── assets/screenshots/         # UI verification & design proof captures
+│   └── Operis_Search_100_v5_1/     # Semantic search taxonomy, specs & benchmark datasets
 ├── i18n/                           # Internationalization setup (next-intl)
 │   ├── request.ts                  # Server-side locale resolution & dictionary loader
 │   └── routing.ts                  # Localized routing configuration (tr/en prefixes)
@@ -600,10 +604,14 @@ operis-platform/
 ├── deploy/                         # Üretim ortamı için systemd servisleri ve zamanlayıcılar
 │   ├── operis-worker.service       # Bağımsız arka plan işçi servisi
 │   └── operis-worker-check.timer   # İşçi sağlık kontrolü zamanlayıcısı
-├── docs/                           # Ana şartnameler ve mimari rehberler
-│   ├── FREELANCE_PLATFORM_MASTER_SPEC.md # Ürün ve sistem şartnamesi
-│   ├── AUDIT_AND_COMPLIANCE.md     # Güvenlik, KVKK ve gizlilik denetim raporu
-│   └── OPERIS_WORKER_DAEMON_OPERATIONS.md # Bağımsız işçi çalıştırma rehberi
+├── docs/                           # Ana dokümantasyon, mimari ve operasyon merkezi
+│   ├── README.md                   # Dokümantasyon ana indeksi ve mimari haritası
+│   ├── architecture/               # Ana ürün şartnamesi ve çalışma zamanı matrisi
+│   ├── operations/                 # İşçi (worker daemon) rehberi ve yayın kontrol listesi
+│   ├── security/                   # Anahtar rotasyonu ve kriptografi kılavuzu
+│   ├── audit/                      # Güvenlik ve denetim çözümleme raporları
+│   ├── assets/screenshots/         # Arayüz ve tasarım doğrulama ekran görüntüleri
+│   └── Operis_Search_100_v5_1/     # Arama motoru taksonomisi ve kıyaslama veri setleri
 ├── i18n/                           # Çoklu dil yönlendirme ve istek yapılandırması
 │   ├── request.ts                  # İstek bazlı yerel dil çözümleme
 │   └── routing.ts                  # /tr ve /en önekli rota yapılandırması

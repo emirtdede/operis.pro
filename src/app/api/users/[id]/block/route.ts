@@ -60,12 +60,12 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       { status: 200 }
     );
   } catch (err: unknown) {
-    const message =
-      err instanceof Error
-        ? err.message
-        : isEn
-          ? "Failed to block user."
-          : "Kullanıcı engellenemedi.";
+    let message = isEn
+      ? "Failed to block user."
+      : "Kullanıcı engellenemedi.";
+    if (err instanceof Error) {
+      message = err.message;
+    }
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

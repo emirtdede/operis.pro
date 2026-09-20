@@ -156,17 +156,29 @@ export function RegisterForm({ locale, returnUrl }: RegisterFormProps) {
 
       setSuccess(true);
     } catch (err: unknown) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : isTr
-            ? "Kayıt işlemi gerçekleştirilemedi. Lütfen bilgilerinizi kontrol edin."
-            : "Registration failed. Please check your information."
-      );
+      const defaultErrMsg = isTr
+        ? "Kayıt işlemi gerçekleştirilemedi. Lütfen bilgilerinizi kontrol edin."
+        : "Registration failed. Please check your information.";
+      setError(err instanceof Error ? err.message : defaultErrMsg);
     } finally {
       setIsLoading(false);
     }
   };
+
+  const loginBasePath = isTr ? "/tr/giris" : "/en/login";
+  const successLoginHref = returnUrl
+    ? `${loginBasePath}?returnUrl=${encodeURIComponent(returnUrl)}`
+    : loginBasePath;
+
+  let passwordToggleLabel = isTr ? "Şifreyi göster" : "Show password";
+  if (showPassword) {
+    passwordToggleLabel = isTr ? "Şifreyi gizle" : "Hide password";
+  }
+
+  let confirmPasswordToggleLabel = isTr ? "Şifre tekrarını göster" : "Show password confirmation";
+  if (showConfirmPassword) {
+    confirmPasswordToggleLabel = isTr ? "Şifre tekrarını gizle" : "Hide password confirmation";
+  }
 
   if (success) {
     return (
@@ -183,17 +195,7 @@ export function RegisterForm({ locale, returnUrl }: RegisterFormProps) {
             : "Your account has been created. Please check your email inbox to verify your address or sign in to continue."}
         </p>
         <div className="pt-3">
-          <Link
-            href={
-              returnUrl
-                ? isTr
-                  ? `/tr/giris?returnUrl=${encodeURIComponent(returnUrl)}`
-                  : `/en/login?returnUrl=${encodeURIComponent(returnUrl)}`
-                : isTr
-                  ? "/tr/giris"
-                  : "/en/login"
-            }
-          >
+          <Link href={successLoginHref}>
             <Button variant="primary" size="lg" className="font-semibold">
               {isTr ? "Giriş Yap Ekranına Git" : "Go to Sign In"}
             </Button>
@@ -310,15 +312,7 @@ export function RegisterForm({ locale, returnUrl }: RegisterFormProps) {
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="p-1 rounded-md text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-              aria-label={
-                showPassword
-                  ? isTr
-                    ? "Şifreyi gizle"
-                    : "Hide password"
-                  : isTr
-                    ? "Şifreyi göster"
-                    : "Show password"
-              }
+              aria-label={passwordToggleLabel}
             >
               {showPassword ? (
                 <EyeOff className="h-4 w-4" aria-hidden="true" />
@@ -342,15 +336,7 @@ export function RegisterForm({ locale, returnUrl }: RegisterFormProps) {
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className="p-1 rounded-md text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-              aria-label={
-                showConfirmPassword
-                  ? isTr
-                    ? "Şifre tekrarını gizle"
-                    : "Hide password confirmation"
-                  : isTr
-                    ? "Şifre tekrarını göster"
-                    : "Show password confirmation"
-              }
+              aria-label={confirmPasswordToggleLabel}
             >
               {showConfirmPassword ? (
                 <EyeOff className="h-4 w-4" aria-hidden="true" />

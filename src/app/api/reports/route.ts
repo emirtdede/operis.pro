@@ -207,12 +207,13 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (err: unknown) {
-    const message =
-      err instanceof z.ZodError
-        ? err.issues[0]?.message || (isEn ? "Invalid form data." : "Form verileri geçersiz.")
-        : isEn
-          ? "Failed to submit report."
-          : "Bildirim iletilemedi.";
+    let message = isEn
+      ? "Failed to submit report."
+      : "Bildirim iletilemedi.";
+    if (err instanceof z.ZodError) {
+      const fallbackMsg = isEn ? "Invalid form data." : "Form verileri geçersiz.";
+      message = err.issues[0]?.message || fallbackMsg;
+    }
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

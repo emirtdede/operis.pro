@@ -41,12 +41,12 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (err: unknown) {
-    const message =
-      err instanceof Error
-        ? err.message
-        : isEn
-          ? "Failed to follow all categories."
-          : "Tüm kategoriler takip edilemedi.";
+    let message = isEn
+      ? "Failed to follow all categories."
+      : "Tüm kategoriler takip edilemedi.";
+    if (err instanceof Error) {
+      message = err.message;
+    }
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

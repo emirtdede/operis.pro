@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/src/modules/auth/session";
 import { OfferService } from "@/src/modules/offers/service";
+import { ReviewService } from "@/src/modules/reviews/service";
 import { evaluateSecurityAccessAsync, getClientIp } from "@/src/lib/security/rate-limit";
 
 export async function POST(req: Request) {
@@ -31,6 +32,21 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { error: isEn ? "Unauthorized" : "Yetkisiz erişim" },
         { status: 401 }
+      );
+    }
+
+    const pendingReviews = await ReviewService.checkPendingMandatoryReviews(session.userId);
+    if (pendingReviews.length > 0 && pendingReviews[0]) {
+      const pending = pendingReviews[0];
+      return NextResponse.json(
+        {
+          error: isEn
+            ? `Please submit your review for "${pending.projectTitle}" before submitting new offers.`
+            : `Yeni bir teklif vermeden önce lütfen tamamlanan "${pending.projectTitle}" projesi için değerlendirmenizi yapın.`,
+          code: "PENDING_MANDATORY_REVIEW",
+          pendingReview: pending,
+        },
+        { status: 403 }
       );
     }
 

@@ -20,6 +20,56 @@ interface ThreatsConsoleClientProps {
   initialThreats: AdminThreatItem[];
 }
 
+const STATUS_FILTER_LABELS: Record<string, string> = {
+  ALL: "Tümü",
+  DETECTED: "Aktif",
+  BLOCKED: "Engelli",
+  MITIGATED: "Yatıştırıldı",
+  INVESTIGATING: "İncelemede",
+};
+
+function getStatusFilterLabel(st: string): string {
+  return STATUS_FILTER_LABELS[st] || "İncelemede";
+}
+
+function getThreatIconBoxClass(severity: string): string {
+  if (severity === "CRITICAL") return "bg-red-500/20 text-red-400 border border-red-500/30";
+  if (severity === "HIGH") return "bg-amber-500/20 text-amber-400 border border-amber-500/30";
+  return "bg-blue-500/20 text-blue-400 border border-blue-500/30";
+}
+
+function getThreatSeverityBadgeClass(severity: string): string {
+  if (severity === "CRITICAL") return "bg-red-500/10 text-red-400 border-red-500/30";
+  if (severity === "HIGH") return "bg-amber-500/10 text-amber-400 border-amber-500/30";
+  return "bg-slate-700/30 text-slate-300 border-slate-700";
+}
+
+function getThreatStatusBadgeClass(isBlocked: boolean, status: string): string {
+  if (isBlocked || status === "BLOCKED") {
+    return "bg-red-500/10 text-red-400 border-red-500/30";
+  }
+  if (status === "DETECTED") {
+    return "bg-amber-500/10 text-amber-400 border-amber-500/30 animate-pulse";
+  }
+  if (status === "INVESTIGATING") {
+    return "bg-blue-500/10 text-blue-400 border-blue-500/30";
+  }
+  return "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
+}
+
+function getThreatStatusLabel(isBlocked: boolean, status: string): string {
+  if (isBlocked || status === "BLOCKED") {
+    return "ENGELLENDİ";
+  }
+  if (status === "DETECTED") {
+    return "SALDIRI SÜRÜYOR";
+  }
+  if (status === "INVESTIGATING") {
+    return "İNCELENİYOR";
+  }
+  return "YATIŞTIRILDI";
+}
+
 export function ThreatsConsoleClient({ initialThreats }: ThreatsConsoleClientProps) {
   const [threats, setThreats] = useState<AdminThreatItem[]>(initialThreats);
   const [search, setSearch] = useState("");
@@ -205,15 +255,7 @@ export function ThreatsConsoleClient({ initialThreats }: ThreatsConsoleClientPro
                     : "text-slate-400 hover:text-white"
                 }`}
               >
-                {st === "ALL"
-                  ? "Tümü"
-                  : st === "DETECTED"
-                    ? "Aktif"
-                    : st === "BLOCKED"
-                      ? "Engelli"
-                      : st === "MITIGATED"
-                        ? "Yatıştırıldı"
-                        : "İncelemede"}
+                {getStatusFilterLabel(st)}
               </button>
             ))}
           </div>
@@ -252,13 +294,7 @@ export function ThreatsConsoleClient({ initialThreats }: ThreatsConsoleClientPro
                       <td className="px-4 py-3.5">
                         <div className="flex items-center gap-2">
                           <div
-                            className={`p-1.5 rounded-lg ${
-                              threat.severity === "CRITICAL"
-                                ? "bg-red-500/20 text-red-400 border border-red-500/30"
-                                : threat.severity === "HIGH"
-                                  ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
-                                  : "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-                            }`}
+                            className={`p-1.5 rounded-lg ${getThreatIconBoxClass(threat.severity)}`}
                           >
                             <ShieldAlert className="h-3.5 w-3.5" />
                           </div>
@@ -273,13 +309,9 @@ export function ThreatsConsoleClient({ initialThreats }: ThreatsConsoleClientPro
                       <td className="px-4 py-3.5">
                         <div className="flex items-center gap-2">
                           <span
-                            className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
-                              threat.severity === "CRITICAL"
-                                ? "bg-red-500/10 text-red-400 border-red-500/30"
-                                : threat.severity === "HIGH"
-                                  ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
-                                  : "bg-slate-700/30 text-slate-300 border-slate-700"
-                            }`}
+                            className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getThreatSeverityBadgeClass(
+                              threat.severity
+                            )}`}
                           >
                             {threat.severity}
                           </span>
@@ -313,23 +345,12 @@ export function ThreatsConsoleClient({ initialThreats }: ThreatsConsoleClientPro
 
                       <td className="px-4 py-3.5">
                         <span
-                          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${
-                            isBlocked || threat.status === "BLOCKED"
-                              ? "bg-red-500/10 text-red-400 border-red-500/30"
-                              : threat.status === "DETECTED"
-                                ? "bg-amber-500/10 text-amber-400 border-amber-500/30 animate-pulse"
-                                : threat.status === "INVESTIGATING"
-                                  ? "bg-blue-500/10 text-blue-400 border-blue-500/30"
-                                  : "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
-                          }`}
+                          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${getThreatStatusBadgeClass(
+                            isBlocked,
+                            threat.status
+                          )}`}
                         >
-                          {isBlocked || threat.status === "BLOCKED"
-                            ? "ENGELLENDİ"
-                            : threat.status === "DETECTED"
-                              ? "SALDIRI SÜRÜYOR"
-                              : threat.status === "INVESTIGATING"
-                                ? "İNCELENİYOR"
-                                : "YATIŞTIRILDI"}
+                          {getThreatStatusLabel(isBlocked, threat.status)}
                         </span>
                       </td>
 

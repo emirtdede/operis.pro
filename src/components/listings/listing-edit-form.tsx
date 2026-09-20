@@ -111,9 +111,8 @@ export function ListingEditForm({ listing, locale }: ListingEditFormProps) {
         router.refresh();
       }, 1500);
     } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : isTr ? "Güncelleme başarısız oldu." : "Update failed."
-      );
+      const fallback = isTr ? "Güncelleme başarısız oldu." : "Update failed.";
+      setError(err instanceof Error ? err.message : fallback);
     } finally {
       setIsLoading(false);
     }

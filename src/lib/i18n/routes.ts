@@ -49,9 +49,21 @@ export const ROUTE_MAP = {
     tr: "/tr/panel/teklifler/gonderilen",
     en: "/en/dashboard/offers/sent",
   },
+  dashboardSaved: {
+    tr: "/tr/panel/kaydedilenler",
+    en: "/en/dashboard/saved",
+  },
+  dashboardWork: {
+    tr: "/tr/panel/aktif-isler",
+    en: "/en/dashboard/work",
+  },
+  settings: {
+    tr: "/tr/ayarlar",
+    en: "/en/settings",
+  },
   dashboardSettings: {
-    tr: "/tr/panel/ayarlar",
-    en: "/en/dashboard/settings",
+    tr: "/tr/ayarlar",
+    en: "/en/settings",
   },
   dashboardSecurity: {
     tr: "/tr/panel/guvenlik",

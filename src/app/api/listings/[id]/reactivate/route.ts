@@ -38,12 +38,12 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err: unknown) {
-    let message =
-      err instanceof Error
-        ? err.message
-        : isEn
-          ? "Failed to reactivate listing"
-          : "İlan yeniden yayınlanamadı";
+    let message = isEn
+      ? "Failed to reactivate listing"
+      : "İlan yeniden yayınlanamadı";
+    if (err instanceof Error) {
+      message = err.message;
+    }
 
     if (!isEn) {
       if (message.includes("Listing not found") || message.includes("not authorized")) {
