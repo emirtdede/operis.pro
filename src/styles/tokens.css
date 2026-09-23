@@ -434,13 +434,25 @@ input, select, textarea {
 .text-gradient {
   background: linear-gradient(135deg, var(--text-primary) 30%, var(--text-secondary) 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  display: inline-block;
+  padding-bottom: 0.18em;
+  margin-bottom: -0.18em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 .text-gradient-accent {
   background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  display: inline-block;
+  padding-bottom: 0.18em;
+  margin-bottom: -0.18em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 /* Glassmorphic Surfaces */

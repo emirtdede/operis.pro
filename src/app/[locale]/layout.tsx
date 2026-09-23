@@ -56,12 +56,12 @@ export async function generateMetadata({
       locale: locale === "tr" ? "tr_TR" : "en_US",
       images: [
         {
-          url: "/operis-logo-koyu.svg",
+          url: "/og-image.png",
           width: 1200,
           height: 630,
           alt: isTr
-            ? "Operis — Bağımsız Mühendislik Ağı"
-            : "Operis — Independent Engineering Network",
+            ? "Operis — Bağımsız Yetenekler & Şirketler İçin Komisyonsuz İş Birliği Platformu"
+            : "Operis — Direct & Zero-Commission Freelance Platform for Talents & Teams",
         },
       ],
     },
@@ -69,7 +69,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: ["/operis-logo-koyu.svg"],
+      images: ["/og-image.png"],
     },
     other: {
       "geo.region": "TR-34",

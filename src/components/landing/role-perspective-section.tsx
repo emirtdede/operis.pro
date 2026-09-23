@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
-  Code2,
   Building2,
   Percent,
   Lock,
@@ -76,8 +75,8 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
                   : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]"
               }`}
             >
-              <Code2 className="h-4 w-4" aria-hidden="true" />
-              <span>{isTr ? "Freelancer & Geliştirici Gözünden" : "For Freelancers & Engineers"}</span>
+              <Sparkles className="h-4 w-4" aria-hidden="true" />
+              <span>{isTr ? "Bağımsız Yetenek & Freelancer" : "For Independent Talents & Freelancers"}</span>
             </button>
 
             <button
@@ -90,7 +89,7 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
               }`}
             >
               <Building2 className="h-4 w-4" aria-hidden="true" />
-              <span>{isTr ? "İşveren & Şirket Gözünden" : "For Clients & Founders"}</span>
+              <span>{isTr ? "İşveren & Şirket" : "For Clients & Founders"}</span>
             </button>
           </div>
         </div>
@@ -103,7 +102,7 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
             <div className="relative overflow-hidden rounded-3xl border border-blue-500/20 bg-gradient-to-r from-blue-500/5 via-indigo-500/5 to-cyan-500/5 p-6 sm:p-8 backdrop-blur-xl">
               <div className="max-w-3xl space-y-2">
                 <span className="text-xs font-bold uppercase tracking-wider text-blue-400">
-                  {isTr ? "GELİŞTİRİCİYE ÖZEL KAZANIMLAR" : "FREELANCER VALUE PROPOSITION"}
+                  {isTr ? "UZMANA VE FREELANCER'A ÖZEL KAZANIMLAR" : "TALENT & FREELANCER VALUE PROPOSITION"}
                 </span>
                 <h3 className="text-xl sm:text-3xl font-extrabold text-[var(--color-text-primary)]">
                   {isTr
