@@ -556,7 +556,7 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8">
         {/* Left: Brand Logo */}
-        <div className="flex items-center shrink-0">
+        <div className="flex items-center justify-start shrink-0 min-w-[160px] md:flex-1">
           <Link
             href={session ? getLocalizedRoute("listings", locale) : `/${locale}`}
             className="flex items-center gap-2.5 transition-opacity hover:opacity-90"
@@ -566,11 +566,12 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
           </Link>
         </div>
 
-        {/* Center: Wide Interactive Direct Search Bar with Quick Dropdown */}
-        <div
-          ref={searchContainerRef}
-          className="relative hidden md:flex flex-1 max-w-md lg:max-w-lg xl:max-w-xl mx-4 lg:mx-8 items-center justify-center"
-        >
+        {/* Center: Compact Interactive Direct Search Bar (Only shown for authenticated users, perfectly centered) */}
+        {session && (
+          <div
+            ref={searchContainerRef}
+            className="relative hidden md:flex flex-initial w-full max-w-xs sm:max-w-sm lg:max-w-md mx-auto items-center justify-center"
+          >
           <form
             onSubmit={handleHeaderSearchSubmit}
             className="w-full relative flex items-center rounded-xl bg-[var(--color-surface-hover)] hover:bg-[var(--color-surface-subtle,#181b24)] border border-[var(--color-border-subtle)] focus-within:border-blue-500/60 focus-within:ring-2 focus-within:ring-blue-500/25 transition-all shadow-xs group"
@@ -883,9 +884,10 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
             </div>
           )}
         </div>
+        )}
 
         {/* Right: Premium Auth / User Area */}
-        <div className="hidden md:flex items-center justify-end gap-2 shrink-0">
+        <div className="hidden md:flex items-center justify-end gap-2 shrink-0 min-w-[160px] md:flex-1">
           {session ? (
             <div className="flex items-center gap-1.5 sm:gap-2">
               {/* 1. İlanlar Butonu (İkon + Alt Metin) */}
@@ -1162,22 +1164,6 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <Link
-                href={getLocalizedRoute("listings", locale)}
-                className={`relative px-2.5 py-1 rounded-xl border transition-all cursor-pointer focus:outline-none flex flex-col items-center justify-center gap-0.5 ${
-                  isListingsActive
-                    ? "text-[var(--color-text-primary)] bg-[var(--color-surface-hover)] border-[var(--color-border-subtle)] shadow-xs font-semibold"
-                    : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] border-transparent hover:border-[var(--color-border-subtle)]"
-                }`}
-                title={isTr ? "İlanlar" : "Listings"}
-                aria-label={isTr ? "İlanlar" : "Listings"}
-              >
-                <Compass className="h-4 w-4" aria-hidden="true" />
-                <span className="text-[10px] font-medium leading-tight whitespace-nowrap select-none">
-                  {isTr ? "İlanlar" : "Listings"}
-                </span>
-              </Link>
-
               <Link href={getLocalizedRoute("login", locale)}>
                 <Button
                   variant="ghost"
@@ -1246,25 +1232,27 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
           className="border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] backdrop-blur-2xl px-4 pt-3 pb-6 md:hidden animate-in fade-in-0 slide-in-from-top-2 duration-200"
         >
           <nav className="flex flex-col gap-1.5">
-            {/* Quick Search inside Mobile Menu Drawer */}
-            <button
-              type="button"
-              onClick={() => {
-                setMobileMenuOpen(false);
-                setCommandPaletteOpen(true);
-              }}
-              className="flex items-center justify-between gap-2.5 w-full rounded-2xl px-3.5 py-2.5 text-xs text-[var(--color-text-secondary)] bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] hover:border-blue-500/40 hover:text-[var(--color-text-primary)] transition-all mb-2 cursor-pointer text-left"
-            >
-              <div className="flex items-center gap-2">
-                <Search className="h-4 w-4 text-blue-500 shrink-0" aria-hidden="true" />
-                <span className="font-medium text-[var(--color-text-tertiary)]">
-                  {isTr ? "İlanlarda, kategorilerde ara..." : "Search listings, categories..."}
-                </span>
-              </div>
-              <kbd className="px-1.5 py-0.5 rounded border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] text-[10px] font-mono text-[var(--color-text-tertiary)]">
-                ⌘K
-              </kbd>
-            </button>
+            {/* Quick Search inside Mobile Menu Drawer (Only when logged in) */}
+            {session && (
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setCommandPaletteOpen(true);
+                }}
+                className="flex items-center justify-between gap-2.5 w-full rounded-2xl px-3.5 py-2.5 text-xs text-[var(--color-text-secondary)] bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] hover:border-blue-500/40 hover:text-[var(--color-text-primary)] transition-all mb-2 cursor-pointer text-left"
+              >
+                <div className="flex items-center gap-2">
+                  <Search className="h-4 w-4 text-blue-500 shrink-0" aria-hidden="true" />
+                  <span className="font-medium text-[var(--color-text-tertiary)]">
+                    {isTr ? "İlanlarda, kategorilerde ara..." : "Search listings, categories..."}
+                  </span>
+                </div>
+                <kbd className="px-1.5 py-0.5 rounded border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] text-[10px] font-mono text-[var(--color-text-tertiary)]">
+                  ⌘K
+                </kbd>
+              </button>
+            )}
             {navLinks.map((link) => {
               const isActive = link.isActive ?? pathname === link.href;
               return (

@@ -8,7 +8,7 @@ export function Skeleton({ className, ...props }: SkeletonProps) {
   return (
     <div
       aria-hidden="true"
-      className={twMerge(clsx("animate-pulse rounded-md bg-[var(--bg-elevated)]", className))}
+      className={twMerge(clsx("rounded-md bg-[var(--bg-elevated)]", className))}
       {...props}
     />
   );
