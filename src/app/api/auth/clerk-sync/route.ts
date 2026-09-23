@@ -125,6 +125,25 @@ export async function POST(req: Request) {
       );
     }
 
+    let legalConsent:
+      | { accepted: boolean; locale?: string; documentVersions?: Record<string, string> }
+      | undefined;
+    try {
+      const body = await req.json();
+      if (body?.legalConsent && typeof body.legalConsent === "object") {
+        legalConsent = {
+          accepted: Boolean(body.legalConsent.accepted),
+          locale: typeof body.legalConsent.locale === "string" ? body.legalConsent.locale : undefined,
+          documentVersions:
+            typeof body.legalConsent.documentVersions === "object"
+              ? body.legalConsent.documentVersions
+              : undefined,
+        };
+      }
+    } catch {
+      // Body is optional in clerk-sync route
+    }
+
     // Sync Clerk user with PostgreSQL database using strictly verified server data
     const syncResult = await ClerkSyncService.syncClerkUser({
       clerkUserId: targetClerkUserId,
@@ -133,6 +152,7 @@ export async function POST(req: Request) {
       lastName,
       avatarUrl,
       emailVerified: true,
+      legalConsent,
     });
 
     const db = getDb();

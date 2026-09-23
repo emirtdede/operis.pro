@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { eq } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
 import {
   encryptEnvelopeV2,
@@ -9,6 +9,12 @@ import {
 } from "@/src/lib/crypto";
 import { LegalService } from "@/src/modules/legal/service";
 
+export interface LegalConsentInput {
+  accepted: boolean;
+  locale?: string;
+  documentVersions?: Record<string, string>;
+}
+
 export interface SyncClerkUserInput {
   clerkUserId: string;
   email: string;
@@ -16,6 +22,7 @@ export interface SyncClerkUserInput {
   lastName?: string | null;
   avatarUrl?: string | null;
   emailVerified?: boolean;
+  legalConsent?: LegalConsentInput;
 }
 
 export interface SyncClerkUserResult {
@@ -31,7 +38,7 @@ export class ClerkSyncService {
    * Generates a safe, URL-friendly unique handle for the user based on their name or email.
    */
   private static async generateUniqueHandle(
-    db: ReturnType<typeof getDb>,
+    db: any,
     baseStr: string
   ): Promise<string> {
     let clean = baseStr
@@ -71,7 +78,7 @@ export class ClerkSyncService {
    * Ensures the mandatory userPrivateIdentity row exists for KVKK compliance and phone verification readiness.
    */
   private static async ensureUserPrivateIdentity(
-    db: ReturnType<typeof getDb>,
+    db: any,
     userId: string,
     firstName?: string | null,
     lastName?: string | null
@@ -125,25 +132,33 @@ export class ClerkSyncService {
   }
 
   /**
-   * Records immutable legal acceptances for terms, privacy, and matching disclaimer upon initial sync.
+   * Records immutable legal acceptances for terms, privacy, and matching disclaimer
+   * ONLY when explicit user consent is supplied (R26).
    */
   private static async recordInitialLegalAcceptances(
-    db: ReturnType<typeof getDb>,
-    userId: string
+    db: any,
+    userId: string,
+    consent?: LegalConsentInput
   ): Promise<void> {
+    if (!consent || !consent.accepted) {
+      return;
+    }
+
     const legalDocKeys = ["terms", "privacy", "matching-disclaimer"];
     const now = new Date();
+    const locale = (consent.locale === "en" ? "en" : "tr") as "tr" | "en";
 
     const legalRecords = [];
     for (const docKey of legalDocKeys) {
-      let version = "v1";
+      const requestedVersion = consent.documentVersions?.[docKey] || "v1";
+      let version = requestedVersion;
       let contentHash: string;
       try {
-        const doc = LegalService.getDocument(docKey, "tr", "v1");
+        const doc = LegalService.getDocument(docKey, locale, requestedVersion);
         version = doc.version;
         contentHash = doc.hash;
       } catch {
-        contentHash = sha256(`legal-${docKey}-v1`);
+        contentHash = sha256(`legal-${docKey}-${version}`);
       }
 
       legalRecords.push({
@@ -193,21 +208,82 @@ export class ClerkSyncService {
         input.lastName
       );
 
+      // Self-heal: ensure profiles exists if missing (WP-25)
+      if (!existingByClerkId.profile) {
+        const baseHandle = input.firstName || normalizedEmail.split("@")[0] || "operis_user";
+        const uniqueHandle = await this.generateUniqueHandle(db, baseHandle);
+        const displayName =
+          [input.firstName, input.lastName].filter(Boolean).join(" ").trim() ||
+          normalizedEmail.split("@")[0] ||
+          "Operis Kullanıcısı";
+
+        await db.insert(schema.profiles).values({
+          userId: existingByClerkId.user.id,
+          handle: uniqueHandle,
+          displayName,
+          avatarUrl: input.avatarUrl || null,
+          avatarSource: input.avatarUrl ? "oauth" : "custom",
+          locale: "tr",
+          theme: "dark",
+        });
+      }
+
+      // Handle Clerk email changes (WP-24)
       const userUpdates: Partial<typeof schema.users.$inferInsert> = {};
-      if (!existingByClerkId.user.emailEnc) {
+      const currentEmail = existingByClerkId.user.email?.toLowerCase().trim();
+
+      if (normalizedEmail !== currentEmail) {
+        // Verify new email doesn't conflict with another existing user
+        const [conflictUser] = await db
+          .select({ id: schema.users.id })
+          .from(schema.users)
+          .where(
+            and(
+              eq(schema.users.email, normalizedEmail),
+              ne(schema.users.id, existingByClerkId.user.id)
+            )
+          )
+          .limit(1);
+
+        if (conflictUser) {
+          throw new Error(
+            "Hesap çakışması: Güncellenen e-posta adresi başka bir Operis hesabında zaten kayıtlı."
+          );
+        }
+
+        userUpdates.email = normalizedEmail;
+        userUpdates.emailVerified = input.emailVerified ?? true;
         userUpdates.emailEnc = encryptEnvelopeV2(normalizedEmail, {
           table: "users",
           primaryKey: existingByClerkId.user.id,
           column: "email_enc",
         });
-      }
-      if (!existingByClerkId.user.emailHmac) {
         userUpdates.emailHmac = hashEmailBlindIndex(normalizedEmail);
+      } else {
+        // Email is identical, update verification status if changed
+        if (
+          input.emailVerified !== undefined &&
+          input.emailVerified !== existingByClerkId.user.emailVerified
+        ) {
+          userUpdates.emailVerified = input.emailVerified;
+        }
+        if (!existingByClerkId.user.emailEnc) {
+          userUpdates.emailEnc = encryptEnvelopeV2(normalizedEmail, {
+            table: "users",
+            primaryKey: existingByClerkId.user.id,
+            column: "email_enc",
+          });
+        }
+        if (!existingByClerkId.user.emailHmac) {
+          userUpdates.emailHmac = hashEmailBlindIndex(normalizedEmail);
+        }
       }
+
       if (Object.keys(userUpdates).length > 0) {
+        userUpdates.updatedAt = new Date();
         await db
           .update(schema.users)
-          .set({ ...userUpdates, updatedAt: new Date() })
+          .set(userUpdates)
           .where(eq(schema.users.id, existingByClerkId.user.id));
       }
 
@@ -228,11 +304,17 @@ export class ClerkSyncService {
           .where(eq(schema.profiles.userId, existingByClerkId.user.id));
       }
 
+      // If explicit legal consent provided, record it (WP-26)
+      if (input.legalConsent?.accepted) {
+        await this.recordInitialLegalAcceptances(db, existingByClerkId.user.id, input.legalConsent);
+      }
+
+      const activeEmail = userUpdates.email ?? existingByClerkId.user.email;
       return {
         userId: existingByClerkId.user.id,
         isNewUser: false,
         handle: existingByClerkId.profile?.handle || "kullanici",
-        email: existingByClerkId.user.email,
+        email: activeEmail,
         displayName: existingByClerkId.profile?.displayName || "Operis Kullanıcısı",
       };
     }
@@ -313,6 +395,26 @@ export class ClerkSyncService {
         .set(userUpdates)
         .where(eq(schema.users.id, existingByEmail.user.id));
 
+      // Self-heal: ensure profiles exists if missing (WP-25)
+      if (!existingByEmail.profile) {
+        const baseHandle = input.firstName || normalizedEmail.split("@")[0] || "operis_user";
+        const uniqueHandle = await this.generateUniqueHandle(db, baseHandle);
+        const displayName =
+          [input.firstName, input.lastName].filter(Boolean).join(" ").trim() ||
+          normalizedEmail.split("@")[0] ||
+          "Operis Kullanıcısı";
+
+        await db.insert(schema.profiles).values({
+          userId: existingByEmail.user.id,
+          handle: uniqueHandle,
+          displayName,
+          avatarUrl: input.avatarUrl || null,
+          avatarSource: input.avatarUrl ? "oauth" : "custom",
+          locale: "tr",
+          theme: "dark",
+        });
+      }
+
       if (
         input.avatarUrl &&
         existingByEmail.profile &&
@@ -329,6 +431,11 @@ export class ClerkSyncService {
           .where(eq(schema.profiles.userId, existingByEmail.user.id));
       }
 
+      // If explicit legal consent provided, record it (WP-26)
+      if (input.legalConsent?.accepted) {
+        await this.recordInitialLegalAcceptances(db, existingByEmail.user.id, input.legalConsent);
+      }
+
       return {
         userId: existingByEmail.user.id,
         isNewUser: false,
@@ -338,67 +445,77 @@ export class ClerkSyncService {
       };
     }
 
-    // 3. New user: create users + userPrivateIdentity + profiles + legalAcceptances
-    const userId = crypto.randomUUID();
-    const displayName =
-      [input.firstName, input.lastName].filter(Boolean).join(" ").trim() ||
-      normalizedEmail.split("@")[0] ||
-      "Operis Kullanıcısı";
+    // 3. New user: atomically create users + userPrivateIdentity + profiles + optional legalAcceptances (WP-25)
+    const executeCreation = async (tx: any) => {
+      const userId = crypto.randomUUID();
+      const displayName =
+        [input.firstName, input.lastName].filter(Boolean).join(" ").trim() ||
+        normalizedEmail.split("@")[0] ||
+        "Operis Kullanıcısı";
 
-    const baseHandle = input.firstName || normalizedEmail.split("@")[0] || "operis_user";
-    const uniqueHandle = await this.generateUniqueHandle(db, baseHandle);
+      const baseHandle = input.firstName || normalizedEmail.split("@")[0] || "operis_user";
+      const uniqueHandle = await this.generateUniqueHandle(tx, baseHandle);
 
-    const placeholderHash = `clerk_ext_${crypto.randomBytes(32).toString("hex")}`;
-    const emailEnc = encryptEnvelopeV2(normalizedEmail, {
-      table: "users",
-      primaryKey: userId,
-      column: "email_enc",
-    });
-    const emailHmac = hashEmailBlindIndex(normalizedEmail);
+      const placeholderHash = `clerk_ext_${crypto.randomBytes(32).toString("hex")}`;
+      const emailEnc = encryptEnvelopeV2(normalizedEmail, {
+        table: "users",
+        primaryKey: userId,
+        column: "email_enc",
+      });
+      const emailHmac = hashEmailBlindIndex(normalizedEmail);
 
-    const [newUser] = await db
-      .insert(schema.users)
-      .values({
-        id: userId,
+      const [newUser] = await tx
+        .insert(schema.users)
+        .values({
+          id: userId,
+          email: normalizedEmail,
+          emailVerified: input.emailVerified ?? true,
+          passwordHash: placeholderHash,
+          clerkUserId: input.clerkUserId,
+          role: "USER",
+          status: "ACTIVE",
+          emailEnc,
+          emailHmac,
+        })
+        .returning({ id: schema.users.id });
+
+      if (!newUser) {
+        throw new Error("Failed to create user record during Clerk sync");
+      }
+
+      // Insert mandatory KVKK private identity record
+      await this.ensureUserPrivateIdentity(tx, newUser.id, input.firstName, input.lastName);
+
+      // Insert public profile
+      await tx.insert(schema.profiles).values({
+        userId: newUser.id,
+        handle: uniqueHandle,
+        displayName,
+        avatarUrl: input.avatarUrl || null,
+        avatarSource: input.avatarUrl ? "oauth" : "custom",
+        locale: "tr",
+        theme: "dark",
+      });
+
+      // Record immutable legal consent records ONLY if explicit user consent is supplied (WP-26)
+      if (input.legalConsent?.accepted) {
+        await this.recordInitialLegalAcceptances(tx, newUser.id, input.legalConsent);
+      }
+
+      return {
+        userId: newUser.id,
+        isNewUser: true,
+        handle: uniqueHandle,
         email: normalizedEmail,
-        emailVerified: input.emailVerified ?? true,
-        passwordHash: placeholderHash,
-        clerkUserId: input.clerkUserId,
-        role: "USER",
-        status: "ACTIVE",
-        emailEnc,
-        emailHmac,
-      })
-      .returning({ id: schema.users.id });
-
-    if (!newUser) {
-      throw new Error("Failed to create user record during Clerk sync");
-    }
-
-    // Insert mandatory KVKK private identity record
-    await this.ensureUserPrivateIdentity(db, newUser.id, input.firstName, input.lastName);
-
-    // Insert public profile
-    await db.insert(schema.profiles).values({
-      userId: newUser.id,
-      handle: uniqueHandle,
-      displayName,
-      avatarUrl: input.avatarUrl || null,
-      avatarSource: "oauth",
-      locale: "tr",
-      theme: "dark",
-    });
-
-    // Record immutable legal consent records
-    await this.recordInitialLegalAcceptances(db, newUser.id);
-
-    return {
-      userId: newUser.id,
-      isNewUser: true,
-      handle: uniqueHandle,
-      email: normalizedEmail,
-      displayName,
+        displayName,
+      };
     };
+
+    if (typeof (db as any).transaction === "function") {
+      return await (db as any).transaction(async (tx: any) => executeCreation(tx));
+    } else {
+      return await executeCreation(db);
+    }
   }
 
   /**

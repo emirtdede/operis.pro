@@ -76,6 +76,7 @@ export async function POST(request: NextRequest) {
       ? requestedRole
       : "ADMIN";
     let userId = "usr_admin_authorized";
+    let authVersion = 1;
     let dbUserFound = false;
 
     // Re-verify against database users
@@ -90,6 +91,7 @@ export async function POST(request: NextRequest) {
           status: schema.users.status,
           twoFactorEnabled: schema.users.twoFactorEnabled,
           twoFactorSecret: schema.users.twoFactorSecret,
+          authVersion: schema.users.authVersion,
         })
         .from(schema.users)
         .where(eq(schema.users.email, email))
@@ -129,6 +131,7 @@ export async function POST(request: NextRequest) {
 
         userId = existingUser.id;
         targetRole = existingUser.role as (typeof validRoles)[number];
+        authVersion = existingUser.authVersion ?? 1;
       }
     } catch {
       if (process.env.NODE_ENV === "production") {
@@ -154,6 +157,7 @@ export async function POST(request: NextRequest) {
       email,
       role: targetRole,
       status: "ACTIVE",
+      authVersion,
     });
 
     const response = NextResponse.json({
@@ -163,8 +167,9 @@ export async function POST(request: NextRequest) {
       user: {
         id: userId,
         email,
-        displayName,
+        name: displayName,
         role: targetRole,
+        authVersion,
       },
     });
 
