@@ -16,7 +16,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const isTr = locale === "tr";
 
-  const title = isTr ? "Giriş Yap — Güvenli Oturum | Operis" : "Sign In — Secure Portal Access | Operis";
+  const title = isTr ? "Giriş Yap — Güvenli Oturum" : "Sign In — Secure Portal Access";
   const description = isTr
     ? "Hesabınıza güvenle giriş yaparak teknoloji ilanlarını inceleyin, tekliflerinizi yönetin ve doğrudan iletişim kurun."
     : "Log in securely to review technology listings, manage proposals, and access direct match workspaces.";
