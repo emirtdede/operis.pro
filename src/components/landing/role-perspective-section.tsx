@@ -30,7 +30,7 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
     <section className="relative flex flex-col justify-center items-center w-full px-4 sm:px-6 lg:px-8 py-14 sm:py-20 snap-start scroll-mt-16">
       <div className="mx-auto max-w-6xl w-full space-y-10 sm:space-y-12">
         {/* Section Header */}
-        <div className="text-center space-y-4 max-w-3xl mx-auto">
+        <div className="text-center space-y-4 max-w-5xl mx-auto">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/20">
             <Zap className="h-3.5 w-3.5" aria-hidden="true" />
             <span>
@@ -38,7 +38,7 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--color-text-primary)]">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--color-text-primary)] sm:whitespace-nowrap">
             {isTr ? (
               <>
                 Sizin İçin Ne Sunar,{" "}
@@ -56,7 +56,7 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
             )}
           </h2>
 
-          <p className="text-sm sm:text-base text-[var(--color-text-secondary)] leading-relaxed">
+          <p className="text-sm sm:text-base text-[var(--color-text-secondary)] leading-relaxed max-w-3xl mx-auto">
             {isTr
               ? "Operis'i ziyaret eden her profesyonel ve işveren, sistemin kendisine ne kazandıracağını ve ilk andan iş teslimine kadar sürecin nasıl ilerleyeceğini net bir şekilde görür."
               : "Whether you write code or build a company, explore exactly what Operis guarantees for your role and how the end-to-end journey operates."}
@@ -119,13 +119,15 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
 
             {/* 4 Concrete Pillars */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-              <SpotlightCard className="p-5 sm:p-6 space-y-3 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  <Percent className="h-5 w-5" aria-hidden="true" />
+              <SpotlightCard className="p-5 sm:p-6 space-y-3.5 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <Percent className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <h4 className="text-base font-bold text-[var(--color-text-primary)]">
+                    {isTr ? "%100 Net Kazanç" : "100% Net Take-Home"}
+                  </h4>
                 </div>
-                <h4 className="text-base font-bold text-[var(--color-text-primary)]">
-                  {isTr ? "%100 Net Kazanç" : "100% Net Take-Home"}
-                </h4>
                 <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
                   {isTr
                     ? "100.000 ₺'lik bir projede 20.000 ₺ platforma gitmez. Anlaşılan tutarın tamamı doğrudan sizin banka hesabınıza veya cüzdanınıza yatar."
@@ -133,13 +135,15 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
                 </p>
               </SpotlightCard>
 
-              <SpotlightCard className="p-5 sm:p-6 space-y-3 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                  <Lock className="h-5 w-5" aria-hidden="true" />
+              <SpotlightCard className="p-5 sm:p-6 space-y-3.5 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                    <Lock className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <h4 className="text-base font-bold text-[var(--color-text-primary)]">
+                    {isTr ? "Kör Teklif Güvencesi" : "Encrypted Blind Bids"}
+                  </h4>
                 </div>
-                <h4 className="text-base font-bold text-[var(--color-text-primary)]">
-                  {isTr ? "Kör Teklif Güvencesi" : "Encrypted Blind Bids"}
-                </h4>
                 <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
                   {isTr
                     ? "Teklifiniz AES-256 ile şifrelenir. Rakipler teklif mektubunuzu veya fiyatınızı asla göremez; kimse sizin 100 ₺ altınıza teklif vererek emeğinizi çalamaz."
@@ -147,13 +151,15 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
                 </p>
               </SpotlightCard>
 
-              <SpotlightCard className="p-5 sm:p-6 space-y-3 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                  <Clock className="h-5 w-5" aria-hidden="true" />
+              <SpotlightCard className="p-5 sm:p-6 space-y-3.5 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                    <Clock className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <h4 className="text-base font-bold text-[var(--color-text-primary)]">
+                    {isTr ? "Taze ve Cevap Veren İlanlar" : "Active Responsive Radar"}
+                  </h4>
                 </div>
-                <h4 className="text-base font-bold text-[var(--color-text-primary)]">
-                  {isTr ? "Taze ve Cevap Veren İlanlar" : "Active Responsive Radar"}
-                </h4>
                 <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
                   {isTr
                     ? "3 ay önce unutulmuş ölü ilanlara teklif hakkı harcamazsınız. Tüm ilanlar maksimum 7 gün canlıdır; her ilan sahibi aktif ve dönüş yapmaya hazırdır."
@@ -161,13 +167,15 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
                 </p>
               </SpotlightCard>
 
-              <SpotlightCard className="p-5 sm:p-6 space-y-3 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                  <MessageSquare className="h-5 w-5" aria-hidden="true" />
+              <SpotlightCard className="p-5 sm:p-6 space-y-3.5 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                    <MessageSquare className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <h4 className="text-base font-bold text-[var(--color-text-primary)]">
+                    {isTr ? "Sansürsüz Doğrudan İletişim" : "Direct Uncensored Chat"}
+                  </h4>
                 </div>
-                <h4 className="text-base font-bold text-[var(--color-text-primary)]">
-                  {isTr ? "Sansürsüz Doğrudan İletişim" : "Direct Uncensored Chat"}
-                </h4>
                 <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
                   {isTr
                     ? "Eşleştiğiniz an telefon, WhatsApp ve Slack üzerinden müşteriyle doğrudan konuşursunuz. Yapay zeka sansürü veya iletişim kısıtlaması yoktur."
@@ -304,13 +312,15 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
 
             {/* 4 Concrete Pillars for Clients */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-              <SpotlightCard className="p-5 sm:p-6 space-y-3 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                  <Sparkles className="h-5 w-5" aria-hidden="true" />
+              <SpotlightCard className="p-5 sm:p-6 space-y-3.5 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                    <Sparkles className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <h4 className="text-base font-bold text-[var(--color-text-primary)]">
+                    {isTr ? "2 Dakikada Ücretsiz İlan" : "Free 2-Minute Posting"}
+                  </h4>
                 </div>
-                <h4 className="text-base font-bold text-[var(--color-text-primary)]">
-                  {isTr ? "2 Dakikada Ücretsiz İlan" : "Free 2-Minute Posting"}
-                </h4>
                 <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
                   {isTr
                     ? "Kredi kartı, üyelik ücreti veya ön ödeme gerekmez. Proje gereksinimlerinizi yazın, 7 gün boyunca radarda canlı kalsın."
@@ -318,13 +328,15 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
                 </p>
               </SpotlightCard>
 
-              <SpotlightCard className="p-5 sm:p-6 space-y-3 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  <Percent className="h-5 w-5" aria-hidden="true" />
+              <SpotlightCard className="p-5 sm:p-6 space-y-3.5 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <Percent className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <h4 className="text-base font-bold text-[var(--color-text-primary)]">
+                    {isTr ? "Daha Uygun Bütçeler" : "Direct Budget Efficiency"}
+                  </h4>
                 </div>
-                <h4 className="text-base font-bold text-[var(--color-text-primary)]">
-                  {isTr ? "Daha Uygun Bütçeler" : "Direct Budget Efficiency"}
-                </h4>
                 <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
                   {isTr
                     ? "Yazılımcı platforma %20 komisyon kaptırmadığı için fiyatı şişirmez. Bütçeniz aracıya değil, doğrudan proje kalitesine gider."
@@ -332,13 +344,15 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
                 </p>
               </SpotlightCard>
 
-              <SpotlightCard className="p-5 sm:p-6 space-y-3 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                  <FileCheck2 className="h-5 w-5" aria-hidden="true" />
+              <SpotlightCard className="p-5 sm:p-6 space-y-3.5 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                    <FileCheck2 className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <h4 className="text-base font-bold text-[var(--color-text-primary)]">
+                    {isTr ? "Nitelikli Teklifler" : "High-Conviction Bids"}
+                  </h4>
                 </div>
-                <h4 className="text-base font-bold text-[var(--color-text-primary)]">
-                  {isTr ? "Nitelikli Teklifler" : "High-Conviction Bids"}
-                </h4>
                 <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
                   {isTr
                     ? "Rakipler fiyatları görmediği için kopyala-yapıştır bot teklifler yerine projenizin mimarisine özel çözümler içeren ciddi teklifler alırsınız."
@@ -346,13 +360,15 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
                 </p>
               </SpotlightCard>
 
-              <SpotlightCard className="p-5 sm:p-6 space-y-3 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                  <Handshake className="h-5 w-5" aria-hidden="true" />
+              <SpotlightCard className="p-5 sm:p-6 space-y-3.5 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                    <Handshake className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <h4 className="text-base font-bold text-[var(--color-text-primary)]">
+                    {isTr ? "Hızlı ve Doğrudan Başlangıç" : "Instant Direct Kickoff"}
+                  </h4>
                 </div>
-                <h4 className="text-base font-bold text-[var(--color-text-primary)]">
-                  {isTr ? "Hızlı ve Doğrudan Başlangıç" : "Instant Direct Kickoff"}
-                </h4>
                 <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
                   {isTr
                     ? "Teklifi onayladığınız an yazılımcıyı doğrudan arayabilir, WhatsApp veya Slack'te aynı gün geliştirmeye başlayabilirsiniz."

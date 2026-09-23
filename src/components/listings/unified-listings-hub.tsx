@@ -2,10 +2,8 @@
 
 import {
   useListingsHubState,
-  ListingsFilterSidebar,
   ListingsSearchHeader,
   ListingsFeedView,
-  ListingsDiscoverySidebar,
   ListingsModals,
 } from "./hub";
 import type { UnifiedListingsHubProps } from "./hub";
@@ -17,26 +15,9 @@ export function UnifiedListingsHub(props: UnifiedListingsHubProps) {
 
   return (
     <div className="w-full">
-      {/* Twitter (X) 3-Column Container */}
-      <div className="flex flex-col lg:flex-row items-start justify-center gap-6 xl:gap-8 w-full">
-        {/* 1. SOL KOLON (Sadeleştirilmiş Tek Parça Navigasyon & Filtreler) */}
-        <ListingsFilterSidebar
-          categories={props.categories}
-          categorySlug={props.categorySlug}
-          basePath={props.basePath}
-          searchQuery={props.searchQuery}
-          mode={state.mode}
-          view={state.view}
-          locale={props.locale}
-          isTr={state.isTr}
-          chipLast24h={state.chipLast24h}
-          setChipLast24h={state.setChipLast24h}
-          chipFixedBudget={state.chipFixedBudget}
-          setChipFixedBudget={state.setChipFixedBudget}
-        />
-
-        {/* 2. ORTA KOLON (Center Main Feed Stream) */}
-        <div className="w-full max-w-[640px] min-w-0 flex flex-col gap-3.5 mx-auto">
+      {/* Centered Focused Feed Stream (Left & Right Sidebars hidden per request) */}
+      <div className="w-full flex justify-center">
+        <div className="w-full max-w-[680px] min-w-0 flex flex-col gap-3.5 mx-auto">
           <ListingsSearchHeader
             isTr={state.isTr}
             locale={props.locale}
@@ -83,17 +64,6 @@ export function UnifiedListingsHub(props: UnifiedListingsHubProps) {
             handleLoadMore={state.handleLoadMore}
           />
         </div>
-
-        {/* 3. SAĞ KOLON (Right Search, Trending & Discovery Sidebar) */}
-        <ListingsDiscoverySidebar
-          isTr={state.isTr}
-          locale={props.locale}
-          basePath={props.basePath}
-          trendingTags={state.trendingTags}
-          categories={props.categories}
-          followedCategoryIds={state.followedCategoryIds}
-          handleToggleCategoryFollow={state.handleToggleCategoryFollow}
-        />
       </div>
 
       {/* 5. Drawers & Modals (Quick Offer, Batch Selection, Full Modal) */}

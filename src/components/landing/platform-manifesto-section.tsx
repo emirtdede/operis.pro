@@ -91,43 +91,45 @@ export function PlatformManifestoSection({ isTr = true }: PlatformManifestoSecti
       </div>
 
       {/* Manifesto Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="flex flex-wrap justify-center gap-6">
         {manifestoPillars.map((item, idx) => {
           const Icon = item.icon;
           return (
-            <SpotlightCard
+            <div
               key={idx}
-              className={`p-6 sm:p-7 flex flex-col justify-between rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-xl transition-all duration-300 hover:border-blue-500/40 hover:-translate-y-1 ${
-                idx === 0 ? "md:col-span-2 lg:col-span-1" : ""
-              }`}
+              className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] flex"
             >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className={`p-2.5 rounded-2xl border ${item.accent}`}>
-                    <Icon className="h-5 w-5" aria-hidden="true" />
+              <SpotlightCard
+                className="w-full p-6 sm:p-7 flex flex-col justify-between rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-xl transition-all duration-300 hover:border-blue-500/40 hover:-translate-y-1"
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className={`p-2.5 rounded-2xl border ${item.accent}`}>
+                      <Icon className="h-5 w-5" aria-hidden="true" />
+                    </div>
+                    <span className="text-[11px] font-semibold text-[var(--color-text-secondary)] px-2.5 py-0.5 rounded-full bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)]">
+                      {item.badge}
+                    </span>
                   </div>
-                  <span className="text-[11px] font-semibold text-[var(--color-text-secondary)] px-2.5 py-0.5 rounded-full bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)]">
-                    {item.badge}
+
+                  <div className="space-y-2">
+                    <h3 className="text-base font-bold text-[var(--color-text-primary)]">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-4 mt-4 border-t border-[var(--color-border-subtle)]/60 flex items-center gap-2 text-[11px] text-[var(--color-text-tertiary)]">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" aria-hidden="true" />
+                  <span>
+                    {isTr ? "Platform mimarisinde aktif olarak denetlenmektedir" : "Actively enforced in core platform architecture"}
                   </span>
                 </div>
-
-                <div className="space-y-2">
-                  <h3 className="text-base font-bold text-[var(--color-text-primary)]">
-                    {item.title}
-                  </h3>
-                  <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
-                    {item.desc}
-                  </p>
-                </div>
-              </div>
-
-              <div className="pt-4 mt-4 border-t border-[var(--color-border-subtle)]/60 flex items-center gap-2 text-[11px] text-[var(--color-text-tertiary)]">
-                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" aria-hidden="true" />
-                <span>
-                  {isTr ? "Platform mimarisinde aktif olarak denetlenmektedir" : "Actively enforced in core platform architecture"}
-                </span>
-              </div>
-            </SpotlightCard>
+              </SpotlightCard>
+            </div>
           );
         })}
       </div>

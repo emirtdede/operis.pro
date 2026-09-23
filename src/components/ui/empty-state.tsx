@@ -25,7 +25,7 @@ export function EmptyState({
         clsx(
           "flex flex-col items-center justify-center text-center",
           variant === "card"
-            ? "p-8 sm:p-12 rounded-3xl bg-[var(--color-surface-base)]/70 border border-[var(--color-border-subtle)] backdrop-blur-xl shadow-sm"
+            ? "p-8 sm:p-12 rounded-3xl bg-[var(--color-surface-base)]/70 border border-[var(--color-border-subtle)] backdrop-blur-xl shadow-sm min-h-[380px] sm:min-h-[420px] w-full"
             : "py-4 px-2 sm:py-6",
           className
         )

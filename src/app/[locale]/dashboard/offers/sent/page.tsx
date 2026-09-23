@@ -155,21 +155,6 @@ export default async function SentOffersPage({ params }: { params: Promise<{ loc
         </Link>
       </div>
 
-      {/* Sent Offers Lifecycle Guidance Banner */}
-      <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/60 backdrop-blur-md p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-[var(--color-text-secondary)] shadow-xs">
-        <div className="flex items-start gap-2.5">
-          <Send className="h-4 w-4 text-indigo-400 shrink-0 mt-0.5" aria-hidden="true" />
-          <p>
-            {isTr
-              ? "Teklifleriniz rakiplere kapalıdır. Beklemedeki teklifinizi dilediğinizde güncelleyebilir veya geri çekebilirsiniz."
-              : "Proposals are strictly confidential. You may update or withdraw any pending proposal at any time."}
-          </p>
-        </div>
-        <span className="text-[11px] font-semibold text-emerald-400 shrink-0 self-end sm:self-center">
-          {isTr ? "%100 Kazanç" : "100% Take-Home"}
-        </span>
-      </div>
-
       {/* Soft Error Notice if database query had an issue */}
       {fetchError && (
         <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3 flex items-center justify-between gap-3 text-xs text-amber-300">

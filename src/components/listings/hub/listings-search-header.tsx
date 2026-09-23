@@ -1,10 +1,11 @@
-import type { Dispatch, SetStateAction } from "react";
+import { useState, type Dispatch, SetStateAction } from "react";
 import Link from "next/link";
-import { Search, PlusCircle, Flame, Briefcase, X } from "lucide-react";
+import { Search, PlusCircle, Flame, Briefcase, X, SlidersHorizontal } from "lucide-react";
 import type { CategoryDto } from "@/src/modules/categories/service";
 import { SortDropdown } from "@/src/components/ui/sort-dropdown";
 import { Button } from "@/src/components/ui/button";
 import { getLocalizedRoute } from "@/src/lib/i18n/routes";
+import { AdvancedFilterModal } from "./advanced-filter-modal";
 
 export interface ListingsSearchHeaderProps {
   isTr: boolean;
@@ -51,6 +52,8 @@ export function ListingsSearchHeader({
   setChipFixedBudget,
   totalItemsCount,
 }: ListingsSearchHeaderProps) {
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [activeFilterCount, setActiveFilterCount] = useState(0);
   return (
     <>
       {/* Mobile Top Control Bar (< lg) */}
@@ -154,8 +157,26 @@ export function ListingsSearchHeader({
           </button>
         </div>
 
-        {/* Right: Sorting */}
+        {/* Right: Sorting and Advanced Filter */}
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setIsFilterModalOpen(true)}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+              activeFilterCount > 0
+                ? "bg-blue-600/15 border-blue-500/40 text-blue-400 font-bold shadow-xs"
+                : "bg-[var(--color-surface-hover)] border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-blue-500/30"
+            }`}
+            title={isTr ? "Gelişmiş filtreleme seçeneklerini aç" : "Open advanced filtering options"}
+          >
+            <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
+            <span>{isTr ? "Gelişmiş Filtrele" : "Filter"}</span>
+            {activeFilterCount > 0 && (
+              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-500 text-[10px] font-bold text-white">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
           <SortDropdown value={sortBy} onChange={setSortBy} locale={locale} />
         </div>
       </div>
@@ -226,6 +247,21 @@ export function ListingsSearchHeader({
           </Link>
         )}
       </div>
+
+      {/* Advanced Filter Modal */}
+      <AdvancedFilterModal
+        isOpen={isFilterModalOpen}
+        onClose={() => setIsFilterModalOpen(false)}
+        categories={categories}
+        isTr={isTr}
+        basePath={basePath}
+        currentCategorySlug={categorySlug}
+        chipLast24h={chipLast24h}
+        setChipLast24h={setChipLast24h}
+        chipFixedBudget={chipFixedBudget}
+        setChipFixedBudget={setChipFixedBudget}
+        onFilterChangeCount={setActiveFilterCount}
+      />
     </>
   );
 }

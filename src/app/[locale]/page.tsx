@@ -469,11 +469,15 @@ export default async function LandingPage({
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex flex-wrap justify-center gap-6">
             {sectors.map((sec) => {
               const Icon = sec.icon;
               return (
-                <Link key={sec.key} href={sec.href} className="group block">
+                <Link
+                  key={sec.key}
+                  href={sec.href}
+                  className="group block w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
+                >
                   <SpotlightCard className="h-full p-6 transition-all duration-300 group-hover:-translate-y-1 group-hover:border-blue-500/40 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between mb-4">

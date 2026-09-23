@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { Lock, ShieldCheck, RefreshCw, Inbox } from "lucide-react";
+import { Lock, RefreshCw, Inbox } from "lucide-react";
 import { getSession } from "@/src/modules/auth/session";
 import { OfferService } from "@/src/modules/offers/service";
 import {
@@ -173,21 +173,6 @@ export default async function ReceivedOffersPage({
             {isTr ? "İlanlarıma Dön" : "My Listings"}
           </Button>
         </Link>
-      </div>
-
-      {/* Acceptance Guidance & Invariant Rules */}
-      <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/60 backdrop-blur-md p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-[var(--color-text-secondary)] shadow-xs">
-        <div className="flex items-start gap-2.5">
-          <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" aria-hidden="true" />
-          <p>
-            {isTr
-              ? "Bir teklifi kabul ettiğinizde doğrudan çalışma alanınız açılır. İlandaki diğer bekleyen teklifler otomatik olarak nezaketle reddedilir."
-              : "Accepting a proposal opens your direct workspace. Other pending offers on the listing are politely auto-declined."}
-          </p>
-        </div>
-        <span className="text-[11px] font-semibold text-emerald-400 shrink-0 self-end sm:self-center">
-          {isTr ? "%0 Komisyon" : "0% Fee"}
-        </span>
       </div>
 
       {/* Soft Error Notice if database query had an issue */}

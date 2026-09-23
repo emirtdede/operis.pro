@@ -300,78 +300,24 @@ export function OwnerListingsDashboard({
       );
     }
     return (
-      <div className="relative overflow-hidden rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-8 sm:p-12 text-center shadow-sm">
-        {/* Background ambient radial glow */}
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-indigo-500/5 to-transparent pointer-events-none" />
-
-        <div className="relative z-10 max-w-2xl mx-auto space-y-6">
-          {/* Center glowing rocket / launchpad icon */}
-          <div className="mx-auto w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 shadow-lg shadow-blue-500/5 ring-4 ring-blue-500/5 flex items-center justify-center">
-            <Rocket className="h-7 w-7 sm:h-8 sm:w-8 text-blue-400" />
-          </div>
-
-          {/* Title & Subtitle */}
-          <div className="space-y-2">
-            <h3 className="text-lg sm:text-xl font-bold tracking-tight text-[var(--color-text-primary)]">
-              {isTr ? "Henüz Bir İlan Yayınlamadınız" : "You Haven't Published Any Listings Yet"}
-            </h3>
-            <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] max-w-lg mx-auto leading-relaxed">
-              {isTr
-                ? "Operis'te %100 komisyonsuz ve doğrudan iletişimle bağımsız mühendis arayışınızı hemen başlatın."
-                : "Start finding verified independent engineers directly with 0% commission cut on Operis."}
-            </p>
-          </div>
-
-          {/* 3-Step Quick Launchpad Roadmap */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 py-2 text-left">
-            <div className="p-3.5 rounded-2xl bg-[var(--color-surface-hover)]/70 border border-[var(--color-border-subtle)] space-y-1 hover:border-blue-500/30 transition-colors">
-              <div className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 font-mono text-[11px] font-bold flex items-center justify-center shrink-0">1</span>
-                <span className="text-xs font-semibold text-[var(--color-text-primary)] truncate">
-                  {isTr ? "İhtiyacını Yaz" : "Describe Need"}
-                </span>
-              </div>
-              <p className="text-[11px] text-[var(--color-text-secondary)] leading-relaxed">
-                {isTr ? "Kapsamı ve bütçeyi 2 dakikada belirleyip ilanını oluştur." : "Define scope & budget in 2 minutes to create your project."}
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-2xl bg-[var(--color-surface-hover)]/70 border border-[var(--color-border-subtle)] space-y-1 hover:border-indigo-500/30 transition-colors">
-              <div className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-400 font-mono text-[11px] font-bold flex items-center justify-center shrink-0">2</span>
-                <span className="text-xs font-semibold text-[var(--color-text-primary)] truncate">
-                  {isTr ? "7 Gün Canlı Radar" : "7-Day Live Radar"}
-                </span>
-              </div>
-              <p className="text-[11px] text-[var(--color-text-secondary)] leading-relaxed">
-                {isTr ? "İlanın 1 hafta boyunca bağımsız mühendislerin radarında kalsın." : "Your listing stays active on our radar for 1 full week."}
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-2xl bg-[var(--color-surface-hover)]/70 border border-[var(--color-border-subtle)] space-y-1 hover:border-emerald-500/30 transition-colors">
-              <div className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[11px] font-bold flex items-center justify-center shrink-0">3</span>
-                <span className="text-xs font-semibold text-[var(--color-text-primary)] truncate">
-                  {isTr ? "Doğrudan Teklif Al" : "Direct Proposals"}
-                </span>
-              </div>
-              <p className="text-[11px] text-[var(--color-text-secondary)] leading-relaxed">
-                {isTr ? "%0 komisyonla mühendislerle doğrudan anlaş ve çalışmaya başla." : "Contract directly with zero commissions and start building."}
-              </p>
-            </div>
-          </div>
-
-          {/* CTA Button */}
-          <div className="pt-2">
-            <Link href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"}>
-              <Button variant="shimmer" size="md" className="gap-2 px-6 py-2.5 shadow-xl shadow-blue-500/20">
-                <PlusCircle className="h-4 w-4" aria-hidden="true" />
-                <span>{isTr ? "+ İlk İlanınızı Yayınlayın" : "+ Post Your First Listing"}</span>
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
+      <EmptyState
+        variant="card"
+        icon={<Briefcase className="h-7 w-7 text-blue-400" />}
+        title={isTr ? "Henüz Bir İlan Yayınlamadınız" : "You Haven't Published Any Listings Yet"}
+        description={
+          isTr
+            ? "Operis'te %100 komisyonsuz ve doğrudan iletişimle bağımsız uzman arayışınızı hemen başlatın."
+            : "Start finding verified independent specialists directly with 0% commission on Operis."
+        }
+        action={
+          <Link href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"}>
+            <Button variant="shimmer" size="md" className="gap-2 shadow-lg shadow-blue-500/15">
+              <PlusCircle className="h-4 w-4" />
+              <span>{isTr ? "Yeni İlan Yayınla" : "Publish Listing"}</span>
+            </Button>
+          </Link>
+        }
+      />
     );
   };
 
