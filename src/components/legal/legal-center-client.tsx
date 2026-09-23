@@ -330,8 +330,8 @@ export function LegalCenterClient({ locale }: LegalCenterClientProps) {
         version: "v1.0",
         title: isTr ? "Kurumsal Künye ve Yasal İletişim" : "Corporate Identity & Legal Contact",
         description: isTr
-          ? "Operis tüzel kişilik bilgileri, ETBİS sınıflandırması, KEP adresi ve resmi tebligat kanalları."
-          : "Official corporate records, legal notices email, ETBİS classification, and contact info.",
+          ? "Operis tüzel kişilik bilgileri, resmi şirket künyesi, KEP adresi ve resmi tebligat kanalları."
+          : "Official corporate records, legal notices email, statutory disclosures, and contact info.",
         summaryTitle: isTr ? "Önemli Güvenceler" : "Key Guarantees",
         bullets: isTr
           ? [
@@ -344,7 +344,7 @@ export function LegalCenterClient({ locale }: LegalCenterClientProps) {
               "Expedited triage for official court subpoenas and legal notices.",
               "Dedicated data protection desk for GDPR and KVKK compliance.",
             ],
-        keywords: ["künye", "iletişim", "contact", "şirket", "etbis", "kep", "adres", "sicil"],
+        keywords: ["künye", "iletişim", "contact", "şirket", "kep", "adres", "sicil"],
       },
     ],
     [isTr]

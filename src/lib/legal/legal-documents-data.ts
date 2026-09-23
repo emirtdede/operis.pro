@@ -604,9 +604,9 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Kurumsal Bilgiler, Yasal Künye ve İletişim",
       subtitle: "TTK m. 1524 ve 6563 Sayılı ETK Uyarınca Resmi Şirket Bilgileri",
       version: "v1.0",
-      contentHash: "e1cad5b6ad507eb8eeeea4ff107bfcea1adaa6db841fef74ab6be6e1edef4642",
-      lastUpdated: "17.09.2026",
-      badge: "Resmi Şirket Künyesi • ETBİS Kayıtlı",
+      contentHash: "a2a23285e6ee904f8f844198f8a4b8738182ee7201161ade14f9c55638a3f714",
+      lastUpdated: "23.09.2026",
+      badge: "Resmi Şirket Künyesi • Yasal İletişim",
       highlight:
         "Vellium tarafından işletilmektedir. Operis bir Vellium ürünüdür. MERSİS, KEP ve resmi tebligat kanalları aşağıda yer almaktadır.",
       sections: [
@@ -629,8 +629,8 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Corporate Legal Identity & Contact",
       subtitle: "Official Disclosures Pursuant to Commercial Statutes",
       version: "v1.0",
-      contentHash: "7dfc338c0f73c958a117aae0458891b7999678131062528bd26cc8bc65a44b38",
-      lastUpdated: "17.09.2026",
+      contentHash: "cf229a831db39a4021146eecf18972f35988091fc8f6796ea0574504b8949368",
+      lastUpdated: "23.09.2026",
       badge: "Official Corporate Entity",
       highlight:
         "Operated under Vellium. Operis is a proprietary product of Vellium. Registered address, corporate ID, and legal compliance channels.",

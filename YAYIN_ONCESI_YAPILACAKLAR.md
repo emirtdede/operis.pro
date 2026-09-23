@@ -79,8 +79,8 @@ Bu belge, Operis platformunun yerel geliştirme (development) ortamından canlı
     LEGAL_SUPPORT_EMAIL="destek@operis.pro"
     LEGAL_PRIVACY_EMAIL="kvkk@operis.pro"
     ```
-- [ ] **ETBİS Kaydı:**
-  - Ticaret Bakanlığı Elektronik Ticaret Bilgi Sistemi (ETBİS) üzerinden platform kaydı tamamlanmalı ve karekod (QR) footer alanına yerleştirilmeli.
+- [x] **ETBİS Değerlendirmesi ve Temizliği:**
+  - Platform doğrudan sipariş ve ödeme tahsilatı yapmadığı için ETBİS tescili zorunluluğu bulunmamaktadır; yanıltıcı beyan riskini önlemek amacıyla footer ve hukuki künyedeki tüm ETBİS tescili iddiaları kaldırılmıştır. İleride doğrudan ödeme/emanet modeli eklenirse Bakanlık kaydı yapılıp resmi karekod eklenecektir.
 - [ ] **Kriptografik SHA-256 Doğrulaması:**
   - Tüm yasal sayfaların güncel SHA-256 parmak izlerinin `src/lib/legal/legal-documents-data.ts` ile eşleştiği `pnpm vitest run tests/unit/legal.test.ts` komutuyla teyit edilmeli.
 
