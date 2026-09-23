@@ -1,3 +1,4 @@
+import { cache } from "react";
 import {
   type ListingWizardInput,
   type UpdateListingInput,
@@ -139,10 +140,11 @@ export class ListingService {
 
   /**
    * Fetches listings owned by a user, filtered by status tab for the dashboard.
+   * Wrapped in React.cache() for request-scoped deduplication across layouts and server components.
    */
-  static async getOwnerListings(userId: string, statusTab?: string) {
+  static getOwnerListings = cache(async (userId: string, statusTab?: string) => {
     return ListingCrudService.getOwnerListings(userId, statusTab);
-  }
+  });
 
   /**
    * Updates an existing listing and records an immutable revision snapshot.

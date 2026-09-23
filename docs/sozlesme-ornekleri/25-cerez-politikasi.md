@@ -1,7 +1,7 @@
 # ÇEREZ POLITIKASI
 > **Alt Başlık:** KVKK Çerez Uygulamaları Rehberi Uyarınca Bilgilendirme  
 > **Sürüm:** v1.0 | **Son Güncelleme:** 17.09.2026 | **Rozet:** Sıfır Reklam Takibi • Yalnızca Zorunlu Çerez  
-> **Kriptografik İçerik Özeti (SHA-256):** `0718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f6`  
+> **Kriptografik İçerik Özeti (SHA-256):** `e564cfa36e4c63367f525121a537dd93426a576ca09fac19a6fa2f554aba10f7`  
 
 ---
 

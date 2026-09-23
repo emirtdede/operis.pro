@@ -82,7 +82,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const now = Date.now();
     const elapsed = now - lastPingTime;
 
-    if (elapsed < PING_COOLDOWN_MS && !Boolean(process.env.VITEST)) {
+    if (elapsed < PING_COOLDOWN_MS && !process.env.VITEST) {
       const remainingSeconds = Math.ceil((PING_COOLDOWN_MS - elapsed) / 1000);
       return NextResponse.json(
         {

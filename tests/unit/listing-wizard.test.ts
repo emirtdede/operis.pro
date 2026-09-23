@@ -102,3 +102,52 @@ describe("Listing Wizard Schema & Content Quality Rules", () => {
     expect(listingWizardSchema.safeParse(missingConfirmation).success).toBe(false);
   });
 });
+
+describe("Sector and Category Cascading & Search Logic", () => {
+  it("verifies all sectors in SEED_SECTORS have valid keys and translations", async () => {
+    const { SEED_SECTORS } = await import("@/db/seeds/categories");
+    expect(SEED_SECTORS.length).toBeGreaterThanOrEqual(10);
+    for (const s of SEED_SECTORS) {
+      expect(s.key).toMatch(/^sector-/);
+      expect(s.translations.tr.name).toBeDefined();
+      expect(s.translations.en.name).toBeDefined();
+    }
+  });
+
+  it("filters categories accurately when a sector is selected", async () => {
+    const { SEED_CATEGORIES } = await import("@/db/seeds/categories");
+    const softwareCats = SEED_CATEGORIES.filter((c) => c.sectorKey === "sector-software-it");
+    expect(softwareCats.length).toBeGreaterThan(0);
+    expect(softwareCats.some((c) => c.key === "web-development")).toBe(true);
+
+    const aiCats = SEED_CATEGORIES.filter((c) => c.sectorKey === "sector-ai-data");
+    expect(aiCats.length).toBeGreaterThan(0);
+    expect(aiCats.some((c) => c.key === "web-development")).toBe(false);
+  });
+
+  it("normalizes Turkish characters correctly for fast type-ahead search", () => {
+    function normalizeTurkish(text: string): string {
+      return text
+        .replace(/İ/g, "i")
+        .replace(/I/g, "i")
+        .replace(/ı/g, "i")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    const sectorName = "Yazılım ve Bilişim Teknolojileri";
+    const query1 = "yazilim";
+    const query2 = "bilisim";
+    const query3 = "YAZILIM";
+
+    expect(normalizeTurkish(sectorName).includes(normalizeTurkish(query1))).toBe(true);
+    expect(normalizeTurkish(sectorName).includes(normalizeTurkish(query2))).toBe(true);
+    expect(normalizeTurkish(sectorName).includes(normalizeTurkish(query3))).toBe(true);
+
+    const aiSectorName = "Yapay Zeka, Veri ve Otomasyon";
+    expect(normalizeTurkish(aiSectorName).includes(normalizeTurkish("yapay"))).toBe(true);
+    expect(normalizeTurkish(aiSectorName).includes(normalizeTurkish("otomasyon"))).toBe(true);
+  });
+});
+

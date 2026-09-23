@@ -178,8 +178,9 @@ export class ProfileDataService {
         )
         .limit(1);
 
-      if (profileRows.length === 0) return null;
-      const profile = profileRows[0]!.profile;
+      const firstRow = profileRows[0];
+      if (!firstRow) return null;
+      const profile = firstRow.profile;
 
       // 2. Fetch public links
       const links = await db
@@ -721,15 +722,22 @@ export class ProfileDataService {
       await db.transaction(async (tx) => {
         await tx.delete(schema.profileLinks).where(eq(schema.profileLinks.userId, userId));
 
-        for (let i = 0; i < validatedLinks.length; i++) {
-          const link = validatedLinks[i]!;
-          await tx.insert(schema.profileLinks).values({
-            userId,
-            type: link.type,
-            label: link.label,
-            url: link.url,
-            sortOrder: i,
-          });
+        const linkValues = validatedLinks
+          .map((link, i) =>
+            link
+              ? {
+                  userId,
+                  type: link.type,
+                  label: link.label,
+                  url: link.url,
+                  sortOrder: i,
+                }
+              : null
+          )
+          .filter((v): v is NonNullable<typeof v> => v !== null);
+
+        if (linkValues.length > 0) {
+          await tx.insert(schema.profileLinks).values(linkValues);
         }
       });
     } catch (err) {
@@ -789,8 +797,8 @@ export class ProfileDataService {
         .where(eq(schema.profiles.userId, userId))
         .limit(1);
 
-      if (profileRows.length === 0) return null;
-      const profile = profileRows[0]!;
+      const profile = profileRows[0];
+      if (!profile) return null;
 
       const links = await db
         .select()

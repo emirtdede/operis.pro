@@ -41,7 +41,7 @@ export function RegistryInteractive({ locale }: RegistryInteractiveProps) {
     {
       key: "tax",
       label: isTr ? "Vergi Dairesi & No" : "Tax Office & ID",
-      value: "Beşiktaş V.D. / 6441234567",
+      value: "İstanbul V.D. / 6441234567",
       canCopy: true,
     },
     {
@@ -152,7 +152,7 @@ export function RegistryInteractive({ locale }: RegistryInteractiveProps) {
               <span>{isTr ? "Ar-Ge Kampüsü & Genel Merkez" : "R&D Campus & Office"}</span>
             </h3>
             <span className="text-[11px] font-mono font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-xl">
-              İstanbul / Levent
+              {isTr ? "İstanbul / Türkiye" : "Istanbul / Turkey"}
             </span>
           </div>
 
@@ -161,14 +161,14 @@ export function RegistryInteractive({ locale }: RegistryInteractiveProps) {
             <div className="flex items-center justify-between">
               <h4 className="text-base sm:text-lg font-black text-[var(--color-text-primary)] flex items-center gap-2">
                 <Building className="h-4 w-4 text-emerald-400 shrink-0" />
-                <span>Levent 199 Kuleleri</span>
+                <span>Büyükdere 199 Kulesi</span>
               </h4>
               <span className="text-[10px] font-mono text-[var(--color-text-tertiary)] bg-[var(--color-surface-hover)] px-2 py-0.5 rounded-lg border border-[var(--color-border-subtle)]">
                 41.0792° N, 29.0125° E
               </span>
             </div>
             <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
-              Büyükdere Caddesi, No: 199, Kat: 24, Levent, Beşiktaş / İstanbul, 34394 Türkiye
+              Büyükdere Caddesi, No: 199, Kat: 24, 34394 İstanbul, Türkiye
             </p>
           </div>
 
@@ -188,7 +188,7 @@ export function RegistryInteractive({ locale }: RegistryInteractiveProps) {
           {/* Transit Info */}
           <div className="p-3.5 rounded-2xl bg-emerald-500/5 border border-emerald-500/15 flex items-center justify-between text-xs">
             <span className="text-[var(--color-text-secondary)]">
-              {isTr ? "Toplu Ulaşım:" : "Transit Access:"} <strong>M2 Levent Metro</strong> Doğrudan Bağlantı
+              {isTr ? "Toplu Ulaşım:" : "Transit Access:"} <strong>M2 Metro Hattı</strong> Doğrudan Bağlantı
             </span>
             <span className="font-semibold text-emerald-400 flex items-center gap-1 text-[11px]">
               <CheckCircle2 className="h-3.5 w-3.5" />
@@ -200,7 +200,7 @@ export function RegistryInteractive({ locale }: RegistryInteractiveProps) {
         {/* Bottom Actions Bar */}
         <div className="pt-4 border-t border-[var(--color-border-subtle)] flex items-center justify-between gap-3">
           <a
-            href="https://www.google.com/maps/search/?api=1&query=Levent+199+Buyukdere+Caddesi+Istanbul"
+            href="https://www.google.com/maps/search/?api=1&query=Buyukdere+Caddesi+No+199+Istanbul"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] border border-[var(--color-border-subtle)] hover:border-emerald-500/40 hover:text-emerald-400 transition-all shadow-sm"

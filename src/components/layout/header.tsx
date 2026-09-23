@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -19,6 +19,14 @@ import {
   Contrast,
   Search,
   Compass,
+  X,
+  History,
+  TrendingUp,
+  Trash2,
+  ArrowUpRight,
+  FileText,
+  Folder,
+  Loader2,
 } from "lucide-react";
 import { Locale } from "@/src/lib/i18n/config";
 import {
@@ -30,9 +38,32 @@ import {
 import { BrandLogo } from "./brand-logo";
 import { Button } from "../ui/button";
 import { useTheme } from "./theme-provider";
+import { formatBudgetRange } from "@/src/lib/format/budget";
+
+function getTrendingRankBadgeStyle(rank: number): string {
+  if (rank === 1) return "bg-amber-500/15 text-amber-400 border border-amber-500/30";
+  if (rank === 2) return "bg-blue-500/15 text-blue-400 border border-blue-500/30";
+  if (rank === 3) return "bg-indigo-500/15 text-indigo-400 border border-indigo-500/30";
+  return "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)] border border-[var(--color-border-subtle)]";
+}
 import { NotificationPopover } from "./notification-popover";
 import { CommandPalette } from "./command-palette";
+import { HeaderSearchSync } from "./header-search-sync";
+import { getSeedTrending } from "@/src/lib/search/trending-constants";
+import { searchCategories } from "@/src/lib/search/engine";
 import type { SessionPayload } from "@/src/modules/auth/session";
+
+export interface SearchListingResult {
+  id: string;
+  title: string;
+  slug: string;
+  categoryName: string;
+  tags?: string[];
+  budgetMode?: string;
+  budgetMin?: string | null;
+  budgetMax?: string | null;
+  budgetCurrency?: string | null;
+}
 
 export interface HeaderProps {
   initialSession?: SessionPayload | null;
@@ -96,11 +127,235 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [headerSearchQuery, setHeaderSearchQuery] = useState("");
+  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [trendingSearches, setTrendingSearches] = useState<string[]>(
+    () => getSeedTrending(locale)
+  );
+  const [liveListings, setLiveListings] = useState<SearchListingResult[]>([]);
+  const [isSearchingLive, setIsSearchingLive] = useState(false);
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
+
   const userMenuRef = useRef<HTMLDivElement>(null);
   const notificationMenuRef = useRef<HTMLDivElement>(null);
+  const headerInputRef = useRef<HTMLInputElement>(null);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const sessionCacheRef = useRef<Map<string, SearchListingResult[]>>(new Map());
 
   const isTr = locale === "tr";
   const session = initialSession;
+
+  // Fetch dynamic trending searches with hybrid blending
+  useEffect(() => {
+    fetch(`/api/search/trending?locale=${locale}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data?.trending) && data.trending.length > 0) {
+          setTrendingSearches(data.trending);
+        }
+      })
+      .catch(() => {});
+  }, [locale]);
+
+  // Load recent searches lazily from localStorage
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("operis_recent_searches");
+      if (stored) {
+        setRecentSearches(JSON.parse(stored));
+      }
+    } catch {
+      // Gracefully ignore localStorage read/parse errors (e.g., SSR or private browsing)
+    }
+  }, []);
+
+  const saveRecentSearch = (term: string) => {
+    const clean = term.trim();
+    if (!clean) return;
+    try {
+      setRecentSearches((prev) => {
+        const filtered = prev.filter((item) => item.toLowerCase() !== clean.toLowerCase());
+        const next = [clean, ...filtered].slice(0, 5);
+        localStorage.setItem("operis_recent_searches", JSON.stringify(next));
+        return next;
+      });
+    } catch {
+      // Gracefully ignore localStorage write quota restrictions
+    }
+  };
+
+  const removeRecentSearch = (termToRemove: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      setRecentSearches((prev) => {
+        const next = prev.filter((item) => item !== termToRemove);
+        localStorage.setItem("operis_recent_searches", JSON.stringify(next));
+        return next;
+      });
+    } catch {
+      // Gracefully ignore localStorage update restrictions
+    }
+  };
+
+  const clearAllRecentSearches = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      localStorage.removeItem("operis_recent_searches");
+      setRecentSearches([]);
+    } catch {
+      // Gracefully ignore localStorage clear restrictions
+    }
+  };
+
+  const executeSearch = (term: string) => {
+    const trimmed = term.trim();
+    if (!trimmed) {
+      setIsSearchDropdownOpen(false);
+      const searchPath = getLocalizedRoute("listings", locale);
+      router.push(searchPath);
+      return;
+    }
+    saveRecentSearch(trimmed);
+
+    // Asynchronously log search query to trending statistics (fire-and-forget)
+    fetch("/api/search/trending", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: trimmed, locale }),
+    }).catch(() => {});
+
+    setIsSearchDropdownOpen(false);
+    setHeaderSearchQuery(trimmed);
+    const searchPath = getLocalizedRoute("listings", locale);
+    router.push(`${searchPath}?q=${encodeURIComponent(trimmed)}`);
+  };
+
+  const trimmedSearchQuery = headerSearchQuery.trim();
+  const liveCategories = trimmedSearchQuery
+    ? searchCategories(trimmedSearchQuery, { limit: 2 })
+    : [];
+
+  // Build unified array of navigable suggestions for keyboard navigation (ArrowUp / ArrowDown / Enter)
+  const activeSuggestions: { id: string; onSelect: () => void }[] = [];
+  if (trimmedSearchQuery) {
+    liveCategories.forEach((cat) => {
+      activeSuggestions.push({
+        id: `cat-${cat.slug}`,
+        onSelect: () => {
+          setIsSearchDropdownOpen(false);
+          setSelectedSuggestionIndex(-1);
+          router.push(
+            isTr
+              ? `/tr/kategoriler?q=${encodeURIComponent(cat.name)}`
+              : `/en/categories?q=${encodeURIComponent(cat.name)}`
+          );
+        },
+      });
+    });
+
+    liveListings.forEach((item) => {
+      activeSuggestions.push({
+        id: `listing-${item.id}`,
+        onSelect: () => {
+          setIsSearchDropdownOpen(false);
+          setSelectedSuggestionIndex(-1);
+          saveRecentSearch(item.title);
+          router.push(isTr ? `/tr/ilanlar/${item.slug}` : `/en/listings/${item.slug}`);
+        },
+      });
+    });
+
+    activeSuggestions.push({
+      id: "direct-search",
+      onSelect: () => {
+        setIsSearchDropdownOpen(false);
+        setSelectedSuggestionIndex(-1);
+        executeSearch(trimmedSearchQuery);
+      },
+    });
+  }
+
+  const handleHeaderSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (
+      isSearchDropdownOpen &&
+      selectedSuggestionIndex >= 0 &&
+      selectedSuggestionIndex < activeSuggestions.length
+    ) {
+      activeSuggestions[selectedSuggestionIndex]?.onSelect();
+      return;
+    }
+    executeSearch(headerSearchQuery);
+  };
+
+  const handlePaletteDismiss = () => {
+    setCommandPaletteOpen(false);
+    setTimeout(() => {
+      headerInputRef.current?.focus();
+    }, 50);
+  };
+
+  // Live search debounced query with AbortController and session cache
+  useEffect(() => {
+    const trimmed = headerSearchQuery.trim();
+    if (!trimmed || trimmed.length < 2) {
+      setLiveListings([]);
+      setIsSearchingLive(false);
+      setSelectedSuggestionIndex(-1);
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
+      return;
+    }
+
+    const cacheKey = `${locale}:${trimmed.toLowerCase()}`;
+    if (sessionCacheRef.current.has(cacheKey)) {
+      setLiveListings(sessionCacheRef.current.get(cacheKey) || []);
+      setIsSearchingLive(false);
+      return;
+    }
+
+    setIsSearchingLive(true);
+
+    const timer = setTimeout(async () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+
+      try {
+        const res = await fetch(
+          `/api/listings/search?q=${encodeURIComponent(trimmed)}&locale=${locale}`,
+          {
+            signal: controller.signal,
+            headers: { "x-locale": locale },
+          }
+        );
+        if (!res.ok) throw new Error("Search response error");
+        const data = await res.json();
+        const items: SearchListingResult[] = Array.isArray(data?.items) ? data.items.slice(0, 4) : [];
+        sessionCacheRef.current.set(cacheKey, items);
+        setLiveListings(items);
+      } catch (err: unknown) {
+        if ((err as Error)?.name !== "AbortError") {
+          setLiveListings([]);
+        }
+      } finally {
+        if (abortControllerRef.current === controller) {
+          setIsSearchingLive(false);
+        }
+      }
+    }, 180);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [headerSearchQuery, locale]);
+
   const [avatarError, setAvatarError] = useState(false);
   const avatarUrl = initialProfile?.avatarUrl;
 
@@ -127,6 +382,12 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
       ) {
         setNotificationsOpen(false);
       }
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target as Node)
+      ) {
+        setIsSearchDropdownOpen(false);
+      }
     }
     function handleKeyDown(event: KeyboardEvent) {
       if (
@@ -134,13 +395,17 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
         (event.key.toLowerCase() === "k" || event.code === "KeyK")
       ) {
         event.preventDefault();
+        setIsSearchDropdownOpen(false);
         setCommandPaletteOpen((prev) => !prev);
       }
       if (event.key === "Escape") {
         setUserMenuOpen(false);
         setNotificationsOpen(false);
         setMobileMenuOpen(false);
-        setCommandPaletteOpen(false);
+        setIsSearchDropdownOpen(false);
+        if (commandPaletteOpen) {
+          handlePaletteDismiss();
+        }
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -149,7 +414,7 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [commandPaletteOpen]);
 
   const isWorkspaceActive =
     pathname.startsWith(`/${locale}/panel`) || pathname.startsWith(`/${locale}/dashboard`);
@@ -207,12 +472,87 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
     router.push(targetPath);
   };
 
+  const renderLiveListings = () => {
+    if (trimmedSearchQuery.length === 1) {
+      return (
+        <div className="px-3 py-2 text-[11px] text-[var(--color-text-tertiary)]">
+          {isTr ? "İlan başlıkları için en az 2 karakter yazın..." : "Type at least 2 characters for listings..."}
+        </div>
+      );
+    }
+    if (liveListings.length > 0) {
+      return (
+        <div className="space-y-1">
+          {liveListings.map((item, idx) => {
+            const overallIdx = liveCategories.length + idx;
+            const isSelected = selectedSuggestionIndex === overallIdx;
+            const budgetText = item.budgetMin
+              ? formatBudgetRange(item.budgetMin, item.budgetMax, item.budgetCurrency, isTr)
+              : item.budgetMode || (isTr ? "Bütçe Belirtilmedi" : "Flexible Budget");
+
+            return (
+              <div
+                key={item.id}
+                role="button"
+                tabIndex={0}
+                onClick={() => {
+                  setIsSearchDropdownOpen(false);
+                  saveRecentSearch(item.title);
+                  router.push(isTr ? `/tr/ilanlar/${item.slug}` : `/en/listings/${item.slug}`);
+                }}
+                className={`group flex items-center justify-between px-3 py-2 rounded-xl border transition-all cursor-pointer ${
+                  isSelected
+                    ? "bg-blue-500/15 text-[var(--color-text-primary)] border-blue-500/30"
+                    : "bg-[var(--color-surface-base)]/50 hover:bg-[var(--color-surface-hover)] border-transparent hover:border-[var(--color-border-subtle)]"
+                }`}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-5 h-5 rounded-md bg-blue-500/10 flex items-center justify-center text-blue-400 shrink-0">
+                    <FileText className="h-3 w-3" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-xs font-medium text-[var(--color-text-primary)] group-hover:text-blue-400 truncate transition-colors">
+                      {item.title}
+                    </div>
+                    <div className="text-[10px] text-[var(--color-text-tertiary)] truncate">
+                      {item.categoryName}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0 ml-2">
+                  <span className="text-[10px] font-medium text-[var(--color-text-secondary)] px-2 py-0.5 rounded-md bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)]">
+                    {budgetText}
+                  </span>
+                  <ArrowUpRight className="h-3.5 w-3.5 text-[var(--color-text-tertiary)] opacity-0 group-hover:opacity-100 group-hover:text-blue-400 transition-all shrink-0" />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+    if (!isSearchingLive) {
+      return (
+        <div className="px-3 py-2.5 text-center text-xs text-[var(--color-text-tertiary)] space-y-0.5">
+          <p className="font-medium text-[var(--color-text-secondary)]">
+            {isTr ? "Eşleşen aktif ilan bulunamadı" : "No matching active listings found"}
+          </p>
+          <p className="text-[10px]">
+            {isTr ? "Tüm ilanlar dizininde aramak için Enter'a basın." : "Press Enter to search the full listings directory."}
+          </p>
+        </div>
+      );
+    }
+    return (
+      <div className="p-3 text-center text-xs text-[var(--color-text-tertiary)] animate-pulse">
+        {isTr ? "İlanlar taranıyor..." : "Scanning listings..."}
+      </div>
+    );
+  };
+
   return (
     <header
-      className="sticky top-0 z-40 w-full border-b border-[var(--color-border-subtle)] backdrop-blur-xl transition-all"
-      style={{
-        backgroundColor: "color-mix(in srgb, var(--color-surface-base) 88%, transparent)",
-      }}
+      className="sticky top-0 z-40 w-full border-b border-[var(--color-border-subtle)] bg-[color-mix(in_srgb,var(--color-surface-base)_88%,transparent)] backdrop-blur-xl transition-all"
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8">
         {/* Left: Brand Logo */}
@@ -226,27 +566,322 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
           </Link>
         </div>
 
-        {/* Center: Wide Interactive Search Bar */}
-        <div className="hidden md:flex flex-1 max-w-md lg:max-w-lg xl:max-w-xl mx-4 lg:mx-8 items-center justify-center">
-          <button
-            type="button"
-            onClick={() => setCommandPaletteOpen(true)}
-            className="w-full flex items-center justify-between gap-3 px-3.5 py-2 rounded-xl text-xs bg-[var(--color-surface-hover)] hover:bg-[var(--color-surface-subtle,#181b24)] border border-[var(--color-border-subtle)] hover:border-blue-500/50 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)] transition-all cursor-pointer shadow-xs group focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-            title={isTr ? "Hızlı Arama (⌘K / Ctrl+K)" : "Quick Search (⌘K / Ctrl+K)"}
-            aria-label={isTr ? "Hızlı Arama" : "Quick Search"}
+        {/* Center: Wide Interactive Direct Search Bar with Quick Dropdown */}
+        <div
+          ref={searchContainerRef}
+          className="relative hidden md:flex flex-1 max-w-md lg:max-w-lg xl:max-w-xl mx-4 lg:mx-8 items-center justify-center"
+        >
+          <form
+            onSubmit={handleHeaderSearchSubmit}
+            className="w-full relative flex items-center rounded-xl bg-[var(--color-surface-hover)] hover:bg-[var(--color-surface-subtle,#181b24)] border border-[var(--color-border-subtle)] focus-within:border-blue-500/60 focus-within:ring-2 focus-within:ring-blue-500/25 transition-all shadow-xs group"
           >
-            <div className="flex items-center gap-2.5 min-w-0">
-              <Search className="h-4 w-4 text-[var(--color-text-tertiary)] group-hover:text-blue-400 transition-colors shrink-0" aria-hidden="true" />
-              <span className="truncate select-none font-normal text-xs lg:text-[13px]">
-                {isTr ? "İlan, teknoloji veya kategori ara..." : "Search listings, skills, or categories..."}
-              </span>
-            </div>
-            <div className="flex items-center gap-1 shrink-0">
-              <kbd className="hidden sm:inline-flex items-center gap-0.5 px-2 py-0.5 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] text-[10px] font-mono text-[var(--color-text-tertiary)] shadow-xs">
+            {/* Search icon button - clicking opens command palette */}
+            <button
+              type="button"
+              onClick={() => {
+                setIsSearchDropdownOpen(false);
+                setCommandPaletteOpen(true);
+              }}
+              className="pl-3.5 pr-2 py-2 text-[var(--color-text-tertiary)] group-hover:text-blue-400 focus:text-blue-400 focus:outline-none cursor-pointer transition-colors shrink-0 flex items-center justify-center"
+              title={isTr ? "Hızlı Arama Paletini Aç (⌘K / Ctrl+K)" : "Open Command Palette (⌘K / Ctrl+K)"}
+              aria-label={isTr ? "Hızlı Arama Paletini Aç" : "Open Command Palette"}
+            >
+              <Search className="h-4 w-4 shrink-0" aria-hidden="true" />
+            </button>
+
+            {/* Direct text input for search */}
+            <input
+              ref={headerInputRef}
+              type="text"
+              role="combobox"
+              aria-expanded={isSearchDropdownOpen}
+              aria-autocomplete="list"
+              aria-controls="header-search-suggestions"
+              aria-label={isTr ? "İlan, teknoloji veya kategori ara" : "Search listings, skills, or categories"}
+              value={headerSearchQuery}
+              onChange={(e) => {
+                setHeaderSearchQuery(e.target.value);
+                setSelectedSuggestionIndex(-1);
+              }}
+              onFocus={() => setIsSearchDropdownOpen(true)}
+              onKeyDown={(e) => {
+                if ((e.metaKey || e.ctrlKey) && (e.key.toLowerCase() === "k" || e.code === "KeyK")) {
+                  e.preventDefault();
+                  setIsSearchDropdownOpen(false);
+                  setCommandPaletteOpen(true);
+                } else if (e.key === "Escape") {
+                  setIsSearchDropdownOpen(false);
+                  (e.target as HTMLInputElement).blur();
+                } else if (isSearchDropdownOpen && activeSuggestions.length > 0) {
+                  if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    setSelectedSuggestionIndex((prev) => (prev + 1) % activeSuggestions.length);
+                  } else if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    setSelectedSuggestionIndex((prev) => (prev <= 0 ? activeSuggestions.length - 1 : prev - 1));
+                  } else if (e.key === "Enter" && selectedSuggestionIndex >= 0 && selectedSuggestionIndex < activeSuggestions.length) {
+                    e.preventDefault();
+                    activeSuggestions[selectedSuggestionIndex]?.onSelect();
+                  }
+                }
+              }}
+              placeholder={isTr ? "İlan, teknoloji veya kategori ara..." : "Search listings, skills, or categories..."}
+              className="w-full py-2 bg-transparent text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] text-xs lg:text-[13px] font-normal focus:outline-none min-w-0"
+            />
+
+            {/* Clear button if text exists */}
+            {headerSearchQuery && (
+              <button
+                type="button"
+                onClick={() => {
+                  setHeaderSearchQuery("");
+                  setSelectedSuggestionIndex(-1);
+                  headerInputRef.current?.focus();
+                }}
+                className="p-1.5 mr-1 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] cursor-pointer transition-colors focus:outline-none shrink-0"
+                title={isTr ? "Temizle" : "Clear"}
+                aria-label={isTr ? "Aramayı Temizle" : "Clear search query"}
+              >
+                <X className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+            )}
+
+            {/* Right: ⌘K badge button - clicking opens command palette */}
+            <button
+              type="button"
+              onClick={() => {
+                setIsSearchDropdownOpen(false);
+                setCommandPaletteOpen(true);
+              }}
+              className="pr-2.5 pl-1.5 py-1.5 flex items-center shrink-0 cursor-pointer focus:outline-none"
+              title={isTr ? "Hızlı Arama Paletini Aç (⌘K / Ctrl+K)" : "Open Command Palette (⌘K / Ctrl+K)"}
+              aria-label={isTr ? "Hızlı Arama Paletini Aç" : "Open Command Palette"}
+            >
+              <kbd className="hidden sm:inline-flex items-center gap-0.5 px-2 py-0.5 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] text-[10px] font-mono text-[var(--color-text-tertiary)] group-hover:text-[var(--color-text-secondary)] shadow-xs transition-colors">
                 <span className="text-[11px]">⌘</span>K
               </kbd>
+            </button>
+          </form>
+
+          {/* Quick Dropdown: En Çok Arananlar & Son Aramalar (100% Solid Background & Flush Footer) */}
+          {isSearchDropdownOpen && !commandPaletteOpen && (
+            <div
+              id="header-search-suggestions"
+              role="region"
+              className="absolute top-full left-0 right-0 mt-2.5 z-50 rounded-2xl border border-[var(--color-border-strong)] shadow-2xl shadow-black/80 ring-1 ring-white/10 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150 flex flex-col bg-[var(--color-surface-elevated)]"
+            >
+              {/* Content body: switches between Live Suggestions (when query exists) and Trends/Recent (when empty) */}
+              {trimmedSearchQuery ? (
+                <div className="p-3.5 space-y-3.5">
+                  {/* Live Categories (Instant 0ms) */}
+                  {liveCategories.length > 0 && (
+                    <div className="space-y-1.5">
+                      <div className="px-1 text-[11px] font-semibold text-[var(--color-text-secondary)] flex items-center gap-1.5">
+                        <Folder className="h-3.5 w-3.5 text-emerald-400" />
+                        <span>{isTr ? "Kategoriler" : "Categories"}</span>
+                      </div>
+                      <div className="space-y-1">
+                        {liveCategories.map((cat, idx) => {
+                          const isSelected = selectedSuggestionIndex === idx;
+                          return (
+                            <div
+                              key={cat.slug}
+                              role="button"
+                              tabIndex={0}
+                              onClick={() => {
+                                setIsSearchDropdownOpen(false);
+                                router.push(
+                                  isTr
+                                    ? `/tr/kategoriler?q=${encodeURIComponent(cat.name)}`
+                                    : `/en/categories?q=${encodeURIComponent(cat.name)}`
+                                );
+                              }}
+                              className={`group flex items-center justify-between px-3 py-2 rounded-xl border transition-all cursor-pointer ${
+                                isSelected
+                                  ? "bg-emerald-500/15 text-[var(--color-text-primary)] border-emerald-500/30"
+                                  : "bg-[var(--color-surface-base)]/50 hover:bg-[var(--color-surface-hover)] border-transparent hover:border-[var(--color-border-subtle)]"
+                              }`}
+                            >
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                <div className="w-5 h-5 rounded-md bg-emerald-500/10 flex items-center justify-center text-emerald-400 shrink-0">
+                                  <Folder className="h-3 w-3" />
+                                </div>
+                                <span className="text-xs font-medium text-[var(--color-text-primary)] group-hover:text-emerald-400 truncate transition-colors">
+                                  {cat.name}
+                                </span>
+                              </div>
+                              <ArrowUpRight className="h-3.5 w-3.5 text-[var(--color-text-tertiary)] opacity-0 group-hover:opacity-100 group-hover:text-emerald-400 transition-all shrink-0" />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Live Listings (180ms Debounced with Abort & Session Cache) */}
+                  <div className="space-y-1.5">
+                    <div className="px-1 flex items-center justify-between text-[11px] font-semibold text-[var(--color-text-secondary)]">
+                      <span className="flex items-center gap-1.5">
+                        <FileText className="h-3.5 w-3.5 text-blue-400" />
+                        <span>{isTr ? "Canlı İlanlar" : "Live Listings"}</span>
+                      </span>
+                      {isSearchingLive && (
+                        <span className="flex items-center gap-1 text-[10px] text-blue-400 font-normal animate-pulse">
+                          <Loader2 className="h-2.5 w-2.5 animate-spin" />
+                          <span>{isTr ? "Aranıyor..." : "Searching..."}</span>
+                        </span>
+                      )}
+                    </div>
+
+                    {renderLiveListings()}
+                  </div>
+                </div>
+              ) : (
+                /* Recent Searches & Trending Searches (Default View) */
+                <div className="p-3.5 space-y-3.5">
+                  {/* Recent Searches */}
+                  {recentSearches.length > 0 && (
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between px-1">
+                        <span className="flex items-center gap-1.5 text-[11px] font-semibold text-[var(--color-text-secondary)]">
+                          <History className="h-3.5 w-3.5 text-blue-400" />
+                          {isTr ? "Son Aramalar" : "Recent Searches"}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={clearAllRecentSearches}
+                          className="text-[10px] text-[var(--color-text-tertiary)] hover:text-rose-400 transition-colors cursor-pointer flex items-center gap-1 font-medium"
+                        >
+                          <Trash2 className="h-2.5 w-2.5" />
+                          {isTr ? "Tümünü Temizle" : "Clear all"}
+                        </button>
+                      </div>
+                      <div className="space-y-1">
+                        {recentSearches.map((item) => (
+                          <div
+                            key={item}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => executeSearch(item)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                executeSearch(item);
+                              }
+                            }}
+                            className="group flex items-center justify-between px-3 py-2 rounded-xl bg-[var(--color-surface-base)]/60 hover:bg-[var(--color-surface-hover)] border border-transparent hover:border-[var(--color-border-subtle)] cursor-pointer text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-all focus:outline-none focus:border-blue-500/50"
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <History className="h-3.5 w-3.5 text-[var(--color-text-tertiary)] group-hover:text-blue-400 transition-colors shrink-0" />
+                              <span className="truncate font-medium">{item}</span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={(e) => removeRecentSearch(item, e)}
+                              className="opacity-0 group-hover:opacity-100 p-1 hover:text-rose-400 text-[var(--color-text-tertiary)] transition-all cursor-pointer rounded-md hover:bg-[var(--color-surface-base)]"
+                              title={isTr ? "Kaldır" : "Remove"}
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Trending Searches (En Çok Arananlar - Sıralı Liste) */}
+                  <div className="space-y-1.5">
+                    <div className="px-1 flex items-center justify-between text-[11px] font-semibold text-[var(--color-text-secondary)]">
+                      <span className="flex items-center gap-1.5">
+                        <TrendingUp className="h-3.5 w-3.5 text-blue-400" />
+                        {isTr ? "En Çok Arananlar" : "Trending Searches"}
+                      </span>
+                      <span className="text-[10px] text-[var(--color-text-tertiary)] font-normal">
+                        {isTr ? "Canlı Trendler" : "Live Trends"}
+                      </span>
+                    </div>
+                    <div className="space-y-1">
+                      {trendingSearches.map((term, index) => {
+                        const rank = index + 1;
+                        return (
+                          <div
+                            key={term}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => executeSearch(term)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              executeSearch(term);
+                            }
+                          }}
+                          className="group flex items-center justify-between px-3 py-2 rounded-xl bg-[var(--color-surface-base)]/50 hover:bg-[var(--color-surface-hover)] border border-transparent hover:border-[var(--color-border-subtle)] cursor-pointer transition-all focus:outline-none focus:border-blue-500/50"
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <span
+                              className={`w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-mono font-bold shrink-0 transition-colors ${getTrendingRankBadgeStyle(
+                                rank
+                              )}`}
+                            >
+                              {rank}
+                            </span>
+                            <span className="text-xs font-medium text-[var(--color-text-primary)] group-hover:text-blue-400 truncate transition-colors">
+                              {term}
+                            </span>
+                          </div>
+                          <ArrowUpRight className="h-3.5 w-3.5 text-[var(--color-text-tertiary)] opacity-0 group-hover:opacity-100 group-hover:text-blue-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+              {/* Distinct Footer strip - perfectly flush at bottom edge with zero gap */}
+              <div
+                className="w-full px-3.5 py-2.5 border-t border-[var(--color-border-subtle)] flex items-center justify-between text-[11px] text-[var(--color-text-tertiary)] mt-auto bg-[var(--color-surface-base)]"
+              >
+                {trimmedSearchQuery ? (
+                  <button
+                    type="button"
+                    onClick={() => executeSearch(trimmedSearchQuery)}
+                    className={`cursor-pointer flex items-center gap-1.5 text-left text-xs font-medium transition-all truncate max-w-[280px] px-2 py-1 -ml-1 rounded-lg border ${
+                      selectedSuggestionIndex === activeSuggestions.length - 1
+                        ? "bg-blue-500/15 text-blue-400 border-blue-500/30"
+                        : "text-[var(--color-text-secondary)] hover:text-blue-400 border-transparent"
+                    }`}
+                  >
+                    <Search className="h-3.5 w-3.5 text-blue-400 shrink-0" />
+                    <span className="truncate">
+                      {isTr
+                        ? `"${trimmedSearchQuery}" için tüm ilanlarda ara`
+                        : `Search all listings for "${trimmedSearchQuery}"`}
+                    </span>
+                    <kbd className="px-1.5 py-0.5 rounded border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] text-[10px] font-mono shrink-0">
+                      ↵
+                    </kbd>
+                  </button>
+                ) : (
+                  <span>{isTr ? "Detaylı filtreler ve sayfalar" : "Advanced search & filters"}</span>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsSearchDropdownOpen(false);
+                    setCommandPaletteOpen(true);
+                  }}
+                  className="hover:text-blue-400 cursor-pointer flex items-center gap-1.5 font-mono text-[10px] text-[var(--color-text-secondary)] hover:text-blue-400 transition-colors shrink-0 ml-2"
+                >
+                  <span>{isTr ? "Paleti Aç" : "Open Palette"}</span>
+                  <kbd className="px-1.5 py-0.5 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] shadow-xs">
+                    ⌘K
+                  </kbd>
+                </button>
+              </div>
             </div>
-          </button>
+          )}
         </div>
 
         {/* Right: Premium Auth / User Area */}
@@ -329,22 +964,13 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
                 {/* Dropdown Menu Modal */}
                 {userMenuOpen && (
                   <div
-                    className="absolute right-0 top-full mt-2 w-72 rounded-2xl border border-[var(--color-border-subtle)] p-2 shadow-2xl backdrop-blur-2xl animate-in fade-in-0 zoom-in-95 duration-150 z-50 select-none text-xs"
-                    style={{
-                      backgroundColor: "var(--color-surface-base)",
-                      borderColor: "var(--color-border-subtle)",
-                      boxShadow:
-                        "0 20px 40px -15px rgba(0, 0, 0, 0.25), 0 0 0 1px var(--color-border-subtle)",
-                    }}
+                    className="absolute right-0 top-full mt-2 w-72 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-2 shadow-2xl backdrop-blur-2xl animate-in fade-in-0 zoom-in-95 duration-150 z-50 select-none text-xs"
                     role="menu"
                     aria-orientation="vertical"
                   >
                     {/* Header: User Badge & Identity */}
                     <div
-                      className="flex items-center gap-3 p-2.5 rounded-xl border border-[var(--color-border-subtle)] mb-2"
-                      style={{
-                        backgroundColor: "var(--color-surface-hover)",
-                      }}
+                      className="flex items-center gap-3 p-2.5 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] mb-2"
                     >
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm tracking-tight overflow-hidden">
                         {avatarUrl && !avatarError ? (
@@ -444,10 +1070,7 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
                           <span>{isTr ? "Dil" : "Language"}</span>
                         </div>
                         <div
-                          className="flex items-center gap-1 p-0.5 rounded-lg border border-[var(--color-border-subtle)]"
-                          style={{
-                            backgroundColor: "var(--color-surface-hover)",
-                          }}
+                          className="flex items-center gap-1 p-0.5 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]"
                         >
                           <button
                             type="button"
@@ -481,10 +1104,7 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
                           <span>{isTr ? "Tema" : "Theme"}</span>
                         </div>
                         <div
-                          className="flex items-center gap-0.5 p-0.5 rounded-lg border border-[var(--color-border-subtle)]"
-                          style={{
-                            backgroundColor: "var(--color-surface-hover)",
-                          }}
+                          className="flex items-center gap-0.5 p-0.5 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]"
                         >
                           <button
                             type="button"
@@ -623,10 +1243,7 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
         <div
-          className="border-b border-[var(--color-border-subtle)] backdrop-blur-2xl px-4 pt-3 pb-6 md:hidden animate-in fade-in-0 slide-in-from-top-2 duration-200"
-          style={{
-            backgroundColor: "var(--color-surface-base)",
-          }}
+          className="border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] backdrop-blur-2xl px-4 pt-3 pb-6 md:hidden animate-in fade-in-0 slide-in-from-top-2 duration-200"
         >
           <nav className="flex flex-col gap-1.5">
             {/* Quick Search inside Mobile Menu Drawer */}
@@ -669,10 +1286,7 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
               {session ? (
                 <>
                   <div
-                    className="flex items-center gap-3 px-3 py-2 text-sm text-[var(--color-text-secondary)] rounded-xl border border-[var(--color-border-subtle)]"
-                    style={{
-                      backgroundColor: "var(--color-surface-hover)",
-                    }}
+                    className="flex items-center gap-3 px-3 py-2 text-sm text-[var(--color-text-secondary)] rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]"
                   >
                     <div className="h-8 w-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-xs tracking-tight overflow-hidden">
                       {avatarUrl && !avatarError ? (
@@ -844,8 +1458,17 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
         locale={locale}
         isOpen={commandPaletteOpen}
         onClose={() => setCommandPaletteOpen(false)}
+        onDismiss={handlePaletteDismiss}
         userHandle={initialProfile?.handle}
+        initialQuery={headerSearchQuery}
       />
+
+      {/* URL Search Query Synchronization (App Router & SSR Safe) */}
+      <Suspense fallback={null}>
+        <HeaderSearchSync
+          onQueryChange={(query) => setHeaderSearchQuery(query)}
+        />
+      </Suspense>
     </header>
   );
 }

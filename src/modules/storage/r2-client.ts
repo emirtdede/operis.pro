@@ -8,42 +8,61 @@ let s3ClientInstance: S3Client | null = null;
 // In-memory mock storage for local testing when Cloudflare R2 is not configured
 const inMemoryEphemeralStore = new Map<string, { buffer: Buffer; mimeType: string }>();
 
-export function isR2Configured(): boolean {
+interface ValidatedR2Config {
+  accountId: string;
+  accessKeyId: string;
+  secretAccessKey: string;
+  bucketName: string;
+  publicUrlBase?: string;
+}
+
+function getValidatedR2Config(): ValidatedR2Config {
   const env = getEnv();
-  return Boolean(
-    env.CLOUDFLARE_R2_ACCOUNT_ID &&
-      env.CLOUDFLARE_R2_ACCESS_KEY_ID &&
-      env.CLOUDFLARE_R2_SECRET_ACCESS_KEY &&
-      env.CLOUDFLARE_R2_BUCKET_NAME
-  );
+  const {
+    CLOUDFLARE_R2_ACCOUNT_ID: accountId,
+    CLOUDFLARE_R2_ACCESS_KEY_ID: accessKeyId,
+    CLOUDFLARE_R2_SECRET_ACCESS_KEY: secretAccessKey,
+    CLOUDFLARE_R2_BUCKET_NAME: bucketName,
+    NEXT_PUBLIC_R2_PUBLIC_URL: publicUrlBase,
+  } = env;
+
+  if (!accountId || !accessKeyId || !secretAccessKey || !bucketName) {
+    throw new Error("Cloudflare R2 storage credentials are not configured in environment.");
+  }
+
+  return { accountId, accessKeyId, secretAccessKey, bucketName, publicUrlBase };
+}
+
+export function isR2Configured(): boolean {
+  try {
+    getValidatedR2Config();
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function getR2Client(): { client: S3Client; bucketName: string; publicUrlBase: string } {
-  const env = getEnv();
-
-  if (!isR2Configured()) {
-    throw new Error("Cloudflare R2 storage credentials are not configured in environment.");
-  }
+  const config = getValidatedR2Config();
 
   if (!s3ClientInstance) {
     s3ClientInstance = new S3Client({
       region: "auto",
-      endpoint: `https://${env.CLOUDFLARE_R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+      endpoint: `https://${config.accountId}.r2.cloudflarestorage.com`,
       credentials: {
-        accessKeyId: env.CLOUDFLARE_R2_ACCESS_KEY_ID!,
-        secretAccessKey: env.CLOUDFLARE_R2_SECRET_ACCESS_KEY!,
+        accessKeyId: config.accessKeyId,
+        secretAccessKey: config.secretAccessKey,
       },
     });
   }
 
-  const bucketName = env.CLOUDFLARE_R2_BUCKET_NAME!;
   const publicUrlBase =
-    env.NEXT_PUBLIC_R2_PUBLIC_URL?.replace(/\/+$/, "") ||
-    `https://${bucketName}.${env.CLOUDFLARE_R2_ACCOUNT_ID}.r2.cloudflarestorage.com`;
+    config.publicUrlBase?.replace(/\/+$/, "") ||
+    `https://${config.bucketName}.${config.accountId}.r2.cloudflarestorage.com`;
 
   return {
     client: s3ClientInstance,
-    bucketName,
+    bucketName: config.bucketName,
     publicUrlBase,
   };
 }
@@ -168,14 +187,10 @@ export async function deleteEphemeralSignature(key: string): Promise<boolean> {
  * Batch deletes multiple ephemeral signature keys from Cloudflare R2.
  */
 export async function deleteEphemeralSignatures(keys: string[]): Promise<number> {
-  let deletedCount = 0;
-  for (const key of keys) {
-    if (key) {
-      const ok = await deleteEphemeralSignature(key);
-      if (ok) deletedCount++;
-    }
-  }
-  return deletedCount;
+  const validKeys = keys.filter(Boolean);
+  if (validKeys.length === 0) return 0;
+  const results = await Promise.all(validKeys.map((key) => deleteEphemeralSignature(key)));
+  return results.filter(Boolean).length;
 }
 
 /**

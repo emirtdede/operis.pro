@@ -1,7 +1,7 @@
 # FIKRI MÜLKIYET VE TELIF HAKLARI POLITIKASI
 > **Alt Başlık:** 5846 Sayılı FSEK ve Uyar-Kaldır Bildirim Prosedürü  
 > **Sürüm:** v1.0 | **Son Güncelleme:** 17.09.2026 | **Rozet:** 5846 FSEK • 48 Saat Uyar-Kaldır  
-> **Kriptografik İçerik Özeti (SHA-256):** `293a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f60718`  
+> **Kriptografik İçerik Özeti (SHA-256):** `c83b96edf0209f302e8842a1e2eec033c38580534fd34c7a5d3e3b6c657aa336`  
 
 ---
 

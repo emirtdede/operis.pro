@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import { eq, and, sql, desc, asc } from "drizzle-orm";
 import { getDb } from "@/src/lib/db";
+import { mapConcurrent } from "@/src/lib/async/concurrency";
 import { resendContactPool } from "@/db/schema";
 import { getEnv } from "@/src/config/env";
 
@@ -242,7 +243,8 @@ export class ResendPoolService {
     let promotedCount = 0;
     const now = new Date();
 
-    for (const candidate of candidates) {
+    const CHUNK_SIZE = 5;
+    await mapConcurrent(candidates, CHUNK_SIZE, async (candidate) => {
       const apiRes = await this.callResendApi("/contacts", "POST", {
         email: candidate.email,
         unsubscribed: false,
@@ -262,7 +264,7 @@ export class ResendPoolService {
 
         promotedCount++;
       }
-    }
+    });
 
     return { promotedCount };
   }

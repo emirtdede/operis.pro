@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { NextRequest } from "next/server";
 import { getLocalizedRoute } from "@/src/lib/i18n/routes";
 import { GET } from "@/src/app/api/listings/feed/route";
 import * as sessionModule from "@/src/modules/auth/session";
@@ -20,8 +21,8 @@ describe("Feed Authentication & Navbar Navigation Guards", () => {
   it("ensures unauthenticated visitors to feed API receive 401 Unauthorized", async () => {
     vi.spyOn(sessionModule, "getSession").mockResolvedValue(null);
 
-    const req = new Request("http://localhost:3000/api/listings/feed?mode=all&locale=tr");
-    const res = await GET(req as any);
+    const req = new NextRequest("http://localhost:3000/api/listings/feed?mode=all&locale=tr");
+    const res = await GET(req);
     expect(res.status).toBe(401);
     const json = await res.json();
     expect(json.error).toBe("Unauthorized");

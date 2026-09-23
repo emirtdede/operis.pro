@@ -6,6 +6,7 @@ import {
   inMemoryCounterProposals,
 } from "@/src/modules/offers/service";
 import { inMemoryListings } from "@/src/modules/listings/service";
+import type { InMemListing } from "@/src/modules/listings/services/types";
 
 describe("Counter-Offer — Concurrency Safety & Race Conditions", () => {
   const listingOwnerId = "user-employer-conc";
@@ -29,7 +30,7 @@ describe("Counter-Offer — Concurrency Safety & Race Conditions", () => {
       activeUntil: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
       activationSeq: 1,
     };
-    inMemoryListings.push(listing as any);
+    inMemoryListings.push(listing as unknown as InMemListing);
 
     const initialOffer = {
       id: offerId,

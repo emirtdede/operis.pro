@@ -66,7 +66,7 @@ export class SafeHarborEngine {
     const remedialMitigationsEn: string[] = [];
 
     // 1. Schedule Autonomy (Weight: 25)
-    let schedulePoints = 0;
+    let schedulePoints: number;
     switch (config.scheduleAutonomy) {
       case "FIXED_BUSINESS_HOURS":
         schedulePoints = 25;
@@ -103,7 +103,7 @@ export class SafeHarborEngine {
     });
 
     // 2. Equipment & Tools (Weight: 15)
-    let equipmentPoints = 0;
+    let equipmentPoints: number;
     switch (config.equipmentOwnership) {
       case "EMPLOYER_MANDATORY_HARDWARE":
         equipmentPoints = 15;
@@ -140,7 +140,7 @@ export class SafeHarborEngine {
     });
 
     // 3. Management Hierarchy & Subordination (Weight: 20)
-    let hierarchyPoints = 0;
+    let hierarchyPoints: number;
     switch (config.managementHierarchy) {
       case "DIRECT_SUPERVISOR_SUBORDINATION":
         hierarchyPoints = 20;
@@ -177,7 +177,7 @@ export class SafeHarborEngine {
     });
 
     // 4. Exclusivity Status (Weight: 20)
-    let exclusivityPoints = 0;
+    let exclusivityPoints: number;
     switch (config.exclusivityStatus) {
       case "STRICT_EXCLUSIVITY_FULL_TIME":
         exclusivityPoints = 20;
@@ -214,7 +214,7 @@ export class SafeHarborEngine {
     });
 
     // 5. Invoicing & Tax Entity (Weight: 10)
-    let invoicingPoints = 0;
+    let invoicingPoints: number;
     switch (config.invoicingEntityStatus) {
       case "INDIVIDUAL_NO_TAX_ID":
         invoicingPoints = 10;
@@ -251,7 +251,7 @@ export class SafeHarborEngine {
     });
 
     // 6. Corporate Integration & Email (Weight: 10)
-    let integrationPoints = 0;
+    let integrationPoints: number;
     switch (config.corporateIntegration) {
       case "INTERNAL_EMAIL_AND_TITLE":
         integrationPoints = 10;
@@ -313,8 +313,8 @@ export class SafeHarborEngine {
     }
 
     // Prepare summaries
-    let summaryTr = "";
-    let summaryEn = "";
+    let summaryTr: string;
+    let summaryEn: string;
 
     if (riskLevel === "SAFE_HARBOR") {
       summaryTr = `Güvenli Liman (Skor: ${totalScore}/100): Taraflar arasındaki ilişki 6098 sayılı TBK m. 470 Eser Sözleşmesi ve bağımsız yüklenici standartlarıyla tam uyumludur. 4857 sayılı İş Kanunu m. 8 kapsamında gizli hizmet sözleşmesi iddiası riski asgari düzeydedir.`;

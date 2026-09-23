@@ -86,7 +86,7 @@ export class AiGovernanceEngine {
     const remedialMitigationsEn: string[] = [];
 
     // 1. AI Usage Intensity (Weight: 35)
-    let usagePoints = 0;
+    let usagePoints: number;
     switch (config.usageLevel) {
       case "HEAVY_AI_GENERATED":
         usagePoints = 35;
@@ -135,7 +135,7 @@ export class AiGovernanceEngine {
     });
 
     // 2. Data Privacy & Zero Retention (Weight: 25)
-    let dataPrivacyPoints = 0;
+    let dataPrivacyPoints: number;
     switch (config.dataPrivacyTier) {
       case "CONSUMER_PUBLIC_TRAINING_RISK":
         dataPrivacyPoints = 25;
@@ -312,8 +312,8 @@ export class AiGovernanceEngine {
     }
 
     // Prepare summaries
-    let summaryTr = "";
-    let summaryEn = "";
+    let summaryTr: string;
+    let summaryEn: string;
 
     if (riskLevel === "PRISTINE_IP_SAFE") {
       summaryTr = `Kusursuz Telif Güvencesi (Risk Skoru: ${totalScore}/100): Kod tabanı 5846 sayılı FSEK m. 52, EU AI Act m. 50 ve ticari gizlilik standartlarıyla tam uyumludur. İnsani hususiyet ve sıfır veri saklama taahhütleri tamdır; telif devri hukuken eksiksizdir.`;

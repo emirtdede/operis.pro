@@ -6,7 +6,9 @@ import { getSession } from "@/src/modules/auth/session";
 import { ProfileService } from "@/src/modules/profiles/service";
 import { EngagementService } from "@/src/modules/engagements/service";
 import { MatchDetailsView } from "@/src/components/engagements/match-details-view";
-import { serializeJsonLd } from "@/src/lib/security/json-ld";
+import { JsonLd } from "@/src/components/seo/json-ld";
+import { formatBudgetRange } from "@/src/lib/format/budget";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -87,12 +89,12 @@ export default async function MatchPage({
   );
 
   // Format budget label
-  let budgetLabel: string | null = null;
-  if (acceptedOffer.budgetMin && acceptedOffer.budgetMax) {
-    budgetLabel = `${parseFloat(acceptedOffer.budgetMin).toLocaleString(isTr ? "tr-TR" : "en-US")} – ${parseFloat(acceptedOffer.budgetMax).toLocaleString(isTr ? "tr-TR" : "en-US")} ${acceptedOffer.budgetCurrency ?? ""}`;
-  } else if (acceptedOffer.budgetMin) {
-    budgetLabel = `${parseFloat(acceptedOffer.budgetMin).toLocaleString(isTr ? "tr-TR" : "en-US")} ${acceptedOffer.budgetCurrency ?? ""}`;
-  }
+  const budgetLabel = formatBudgetRange(
+    acceptedOffer.budgetMin,
+    acceptedOffer.budgetMax,
+    acceptedOffer.budgetCurrency,
+    isTr
+  );
 
   // Format timeline label
   let timelineLabel: string | null = null;
@@ -109,9 +111,10 @@ export default async function MatchPage({
     phone: null,
   };
 
+  const baseUrl = getBaseUrl();
   const workspaceUrl = isTr
-    ? `https://operis.pro/tr/calisma-alani/${id}`
-    : `https://operis.pro/en/workspace/${id}`;
+    ? `${baseUrl}/tr/calisma-alani/${id}`
+    : `${baseUrl}/en/workspace/${id}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -121,13 +124,13 @@ export default async function MatchPage({
         "@type": "ListItem",
         position: 1,
         name: isTr ? "Ana Sayfa" : "Home",
-        item: `https://operis.pro/${locale}`,
+        item: `${baseUrl}/${locale}`,
       },
       {
         "@type": "ListItem",
         position: 2,
         name: isTr ? "İlanlarım" : "My Listings",
-        item: `https://operis.pro${isTr ? "/tr/panel/ilanlarim" : "/en/dashboard/listings"}`,
+        item: `${baseUrl}${isTr ? "/tr/panel/ilanlarim" : "/en/dashboard/listings"}`,
       },
       {
         "@type": "ListItem",
@@ -141,10 +144,7 @@ export default async function MatchPage({
   return (
     <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
       {/* Schema.org Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
 
       {/* Bilateral Engagement Guidance Banner */}
       <section

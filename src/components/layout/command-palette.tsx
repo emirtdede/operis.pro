@@ -40,7 +40,9 @@ export interface CommandPaletteProps {
   locale: Locale;
   isOpen: boolean;
   onClose: () => void;
+  onDismiss?: () => void;
   userHandle?: string;
+  initialQuery?: string;
 }
 
 interface PaletteAction {
@@ -52,7 +54,14 @@ interface PaletteAction {
   onSelect: () => void;
 }
 
-export function CommandPalette({ locale, isOpen, onClose, userHandle }: CommandPaletteProps) {
+export function CommandPalette({
+  locale,
+  isOpen,
+  onClose,
+  onDismiss,
+  userHandle,
+  initialQuery,
+}: CommandPaletteProps) {
   const isTr = locale === "tr";
   const router = useRouter();
   const { theme, setTheme } = useTheme();
@@ -83,14 +92,14 @@ export function CommandPalette({ locale, isOpen, onClose, userHandle }: CommandP
   // Focus input when opened
   useEffect(() => {
     if (isOpen) {
-      setQuery("");
+      setQuery(initialQuery || "");
       setSearchResults([]);
       setSelectedIndex(0);
       setTimeout(() => {
         inputRef.current?.focus();
       }, 50);
     }
-  }, [isOpen]);
+  }, [isOpen, initialQuery]);
 
   // Live search effect
   useEffect(() => {
@@ -130,13 +139,17 @@ export function CommandPalette({ locale, isOpen, onClose, userHandle }: CommandP
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
-        onClose();
+        if (onDismiss) {
+          onDismiss();
+        } else {
+          onClose();
+        }
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, onDismiss]);
 
   // Navigation actions
   const navActions: PaletteAction[] = [
@@ -302,10 +315,26 @@ export function CommandPalette({ locale, isOpen, onClose, userHandle }: CommandP
           icon: <Search className="h-4 w-4 text-blue-400" />,
           category: "navigation",
           onSelect: () => {
+            const clean = query.trim();
+            try {
+              const stored = localStorage.getItem("operis_recent_searches");
+              const prev: string[] = stored ? JSON.parse(stored) : [];
+              const filtered = prev.filter((item) => item.toLowerCase() !== clean.toLowerCase());
+              localStorage.setItem("operis_recent_searches", JSON.stringify([clean, ...filtered].slice(0, 5)));
+            } catch {
+              // Gracefully ignore localStorage quota or private browsing errors
+            }
+
+            fetch("/api/search/trending", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ query: clean, locale }),
+            }).catch(() => {});
+
             router.push(
               isTr
-                ? `/tr/ilanlar?q=${encodeURIComponent(query.trim())}`
-                : `/en/listings?q=${encodeURIComponent(query.trim())}`
+                ? `/tr/ilanlar?q=${encodeURIComponent(clean)}`
+                : `/en/listings?q=${encodeURIComponent(clean)}`
             );
             onClose();
           },
@@ -340,7 +369,14 @@ export function CommandPalette({ locale, isOpen, onClose, userHandle }: CommandP
 
   // Keyboard navigation within list
   const handleInputKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowDown") {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      if (onDismiss) {
+        onDismiss();
+      } else {
+        onClose();
+      }
+    } else if (e.key === "ArrowDown") {
       e.preventDefault();
       setSelectedIndex((prev) => (prev + 1) % Math.max(1, combinedActions.length));
     } else if (e.key === "ArrowUp") {
@@ -361,7 +397,13 @@ export function CommandPalette({ locale, isOpen, onClose, userHandle }: CommandP
     <div
       className="fixed inset-0 z-50 flex items-start justify-center pt-[5vh] sm:pt-[12vh] px-2.5 sm:px-4 bg-black/65 backdrop-blur-md animate-in fade-in duration-150"
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget) {
+          if (onDismiss) {
+            onDismiss();
+          } else {
+            onClose();
+          }
+        }
       }}
       role="dialog"
       aria-modal="true"
@@ -369,11 +411,7 @@ export function CommandPalette({ locale, isOpen, onClose, userHandle }: CommandP
     >
       <div
         ref={containerRef}
-        className="w-full max-w-xl rounded-3xl border border-[var(--color-border-subtle)] shadow-2xl shadow-blue-500/10 overflow-hidden flex flex-col max-h-[min(85dvh,620px)] animate-in zoom-in-95 duration-150"
-        style={{
-          backgroundColor: "var(--color-surface-base)",
-          borderColor: "var(--color-border-subtle)",
-        }}
+        className="w-full max-w-xl rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] shadow-2xl shadow-blue-500/10 overflow-hidden flex flex-col max-h-[min(85dvh,620px)] animate-in zoom-in-95 duration-150"
       >
         {/* Search Header Input */}
         <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/60">

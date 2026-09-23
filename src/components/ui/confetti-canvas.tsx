@@ -76,7 +76,7 @@ export function ConfettiCanvas({
         vx: Math.cos(angle) * speed * (Math.random() > 0.5 ? 1 : -1) + (Math.random() - 0.5) * 4,
         vy: -Math.abs(Math.sin(angle) * speed * 0.8), // Initial upward pop
         size: 6 + Math.random() * 6,
-        color: PALETTE[Math.floor(Math.random() * PALETTE.length)]!,
+        color: PALETTE[Math.floor(Math.random() * PALETTE.length)] ?? "#3B82F6",
         rotation: Math.random() * 360,
         rotationSpeed: (Math.random() - 0.5) * 12,
         wobble: Math.random() * 10,

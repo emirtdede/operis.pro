@@ -12,6 +12,7 @@ import {
   inMemoryCounterProposals,
 } from "@/src/modules/offers/service";
 import { inMemoryListings } from "@/src/modules/listings/service";
+import type { InMemListing } from "@/src/modules/listings/services/types";
 
 describe("Counter-Offer & Negotiation Cycle — State Machine & Business Invariants", () => {
   const listingOwnerId = "user-employer-001";
@@ -22,7 +23,7 @@ describe("Counter-Offer & Negotiation Cycle — State Machine & Business Invaria
   const offerId = "offer-test-fsm-202";
 
   beforeEach(() => {
-    // Reset in-memory stores
+    // Reset in-memory state before each test
     inMemorySentOffers.length = 0;
     inMemoryReceivedOffers.length = 0;
     inMemoryCounterProposals.length = 0;
@@ -38,7 +39,7 @@ describe("Counter-Offer & Negotiation Cycle — State Machine & Business Invaria
       activeUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days active
       activationSeq: 1,
     };
-    inMemoryListings.push(listing as any);
+    inMemoryListings.push(listing as unknown as InMemListing);
 
     // Seed initial offer submitted by freelancer
     const initialOffer = {

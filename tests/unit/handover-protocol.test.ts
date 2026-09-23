@@ -47,12 +47,23 @@ describe("Proof of Delivery & Handover Protocol (TBK m. 474 & 477, FSEK m. 52, H
     locale: "tr",
   };
 
+  const createMockSession = (userId: string, email: string): sessionModule.SessionPayload => ({
+    type: "SESSION",
+    userId,
+    email,
+    role: "USER",
+    status: "ACTIVE",
+    authVersion: 1,
+    createdAt: Date.now(),
+    expiresAt: Date.now() + 7 * 86400000,
+  });
+
   beforeEach(() => {
     vi.restoreAllMocks();
     HandoverService._resetInMemory();
     vi.spyOn(rateLimitModule, "evaluateSecurityAccessAsync").mockResolvedValue({
       allowed: true,
-    } as any);
+    } as unknown as Awaited<ReturnType<typeof rateLimitModule.evaluateSecurityAccessAsync>>);
   });
 
   describe("1. HandoverGeneratorService - Deterministic SHA-256 Seal & Legal Text", () => {
@@ -341,12 +352,9 @@ describe("Proof of Delivery & Handover Protocol (TBK m. 474 & 477, FSEK m. 52, H
       });
 
       const { GET } = await import("@/src/app/api/work/[id]/handover/route");
-      vi.spyOn(sessionModule, "getSession").mockResolvedValue({
-        userId: DEFAULT_USER.id,
-        email: DEFAULT_USER.email,
-        role: "USER",
-        status: "ACTIVE",
-      } as any);
+      vi.spyOn(sessionModule, "getSession").mockResolvedValue(
+        createMockSession(DEFAULT_USER.id, DEFAULT_USER.email)
+      );
 
       const req = new Request("https://operis.pro/api/work/eng-demo-101/handover?lang=tr");
       const res = await GET(req, { params: Promise.resolve({ id: "eng-demo-101" }) });
@@ -361,12 +369,9 @@ describe("Proof of Delivery & Handover Protocol (TBK m. 474 & 477, FSEK m. 52, H
     it("handles SUBMIT, ACCEPT, and REVISION actions via POST", async () => {
       const { POST } = await import("@/src/app/api/work/[id]/handover/route");
       // Authenticate as freelancer
-      vi.spyOn(sessionModule, "getSession").mockResolvedValue({
-        userId: "u-techcorp-1",
-        email: "ahmet@techcorp.com",
-        role: "USER",
-        status: "ACTIVE",
-      } as any);
+      vi.spyOn(sessionModule, "getSession").mockResolvedValue(
+        createMockSession("u-techcorp-1", "ahmet@techcorp.com")
+      );
 
       // Submit
       const submitReq = new Request("https://operis.pro/api/work/eng-demo-101/handover", {
@@ -392,12 +397,9 @@ describe("Proof of Delivery & Handover Protocol (TBK m. 474 & 477, FSEK m. 52, H
       expect(submitData.handover.status).toBe("SUBMITTED");
 
       // Now authenticate as employer and accept
-      vi.spyOn(sessionModule, "getSession").mockResolvedValue({
-        userId: DEFAULT_USER.id,
-        email: DEFAULT_USER.email,
-        role: "USER",
-        status: "ACTIVE",
-      } as any);
+      vi.spyOn(sessionModule, "getSession").mockResolvedValue(
+        createMockSession(DEFAULT_USER.id, DEFAULT_USER.email)
+      );
 
       const acceptReq = new Request("https://operis.pro/api/work/eng-demo-101/handover", {
         method: "POST",
@@ -427,12 +429,9 @@ describe("Proof of Delivery & Handover Protocol (TBK m. 474 & 477, FSEK m. 52, H
       });
 
       const { GET: ExportGET } = await import("@/src/app/api/work/[id]/handover/export/route");
-      vi.spyOn(sessionModule, "getSession").mockResolvedValue({
-        userId: DEFAULT_USER.id,
-        email: DEFAULT_USER.email,
-        role: "USER",
-        status: "ACTIVE",
-      } as any);
+      vi.spyOn(sessionModule, "getSession").mockResolvedValue(
+        createMockSession(DEFAULT_USER.id, DEFAULT_USER.email)
+      );
 
       // 1. Export as markdown
       const mdReq = new Request("https://operis.pro/api/work/eng-demo-101/handover/export?format=markdown&lang=tr");

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { calculateFreelanceTax } from "@/src/modules/finance/tax-calculator";
 import type { MarketBenchmarkResult } from "@/src/modules/categories/benchmark-service";
@@ -14,6 +14,8 @@ import {
 } from "@/src/modules/listings/wizard/scope-synthesizer";
 import {
   CategoryItem,
+  SavedDraftItem,
+  SavedDraftPayload,
   BLUEPRINT_TEMPLATE_TR,
   BLUEPRINT_TEMPLATE_EN,
   mapBudgetModeToPayload,
@@ -34,7 +36,12 @@ export function useListingWizardState({
   const router = useRouter();
   const searchParams = useSearchParams();
   const cloneFromId = searchParams.get("cloneFrom");
+  const draftsListKey = userId ? `operis_wizard_drafts_${userId}` : "operis_wizard_drafts_guest";
   const draftKey = userId ? `operis_listing_draft_${userId}` : "operis_listing_draft";
+
+  const [draftsList, setDraftsList] = useState<SavedDraftItem[]>([]);
+  const [activeDraftId, setActiveDraftId] = useState<string | null>(null);
+  const isDiscardingRef = useRef(false);
 
   const [clonedSourceTitle, setClonedSourceTitle] = useState<string | null>(null);
   const [isCloningLoading, setIsCloningLoading] = useState(false);
@@ -261,74 +268,133 @@ export function useListingWizardState({
     };
   }, [cloneFromId, locale]);
 
-  // LocalStorage Draft Persistence Check
+  // LocalStorage Multi-Draft Persistence & Migration
   useEffect(() => {
     try {
+      // 1. Load multi-draft list from localStorage
+      const listRaw = localStorage.getItem(draftsListKey);
+      let list: SavedDraftItem[] = listRaw ? JSON.parse(listRaw) : [];
+
+      // 2. Check legacy single draft key: if exists with user content, migrate to list
       let saved = localStorage.getItem(draftKey);
       if (!saved && !userId) {
         saved = localStorage.getItem("operis_listing_draft");
       }
       if (saved) {
         const d = JSON.parse(saved);
-        if (d.title || d.summary || d.scope || d.answers) {
-          if (d.categoryId) setCategoryId(d.categoryId);
-          if (d.title) setTitle(d.title);
-          if (d.summary) setSummary(d.summary);
-          if (d.scope) setScope(d.scope);
-          if (d.tagsInput) setTagsInput(d.tagsInput);
-          if (d.budgetMode) setBudgetMode(d.budgetMode);
-          if (d.budgetCurrency) setBudgetCurrency(d.budgetCurrency);
-          if (d.budgetMin) setBudgetMin(d.budgetMin);
-          if (d.budgetMax) setBudgetMax(d.budgetMax);
-          if (d.timelineMode) setTimelineMode(d.timelineMode);
-          if (d.timelineValue) setTimelineValue(d.timelineValue);
-          if (d.timelineUnit) setTimelineUnit(d.timelineUnit);
-          if (d.targetDate) setTargetDate(d.targetDate);
-          if (d.projectType) setProjectType(d.projectType);
-          if (d.projectStage) setProjectStage(d.projectStage);
-          if (d.workPreference) setWorkPreference(d.workPreference);
-          if (d.preferredLanguage) setPreferredLanguage(d.preferredLanguage);
-          if (d.answers) setAnswers(d.answers);
-          if (d.customNotes) setCustomNotes(d.customNotes);
-          if (d.scopeMode) setScopeMode(d.scopeMode);
+        const hasSubstantialContent = Boolean(
+          (d.title && d.title.trim().length >= 3) ||
+          (d.summary && d.summary.trim().length >= 10) ||
+          (d.scope && d.scope.trim().length >= 10)
+        );
 
-          setDraftTitleNotice(d.title || "");
-          setHasDraftNotice(true);
+        if (hasSubstantialContent) {
+          const alreadyExists = list.some(
+            (item) => item.data.title === d.title && item.data.summary === d.summary
+          );
+          if (!alreadyExists) {
+            const catName = categories.find((c) => c.id === d.categoryId)?.name;
+            const migratedDraft: SavedDraftItem = {
+              id: `draft_${d.savedAt || Date.now()}`,
+              title: d.title || (isTr ? "Kayıtlı Taslak" : "Saved Draft"),
+              summary: d.summary || "",
+              categoryId: d.categoryId,
+              categoryName: catName,
+              step: d.step || 1,
+              updatedAt: d.savedAt || Date.now(),
+              data: d,
+            };
+            list = [migratedDraft, ...list];
+            try {
+              localStorage.setItem(draftsListKey, JSON.stringify(list));
+            } catch {
+              // Gracefully ignore localStorage quota limit or storage restrictions
+            }
+          }
         }
       }
-    } catch {
-      // ignore
-    }
-  }, [draftKey, userId]);
 
+      setDraftsList(list);
+
+      // Populate notice if drafts exist
+      if (list.length > 0 && list[0]) {
+        setDraftTitleNotice(list[0].title);
+        setHasDraftNotice(true);
+      }
+    } catch {
+      // fail-open
+    }
+  }, [draftsListKey, draftKey, userId, categories, isTr]);
+
+  // Safe Autosave: ONLY saves if user has typed meaningful content!
+  // Template question defaults by themselves will NEVER auto-save or re-create drafts.
   useEffect(() => {
+    if (isDiscardingRef.current) return;
+
+    const hasUserContent =
+      (title && title.trim().length >= 3) ||
+      (summary && summary.trim().length >= 10) ||
+      (scope && scope.trim().length >= 20) ||
+      (tagsInput && tagsInput.trim().length > 0);
+
+    if (!hasUserContent) return;
+
     try {
-      if (title || summary || scope || Object.keys(answers).length > 0) {
-        localStorage.setItem(
-          draftKey,
-          JSON.stringify({
-            categoryId,
-            title,
-            summary,
-            scope,
-            tagsInput,
-            budgetMode,
-            budgetCurrency,
-            budgetMin,
-            budgetMax,
-            timelineMode,
-            timelineValue,
-            timelineUnit,
-            targetDate,
-            projectType,
-            projectStage,
-            workPreference,
-            preferredLanguage,
-            answers,
-            customNotes,
-            scopeMode,
-          })
-        );
+      const payload = {
+        categoryId,
+        title,
+        summary,
+        scope,
+        tagsInput,
+        budgetMode,
+        budgetCurrency,
+        budgetMin,
+        budgetMax,
+        timelineMode,
+        timelineValue,
+        timelineUnit,
+        targetDate,
+        projectType,
+        projectStage,
+        workPreference,
+        preferredLanguage,
+        answers,
+        customNotes,
+        scopeMode,
+        step,
+        savedAt: Date.now(),
+      };
+
+      localStorage.setItem(draftKey, JSON.stringify(payload));
+      if (!userId) {
+        localStorage.setItem("operis_listing_draft", JSON.stringify(payload));
+      }
+
+      // If this session is actively editing a known draft in the list, update it
+      if (activeDraftId) {
+        setDraftsList((prev) => {
+          const exists = prev.some((d) => d.id === activeDraftId);
+          if (!exists) return prev;
+          const updated = prev.map((d) => {
+            if (d.id !== activeDraftId) return d;
+            return {
+              ...d,
+              title: title.trim() || d.title,
+              summary: summary.trim(),
+              categoryId,
+              categoryName: categories.find((c) => c.id === categoryId)?.name,
+              step,
+              updatedAt: Date.now(),
+              data: payload,
+            };
+          });
+          try {
+            localStorage.setItem(draftsListKey, JSON.stringify(updated));
+          } catch {
+            // Gracefully ignore localStorage quota limit or storage restrictions
+          }
+          return updated;
+        });
       }
     } catch {
       // ignore
@@ -354,7 +420,12 @@ export function useListingWizardState({
     answers,
     customNotes,
     scopeMode,
+    step,
     draftKey,
+    draftsListKey,
+    userId,
+    activeDraftId,
+    categories,
   ]);
 
   const handleCustomNotesChange = (val: string) => {
@@ -429,8 +500,146 @@ export function useListingWizardState({
     }
   };
 
-  const handleDiscardDraft = () => {
+  const [draftSavedToast, setDraftSavedToast] = useState(false);
+
+  const handleSaveDraft = () => {
     try {
+      const draftId = activeDraftId || `draft_${Date.now()}`;
+      const draftTitle = title.trim() || (isTr ? "İsimsiz İlan Taslağı" : "Untitled Draft");
+      const draftSummary = summary.trim();
+
+      const draftPayload: SavedDraftPayload = {
+        categoryId,
+        title,
+        summary,
+        scope,
+        tagsInput,
+        budgetMode,
+        budgetCurrency,
+        budgetMin,
+        budgetMax,
+        timelineMode,
+        timelineValue,
+        timelineUnit,
+        targetDate,
+        projectType,
+        projectStage,
+        workPreference,
+        preferredLanguage,
+        answers,
+        customNotes,
+        scopeMode,
+        step,
+        savedAt: Date.now(),
+      };
+
+      const newDraftItem: SavedDraftItem = {
+        id: draftId,
+        title: draftTitle,
+        summary: draftSummary,
+        categoryId,
+        categoryName: selectedCategory?.name,
+        step,
+        updatedAt: Date.now(),
+        data: draftPayload,
+      };
+
+      setDraftsList((prev) => {
+        const filtered = prev.filter((d) => d.id !== draftId);
+        const updated = [newDraftItem, ...filtered];
+        try {
+          localStorage.setItem(draftsListKey, JSON.stringify(updated));
+        } catch {
+          // Gracefully ignore localStorage quota limit or storage restrictions
+        }
+        return updated;
+      });
+
+      setActiveDraftId(draftId);
+      localStorage.setItem(draftKey, JSON.stringify(draftPayload));
+      if (!userId) {
+        localStorage.setItem("operis_listing_draft", JSON.stringify(draftPayload));
+      }
+
+      setHasDraftNotice(false);
+      setDraftSavedToast(true);
+      setTimeout(() => setDraftSavedToast(false), 2500);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleLoadDraft = (draftId: string) => {
+    try {
+      const item = draftsList.find((d) => d.id === draftId);
+      if (!item) return;
+
+      const d = item.data;
+      if (d.categoryId) setCategoryId(d.categoryId);
+      setTitle(d.title || "");
+      setSummary(d.summary || "");
+      setScope(d.scope || "");
+      setTagsInput(d.tagsInput || "");
+      if (d.budgetMode) setBudgetMode(d.budgetMode);
+      if (d.budgetCurrency) setBudgetCurrency(d.budgetCurrency);
+      if (d.budgetMin) setBudgetMin(d.budgetMin);
+      if (d.budgetMax) setBudgetMax(d.budgetMax);
+      if (d.timelineMode) setTimelineMode(d.timelineMode);
+      if (d.timelineValue) setTimelineValue(d.timelineValue);
+      if (d.timelineUnit) setTimelineUnit(d.timelineUnit);
+      if (d.targetDate) setTargetDate(d.targetDate);
+      if (d.projectType) setProjectType(d.projectType);
+      if (d.projectStage) setProjectStage(d.projectStage);
+      if (d.workPreference) setWorkPreference(d.workPreference);
+      if (d.preferredLanguage) setPreferredLanguage(d.preferredLanguage);
+      if (d.answers) setAnswers(d.answers);
+      if (d.customNotes) setCustomNotes(d.customNotes);
+      if (d.scopeMode) setScopeMode(d.scopeMode);
+      if (d.step) setStep(d.step);
+
+      setActiveDraftId(item.id);
+      setHasDraftNotice(false);
+    } catch {
+      // ignore
+    }
+  };
+
+  const handleDeleteDraft = (draftId: string) => {
+    try {
+      // 1. Remove permanently from draftsList and localStorage
+      const updated = draftsList.filter((d) => d.id !== draftId);
+      setDraftsList(updated);
+      localStorage.setItem(draftsListKey, JSON.stringify(updated));
+
+      // 2. If the deleted draft was the active one currently in the form or list is now empty:
+      if (activeDraftId === draftId || updated.length === 0) {
+        isDiscardingRef.current = true;
+        setActiveDraftId(null);
+        localStorage.removeItem(draftKey);
+        localStorage.removeItem("operis_listing_draft");
+        setTitle("");
+        setSummary("");
+        setScope("");
+        setTagsInput("");
+        setAnswers({});
+        setCustomNotes("");
+        setScopeMode("wizard");
+        setStep(1);
+        setHasDraftNotice(false);
+        setTimeout(() => {
+          isDiscardingRef.current = false;
+        }, 500);
+      }
+    } catch {
+      // ignore
+    }
+  };
+
+  const handleStartNewListing = () => {
+    try {
+      isDiscardingRef.current = true;
+      setActiveDraftId(null);
       localStorage.removeItem(draftKey);
       localStorage.removeItem("operis_listing_draft");
       setTitle("");
@@ -440,10 +649,31 @@ export function useListingWizardState({
       setAnswers({});
       setCustomNotes("");
       setScopeMode("wizard");
+      setStep(1);
       setHasDraftNotice(false);
+      setTimeout(() => {
+        isDiscardingRef.current = false;
+      }, 500);
     } catch {
       // ignore
     }
+  };
+
+  const handleDiscardDraft = () => {
+    if (activeDraftId) {
+      handleDeleteDraft(activeDraftId);
+    } else if (draftsList.length > 0 && draftsList[0]) {
+      handleDeleteDraft(draftsList[0].id);
+    } else {
+      handleStartNewListing();
+    }
+  };
+
+  const handleRestoreDraft = () => {
+    if (draftsList.length > 0 && draftsList[0]) {
+      handleLoadDraft(draftsList[0].id);
+    }
+    setHasDraftNotice(false);
   };
 
   const validateStep = (currentStep: number): boolean => {
@@ -719,7 +949,15 @@ export function useListingWizardState({
     handleApplyScopePackage,
     handleApplyMarketBudget,
     handleToggleTagSuggestion,
+    handleSaveDraft,
+    draftSavedToast,
     handleDiscardDraft,
+    draftsList,
+    activeDraftId,
+    handleLoadDraft,
+    handleDeleteDraft,
+    handleStartNewListing,
+    handleRestoreDraft,
     validateStep,
     nextStep,
     prevStep,

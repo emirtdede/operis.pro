@@ -225,6 +225,27 @@
       "when": 1789780000000,
       "tag": "0031_contract_packages_version_cas",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1789784000000,
+      "tag": "0032_performance_composite_indexes",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1789788000000,
+      "tag": "0033_search_trends",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1790128705403,
+      "tag": "0034_exotic_the_enforcers",
+      "breakpoints": true
     }
   ]
 }

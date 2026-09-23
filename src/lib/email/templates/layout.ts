@@ -1,3 +1,5 @@
+import { getBaseUrl } from "@/src/lib/config/url";
+
 export interface EmailLayoutProps {
   title: string;
   previewText?: string;
@@ -16,7 +18,7 @@ export function wrapInEmailLayout({
   locale,
 }: EmailLayoutProps): string {
   const isTr = locale === "tr";
-  const appUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || "https://operis.pro";
+  const appUrl = getBaseUrl();
 
   const securityNote = isTr
     ? "Bu e-postayı siz talep etmediyseniz, hiçbir işlem yapmanıza gerek yoktur. Hesabınız tamamen güvendedir."

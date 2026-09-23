@@ -12,4 +12,5 @@ export * from "./tables/offers";
 export * from "./tables/engagements";
 export * from "./tables/communication";
 export * from "./tables/governance";
+export * from "./tables/search-trends";
 export * from "./relations";

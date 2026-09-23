@@ -485,15 +485,14 @@ export async function verifyPhoneOtpAsync(
           .for("update")
           .limit(1);
 
-        if (challenges.length === 0) {
+        const challenge = challenges[0];
+        if (!challenge) {
           verificationError = new PhoneVerificationError(
             "CHALLENGE_NOT_FOUND",
             "No active verification challenge found for this user."
           );
           return;
         }
-
-        const challenge = challenges[0]!;
 
         // Check max attempts (5)
         if (challenge.attemptCount >= 5) {

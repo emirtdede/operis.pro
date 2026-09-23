@@ -524,8 +524,9 @@ export function searchCategories(
     for (const stmt of taxonomyIndex.stemmedProblemStatements) {
       let matchedCount = 0;
       for (let i = 0; i < contentTokens.length; i++) {
-        const tok = contentTokens[i]!;
-        const stem = stemmedContentTokens[i]!;
+        const tok = contentTokens[i];
+        const stem = stemmedContentTokens[i];
+        if (!tok || !stem) continue;
         if (stmt.rawTokens.has(tok) || stmt.rawTokens.has(toAsciiShadow(tok)) || stmt.stemmedTokens.has(stem)) {
           matchedCount++;
         }
@@ -554,8 +555,9 @@ export function searchCategories(
             }
           }
           for (let i = 0; i < contentTokens.length; i++) {
-            const tok = contentTokens[i]!;
-            const stem = stemmedContentTokens[i]!;
+            const tok = contentTokens[i];
+            const stem = stemmedContentTokens[i];
+            if (!tok || !stem) continue;
             if (stmt.rawTokens.has(tok) || stmt.rawTokens.has(toAsciiShadow(tok)) || stmt.stemmedTokens.has(stem)) {
               acc.matchedQueryTokens.add(tok);
             }
@@ -577,10 +579,11 @@ export function searchCategories(
       // Positive context
       for (const pos of disRule.positiveContext) {
         const posWords = toAsciiShadow(pos).split(/\s+/);
+        const firstPosWord = posWords[0] ?? "";
         const matchesPos =
           posWords.length > 1
             ? posWords.every((w) => shadowQuery.includes(w) || stemmedShadowTokens.has(stemTurkishWord(w)))
-            : shadowQuery.includes(posWords[0]!) || stemmedShadowTokens.has(stemTurkishWord(posWords[0]!));
+            : shadowQuery.includes(firstPosWord) || stemmedShadowTokens.has(stemTurkishWord(firstPosWord));
         if (matchesPos) {
           acc.contextBoost += 0.15;
           break;
@@ -592,10 +595,11 @@ export function searchCategories(
       if (!isExactCategoryOrCanon) {
         for (const neg of disRule.softNegativeContext) {
           const negWords = toAsciiShadow(neg.term).split(/\s+/);
+          const firstNegWord = negWords[0] ?? "";
           const matchesNeg =
             negWords.length > 1
               ? negWords.every((w) => shadowQuery.includes(w) || stemmedShadowTokens.has(stemTurkishWord(w)))
-              : shadowQuery.includes(negWords[0]!) || stemmedShadowTokens.has(stemTurkishWord(negWords[0]!));
+              : shadowQuery.includes(firstNegWord) || stemmedShadowTokens.has(stemTurkishWord(firstNegWord));
           if (matchesNeg) {
             acc.contextBoost += neg.penalty;
             const towardCat = taxonomyIndex.getCategory(neg.towardCategorySlug);
@@ -710,9 +714,9 @@ export function searchCategories(
   // 8. Relation Prior (Small precision boost for strong relations)
   if (enableRelationPrior && scoredResults.length > 0) {
     scoredResults.sort((a, b) => b.score - a.score);
-    const top = scoredResults[0]!;
+    const top = scoredResults[0];
 
-    if (top.score >= 0.85) {
+    if (top && top.score >= 0.85) {
       const relations = taxonomyIndex.relationGraph.get(top.slug);
       if (relations) {
         for (const rel of relations) {

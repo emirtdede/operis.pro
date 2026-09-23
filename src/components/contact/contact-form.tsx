@@ -87,6 +87,28 @@ export const DEPARTMENTS: DepartmentConfig[] = [
     icon: Scale,
   },
   {
+    id: "privacy",
+    labelTr: "KVKK & Veri Gizliliği Masası",
+    labelEn: "Privacy & Data Protection Desk",
+    slaTr: "< 12 İş Saati",
+    slaEn: "< 12 Business Hours",
+    badgeTr: "KVKK",
+    badgeEn: "Privacy",
+    color: "text-cyan-400 border-cyan-500/20 bg-cyan-500/10",
+    icon: ShieldCheck,
+  },
+  {
+    id: "billing",
+    labelTr: "Faturalandırma & Finans Masası",
+    labelEn: "Billing & Accounting Desk",
+    slaTr: "< 6 İş Saati",
+    slaEn: "< 6 Business Hours",
+    badgeTr: "Finans",
+    badgeEn: "Billing",
+    color: "text-amber-400 border-amber-500/20 bg-amber-500/10",
+    icon: FileText,
+  },
+  {
     id: "press",
     labelTr: "Basın & Medya İletişimi",
     labelEn: "Press & Media Relations",
@@ -110,6 +132,75 @@ function getFileUploadPrompt(isDragging: boolean, isTr: boolean): string {
     return isTr ? "Dosyayı yüklemek için şimdi buraya bırakın" : "Drop your file here to attach";
   }
   return isTr ? "Dosyayı buraya sürükleyip bırakın veya tıklayın" : "Drag and drop your file here, or click to browse";
+}
+
+function getFileTypeBadge(isImage: boolean, isPdf: boolean, isZip: boolean, isTr: boolean): string {
+  if (isImage) return isTr ? "Görsel Önizleme" : "Image Preview";
+  if (isPdf) return isTr ? "PDF Belgesi" : "PDF Document";
+  if (isZip) return isTr ? "Arşiv Paketi" : "Archive Package";
+  return isTr ? "Doküman" : "Document";
+}
+
+function renderFileThumbnail(
+  file: { name: string; data?: string },
+  isImage: boolean,
+  isPdf: boolean,
+  isZip: boolean
+) {
+  if (isImage && file.data) {
+    return (
+      <div className="relative shrink-0 group/img">
+        <img
+          src={file.data}
+          alt={file.name}
+          className="h-24 w-24 sm:h-28 sm:w-28 object-cover rounded-2xl border-2 border-blue-500/40 shadow-xl shadow-blue-500/20 ring-4 ring-blue-500/10"
+        />
+        <span className="absolute -bottom-1.5 -right-1.5 h-6 w-6 rounded-full bg-emerald-500 text-white flex items-center justify-center ring-2 ring-[var(--color-surface-base)] shadow-sm">
+          <Check className="h-3.5 w-3.5 stroke-[3]" />
+        </span>
+      </div>
+    );
+  }
+
+  if (isPdf) {
+    return (
+      <div className="relative shrink-0 h-24 w-24 sm:h-28 sm:w-28 rounded-2xl bg-gradient-to-br from-rose-500/20 via-rose-500/10 to-rose-500/5 border-2 border-rose-500/30 flex flex-col items-center justify-center shadow-lg shadow-rose-500/10">
+        <FileText className="h-9 w-9 text-rose-400" />
+        <span className="text-[10px] font-mono font-black text-rose-300 uppercase mt-1 px-2 py-0.5 rounded-md bg-rose-500/20 border border-rose-500/30">
+          PDF
+        </span>
+        <span className="absolute -bottom-1.5 -right-1.5 h-6 w-6 rounded-full bg-emerald-500 text-white flex items-center justify-center ring-2 ring-[var(--color-surface-base)] shadow-sm">
+          <Check className="h-3.5 w-3.5 stroke-[3]" />
+        </span>
+      </div>
+    );
+  }
+
+  if (isZip) {
+    return (
+      <div className="relative shrink-0 h-24 w-24 sm:h-28 sm:w-28 rounded-2xl bg-gradient-to-br from-amber-500/20 via-amber-500/10 to-amber-500/5 border-2 border-amber-500/30 flex flex-col items-center justify-center shadow-lg shadow-amber-500/10">
+        <FileText className="h-9 w-9 text-amber-400" />
+        <span className="text-[10px] font-mono font-black text-amber-300 uppercase mt-1 px-2 py-0.5 rounded-md bg-amber-500/20 border border-amber-500/30">
+          ZIP
+        </span>
+        <span className="absolute -bottom-1.5 -right-1.5 h-6 w-6 rounded-full bg-emerald-500 text-white flex items-center justify-center ring-2 ring-[var(--color-surface-base)] shadow-sm">
+          <Check className="h-3.5 w-3.5 stroke-[3]" />
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative shrink-0 h-24 w-24 sm:h-28 sm:w-28 rounded-2xl bg-gradient-to-br from-blue-500/20 via-blue-500/10 to-blue-500/5 border-2 border-blue-500/30 flex flex-col items-center justify-center shadow-lg shadow-blue-500/10">
+      <FileText className="h-9 w-9 text-blue-400" />
+      <span className="text-[10px] font-mono font-black text-blue-300 uppercase mt-1 px-2 py-0.5 rounded-md bg-blue-500/20 border border-blue-500/30">
+        BELGE
+      </span>
+      <span className="absolute -bottom-1.5 -right-1.5 h-6 w-6 rounded-full bg-emerald-500 text-white flex items-center justify-center ring-2 ring-[var(--color-surface-base)] shadow-sm">
+        <Check className="h-3.5 w-3.5 stroke-[3]" />
+      </span>
+    </div>
+  );
 }
 
 export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: ContactFormProps) {
@@ -251,14 +342,15 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
     if (selectedDepartment && selectedDepartment !== department) {
       setDepartment(selectedDepartment);
     }
-  }, [selectedDepartment]);
+  }, [selectedDepartment, department]);
 
   const handleDeptSelect = (deptId: string) => {
     setDepartment(deptId);
     onDepartmentChange?.(deptId);
   };
 
-  const currentDept = DEPARTMENTS.find((d) => d.id === department) ?? DEPARTMENTS[0]!;
+  const defaultDept = DEPARTMENTS[0] as (typeof DEPARTMENTS)[number];
+  const currentDept = DEPARTMENTS.find((d) => d.id === department) ?? defaultDept;
   const CurrentIcon = currentDept.icon;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -392,7 +484,7 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="flex-1 flex flex-col justify-between space-y-4 sm:space-y-5">
       {/* 1. Unified Target Desk & SLA Console (Synchronized with selected desk) */}
       <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/50 p-3 sm:p-3.5 flex items-center justify-between gap-3 shadow-sm transition-all">
         <div className="flex items-center gap-3 min-w-0">
@@ -508,8 +600,8 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
         className="min-h-[105px]"
       />
 
-      {/* Row 4: Optional File Attachment (Enlarged Dropzone + Drag-and-Drop) */}
-      <div className="space-y-1.5">
+      {/* Row 4: Optional File Attachment (Enlarged Dropzone + Drag-and-Drop + Image/File Preview) */}
+      <div className="flex-1 flex flex-col space-y-1.5 min-h-[220px] sm:min-h-[260px]">
         <div className="flex items-center justify-between text-xs">
           <label
             htmlFor="contact-file-input"
@@ -536,103 +628,126 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
         />
 
         {attachedFile ? (
-          /* Attached State - High Profile Spacious Card */
-          <div
-            onDragEnter={handleDragEnter}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            className={`relative p-6 sm:p-7 rounded-2xl border transition-all flex flex-col items-center justify-center text-center gap-3 animate-in fade-in min-h-[145px] overflow-hidden ${
-              isDragging
-                ? "border-blue-500 bg-blue-500/20 ring-4 ring-blue-500/20 shadow-2xl"
-                : "bg-blue-500/[0.07] border-blue-500/30 hover:border-blue-500/40"
-            }`}
-          >
-            {/* Top: Elevated File Badge with Status Checkmark */}
-            <div className="relative pointer-events-none">
-              <div className="h-12 w-12 rounded-2xl bg-blue-500/20 border border-blue-500/35 text-blue-400 flex items-center justify-center shadow-md">
-                <FileText className="h-6 w-6" />
-              </div>
-              <span className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-emerald-500 text-white flex items-center justify-center ring-2 ring-[var(--color-surface-base)] shadow-xs">
-                <Check className="h-3 w-3 stroke-[3]" />
-              </span>
-            </div>
+          /* Attached State - Spacious Card with Real Image / File Preview */
+          (() => {
+            const isImage = Boolean(
+              attachedFile.type?.startsWith("image/") ||
+                [".png", ".jpg", ".jpeg", ".webp"].some((ext) =>
+                  attachedFile.name.toLowerCase().endsWith(ext)
+                )
+            );
+            const isPdf = Boolean(
+              attachedFile.type === "application/pdf" ||
+                attachedFile.name.toLowerCase().endsWith(".pdf")
+            );
+            const isZip = Boolean(
+              [".zip", ".rar", ".7z", ".tar", ".gz"].some((ext) =>
+                attachedFile.name.toLowerCase().endsWith(ext)
+              )
+            );
 
-            {/* Middle: File Name, Size & Success Indicator */}
-            <div className="space-y-1 max-w-sm pointer-events-none">
-              <p className="text-xs sm:text-sm font-bold text-[var(--color-text-primary)] truncate max-w-[280px] sm:max-w-[360px] mx-auto">
-                {attachedFile.name}
-              </p>
-              <div className="flex items-center justify-center gap-2 text-xs font-mono text-[var(--color-text-tertiary)]">
-                <span className="px-2 py-0.5 rounded-md bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] font-medium">
-                  {attachedFile.size}
-                </span>
-                <span>•</span>
-                <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                  <CheckCircle2 className="h-3.5 w-3.5" />
-                  <span>{isTr ? "Ek Başarıyla Hazırlandı" : "Attached Successfully"}</span>
-                </span>
-              </div>
-            </div>
-
-            {/* Bottom Actions: Change / Remove buttons */}
-            <div className="flex items-center justify-center gap-2.5 pt-0.5">
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-[var(--color-text-secondary)] hover:text-white bg-[var(--color-surface-hover)] hover:bg-[var(--color-surface-hover)]/80 border border-[var(--color-border-subtle)] hover:border-blue-500/40 transition-all flex items-center gap-1.5 shadow-xs"
+            return (
+              <div
+                onDragEnter={handleDragEnter}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`flex-1 w-full relative p-5 sm:p-7 rounded-2xl border transition-all flex flex-col justify-between gap-4 animate-in fade-in min-h-[190px] sm:min-h-[220px] overflow-hidden ${
+                  isDragging
+                    ? "border-blue-500 bg-blue-500/20 ring-4 ring-blue-500/20 shadow-2xl"
+                    : "bg-blue-500/[0.07] border-blue-500/30 hover:border-blue-500/40"
+                }`}
               >
-                <Paperclip className="h-3.5 w-3.5 text-blue-400" />
-                <span>{isTr ? "Farklı Dosya Seç" : "Replace File"}</span>
-              </button>
-              <button
-                type="button"
-                onClick={handleRemoveFile}
-                className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-red-400 bg-red-500/10 hover:bg-red-500/20 border border-red-500/25 flex items-center gap-1.5 transition-all shadow-xs"
-                title={isTr ? "Dosyayı Kaldır" : "Remove file"}
-                aria-label={isTr ? "Dosyayı Kaldır" : "Remove file"}
-              >
-                <X className="h-3.5 w-3.5" />
-                <span>{isTr ? "Kaldır" : "Remove"}</span>
-              </button>
-            </div>
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 flex-1 justify-center sm:justify-start">
+                  {/* File Preview Thumbnail / Badge */}
+                  {renderFileThumbnail(attachedFile, isImage, isPdf, isZip)}
 
-            {/* Drag Hover Overlay if dragging another file */}
-            {isDragging && (
-              <div className="absolute inset-0 bg-blue-600/90 backdrop-blur-xs rounded-2xl flex flex-col items-center justify-center text-white gap-2 pointer-events-none animate-in fade-in">
-                <UploadCloud className="h-8 w-8 animate-bounce" />
-                <p className="text-xs sm:text-sm font-bold">
-                  {isTr ? "Yeni dosyayı yüklemek için buraya bırakın" : "Drop to replace with new file"}
-                </p>
+                  {/* File Metadata & Badges */}
+                  <div className="space-y-2 flex-1 min-w-0 text-center sm:text-left">
+                    <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                      <span className="px-2.5 py-0.5 rounded-md bg-blue-500/15 border border-blue-500/25 text-blue-400 text-[11px] font-mono font-bold uppercase">
+                        {getFileTypeBadge(isImage, isPdf, isZip, isTr)}
+                      </span>
+                      <span className="text-emerald-400 text-xs font-semibold flex items-center gap-1">
+                        <CheckCircle2 className="h-3.5 w-3.5" />
+                        <span>{isTr ? "Doğrulandı & Gönderime Hazır" : "Verified & Ready"}</span>
+                      </span>
+                    </div>
+
+                    <p className="text-sm font-bold text-[var(--color-text-primary)] truncate max-w-[280px] sm:max-w-[340px] mx-auto sm:mx-0">
+                      {attachedFile.name}
+                    </p>
+
+                    <div className="flex items-center justify-center sm:justify-start gap-2 text-xs font-mono text-[var(--color-text-tertiary)]">
+                      <span className="px-2 py-0.5 rounded-md bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] font-medium">
+                        {attachedFile.size}
+                      </span>
+                      <span>•</span>
+                      <span>{isTr ? "Maks. 5 MB Kapsamında" : "Within 5 MB Limit"}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Actions inside Attached Card */}
+                <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-blue-500/20">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-[var(--color-text-secondary)] hover:text-white bg-[var(--color-surface-hover)] hover:bg-[var(--color-surface-hover)]/80 border border-[var(--color-border-subtle)] hover:border-blue-500/40 transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  >
+                    <Paperclip className="h-3.5 w-3.5 text-blue-400" />
+                    <span>{isTr ? "Farklı Dosya Seç" : "Replace File"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleRemoveFile}
+                    className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-red-400 bg-red-500/10 hover:bg-red-500/20 border border-red-500/25 flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+                    title={isTr ? "Dosyayı Kaldır" : "Remove file"}
+                    aria-label={isTr ? "Dosyayı Kaldır" : "Remove file"}
+                  >
+                    <X className="h-3.5 w-3.5" />
+                    <span>{isTr ? "Kaldır" : "Remove"}</span>
+                  </button>
+                </div>
+
+                {/* Drag Hover Overlay if dragging another file */}
+                {isDragging && (
+                  <div className="absolute inset-0 bg-blue-600/90 backdrop-blur-xs rounded-2xl flex flex-col items-center justify-center text-white gap-2 pointer-events-none animate-in fade-in">
+                    <UploadCloud className="h-8 w-8 animate-bounce" />
+                    <p className="text-xs sm:text-sm font-bold">
+                      {isTr ? "Yeni dosyayı yüklemek için buraya bırakın" : "Drop to replace with new file"}
+                    </p>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            );
+          })()
         ) : (
-          /* Empty Dropzone with Increased Height, Drag & Drop Support, and Prominent Button */
+          /* Empty Dropzone: Expanded Height to Gracefully Fill the Column */
           <div
             onClick={() => fileInputRef.current?.click()}
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
-            className={`group relative cursor-pointer rounded-2xl border-2 border-dashed transition-all py-6 sm:py-7 px-4 flex flex-col items-center justify-center text-center gap-2.5 min-h-[145px] overflow-hidden ${
+            className={`flex-1 w-full group relative cursor-pointer rounded-2xl border-2 border-dashed transition-all py-8 sm:py-10 px-4 flex flex-col items-center justify-center text-center gap-3.5 min-h-[190px] sm:min-h-[220px] overflow-hidden ${
               isDragging
                 ? "border-blue-500 bg-blue-500/15 ring-4 ring-blue-500/20 shadow-xl shadow-blue-500/10 scale-[1.01]"
                 : "border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/30 hover:border-blue-500/40 hover:bg-[var(--color-surface-hover)]/60"
             }`}
           >
-            <div className="pointer-events-none flex flex-col items-center justify-center text-center gap-2 max-w-sm">
+            <div className="pointer-events-none flex flex-col items-center justify-center text-center gap-2.5 max-w-sm">
               <div
-                className={`h-11 w-11 rounded-2xl flex items-center justify-center transition-all ${
+                className={`h-12 w-12 sm:h-14 sm:w-14 rounded-2xl flex items-center justify-center transition-all ${
                   isDragging
                     ? "bg-blue-500 text-white scale-110 shadow-lg shadow-blue-500/30 animate-pulse"
-                    : "bg-blue-500/10 border border-blue-500/20 text-blue-400 group-hover:scale-105 group-hover:border-blue-500/40 group-hover:bg-blue-500/20"
+                    : "bg-blue-500/10 border border-blue-500/20 text-blue-400 group-hover:scale-105 group-hover:border-blue-500/40 group-hover:bg-blue-500/20 shadow-sm"
                 }`}
               >
-                <UploadCloud className="h-5 w-5" />
+                <UploadCloud className="h-6 w-6 sm:h-7 sm:w-7" />
               </div>
 
-              <div className="space-y-0.5">
+              <div className="space-y-1">
                 <p className="text-xs sm:text-sm font-bold text-[var(--color-text-primary)] group-hover:text-blue-400 transition-colors">
                   {getFileUploadPrompt(isDragging, isTr)}
                 </p>

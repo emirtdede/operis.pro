@@ -24,6 +24,7 @@ export type {
   PaymentTimingGuidance,
   HandshakeAuditEntry,
   IpAssignmentDeed,
+  MilestoneDeliverableUrlType,
 };
 
 export type DeliverableStatus = "NOT_STARTED" | "IN_PROGRESS" | "SUBMITTED" | "ACCEPTED";

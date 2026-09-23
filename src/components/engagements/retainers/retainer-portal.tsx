@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Repeat,
   Clock,
@@ -63,7 +63,7 @@ export function RetainerPortal({
   const [actionFeedback, setActionFeedback] = useState<string | null>(null);
   const [copiedContract, setCopiedContract] = useState(false);
 
-  const fetchRetainer = async () => {
+  const fetchRetainer = useCallback(async () => {
     setIsLoading(true);
     try {
       const res = await fetch(`/api/work/${engagementId}/retainer`, {
@@ -78,11 +78,11 @@ export function RetainerPortal({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [engagementId, locale]);
 
   useEffect(() => {
     fetchRetainer();
-  }, [engagementId, locale]);
+  }, [fetchRetainer]);
 
   const handleActivate = async () => {
     if (!data?.retainer) return;

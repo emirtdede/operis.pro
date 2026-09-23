@@ -7,9 +7,10 @@ import { LegalService } from "@/src/modules/legal/service";
 import { Locale } from "@/src/lib/i18n/config";
 import { ReadingProgressBar } from "@/src/components/ui/reading-progress-bar";
 import { LegalDocumentViewer } from "@/src/components/legal/legal-document-viewer";
-import { serializeJsonLd } from "@/src/lib/security/json-ld";
+import { JsonLd } from "@/src/components/seo/json-ld";
 
 import { TR_TO_INTERNAL_LEGAL_SLUG, getLocalizedLegalPath } from "@/src/lib/i18n/routes";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 const VALID_LEGAL_SLUGS = [
   "terms",
@@ -306,7 +307,8 @@ export default async function LegalDocumentPage({
   const titleObj = TITLES[internalKey] ?? { tr: "Yasal Belge", en: "Legal Document" };
   const docTitle = isTr ? titleObj.tr : titleObj.en;
 
-  const legalDocUrl = `https://operis.pro${getLocalizedLegalPath(internalKey, locale as Locale)}`;
+  const baseUrl = getBaseUrl();
+  const legalDocUrl = `${baseUrl}${getLocalizedLegalPath(internalKey, locale as Locale)}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -332,7 +334,7 @@ export default async function LegalDocumentPage({
             "@type": "ListItem",
             position: 1,
             name: isTr ? "Ana Sayfa" : "Home",
-            item: `https://operis.pro/${locale}`,
+            item: `${baseUrl}/${locale}`,
           },
           {
             "@type": "ListItem",
@@ -357,10 +359,7 @@ export default async function LegalDocumentPage({
       <ReadingProgressBar />
 
       {/* Schema.org Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
 
       {/* Plain Language Executive Summary */}
       {PLAIN_SUMMARIES[internalKey] && (

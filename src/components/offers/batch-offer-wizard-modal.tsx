@@ -182,7 +182,7 @@ export function BatchOfferWizardModal({
   // Prepare custom message defaults if switching to custom mode
   const getListingMessage = (listing: BatchListingTarget) => {
     if (mode === "custom" && customMessages[listing.id]) {
-      return customMessages[listing.id]!;
+      return customMessages[listing.id] ?? "";
     }
     let text = commonMessage;
     text = text.replace(/\{\{ilan_basligi\}\}/g, listing.title);

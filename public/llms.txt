@@ -1,0 +1,37 @@
+# Operis
+
+> Operis is an open, high-trust, zero-commission freelance software engineering directory and bilateral matching network operated by Vellium, headquartered in Istanbul, Turkey.
+
+Operis eliminates traditional marketplace broker fees, platform escrow holds, bidding race-to-the-bottom undercutting, and communication restrictions. It serves verified software engineers, technical leads, and innovative technology companies.
+
+## Core Architectural Pillars & Philosophy
+
+- **0% Platform Commission**: Operis never charges a percentage cut, matching tax, or extraction fee on projects. 100% of agreed compensation goes directly from employer to engineer.
+- **168-Hour Freshness Radar**: All project listings remain active on the platform for strictly 168 hours (7 days) before automatic archival unless refreshed by the author. Ghost postings and stale listings are eliminated.
+- **AES-256 Encrypted Blind Bidding**: Proposal text, rates, and milestone timelines are encrypted at rest with military-grade AES-256-GCM. Competitors cannot inspect bids or undercut prices.
+- **Direct Bilateral Collaboration**: Once a proposal is accepted, verified phone, email, WhatsApp, and Slack channels unlock immediately. Operis enforces zero platform gag orders.
+- **Statutory IP & Contract Compliance**: Full compliance with Turkish Copyright Law (5846 sayılı FSEK m. 52), Code of Obligations (TBK), electronic self-employment receipts (e-SMM), and intermediary hosting provider status (5651 sayılı Kanun).
+
+## Canonical Documentation & Public URLs
+
+- [Corporate Manifesto & About Us](https://operis.pro/tr/hakkimizda): Philosophical pillars, comparison matrix, and corporate governance.
+- [Active Listings Radar](https://operis.pro/tr/ilanlar): Real-time live software engineering listings and filterable categories.
+- [Knowledge & Help Hub](https://operis.pro/tr/yardim): Comprehensive operating guidelines, FAQ, taxation rules, and contract best practices.
+- [Contact & Support Desks](https://operis.pro/tr/iletisim): Official enterprise, security, legal, support, and press intake desks.
+- [Legal & Trust Center](https://operis.pro/tr/yasal): Binding contracts, NDAs, privacy notices, and IP assignment templates.
+- [Brand Guidelines & Media Kit](https://operis.pro/tr/marka): Official vector logos, typography tokens, and design standards.
+
+## Technical Architecture & Security Model
+
+- Built on Next.js 15 App Router, React 19, Tailwind CSS, TypeScript.
+- PostgreSQL database with strict Row Level Security (RLS) policies and Drizzle ORM.
+- Cloudflare Edge CDN, DDoS mitigation, and fail-open Turnstile human verification.
+- Zero-Escrow Architecture: Operis never holds custody of user deposits, eliminating insolvency, fund seizure, or withdrawal lock risks.
+
+## Corporate & Statutory Identity
+
+- **Platform Operator**: Vellium (Vellium Teknolojileri ve İnovasyon)
+- **Headquarters**: İstanbul, Turkey (TR-34, 34394)
+- **Jurisdiction**: Republic of Turkey
+- **Statutory Role**: Law No. 5651 Intermediary Service Provider (Yer Sağlayıcı)
+- **Official Inquiries**: KEP & UETS electronic notice registered

@@ -411,7 +411,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
             "X-Contract-Sha256": contract.sha256Fingerprint,
           },
         });
-      } catch (pdfErr) {
+      } catch {
         // Fallback to printable HTML if headless Chromium fails in restricted host
         return new NextResponse(
           contract.htmlContent + `<script>window.onload=function(){window.print();}</script>`,

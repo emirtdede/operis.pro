@@ -52,16 +52,23 @@ export const userPrivateIdentity = pgTable("user_private_identity", {
 });
 
 // 22. Security Events
-export const securityEvents = pgTable("security_events", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("user_id").references(() => users.id, { onDelete: "set null" }),
-  eventType: varchar("event_type", { length: 50 }).notNull(),
-  ipAddress: varchar("ip_address", { length: 45 }),
-  userAgent: text("user_agent"),
-  riskMetadata: jsonb("risk_metadata"),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
-});
+export const securityEvents = pgTable(
+  "security_events",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: uuid("user_id").references(() => users.id, { onDelete: "set null" }),
+    eventType: varchar("event_type", { length: 50 }).notNull(),
+    ipAddress: varchar("ip_address", { length: 45 }),
+    userAgent: text("user_agent"),
+    riskMetadata: jsonb("risk_metadata"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  },
+  (table) => [
+    index("security_events_user_created_idx").on(table.userId, table.createdAt),
+    index("security_events_expires_idx").on(table.expiresAt),
+  ]
+);
 
 // 27. OTP Challenges (Atomic and persistent phone verification - B12)
 export const otpChallenges = pgTable(

@@ -73,6 +73,30 @@ export function RunbookEditorModal({
   const [drSteps, setDrSteps] = useState<RunbookDisasterStep[]>(initialRunbook.disasterRecoverySteps || []);
   const [backupSchedule] = useState(initialRunbook.backupSchedule || { frequency: "DAILY" });
 
+  const updateEnvVar = (idx: number, patch: Partial<RunbookEnvVar>) => {
+    setEnvVars((prev) =>
+      prev.map((item, i) => (i === idx ? { ...item, ...patch } : item))
+    );
+  };
+
+  const updateBuildStep = (idx: number, patch: Partial<RunbookBuildStep>) => {
+    setBuildSteps((prev) =>
+      prev.map((item, i) => (i === idx ? { ...item, ...patch } : item))
+    );
+  };
+
+  const updateService = (idx: number, patch: Partial<RunbookThirdPartyService>) => {
+    setServices((prev) =>
+      prev.map((item, i) => (i === idx ? { ...item, ...patch } : item))
+    );
+  };
+
+  const updateDrStep = (idx: number, patch: Partial<RunbookDisasterStep>) => {
+    setDrSteps((prev) =>
+      prev.map((item, i) => (i === idx ? { ...item, ...patch } : item))
+    );
+  };
+
   // Raw .env parser modal state
   const [rawEnvText, setRawEnvText] = useState("");
   const [showRawEnvInput, setShowRawEnvInput] = useState(false);
@@ -344,11 +368,7 @@ export function RunbookEditorModal({
                         <input
                           type="text"
                           value={env.key}
-                          onChange={(e) => {
-                            const copy = [...envVars];
-                            copy[idx]!.key = e.target.value.toUpperCase();
-                            setEnvVars(copy);
-                          }}
+                          onChange={(e) => updateEnvVar(idx, { key: e.target.value.toUpperCase() })}
                           className="w-full rounded-xl border border-white/10 bg-black/40 p-2 font-mono text-xs text-cyan-300 focus:outline-none"
                         />
                       </div>
@@ -359,11 +379,7 @@ export function RunbookEditorModal({
                         </label>
                         <select
                           value={env.secretCategory}
-                          onChange={(e) => {
-                            const copy = [...envVars];
-                            copy[idx]!.secretCategory = e.target.value as SecretCategory;
-                            setEnvVars(copy);
-                          }}
+                          onChange={(e) => updateEnvVar(idx, { secretCategory: e.target.value as SecretCategory })}
                           className="w-full rounded-xl border border-white/10 bg-black/40 p-2 text-xs text-[var(--color-text-primary)] focus:outline-none"
                         >
                           <option value="DATABASE">DATABASE (Veritabanı)</option>
@@ -384,11 +400,7 @@ export function RunbookEditorModal({
                           type="text"
                           value={env.sampleValue || ""}
                           placeholder="Örn: postgresql://..."
-                          onChange={(e) => {
-                            const copy = [...envVars];
-                            copy[idx]!.sampleValue = e.target.value;
-                            setEnvVars(copy);
-                          }}
+                          onChange={(e) => updateEnvVar(idx, { sampleValue: e.target.value })}
                           className="w-full rounded-xl border border-white/10 bg-black/40 p-2 font-mono text-xs text-[var(--color-text-secondary)] focus:outline-none"
                         />
                       </div>
@@ -402,11 +414,7 @@ export function RunbookEditorModal({
                         <input
                           type="text"
                           value={env.description}
-                          onChange={(e) => {
-                            const copy = [...envVars];
-                            copy[idx]!.description = e.target.value;
-                            setEnvVars(copy);
-                          }}
+                          onChange={(e) => updateEnvVar(idx, { description: e.target.value })}
                           className="w-full rounded-xl border border-white/10 bg-black/40 p-2 text-xs text-[var(--color-text-primary)] focus:outline-none"
                         />
                       </div>
@@ -469,11 +477,7 @@ export function RunbookEditorModal({
                         <input
                           type="text"
                           value={step.title}
-                          onChange={(e) => {
-                            const copy = [...buildSteps];
-                            copy[idx]!.title = e.target.value;
-                            setBuildSteps(copy);
-                          }}
+                          onChange={(e) => updateBuildStep(idx, { title: e.target.value })}
                           className="w-full rounded-xl border border-white/10 bg-black/40 p-2 text-xs text-[var(--color-text-primary)] focus:outline-none"
                         />
                       </div>
@@ -484,11 +488,7 @@ export function RunbookEditorModal({
                         </label>
                         <select
                           value={step.environment}
-                          onChange={(e) => {
-                            const copy = [...buildSteps];
-                            copy[idx]!.environment = e.target.value as RunbookBuildStep["environment"];
-                            setBuildSteps(copy);
-                          }}
+                          onChange={(e) => updateBuildStep(idx, { environment: e.target.value as RunbookBuildStep["environment"] })}
                           className="w-full rounded-xl border border-white/10 bg-black/40 p-2 text-xs text-[var(--color-text-primary)] focus:outline-none"
                         >
                           <option value="LOCAL">LOCAL (Yerel)</option>
@@ -506,11 +506,7 @@ export function RunbookEditorModal({
                       <input
                         type="text"
                         value={step.command}
-                        onChange={(e) => {
-                          const copy = [...buildSteps];
-                          copy[idx]!.command = e.target.value;
-                          setBuildSteps(copy);
-                        }}
+                        onChange={(e) => updateBuildStep(idx, { command: e.target.value })}
                         className="w-full rounded-xl border border-white/10 bg-black/50 p-2 font-mono text-xs text-emerald-400 focus:outline-none"
                       />
                     </div>
@@ -523,11 +519,7 @@ export function RunbookEditorModal({
                         <input
                           type="text"
                           value={step.description}
-                          onChange={(e) => {
-                            const copy = [...buildSteps];
-                            copy[idx]!.description = e.target.value;
-                            setBuildSteps(copy);
-                          }}
+                          onChange={(e) => updateBuildStep(idx, { description: e.target.value })}
                           className="w-full rounded-xl border border-white/10 bg-black/40 p-2 text-xs text-[var(--color-text-primary)] focus:outline-none"
                         />
                       </div>
@@ -588,11 +580,7 @@ export function RunbookEditorModal({
                         <input
                           type="text"
                           value={srv.serviceName}
-                          onChange={(e) => {
-                            const copy = [...services];
-                            copy[idx]!.serviceName = e.target.value;
-                            setServices(copy);
-                          }}
+                          onChange={(e) => updateService(idx, { serviceName: e.target.value })}
                           className="w-full rounded-xl border border-white/10 bg-black/40 p-2 text-xs text-[var(--color-text-primary)] focus:outline-none"
                         />
                       </div>
@@ -604,11 +592,7 @@ export function RunbookEditorModal({
                         <input
                           type="text"
                           value={srv.category}
-                          onChange={(e) => {
-                            const copy = [...services];
-                            copy[idx]!.category = e.target.value;
-                            setServices(copy);
-                          }}
+                          onChange={(e) => updateService(idx, { category: e.target.value })}
                           className="w-full rounded-xl border border-white/10 bg-black/40 p-2 text-xs text-[var(--color-text-primary)] focus:outline-none"
                         />
                       </div>
@@ -621,11 +605,7 @@ export function RunbookEditorModal({
                           type="text"
                           value={srv.dashboardUrl || ""}
                           placeholder="https://..."
-                          onChange={(e) => {
-                            const copy = [...services];
-                            copy[idx]!.dashboardUrl = e.target.value;
-                            setServices(copy);
-                          }}
+                          onChange={(e) => updateService(idx, { dashboardUrl: e.target.value })}
                           className="w-full rounded-xl border border-white/10 bg-black/40 p-2 text-xs text-[var(--color-text-secondary)] focus:outline-none"
                         />
                       </div>
@@ -639,11 +619,7 @@ export function RunbookEditorModal({
                         <input
                           type="text"
                           value={srv.purpose}
-                          onChange={(e) => {
-                            const copy = [...services];
-                            copy[idx]!.purpose = e.target.value;
-                            setServices(copy);
-                          }}
+                          onChange={(e) => updateService(idx, { purpose: e.target.value })}
                           className="w-full rounded-xl border border-white/10 bg-black/40 p-2 text-xs text-[var(--color-text-primary)] focus:outline-none"
                         />
                       </div>
@@ -703,11 +679,7 @@ export function RunbookEditorModal({
                         <input
                           type="text"
                           value={dr.scenario}
-                          onChange={(e) => {
-                            const copy = [...drSteps];
-                            copy[idx]!.scenario = e.target.value;
-                            setDrSteps(copy);
-                          }}
+                          onChange={(e) => updateDrStep(idx, { scenario: e.target.value })}
                           className="w-full rounded-xl border border-white/10 bg-black/40 p-2 text-xs text-[var(--color-text-primary)] focus:outline-none"
                         />
                       </div>
@@ -718,11 +690,7 @@ export function RunbookEditorModal({
                         </label>
                         <select
                           value={dr.priority}
-                          onChange={(e) => {
-                            const copy = [...drSteps];
-                            copy[idx]!.priority = e.target.value as RunbookDisasterStep["priority"];
-                            setDrSteps(copy);
-                          }}
+                          onChange={(e) => updateDrStep(idx, { priority: e.target.value as RunbookDisasterStep["priority"] })}
                           className="w-full rounded-xl border border-white/10 bg-black/40 p-2 text-xs text-[var(--color-text-primary)] focus:outline-none"
                         >
                           <option value="CRITICAL">CRITICAL (Kritik)</option>
@@ -739,11 +707,7 @@ export function RunbookEditorModal({
                       <textarea
                         value={dr.procedure}
                         rows={2}
-                        onChange={(e) => {
-                          const copy = [...drSteps];
-                          copy[idx]!.procedure = e.target.value;
-                          setDrSteps(copy);
-                        }}
+                        onChange={(e) => updateDrStep(idx, { procedure: e.target.value })}
                         className="w-full rounded-xl border border-white/10 bg-black/40 p-2 text-xs text-[var(--color-text-primary)] focus:outline-none"
                       />
                     </div>
@@ -757,11 +721,7 @@ export function RunbookEditorModal({
                           type="text"
                           value={dr.verificationCommand || ""}
                           placeholder="curl -I https://..."
-                          onChange={(e) => {
-                            const copy = [...drSteps];
-                            copy[idx]!.verificationCommand = e.target.value;
-                            setDrSteps(copy);
-                          }}
+                          onChange={(e) => updateDrStep(idx, { verificationCommand: e.target.value })}
                           className="w-full rounded-xl border border-white/10 bg-black/50 p-2 font-mono text-xs text-emerald-400 focus:outline-none"
                         />
                       </div>

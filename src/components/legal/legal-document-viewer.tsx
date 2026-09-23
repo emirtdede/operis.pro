@@ -311,7 +311,7 @@ export function LegalDocumentViewer({
 
   // Helper to format clean section titles without repetitive leading numbers (e.g. "1. " or "2) ")
   const formatSectionTitle = (title: string) => {
-    return title.replace(/^\d+[\.\)]\s*/, "").trim();
+    return title.replace(/^\d+[.)]\s*/, "").trim();
   };
 
   return (
@@ -403,8 +403,7 @@ export function LegalDocumentViewer({
 
               {navDropdownOpen && (
                 <div
-                  style={{ backgroundColor: "var(--bg-elevated)" }}
-                  className="absolute right-0 top-full mt-2 w-72 sm:w-80 rounded-2xl border border-[var(--color-border-strong)] shadow-2xl shadow-black/80 ring-1 ring-black/10 dark:ring-white/15 z-50 p-2 space-y-1 animate-in fade-in zoom-in-95"
+                  className="absolute right-0 top-full mt-2 w-72 sm:w-80 rounded-2xl border border-[var(--color-border-strong)] shadow-2xl shadow-black/80 ring-1 ring-black/10 dark:ring-white/15 z-50 p-2 space-y-1 animate-in fade-in zoom-in-95 bg-[var(--bg-elevated)]"
                 >
                   <div className="px-3 py-2 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/50 rounded-xl">
                     <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-tertiary)]">

@@ -163,7 +163,7 @@ export class DeliveryInspectorService {
         throw err;
       }
       // If DNS resolution fails completely
-      throw new Error(`DNS Çözümleme Hatası: ${msg}`);
+      throw new Error(`DNS Çözümleme Hatası: ${msg}`, { cause: err });
     }
 
     return parsed;
@@ -227,7 +227,7 @@ export class DeliveryInspectorService {
             redirect: "follow",
           });
         }
-      } catch (innerErr: unknown) {
+      } catch {
         // Fallback to GET if HEAD failed network handshake
         response = await fetch(parsedUrl.toString(), {
           method: "GET",
@@ -323,7 +323,7 @@ export class DeliveryInspectorService {
     }
 
     // Attempt lightweight public repository check
-    let isAccessible = true;
+    let isAccessible: boolean;
     let isPublic = false;
     let error: string | undefined = undefined;
 

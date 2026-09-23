@@ -6,9 +6,9 @@ import { Bookmark, Compass } from "lucide-react";
 import { getSession } from "@/src/modules/auth/session";
 import { SavedListingService, SavedListingItem } from "@/src/modules/listings/saved-service";
 import { SavedListingsDashboard } from "@/src/components/dashboard/saved-listings-dashboard";
-import { DashboardTabs } from "@/src/components/dashboard/dashboard-tabs";
 import { Button } from "@/src/components/ui/button";
-import { serializeJsonLd } from "@/src/lib/security/json-ld";
+import { JsonLd } from "@/src/components/seo/json-ld";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -73,7 +73,7 @@ export default async function SavedListingsPage({
     );
   }
 
-  let savedItems: SavedListingItem[] = [];
+  let savedItems: SavedListingItem[];
   let fetchError = false;
 
   try {
@@ -86,6 +86,7 @@ export default async function SavedListingsPage({
     savedItems = [];
   }
 
+  const baseUrl = getBaseUrl();
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -94,37 +95,31 @@ export default async function SavedListingsPage({
         "@type": "ListItem",
         position: 1,
         name: isTr ? "Ana Sayfa" : "Home",
-        item: `https://operis.pro/${locale}`,
+        item: `${baseUrl}/${locale}`,
       },
       {
         "@type": "ListItem",
         position: 2,
         name: isTr ? "Kaydedilen İlanlar" : "Saved Jobs",
-        item: `https://operis.pro/${locale}/dashboard/saved`,
+        item: `${baseUrl}/${locale}/dashboard/saved`,
       },
     ],
   };
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-      {/* Schema.org Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
-
-      {/* Header */}
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-6">
+    <div className="space-y-6">
+      {/* Header Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400">
               <Bookmark className="h-5 w-5 fill-blue-400/20 text-blue-400" />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
               {isTr ? "Kaydedilen İlanlar" : "Saved Jobs"}
             </h1>
           </div>
-          <p className="text-sm text-[var(--color-text-secondary)]">
+          <p className="text-xs sm:text-sm text-[var(--color-text-secondary)]">
             {isTr
               ? "Daha sonra değerlendirmek üzere yer imlerine eklediğiniz iş fırsatları."
               : "Opportunities you have bookmarked to review or apply to later."}
@@ -132,17 +127,14 @@ export default async function SavedListingsPage({
         </div>
 
         <Link href={isTr ? "/tr/ilanlar" : "/en/listings"}>
-          <Button variant="shimmer" size="sm" className="gap-2">
-            <Compass className="h-4 w-4" aria-hidden="true" />
+          <Button variant="shimmer" size="sm" className="gap-2 text-xs">
+            <Compass className="h-3.5 w-3.5" aria-hidden="true" />
             <span>{isTr ? "Yeni İlanları Keşfet" : "Explore Listings"}</span>
           </Button>
         </Link>
-      </header>
+      </div>
 
-      {/* Navigation Tabs */}
-      <DashboardTabs locale={locale} counts={{ savedListings: savedItems.length }} />
-
-      {/* Error state */}
+      {/* Content Stream */}
       {fetchError ? (
         <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-6 text-center space-y-3">
           <p className="text-sm font-semibold text-rose-400">
@@ -159,6 +151,9 @@ export default async function SavedListingsPage({
       ) : (
         <SavedListingsDashboard initialSavedListings={savedItems} locale={locale} />
       )}
-    </main>
+
+      {/* Schema.org Structured Data */}
+      <JsonLd data={jsonLd} />
+    </div>
   );
 }

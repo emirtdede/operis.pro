@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Eye, MousePointerClick, History, Copy } from "lucide-react";
+import { Eye, MousePointerClick, History, Copy, Rocket, PlusCircle, Search, X, ListFilter, ChevronDown, ArrowUpDown, Clock, Briefcase } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { EmptyState } from "../ui/empty-state";
@@ -39,15 +39,22 @@ const LISTING_STATUS_BADGE_VARIANTS: Record<string, "primary" | "secondary" | "o
   MATCHED: "secondary",
 };
 
+export type OwnerSortOption =
+  | "newest"
+  | "expiring_soon"
+  | "most_viewed"
+  | "budget_desc"
+  | "budget_asc";
+
 function getOwnerTabLabel(
   tabKey: "all" | "active" | "inactive" | "matched",
   isTr: boolean
 ): string {
   const LABELS: Record<"all" | "active" | "inactive" | "matched", { tr: string; en: string }> = {
     all: { tr: "Tümü", en: "All" },
-    active: { tr: "Aktif (1 Hafta)", en: "Active (1-Week)" },
-    inactive: { tr: "Pasif / Süresi Dolanlar", en: "Inactive / Expired" },
-    matched: { tr: "Eşleşenler", en: "Matched" },
+    active: { tr: "Aktif", en: "Active" },
+    inactive: { tr: "Pasif", en: "Inactive" },
+    matched: { tr: "Eşleşen", en: "Matched" },
   };
   const item = LABELS[tabKey];
   return isTr ? item.tr : item.en;
@@ -61,19 +68,63 @@ export function OwnerListingsDashboard({
   const isTr = locale === "tr";
   const [listings, setListings] = useState<OwnerListingItem[]>(initialListings);
   const [tab, setTab] = useState<"all" | "active" | "inactive" | "matched">("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<OwnerSortOption>("newest");
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [selectedListingForRevisions, setSelectedListingForRevisions] = useState<string | null>(
     null
   );
 
-  const filteredListings = listings.filter((l) => {
-    if (tab === "all") return true;
-    if (tab === "active") return l.status === "ACTIVE";
-    if (tab === "inactive") return l.status === "INACTIVE_EXPIRED" || l.status === "INACTIVE_OWNER";
-    if (tab === "matched") return l.status === "MATCHED" || l.status === "COMPLETED";
-    return true;
-  });
+  const filteredAndSortedListings = useMemo(() => {
+    let list = listings.filter((l) => {
+      if (tab === "all") return true;
+      if (tab === "active") return l.status === "ACTIVE";
+      if (tab === "inactive") return l.status === "INACTIVE_EXPIRED" || l.status === "INACTIVE_OWNER";
+      if (tab === "matched") return l.status === "MATCHED" || l.status === "COMPLETED";
+      return true;
+    });
+
+    const q = searchQuery.trim().toLocaleLowerCase("tr-TR");
+    if (q) {
+      list = list.filter((l) => {
+        const titleMatch = l.title.toLocaleLowerCase("tr-TR").includes(q);
+        const slugMatch = l.slug.toLocaleLowerCase("tr-TR").includes(q);
+        return titleMatch || slugMatch;
+      });
+    }
+
+    const sorted = [...list];
+    switch (sortBy) {
+      case "expiring_soon":
+        return sorted.sort((a, b) => {
+          const timeA = a.activeUntil ? new Date(a.activeUntil).getTime() : Infinity;
+          const timeB = b.activeUntil ? new Date(b.activeUntil).getTime() : Infinity;
+          return timeA - timeB;
+        });
+      case "most_viewed":
+        return sorted.sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0));
+      case "budget_desc":
+        return sorted.sort((a, b) => {
+          const maxA = Number(a.budgetMax || a.budgetMin || 0);
+          const maxB = Number(b.budgetMax || b.budgetMin || 0);
+          return maxB - maxA;
+        });
+      case "budget_asc":
+        return sorted.sort((a, b) => {
+          const minA = Number(a.budgetMin || a.budgetMax || 0);
+          const minB = Number(b.budgetMin || b.budgetMax || 0);
+          return minA - minB;
+        });
+      case "newest":
+      default:
+        return sorted.sort((a, b) => {
+          const dateA = new Date(a.firstPublishedAt || a.lastActivatedAt || 0).getTime();
+          const dateB = new Date(b.firstPublishedAt || b.lastActivatedAt || 0).getTime();
+          return dateB - dateA;
+        });
+    }
+  }, [listings, tab, searchQuery, sortBy]);
 
   const handleReactivate = async (id: string) => {
     setLoadingId(id);
@@ -167,9 +218,30 @@ export function OwnerListingsDashboard({
   };
 
   const renderEmptyState = () => {
+    if (searchQuery.trim()) {
+      return (
+        <EmptyState
+          variant="card"
+          icon={<Search className="h-7 w-7 text-blue-400" />}
+          title={isTr ? "Aramanıza uygun ilan bulunamadı" : "No listings match your search"}
+          description={
+            isTr
+              ? `"${searchQuery.trim()}" aramasıyla eşleşen bir ilanınız bulunmuyor. Farklı anahtar kelimeler deneyebilir veya filtreyi temizleyebilirsiniz.`
+              : `No listings match "${searchQuery.trim()}". Try searching with different keywords or reset your filters.`
+          }
+          action={
+            <Button variant="secondary" size="sm" onClick={() => setSearchQuery("")} className="cursor-pointer">
+              {isTr ? "Aramayı Temizle" : "Clear Search"}
+            </Button>
+          }
+        />
+      );
+    }
     if (tab === "inactive") {
       return (
         <EmptyState
+          variant="card"
+          icon={<Clock className="h-7 w-7 text-blue-400" />}
           title={isTr ? "Süresi Dolan veya Pasif İlan Yok" : "No Inactive or Expired Listings"}
           description={
             isTr
@@ -177,7 +249,7 @@ export function OwnerListingsDashboard({
               : "You have no expired or paused listings. Check active listings to see your live projects."
           }
           action={
-            <Button variant="secondary" onClick={() => setTab("active")}>
+            <Button variant="secondary" size="sm" onClick={() => setTab("active")} className="cursor-pointer">
               {isTr ? "Aktif İlanları Gör" : "View Active Listings"}
             </Button>
           }
@@ -187,6 +259,8 @@ export function OwnerListingsDashboard({
     if (tab === "matched") {
       return (
         <EmptyState
+          variant="card"
+          icon={<Briefcase className="h-7 w-7 text-blue-400" />}
           title={isTr ? "Eşleşen İlan Bulunmuyor" : "No Matched Listings"}
           description={
             isTr
@@ -195,7 +269,7 @@ export function OwnerListingsDashboard({
           }
           action={
             <Link href={isTr ? "/tr/panel/teklifler/gelen" : "/en/dashboard/offers/received"}>
-              <Button variant="secondary">
+              <Button variant="shimmer" size="md" className="gap-2 shadow-lg shadow-blue-500/15">
                 {isTr ? "Gelen Teklifleri İncele" : "Review Incoming Offers"}
               </Button>
             </Link>
@@ -206,6 +280,8 @@ export function OwnerListingsDashboard({
     if (tab === "active") {
       return (
         <EmptyState
+          variant="card"
+          icon={<Rocket className="h-7 w-7 text-blue-400" />}
           title={isTr ? "Aktif İlan Bulunmuyor" : "No Active Listings"}
           description={
             isTr
@@ -214,8 +290,9 @@ export function OwnerListingsDashboard({
           }
           action={
             <Link href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"}>
-              <Button variant="primary">
-                {isTr ? "Yeni İlan Yayınla" : "Publish Listing"}
+              <Button variant="shimmer" size="md" className="gap-2 shadow-lg shadow-blue-500/15">
+                <PlusCircle className="h-4 w-4" />
+                <span>{isTr ? "Yeni İlan Yayınla" : "Publish Listing"}</span>
               </Button>
             </Link>
           }
@@ -223,26 +300,90 @@ export function OwnerListingsDashboard({
       );
     }
     return (
-      <EmptyState
-        title={
-          isTr
-            ? "Henüz Bir İlan Yayınlamadınız"
-            : "You Haven't Published Any Listings Yet"
-        }
-        description={
-          isTr
-            ? "%100 komisyonsuz ve doğrudan iletişimle ilanınız için bağımsız mühendis arayışınızı hemen başlatabilirsiniz."
-            : "Start finding independent engineers directly with 0% commission cut."
-        }
-        action={
-          <Link href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"}>
-            <Button variant="primary">
-              {isTr ? "+ İlk İlanınızı Yayınlayın" : "+ Post Your First Listing"}
-            </Button>
-          </Link>
-        }
-      />
+      <div className="relative overflow-hidden rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-8 sm:p-12 text-center shadow-sm">
+        {/* Background ambient radial glow */}
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-indigo-500/5 to-transparent pointer-events-none" />
+
+        <div className="relative z-10 max-w-2xl mx-auto space-y-6">
+          {/* Center glowing rocket / launchpad icon */}
+          <div className="mx-auto w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 shadow-lg shadow-blue-500/5 ring-4 ring-blue-500/5 flex items-center justify-center">
+            <Rocket className="h-7 w-7 sm:h-8 sm:w-8 text-blue-400" />
+          </div>
+
+          {/* Title & Subtitle */}
+          <div className="space-y-2">
+            <h3 className="text-lg sm:text-xl font-bold tracking-tight text-[var(--color-text-primary)]">
+              {isTr ? "Henüz Bir İlan Yayınlamadınız" : "You Haven't Published Any Listings Yet"}
+            </h3>
+            <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] max-w-lg mx-auto leading-relaxed">
+              {isTr
+                ? "Operis'te %100 komisyonsuz ve doğrudan iletişimle bağımsız mühendis arayışınızı hemen başlatın."
+                : "Start finding verified independent engineers directly with 0% commission cut on Operis."}
+            </p>
+          </div>
+
+          {/* 3-Step Quick Launchpad Roadmap */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 py-2 text-left">
+            <div className="p-3.5 rounded-2xl bg-[var(--color-surface-hover)]/70 border border-[var(--color-border-subtle)] space-y-1 hover:border-blue-500/30 transition-colors">
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 font-mono text-[11px] font-bold flex items-center justify-center shrink-0">1</span>
+                <span className="text-xs font-semibold text-[var(--color-text-primary)] truncate">
+                  {isTr ? "İhtiyacını Yaz" : "Describe Need"}
+                </span>
+              </div>
+              <p className="text-[11px] text-[var(--color-text-secondary)] leading-relaxed">
+                {isTr ? "Kapsamı ve bütçeyi 2 dakikada belirleyip ilanını oluştur." : "Define scope & budget in 2 minutes to create your project."}
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-[var(--color-surface-hover)]/70 border border-[var(--color-border-subtle)] space-y-1 hover:border-indigo-500/30 transition-colors">
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-400 font-mono text-[11px] font-bold flex items-center justify-center shrink-0">2</span>
+                <span className="text-xs font-semibold text-[var(--color-text-primary)] truncate">
+                  {isTr ? "7 Gün Canlı Radar" : "7-Day Live Radar"}
+                </span>
+              </div>
+              <p className="text-[11px] text-[var(--color-text-secondary)] leading-relaxed">
+                {isTr ? "İlanın 1 hafta boyunca bağımsız mühendislerin radarında kalsın." : "Your listing stays active on our radar for 1 full week."}
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-[var(--color-surface-hover)]/70 border border-[var(--color-border-subtle)] space-y-1 hover:border-emerald-500/30 transition-colors">
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[11px] font-bold flex items-center justify-center shrink-0">3</span>
+                <span className="text-xs font-semibold text-[var(--color-text-primary)] truncate">
+                  {isTr ? "Doğrudan Teklif Al" : "Direct Proposals"}
+                </span>
+              </div>
+              <p className="text-[11px] text-[var(--color-text-secondary)] leading-relaxed">
+                {isTr ? "%0 komisyonla mühendislerle doğrudan anlaş ve çalışmaya başla." : "Contract directly with zero commissions and start building."}
+              </p>
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          <div className="pt-2">
+            <Link href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"}>
+              <Button variant="shimmer" size="md" className="gap-2 px-6 py-2.5 shadow-xl shadow-blue-500/20">
+                <PlusCircle className="h-4 w-4" aria-hidden="true" />
+                <span>{isTr ? "+ İlk İlanınızı Yayınlayın" : "+ Post Your First Listing"}</span>
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
     );
+  };
+
+  const tabCounts = {
+    all: listings.length,
+    active: listings.filter((l) => l.status === "ACTIVE").length,
+    inactive: listings.filter(
+      (l) => l.status === "INACTIVE_EXPIRED" || l.status === "INACTIVE_OWNER"
+    ).length,
+    matched: listings.filter(
+      (l) => l.status === "MATCHED" || l.status === "COMPLETED"
+    ).length,
   };
 
   return (
@@ -260,23 +401,90 @@ export function OwnerListingsDashboard({
         </div>
       )}
 
-      {/* Top Bar: Status Filter Tabs */}
-      <div className="flex flex-wrap items-center gap-1.5 border-b border-[var(--color-border-subtle)] pb-4">
-        {(["all", "active", "inactive", "matched"] as const).map((t) => (
-          <button
-            key={t}
-            type="button"
-            onClick={() => setTab(t)}
-            className={`rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all ${
-              tab === t
-                ? "bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] font-semibold border border-[var(--color-border-subtle)]"
-                : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
-            }`}
-          >
-            {getOwnerTabLabel(t, isTr)}
-          </button>
-        ))}
+      {/* Unified Toolbar: Search Input + Status Filters + Sort Dropdown */}
+      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        {/* Search Input */}
+        <div className="relative flex-1 min-w-[200px] max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-text-tertiary)]" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={isTr ? "İlanlarda ara..." : "Search listings..."}
+            className="w-full pl-10 pr-9 py-2 rounded-xl text-xs sm:text-sm bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all truncate"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] cursor-pointer"
+              aria-label={isTr ? "Aramayı Temizle" : "Clear Search"}
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+
+        {/* Controls: Single Status Filter Button + Single Sort Button */}
+        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+          {/* Single Status Filter Dropdown Button */}
+          <div className="relative inline-flex items-center">
+            <ListFilter className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <select
+              value={tab}
+              onChange={(e) => setTab(e.target.value as "all" | "active" | "inactive" | "matched")}
+              aria-label={isTr ? "Durum Filtresi" : "Status Filter"}
+              className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
+            >
+              {(["all", "active", "inactive", "matched"] as const).map((t) => (
+                <option key={t} value={t} className="bg-[#141517] text-[var(--color-text-primary)]">
+                  {getOwnerTabLabel(t, isTr)} ({tabCounts[t]})
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+          </div>
+
+          {/* Single Sort Dropdown Button */}
+          <div className="relative inline-flex items-center">
+            <ArrowUpDown className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as OwnerSortOption)}
+              aria-label={isTr ? "Sıralama ölçütü" : "Sort by"}
+              className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
+            >
+              <option value="newest" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yeni" : "Newest"}</option>
+              <option value="expiring_soon" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "Süresi Biten" : "Expiring Soon"}</option>
+              <option value="most_viewed" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Çok Görüntülenen" : "Most Viewed"}</option>
+              <option value="budget_desc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yüksek Bütçe" : "Highest Budget"}</option>
+              <option value="budget_asc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Düşük Bütçe" : "Lowest Budget"}</option>
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+          </div>
+        </div>
       </div>
+
+      {/* Result Count and Active Filter Indicator */}
+      {(searchQuery.trim() || tab !== "all") && (
+        <div className="flex items-center justify-between text-xs text-[var(--color-text-secondary)] px-1">
+          <span>
+            {isTr
+              ? `${filteredAndSortedListings.length} ilan listeleniyor`
+              : `Showing ${filteredAndSortedListings.length} listings`}
+            {searchQuery.trim() && ` ("${searchQuery.trim()}")`}
+          </span>
+          {searchQuery.trim() && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              className="text-blue-400 hover:text-blue-300 font-medium cursor-pointer"
+            >
+              {isTr ? "Aramayı Temizle" : "Clear Search"}
+            </button>
+          )}
+        </div>
+      )}
 
       {actionError && (
         <div className="rounded-md border border-[var(--color-danger)]/20 bg-[var(--color-danger)]/10 p-3 text-xs text-[var(--color-danger)]">
@@ -285,13 +493,11 @@ export function OwnerListingsDashboard({
       )}
 
       {/* Listings Table / Cards */}
-      {filteredListings.length === 0 ? (
-        <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-8 sm:p-12 text-center shadow-sm">
-          {renderEmptyState()}
-        </div>
+      {filteredAndSortedListings.length === 0 ? (
+        renderEmptyState()
       ) : (
         <div className="space-y-4">
-          {filteredListings.map((listing) => {
+          {filteredAndSortedListings.map((listing) => {
             const firstDate = listing.firstPublishedAt
               ? new Date(listing.firstPublishedAt).toLocaleDateString(isTr ? "tr-TR" : "en-US")
               : "—";

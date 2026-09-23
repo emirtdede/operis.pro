@@ -189,6 +189,19 @@ ${squadMembers.map((m, i) => `| ${i + 1} | **${m.displayName}** ${m.isLead ? "*(
       inflationShieldHtml = isTr ? clauseTr.html : clauseEn.html;
     }
 
+    const [d0, d1, d2] = DEFAULT_MILESTONES;
+    const defaultScheduleTr = [
+      `- **1. Aşama (%30 Avans):** ${d0?.titleTr ?? ""} — ${d0?.descriptionTr ?? ""}`,
+      `- **2. Aşama (%40 Ara Hakediş):** ${d1?.titleTr ?? ""} — ${d1?.descriptionTr ?? ""}`,
+      `- **3. Aşama (%30 Kapanış ve Devir):** ${d2?.titleTr ?? ""} — ${d2?.descriptionTr ?? ""}`,
+    ].join("\n");
+
+    const defaultScheduleEn = [
+      `- **Phase 1 (30% Advance):** ${d0?.titleEn ?? ""} — ${d0?.descriptionEn ?? ""}`,
+      `- **Phase 2 (40% Interim):** ${d1?.titleEn ?? ""} — ${d1?.descriptionEn ?? ""}`,
+      `- **Phase 3 (30% Final Handover):** ${d2?.titleEn ?? ""} — ${d2?.descriptionEn ?? ""}`,
+    ].join("\n");
+
     const milestoneScheduleMarkdownTr =
       input.milestones && input.milestones.length > 0
         ? input.milestones
@@ -197,11 +210,7 @@ ${squadMembers.map((m, i) => `| ${i + 1} | **${m.displayName}** ${m.isLead ? "*(
                 `- **${i + 1}. Aşama (%${m.percentage}):** ${m.titleTr} — ${m.descriptionTr}`
             )
             .join("\n")
-        : [
-            `- **1. Aşama (%30 Avans):** ${DEFAULT_MILESTONES[0]!.titleTr} — ${DEFAULT_MILESTONES[0]!.descriptionTr}`,
-            `- **2. Aşama (%40 Ara Hakediş):** ${DEFAULT_MILESTONES[1]!.titleTr} — ${DEFAULT_MILESTONES[1]!.descriptionTr}`,
-            `- **3. Aşama (%30 Kapanış ve Devir):** ${DEFAULT_MILESTONES[2]!.titleTr} — ${DEFAULT_MILESTONES[2]!.descriptionTr}`,
-          ].join("\n");
+        : defaultScheduleTr;
 
     const milestoneScheduleMarkdownEn =
       input.milestones && input.milestones.length > 0
@@ -210,11 +219,7 @@ ${squadMembers.map((m, i) => `| ${i + 1} | **${m.displayName}** ${m.isLead ? "*(
               (m, i) => `- **Phase ${i + 1} (${m.percentage}%):** ${m.titleEn} — ${m.descriptionEn}`
             )
             .join("\n")
-        : [
-            `- **Phase 1 (30% Advance):** ${DEFAULT_MILESTONES[0]!.titleEn} — ${DEFAULT_MILESTONES[0]!.descriptionEn}`,
-            `- **Phase 2 (40% Interim):** ${DEFAULT_MILESTONES[1]!.titleEn} — ${DEFAULT_MILESTONES[1]!.descriptionEn}`,
-            `- **Phase 3 (30% Final Handover):** ${DEFAULT_MILESTONES[2]!.titleEn} — ${DEFAULT_MILESTONES[2]!.descriptionEn}`,
-          ].join("\n");
+        : defaultScheduleEn;
 
     const inspectionClauseTr = hasAcceptanceCriteria
       ? `İş Sahibi, Yüklenici tarafından yapılan teslimatı takip eden **${inspectionDays} (yedi) iş günü** içinde teslimatı EK-1'de kararlaştırılan Objektif Kabul Kriterleri çerçevesinde incelemekle yükümlüdür. İşbu kriterleri karşılayan teslimat ayıpsız sayılır; işveren keyfi ret yapamaz, ancak EK-1'deki somut kriter eksikliklerini gerekçe göstererek revizyon isteyebilir. Bu süre içinde yazılı itiraz yapılmadığı takdirde eser zımnen eksiksiz ve ayıpsız kabul edilmiş sayılır.`
@@ -716,6 +721,33 @@ ${annexMarkdownEn}${includeDpa ? dpaMarkdownEn : ""}${includeSafeHarbor ? safeHa
     };
 
     // Build executive-ready HTML for clean @media print PDF conversion
+    let headerBrandText = "OPERIS";
+    if (isWhiteLabel) {
+      headerBrandText = isTr ? "SÖZLEŞME VE PROTOKOL METNİ" : "OFFICIAL SERVICE AGREEMENT";
+    }
+
+    let headerSubText: string;
+    if (isWhiteLabel) {
+      headerSubText = isTr
+        ? "Bağımsız Yazılım ve Teknoloji Hizmet Sözleşmesi"
+        : "Independent Software & Technology Services Agreement";
+    } else {
+      headerSubText = isTr
+        ? "Bağımsız Yazılım ve Teknoloji Sözleşme Altyapısı"
+        : "Independent Software & Technology Services Agreement Infrastructure";
+    }
+
+    let sealNoticeText: string;
+    if (isWhiteLabel) {
+      sealNoticeText = isTr
+        ? "Metin bütünlüğü ve kriptografik doğruluğu bağımsız SHA-256 algoritmasıyla tanzim edilmiştir."
+        : "Text integrity and cryptographic proof verified via deterministic SHA-256 algorithm.";
+    } else {
+      sealNoticeText = isTr
+        ? "Metin bütünlüğü Operis platformu tarafından doğrulanabilir deterministik algoritmayla tanzim edilmiştir."
+        : "Document integrity verified via Operis deterministic cryptographic seal.";
+    }
+
     const htmlContent = `<!DOCTYPE html>
 <html lang="${isTr ? "tr" : "en"}">
 <head>
@@ -733,7 +765,7 @@ ${annexMarkdownEn}${includeDpa ? dpaMarkdownEn : ""}${includeSafeHarbor ? safeHa
       padding: 24px;
     }
     .header {
-      border-bottom: 2px solid #2563eb;
+      border-bottom: 2px solid #0f172a;
       padding-bottom: 12px;
       margin-bottom: 20px;
       display: flex;
@@ -768,19 +800,22 @@ ${annexMarkdownEn}${includeDpa ? dpaMarkdownEn : ""}${includeSafeHarbor ? safeHa
     .sha-seal {
       margin-top: 24px;
       background: #f1f5f9;
-      border: 1px dashed #94a3b8;
+      border: 1px solid #cbd5e1;
       border-radius: 6px;
-      padding: 10px 14px;
+      padding: 8px 12px;
+      font-size: 8pt;
       font-family: monospace;
-      font-size: 8.5pt;
       word-break: break-all;
-      break-inside: avoid;
-      page-break-inside: avoid;
+      color: #475569;
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
     }
-    .signature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 36px; page-break-inside: avoid; break-inside: avoid; }
-    .signature-box { border-top: 1px solid #0f172a; padding-top: 8px; font-size: 9pt; break-inside: avoid; page-break-inside: avoid; }
-    ul { margin: 4px 0; padding-left: 20px; }
-    li { margin: 2px 0; }
+    .footer { margin-top: 30px; font-size: 8pt; color: #94a3b8; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 8px; }
+    table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.5pt; }
+    th, td { border: 1px solid #cbd5e1; padding: 6px 10px; text-align: left; }
+    th { background: #f1f5f9; font-weight: 600; color: #334155; }
+    ul { padding-left: 20px; margin: 6px 0; }
+    li { margin-bottom: 3px; }
     @media print {
       body { padding: 0; }
       .no-print { display: none; }
@@ -796,12 +831,8 @@ ${annexMarkdownEn}${includeDpa ? dpaMarkdownEn : ""}${includeSafeHarbor ? safeHa
 <body>
   <div class="header">
     <div>
-      <div class="brand">${isWhiteLabel ? (isTr ? "SÖZLEŞME VE PROTOKOL METNİ" : "OFFICIAL SERVICE AGREEMENT") : "OPERIS"}</div>
-      <div style="font-size: 8pt; color: #64748b; margin-top: 2px;">${
-        isWhiteLabel
-          ? (isTr ? "Bağımsız Yazılım ve Teknoloji Hizmet Sözleşmesi" : "Independent Software & Technology Services Agreement")
-          : (isTr ? "Bağımsız Yazılım ve Teknoloji Sözleşme Altyapısı" : "Independent Software & Technology Services Agreement Infrastructure")
-      }</div>
+      <div class="brand">${headerBrandText}</div>
+      <div style="font-size: 8pt; color: #64748b; margin-top: 2px;">${headerSubText}</div>
     </div>
     <div class="meta">
       <div><strong>Ref:</strong> ${contractRef}</div>
@@ -968,11 +999,7 @@ ${annexMarkdownEn}${includeDpa ? dpaMarkdownEn : ""}${includeSafeHarbor ? safeHa
   <div class="sha-seal">
     <div><strong>DİJİTAL SÖZLEŞME GÜVENLİK MÜHRÜ (SHA-256):</strong></div>
     <div>${sha256Fingerprint}</div>
-    <div style="font-size: 7.5pt; margin-top: 2px;">${
-      isWhiteLabel
-        ? (isTr ? "Metin bütünlüğü ve kriptografik doğruluğu bağımsız SHA-256 algoritmasıyla tanzim edilmiştir." : "Text integrity and cryptographic proof verified via deterministic SHA-256 algorithm.")
-        : (isTr ? "Metin bütünlüğü Operis platformu tarafından doğrulanabilir deterministik algoritmayla tanzim edilmiştir." : "Document integrity verified via Operis deterministic cryptographic seal.")
-    }</div>
+    <div style="font-size: 7.5pt; margin-top: 2px;">${sealNoticeText}</div>
   </div>
 
   <div class="signature-grid">

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
-import { History, ArrowRightLeft } from "lucide-react";
+import { History, ArrowRightLeft, Search, X, ListFilter, ChevronDown, ArrowUpDown, Inbox, Eye } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { OfferRevisionsModal } from "../offers/offer-revisions-modal";
@@ -57,15 +57,15 @@ function getReceivedFilterLabel(f: string, isTr: boolean): string {
   const LABELS: Record<string, { tr: string; en: string }> = {
     all: { tr: "Tümü", en: "All" },
     pending: { tr: "Beklemede", en: "Pending" },
-    accepted: { tr: "Kabul Edilenler", en: "Accepted" },
-    rejected: { tr: "Reddedilenler", en: "Rejected" },
-    cancelled: { tr: "İptal Edilenler", en: "Cancelled" },
+    accepted: { tr: "Kabul Edilen", en: "Accepted" },
+    rejected: { tr: "Reddedilen", en: "Rejected" },
+    cancelled: { tr: "İptal Edilen", en: "Cancelled" },
   };
   const item = LABELS[f];
   if (item) {
     return isTr ? item.tr : item.en;
   }
-  return isTr ? "Geri Çekilenler" : "Withdrawn";
+  return isTr ? "Geri Çekilen" : "Withdrawn";
 }
 
 function getNegotiationButtonLabel(
@@ -80,10 +80,22 @@ function getNegotiationButtonLabel(
   return isTr ? "Pazarlık / Karşı Teklif" : "Counter-Offer";
 }
 
+export type ReceivedOfferSortOption = "newest" | "budget_desc" | "budget_asc" | "duration_asc";
+
+function getOfferDurationInDays(val: number | null, unit: string | null): number {
+  if (!val) return Infinity;
+  const u = (unit || "").toLowerCase();
+  if (u.includes("month") || u.includes("ay")) return val * 30;
+  if (u.includes("week") || u.includes("hafta")) return val * 7;
+  return val;
+}
+
 export function ReceivedOffersDashboard({ initialOffers, locale }: ReceivedOffersDashboardProps) {
   const isTr = locale === "tr";
   const [offers, setOffers] = useState<ReceivedOfferItem[]>(initialOffers);
   const [filter, setFilter] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<ReceivedOfferSortOption>("newest");
   const [selectedOfferForRevisions, setSelectedOfferForRevisions] = useState<string | null>(null);
   const [selectedOfferForNegotiation, setSelectedOfferForNegotiation] = useState<string | null>(null);
 
@@ -99,22 +111,81 @@ export function ReceivedOffersDashboard({ initialOffers, locale }: ReceivedOffer
   const [isRejecting, setIsRejecting] = useState(false);
   const [rejectError, setRejectError] = useState<string | null>(null);
 
-  const filteredOffers = offers.filter((o) => {
-    if (filter === "all") return true;
-    if (filter === "cancelled") {
-      return (
-        o.status === "CANCELLED_ENGAGEMENT" ||
-        o.status === "CANCELLED" ||
-        o.status === "EXPIRED_LISTING" ||
-        o.status === "EXPIRED_LISTING_INACTIVE" ||
-        o.status === "VOID_MODERATION"
-      );
+  const filterCounts = useMemo(() => {
+    return {
+      all: offers.length,
+      pending: offers.filter((o) => o.status.toLowerCase() === "pending").length,
+      accepted: offers.filter((o) => o.status.toLowerCase() === "accepted").length,
+      rejected: offers.filter((o) => o.status.toLowerCase().startsWith("rejected")).length,
+      cancelled: offers.filter(
+        (o) =>
+          o.status === "CANCELLED_ENGAGEMENT" ||
+          o.status === "CANCELLED" ||
+          o.status === "EXPIRED_LISTING" ||
+          o.status === "EXPIRED_LISTING_INACTIVE" ||
+          o.status === "VOID_MODERATION"
+      ).length,
+      withdrawn: offers.filter((o) => o.status.toLowerCase() === "withdrawn").length,
+    };
+  }, [offers]);
+
+  const filteredAndSortedOffers = useMemo(() => {
+    let list = offers.filter((o) => {
+      if (filter === "all") return true;
+      if (filter === "cancelled") {
+        return (
+          o.status === "CANCELLED_ENGAGEMENT" ||
+          o.status === "CANCELLED" ||
+          o.status === "EXPIRED_LISTING" ||
+          o.status === "EXPIRED_LISTING_INACTIVE" ||
+          o.status === "VOID_MODERATION"
+        );
+      }
+      if (filter === "rejected") {
+        return o.status.toLowerCase().startsWith("rejected");
+      }
+      return o.status.toLowerCase() === filter.toLowerCase();
+    });
+
+    const q = searchQuery.trim().toLocaleLowerCase("tr-TR");
+    if (q) {
+      list = list.filter((o) => {
+        const nameMatch = o.offerorDisplayName.toLocaleLowerCase("tr-TR").includes(q);
+        const handleMatch = o.offerorHandle.toLocaleLowerCase("tr-TR").includes(q);
+        const msgMatch = (o.message || "").toLocaleLowerCase("tr-TR").includes(q);
+        const titleMatch = (o.listingTitle || "").toLocaleLowerCase("tr-TR").includes(q);
+        const squadMatch = (o.squadTitle || "").toLocaleLowerCase("tr-TR").includes(q);
+        return nameMatch || handleMatch || msgMatch || titleMatch || squadMatch;
+      });
     }
-    if (filter === "rejected") {
-      return o.status.toLowerCase().startsWith("rejected");
+
+    const sorted = [...list];
+    switch (sortBy) {
+      case "budget_desc":
+        return sorted.sort((a, b) => {
+          const maxA = Number(a.budgetMax || a.budgetMin || 0);
+          const maxB = Number(b.budgetMax || b.budgetMin || 0);
+          return maxB - maxA;
+        });
+      case "budget_asc":
+        return sorted.sort((a, b) => {
+          const minA = Number(a.budgetMin || a.budgetMax || 0);
+          const minB = Number(b.budgetMin || b.budgetMax || 0);
+          return minA - minB;
+        });
+      case "duration_asc":
+        return sorted.sort((a, b) => {
+          const durA = getOfferDurationInDays(a.estimatedDurationValue, a.estimatedDurationUnit);
+          const durB = getOfferDurationInDays(b.estimatedDurationValue, b.estimatedDurationUnit);
+          return durA - durB;
+        });
+      case "newest":
+      default:
+        return sorted.sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
     }
-    return o.status.toLowerCase() === filter.toLowerCase();
-  });
+  }, [offers, filter, searchQuery, sortBy]);
 
   const handleAcceptConfirm = async () => {
     if (!acceptingOffer) return;
@@ -191,65 +262,160 @@ export function ReceivedOffersDashboard({ initialOffers, locale }: ReceivedOffer
     }
   };
 
+  const renderEmptyState = () => {
+    if (searchQuery.trim()) {
+      return (
+        <EmptyState
+          variant="card"
+          icon={<Inbox className="h-7 w-7 text-blue-400" />}
+          title={isTr ? "Aramanıza uygun teklif bulunamadı" : "No offers match your search"}
+          description={
+            isTr
+              ? `"${searchQuery.trim()}" aramasıyla eşleşen gelen teklif bulunmuyor. Farklı kelimelerle aramayı veya filtreyi sıfırlamayı deneyebilirsiniz.`
+              : `No proposals match "${searchQuery.trim()}". Try searching with different keywords or reset your filters.`
+          }
+          action={
+            <Button variant="secondary" size="sm" onClick={() => setSearchQuery("")} className="cursor-pointer">
+              {isTr ? "Aramayı Temizle" : "Clear Search"}
+            </Button>
+          }
+        />
+      );
+    }
+
+    if (offers.length === 0) {
+      return (
+        <EmptyState
+          variant="card"
+          icon={<Inbox className="h-7 w-7 text-blue-400" />}
+          title={isTr ? "Henüz teklif alınmadı" : "No received offers yet"}
+          description={
+            isTr
+              ? "İlanlarınıza teklif geldiğinde bu ekranda listelenecektir."
+              : "Offers submitted to your listings will appear here."
+          }
+          action={
+            <Link href={isTr ? "/tr/panel/ilanlarim" : "/en/dashboard/listings"}>
+              <Button variant="shimmer" size="md" className="gap-2 shadow-lg shadow-blue-500/15">
+                <Eye className="h-4 w-4" />
+                <span>{isTr ? "İlanlarımı İncele" : "View My Listings"}</span>
+              </Button>
+            </Link>
+          }
+        />
+      );
+    }
+
+    return (
+      <EmptyState
+        variant="card"
+        icon={<Inbox className="h-7 w-7 text-blue-400" />}
+        title={isTr ? "Teklif bulunamadı" : "No offers found"}
+        description={
+          isTr
+            ? "Seçilen filtreye uygun gelen teklif bulunmuyor."
+            : "No incoming proposals match this filter criteria."
+        }
+        action={
+          <Button variant="secondary" size="sm" onClick={() => setFilter("all")} className="cursor-pointer">
+            {isTr ? "Tüm Teklifleri Göster" : "Show All Offers"}
+          </Button>
+        }
+      />
+    );
+  };
+
   return (
     <div className="space-y-6">
-      {/* Filter Tabs */}
-      <div className="flex flex-wrap items-center gap-1.5 border-b border-[var(--color-border-subtle)] pb-4">
-        {(["all", "pending", "accepted", "rejected", "cancelled", "withdrawn"] as const).map(
-          (f) => (
+      {/* Unified Toolbar: Search Input + Status Filters + Sort Dropdown */}
+      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        {/* Search Input */}
+        <div className="relative flex-1 min-w-[200px] max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-text-tertiary)]" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={isTr ? "Tekliflerde ara..." : "Search offers..."}
+            className="w-full pl-10 pr-9 py-2 rounded-xl text-xs sm:text-sm bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all truncate"
+          />
+          {searchQuery && (
             <button
-              key={f}
               type="button"
-              onClick={() => setFilter(f)}
-              className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
-                filter === f
-                  ? "bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] font-semibold"
-                  : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
-              }`}
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] cursor-pointer"
+              aria-label={isTr ? "Aramayı Temizle" : "Clear Search"}
             >
-              {getReceivedFilterLabel(f, isTr)}
+              <X className="h-4 w-4" />
             </button>
-          )
-        )}
-      </div>
-
-      {filteredOffers.length === 0 ? (
-        <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-8 sm:p-12 text-center shadow-sm">
-          {offers.length === 0 ? (
-            <EmptyState
-              title={isTr ? "Henüz teklif alınmadı" : "No received offers yet"}
-              description={
-                isTr
-                  ? "İlanlarınıza teklif geldiğinde bu ekranda listelenecektir."
-                  : "Offers submitted to your listings will appear here."
-              }
-              action={
-                <Link href={isTr ? "/tr/panel/ilanlarim" : "/en/dashboard/listings"}>
-                  <Button variant="secondary">
-                    {isTr ? "İlanlarımı İncele" : "View My Listings"}
-                  </Button>
-                </Link>
-              }
-            />
-          ) : (
-            <EmptyState
-              title={isTr ? "Teklif bulunamadı" : "No offers found"}
-              description={
-                isTr
-                  ? "Seçilen filtreye uygun gelen teklif bulunmuyor."
-                  : "No incoming proposals match this filter criteria."
-              }
-              action={
-                <Button variant="secondary" onClick={() => setFilter("all")}>
-                  {isTr ? "Tüm Teklifleri Göster" : "Show All Offers"}
-                </Button>
-              }
-            />
           )}
         </div>
+
+        {/* Controls: Single Status Filter Button + Single Sort Button */}
+        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+          {/* Single Status Filter Dropdown Button */}
+          <div className="relative inline-flex items-center">
+            <ListFilter className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              aria-label={isTr ? "Durum Filtresi" : "Status Filter"}
+              className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
+            >
+              {(["all", "pending", "accepted", "rejected", "cancelled", "withdrawn"] as const).map((f) => (
+                <option key={f} value={f} className="bg-[#141517] text-[var(--color-text-primary)]">
+                  {getReceivedFilterLabel(f, isTr)} ({filterCounts[f]})
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+          </div>
+
+          {/* Single Sort Dropdown Button */}
+          <div className="relative inline-flex items-center">
+            <ArrowUpDown className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as ReceivedOfferSortOption)}
+              aria-label={isTr ? "Sıralama ölçütü" : "Sort by"}
+              className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
+            >
+              <option value="newest" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yeni" : "Newest"}</option>
+              <option value="budget_desc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yüksek Bütçe" : "Highest Budget"}</option>
+              <option value="budget_asc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Düşük Bütçe" : "Lowest Budget"}</option>
+              <option value="duration_asc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Kısa Süre" : "Shortest Timeline"}</option>
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+          </div>
+        </div>
+      </div>
+
+      {/* Result Count and Active Filter Indicator */}
+      {(searchQuery.trim() || filter !== "all") && (
+        <div className="flex items-center justify-between text-xs text-[var(--color-text-secondary)] px-1">
+          <span>
+            {isTr
+              ? `${filteredAndSortedOffers.length} teklif listeleniyor`
+              : `Showing ${filteredAndSortedOffers.length} offers`}
+            {searchQuery.trim() && ` ("${searchQuery.trim()}")`}
+          </span>
+          {searchQuery.trim() && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              className="text-blue-400 hover:text-blue-300 font-medium cursor-pointer"
+            >
+              {isTr ? "Aramayı Temizle" : "Clear Search"}
+            </button>
+          )}
+        </div>
+      )}
+
+      {filteredAndSortedOffers.length === 0 ? (
+        renderEmptyState()
       ) : (
         <div className="space-y-4">
-          {filteredOffers.map((offer) => {
+          {filteredAndSortedOffers.map((offer) => {
             const dateStr = new Date(offer.createdAt).toLocaleDateString(isTr ? "tr-TR" : "en-US");
 
             return (

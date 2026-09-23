@@ -117,7 +117,7 @@ export class HiringIntentEngine {
     _currency: string | null | undefined,
     categoryBenchmark: HiringIntentEvaluationInput["categoryBenchmark"]
   ): PillarScore {
-    let score = 0;
+    let score: number;
     const signals: string[] = [];
 
     const numMin = typeof budgetMin === "string" ? parseFloat(budgetMin) : Number(budgetMin) || 0;
@@ -273,7 +273,7 @@ export class HiringIntentEngine {
     const isFirstTime =
       !clientHistory || clientHistory.totalListings === 0 || clientHistory.closedListings === 0;
 
-    let score = 0;
+    let score: number;
     const signals: string[] = [];
 
     if (isFirstTime) {
@@ -411,15 +411,15 @@ export class HiringIntentEngine {
     const overallScore = Math.min(100, Math.max(0, Math.round(rawTotal)));
 
     // Determine Level and Badge
-    let level: HiringIntentLevel = "ACTIVE_HIRING_LIKELY";
-    let badgeLabelTr = `%${overallScore} İşe Alım Niyeti`;
-    let badgeLabelEn = `${overallScore}% Hiring Intent`;
-    let shortBadgeLabelTr = `%${overallScore} Niyet`;
-    let shortBadgeLabelEn = `${overallScore}% Intent`;
-    let badgeClass = "bg-sky-500/10 text-sky-400 border-sky-500/30";
-    let dotColor = "bg-sky-400";
-    let summaryTr = "Bu ilan standart aktif işe alım potansiyeline sahiptir.";
-    let summaryEn = "This listing exhibits solid, active hiring potential.";
+    let level: HiringIntentLevel;
+    let badgeLabelTr: string;
+    let badgeLabelEn: string;
+    let shortBadgeLabelTr: string;
+    let shortBadgeLabelEn: string;
+    let badgeClass: string;
+    let dotColor: string;
+    let summaryTr: string;
+    let summaryEn: string;
 
     if (isFirstTime && isCompanyVerified && overallScore >= 78) {
       level = "VERIFIED_NEW_CLIENT";
@@ -474,8 +474,8 @@ export class HiringIntentEngine {
     }
 
     // Freelancer Advice
-    let freelancerGuidanceTr = "";
-    let freelancerGuidanceEn = "";
+    let freelancerGuidanceTr: string;
+    let freelancerGuidanceEn: string;
     if (level === "PROVEN_HIGH_INTENT" || level === "VERIFIED_NEW_CLIENT") {
       freelancerGuidanceTr = "Bu işveren ciddi ve hazırdır. Detaylı teknik teklif ve mimari çözüm hazırlamak için harcanan zamanın karşılık bulma ihtimali çok yüksektir.";
       freelancerGuidanceEn = "High-priority client with high hiring probability. Investing time in tailored technical proposals is strongly recommended.";

@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev --webpack -p 8000",
-    "prebuild": "tsx scripts/check-secrets.ts",
+    "dev": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next dev --webpack -p 8000",
+    "dev:clean": "tsx scripts/clean-dev.ts",
+    "prebuild": "tsx scripts/check-secrets.ts && tsx scripts/check-db-schema-sync.ts",
     "build": "next build --webpack",
     "start": "next start -p 8000",
     "lint": "eslint .",
@@ -23,6 +24,7 @@
     "db:seed": "tsx scripts/seed.ts",
     "audit:emoji": "tsx scripts/check-emojis.ts",
     "audit:i18n": "tsx scripts/check-i18n-parity.ts",
+    "audit:schema": "tsx scripts/check-db-schema-sync.ts",
     "audit:secrets": "tsx scripts/check-secrets.ts",
     "worker": "tsx scripts/worker-daemon.ts",
     "worker:daemon": "tsx scripts/worker-daemon.ts",
@@ -68,6 +70,7 @@
     "drizzle-kit": "^0.31.0",
     "eslint": "^9.22.0",
     "eslint-config-next": "16.3.3",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
     "tailwindcss": "^3.4.17",
@@ -77,3 +80,5 @@
     "vitest": "^3.0.8"
   }
 }
+
+

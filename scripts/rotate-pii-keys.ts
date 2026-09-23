@@ -52,7 +52,87 @@ export async function runRotation(options?: RotatePiiKeysOptions) {
     if (cpManager.data.phase === "USERS") {
       console.info("[PII-Rotation] Phase 1: Rotating 'users' table...");
 
-      while (true) {
+      async function attemptUserCas(
+        user: typeof schema.users.$inferSelect,
+        retry: number
+      ): Promise<boolean> {
+        if (retry >= 3) return false;
+        const currentRows = await db
+          .select()
+          .from(schema.users)
+          .where(eq(schema.users.id, user.id))
+          .limit(1);
+
+        const currentUser = currentRows[0];
+        if (!currentUser) {
+          return true;
+        }
+
+        const updates: Partial<typeof schema.users.$inferInsert> = {};
+        let needsUpdate = false;
+
+        // Rotate emailEnc if not already on target keyId
+        if (currentUser.emailEnc && !currentUser.emailEnc.startsWith(`v2:${targetKeyId}:`)) {
+          const decryptedEmail = decryptEnvelopeV2(currentUser.emailEnc, {
+            table: "users",
+            primaryKey: currentUser.id,
+            column: "email_enc",
+          });
+          updates.emailEnc = encryptEnvelopeV2(
+            decryptedEmail,
+            { table: "users", primaryKey: currentUser.id, column: "email_enc" },
+            targetKeyId
+          );
+          needsUpdate = true;
+        }
+
+        // Rotate twoFactorSecret if present and not already on target keyId
+        if (
+          currentUser.twoFactorSecret &&
+          !currentUser.twoFactorSecret.startsWith(`v2:${targetKeyId}:`)
+        ) {
+          const dec2Fa = decryptTotpSecret(currentUser.id, currentUser.twoFactorSecret);
+          if (dec2Fa) {
+            updates.twoFactorSecret = encryptEnvelopeV2(
+              dec2Fa,
+              { table: "users", primaryKey: currentUser.id, column: "two_factor_secret" },
+              targetKeyId
+            );
+            needsUpdate = true;
+          }
+        }
+
+        if (!needsUpdate) {
+          return true;
+        }
+
+        const whereConditions = [
+          eq(schema.users.id, currentUser.id),
+          currentUser.emailEnc !== null && currentUser.emailEnc !== undefined
+            ? eq(schema.users.emailEnc, currentUser.emailEnc)
+            : isNull(schema.users.emailEnc),
+          currentUser.twoFactorSecret !== null && currentUser.twoFactorSecret !== undefined
+            ? eq(schema.users.twoFactorSecret, currentUser.twoFactorSecret)
+            : isNull(schema.users.twoFactorSecret),
+        ];
+
+        const res = await db
+          .update(schema.users)
+          .set({
+            ...updates,
+            updatedAt: new Date(),
+          })
+          .where(and(...whereConditions))
+          .returning({ id: schema.users.id });
+
+        if (res.length > 0) {
+          return true;
+        }
+
+        return attemptUserCas(user, retry + 1);
+      }
+
+      async function processUsersBatch(): Promise<void> {
         const lastId = cpManager.data.lastSuccessfulId;
         const conditions = [
           lastId ? gt(schema.users.id, lastId) : undefined,
@@ -66,104 +146,35 @@ export async function runRotation(options?: RotatePiiKeysOptions) {
           .orderBy(asc(schema.users.id))
           .limit(BATCH_SIZE);
 
-        if (batch.length === 0) break;
+        if (batch.length === 0) return;
 
-        for (const user of batch) {
-          try {
-            // Multi-field CAS retry loop with fresh row re-read and update re-calculation
-            let casSuccess = false;
+        async function processUserItem(idx: number): Promise<void> {
+          if (idx >= batch.length) return;
+          const user = batch[idx];
+          if (user) {
+            try {
+              const casSuccess = await attemptUserCas(user, 0);
 
-            for (let retry = 0; retry < 3 && !casSuccess; retry++) {
-              const currentRows = await db
-                .select()
-                .from(schema.users)
-                .where(eq(schema.users.id, user.id))
-                .limit(1);
-
-              const currentUser = currentRows[0];
-              if (!currentUser) {
-                casSuccess = true;
-                break;
+              if (!casSuccess) {
+                cpManager.recordFailureAndHalt(user.id, "USERS_CAS_CONFLICT_EXHAUSTED");
               }
 
-              const updates: Partial<typeof schema.users.$inferInsert> = {};
-              let needsUpdate = false;
-
-              // Rotate emailEnc if not already on target keyId
-              if (currentUser.emailEnc && !currentUser.emailEnc.startsWith(`v2:${targetKeyId}:`)) {
-                const decryptedEmail = decryptEnvelopeV2(currentUser.emailEnc, {
-                  table: "users",
-                  primaryKey: currentUser.id,
-                  column: "email_enc",
-                });
-                updates.emailEnc = encryptEnvelopeV2(
-                  decryptedEmail,
-                  { table: "users", primaryKey: currentUser.id, column: "email_enc" },
-                  targetKeyId
-                );
-                needsUpdate = true;
-              }
-
-              // Rotate twoFactorSecret if present and not already on target keyId
-              if (
-                currentUser.twoFactorSecret &&
-                !currentUser.twoFactorSecret.startsWith(`v2:${targetKeyId}:`)
-              ) {
-                // Must not swallow decrypt errors
-                const dec2Fa = decryptTotpSecret(currentUser.id, currentUser.twoFactorSecret);
-                if (dec2Fa) {
-                  updates.twoFactorSecret = encryptEnvelopeV2(
-                    dec2Fa,
-                    { table: "users", primaryKey: currentUser.id, column: "two_factor_secret" },
-                    targetKeyId
-                  );
-                  needsUpdate = true;
-                }
-              }
-
-              if (!needsUpdate) {
-                casSuccess = true;
-                break;
-              }
-
-              const whereConditions = [
-                eq(schema.users.id, currentUser.id),
-                currentUser.emailEnc !== null && currentUser.emailEnc !== undefined
-                  ? eq(schema.users.emailEnc, currentUser.emailEnc)
-                  : isNull(schema.users.emailEnc),
-                currentUser.twoFactorSecret !== null && currentUser.twoFactorSecret !== undefined
-                  ? eq(schema.users.twoFactorSecret, currentUser.twoFactorSecret)
-                  : isNull(schema.users.twoFactorSecret),
-              ];
-
-              const res = await db
-                .update(schema.users)
-                .set({
-                  ...updates,
-                  updatedAt: new Date(),
-                })
-                .where(and(...whereConditions))
-                .returning({ id: schema.users.id });
-
-              if (res.length > 0) {
-                casSuccess = true;
-              }
+              cpManager.recordSuccess(user.id);
+            } catch (err) {
+              cpManager.recordFailureAndHalt(
+                user.id,
+                err instanceof Error ? err.message : String(err)
+              );
             }
-
-            if (!casSuccess) {
-              cpManager.recordFailureAndHalt(user.id, "USERS_CAS_CONFLICT_EXHAUSTED");
-            }
-
-            cpManager.recordSuccess(user.id);
-          } catch (err) {
-            cpManager.recordFailureAndHalt(
-              user.id,
-              err instanceof Error ? err.message : String(err)
-            );
           }
+          await processUserItem(idx + 1);
         }
+
+        await processUserItem(0);
+        await processUsersBatch();
       }
 
+      await processUsersBatch();
       cpManager.transitionPhase("IDENTITIES");
     }
 
@@ -171,7 +182,152 @@ export async function runRotation(options?: RotatePiiKeysOptions) {
     if (cpManager.data.phase === "IDENTITIES") {
       console.info("[PII-Rotation] Phase 2: Rotating 'user_private_identity' table...");
 
-      while (true) {
+      async function attemptIdentityCas(
+        identity: typeof schema.userPrivateIdentity.$inferSelect,
+        retry: number
+      ): Promise<boolean> {
+        if (retry >= 3) return false;
+        const currentRows = await db
+          .select()
+          .from(schema.userPrivateIdentity)
+          .where(eq(schema.userPrivateIdentity.userId, identity.userId))
+          .limit(1);
+
+        const currentIdentity = currentRows[0];
+        if (!currentIdentity) {
+          return true;
+        }
+
+        const updates: Partial<typeof schema.userPrivateIdentity.$inferInsert> = {};
+        let needsUpdate = false;
+
+        if (
+          currentIdentity.legalFirstNameEnc &&
+          !currentIdentity.legalFirstNameEnc.startsWith(`v2:${targetKeyId}:`)
+        ) {
+          const dec = decryptEnvelopeV2(currentIdentity.legalFirstNameEnc, {
+            table: "user_private_identity",
+            primaryKey: currentIdentity.userId,
+            column: "legal_first_name_enc",
+          });
+          updates.legalFirstNameEnc = encryptEnvelopeV2(
+            dec,
+            {
+              table: "user_private_identity",
+              primaryKey: currentIdentity.userId,
+              column: "legal_first_name_enc",
+            },
+            targetKeyId
+          );
+          needsUpdate = true;
+        }
+
+        if (
+          currentIdentity.legalLastNameEnc &&
+          !currentIdentity.legalLastNameEnc.startsWith(`v2:${targetKeyId}:`)
+        ) {
+          const dec = decryptEnvelopeV2(currentIdentity.legalLastNameEnc, {
+            table: "user_private_identity",
+            primaryKey: currentIdentity.userId,
+            column: "legal_last_name_enc",
+          });
+          updates.legalLastNameEnc = encryptEnvelopeV2(
+            dec,
+            {
+              table: "user_private_identity",
+              primaryKey: currentIdentity.userId,
+              column: "legal_last_name_enc",
+            },
+            targetKeyId
+          );
+          needsUpdate = true;
+        }
+
+        if (
+          currentIdentity.phoneE164Enc &&
+          !currentIdentity.phoneE164Enc.startsWith(`v2:${targetKeyId}:`)
+        ) {
+          const dec = decryptEnvelopeV2(currentIdentity.phoneE164Enc, {
+            table: "user_private_identity",
+            primaryKey: currentIdentity.userId,
+            column: "phone_e164_enc",
+          });
+          updates.phoneE164Enc = encryptEnvelopeV2(
+            dec,
+            {
+              table: "user_private_identity",
+              primaryKey: currentIdentity.userId,
+              column: "phone_e164_enc",
+            },
+            targetKeyId
+          );
+          needsUpdate = true;
+        }
+
+        if (
+          currentIdentity.dateOfBirthEnc &&
+          !currentIdentity.dateOfBirthEnc.startsWith(`v2:${targetKeyId}:`)
+        ) {
+          const dec = decryptEnvelopeV2(currentIdentity.dateOfBirthEnc, {
+            table: "user_private_identity",
+            primaryKey: currentIdentity.userId,
+            column: "date_of_birth_enc",
+          });
+          updates.dateOfBirthEnc = encryptEnvelopeV2(
+            dec,
+            {
+              table: "user_private_identity",
+              primaryKey: currentIdentity.userId,
+              column: "date_of_birth_enc",
+            },
+            targetKeyId
+          );
+          needsUpdate = true;
+        }
+
+        if (!needsUpdate) {
+          return true;
+        }
+
+        const whereConditions = [
+          eq(schema.userPrivateIdentity.userId, currentIdentity.userId),
+          currentIdentity.legalFirstNameEnc !== null &&
+          currentIdentity.legalFirstNameEnc !== undefined
+            ? eq(
+                schema.userPrivateIdentity.legalFirstNameEnc,
+                currentIdentity.legalFirstNameEnc
+              )
+            : isNull(schema.userPrivateIdentity.legalFirstNameEnc),
+          currentIdentity.legalLastNameEnc !== null &&
+          currentIdentity.legalLastNameEnc !== undefined
+            ? eq(
+                schema.userPrivateIdentity.legalLastNameEnc,
+                currentIdentity.legalLastNameEnc
+              )
+            : isNull(schema.userPrivateIdentity.legalLastNameEnc),
+          currentIdentity.phoneE164Enc !== null && currentIdentity.phoneE164Enc !== undefined
+            ? eq(schema.userPrivateIdentity.phoneE164Enc, currentIdentity.phoneE164Enc)
+            : isNull(schema.userPrivateIdentity.phoneE164Enc),
+          currentIdentity.dateOfBirthEnc !== null &&
+          currentIdentity.dateOfBirthEnc !== undefined
+            ? eq(schema.userPrivateIdentity.dateOfBirthEnc, currentIdentity.dateOfBirthEnc)
+            : isNull(schema.userPrivateIdentity.dateOfBirthEnc),
+        ];
+
+        const res = await db
+          .update(schema.userPrivateIdentity)
+          .set({ ...updates, updatedAt: new Date() })
+          .where(and(...whereConditions))
+          .returning({ userId: schema.userPrivateIdentity.userId });
+
+        if (res.length > 0) {
+          return true;
+        }
+
+        return attemptIdentityCas(identity, retry + 1);
+      }
+
+      async function processIdentitiesBatch(): Promise<void> {
         const lastId = cpManager.data.lastSuccessfulId;
         const conditions = [
           lastId ? gt(schema.userPrivateIdentity.userId, lastId) : undefined,
@@ -184,167 +340,35 @@ export async function runRotation(options?: RotatePiiKeysOptions) {
           .orderBy(asc(schema.userPrivateIdentity.userId))
           .limit(BATCH_SIZE);
 
-        if (batch.length === 0) break;
+        if (batch.length === 0) return;
 
-        for (const identity of batch) {
-          try {
-            let casSuccess = false;
+        async function processIdentityItem(idx: number): Promise<void> {
+          if (idx >= batch.length) return;
+          const identity = batch[idx];
+          if (identity) {
+            try {
+              const casSuccess = await attemptIdentityCas(identity, 0);
 
-            for (let retry = 0; retry < 3 && !casSuccess; retry++) {
-              const currentRows = await db
-                .select()
-                .from(schema.userPrivateIdentity)
-                .where(eq(schema.userPrivateIdentity.userId, identity.userId))
-                .limit(1);
-
-              const currentIdentity = currentRows[0];
-              if (!currentIdentity) {
-                casSuccess = true;
-                break;
+              if (!casSuccess) {
+                cpManager.recordFailureAndHalt(identity.userId, "IDENTITY_CAS_CONFLICT_EXHAUSTED");
               }
 
-              const updates: Partial<typeof schema.userPrivateIdentity.$inferInsert> = {};
-              let needsUpdate = false;
-
-              if (
-                currentIdentity.legalFirstNameEnc &&
-                !currentIdentity.legalFirstNameEnc.startsWith(`v2:${targetKeyId}:`)
-              ) {
-                const dec = decryptEnvelopeV2(currentIdentity.legalFirstNameEnc, {
-                  table: "user_private_identity",
-                  primaryKey: currentIdentity.userId,
-                  column: "legal_first_name_enc",
-                });
-                updates.legalFirstNameEnc = encryptEnvelopeV2(
-                  dec,
-                  {
-                    table: "user_private_identity",
-                    primaryKey: currentIdentity.userId,
-                    column: "legal_first_name_enc",
-                  },
-                  targetKeyId
-                );
-                needsUpdate = true;
-              }
-
-              if (
-                currentIdentity.legalLastNameEnc &&
-                !currentIdentity.legalLastNameEnc.startsWith(`v2:${targetKeyId}:`)
-              ) {
-                const dec = decryptEnvelopeV2(currentIdentity.legalLastNameEnc, {
-                  table: "user_private_identity",
-                  primaryKey: currentIdentity.userId,
-                  column: "legal_last_name_enc",
-                });
-                updates.legalLastNameEnc = encryptEnvelopeV2(
-                  dec,
-                  {
-                    table: "user_private_identity",
-                    primaryKey: currentIdentity.userId,
-                    column: "legal_last_name_enc",
-                  },
-                  targetKeyId
-                );
-                needsUpdate = true;
-              }
-
-              if (
-                currentIdentity.phoneE164Enc &&
-                !currentIdentity.phoneE164Enc.startsWith(`v2:${targetKeyId}:`)
-              ) {
-                const dec = decryptEnvelopeV2(currentIdentity.phoneE164Enc, {
-                  table: "user_private_identity",
-                  primaryKey: currentIdentity.userId,
-                  column: "phone_e164_enc",
-                });
-                updates.phoneE164Enc = encryptEnvelopeV2(
-                  dec,
-                  {
-                    table: "user_private_identity",
-                    primaryKey: currentIdentity.userId,
-                    column: "phone_e164_enc",
-                  },
-                  targetKeyId
-                );
-                needsUpdate = true;
-              }
-
-              if (
-                currentIdentity.dateOfBirthEnc &&
-                !currentIdentity.dateOfBirthEnc.startsWith(`v2:${targetKeyId}:`)
-              ) {
-                const dec = decryptEnvelopeV2(currentIdentity.dateOfBirthEnc, {
-                  table: "user_private_identity",
-                  primaryKey: currentIdentity.userId,
-                  column: "date_of_birth_enc",
-                });
-                updates.dateOfBirthEnc = encryptEnvelopeV2(
-                  dec,
-                  {
-                    table: "user_private_identity",
-                    primaryKey: currentIdentity.userId,
-                    column: "date_of_birth_enc",
-                  },
-                  targetKeyId
-                );
-                needsUpdate = true;
-              }
-
-              if (!needsUpdate) {
-                casSuccess = true;
-                break;
-              }
-
-              const whereConditions = [
-                eq(schema.userPrivateIdentity.userId, currentIdentity.userId),
-                currentIdentity.legalFirstNameEnc !== null &&
-                currentIdentity.legalFirstNameEnc !== undefined
-                  ? eq(
-                      schema.userPrivateIdentity.legalFirstNameEnc,
-                      currentIdentity.legalFirstNameEnc
-                    )
-                  : isNull(schema.userPrivateIdentity.legalFirstNameEnc),
-                currentIdentity.legalLastNameEnc !== null &&
-                currentIdentity.legalLastNameEnc !== undefined
-                  ? eq(
-                      schema.userPrivateIdentity.legalLastNameEnc,
-                      currentIdentity.legalLastNameEnc
-                    )
-                  : isNull(schema.userPrivateIdentity.legalLastNameEnc),
-                currentIdentity.phoneE164Enc !== null && currentIdentity.phoneE164Enc !== undefined
-                  ? eq(schema.userPrivateIdentity.phoneE164Enc, currentIdentity.phoneE164Enc)
-                  : isNull(schema.userPrivateIdentity.phoneE164Enc),
-                currentIdentity.dateOfBirthEnc !== null &&
-                currentIdentity.dateOfBirthEnc !== undefined
-                  ? eq(schema.userPrivateIdentity.dateOfBirthEnc, currentIdentity.dateOfBirthEnc)
-                  : isNull(schema.userPrivateIdentity.dateOfBirthEnc),
-              ];
-
-              const res = await db
-                .update(schema.userPrivateIdentity)
-                .set({ ...updates, updatedAt: new Date() })
-                .where(and(...whereConditions))
-                .returning({ userId: schema.userPrivateIdentity.userId });
-
-              if (res.length > 0) {
-                casSuccess = true;
-              }
+              cpManager.recordSuccess(identity.userId);
+            } catch (err) {
+              cpManager.recordFailureAndHalt(
+                identity.userId,
+                err instanceof Error ? err.message : String(err)
+              );
             }
-
-            if (!casSuccess) {
-              cpManager.recordFailureAndHalt(identity.userId, "IDENTITY_CAS_CONFLICT_EXHAUSTED");
-            }
-
-            cpManager.recordSuccess(identity.userId);
-          } catch (err) {
-            cpManager.recordFailureAndHalt(
-              identity.userId,
-              err instanceof Error ? err.message : String(err)
-            );
           }
+          await processIdentityItem(idx + 1);
         }
+
+        await processIdentityItem(0);
+        await processIdentitiesBatch();
       }
 
+      await processIdentitiesBatch();
       cpManager.transitionPhase("EXPORT_PARTS");
     }
 
@@ -363,17 +387,88 @@ export async function runRotation(options?: RotatePiiKeysOptions) {
         if (cpManager.data.lastSuccessfulId) {
           const parts = cpManager.data.lastSuccessfulId.split(":");
           if (parts.length === 3) {
-            cursor = {
-              jobId: parts[0]!,
-              attemptNo: parseInt(parts[1]!, 10),
-              partNo: parseInt(parts[2]!, 10),
-            };
+            const [pJobId, pAttemptNo, pPartNo] = parts;
+            if (pJobId && pAttemptNo && pPartNo) {
+              cursor = {
+                jobId: pJobId,
+                attemptNo: parseInt(pAttemptNo, 10),
+                partNo: parseInt(pPartNo, 10),
+              };
+            }
           }
         }
 
-        while (true) {
-          const cursorCondition = cursor
-            ? sql`(${schema.exportJobParts.jobId}, ${schema.exportJobParts.attemptNo}, ${schema.exportJobParts.partNo}) > (${cursor.jobId}::uuid, ${cursor.attemptNo}::integer, ${cursor.partNo}::integer)`
+        async function attemptPartCas(
+          part: typeof schema.exportJobParts.$inferSelect,
+          compositeKey: string,
+          retry: number
+        ): Promise<boolean> {
+          if (retry >= 3) return false;
+
+          // Re-read current row for CAS verification
+          const [currentPart] = await db
+            .select()
+            .from(schema.exportJobParts)
+            .where(
+              and(
+                eq(schema.exportJobParts.jobId, part.jobId),
+                eq(schema.exportJobParts.attemptNo, part.attemptNo),
+                eq(schema.exportJobParts.partNo, part.partNo)
+              )
+            )
+            .limit(1);
+
+          if (!currentPart) {
+            return true;
+          }
+
+          if (currentPart.payloadEnc.startsWith(`v2:${targetKeyId}:`)) {
+            return true;
+          }
+
+          const aadContext = {
+            table: "export_job_parts",
+            primaryKey: currentPart.jobId,
+            column: `${currentPart.attemptNo}:${currentPart.partNo}`,
+          };
+
+          const decBuffer = decryptEnvelopeV2Buffer(currentPart.payloadEnc, aadContext);
+          const computedSha256 = crypto.createHash("sha256").update(decBuffer).digest("hex");
+
+          if (computedSha256 !== currentPart.plaintextSha256) {
+            cpManager.recordFailureAndHalt(
+              compositeKey,
+              `CHECKSUM_MISMATCH: Decrypted part sha256 '${computedSha256}' !== recorded '${currentPart.plaintextSha256}'`
+            );
+          }
+
+          const newPayloadEnc = encryptEnvelopeV2Buffer(decBuffer, aadContext, targetKeyId);
+
+          const updateRes = await db
+            .update(schema.exportJobParts)
+            .set({ payloadEnc: newPayloadEnc })
+            .where(
+              and(
+                eq(schema.exportJobParts.jobId, currentPart.jobId),
+                eq(schema.exportJobParts.attemptNo, currentPart.attemptNo),
+                eq(schema.exportJobParts.partNo, currentPart.partNo),
+                eq(schema.exportJobParts.payloadEnc, currentPart.payloadEnc)
+              )
+            )
+            .returning({ jobId: schema.exportJobParts.jobId });
+
+          if (updateRes.length > 0) {
+            return true;
+          }
+
+          return attemptPartCas(part, compositeKey, retry + 1);
+        }
+
+        async function processPartsBatch(
+          currentCursor: { jobId: string; attemptNo: number; partNo: number } | null
+        ): Promise<void> {
+          const cursorCondition = currentCursor
+            ? sql`(${schema.exportJobParts.jobId}, ${schema.exportJobParts.attemptNo}, ${schema.exportJobParts.partNo}) > (${currentCursor.jobId}::uuid, ${currentCursor.attemptNo}::integer, ${currentCursor.partNo}::integer)`
             : undefined;
 
           const batch = await db
@@ -387,88 +482,40 @@ export async function runRotation(options?: RotatePiiKeysOptions) {
             )
             .limit(BATCH_SIZE);
 
-          if (batch.length === 0) break;
+          if (batch.length === 0) return;
 
-          for (const part of batch) {
-            const compositeKey = `${part.jobId}:${part.attemptNo}:${part.partNo}`;
+          let nextCursor = currentCursor;
 
-            try {
-              let casSuccess = false;
+          async function processPartItem(idx: number): Promise<void> {
+            if (idx >= batch.length) return;
+            const part = batch[idx];
+            if (part) {
+              const compositeKey = `${part.jobId}:${part.attemptNo}:${part.partNo}`;
 
-              for (let retry = 0; retry < 3 && !casSuccess; retry++) {
-                // Re-read current row for CAS verification
-                const [currentPart] = await db
-                  .select()
-                  .from(schema.exportJobParts)
-                  .where(
-                    and(
-                      eq(schema.exportJobParts.jobId, part.jobId),
-                      eq(schema.exportJobParts.attemptNo, part.attemptNo),
-                      eq(schema.exportJobParts.partNo, part.partNo)
-                    )
-                  )
-                  .limit(1);
+              try {
+                const casSuccess = await attemptPartCas(part, compositeKey, 0);
 
-                if (!currentPart) {
-                  casSuccess = true;
-                  break;
+                if (!casSuccess) {
+                  cpManager.recordFailureAndHalt(compositeKey, "EXPORT_PART_CAS_CONFLICT_EXHAUSTED");
                 }
 
-                if (currentPart.payloadEnc.startsWith(`v2:${targetKeyId}:`)) {
-                  casSuccess = true;
-                  break;
-                }
-
-                const aadContext = {
-                  table: "export_job_parts",
-                  primaryKey: currentPart.jobId,
-                  column: `${currentPart.attemptNo}:${currentPart.partNo}`,
-                };
-
-                const decBuffer = decryptEnvelopeV2Buffer(currentPart.payloadEnc, aadContext);
-                const computedSha256 = crypto.createHash("sha256").update(decBuffer).digest("hex");
-
-                if (computedSha256 !== currentPart.plaintextSha256) {
-                  cpManager.recordFailureAndHalt(
-                    compositeKey,
-                    `CHECKSUM_MISMATCH: Decrypted part sha256 '${computedSha256}' !== recorded '${currentPart.plaintextSha256}'`
-                  );
-                }
-
-                const newPayloadEnc = encryptEnvelopeV2Buffer(decBuffer, aadContext, targetKeyId);
-
-                const updateRes = await db
-                  .update(schema.exportJobParts)
-                  .set({ payloadEnc: newPayloadEnc })
-                  .where(
-                    and(
-                      eq(schema.exportJobParts.jobId, currentPart.jobId),
-                      eq(schema.exportJobParts.attemptNo, currentPart.attemptNo),
-                      eq(schema.exportJobParts.partNo, currentPart.partNo),
-                      eq(schema.exportJobParts.payloadEnc, currentPart.payloadEnc)
-                    )
-                  )
-                  .returning({ jobId: schema.exportJobParts.jobId });
-
-                if (updateRes.length > 0) {
-                  casSuccess = true;
-                }
+                nextCursor = { jobId: part.jobId, attemptNo: part.attemptNo, partNo: part.partNo };
+                cpManager.recordSuccess(compositeKey);
+              } catch (err) {
+                cpManager.recordFailureAndHalt(
+                  compositeKey,
+                  err instanceof Error ? err.message : String(err)
+                );
               }
-
-              if (!casSuccess) {
-                cpManager.recordFailureAndHalt(compositeKey, "EXPORT_PART_CAS_CONFLICT_EXHAUSTED");
-              }
-
-              cursor = { jobId: part.jobId, attemptNo: part.attemptNo, partNo: part.partNo };
-              cpManager.recordSuccess(compositeKey);
-            } catch (err) {
-              cpManager.recordFailureAndHalt(
-                compositeKey,
-                err instanceof Error ? err.message : String(err)
-              );
             }
+            await processPartItem(idx + 1);
           }
+
+          await processPartItem(0);
+          await processPartsBatch(nextCursor);
         }
+
+        await processPartsBatch(cursor);
       }
 
       cpManager.transitionPhase("VERIFY");
@@ -483,10 +530,9 @@ export async function runRotation(options?: RotatePiiKeysOptions) {
       let totalPartsExamined = 0;
 
       // 1. Verify all users with emailEnc or twoFactorSecret
-      let verifyUserId: string | null = null;
-      while (true) {
+      async function verifyUsersBatch(lastUserId: string | null): Promise<void> {
         const cond: SQL[] = [
-          verifyUserId ? gt(schema.users.id, verifyUserId) : undefined,
+          lastUserId ? gt(schema.users.id, lastUserId) : undefined,
           or(isNotNull(schema.users.emailEnc), isNotNull(schema.users.twoFactorSecret)),
         ].filter((c): c is SQL => Boolean(c));
 
@@ -501,8 +547,9 @@ export async function runRotation(options?: RotatePiiKeysOptions) {
           .orderBy(asc(schema.users.id))
           .limit(BATCH_SIZE);
 
-        if (users.length === 0) break;
+        if (users.length === 0) return;
 
+        let nextUserId = lastUserId;
         for (const u of users) {
           totalUsersExamined++;
           if (u.emailEnc) {
@@ -549,15 +596,18 @@ export async function runRotation(options?: RotatePiiKeysOptions) {
             }
           }
 
-          verifyUserId = u.id;
+          nextUserId = u.id;
         }
+
+        await verifyUsersBatch(nextUserId);
       }
 
+      await verifyUsersBatch(null);
+
       // 2. Verify all identities
-      let verifyIdentityId: string | null = null;
-      while (true) {
+      async function verifyIdentitiesBatch(lastIdentityId: string | null): Promise<void> {
         const cond: SQL[] = [
-          verifyIdentityId ? gt(schema.userPrivateIdentity.userId, verifyIdentityId) : undefined,
+          lastIdentityId ? gt(schema.userPrivateIdentity.userId, lastIdentityId) : undefined,
         ].filter((c): c is SQL => Boolean(c));
 
         const ids = await db
@@ -567,8 +617,9 @@ export async function runRotation(options?: RotatePiiKeysOptions) {
           .orderBy(asc(schema.userPrivateIdentity.userId))
           .limit(BATCH_SIZE);
 
-        if (ids.length === 0) break;
+        if (ids.length === 0) return;
 
+        let nextIdentityId = lastIdentityId;
         for (const idRow of ids) {
           totalIdentitiesExamined++;
           const checkCol = (val: string | null, col: string) => {
@@ -598,9 +649,13 @@ export async function runRotation(options?: RotatePiiKeysOptions) {
           checkCol(idRow.phoneE164Enc, "phone_e164_enc");
           checkCol(idRow.dateOfBirthEnc, "date_of_birth_enc");
 
-          verifyIdentityId = idRow.userId;
+          nextIdentityId = idRow.userId;
         }
+
+        await verifyIdentitiesBatch(nextIdentityId);
       }
+
+      await verifyIdentitiesBatch(null);
 
       // 3. Verify all export_job_parts
       const partsTableCheck = await db.execute<{ exists: boolean }>(
@@ -611,10 +666,11 @@ export async function runRotation(options?: RotatePiiKeysOptions) {
       );
 
       if (hasPartsTable) {
-        let verifyPartCursor: { jobId: string; attemptNo: number; partNo: number } | null = null;
-        while (true) {
-          const verifyPartCondition: SQL | undefined = verifyPartCursor
-            ? sql`(${schema.exportJobParts.jobId}, ${schema.exportJobParts.attemptNo}, ${schema.exportJobParts.partNo}) > (${verifyPartCursor.jobId}::uuid, ${verifyPartCursor.attemptNo}::integer, ${verifyPartCursor.partNo}::integer)`
+        async function verifyPartsBatch(
+          cursor: { jobId: string; attemptNo: number; partNo: number } | null
+        ): Promise<void> {
+          const verifyPartCondition: SQL | undefined = cursor
+            ? sql`(${schema.exportJobParts.jobId}, ${schema.exportJobParts.attemptNo}, ${schema.exportJobParts.partNo}) > (${cursor.jobId}::uuid, ${cursor.attemptNo}::integer, ${cursor.partNo}::integer)`
             : undefined;
 
           const parts: (typeof schema.exportJobParts.$inferSelect)[] = await db
@@ -628,8 +684,9 @@ export async function runRotation(options?: RotatePiiKeysOptions) {
             )
             .limit(BATCH_SIZE);
 
-          if (parts.length === 0) break;
+          if (parts.length === 0) return;
 
+          let nextPartCursor = cursor;
           for (const p of parts) {
             totalPartsExamined++;
             const compositeKey = `${p.jobId}:${p.attemptNo}:${p.partNo}`;
@@ -667,9 +724,13 @@ export async function runRotation(options?: RotatePiiKeysOptions) {
               );
             }
 
-            verifyPartCursor = { jobId: p.jobId, attemptNo: p.attemptNo, partNo: p.partNo };
+            nextPartCursor = { jobId: p.jobId, attemptNo: p.attemptNo, partNo: p.partNo };
           }
+
+          await verifyPartsBatch(nextPartCursor);
         }
+
+        await verifyPartsBatch(null);
       }
 
       console.info(

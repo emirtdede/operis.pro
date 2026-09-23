@@ -231,7 +231,7 @@ export class HandoverService {
       return null;
     }
 
-    let handover: HandoverRecord | null = null;
+    let handover: HandoverRecord | null;
     const isMock =
       Boolean(process.env.VITEST) ||
       engagementId === "eng-demo-101" ||
@@ -543,7 +543,7 @@ export class HandoverService {
       engagementId === "eng-demo-101" ||
       !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(engagementId);
 
-    let existingHandover: HandoverRecord | null = null;
+    let existingHandover: HandoverRecord | null;
     if (isMock) {
       existingHandover = inMemoryHandovers.get(engagementId) ?? null;
     } else {
@@ -668,7 +668,7 @@ export class HandoverService {
       engagementId === "eng-demo-101" ||
       !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(engagementId);
 
-    let existingHandover: HandoverRecord | null = null;
+    let existingHandover: HandoverRecord | null;
     if (isMock) {
       existingHandover = inMemoryHandovers.get(engagementId) ?? null;
     } else {

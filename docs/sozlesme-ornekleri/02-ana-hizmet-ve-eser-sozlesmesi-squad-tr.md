@@ -1,6 +1,6 @@
 # ÇEVİK YAZILIMCI KONSORSİYUMU ESER SÖZLEŞMESİ (TBK m. 620 & TBK m. 470)
 > **Operis Referans No:** `OPR-CONTR-ENG2026S`  
-> **Kriptografik SHA-256 Mührü:** `3d99f3f300dd4c3316c4754fdec89861aee64a6557e4fa65f9d2f7fc0ca089f4`  
+> **Kriptografik SHA-256 Mührü:** `d7a3eb96aa0b2efb30451d6a15739da2c23c993943e76ed4b37ed447eca9e04c`  
 > **Hukuki Niteliği:** 6098 s. TBK m. 620 Adi Ortaklık Konsorsiyumu & TBK m. 162 Müteselsil Borçluluk
 
 ---
@@ -12,7 +12,7 @@
 # BAĞIMSIZ YAZILIM VE TEKNOLOJİ HİZMET SÖZLEŞMESİ (ESER SÖZLEŞMESİ VE GİZLİLİK PROTOKOLÜ)
 **Referans Kodu:** `OPR-CONTR-ENG2026S`  
 **Tanzim Tarihi:** 5 Eylül 2026  
-**Dijital Üretim Damgası:** 20 Eylül 2026 05:56  
+**Dijital Üretim Damgası:** 21 Eylül 2026 04:58  
 **Mevzuat Dayanağı:** 6098 sayılı Türk Borçlar Kanunu (TBK m. 470 vd., m. 620) ve 5846 sayılı Fikir ve Sanat Eserleri Kanunu (FSEK m. 52)
 
 ---

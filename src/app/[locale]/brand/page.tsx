@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { BrandKitClient } from "@/src/components/brand/brand-kit-client";
-import { serializeJsonLd } from "@/src/lib/security/json-ld";
+import { getLocalizedRoute } from "@/src/lib/i18n/routes";
+import { JsonLd } from "@/src/components/seo/json-ld";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -18,7 +20,8 @@ export async function generateMetadata({
     ? "Operis'in resmi vektör logoları, O-stream sembolü, optik kalibrasyon standartları, renk paleti ve marka kullanım kuralları."
     : "Official vector logos, calibrated O-stream symbol, optical kerning standards, color tokens, and brand usage rules for Operis.";
 
-  const url = isTr ? "https://operis.pro/tr/marka" : "https://operis.pro/en/brand";
+  const baseUrl = getBaseUrl();
+  const url = isTr ? `${baseUrl}/tr/marka` : `${baseUrl}/en/brand`;
 
   return {
     title,
@@ -51,28 +54,51 @@ export default async function BrandPage({ params }: { params: Promise<{ locale: 
   setRequestLocale(locale);
   const isTr = locale === "tr";
 
+  const baseUrl = getBaseUrl();
+  const brandUrl = `${baseUrl}${getLocalizedRoute("brand", locale)}`;
+
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: isTr ? "Operis Marka ve Tasarım Kılavuzu" : "Operis Brand Guidelines & Media Kit",
-    description: isTr
-      ? "Operis tescilli vektör logo varlıkları, renk paleti ve kullanım standartları."
-      : "Official vector assets, color palette, and design guidelines for Operis.",
-    publisher: {
-      "@type": "Organization",
-      name: "Vellium",
-      url: "https://vellium.dev",
-      logo: "https://operis.pro/operis-logo-acik.svg",
-    },
+    "@graph": [
+      {
+        "@type": "WebPage",
+        name: isTr ? "Operis Marka ve Tasarım Kılavuzu" : "Operis Brand Guidelines & Media Kit",
+        description: isTr
+          ? "Operis tescilli vektör logo varlıkları, renk paleti ve kullanım standartları."
+          : "Official vector assets, color palette, and design guidelines for Operis.",
+        url: brandUrl,
+        inLanguage: locale,
+        publisher: {
+          "@type": "Organization",
+          name: "Vellium",
+          url: "https://vellium.dev",
+          logo: `${baseUrl}/operis-logo-acik.svg`,
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: isTr ? "Ana Sayfa" : "Home",
+            item: `${baseUrl}/${locale}`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: isTr ? "Marka Kılavuzu" : "Brand Guidelines",
+            item: brandUrl,
+          },
+        ],
+      },
+    ],
   };
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 space-y-12">
       {/* Schema.org Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
 
       {/* Hero Header Section */}
       <header className="text-center space-y-4 max-w-3xl mx-auto pt-4 pb-2">

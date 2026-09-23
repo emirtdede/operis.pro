@@ -15,7 +15,7 @@ async function generateAllPdfs() {
     .filter((f) => f.endsWith(".html"))
     .sort();
 
-  console.log(`🚀 Toplam ${htmlFiles.length} adet sözleşme HTML dosyasından resmi A4 vektörel PDF üretiliyor...`);
+  console.info(`🚀 Toplam ${htmlFiles.length} adet sözleşme HTML dosyasından resmi A4 vektörel PDF üretiliyor...`);
 
   const browser = await chromium.launch({
     headless: true,
@@ -26,13 +26,18 @@ async function generateAllPdfs() {
     viewport: { width: 1200, height: 1600 },
   });
 
-  for (let i = 0; i < htmlFiles.length; i++) {
-    const htmlFile = htmlFiles[i]!;
+  async function processFile(i: number): Promise<void> {
+    if (i >= htmlFiles.length) return;
+    const htmlFile = htmlFiles[i];
+    if (!htmlFile) {
+      await processFile(i + 1);
+      return;
+    }
     const pdfFile = htmlFile.replace(/\.html$/, ".pdf");
     const htmlPath = path.join(DIR, htmlFile);
     const pdfPath = path.join(DIR, pdfFile);
 
-    console.log(`[${i + 1}/${htmlFiles.length}] PDF'e dönüştürülüyor: ${pdfFile}...`);
+    console.info(`[${i + 1}/${htmlFiles.length}] PDF'e dönüştürülüyor: ${pdfFile}...`);
 
     const fileUrl = `file:///${htmlPath.replace(/\\/g, "/")}`;
     await page.goto(fileUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
@@ -51,10 +56,13 @@ async function generateAllPdfs() {
     });
 
     fs.writeFileSync(pdfPath, pdfBuffer);
+    await processFile(i + 1);
   }
 
+  await processFile(0);
+
   await browser.close();
-  console.log(`\n✅ BAŞARILI: ${htmlFiles.length} adet resmi PDF dosyası '${DIR}' klasörüne kaydedildi!`);
+  console.info(`\n✅ BAŞARILI: ${htmlFiles.length} adet resmi PDF dosyası '${DIR}' klasörüne kaydedildi!`);
 }
 
 generateAllPdfs().catch((err) => {

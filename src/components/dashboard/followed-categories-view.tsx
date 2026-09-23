@@ -33,6 +33,11 @@ export function FollowedCategoriesView({ categories, locale }: FollowedCategorie
 
       if (res.ok) {
         setItems((prev) => prev.filter((c) => c.id !== cat.id));
+        window.dispatchEvent(
+          new CustomEvent("operis:badge-update", {
+            detail: { key: "categories", delta: -1 },
+          })
+        );
       }
     } catch {
       // Fallback
@@ -57,24 +62,24 @@ export function FollowedCategoriesView({ categories, locale }: FollowedCategorie
 
   if (items.length === 0) {
     return (
-      <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-8 sm:p-12 text-center shadow-sm">
-        <EmptyState
-          title={isTr ? "Henüz Bir Kategori Takip Etmiyorsunuz" : "No Followed Categories Yet"}
-          description={
-            isTr
-              ? "İlgi duyduğunuz teknoloji kategorilerini takip ederek yeni açılan ilanlardan anında haberdar olabilirsiniz."
-              : "Follow tech categories to get notified of newly published projects on our radar."
-          }
-          action={
-            <Link href={isTr ? "/tr/kategoriler" : "/en/categories"}>
-              <Button variant="primary" size="md" className="gap-2">
-                <FolderTree className="h-4 w-4" aria-hidden="true" />
-                <span>{isTr ? "Kategorileri İncele & Takip Et" : "Explore Categories"}</span>
-              </Button>
-            </Link>
-          }
-        />
-      </div>
+      <EmptyState
+        variant="card"
+        icon={<FolderTree className="h-7 w-7 text-blue-400" />}
+        title={isTr ? "Henüz Bir Kategori Takip Etmiyorsunuz" : "No Followed Categories Yet"}
+        description={
+          isTr
+            ? "İlgi duyduğunuz teknoloji kategorilerini takip ederek yeni açılan ilanlardan anında haberdar olabilirsiniz."
+            : "Follow tech categories to get notified of newly published projects on our radar."
+        }
+        action={
+          <Link href={isTr ? "/tr/kategoriler" : "/en/categories"}>
+            <Button variant="shimmer" size="md" className="gap-2 shadow-lg shadow-blue-500/15">
+              <FolderTree className="h-4 w-4" aria-hidden="true" />
+              <span>{isTr ? "Kategorileri İncele & Takip Et" : "Explore Categories"}</span>
+            </Button>
+          </Link>
+        }
+      />
     );
   }
 

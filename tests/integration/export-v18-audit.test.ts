@@ -364,17 +364,15 @@ describe("Sürüm 18 Audit: B25-ENTRY, B25-EXIT, B25-RUNNER, B26-CLEANUP, B26-ME
           4000,
           "test_real_reset_error",
           async (client) => {
-            // Monkey-patch client.query to fail during RESET
             const origQuery = client.query.bind(client);
-            (client as unknown as { query: typeof origQuery }).query = function (
+            (client as unknown as { query: unknown }).query = function (
               cmd: unknown,
               ...args: unknown[]
             ) {
               if (typeof cmd === "string" && cmd.includes("RESET statement_timeout")) {
                 throw new Error("INJECTED_RESET_FAILURE: Network dropped during RESET");
               }
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              return (origQuery as any)(cmd, ...args);
+              return (origQuery as (...fnArgs: unknown[]) => unknown)(cmd, ...args);
             };
 
             clientRef = client;
@@ -421,17 +419,15 @@ describe("Sürüm 18 Audit: B25-ENTRY, B25-EXIT, B25-RUNNER, B26-CLEANUP, B26-ME
           budgetMs,
           "test_reset_hang",
           async (client) => {
-            // Monkey-patch RESET to hang forever
             const origQuery = client.query.bind(client);
-            (client as unknown as { query: typeof origQuery }).query = function (
+            (client as unknown as { query: unknown }).query = function (
               cmd: unknown,
               ...args: unknown[]
             ) {
               if (typeof cmd === "string" && cmd.includes("RESET statement_timeout")) {
                 return new Promise(() => {}); // Hangs forever
               }
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              return (origQuery as any)(cmd, ...args);
+              return (origQuery as (...fnArgs: unknown[]) => unknown)(cmd, ...args);
             };
             return "DONE_FAST";
           }

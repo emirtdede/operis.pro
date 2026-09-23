@@ -330,8 +330,9 @@ export function getClientIp(req: Request): string {
       .split(",")
       .map((p) => p.trim())
       .filter(Boolean);
-    if (ips.length > 0) {
-      return ips[0]!;
+    const firstIp = ips[0];
+    if (firstIp) {
+      return firstIp;
     }
   }
   return "127.0.0.1";

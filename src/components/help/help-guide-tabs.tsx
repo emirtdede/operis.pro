@@ -21,6 +21,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { InteractiveFaqHub } from "./interactive-faq-hub";
+import { FAQ_ITEMS } from "./faq-data";
 import { getLocalizedRoute } from "@/src/lib/i18n/routes";
 
 interface HelpGuideTabsProps {
@@ -127,11 +128,11 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
           id: "all-faq",
           titleTr: "Sıkça Sorulan Sorular",
           titleEn: "Frequently Asked Questions",
-          descTr: "28 soru, anlık canlı arama ve filtreler",
-          descEn: "28 Q&A, live search & category filters",
+          descTr: `${FAQ_ITEMS.length} soru, anlık canlı arama ve filtreler`,
+          descEn: `${FAQ_ITEMS.length} Q&A, live search & category filters`,
           icon: HelpCircle,
-          badgeTr: "28 Soru",
-          badgeEn: "28 Q&A",
+          badgeTr: `${FAQ_ITEMS.length} Soru`,
+          badgeEn: `${FAQ_ITEMS.length} Q&A`,
           badgeColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
           hash: "sss",
         },
@@ -913,7 +914,9 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
                 <span>{isTr ? "Kapsamlı SSS Havuzu & Arama" : "Global FAQ Knowledge Pool"}</span>
               </div>
               <h2 className="text-2xl sm:text-4xl font-black text-[var(--color-text-primary)] tracking-tight">
-                {isTr ? "Tüm Sıkça Sorulan Sorular (28 Soru)" : "Frequently Asked Questions (28 Q&A)"}
+                {isTr
+                  ? `Tüm Sıkça Sorulan Sorular (${FAQ_ITEMS.length} Soru)`
+                  : `Frequently Asked Questions (${FAQ_ITEMS.length} Q&A)`}
               </h2>
               <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed max-w-3xl">
                 {isTr

@@ -19,6 +19,10 @@ import {
 } from "lucide-react";
 import { ReportForm } from "@/src/components/reports/report-form";
 import { getSession } from "@/src/modules/auth/session";
+import { JsonLd } from "@/src/components/seo/json-ld";
+import { getLocalizedRoute } from "@/src/lib/i18n/routes";
+import { type Locale } from "@/src/lib/i18n/config";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -27,6 +31,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isTr = locale === "tr";
+  const canonicalPath = isTr ? "/tr/sikayet-bildir" : "/en/report";
+  const fullUrl = `${getBaseUrl()}${canonicalPath}`;
 
   return {
     title: isTr
@@ -36,15 +42,36 @@ export async function generateMetadata({
       ? "Operis topluluk güvenliği, dolandırıcılık önleme, FSEK/telif hakları ve uyuşmazlık çözümü için 5651 ve KVKK standartlarında resmi ihbar masası."
       : "Official incident intake desk for scam prevention, DMCA/IP copyright protection, and neutral dispute resolution under statutory cyber regulations.",
     alternates: {
-      canonical: isTr ? "/tr/sikayet-bildir" : "/en/report",
+      canonical: canonicalPath,
       languages: {
         tr: "/tr/sikayet-bildir",
         en: "/en/report",
       },
     },
+    openGraph: {
+      title: isTr
+        ? "İhlal & Şikayet Bildirim Merkezi — Güvenlik, Denetim & Uyum | Operis"
+        : "Trust, Safety & Incident Response Hub — Security & Compliance | Operis",
+      description: isTr
+        ? "Operis topluluk güvenliği, dolandırıcılık önleme, FSEK/telif hakları ve uyuşmazlık çözümü için 5651 ve KVKK standartlarında resmi ihbar masası."
+        : "Official incident intake desk for scam prevention, DMCA/IP copyright protection, and neutral dispute resolution under statutory cyber regulations.",
+      url: fullUrl,
+      siteName: "Operis",
+      locale: isTr ? "tr_TR" : "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: isTr
+        ? "İhlal & Şikayet Bildirim Merkezi — Operis"
+        : "Trust, Safety & Incident Hub — Operis",
+      description: isTr
+        ? "5651 ve FSEK standartlarında resmi güvenlik ve uyuşmazlık bildirim merkezi."
+        : "Official incident intake desk for safety, escrow, and statutory copyright.",
+    },
     robots: {
-      index: false,
-      follow: false,
+      index: true,
+      follow: true,
     },
   };
 }
@@ -202,36 +229,121 @@ export default async function ReportPage({
     },
   ];
 
-  return (
-    <main className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 space-y-16">
-      {/* Navigation Breadcrumb */}
-      <div>
-        <Link
-          href={`/${locale}`}
-          className="inline-flex items-center gap-2 text-xs font-semibold text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] transition-colors group"
-        >
-          <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" aria-hidden="true" />
-          <span>{isTr ? "Operis Platformuna Dön" : "Return to Operis Platform"}</span>
-        </Link>
-      </div>
+  const baseUrl = getBaseUrl();
+  const reportRoute = getLocalizedRoute("report", locale as Locale);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ContactPage",
+        "@id": `${baseUrl}${reportRoute}#webpage`,
+        url: `${baseUrl}${reportRoute}`,
+        name: isTr
+          ? "İhlal & Şikayet Bildirim Merkezi — Güvenlik, Denetim & Uyum"
+          : "Trust, Safety & Incident Response Hub — Security & Compliance",
+        description: isTr
+          ? "Operis topluluk güvenliği, dolandırıcılık önleme, FSEK/telif hakları ve uyuşmazlık çözümü için 5651 ve KVKK standartlarında resmi ihbar masası."
+          : "Official incident intake desk for scam prevention, DMCA/IP copyright protection, and neutral dispute resolution.",
+        inLanguage: isTr ? "tr-TR" : "en-US",
+        isPartOf: {
+          "@type": "WebSite",
+          "@id": `${baseUrl}/#website`,
+          name: "Operis",
+          url: baseUrl,
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${baseUrl}${reportRoute}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: isTr ? "Ana Sayfa" : "Home",
+            item: `${baseUrl}/${locale}`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: isTr ? "İhlal & Şikayet Bildir" : "Trust & Safety Hub",
+            item: `${baseUrl}${reportRoute}`,
+          },
+        ],
+      },
+      {
+        "@type": "Organization",
+        "@id": `${baseUrl}/#organization`,
+        name: "Operis",
+        legalName: "Vellium",
+        url: baseUrl,
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "İstanbul",
+          addressCountry: "TR",
+        },
+        contactPoint: [
+          {
+            "@type": "ContactPoint",
+            contactType: "Fraud & Safety",
+            email: "security@vellium.dev",
+            availableLanguage: ["Turkish", "English"],
+          },
+          {
+            "@type": "ContactPoint",
+            contactType: "Legal & Copyright",
+            email: "legal@vellium.dev",
+            availableLanguage: ["Turkish", "English"],
+          },
+          {
+            "@type": "ContactPoint",
+            contactType: "Privacy & Ethics",
+            email: "privacy@vellium.dev",
+            availableLanguage: ["Turkish", "English"],
+          },
+          {
+            "@type": "ContactPoint",
+            contactType: "Dispute & Support",
+            email: "support@vellium.dev",
+            availableLanguage: ["Turkish", "English"],
+          },
+        ],
+      },
+    ],
+  };
 
-      {/* Hero Header */}
-      <header className="space-y-6 text-center max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold tracking-wider text-rose-400 bg-rose-500/10 border border-rose-500/20 shadow-sm">
-          <ShieldAlert className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>{isTr ? "5651 & KVKK UYUMLU GÜVENLİK VE UYUŞMAZLIK MERKEZİ" : "STATUTORY COMPLIANCE & INCIDENT HUB"}</span>
+  return (
+    <>
+      {/* Schema.org Structured Data */}
+      <JsonLd data={jsonLd} />
+      <main className="mx-auto max-w-6xl px-4 pt-4 pb-16 sm:px-6 sm:pt-6 lg:px-8 space-y-8 sm:space-y-10">
+        {/* Navigation Breadcrumb */}
+        <div>
+          <Link
+            href={`/${locale}`}
+            className="inline-flex items-center gap-2 text-xs font-semibold text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] transition-colors group"
+          >
+            <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" aria-hidden="true" />
+            <span>{isTr ? "Operis Platformuna Dön" : "Return to Operis Platform"}</span>
+          </Link>
         </div>
 
-        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--color-text-primary)] leading-tight">
-          {isTr ? "Güvenlik, Denetim & İhlal Bildirim Merkezi" : "Trust, Safety & Incident Response Hub"}
-        </h1>
+        {/* Hero Header */}
+        <header className="space-y-6 text-center max-w-3xl mx-auto -mt-2">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold tracking-wider text-rose-400 bg-rose-500/10 border border-rose-500/20 shadow-sm">
+            <ShieldAlert className="h-3.5 w-3.5" aria-hidden="true" />
+            <span>{isTr ? "5651 & KVKK UYUMLU GÜVENLİK VE UYUŞMAZLIK MERKEZİ" : "STATUTORY COMPLIANCE & INCIDENT HUB"}</span>
+          </div>
 
-        <p className="text-sm sm:text-base text-[var(--color-text-secondary)] leading-relaxed">
-          {isTr
-            ? "Operis topluluğunun dürüstlüğünü, finansal güvenliğini ve fikri mülkiyet haklarını korumak için bağımsız denetmenlerimiz ve 5651 Uyar-Kaldır protokolümüz 7/24 hizmetinizdedir."
-            : "Protecting ecosystem integrity, escrow capital, and intellectual property. Our independent arbitration board and statutory takedown desks operate around the clock."}
-        </p>
-      </header>
+          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--color-text-primary)] leading-tight">
+            {isTr ? "Güvenlik, Denetim & İhlal Bildirim Merkezi" : "Trust, Safety & Incident Response Hub"}
+          </h1>
+
+          <p className="text-sm sm:text-base text-[var(--color-text-secondary)] leading-relaxed">
+            {isTr
+              ? "Operis topluluğunun dürüstlüğünü, finansal güvenliğini ve fikri mülkiyet haklarını korumak için bağımsız denetmenlerimiz ve 5651 Uyar-Kaldır protokolümüz 7/24 hizmetinizdedir."
+              : "Protecting ecosystem integrity, escrow capital, and intellectual property. Our independent arbitration board and statutory takedown desks operate around the clock."}
+          </p>
+        </header>
 
       {/* 4 Trust & Safety Metrics */}
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -444,6 +556,10 @@ export default async function ReportPage({
                 Vellium (Operis bir Vellium ürünüdür)
               </li>
               <li>
+                <strong className="text-[var(--color-text-secondary)]">{isTr ? "Genel Merkez:" : "Headquarters:"}</strong>{" "}
+                {isTr ? "İstanbul / Türkiye" : "İstanbul, Turkey"}
+              </li>
+              <li>
                 <strong className="text-[var(--color-text-secondary)]">KEP:</strong>{" "}
                 <code className="text-purple-400 font-mono">vellium@hs01.kep.tr</code>
               </li>
@@ -535,5 +651,6 @@ export default async function ReportPage({
         </div>
       </section>
     </main>
+    </>
   );
 }

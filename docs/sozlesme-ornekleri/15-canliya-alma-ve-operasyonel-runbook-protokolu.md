@@ -6,7 +6,7 @@
 ---
 
 # 🛡️ OPERİS RESMİ PROJE DEVİR VE İŞLETİM KILAVUZU (PROJECT RUNBOOK)
-**Referans No:** `OPR-RUNBOOK-ENG2026B-V1` | **Tarih:** 20 Eylül 2026 05:56 | **Versiyon:** v1
+**Referans No:** `OPR-RUNBOOK-ENG2026B-V1` | **Tarih:** 21 Eylül 2026 04:58 | **Versiyon:** v1
 **İlan / Proje:** Kurumsal B2B Finansal Raporlama ve Analitik Platformu
 **İşveren:** Acme Teknoloji ve Girişim A.Ş. | **Yüklenici / Yazılımcı:** Can Demir (Kıdemli Yazılım Mimarı)
 

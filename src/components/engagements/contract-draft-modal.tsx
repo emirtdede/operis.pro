@@ -33,6 +33,7 @@ import {
   getSafeHarborButtonLabel,
   getAiGovButtonLabel,
   getSoftwareExportButtonLabel,
+  getWhiteLabelButtonLabel,
   ContractBilingualViewer,
   ContractActionsToolbar,
   ContractProtocolBanners,
@@ -377,7 +378,7 @@ export function ContractDraftModal({
                     : "Removes Operis branding and header marks for neutral enterprise formatting"
                 }
               >
-                <span>{isWhiteLabel ? (isTr ? "🏛️ Kurumsal Mod (White-Label: Açık)" : "🏛️ White-Label (Active)") : (isTr ? "🏛️ Kurumsal Sade Mod" : "🏛️ White-Label Mode")}</span>
+                <span>{getWhiteLabelButtonLabel(isWhiteLabel, isTr)}</span>
               </button>
 
               {contractData && (

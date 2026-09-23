@@ -1,4 +1,4 @@
-import { and, eq, ne, or } from "drizzle-orm";
+import { and, eq, inArray, ne, or } from "drizzle-orm";
 import { getDb, schema, acquireUserPairAdvisoryLock } from "@/src/lib/db";
 import { NotificationService } from "@/src/modules/notifications/service";
 import { DEFAULT_USER } from "@/src/modules/auth/demo-user";
@@ -314,32 +314,39 @@ export class EngagementLifecycleService {
         }
 
         // Notify other rejected offerors
-        if (Array.isArray(rejectedOfferors)) {
-          for (const rejected of rejectedOfferors) {
-            try {
-              const [profile] = await db
-                .select({ locale: schema.profiles.locale })
-                .from(schema.profiles)
-                .where(eq(schema.profiles.userId, rejected.offerorUserId))
-                .limit(1);
+        if (Array.isArray(rejectedOfferors) && rejectedOfferors.length > 0) {
+          try {
+            const userIds = Array.from(new Set(rejectedOfferors.map((r) => r.offerorUserId)));
+            const profiles =
+              userIds.length > 0
+                ? await db
+                    .select({ userId: schema.profiles.userId, locale: schema.profiles.locale })
+                    .from(schema.profiles)
+                    .where(inArray(schema.profiles.userId, userIds))
+                : [];
 
-              const isEn = profile?.locale === "en";
-              await NotificationService.createNotification(
-                rejected.offerorUserId,
-                "OFFER_REJECTED_OTHER_SELECTED",
-                "offer",
-                rejected.id,
-                {
-                  title: isEn ? "Proposal Status Updated" : "Teklif Durumu Güncellendi",
-                  message: isEn
-                    ? `Another proposal was selected for "${listingTitle}", and your proposal has been concluded.`
-                    : `"${listingTitle}" ilanında başka bir teklif kabul edildiğinden teklifiniz sonuçlandırıldı.`,
-                  actionUrl: isEn ? "/en/dashboard/offers/sent" : "/tr/panel/teklifler/gonderilen",
-                }
-              );
-            } catch {
-              // non-blocking
-            }
+            const localeMap = new Map(profiles.map((p) => [p.userId, p.locale]));
+
+            await Promise.allSettled(
+              rejectedOfferors.map((rejected) => {
+                const isEn = localeMap.get(rejected.offerorUserId) === "en";
+                return NotificationService.createNotification(
+                  rejected.offerorUserId,
+                  "OFFER_REJECTED_OTHER_SELECTED",
+                  "offer",
+                  rejected.id,
+                  {
+                    title: isEn ? "Proposal Status Updated" : "Teklif Durumu Güncellendi",
+                    message: isEn
+                      ? `Another proposal was selected for "${listingTitle}", and your proposal has been concluded.`
+                      : `"${listingTitle}" ilanında başka bir teklif kabul edildiğinden teklifiniz sonuçlandırıldı.`,
+                    actionUrl: isEn ? "/en/dashboard/offers/sent" : "/tr/panel/teklifler/gonderilen",
+                  }
+                );
+              })
+            );
+          } catch {
+            // non-blocking
           }
         }
 

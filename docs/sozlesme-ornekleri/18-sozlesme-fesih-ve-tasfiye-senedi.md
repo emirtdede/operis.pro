@@ -1,10 +1,10 @@
 # ERKEN FESİH, İKÂLE VE TASFİYE PROTOKOLÜ
-**Protokol No:** `OPR-LIQUIDATION-ENG2026E-MU985J9N`  
+**Protokol No:** `OPR-LIQUIDATION-ENG2026E-MUALISHM`  
 **Sözleşme / İş Referansı:** `ENG-2026-EARLY-TERM-EXAMPLE`  
 **Fesih Gerekçesi:** Tarafların karşılıklı serbest iradeleriyle sözleşmeyi ikâle yoluyla sona erdirme mutabakatı (TBK m. 132). Tarafların karşılıklı serbest iradeleriyle, şirketin iş modeli değişikliği sebebiyle projenin 2. aşamada ikâle yoluyla sulhen tasfiyesidir.  
-**Tanzim Tarihi:** 20.09.2026  
+**Tanzim Tarihi:** 21.09.2026  
 **Yasal Dayanak:** 6098 s. TBK m. 484-486 (Sözleşmenin Sona Ermesi ve Tasfiye) & TBK m. 132  
-**Master SHA-256 Kök Özeti:** `7af0389f6de32bc7f561ad1bb0547135cde9f80955cea720c1d027799ef8849b`  
+**Master SHA-256 Kök Özeti:** `31900db0c5ea2b20b90eaaa599d6915e63db4aeb1ed341bcf0252cee64dde919`  
 
 ---
 

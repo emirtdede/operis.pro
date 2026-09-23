@@ -206,17 +206,21 @@ class TaxonomyIndex {
         synSet.add(toAsciiShadow(norm));
 
         // Inverted index
-        if (!this.synonymIndex.has(norm)) {
-          this.synonymIndex.set(norm, new Set());
+        let normSet = this.synonymIndex.get(norm);
+        if (!normSet) {
+          normSet = new Set();
+          this.synonymIndex.set(norm, normSet);
         }
-        this.synonymIndex.get(norm)!.add(slug);
+        normSet.add(slug);
 
         const shadow = toAsciiShadow(norm);
         if (shadow !== norm) {
-          if (!this.synonymIndex.has(shadow)) {
-            this.synonymIndex.set(shadow, new Set());
+          let shadowSet = this.synonymIndex.get(shadow);
+          if (!shadowSet) {
+            shadowSet = new Set();
+            this.synonymIndex.set(shadow, shadowSet);
           }
-          this.synonymIndex.get(shadow)!.add(slug);
+          shadowSet.add(slug);
         }
       }
       this.categorySynonyms.set(slug, synSet);
@@ -237,37 +241,33 @@ class TaxonomyIndex {
         canonAliases.add(normAlias);
 
         // Reverse mapping: alias -> canonical
-        if (!this.globalAliases.has(normAlias)) {
+        const existingList = this.globalAliases.get(normAlias);
+        if (!existingList) {
           this.globalAliases.set(normAlias, [normCanonical]);
-        } else {
-          const list = this.globalAliases.get(normAlias)!;
-          if (!list.includes(normCanonical)) {
-            list.push(normCanonical);
-          }
+        } else if (!existingList.includes(normCanonical)) {
+          existingList.push(normCanonical);
         }
 
         const shadow = toAsciiShadow(normAlias);
         if (shadow !== normAlias) {
           canonAliases.add(shadow);
-          if (!this.globalAliases.has(shadow)) {
+          const shadowList = this.globalAliases.get(shadow);
+          if (!shadowList) {
             this.globalAliases.set(shadow, [normCanonical]);
-          } else {
-            const list = this.globalAliases.get(shadow)!;
-            if (!list.includes(normCanonical)) {
-              list.push(normCanonical);
-            }
+          } else if (!shadowList.includes(normCanonical)) {
+            shadowList.push(normCanonical);
           }
         }
       }
 
       // Canonical -> aliases
-      if (!this.globalAliases.has(normCanonical)) {
+      const canonList = this.globalAliases.get(normCanonical);
+      if (!canonList) {
         this.globalAliases.set(normCanonical, Array.from(canonAliases));
       } else {
-        const list = this.globalAliases.get(normCanonical)!;
         for (const a of canonAliases) {
-          if (!list.includes(a)) {
-            list.push(a);
+          if (!canonList.includes(a)) {
+            canonList.push(a);
           }
         }
       }
@@ -348,13 +348,15 @@ class TaxonomyIndex {
         let weight = defaultWeight;
         let specificity = 1.0;
 
-        if (termWeights?.has(norm)) {
-          const tw = termWeights.get(norm)!;
+        const tw = termWeights?.get(norm);
+        if (tw) {
           weight = tw.weight;
           specificity = tw.specificity;
-        } else if (this.collisions.has(norm)) {
-          const col = this.collisions.get(norm)!;
-          specificity = Math.max(0.1, 1 / col.categoryCount);
+        } else {
+          const col = this.collisions.get(norm);
+          if (col) {
+            specificity = Math.max(0.1, 1 / col.categoryCount);
+          }
         }
 
         const entry: IndexedTerm = {
@@ -365,11 +367,12 @@ class TaxonomyIndex {
         };
 
         const registerNorm = (n: string) => {
-          if (!this.termIndex.has(n)) {
-            this.termIndex.set(n, []);
+          let list = this.termIndex.get(n);
+          if (!list) {
+            list = [];
+            this.termIndex.set(n, list);
           }
           // Avoid duplicate entries for same category and field
-          const list = this.termIndex.get(n)!;
           if (!list.some((it) => it.categorySlug === cat.slug && it.field === field)) {
             list.push(entry);
           }
@@ -386,10 +389,12 @@ class TaxonomyIndex {
       for (const ct of cat.canonicalTerms) {
         addTerm(ct, 'canonical', 0.98);
         const norm = normalizeSearchQuery(ct);
-        if (!this.canonicalTerms.has(norm)) {
-          this.canonicalTerms.set(norm, new Set());
+        let canonicalSet = this.canonicalTerms.get(norm);
+        if (!canonicalSet) {
+          canonicalSet = new Set();
+          this.canonicalTerms.set(norm, canonicalSet);
         }
-        this.canonicalTerms.get(norm)!.add(cat.slug);
+        canonicalSet.add(cat.slug);
       }
 
       // Search terms
@@ -430,10 +435,11 @@ class TaxonomyIndex {
         this.problemStatements.push(probStmt);
 
         for (const token of tokens) {
-          if (!this.problemTokenToSlugs.has(token)) {
-            this.problemTokenToSlugs.set(token, new Map());
+          let catMap = this.problemTokenToSlugs.get(token);
+          if (!catMap) {
+            catMap = new Map();
+            this.problemTokenToSlugs.set(token, catMap);
           }
-          const catMap = this.problemTokenToSlugs.get(token)!;
           catMap.set(slug, (catMap.get(slug) || 0) + 1);
         }
       }

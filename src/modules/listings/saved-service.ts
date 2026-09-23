@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
 
@@ -120,10 +121,12 @@ export class SavedListingService {
         })
         .returning({ id: schema.savedListings.id });
 
-      if (!memorySavedMap.has(userId)) {
-        memorySavedMap.set(userId, new Set());
+      let userSavedSet = memorySavedMap.get(userId);
+      if (!userSavedSet) {
+        userSavedSet = new Set();
+        memorySavedMap.set(userId, userSavedSet);
       }
-      memorySavedMap.get(userId)!.add(listingId);
+      userSavedSet.add(listingId);
 
       return { saved: true, id: inserted?.id };
     } catch (err: unknown) {
@@ -137,17 +140,19 @@ export class SavedListingService {
 
       // Memory fallback for mocked test environments without live DB
       if (Boolean(process.env.VITEST) || process.env.NODE_ENV === "test") {
-        if (!memorySavedMap.has(userId)) {
-          memorySavedMap.set(userId, new Set());
+        let userSet = memorySavedMap.get(userId);
+        if (!userSet) {
+          userSet = new Set();
+          memorySavedMap.set(userId, userSet);
         }
-        const userSet = memorySavedMap.get(userId)!;
         if (userSet.has(listingId)) {
           userSet.delete(listingId);
           return { saved: false };
         }
         if (userSet.size >= MAX_SAVED_LISTINGS_LIMIT) {
           throw new Error(
-            `MAX_SAVED_LIMIT_REACHED: En fazla ${MAX_SAVED_LISTINGS_LIMIT} ilan kaydedebilirsiniz.`
+            `MAX_SAVED_LIMIT_REACHED: En fazla ${MAX_SAVED_LISTINGS_LIMIT} ilan kaydedebilirsiniz.`,
+            { cause: err }
           );
         }
         userSet.add(listingId);
@@ -221,11 +226,12 @@ export class SavedListingService {
 
   /**
    * Retrieves saved listings for the user with joined metadata and status calculations.
+   * Wrapped in React.cache() for request-scoped deduplication across layouts and server components.
    */
-  static async getSavedListings(
+  static getSavedListings = cache(async (
     userId: string,
     options: GetSavedListingsOptions = {}
-  ): Promise<SavedListingItem[]> {
+  ): Promise<SavedListingItem[]> => {
     if (!userId) return [];
 
     const { statusFilter = "all", limit = 100, offset = 0 } = options;
@@ -307,7 +313,7 @@ export class SavedListingService {
     } catch {
       return [];
     }
-  }
+  });
 
   /**
    * Retrieves a Set of listing IDs that the user has saved, optimized for $O(1)$ client lookup.

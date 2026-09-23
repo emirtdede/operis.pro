@@ -6,3 +6,5 @@ allowBuilds:
   esbuild: true
   protobufjs: true
   unrs-resolver: true
+patchedDependencies:
+  next@16.3.3: patches/next@16.3.3.patch

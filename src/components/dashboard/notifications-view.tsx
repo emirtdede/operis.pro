@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Bell, Inbox, Send, Handshake, CheckCheck, Mail } from "lucide-react";
+import { Bell, Inbox, Send, Handshake, CheckCheck, Mail, Compass } from "lucide-react";
 import { Button } from "../ui/button";
 import { EmptyState } from "../ui/empty-state";
 import { getAlternateLocalePath } from "@/src/lib/i18n/routes";
@@ -58,6 +58,11 @@ export function NotificationsView({ initialNotifications, locale }: Notification
       if (res.ok) {
         const now = new Date();
         setNotifications((prev) => prev.map((n) => ({ ...n, readAt: n.readAt || now })));
+        window.dispatchEvent(
+          new CustomEvent("operis:badge-update", {
+            detail: { key: "notifications", value: 0 },
+          })
+        );
       }
     } catch {
       // ignore
@@ -79,6 +84,11 @@ export function NotificationsView({ initialNotifications, locale }: Notification
         setNotifications((prev) =>
           prev.map((n) => (n.id === id ? { ...n, readAt: n.readAt || now } : n))
         );
+        window.dispatchEvent(
+          new CustomEvent("operis:badge-update", {
+            detail: { key: "notifications", delta: -1 },
+          })
+        );
       }
     } catch {
       // ignore
@@ -95,6 +105,11 @@ export function NotificationsView({ initialNotifications, locale }: Notification
       if (res.ok) {
         setNotifications((prev) =>
           prev.map((n) => (n.id === id ? { ...n, readAt: new Date().toISOString() } : n))
+        );
+        window.dispatchEvent(
+          new CustomEvent("operis:badge-update", {
+            detail: { key: "notifications", delta: -1 },
+          })
         );
       }
     } catch {
@@ -118,6 +133,22 @@ export function NotificationsView({ initialNotifications, locale }: Notification
         return <Bell className="h-4 w-4 text-blue-400" />;
     }
   };
+
+  const isUnreadFilter = filter === "unread";
+  let emptyTitle: string;
+  let emptyDescription: string;
+
+  if (isUnreadFilter) {
+    emptyTitle = isTr ? "Okunmamış Bildiriminiz Yok" : "No Unread Notifications";
+    emptyDescription = isTr
+      ? "Tüm bildirimlerinizi okudunuz. Önceki bildirimlerinizi görmek için 'Tümü' sekmesine geçebilirsiniz."
+      : "You're all caught up! Switch to 'All' to review previous updates.";
+  } else {
+    emptyTitle = isTr ? "Henüz Bir Bildiriminiz Yok" : "No Notifications Yet";
+    emptyDescription = isTr
+      ? "İlanlarınıza teklif geldiğinde, teklifleriniz sonuçlandığında veya takip ettiğiniz kategorilerde yeni ilanlar yayınlandığında burada listelenir."
+      : "When you receive offers or matching updates, they will be listed here.";
+  }
 
   return (
     <div className="space-y-6">
@@ -163,23 +194,31 @@ export function NotificationsView({ initialNotifications, locale }: Notification
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-8 sm:p-12 text-center shadow-sm">
-          <EmptyState
-            title={isTr ? "Henüz Bir Bildiriminiz Yok" : "No Notifications Yet"}
-            description={
-              isTr
-                ? "İlanlarınıza teklif geldiğinde, teklifleriniz sonuçlandığında veya takip ettiğiniz kategorilerde yeni ilanlar yayınlandığında burada listelenir."
-                : "When you receive offers or matching updates, they will be listed here."
-            }
+        <EmptyState
+          variant="card"
+          icon={<Bell className="h-7 w-7 text-blue-400" />}
+          title={emptyTitle}
+          description={emptyDescription}
             action={
+              filter === "unread" ? (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setFilter("all")}
+                className="cursor-pointer"
+              >
+                {isTr ? "Tüm Bildirimleri Göster" : "View All Notifications"}
+              </Button>
+            ) : (
               <Link href={isTr ? "/tr/ilanlar" : "/en/listings"}>
-                <Button variant="secondary" size="md">
-                  {isTr ? "İlanları Keşfet" : "Explore Listings"}
+                <Button variant="shimmer" size="md" className="gap-2 shadow-lg shadow-blue-500/15">
+                  <Compass className="h-4 w-4" />
+                  <span>{isTr ? "İlanları Keşfet" : "Explore Listings"}</span>
                 </Button>
               </Link>
-            }
-          />
-        </div>
+            )
+          }
+        />
       ) : (
         <div className="space-y-3">
           {filtered.map((item) => {

@@ -362,7 +362,7 @@ export class AcceptanceRulesEvaluator {
 
     // 3. Mandatory Handover & Acceptance Criterion (Phase 3 Final Acceptance)
     criteria.push({
-      id: `crit-${criterionIndex++}`,
+      id: `crit-${criterionIndex}`,
       phaseNumber: 3,
       category: "DELIVERY_QUALITY",
       humanCriterionTr: "Tüm kaynak kodlar, ortam değişkenleri (.env.example) ve varsa canlı yayın/deployment adımları eksiksiz teslim edilmelidir.",

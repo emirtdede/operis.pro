@@ -11,12 +11,23 @@ describe("Listing Duplicate & Quick Re-post Engine", () => {
   const OWNER_ID = "11111111-1111-1111-1111-111111111111";
   const STRANGER_ID = "99999999-9999-9999-9999-999999999999";
 
+  const createMockSession = (userId: string, email: string): sessionModule.SessionPayload => ({
+    type: "SESSION",
+    userId,
+    email,
+    role: "USER",
+    status: "ACTIVE",
+    authVersion: 1,
+    createdAt: Date.now(),
+    expiresAt: Date.now() + 7 * 86400000,
+  });
+
   beforeEach(() => {
     inMemoryListings.length = 0;
     vi.restoreAllMocks();
     vi.spyOn(rateLimitModule, "evaluateSecurityAccessAsync").mockResolvedValue({
       allowed: true,
-    } as any);
+    } as unknown as Awaited<ReturnType<typeof rateLimitModule.evaluateSecurityAccessAsync>>);
   });
 
   describe("ListingService.getListingCloneData", () => {
@@ -177,10 +188,9 @@ describe("Listing Duplicate & Quick Re-post Engine", () => {
     });
 
     it("returns 403 Forbidden when caller is not the owner", async () => {
-      vi.spyOn(sessionModule, "getSession").mockResolvedValue({
-        userId: STRANGER_ID,
-        email: "stranger@example.com",
-      } as any);
+      vi.spyOn(sessionModule, "getSession").mockResolvedValue(
+        createMockSession(STRANGER_ID, "stranger@example.com")
+      );
 
       inMemoryListings.push({
         id: "owned-by-someone-else",
@@ -220,10 +230,9 @@ describe("Listing Duplicate & Quick Re-post Engine", () => {
     });
 
     it("returns 200 OK with sanitized clone data when authorized owner requests clone", async () => {
-      vi.spyOn(sessionModule, "getSession").mockResolvedValue({
-        userId: OWNER_ID,
-        email: "owner@example.com",
-      } as any);
+      vi.spyOn(sessionModule, "getSession").mockResolvedValue(
+        createMockSession(OWNER_ID, "owner@example.com")
+      );
 
       const targetId = "valid-owned-listing";
       inMemoryListings.push({

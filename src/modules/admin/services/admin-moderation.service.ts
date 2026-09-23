@@ -791,14 +791,15 @@ export class AdminModerationService {
 
       if (params.search && params.search.trim()) {
         const pattern = `%${params.search.trim()}%`;
-        conditions.push(
-          or(
-            ilike(schema.contactMessages.name, pattern),
-            ilike(schema.contactMessages.email, pattern),
-            ilike(schema.contactMessages.subject, pattern),
-            ilike(schema.contactMessages.message, pattern)
-          )!
+        const searchCondition = or(
+          ilike(schema.contactMessages.name, pattern),
+          ilike(schema.contactMessages.email, pattern),
+          ilike(schema.contactMessages.subject, pattern),
+          ilike(schema.contactMessages.message, pattern)
         );
+        if (searchCondition) {
+          conditions.push(searchCondition);
+        }
       }
 
       const whereClause = conditions.length > 0 ? and(...conditions) : undefined;

@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import { eq } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
+import { mapConcurrent } from "@/src/lib/async/concurrency";
 import { BatchSubmitOffersInput, batchSubmitOffersSchema } from "../validation";
 import type { SquadMemberDto } from "../squad-engine";
 import {
@@ -50,7 +51,7 @@ export class SquadOfferService {
     offerorUserId: string,
     rawInput: BatchSubmitOffersInput,
     locale?: string,
-    submitOfferFn?: (offerorUserId: string, rawInput: any) => Promise<any>
+    submitOfferFn?: typeof OfferCreationService.submitOffer
   ): Promise<BatchOfferResponse> {
     const input = batchSubmitOffersSchema.parse(rawInput);
     const isEn = locale === "en";
@@ -132,80 +133,82 @@ export class SquadOfferService {
     }
 
     const batchId = crypto.randomUUID();
-    const results: BatchOfferResultItem[] = [];
+    const results: BatchOfferResultItem[] = await mapConcurrent(
+      input.items,
+      3,
+      async (item): Promise<BatchOfferResultItem> => {
+        try {
+          const createFn = submitOfferFn || OfferCreationService.submitOffer;
+          const offer = await createFn(offerorUserId, item);
+          return {
+            listingId: item.listingId,
+            status: "SUCCESS",
+            offerId: offer.id,
+            offer,
+          };
+        } catch (err: unknown) {
+          const rawMessage = err instanceof Error ? err.message : "Teklif iletilemedi";
+          let code = "SUBMISSION_FAILED";
+          let message: string;
 
-    for (const item of input.items) {
-      try {
-        const createFn = submitOfferFn || OfferCreationService.submitOffer;
-        const offer = await createFn(offerorUserId, item);
-        results.push({
-          listingId: item.listingId,
-          status: "SUCCESS",
-          offerId: offer.id,
-          offer,
-        });
-      } catch (err: unknown) {
-        const rawMessage = err instanceof Error ? err.message : "Teklif iletilemedi";
-        let code = "SUBMISSION_FAILED";
-        let message: string;
+          if (rawMessage.includes("own listing") || rawMessage.includes("Kendi ilanınıza")) {
+            code = "SELF_BIDDING_PROHIBITED";
+            message = isEn
+              ? "You cannot submit an offer on your own listing."
+              : "Kendi ilanınıza teklif veremezsiniz.";
+          } else if (
+            rawMessage.includes("active for offers") ||
+            rawMessage.includes("teklif kabul etmiyor")
+          ) {
+            code = "LISTING_NOT_ACTIVE";
+            message = isEn
+              ? "Listing is not currently active for offers."
+              : "İlan şu anda teklif kabul etmiyor veya süresi dolmuş.";
+          } else if (
+            rawMessage.includes("Cannot submit an offer to this listing") ||
+            rawMessage.includes("engelleme kısıtı")
+          ) {
+            code = "USER_BLOCKED";
+            message = isEn
+              ? "Cannot submit an offer to this listing."
+              : "Bu ilana teklif verilemez (engelleme kısıtı).";
+          } else if (
+            rawMessage.includes("already have an active pending offer") ||
+            rawMessage.includes("bekleyen bir teklifiniz")
+          ) {
+            code = "ALREADY_OFFERED";
+            message = isEn
+              ? "You already have an active pending offer on this listing."
+              : "Bu ilana yönelik zaten aktif ve bekleyen bir teklifiniz bulunmaktadır.";
+          } else if (
+            rawMessage.includes("withdrawing during this activation cycle") ||
+            rawMessage.includes("teklifinizi geri çektiğiniz")
+          ) {
+            code = "WITHDRAWN_IN_CYCLE";
+            message = isEn
+              ? "You cannot submit another offer after withdrawing during this activation cycle."
+              : "Bu yayın döngüsünde teklifinizi geri çektiğiniz için yeni bir teklif iletemezsiniz.";
+          } else if (
+            rawMessage.includes("doğrulamanız gerekmektedir") ||
+            rawMessage.includes("verify your email")
+          ) {
+            code = "EMAIL_VERIFICATION_REQUIRED";
+            message = isEn
+              ? "You must verify your email address before submitting an offer."
+              : "Teklif verebilmek için önce e-posta adresinizi doğrulamanız gerekmektedir.";
+          } else {
+            message = rawMessage;
+          }
 
-        if (rawMessage.includes("own listing") || rawMessage.includes("Kendi ilanınıza")) {
-          code = "SELF_BIDDING_PROHIBITED";
-          message = isEn
-            ? "You cannot submit an offer on your own listing."
-            : "Kendi ilanınıza teklif veremezsiniz.";
-        } else if (
-          rawMessage.includes("active for offers") ||
-          rawMessage.includes("teklif kabul etmiyor")
-        ) {
-          code = "LISTING_NOT_ACTIVE";
-          message = isEn
-            ? "Listing is not currently active for offers."
-            : "İlan şu anda teklif kabul etmiyor veya süresi dolmuş.";
-        } else if (
-          rawMessage.includes("Cannot submit an offer to this listing") ||
-          rawMessage.includes("engelleme kısıtı")
-        ) {
-          code = "USER_BLOCKED";
-          message = isEn
-            ? "Cannot submit an offer to this listing."
-            : "Bu ilana teklif verilemez (engelleme kısıtı).";
-        } else if (
-          rawMessage.includes("already have an active pending offer") ||
-          rawMessage.includes("bekleyen bir teklifiniz")
-        ) {
-          code = "ALREADY_OFFERED";
-          message = isEn
-            ? "You already have an active pending offer on this listing."
-            : "Bu ilana yönelik zaten aktif ve bekleyen bir teklifiniz bulunmaktadır.";
-        } else if (
-          rawMessage.includes("withdrawing during this activation cycle") ||
-          rawMessage.includes("teklifinizi geri çektiğiniz")
-        ) {
-          code = "WITHDRAWN_IN_CYCLE";
-          message = isEn
-            ? "You cannot submit another offer after withdrawing during this activation cycle."
-            : "Bu yayın döngüsünde teklifinizi geri çektiğiniz için yeni bir teklif iletemezsiniz.";
-        } else if (
-          rawMessage.includes("doğrulamanız gerekmektedir") ||
-          rawMessage.includes("verify your email")
-        ) {
-          code = "EMAIL_VERIFICATION_REQUIRED";
-          message = isEn
-            ? "You must verify your email address before submitting an offer."
-            : "Teklif verebilmek için önce e-posta adresinizi doğrulamanız gerekmektedir.";
-        } else {
-          message = rawMessage;
+          return {
+            listingId: item.listingId,
+            status: "FAILED",
+            code,
+            message,
+          };
         }
-
-        results.push({
-          listingId: item.listingId,
-          status: "FAILED",
-          code,
-          message,
-        });
       }
-    }
+    );
 
     const succeededCount = results.filter((r) => r.status === "SUCCESS").length;
     const failedCount = results.filter((r) => r.status === "FAILED").length;

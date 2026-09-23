@@ -14,10 +14,18 @@ export interface DashboardTabsProps {
     notifications?: number;
     savedListings?: number;
     activeEngagements?: number;
+    categories?: number;
   };
+  orientation?: "horizontal" | "vertical";
+  className?: string;
 }
 
-export function DashboardTabs({ locale, counts }: DashboardTabsProps) {
+export function DashboardTabs({
+  locale,
+  counts,
+  orientation = "horizontal",
+  className = "",
+}: DashboardTabsProps) {
   const pathname = usePathname();
   const isTr = locale === "tr";
   const [badgeCounts, setBadgeCounts] = useState(counts || {});
@@ -117,13 +125,63 @@ export function DashboardTabs({ locale, counts }: DashboardTabsProps) {
         "/tr/dashboard/categories",
       ],
       icon: FolderTree,
+      count: badgeCounts.categories,
     },
   ];
+
+  if (orientation === "vertical") {
+    return (
+      <nav
+        aria-label={isTr ? "Panel Sekmeleri" : "Dashboard Navigation"}
+        className={`flex lg:flex-col items-center lg:items-stretch gap-1 p-1.5 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-xl shadow-xs overflow-x-auto lg:overflow-visible scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] ${className}`}
+      >
+        {tabs.map((tab) => {
+          const isActive = tab.matchPrefixes.some((prefix) => pathname.startsWith(prefix));
+          const Icon = tab.icon;
+
+          return (
+            <Link
+              key={tab.id}
+              href={tab.href}
+              className={`flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-medium shrink-0 lg:shrink transition-all group ${
+                isActive
+                  ? "bg-blue-600/15 text-blue-400 border border-blue-500/30 shadow-xs font-semibold"
+                  : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] border border-transparent"
+              }`}
+            >
+              <div className="flex items-center gap-2.5 min-w-0">
+                <Icon
+                  className={`h-4 w-4 shrink-0 transition-colors ${
+                    isActive
+                      ? "text-blue-400"
+                      : "text-[var(--color-text-tertiary)] group-hover:text-[var(--color-text-primary)]"
+                  }`}
+                  aria-hidden="true"
+                />
+                <span className="truncate">{tab.label}</span>
+              </div>
+              {typeof tab.count === "number" && (
+                <span
+                  className={`ml-1.5 px-2 py-0.5 rounded-md text-[10px] font-mono shrink-0 transition-colors ${
+                    isActive
+                      ? "bg-blue-500/25 text-blue-300 font-bold border border-blue-500/30"
+                      : "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)] group-hover:text-[var(--color-text-secondary)]"
+                  }`}
+                >
+                  {tab.count}
+                </span>
+              )}
+            </Link>
+          );
+        })}
+      </nav>
+    );
+  }
 
   return (
     <nav
       aria-label={isTr ? "Panel Sekmeleri" : "Dashboard Navigation"}
-      className="flex items-center gap-1.5 p-1.5 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-xl shadow-sm overflow-x-auto scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none]"
+      className={`flex items-center gap-1.5 p-1.5 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-xl shadow-sm overflow-x-auto scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] ${className}`}
     >
       {tabs.map((tab) => {
         const isActive = tab.matchPrefixes.some((prefix) => pathname.startsWith(prefix));

@@ -19,8 +19,37 @@ import { DEFAULT_USER } from "../auth/demo-user";
 import { notificationPubSub } from "../notifications/pubsub";
 import { NotificationService } from "../notifications/service";
 
+interface RawPackageRecord {
+  id: string;
+  engagementId: string;
+  status?: string | null;
+  selectedContracts?: unknown;
+  version?: number | null;
+  tamperResetCount?: number | null;
+  signaturesInvalidated?: boolean | null;
+  clientSignerUserId?: string | null;
+  clientSignerName?: string | null;
+  clientSignedAt?: string | Date | null;
+  clientIpHash?: string | null;
+  clientSignatureR2Key?: string | null;
+  clientSignatureDataUrl?: string | null;
+  freelancerSignerUserId?: string | null;
+  freelancerSignerName?: string | null;
+  freelancerSignedAt?: string | Date | null;
+  freelancerIpHash?: string | null;
+  freelancerSignatureR2Key?: string | null;
+  freelancerSignatureDataUrl?: string | null;
+  compiledMarkdown?: string | null;
+  compiledHtml?: string | null;
+  sha256Seal?: string | null;
+  signedAt?: string | Date | null;
+  ephemeralCleanedAt?: string | Date | null;
+  createdAt?: string | Date | null;
+  updatedAt?: string | Date | null;
+}
+
 // In-memory fallback for local environments or test runs without live DB
-const inMemoryPackages = new Map<string, any>();
+const inMemoryPackages = new Map<string, RawPackageRecord>();
 
 export class ContractSigningService {
   /**
@@ -78,18 +107,18 @@ export class ContractSigningService {
     const defaultSelectedKeys = recommendations.recommendedContracts.map((c) => c.id);
 
     // 3. Query existing package from DB or in-memory
-    let pkgRow: any = null;
+    let pkgRow: RawPackageRecord | null = null;
     try {
       const db = getDb();
       const rows = await db
         .select()
         .from(schema.engagementContractPackages)
         .where(eq(schema.engagementContractPackages.engagementId, engagementId));
-      if (rows.length > 0) {
-        pkgRow = rows[0];
+      if (rows.length > 0 && rows[0]) {
+        pkgRow = rows[0] as RawPackageRecord;
       }
     } catch {
-      pkgRow = inMemoryPackages.get(engagementId) || null;
+      pkgRow = (inMemoryPackages.get(engagementId) as RawPackageRecord) || null;
     }
 
     if (!pkgRow) {
@@ -180,7 +209,7 @@ export class ContractSigningService {
     const r2KeysToPurge: string[] = [];
 
     const nextVersion = (pkg.packageDetails.version || 1) + 1;
-    const updatePayload: any = {
+    const updatePayload: Record<string, unknown> = {
       selectedContracts: validatedContracts,
       version: nextVersion,
       updatedAt: new Date(),
@@ -217,7 +246,7 @@ export class ContractSigningService {
       await deleteEphemeralSignatures(r2KeysToPurge);
     }
 
-    let updatedRow: any = null;
+    let updatedRow: RawPackageRecord;
     try {
       const db = getDb();
       const [row] = await db
@@ -225,9 +254,10 @@ export class ContractSigningService {
         .set(updatePayload)
         .where(eq(schema.engagementContractPackages.engagementId, engagementId))
         .returning();
-      updatedRow = row;
+      if (!row) throw new Error("Update returned no rows");
+      updatedRow = row as RawPackageRecord;
     } catch {
-      const existing = inMemoryPackages.get(engagementId) || pkg.packageDetails;
+      const existing = (inMemoryPackages.get(engagementId) || pkg.packageDetails) as unknown as RawPackageRecord;
       Object.assign(existing, updatePayload);
       inMemoryPackages.set(engagementId, existing);
       updatedRow = existing;
@@ -254,7 +284,7 @@ export class ContractSigningService {
         type: "CONTRACT_SELECTION_UPDATED",
         engagementId,
         packageId: updatedRow.id,
-        status: updatedRow.status,
+        status: (updatedRow.status as "PENDING_SIGNATURES" | "PARTIALLY_SIGNED" | "FULLY_SIGNED") || "PENDING_SIGNATURES",
         version: nextVersion,
         selectedContracts: validatedContracts,
         timestamp: new Date().toISOString(),
@@ -319,7 +349,7 @@ export class ContractSigningService {
     const selectedContracts = input.selectedContracts || packageDetails.selectedContracts || ["CORE_SERVICE"];
 
     // Update in DB or memory
-    const updatePayload: any = {
+    const updatePayload: Record<string, unknown> = {
       selectedContracts,
       version: nextVersion,
       updatedAt: now,
@@ -341,7 +371,7 @@ export class ContractSigningService {
       updatePayload.freelancerSignatureDataUrl = input.signatureDataUrl;
     }
 
-    let updatedPkg: any = null;
+    let updatedPkg: RawPackageRecord;
     try {
       const db = getDb();
       const [row] = await db
@@ -349,9 +379,10 @@ export class ContractSigningService {
         .set(updatePayload)
         .where(eq(schema.engagementContractPackages.engagementId, input.engagementId))
         .returning();
-      updatedPkg = row;
+      if (!row) throw new Error("Update returned no rows");
+      updatedPkg = row as RawPackageRecord;
     } catch {
-      const existing = inMemoryPackages.get(input.engagementId) || packageDetails;
+      const existing = (inMemoryPackages.get(input.engagementId) || packageDetails) as unknown as RawPackageRecord;
       Object.assign(existing, updatePayload);
       inMemoryPackages.set(input.engagementId, existing);
       updatedPkg = existing;
@@ -402,15 +433,15 @@ export class ContractSigningService {
         selectedContracts,
         clientSignature: {
           signerName: clientName,
-          signedAt: new Date(updatedPkg.clientSignedAt).toISOString(),
-          ipHash: updatedPkg.clientIpHash,
-          signatureDataUrl: updatedPkg.clientSignatureDataUrl,
+          signedAt: updatedPkg.clientSignedAt ? new Date(updatedPkg.clientSignedAt).toISOString() : now.toISOString(),
+          ipHash: updatedPkg.clientIpHash || "",
+          signatureDataUrl: updatedPkg.clientSignatureDataUrl || undefined,
         },
         contractorSignature: {
           signerName: contractorName,
-          signedAt: new Date(updatedPkg.freelancerSignedAt).toISOString(),
-          ipHash: updatedPkg.freelancerIpHash,
-          signatureDataUrl: updatedPkg.freelancerSignatureDataUrl,
+          signedAt: updatedPkg.freelancerSignedAt ? new Date(updatedPkg.freelancerSignedAt).toISOString() : now.toISOString(),
+          ipHash: updatedPkg.freelancerIpHash || "",
+          signatureDataUrl: updatedPkg.freelancerSignatureDataUrl || undefined,
         },
       });
 
@@ -554,7 +585,7 @@ export class ContractSigningService {
   /**
    * Maps a database row or mock object to strongly typed ContractPackageDetails.
    */
-  private static mapRowToDetails(row: any): ContractPackageDetails {
+  private static mapRowToDetails(row: RawPackageRecord): ContractPackageDetails {
     let selectedContracts = ["CORE_SERVICE"];
     if (Array.isArray(row.selectedContracts)) {
       selectedContracts = row.selectedContracts;
@@ -567,9 +598,9 @@ export class ContractSigningService {
     }
 
     return {
-      id: row.id,
-      engagementId: row.engagementId,
-      status: row.status as PackageSigningStatus,
+      id: row.id || "pkg-default",
+      engagementId: row.engagementId || "",
+      status: (row.status as PackageSigningStatus) || "PENDING_SIGNATURES",
       selectedContracts,
       version: Number(row.version ?? 1),
       tamperResetCount: Number(row.tamperResetCount ?? 0),
@@ -582,8 +613,8 @@ export class ContractSigningService {
             signedAt: new Date(row.clientSignedAt).toISOString(),
             ipHash: row.clientIpHash || "",
             signatureType: "DRAWN",
-            signatureR2Key: row.clientSignatureR2Key,
-            signatureDataUrl: row.clientSignatureDataUrl,
+            signatureR2Key: row.clientSignatureR2Key || undefined,
+            signatureDataUrl: row.clientSignatureDataUrl || undefined,
             legalAccepted: true,
           }
         : null,
@@ -595,18 +626,18 @@ export class ContractSigningService {
             signedAt: new Date(row.freelancerSignedAt).toISOString(),
             ipHash: row.freelancerIpHash || "",
             signatureType: "DRAWN",
-            signatureR2Key: row.freelancerSignatureR2Key,
-            signatureDataUrl: row.freelancerSignatureDataUrl,
+            signatureR2Key: row.freelancerSignatureR2Key || undefined,
+            signatureDataUrl: row.freelancerSignatureDataUrl || undefined,
             legalAccepted: true,
           }
         : null,
-      compiledMarkdown: row.compiledMarkdown,
-      compiledHtml: row.compiledHtml,
-      sha256Seal: row.sha256Seal,
+      compiledMarkdown: row.compiledMarkdown || null,
+      compiledHtml: row.compiledHtml || null,
+      sha256Seal: row.sha256Seal || null,
       signedAt: row.signedAt ? new Date(row.signedAt).toISOString() : null,
       ephemeralCleanedAt: row.ephemeralCleanedAt ? new Date(row.ephemeralCleanedAt).toISOString() : null,
-      createdAt: new Date(row.createdAt).toISOString(),
-      updatedAt: new Date(row.updatedAt).toISOString(),
+      createdAt: row.createdAt ? new Date(row.createdAt).toISOString() : new Date().toISOString(),
+      updatedAt: row.updatedAt ? new Date(row.updatedAt).toISOString() : new Date().toISOString(),
     };
   }
 }

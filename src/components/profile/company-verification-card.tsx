@@ -382,7 +382,7 @@ export function CompanyVerificationCard({
               <TextInput
                 value={taxOffice}
                 onChange={(e) => setTaxOffice(e.target.value)}
-                placeholder={isTr ? "Örn: Kadıköy, Beşiktaş, Zincirlikuyu..." : "e.g. Central"}
+                placeholder={isTr ? "Örn: Boğaziçi, Marmara..." : "e.g. Central"}
                 required
               />
             </div>

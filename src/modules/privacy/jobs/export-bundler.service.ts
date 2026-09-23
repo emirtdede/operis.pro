@@ -29,8 +29,8 @@ export async function enqueueExportJob(userId: string): Promise<{
     )
     .limit(1);
 
-  if (activeJobs.length > 0) {
-    const existing = activeJobs[0]!;
+  const existing = activeJobs[0];
+  if (existing) {
     return {
       jobId: existing.id,
       status: existing.status as "PENDING" | "PROCESSING",
@@ -91,10 +91,11 @@ export async function enqueueExportJob(userId: string): Promise<{
         )
         .limit(1);
 
-      if (currentActive.length > 0) {
+      const activeJob = currentActive[0];
+      if (activeJob) {
         return {
-          jobId: currentActive[0]!.id,
-          status: currentActive[0]!.status as "PENDING" | "PROCESSING",
+          jobId: activeJob.id,
+          status: activeJob.status as "PENDING" | "PROCESSING",
           pollAfterSeconds: 3,
           alreadyRunning: true,
         };
@@ -164,9 +165,13 @@ export async function cancelExportJob(
     if (jobId) {
       whereConds.push(eq(schema.exportJobs.id, jobId));
     } else {
-      whereConds.push(
-        or(eq(schema.exportJobs.status, "PENDING"), eq(schema.exportJobs.status, "PROCESSING"))!
+      const statusCondition = or(
+        eq(schema.exportJobs.status, "PENDING"),
+        eq(schema.exportJobs.status, "PROCESSING")
       );
+      if (statusCondition) {
+        whereConds.push(statusCondition);
+      }
     }
 
     const lockedJobs = await tx
@@ -249,8 +254,9 @@ export async function cleanupExpiredJobs(referenceTime: Date = new Date()): Prom
       )
       .returning({ id: schema.exportJobs.id });
 
-    for (const job of expiredJobs) {
-      await tx.delete(schema.exportJobParts).where(eq(schema.exportJobParts.jobId, job.id));
+    if (expiredJobs.length > 0) {
+      const jobIds = expiredJobs.map((job) => job.id);
+      await tx.delete(schema.exportJobParts).where(inArray(schema.exportJobParts.jobId, jobIds));
     }
     return expiredJobs.length;
   });

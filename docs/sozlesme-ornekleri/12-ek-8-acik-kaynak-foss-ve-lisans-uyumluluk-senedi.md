@@ -1,8 +1,8 @@
 # EK-7: AÇIK KAYNAK LİSANS SAFLIĞI VE COPYLEFT BULAŞMAMA ŞARTNAMESİ
-**Şartname No:** `OPR-FOSS-ENG2026B-MU985J9G`  
+**Şartname No:** `OPR-FOSS-ENG2026B-MUALISFV`  
 **Sözleşme / İş Referansı:** `ENG-2026-B2B-FINANCE-01`  
 **Yasal Dayanak:** 5846 s. FSEK m. 52, 6098 s. TBK m. 475 & Uluslararası FOSS / OSI Standartları  
-**Kriptografik Bütünlük Özeti (SHA-256):** `4117c4cc166ae565f679c5b0133beeeb1f836ad87e5319cfc57b086a8cf4fa51`  
+**Kriptografik Bütünlük Özeti (SHA-256):** `6f21c0919d8d83ddd10e1f25fe6a6b85e303a35d4c0f8eab342d912e6f0bf011`  
 
 ---
 

@@ -245,8 +245,8 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
       return null;
     }
 
-    const dbUser = userRows[0]!;
-    if (dbUser.status !== "ACTIVE") return null;
+    const dbUser = userRows[0];
+    if (!dbUser || dbUser.status !== "ACTIVE") return null;
 
     // Strictly enforce authVersion matching current database authVersion (R01)
     const expectedAuthVersion = dbUser.authVersion ?? 1;

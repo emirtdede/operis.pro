@@ -19,7 +19,7 @@ beforeAll(() => {
   process.env.PII_HMAC_KEY = "1a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f809";
   process.env.LEGAL_ENTITY_NAME = "Operis Teknoloji Anonim Sirketi";
   process.env.LEGAL_ENTITY_TYPE = "Anonim Sirket";
-  process.env.LEGAL_ADDRESS = "Buyukdere Cad. No: 100 Sisli, Istanbul";
+  process.env.LEGAL_ADDRESS = "Buyukdere Cad. No: 199 Istanbul, Turkey";
   process.env.LEGAL_SUPPORT_EMAIL = "destek@operis.pro";
   process.env.LEGAL_PRIVACY_EMAIL = "kvkk@operis.pro";
   process.env.LEGAL_PHONE = "+90 212 555 0100";
@@ -81,11 +81,12 @@ describe("Cryptographic Rigor & Security Matrix (750 Test Scenarios)", () => {
   // 2. AES-256-GCM Tamper-Resistance & AuthTag Verification (150 Scenarios)
   // ==========================================================================
   describe("AES-256-GCM Tamper Resistance & Auth Failure Matrix (150 Scenarios)", () => {
+    const TAMPER_MODES = ["TAMPER_IV", "TAMPER_AUTHTAG", "TAMPER_CIPHERTEXT"] as const;
     const tamperCases = Array.from({ length: 150 }, (_, i) => {
-      const mode = i % 3; // 0: tamper IV, 1: tamper AuthTag, 2: tamper Ciphertext
+      const mode = TAMPER_MODES[i % 3] ?? "TAMPER_IV";
       return {
         id: i,
-        mode: mode === 0 ? "TAMPER_IV" : mode === 1 ? "TAMPER_AUTHTAG" : "TAMPER_CIPHERTEXT",
+        mode,
         original: `Sensitive User Record #${i} with PII data`,
       };
     });

@@ -1,8 +1,8 @@
 # EK-6: TEMİZ KOD, ARKA KAPI İÇERMEME VE SİBER GÜVENLİK TAAHHÜTNAMESİ
-**Taahhütname No:** `OPR-SEC-ENG2026B-MU985J9F`  
+**Taahhütname No:** `OPR-SEC-ENG2026B-MUALISFL`  
 **Sözleşme / İş Referansı:** `ENG-2026-B2B-FINANCE-01`  
 **Yasal Dayanak:** 5237 s. TCK m. 243-245, 6098 s. TBK m. 474-477, ISO 27001 & SOC 2 Standartları  
-**Kriptografik Bütünlük Özeti (SHA-256):** `1b31b695391e3bf1fbe48150fc561b9054bdc4b7f3c14ffa9c48e9e19b853151`  
+**Kriptografik Bütünlük Özeti (SHA-256):** `ee083e72b3471dd2e367bdd0aac2e4e9c73798af41872f8c30847d0a19328823`  
 
 ---
 

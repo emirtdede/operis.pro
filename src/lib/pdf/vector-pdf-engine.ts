@@ -20,8 +20,11 @@ export class VectorPdfEngine {
     cacheKey?: string,
     options?: VectorPdfOptions
   ): Promise<Buffer> {
-    if (cacheKey && this.cachedPdfMap.has(cacheKey)) {
-      return this.cachedPdfMap.get(cacheKey)!;
+    if (cacheKey) {
+      const cached = this.cachedPdfMap.get(cacheKey);
+      if (cached) {
+        return cached;
+      }
     }
 
     // Dynamic import to support environments gracefully

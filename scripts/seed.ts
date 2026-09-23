@@ -18,6 +18,7 @@ import { SEED_OFFERS } from "@/db/seeds/offers";
 import { SEED_ENGAGEMENTS } from "@/db/seeds/engagements";
 import { getEnv } from "@/src/config/env";
 import { encryptEnvelopeV2, hashPhoneBlindIndex, hashPassword } from "@/src/lib/crypto";
+import { runSequentially } from "@/src/lib/async/concurrency";
 
 const { Pool } = pg;
 
@@ -41,7 +42,7 @@ export async function runSeed(customConnectionString?: string) {
     console.info(`1. Seeding ${SEED_SECTORS.length} official industry sectors...`);
     const sectorMap = new Map<string, string>(); // key -> id
 
-    for (const sec of SEED_SECTORS) {
+    await runSequentially(SEED_SECTORS, async (sec) => {
       const existing = await db
         .select()
         .from(schema.categories)
@@ -49,7 +50,8 @@ export async function runSeed(customConnectionString?: string) {
         .limit(1);
 
       let sectorId: string;
-      if (existing.length === 0) {
+      const existingSector = existing[0];
+      if (!existingSector) {
         const [inserted] = await db
           .insert(schema.categories)
           .values({
@@ -59,9 +61,12 @@ export async function runSeed(customConnectionString?: string) {
             isActive: true,
           })
           .returning({ id: schema.categories.id });
-        sectorId = inserted!.id;
+        if (!inserted) {
+          throw new Error(`Failed to insert sector category: ${sec.key}`);
+        }
+        sectorId = inserted.id;
       } else {
-        sectorId = existing[0]!.id;
+        sectorId = existingSector.id;
         await db
           .update(schema.categories)
           .set({ sortOrder: sec.sortOrder, parentId: null, isActive: true })
@@ -70,7 +75,7 @@ export async function runSeed(customConnectionString?: string) {
 
       sectorMap.set(sec.key, sectorId);
 
-      for (const locale of ["tr", "en"] as const) {
+      await runSequentially(["tr", "en"] as const, async (locale) => {
         const trans = sec.translations[locale];
         const existingTrans = await db
           .select()
@@ -101,14 +106,14 @@ export async function runSeed(customConnectionString?: string) {
               )
             );
         }
-      }
-    }
+      });
+    });
 
     // 2. Categories & Translations
     console.info(`2. Seeding ${SEED_CATEGORIES.length} official categories under sectors...`);
     const categoryMap = new Map<string, string>(); // key -> id
 
-    for (const cat of SEED_CATEGORIES) {
+    await runSequentially(SEED_CATEGORIES, async (cat) => {
       const parentId = sectorMap.get(cat.sectorKey) || null;
       const existing = await db
         .select()
@@ -117,8 +122,8 @@ export async function runSeed(customConnectionString?: string) {
         .limit(1);
 
       let categoryId: string;
-
-      if (existing.length === 0) {
+      const existingCategory = existing[0];
+      if (!existingCategory) {
         const [inserted] = await db
           .insert(schema.categories)
           .values({
@@ -128,9 +133,12 @@ export async function runSeed(customConnectionString?: string) {
             isActive: true,
           })
           .returning({ id: schema.categories.id });
-        categoryId = inserted!.id;
+        if (!inserted) {
+          throw new Error(`Failed to insert subcategory: ${cat.key}`);
+        }
+        categoryId = inserted.id;
       } else {
-        categoryId = existing[0]!.id;
+        categoryId = existingCategory.id;
         await db
           .update(schema.categories)
           .set({ sortOrder: cat.sortOrder, parentId, isActive: true })
@@ -139,7 +147,7 @@ export async function runSeed(customConnectionString?: string) {
 
       categoryMap.set(cat.key, categoryId);
 
-      for (const locale of ["tr", "en"] as const) {
+      await runSequentially(["tr", "en"] as const, async (locale) => {
         const trans = cat.translations[locale];
         const existingTrans = await db
           .select()
@@ -170,8 +178,8 @@ export async function runSeed(customConnectionString?: string) {
               )
             );
         }
-      }
-    }
+      });
+    });
     console.info("Categories and translations seeded successfully!");
 
     const withDemo = process.argv.includes("--demo") || process.env.SEED_DEMO_DATA === "true";
@@ -184,7 +192,7 @@ export async function runSeed(customConnectionString?: string) {
 
     // 2. Users, Profiles, and Private Identities
     console.info(`2. Seeding ${SEED_USERS.length} demo users & profiles...`);
-    for (const u of SEED_USERS) {
+    await runSequentially(SEED_USERS, async (u) => {
       const passwordHash = await hashPassword(u.passwordPlain);
 
       const existingUser = await db
@@ -308,7 +316,7 @@ export async function runSeed(customConnectionString?: string) {
           })
           .where(eq(schema.userPrivateIdentity.userId, u.id));
       }
-    }
+    });
     console.info("Users, profiles, and private identities seeded successfully!");
 
     // 3. Listings
@@ -316,14 +324,17 @@ export async function runSeed(customConnectionString?: string) {
     const now = new Date();
     const activeUntil = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
-    for (const l of SEED_LISTINGS) {
-      const categoryId = categoryMap.get(l.categoryKey) || Array.from(categoryMap.values())[0]!;
-      const normalizedBudgetMode =
-        l.budgetMode === "FIXED_RANGE"
-          ? "RANGE"
-          : l.budgetMode === "HOURLY_RATE"
-            ? "EXACT"
-            : l.budgetMode;
+    await runSequentially(SEED_LISTINGS, async (l) => {
+      const firstCategory = Array.from(categoryMap.values())[0];
+      const categoryId = categoryMap.get(l.categoryKey) ?? firstCategory;
+      if (!categoryId) {
+        throw new Error(`No category found for listing: ${l.id}`);
+      }
+      const BUDGET_MODE_MAP: Record<string, "RANGE" | "EXACT"> = {
+        FIXED_RANGE: "RANGE",
+        HOURLY_RATE: "EXACT",
+      };
+      const normalizedBudgetMode = BUDGET_MODE_MAP[l.budgetMode] ?? l.budgetMode;
 
       const existingListing = await db
         .select()
@@ -389,12 +400,12 @@ export async function runSeed(customConnectionString?: string) {
           })
           .where(eq(schema.listings.id, l.id));
       }
-    }
+    });
     console.info("Listings seeded successfully!");
 
     // 4. Offers
     console.info(`4. Seeding ${SEED_OFFERS.length} demo offers...`);
-    for (const o of SEED_OFFERS) {
+    await runSequentially(SEED_OFFERS, async (o) => {
       const existingOffer = await db
         .select()
         .from(schema.offers)
@@ -429,12 +440,12 @@ export async function runSeed(customConnectionString?: string) {
           })
           .where(eq(schema.offers.id, o.id));
       }
-    }
+    });
     console.info("Offers seeded successfully!");
 
     // 5. Engagements & Completion Marks
     console.info(`5. Seeding ${SEED_ENGAGEMENTS.length} completed demo engagements...`);
-    for (const eng of SEED_ENGAGEMENTS) {
+    await runSequentially(SEED_ENGAGEMENTS, async (eng) => {
       const existingEng = await db
         .select()
         .from(schema.engagements)
@@ -457,7 +468,7 @@ export async function runSeed(customConnectionString?: string) {
       }
 
       // Completion marks for both parties
-      for (const uid of [eng.ownerUserId, eng.freelancerUserId]) {
+      await runSequentially([eng.ownerUserId, eng.freelancerUserId], async (uid) => {
         const existingMark = await db
           .select()
           .from(schema.engagementCompletionMarks)
@@ -476,7 +487,7 @@ export async function runSeed(customConnectionString?: string) {
             status: "MARKED_COMPLETE",
           });
         }
-      }
+      });
 
       // Bilateral endorsements
       const existingEndorsement1 = await db
@@ -521,7 +532,7 @@ export async function runSeed(customConnectionString?: string) {
           projectTitleSnapshot: eng.listingTitleSnapshot,
         });
       }
-    }
+    });
     console.info("Engagements, completion marks, and endorsements seeded successfully!");
 
     console.info("Database seeding completed successfully! All entities are live in Supabase.");

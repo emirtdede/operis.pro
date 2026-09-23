@@ -105,21 +105,22 @@ export async function* readProfileLinksData(
   const { txDb, userId, options, signal } = ctx;
 
   yield `  "links": [\n`;
-  let lastLinkSortOrder: number | null = null;
-  let lastLinkId: string | null = null;
   let firstLink = true;
   let linkPageCount = 0;
 
-  while (true) {
+  async function* streamLinksPages(
+    lastSortOrder: number | null,
+    lastId: string | null
+  ): AsyncGenerator<string, void, unknown> {
     if (signal?.aborted) {
       throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
     }
 
     const whereClause: SQL | undefined =
-      lastLinkSortOrder !== null && lastLinkId !== null
+      lastSortOrder !== null && lastId !== null
         ? and(
             eq(schema.profileLinks.userId, userId),
-            sql`(${schema.profileLinks.sortOrder}, ${schema.profileLinks.id}) > (${lastLinkSortOrder}::integer, ${lastLinkId}::uuid)`
+            sql`(${schema.profileLinks.sortOrder}, ${schema.profileLinks.id}) > (${lastSortOrder}::integer, ${lastId}::uuid)`
           )
         : eq(schema.profileLinks.userId, userId);
 
@@ -136,7 +137,8 @@ export async function* readProfileLinksData(
       .orderBy(asc(schema.profileLinks.sortOrder), asc(schema.profileLinks.id))
       .limit(PAGE_SIZE);
 
-    if (linkPage.length === 0) break;
+    if (linkPage.length === 0) return;
+
     if (options?.onProgress) {
       await options.onProgress({
         section: "links",
@@ -157,10 +159,15 @@ export async function* readProfileLinksData(
       firstLink = false;
     }
 
-    const last = linkPage[linkPage.length - 1]!;
-    lastLinkSortOrder = last.sortOrder;
-    lastLinkId = last.id;
+    if (linkPage.length < PAGE_SIZE) return;
+
+    const last = linkPage[linkPage.length - 1];
+    if (last) {
+      yield* streamLinksPages(last.sortOrder, last.id);
+    }
   }
+
+  yield* streamLinksPages(null, null);
   yield `\n  ],\n`;
 
   if (options?.onSection) await options.onSection("links");

@@ -1,7 +1,7 @@
 # GIZLILIK VE KVKK AYDINLATMA METNI
 > **Alt Başlık:** 6698 Sayılı KVKK Madde 10 ve GDPR Kapsamında Bilgilendirme  
 > **Sürüm:** v1.0 | **Son Güncelleme:** 07.09.2026 | **Rozet:** AES-256 Şifreli • KVKK Uyumlu  
-> **Kriptografik İçerik Özeti (SHA-256):** `a1b2c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0`  
+> **Kriptografik İçerik Özeti (SHA-256):** `c9316aae2e98ef68eb0fd33ee51139f0ee8d6e569747c29752bf0a6cddc9e68f`  
 
 ---
 

@@ -380,11 +380,13 @@ export async function writeEncryptedExportParts(
   let queueHeadOffset = 0;
 
   const flushQueue = async (forceFinalPart = false) => {
-    while (queueTotalBytes >= CHUNK_SIZE_BYTES) {
+    const drainChunks = async (): Promise<void> => {
+      if (queueTotalBytes < CHUNK_SIZE_BYTES) return;
       const outBuf = Buffer.allocUnsafe(CHUNK_SIZE_BYTES);
       let copied = 0;
-      while (copied < CHUNK_SIZE_BYTES) {
-        const head = chunkQueue[0]!;
+      while (copied < CHUNK_SIZE_BYTES && chunkQueue.length > 0) {
+        const head = chunkQueue[0];
+        if (!head) break;
         const available = head.length - queueHeadOffset;
         const need = CHUNK_SIZE_BYTES - copied;
         const toCopy = Math.min(available, need);
@@ -398,13 +400,17 @@ export async function writeEncryptedExportParts(
       }
       queueTotalBytes -= CHUNK_SIZE_BYTES;
       await persistChunk(outBuf);
-    }
+      return drainChunks();
+    };
+
+    await drainChunks();
 
     if (forceFinalPart && (queueTotalBytes > 0 || partNo === 0)) {
       const finalBuf = Buffer.allocUnsafe(queueTotalBytes);
       let copied = 0;
       while (queueTotalBytes > 0 && chunkQueue.length > 0) {
-        const head = chunkQueue[0]!;
+        const head = chunkQueue[0];
+        if (!head) break;
         const available = head.length - queueHeadOffset;
         const toCopy = Math.min(available, queueTotalBytes);
         head.copy(finalBuf, copied, queueHeadOffset, queueHeadOffset + toCopy);
@@ -424,7 +430,8 @@ export async function writeEncryptedExportParts(
     typeof val === "object" && val !== null && Symbol.asyncIterator in val;
 
   if (isAsyncIterable(payload)) {
-    for await (const chunk of payload) {
+    const iterator = payload[Symbol.asyncIterator]();
+    const consumeAsyncIterable = async (): Promise<void> => {
       if (signal?.aborted) {
         throw (
           signal.reason ||
@@ -432,16 +439,24 @@ export async function writeEncryptedExportParts(
         );
       }
 
+      const item = await iterator.next();
+      if (item.done) return;
+
+      const chunk = item.value;
       const chunkBuf = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk, "utf8");
-      if (chunkBuf.length === 0) continue;
+      if (chunkBuf.length > 0) {
+        chunkQueue.push(chunkBuf);
+        queueTotalBytes += chunkBuf.length;
 
-      chunkQueue.push(chunkBuf);
-      queueTotalBytes += chunkBuf.length;
-
-      if (queueTotalBytes >= CHUNK_SIZE_BYTES) {
-        await flushQueue(false);
+        if (queueTotalBytes >= CHUNK_SIZE_BYTES) {
+          await flushQueue(false);
+        }
       }
-    }
+
+      return consumeAsyncIterable();
+    };
+
+    await consumeAsyncIterable();
   } else {
     const fullBuffer = Buffer.isBuffer(payload) ? payload : Buffer.from(payload, "utf8");
     if (fullBuffer.length > 0) {
@@ -475,12 +490,13 @@ export async function* readAndVerifyExportPartsStream(
   expectedPartCount?: number
 ): AsyncGenerator<Buffer, void, unknown> {
   const db = getDb();
-  let lastPartNo = 0;
   const cumulativeHasher = crypto.createHash("sha256");
   let yieldedPartsCount = 0;
 
   try {
-    while (true) {
+    const streamNextPart = async function* (
+      currentPartNo: number
+    ): AsyncGenerator<Buffer, void, unknown> {
       const [part] = await db
         .select()
         .from(schema.exportJobParts)
@@ -488,19 +504,19 @@ export async function* readAndVerifyExportPartsStream(
           and(
             eq(schema.exportJobParts.jobId, jobId),
             eq(schema.exportJobParts.attemptNo, resultAttempt),
-            gt(schema.exportJobParts.partNo, lastPartNo)
+            gt(schema.exportJobParts.partNo, currentPartNo)
           )
         )
         .orderBy(asc(schema.exportJobParts.partNo))
         .limit(1);
 
-      if (!part) break;
+      if (!part) return;
 
       // Strict sequential part ordering check (no sequence gaps permitted)
-      if (part.partNo !== lastPartNo + 1) {
+      if (part.partNo !== currentPartNo + 1) {
         throw new ExportError(
           "EXPORT_PART_MISSING",
-          `Export part sequence gap detected for job '${jobId}': expected part ${lastPartNo + 1}, got ${part.partNo}`,
+          `Export part sequence gap detected for job '${jobId}': expected part ${currentPartNo + 1}, got ${part.partNo}`,
           500,
           false
         );
@@ -516,42 +532,34 @@ export async function* readAndVerifyExportPartsStream(
       } catch (err) {
         throw new ExportError(
           "EXPORT_DECRYPTION_FAILED",
-          `Failed to decrypt part ${part.partNo} of job '${jobId}': ${err}`,
+          `Failed to decrypt part ${part.partNo}: ${err}`,
           500,
           false
         );
       }
 
-      if (decryptedChunkBuffer.length !== part.byteLength) {
-        throw new ExportError(
-          "EXPORT_PART_CORRUPT",
-          `Part ${part.partNo} byte length mismatch: expected ${part.byteLength}, got ${decryptedChunkBuffer.length}`,
-          500,
-          false
-        );
-      }
-
-      // Verify per-part checksum directly on raw decrypted bytes
-      const computedPartSha = crypto
+      // Verify SHA-256 integrity of this chunk against stored digest
+      const calculatedPartSha256 = crypto
         .createHash("sha256")
         .update(decryptedChunkBuffer)
         .digest("hex");
-
-      if (computedPartSha !== part.plaintextSha256) {
+      if (calculatedPartSha256 !== part.plaintextSha256) {
         throw new ExportError(
           "EXPORT_CHECKSUM_MISMATCH",
-          `Part ${part.partNo} checksum mismatch: expected ${part.plaintextSha256}, got ${computedPartSha}`,
+          `SHA-256 verification failed on part ${part.partNo} of job '${jobId}'. Expected ${part.plaintextSha256}, got ${calculatedPartSha256}`,
           500,
           false
         );
       }
 
       cumulativeHasher.update(decryptedChunkBuffer);
-      lastPartNo = part.partNo;
       yieldedPartsCount++;
-
       yield decryptedChunkBuffer;
-    }
+
+      yield* streamNextPart(part.partNo);
+    };
+
+    yield* streamNextPart(0);
 
     if (yieldedPartsCount === 0) {
       throw new ExportError(

@@ -55,39 +55,45 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
-  const eventType = evt.type;
+  try {
+    const eventType = evt.type;
 
-  if (eventType === "user.created" || eventType === "user.updated") {
-    const data = evt.data;
-    const primaryEmailId = data.primary_email_address_id;
-    const primaryEmailObj =
-      data.email_addresses?.find((e) => e.id === primaryEmailId) || data.email_addresses?.[0];
-    const email = primaryEmailObj?.email_address;
+    if (eventType === "user.created" || eventType === "user.updated") {
+      const data = evt.data;
+      const primaryEmailId = data.primary_email_address_id;
+      const primaryEmailObj =
+        data.email_addresses?.find((e) => e.id === primaryEmailId) || data.email_addresses?.[0];
+      const email = primaryEmailObj?.email_address;
 
-    if (data.id && email) {
-      await ClerkSyncService.syncClerkUser({
-        clerkUserId: data.id,
-        email,
-        firstName: data.first_name,
-        lastName: data.last_name,
-        avatarUrl: data.image_url,
-        emailVerified: primaryEmailObj?.verification?.status === "verified",
-      });
-
-      await SecurityAuditService.logEvent({
-        eventType: "LOGIN_SUCCESS",
-        riskMetadata: {
-          provider: "clerk",
+      if (data.id && email) {
+        await ClerkSyncService.syncClerkUser({
           clerkUserId: data.id,
-          eventType,
-        },
-      });
-    }
-  } else if (eventType === "user.deleted") {
-    if (evt.data?.id) {
-      await ClerkSyncService.deleteClerkUser(evt.data.id);
-    }
-  }
+          email,
+          firstName: data.first_name,
+          lastName: data.last_name,
+          avatarUrl: data.image_url,
+          emailVerified: primaryEmailObj?.verification?.status === "verified",
+        });
 
-  return NextResponse.json({ success: true });
+        await SecurityAuditService.logEvent({
+          eventType: "LOGIN_SUCCESS",
+          riskMetadata: {
+            provider: "clerk",
+            clerkUserId: data.id,
+            eventType,
+          },
+        });
+      }
+    } else if (eventType === "user.deleted") {
+      if (evt.data?.id) {
+        await ClerkSyncService.deleteClerkUser(evt.data.id);
+      }
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to process Clerk webhook event";
+    console.error("[ClerkWebhook] Error processing event:", message);
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }

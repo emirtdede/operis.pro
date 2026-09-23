@@ -21,12 +21,85 @@ export async function* readOffersData(
   const { txDb, userId, options, signal, getRemainingMs } = ctx;
 
   yield `  "offers": [\n`;
-  let lastOfferCreatedAtText: string | null = null;
-  let lastOfferId: string | null = null;
   let firstOffer = true;
   let offerPageCount = 0;
 
-  while (true) {
+  type OfferMetaRow = {
+    id: string;
+    listingId: string;
+    listingActivationSeq: number;
+    status: (typeof schema.offers.$inferSelect)["status"];
+    budgetCurrency: string | null;
+    budgetMin: string | null;
+    budgetMax: string | null;
+    estimatedDurationValue: number | null;
+    estimatedDurationUnit: (typeof schema.offers.$inferSelect)["estimatedDurationUnit"];
+    rejectionCode: (typeof schema.offers.$inferSelect)["rejectionCode"];
+    createdAt: Date;
+    createdAtText: string;
+    updatedAt: Date;
+    resolvedAt: Date | null;
+    byteLen: number;
+  };
+
+  async function* streamOfferGroups(
+    groups: OfferMetaRow[][],
+    idx: number
+  ): AsyncGenerator<string, void, unknown> {
+    if (idx >= groups.length) return;
+    const group = groups[idx];
+    if (!group) return;
+    if (signal?.aborted) {
+      throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
+    }
+    if (getRemainingMs() <= 0) {
+      throw new ExportError("EXPORT_TIMEOUT", "Deadline exceeded", 504, false);
+    }
+
+    const groupIds = group.map((g) => g.id);
+    const payloadRows = await txDb
+      .select({
+        id: schema.offers.id,
+        message: schema.offers.message,
+        rejectionNote: schema.offers.rejectionNote,
+      })
+      .from(schema.offers)
+      .where(inArray(schema.offers.id, groupIds));
+
+    const payloadMap = new Map(
+      payloadRows.map((p) => [p.id, { message: p.message, rejectionNote: p.rejectionNote }])
+    );
+
+    for (const r of group) {
+      const payload = payloadMap.get(r.id);
+      const itemStr = serializeExportRecord({
+        id: r.id,
+        listingId: r.listingId,
+        listingActivationSeq: r.listingActivationSeq,
+        status: r.status,
+        message: payload?.message ?? "",
+        budgetCurrency: r.budgetCurrency,
+        budgetMin: r.budgetMin,
+        budgetMax: r.budgetMax,
+        estimatedDurationValue: r.estimatedDurationValue,
+        estimatedDurationUnit: r.estimatedDurationUnit,
+        rejectionCode: r.rejectionCode,
+        rejectionNote: payload?.rejectionNote ?? null,
+        createdAt: r.createdAt.toISOString(),
+        updatedAt: r.updatedAt.toISOString(),
+        resolvedAt: r.resolvedAt ? r.resolvedAt.toISOString() : null,
+      });
+      yield `${firstOffer ? "    " : ",\n    "}${itemStr}`;
+      firstOffer = false;
+    }
+
+    yield* streamOfferGroups(groups, idx + 1);
+  }
+
+  async function* streamOffersPages(
+    lastOfferCreatedAtText: string | null,
+    lastOfferId: string | null
+  ): AsyncGenerator<string, void, unknown> {
     if (signal?.aborted) {
       throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
     }
@@ -39,7 +112,7 @@ export async function* readOffersData(
           )
         : eq(schema.offers.offerorUserId, userId);
 
-    const metaRows = await txDb
+    const metaRows: OfferMetaRow[] = await txDb
       .select({
         id: schema.offers.id,
         listingId: schema.offers.listingId,
@@ -62,7 +135,7 @@ export async function* readOffersData(
       .orderBy(desc(schema.offers.createdAt), desc(schema.offers.id))
       .limit(PAGE_SIZE);
 
-    if (metaRows.length === 0) break;
+    if (metaRows.length === 0) return;
 
     for (const r of metaRows) {
       if ((Number(r.byteLen) || 0) + METADATA_PADDING_BYTES > MAX_RECORD_BYTES) {
@@ -83,8 +156,8 @@ export async function* readOffersData(
       });
     }
 
-    const groups: (typeof metaRows)[] = [];
-    let currentGroup: typeof metaRows = [];
+    const groups: OfferMetaRow[][] = [];
+    let currentGroup: OfferMetaRow[] = [];
     let currentGroupBytes = 0;
 
     for (const row of metaRows) {
@@ -101,56 +174,17 @@ export async function* readOffersData(
       groups.push(currentGroup);
     }
 
-    for (const group of groups) {
-      if (signal?.aborted) {
-        throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
-      }
-      if (getRemainingMs() <= 0) {
-        throw new ExportError("EXPORT_TIMEOUT", "Deadline exceeded", 504, false);
-      }
+    yield* streamOfferGroups(groups, 0);
 
-      const groupIds = group.map((g) => g.id);
-      const payloadRows = await txDb
-        .select({
-          id: schema.offers.id,
-          message: schema.offers.message,
-          rejectionNote: schema.offers.rejectionNote,
-        })
-        .from(schema.offers)
-        .where(inArray(schema.offers.id, groupIds));
+    if (metaRows.length < PAGE_SIZE) return;
 
-      const payloadMap = new Map(
-        payloadRows.map((p) => [p.id, { message: p.message, rejectionNote: p.rejectionNote }])
-      );
-
-      for (const r of group) {
-        const payload = payloadMap.get(r.id);
-        const itemStr = serializeExportRecord({
-          id: r.id,
-          listingId: r.listingId,
-          listingActivationSeq: r.listingActivationSeq,
-          status: r.status,
-          message: payload?.message ?? "",
-          budgetCurrency: r.budgetCurrency,
-          budgetMin: r.budgetMin,
-          budgetMax: r.budgetMax,
-          estimatedDurationValue: r.estimatedDurationValue,
-          estimatedDurationUnit: r.estimatedDurationUnit,
-          rejectionCode: r.rejectionCode,
-          rejectionNote: payload?.rejectionNote ?? null,
-          createdAt: r.createdAt.toISOString(),
-          updatedAt: r.updatedAt.toISOString(),
-          resolvedAt: r.resolvedAt ? r.resolvedAt.toISOString() : null,
-        });
-        yield `${firstOffer ? "    " : ",\n    "}${itemStr}`;
-        firstOffer = false;
-      }
+    const last = metaRows[metaRows.length - 1];
+    if (last) {
+      yield* streamOffersPages(last.createdAtText, last.id);
     }
-
-    const last = metaRows[metaRows.length - 1]!;
-    lastOfferCreatedAtText = last.createdAtText;
-    lastOfferId = last.id;
   }
+
+  yield* streamOffersPages(null, null);
   yield `\n  ],\n`;
 
   if (options?.onSection) await options.onSection("offers");
@@ -168,12 +202,69 @@ export async function* readOfferRevisionsData(
   const { txDb, userId, options, signal, getRemainingMs } = ctx;
 
   yield `  "offerRevisions": [\n`;
-  let lastORevCreatedAtText: string | null = null;
-  let lastORevId: string | null = null;
   let firstORev = true;
   let oRevPageCount = 0;
 
-  while (true) {
+  type OfferRevisionMetaRow = {
+    id: string;
+    offerId: string;
+    revisionNo: number;
+    createdAt: Date;
+    createdAtText: string;
+    byteLen: number;
+  };
+
+  async function* streamRevisionGroups(
+    groups: OfferRevisionMetaRow[][],
+    idx: number
+  ): AsyncGenerator<string, void, unknown> {
+    if (idx >= groups.length) return;
+    const group = groups[idx];
+    if (!group) return;
+    if (signal?.aborted) {
+      throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
+    }
+    if (getRemainingMs() <= 0) {
+      throw new ExportError("EXPORT_TIMEOUT", "Deadline exceeded", 504, false);
+    }
+
+    const groupIds = group.map((g) => g.id);
+    const payloadRows = await txDb
+      .select({
+        id: schema.offerRevisions.id,
+        snapshotJson: sql<string>`${schema.offerRevisions.snapshotJson}::text`,
+      })
+      .from(schema.offerRevisions)
+      .where(inArray(schema.offerRevisions.id, groupIds));
+
+    const payloadMap = new Map(payloadRows.map((p) => [p.id, p.snapshotJson]));
+
+    for (const r of group) {
+      const snapshotJson = payloadMap.get(r.id);
+      if (snapshotJson === undefined) throw new Error("Export snapshot row missing");
+      yield firstORev ? "    " : ",\n    ";
+      yield* streamRecordWithJsonPayload(
+        {
+          id: r.id,
+          offerId: r.offerId,
+          revisionNo: r.revisionNo,
+          createdAt: r.createdAt.toISOString(),
+        },
+        "snapshotJson",
+        snapshotJson,
+        MAX_RECORD_BYTES
+      );
+      payloadMap.delete(r.id);
+      firstORev = false;
+    }
+
+    yield* streamRevisionGroups(groups, idx + 1);
+  }
+
+  async function* streamOfferRevisionPages(
+    lastORevCreatedAtText: string | null,
+    lastORevId: string | null
+  ): AsyncGenerator<string, void, unknown> {
     if (signal?.aborted) {
       throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
     }
@@ -189,7 +280,7 @@ export async function* readOfferRevisionsData(
           )
         : eq(schema.offers.offerorUserId, userId);
 
-    const metaRows = await txDb
+    const metaRows: OfferRevisionMetaRow[] = await txDb
       .select({
         id: schema.offerRevisions.id,
         offerId: schema.offerRevisions.offerId,
@@ -204,7 +295,7 @@ export async function* readOfferRevisionsData(
       .orderBy(desc(schema.offerRevisions.createdAt), desc(schema.offerRevisions.id))
       .limit(REVISION_PAGE_SIZE);
 
-    if (metaRows.length === 0) break;
+    if (metaRows.length === 0) return;
 
     for (const r of metaRows) {
       if ((Number(r.byteLen) || 0) + METADATA_PADDING_BYTES > MAX_RECORD_BYTES) {
@@ -225,8 +316,8 @@ export async function* readOfferRevisionsData(
       });
     }
 
-    const groups: (typeof metaRows)[] = [];
-    let currentGroup: typeof metaRows = [];
+    const groups: OfferRevisionMetaRow[][] = [];
+    let currentGroup: OfferRevisionMetaRow[] = [];
     let currentGroupBytes = 0;
 
     for (const row of metaRows) {
@@ -243,49 +334,17 @@ export async function* readOfferRevisionsData(
       groups.push(currentGroup);
     }
 
-    for (const group of groups) {
-      if (signal?.aborted) {
-        throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
-      }
-      if (getRemainingMs() <= 0) {
-        throw new ExportError("EXPORT_TIMEOUT", "Deadline exceeded", 504, false);
-      }
+    yield* streamRevisionGroups(groups, 0);
 
-      const groupIds = group.map((g) => g.id);
-      const payloadRows = await txDb
-        .select({
-          id: schema.offerRevisions.id,
-          snapshotJson: sql<string>`${schema.offerRevisions.snapshotJson}::text`,
-        })
-        .from(schema.offerRevisions)
-        .where(inArray(schema.offerRevisions.id, groupIds));
+    if (metaRows.length < REVISION_PAGE_SIZE) return;
 
-      const payloadMap = new Map(payloadRows.map((p) => [p.id, p.snapshotJson]));
-
-      for (const r of group) {
-        const snapshotJson = payloadMap.get(r.id);
-        if (snapshotJson === undefined) throw new Error("Export snapshot row missing");
-        yield firstORev ? "    " : ",\n    ";
-        yield* streamRecordWithJsonPayload(
-          {
-            id: r.id,
-            offerId: r.offerId,
-            revisionNo: r.revisionNo,
-            createdAt: r.createdAt.toISOString(),
-          },
-          "snapshotJson",
-          snapshotJson,
-          MAX_RECORD_BYTES
-        );
-        payloadMap.delete(r.id);
-        firstORev = false;
-      }
+    const last = metaRows[metaRows.length - 1];
+    if (last) {
+      yield* streamOfferRevisionPages(last.createdAtText, last.id);
     }
-
-    const last = metaRows[metaRows.length - 1]!;
-    lastORevCreatedAtText = last.createdAtText;
-    lastORevId = last.id;
   }
+
+  yield* streamOfferRevisionPages(null, null);
   yield `\n  ],\n`;
 
   if (options?.onSection) await options.onSection("offerRevisions");

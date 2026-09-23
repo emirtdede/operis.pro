@@ -55,6 +55,8 @@ export const engagements = pgTable(
       .on(table.acceptedOfferId)
       .where(sql`${table.status} != 'CANCELLED'`),
     index("idx_engagements_benchmark").on(table.status, table.matchedAt),
+    index("engagements_owner_status_idx").on(table.ownerUserId, table.status),
+    index("engagements_freelancer_status_idx").on(table.freelancerUserId, table.status),
   ]
 );
 

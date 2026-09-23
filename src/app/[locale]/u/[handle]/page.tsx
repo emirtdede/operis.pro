@@ -6,8 +6,9 @@ import { ArrowLeft } from "lucide-react";
 import { ProfileService } from "@/src/modules/profiles/service";
 import { getSession } from "@/src/modules/auth/session";
 import { getLocalizedProfilePath } from "@/src/lib/i18n/routes";
-import { serializeJsonLd } from "@/src/lib/security/json-ld";
+import { JsonLd } from "@/src/components/seo/json-ld";
 import { PublicProfileView } from "@/src/components/profile/public-profile-view";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -85,9 +86,8 @@ export default async function PublicProfilePage({
   }
 
   const isSelf = Boolean(session?.userId && session.userId === profile.userId);
-  const profileUrl = isTr
-    ? `https://operis.pro/tr/profil/${profile.handle}`
-    : `https://operis.pro/en/profile/${profile.handle}`;
+  const baseUrl = getBaseUrl();
+  const profileUrl = `${baseUrl}${getLocalizedProfilePath(profile.handle, (locale as "tr" | "en") || "tr")}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -118,7 +118,7 @@ export default async function PublicProfilePage({
             "@type": "ListItem",
             position: 1,
             name: isTr ? "Ana Sayfa" : "Home",
-            item: `https://operis.pro/${locale}`,
+            item: `${baseUrl}/${locale}`,
           },
           {
             "@type": "ListItem",
@@ -134,10 +134,7 @@ export default async function PublicProfilePage({
   return (
     <main className="mx-auto max-w-5xl xl:max-w-6xl px-4 py-8 sm:px-6 lg:px-8 space-y-6">
       {/* Schema.org Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
 
       {/* Navigation Breadcrumb */}
       <nav

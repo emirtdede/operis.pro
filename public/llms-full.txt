@@ -1,0 +1,83 @@
+# Operis — Comprehensive Enterprise & Technical Manifesto
+
+> Complete system architecture, operating principles, legal compliance, and domain specifications for Operis — The Open Technology and Engineering Network operated by Vellium, Istanbul, Turkey.
+
+---
+
+## 1. Executive Summary & Purpose
+
+Operis is built to dismantle the rent-seeking dynamics of legacy freelance marketplaces. Traditional portals extract 10% to 20% in arbitrary commissions, lock user funds in escrow for weeks, monetize job-seeking through pay-to-pitch "connects", keep stale ghost listings alive to artificially inflate activity metrics, and punish external communication with account bans.
+
+Operis replaces this broker-centric model with an open, high-trust engineering directory:
+1. **0% Platform Cut**: An agreed price of 100,000 TL yields exactly 100,000 TL for the engineer.
+2. **168-Hour Freshness Radar**: Strict 7-day lifecycles ensure every listing in the feed is actively hiring.
+3. **AES-256-GCM Blind Bidding**: Private proposals prevent predatory pricing wars.
+4. **Direct Collaboration**: Accepted matches immediately unlock bilateral phone, email, and corporate messaging.
+5. **No Escrow Risk**: Operis holds zero custody of client funds; counterparties contract directly under Turkish legal armor (FSEK m. 52, TBK, e-SMM).
+
+---
+
+## 2. Platform Architecture & Core Workflows
+
+### 2.1 The 168-Hour Listing Lifecycle
+- Every published listing has an immutable `expiresAt` timestamp set exactly 168 hours (7 calendar days) from its creation date.
+- Expired listings are automatically excluded from the public radar and search indices (`WHERE expires_at > NOW()`).
+- Listing owners can extend their project for an additional 7 days with a single click, ensuring listings represent genuinely active, urgent engineering demand.
+
+### 2.2 Blind Encrypted Proposals (AES-256-GCM)
+- Legacy boards trigger a destructive race to the bottom by exposing competitor bids and counts.
+- On Operis, proposal text, financial rates, milestone breakdowns, and timeline commitments are encrypted client-side or before database persistence using AES-256-GCM.
+- Only the authenticated project creator holds the capability to decrypt and review proposals.
+- Competitors cannot inspect bids, forcing contractors to compete strictly on technical competency, architectural elegance, and verified track record.
+
+### 2.3 Direct Bilateral Communication Handshake
+- Platform chats are optional; communication is never censored or penalized.
+- Upon proposal acceptance, verified telephone numbers, direct emails, GitHub profiles, and corporate messaging channels (Slack/WhatsApp) are unlocked bilaterally.
+- Counterparties retain full autonomy over project delivery and collaboration tooling.
+
+---
+
+## 3. Statutory, Legal & Tax Framework
+
+### 3.1 Turkish Copyright Law (5846 Sayılı FSEK Madde 52)
+- Software source code constitutes an intellectual work under Turkish Copyright Law.
+- To legally transfer economic rights (işleme, çoğaltma, yayma, temsil, umuma iletim), a written contract specifying each right individually is legally mandatory under FSEK Article 52.
+- Operis provides downloadable, attorney-vetted Software Development Agreements (Eser Sözleşmesi) and Bilateral NDAs ensuring complete IP assignment upon verified settlement.
+
+### 3.2 Tax Compliance & e-SMM
+- Turkish tax rules require independent software contractors to issue electronic self-employment receipts (e-Serbest Meslek Makbuzu / e-SMM) with statutory withholding tax (stopaj) and VAT (KDV).
+- Platform guidelines include pre-configured tax calculation calculators (GVK 18, GVK 89/13 software export incentives, and Youth Entrepreneur exemptions).
+
+### 3.3 Law No. 5651 & Intermediary Host Status
+- Under Turkish Law No. 5651, Operis operates strictly as an Intermediary Service Provider (Yer Sağlayıcı).
+- Operis does not broker transactions, store user monetary deposits, act as a financial custodian, or adjudicate contractual disputes.
+
+---
+
+## 4. Canonical Route Directory
+
+- **Homepage**: https://operis.pro/tr (EN: https://operis.pro/en)
+- **Manifesto & About**: https://operis.pro/tr/hakkimizda (EN: https://operis.pro/en/about)
+- **Listings Directory**: https://operis.pro/tr/ilanlar (EN: https://operis.pro/en/listings)
+- **Post a Project**: https://operis.pro/tr/ilan-ver (EN: https://operis.pro/en/listings/new)
+- **Categories**: https://operis.pro/tr/kategoriler (EN: https://operis.pro/en/categories)
+- **Knowledge & Help**: https://operis.pro/tr/yardim (EN: https://operis.pro/en/help)
+- **Contact & Desks**: https://operis.pro/tr/iletisim (EN: https://operis.pro/en/contact)
+- **Legal & Trust Center**: https://operis.pro/tr/yasal (EN: https://operis.pro/en/legal)
+- **Brand Guidelines**: https://operis.pro/tr/marka (EN: https://operis.pro/en/brand)
+
+---
+
+## 5. Entity & Governance
+
+- **Operating Entity**: Vellium (Vellium Teknolojileri ve İnovasyon)
+- **Jurisdiction**: Republic of Turkey
+- **Physical Headquarters**: Büyükdere Cad. No: 199, İstanbul 34394, Turkey
+- **Official Delivery**: Registered Electronic Mail (KEP) and UETS Enabled
+- **Direct Intake Desks (Vellium Official Channels)**:
+  - Enterprise & Media Partnerships: contact@vellium.dev
+  - General Member Support: support@vellium.dev
+  - Cybersecurity & Bug Bounty: security@vellium.dev
+  - Legal, IP & Dispute Resolution: legal@vellium.dev
+  - Privacy & KVKK Data Protection: privacy@vellium.dev
+  - Billing & Accounting: billing@vellium.dev

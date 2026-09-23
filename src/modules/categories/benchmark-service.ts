@@ -39,14 +39,18 @@ export class CategoryBenchmarkService {
    */
   static quantile(sorted: number[], q: number): number {
     if (sorted.length === 0) return 0;
-    if (sorted.length === 1) return sorted[0]!;
+    const first = sorted[0];
+    if (first === undefined) return 0;
+    if (sorted.length === 1) return first;
     const pos = (sorted.length - 1) * q;
     const base = Math.floor(pos);
     const rest = pos - base;
-    if (sorted[base + 1] !== undefined) {
-      return sorted[base]! + rest * (sorted[base + 1]! - sorted[base]!);
+    const baseVal = sorted[base] ?? 0;
+    const nextVal = sorted[base + 1];
+    if (nextVal !== undefined) {
+      return baseVal + rest * (nextVal - baseVal);
     }
-    return sorted[base]!;
+    return baseVal;
   }
 
   /**
@@ -101,7 +105,7 @@ export class CategoryBenchmarkService {
     const p50 = this.quantile(computationSet, 0.5);
     const p75 = this.quantile(computationSet, 0.75);
 
-    let min = this.roundClean(p25, currency);
+    const min = this.roundClean(p25, currency);
     const median = this.roundClean(p50, currency);
     let max = this.roundClean(p75, currency);
 

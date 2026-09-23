@@ -7,9 +7,10 @@ import {
   getLocalizedListingPath,
   type RouteKey,
 } from "@/src/lib/i18n/routes";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://operis.pro";
+  const baseUrl = getBaseUrl();
   const now = new Date();
 
   const entries: MetadataRoute.Sitemap = [];
@@ -41,6 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "legalCenter",
     "login",
     "register",
+    "report",
   ];
   for (const key of staticKeys) {
     entries.push({

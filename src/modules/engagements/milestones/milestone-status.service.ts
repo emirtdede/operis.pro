@@ -12,6 +12,9 @@ import {
   type TransferChannel,
   type PaymentSettlementCertificate,
   type IpAssignmentDeed,
+  type DeliverableStatus,
+  type MilestoneDeliverableUrlType,
+  type PaymentLedgerStatus,
   inMemoryMilestones,
   calculateSha256Seal,
   computeMilestoneMetrics,
@@ -82,7 +85,7 @@ export class MilestoneStatusService {
 
     const db = getDb();
     // 1. Fetch engagement
-    const [engagement] = await (db as any)
+    const [engagement] = await db
       .select()
       .from(schema.engagements)
       .where(eq(schema.engagements.id, engagementId))
@@ -96,16 +99,16 @@ export class MilestoneStatusService {
     const isFreelancer = engagement.freelancerUserId === currentUserId;
 
     // 2. Fetch existing milestones
-    const existing = await (db as any)
+    const existing = await db
       .select()
       .from(schema.engagementMilestones)
       .where(eq(schema.engagementMilestones.id, engagementId))
       .orderBy(asc(schema.engagementMilestones.sequenceNumber));
 
     if (existing.length > 0) {
-      const mapped: MilestoneDto[] = existing.map((m: any) => {
+      const mapped: MilestoneDto[] = existing.map((m) => {
         const auditTrail: HandshakeAuditEntry[] = Array.isArray(m.auditTrailJson)
-          ? m.auditTrailJson
+          ? (m.auditTrailJson as unknown as HandshakeAuditEntry[])
           : [];
         const declEntry = [...auditTrail].reverse().find((a) => a.action === "PAYMENT_DECLARED");
         const dispEntry = [...auditTrail].reverse().find((a) => a.action === "PAYMENT_DISPUTED");
@@ -162,13 +165,13 @@ export class MilestoneStatusService {
           amount: parseFloat(m.amount),
           currency: m.currency,
           targetDate: m.targetDate,
-          deliverableStatus: m.deliverableStatus,
+          deliverableStatus: m.deliverableStatus as DeliverableStatus,
           deliverableNote: m.deliverableNote,
           deliverableUrl: m.deliverableUrl,
-          deliverableUrlType: m.deliverableUrlType,
+          deliverableUrlType: m.deliverableUrlType as MilestoneDeliverableUrlType | null,
           submittedAt: m.submittedAt ? new Date(m.submittedAt).toISOString() : null,
           acceptedAt: m.acceptedAt ? new Date(m.acceptedAt).toISOString() : null,
-          paymentStatus: m.paymentStatus,
+          paymentStatus: m.paymentStatus as PaymentLedgerStatus,
           paymentReference: m.paymentReference,
           paymentReceiptUrl: m.paymentReceiptUrl,
           invoiceNumber: m.invoiceNumber,
@@ -203,7 +206,7 @@ export class MilestoneStatusService {
                 amount: parseFloat(m.amount),
                 currency: m.currency,
                 repositoryUrl: m.deliverableUrlType === "CODE_REPO" ? m.deliverableUrl : undefined,
-                gitCommitHash: (m as any).gitCommitHash || null,
+                gitCommitHash: null,
                 deliverableUrl: m.deliverableUrl,
                 deliverableUrlType: m.deliverableUrlType,
                 artifactSha256: m.sha256Seal,
@@ -225,7 +228,7 @@ export class MilestoneStatusService {
             }
             return null;
           })(),
-          gitCommitHash: (m as any).gitCommitHash || null,
+          gitCommitHash: null,
         };
       });
 
@@ -233,13 +236,13 @@ export class MilestoneStatusService {
     }
 
     // 3. If empty, synthesize from listing
-    const [listing] = await (db as any)
+    const [listing] = await db
       .select()
       .from(schema.listings)
       .where(eq(schema.listings.id, engagement.listingId))
       .limit(1);
 
-    const [offer] = await (db as any)
+    const [offer] = await db
       .select()
       .from(schema.offers)
       .where(eq(schema.offers.id, engagement.acceptedOfferId))
@@ -278,12 +281,12 @@ export class MilestoneStatusService {
       ],
     }));
 
-    const insertedRows = await (db as any)
+    const insertedRows = await db
       .insert(schema.engagementMilestones)
       .values(toInsert)
       .returning();
 
-    const mappedInserted: MilestoneDto[] = insertedRows.map((m: any) => ({
+    const mappedInserted: MilestoneDto[] = insertedRows.map((m) => ({
       id: m.id,
       engagementId: m.engagementId,
       sequenceNumber: m.sequenceNumber,
@@ -294,13 +297,13 @@ export class MilestoneStatusService {
       amount: parseFloat(m.amount),
       currency: m.currency,
       targetDate: m.targetDate,
-      deliverableStatus: m.deliverableStatus,
+      deliverableStatus: m.deliverableStatus as DeliverableStatus,
       deliverableNote: m.deliverableNote,
       deliverableUrl: m.deliverableUrl,
-      deliverableUrlType: m.deliverableUrlType,
+      deliverableUrlType: m.deliverableUrlType as MilestoneDeliverableUrlType | null,
       submittedAt: null,
       acceptedAt: null,
-      paymentStatus: m.paymentStatus,
+      paymentStatus: m.paymentStatus as PaymentLedgerStatus,
       paymentReference: null,
       paymentReceiptUrl: null,
       invoiceNumber: null,
@@ -388,7 +391,7 @@ export class MilestoneStatusService {
 
     const db = getDb();
     // Delete existing and replace
-    await (db as any)
+    await db
       .delete(schema.engagementMilestones)
       .where(eq(schema.engagementMilestones.id, engagementId));
 
@@ -428,12 +431,12 @@ export class MilestoneStatusService {
       };
     });
 
-    const insertedRows = await (db as any)
+    const insertedRows = await db
       .insert(schema.engagementMilestones)
       .values(toInsert)
       .returning();
 
-    const resultMapped: MilestoneDto[] = insertedRows.map((m: any) => ({
+    const resultMapped: MilestoneDto[] = insertedRows.map((m) => ({
       id: m.id,
       engagementId: m.engagementId,
       sequenceNumber: m.sequenceNumber,
@@ -444,13 +447,13 @@ export class MilestoneStatusService {
       amount: parseFloat(m.amount),
       currency: m.currency,
       targetDate: m.targetDate,
-      deliverableStatus: m.deliverableStatus,
-      deliverableNote: m.deliverableNote,
-      deliverableUrl: m.deliverableUrl,
-      deliverableUrlType: m.deliverableUrlType,
+      deliverableStatus: m.deliverableStatus as DeliverableStatus,
+      deliverableNote: null,
+      deliverableUrl: null,
+      deliverableUrlType: m.deliverableUrlType as MilestoneDeliverableUrlType | null,
       submittedAt: null,
       acceptedAt: null,
-      paymentStatus: m.paymentStatus,
+      paymentStatus: m.paymentStatus as PaymentLedgerStatus,
       paymentReference: null,
       paymentReceiptUrl: null,
       invoiceNumber: null,
@@ -509,7 +512,7 @@ export class MilestoneStatusService {
     }
 
     const db = getDb();
-    const updateData: Record<string, any> = {
+    const updateData: Partial<typeof schema.engagementMilestones.$inferInsert> = {
       deliverableStatus: input.status,
       updatedAt: new Date(),
     };
@@ -519,7 +522,7 @@ export class MilestoneStatusService {
       updateData.deliverableUrlType = input.deliverableUrlType;
     if (input.status === "SUBMITTED") updateData.submittedAt = new Date();
 
-    const [updated] = await (db as any)
+    const [updated] = await db
       .update(schema.engagementMilestones)
       .set(updateData)
       .where(eq(schema.engagementMilestones.id, milestoneId))
@@ -540,13 +543,13 @@ export class MilestoneStatusService {
         amount: parseFloat(updated.amount),
         currency: updated.currency,
         targetDate: updated.targetDate,
-        deliverableStatus: updated.deliverableStatus,
+        deliverableStatus: updated.deliverableStatus as DeliverableStatus,
         deliverableNote: updated.deliverableNote,
         deliverableUrl: updated.deliverableUrl,
-        deliverableUrlType: updated.deliverableUrlType,
+        deliverableUrlType: updated.deliverableUrlType as MilestoneDeliverableUrlType | null,
         submittedAt: updated.submittedAt ? new Date(updated.submittedAt).toISOString() : null,
         acceptedAt: updated.acceptedAt ? new Date(updated.acceptedAt).toISOString() : null,
-        paymentStatus: updated.paymentStatus,
+        paymentStatus: updated.paymentStatus as PaymentLedgerStatus,
         paymentReference: updated.paymentReference,
         paymentReceiptUrl: updated.paymentReceiptUrl,
         invoiceNumber: updated.invoiceNumber,
@@ -593,7 +596,7 @@ export class MilestoneStatusService {
 
     const db = getDb();
     const acceptedAt = new Date();
-    const [updated] = await (db as any)
+    const [updated] = await db
       .update(schema.engagementMilestones)
       .set({
         deliverableStatus: "ACCEPTED",
@@ -618,13 +621,13 @@ export class MilestoneStatusService {
         amount: parseFloat(updated.amount),
         currency: updated.currency,
         targetDate: updated.targetDate,
-        deliverableStatus: updated.deliverableStatus,
+        deliverableStatus: updated.deliverableStatus as DeliverableStatus,
         deliverableNote: updated.deliverableNote,
         deliverableUrl: updated.deliverableUrl,
-        deliverableUrlType: updated.deliverableUrlType,
+        deliverableUrlType: updated.deliverableUrlType as MilestoneDeliverableUrlType | null,
         submittedAt: updated.submittedAt ? new Date(updated.submittedAt).toISOString() : null,
         acceptedAt: updated.acceptedAt ? new Date(updated.acceptedAt).toISOString() : null,
-        paymentStatus: updated.paymentStatus,
+        paymentStatus: updated.paymentStatus as PaymentLedgerStatus,
         paymentReference: updated.paymentReference,
         paymentReceiptUrl: updated.paymentReceiptUrl,
         invoiceNumber: updated.invoiceNumber,

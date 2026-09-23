@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
-import { AlertTriangle, X, History, Search, CheckSquare, Undo2, ArrowRightLeft } from "lucide-react";
+import { AlertTriangle, X, History, Search, CheckSquare, Undo2, ArrowRightLeft, ListFilter, ChevronDown, ArrowUpDown, Send, Compass } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { EmptyState } from "../ui/empty-state";
@@ -52,10 +52,10 @@ export interface SentOffersDashboardProps {
 const FILTER_LABELS: Record<string, { tr: string; en: string }> = {
   all: { tr: "Tümü", en: "All" },
   pending: { tr: "Beklemede", en: "Pending" },
-  accepted: { tr: "Kabul Edilenler", en: "Accepted" },
-  rejected: { tr: "Reddedilenler", en: "Rejected" },
-  cancelled: { tr: "İptal Edilenler", en: "Cancelled" },
-  withdrawn: { tr: "Geri Çekilenler", en: "Withdrawn" },
+  accepted: { tr: "Kabul Edilen", en: "Accepted" },
+  rejected: { tr: "Reddedilen", en: "Rejected" },
+  cancelled: { tr: "İptal Edilen", en: "Cancelled" },
+  withdrawn: { tr: "Geri Çekilen", en: "Withdrawn" },
 };
 
 function getFilterLabel(filterKey: string, isTr: boolean): string {
@@ -105,11 +105,14 @@ function getBulkWithdrawButtonLabel(isWithdrawing: boolean, isTr: boolean): stri
   return isTr ? "Evet, Hepsini Geri Çek" : "Yes, Withdraw All";
 }
 
+export type SentOfferSortOption = "newest" | "budget_desc" | "budget_asc" | "title_asc";
+
 export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboardProps) {
   const isTr = locale === "tr";
   const [offers, setOffers] = useState<SentOfferItem[]>(initialOffers);
   const [filter, setFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<SentOfferSortOption>("newest");
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [withdrawingOffer, setWithdrawingOffer] = useState<SentOfferItem | null>(null);
   const [withdrawError, setWithdrawError] = useState<string | null>(null);
@@ -144,6 +147,24 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [withdrawingOffer, isBulkWithdrawModalOpen]);
 
+  const filterCounts = useMemo(() => {
+    return {
+      all: offers.length,
+      pending: offers.filter((o) => o.status.toLowerCase() === "pending").length,
+      accepted: offers.filter((o) => o.status.toLowerCase() === "accepted").length,
+      rejected: offers.filter((o) => o.status.toLowerCase().startsWith("rejected")).length,
+      cancelled: offers.filter(
+        (o) =>
+          o.status === "CANCELLED_ENGAGEMENT" ||
+          o.status === "CANCELLED" ||
+          o.status === "EXPIRED_LISTING" ||
+          o.status === "EXPIRED_LISTING_INACTIVE" ||
+          o.status === "VOID_MODERATION"
+      ).length,
+      withdrawn: offers.filter((o) => o.status.toLowerCase() === "withdrawn").length,
+    };
+  }, [offers]);
+
   // 1. Status Filter
   const statusFiltered = useMemo(() => {
     return offers.filter((o) => {
@@ -164,17 +185,45 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
     });
   }, [offers, filter]);
 
-  // 2. Search Filter with Turkish token weighting
+  // 2. Search Filter with Turkish token weighting & Multi-criteria Sort
   const displayedOffers = useMemo(() => {
+    let list: SentOfferItem[];
     if (!searchQuery.trim()) {
-      return statusFiltered;
+      list = [...statusFiltered];
+    } else {
+      list = filterAndSortByRelevance(statusFiltered, searchQuery, (offer) => [
+        { text: offer.listingTitle, weight: 10 },
+        { text: offer.message, weight: 5 },
+        { text: offer.status, weight: 2 },
+      ]);
     }
-    return filterAndSortByRelevance(statusFiltered, searchQuery, (offer) => [
-      { text: offer.listingTitle, weight: 10 },
-      { text: offer.message, weight: 5 },
-      { text: offer.status, weight: 2 },
-    ]);
-  }, [statusFiltered, searchQuery]);
+
+    const sorted = [...list];
+    switch (sortBy) {
+      case "budget_desc":
+        return sorted.sort((a, b) => {
+          const maxA = Number(a.budgetMax || a.budgetMin || 0);
+          const maxB = Number(b.budgetMax || b.budgetMin || 0);
+          return maxB - maxA;
+        });
+      case "budget_asc":
+        return sorted.sort((a, b) => {
+          const minA = Number(a.budgetMin || a.budgetMax || 0);
+          const minB = Number(b.budgetMin || b.budgetMax || 0);
+          return minA - minB;
+        });
+      case "title_asc":
+        return sorted.sort((a, b) =>
+          a.listingTitle.localeCompare(b.listingTitle, isTr ? "tr-TR" : "en-US")
+        );
+      case "newest":
+      default:
+        if (searchQuery.trim()) return list;
+        return sorted.sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+    }
+  }, [statusFiltered, searchQuery, sortBy, isTr]);
 
   // Only PENDING offers can be selected for bulk withdraw
   const selectableOffers = useMemo(() => {
@@ -323,9 +372,9 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
   return (
     <div className="space-y-6">
       {/* Search and Status Filter Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[var(--color-surface-card)] border border-[var(--color-border-subtle)] p-4 rounded-2xl shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Search */}
-        <div className="relative flex-1 min-w-[240px]">
+        <div className="relative flex-1 min-w-[200px]">
           <Search
             className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-text-tertiary)]"
             aria-hidden="true"
@@ -334,12 +383,8 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={
-              isTr
-                ? "Başvurulan ilanlarda ara (başlık veya teklif metni)..."
-                : "Search proposals (listing title or message)..."
-            }
-            className="w-full pl-10 pr-9 py-2 rounded-xl text-xs sm:text-sm bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+            placeholder={isTr ? "Tekliflerde ara..." : "Search offers..."}
+            className="w-full pl-10 pr-9 py-2 rounded-xl text-xs sm:text-sm bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all truncate"
           />
           {searchQuery && (
             <button
@@ -353,26 +398,65 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
           )}
         </div>
 
-        {/* Filter Tabs */}
-        <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
-          {(["all", "pending", "accepted", "rejected", "cancelled", "withdrawn"] as const).map(
-            (f) => (
-              <button
-                key={f}
-                type="button"
-                onClick={() => setFilter(f)}
-                className={`rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
-                  filter === f
-                    ? "bg-blue-600 text-white shadow-sm font-semibold"
-                    : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]"
-                }`}
-              >
-                {getFilterLabel(f, isTr)}
-              </button>
-            )
-          )}
+        {/* Controls: Single Status Filter Button + Single Sort Button */}
+        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+          {/* Single Status Filter Dropdown Button */}
+          <div className="relative inline-flex items-center">
+            <ListFilter className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              aria-label={isTr ? "Durum Filtresi" : "Status Filter"}
+              className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
+            >
+              {(["all", "pending", "accepted", "rejected", "cancelled", "withdrawn"] as const).map((f) => (
+                <option key={f} value={f} className="bg-[#141517] text-[var(--color-text-primary)]">
+                  {getFilterLabel(f, isTr)} ({filterCounts[f]})
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+          </div>
+
+          {/* Single Sort Dropdown Button */}
+          <div className="relative inline-flex items-center">
+            <ArrowUpDown className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SentOfferSortOption)}
+              aria-label={isTr ? "Sıralama ölçütü" : "Sort by"}
+              className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
+            >
+              <option value="newest" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yeni" : "Newest"}</option>
+              <option value="budget_desc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yüksek Bütçe" : "Highest Budget"}</option>
+              <option value="budget_asc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Düşük Bütçe" : "Lowest Budget"}</option>
+              <option value="title_asc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "Başlık (A-Z)" : "Title (A-Z)"}</option>
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+          </div>
         </div>
       </div>
+
+      {/* Result Count and Active Filter Indicator */}
+      {(searchQuery.trim() || filter !== "all") && (
+        <div className="flex items-center justify-between text-xs text-[var(--color-text-secondary)] px-1">
+          <span>
+            {isTr
+              ? `${displayedOffers.length} teklif listeleniyor`
+              : `Showing ${displayedOffers.length} proposals`}
+            {searchQuery.trim() && ` ("${searchQuery.trim()}")`}
+          </span>
+          {searchQuery.trim() && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              className="text-indigo-400 hover:text-indigo-300 font-medium cursor-pointer"
+            >
+              {isTr ? "Aramayı Temizle" : "Clear Search"}
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Bulk Action Sticky Bar */}
       {selectedOfferIds.size > 0 && (
@@ -434,19 +518,31 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
 
       {/* Offers List */}
       {displayedOffers.length === 0 ? (
-        <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-8 sm:p-12 text-center shadow-sm">
-          <EmptyState
-            title={getEmptyStateTitle(Boolean(searchQuery), isTr)}
-            description={getEmptyStateDescription(Boolean(searchQuery), isTr)}
-            action={
-              !searchQuery && (
-                <Link href={isTr ? "/tr/ilanlar" : "/en/listings"}>
-                  <Button variant="primary">{isTr ? "İlanları Keşfet" : "Explore Listings"}</Button>
-                </Link>
-              )
-            }
-          />
-        </div>
+        <EmptyState
+          variant="card"
+          icon={<Send className="h-7 w-7 text-blue-400" />}
+          title={getEmptyStateTitle(Boolean(searchQuery), isTr)}
+          description={getEmptyStateDescription(Boolean(searchQuery), isTr)}
+          action={
+            searchQuery ? (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setSearchQuery("")}
+                className="cursor-pointer"
+              >
+                {isTr ? "Aramayı Temizle" : "Clear Search"}
+              </Button>
+            ) : (
+              <Link href={isTr ? "/tr/ilanlar" : "/en/listings"}>
+                <Button variant="shimmer" size="md" className="gap-2 shadow-lg shadow-blue-500/15">
+                  <Compass className="h-4 w-4" />
+                  <span>{isTr ? "İlanları Keşfet" : "Explore Listings"}</span>
+                </Button>
+              </Link>
+            )
+          }
+        />
       ) : (
         <div className="space-y-4">
           {displayedOffers.map((offer) => {

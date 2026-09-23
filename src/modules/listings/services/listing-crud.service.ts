@@ -43,7 +43,14 @@ export class ListingCrudService {
       ownerUserId: string,
       excludeUserIds?: string[],
       activationSeq?: number,
-      budgetDetails?: any
+      budgetDetails?: {
+        budgetMode?: string;
+        budgetCurrency?: string;
+        budgetMin?: string | null;
+        budgetMax?: string | null;
+        summary?: string | null;
+        tags?: string[];
+      }
     ) => Promise<string[]>
   ): Promise<{ id: string; slug: string }> {
     const radarNotifier = dispatchRadarFn || ListingLifecycleService.dispatchRadarNotifications;
@@ -142,9 +149,14 @@ export class ListingCrudService {
           })
           .returning({ id: schema.listings.id, slug: schema.listings.slug });
 
+        if (!newListing) {
+          throw new Error("Failed to create listing: database insertion returned no record");
+        }
+        const createdListing = newListing;
+
         // Record status transition event
         await tx.insert(schema.listingStatusEvents).values({
-          listingId: newListing!.id,
+          listingId: createdListing.id,
           fromStatus: "DRAFT",
           toStatus: "ACTIVE",
           reason: "Initial publication",
@@ -157,9 +169,9 @@ export class ListingCrudService {
         await tx.insert(schema.outboxEvents).values({
           type: "LISTING_PUBLISHED",
           aggregateType: "listing",
-          aggregateId: newListing!.id,
+          aggregateId: createdListing.id,
           payloadJson: {
-            listingId: newListing!.id,
+            listingId: createdListing.id,
             title: input.title,
             slug,
             tags: input.tags,
@@ -179,7 +191,7 @@ export class ListingCrudService {
           attemptCount: 0,
         });
 
-        return { newListing: newListing!, categoryId, finalBudgetMin, finalBudgetMax };
+        return { newListing: createdListing, categoryId, finalBudgetMin, finalBudgetMax };
       });
 
       // Immediate sub-second outbox dispatch via Inngest (fail-open)
@@ -325,11 +337,10 @@ export class ListingCrudService {
           .where(and(eq(schema.listings.id, listingId), eq(schema.listings.ownerUserId, userId)))
           .limit(1);
 
-        if (listingRows.length === 0) {
+        const listing = listingRows[0];
+        if (!listing) {
           throw new Error("Listing not found or you are not authorized.");
         }
-
-        const listing = listingRows[0]!;
         if (listing.status === "MATCHED" || listing.status === "COMPLETED") {
           throw new Error(
             "Matched or completed listings cannot be deleted for historical integrity."
@@ -596,7 +607,7 @@ export class ListingCrudService {
       for (const row of rawRows) {
         if (!listingMap.has(row.id)) {
           listingMap.set(row.id, row);
-        } else if (!listingMap.get(row.id)!.engagementId && row.engagementId) {
+        } else if (!listingMap.get(row.id)?.engagementId && row.engagementId) {
           listingMap.set(row.id, row);
         }
       }
@@ -699,11 +710,10 @@ export class ListingCrudService {
           }
 
           const listingRows = await listingQuery;
-          if (listingRows.length === 0) {
+          const listing = listingRows[0];
+          if (!listing) {
             throw new Error("Listing not found or unauthorized.");
           }
-
-          const listing = listingRows[0]!;
           if (
             listing.status === "MATCHED" ||
             listing.status === "COMPLETED" ||
@@ -801,34 +811,31 @@ export class ListingCrudService {
               and(eq(schema.offers.listingId, listing.id), eq(schema.offers.status, "PENDING"))
             );
 
-          for (const offeror of pendingOfferors) {
-            const isEn = offeror.locale === "en";
-            let titleText = "İlan Güncellendi";
-            if (isEn) {
-              titleText = "Listing Updated";
-            }
-            let messageText = `Teklif verdiğiniz "${updates.title || listing.title}" başlıklı ilan işveren tarafından güncellendi.`;
-            if (isEn) {
-              messageText = `The listing "${updates.title || listing.title}" you submitted an offer to has been updated by the owner.`;
-            }
-            let actionUrl = `/tr/ilanlar/${listing.slug}`;
-            if (isEn) {
-              actionUrl = `/en/listings/${listing.slug}`;
-            }
+          await Promise.all(
+            pendingOfferors.map(async (offeror) => {
+              const isEn = offeror.locale === "en";
+              const titleText = isEn ? "Listing Updated" : "İlan Güncellendi";
+              const messageText = isEn
+                ? `The listing "${updates.title || listing.title}" you submitted an offer to has been updated by the owner.`
+                : `Teklif verdiğiniz "${updates.title || listing.title}" başlıklı ilan işveren tarafından güncellendi.`;
+              const actionUrl = isEn
+                ? `/en/listings/${listing.slug}`
+                : `/tr/ilanlar/${listing.slug}`;
 
-            await NotificationService.createNotification(
-              offeror.offerorUserId,
-              "LISTING_UPDATED",
-              "listing",
-              listing.id,
-              {
-                title: titleText,
-                message: messageText,
-                actionUrl,
-              },
-              tx
-            );
-          }
+              await NotificationService.createNotification(
+                offeror.offerorUserId,
+                "LISTING_UPDATED",
+                "listing",
+                listing.id,
+                {
+                  title: titleText,
+                  message: messageText,
+                  actionUrl,
+                },
+                tx
+              );
+            })
+          );
         });
         return;
       } catch (err) {

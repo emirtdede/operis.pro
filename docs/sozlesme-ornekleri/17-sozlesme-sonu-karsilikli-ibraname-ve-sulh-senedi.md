@@ -1,10 +1,10 @@
 # SÖZLEŞME SONU KARŞILIKLI İBRANAME VE SULH SENEDİ
-**Sened No:** `OPR-DISCHARGE-ENG2026B-MU985J9M`  
+**Sened No:** `OPR-DISCHARGE-ENG2026B-MUALISHG`  
 **Proje Adı:** Kurumsal B2B Finansal Raporlama ve Analitik Platformu  
 **Sözleşme / İş Referansı:** `ENG-2026-B2B-FINANCE-01`  
-**Tanzim Tarihi:** 20.09.2026 05:56:10  
+**Tanzim Tarihi:** 21.09.2026 04:58:10  
 **Mevzuat Dayanağı:** 6098 s. TBK m. 132 & m. 166, 6100 s. HMK m. 313 (Sulh ve İbra Sözleşmesi)  
-**Master SHA-256 Kök Parmak İzi:** `22cd671272e1c44c687afb74951808ebd77c20c292e08edba56d3c047d3077e8`  
+**Master SHA-256 Kök Parmak İzi:** `274afe3ede2e442536ba88d86a3f7078d230a6f08def1f306f19d061cd363e15`  
 
 ---
 

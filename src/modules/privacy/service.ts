@@ -144,7 +144,11 @@ export class PrivacyService {
             )
           );
 
-        for (const listing of userListings) {
+        if (userListings.length > 0) {
+          const listingIds = userListings.map((l) => l.id);
+          const listingTitleMap = new Map(userListings.map((l) => [l.id, l.title]));
+
+          // 1. Batch update all user listings to DELETED
           await tx
             .update(schema.listings)
             .set({
@@ -152,50 +156,59 @@ export class PrivacyService {
               deletedAt: now,
               updatedAt: now,
             })
-            .where(eq(schema.listings.id, listing.id));
+            .where(inArray(schema.listings.id, listingIds));
 
+          // 2. Batch select all pending offers across these listings
           const pendingOffers = await tx
             .select({
               id: schema.offers.id,
+              listingId: schema.offers.listingId,
               offerorUserId: schema.offers.offerorUserId,
               locale: schema.profiles.locale,
             })
             .from(schema.offers)
             .leftJoin(schema.profiles, eq(schema.offers.offerorUserId, schema.profiles.userId))
             .where(
-              and(eq(schema.offers.listingId, listing.id), eq(schema.offers.status, "PENDING"))
+              and(
+                inArray(schema.offers.listingId, listingIds),
+                eq(schema.offers.status, "PENDING")
+              )
             );
 
           for (const po of pendingOffers) {
             pendingOffersToNotify.push({
               id: po.id,
               offerorUserId: po.offerorUserId,
-              listingTitle: listing.title,
+              listingTitle: listingTitleMap.get(po.listingId) || "İlan",
               locale: po.locale || "tr",
             });
           }
 
-          // Expire any pending offers on this deleted listing
-          await tx
-            .update(schema.offers)
-            .set({
-              status: "EXPIRED_LISTING_INACTIVE",
-              resolvedAt: now,
-              updatedAt: now,
-            })
-            .where(
-              and(eq(schema.offers.listingId, listing.id), eq(schema.offers.status, "PENDING"))
-            );
+          // 3. Batch expire all pending offers on these deleted listings
+          if (pendingOffers.length > 0) {
+            const pendingOfferIds = pendingOffers.map((o) => o.id);
+            await tx
+              .update(schema.offers)
+              .set({
+                status: "EXPIRED_LISTING_INACTIVE",
+                resolvedAt: now,
+                updatedAt: now,
+              })
+              .where(inArray(schema.offers.id, pendingOfferIds));
+          }
 
-          await tx.insert(schema.listingStatusEvents).values({
-            listingId: listing.id,
-            fromStatus: listing.status,
-            toStatus: "DELETED",
-            reason: "ACCOUNT_DELETED",
-            actorType: "USER",
-            actorId: user.id,
-            activationSeq: listing.activationSeq,
-          });
+          // 4. Bulk insert listing status events
+          await tx.insert(schema.listingStatusEvents).values(
+            userListings.map((listing) => ({
+              listingId: listing.id,
+              fromStatus: listing.status,
+              toStatus: "DELETED",
+              reason: "ACCOUNT_DELETED",
+              actorType: "USER",
+              actorId: user.id,
+              activationSeq: listing.activationSeq,
+            }))
+          );
         }
 
         // 7. Withdraw any active pending offers submitted by user
@@ -952,13 +965,14 @@ export class PrivacyService {
     batchSize = 5,
     workerId = `worker-${process.pid}`
   ): Promise<number> {
-    let count = 0;
-    for (let i = 0; i < batchSize; i++) {
+    const processBatch = async (remaining: number, count: number): Promise<number> => {
+      if (remaining <= 0) return count;
       const processed = await ExportJobManager.processNextExportJob(workerId);
-      if (!processed) break;
-      count++;
-    }
-    return count;
+      if (!processed) return count;
+      return processBatch(remaining - 1, count + 1);
+    };
+
+    return processBatch(batchSize, 0);
   }
 
   /**

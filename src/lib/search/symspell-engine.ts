@@ -84,7 +84,8 @@ export class SymSpellEngine {
     const visited = new Set<string>([word]);
 
     while (queue.length > 0) {
-      const item = queue.shift()!;
+      const item = queue.shift();
+      if (!item) break;
       if (item.dist < maxDistance) {
         for (let i = 0; i < item.term.length; i++) {
           const del = item.term.slice(0, i) + item.term.slice(i + 1);
@@ -124,15 +125,16 @@ export class SymSpellEngine {
 
     for (let i = 1; i <= lenA; i++) {
       currRow[0] = i;
-      let minInRow = currRow[0]!;
-      const charA = a[i - 1]!;
+      let minInRow = currRow[0] ?? i;
+      const charA = a[i - 1] ?? "";
 
       for (let j = 1; j <= lenB; j++) {
-        const cost = charA === b[j - 1]! ? 0 : 1;
+        const charB = b[j - 1] ?? "";
+        const cost = charA === charB ? 0 : 1;
         const dist = Math.min(
-          currRow[j - 1]! + 1, // insertion
-          prevRow[j]! + 1, // deletion
-          prevRow[j - 1]! + cost // substitution
+          (currRow[j - 1] ?? 0) + 1, // insertion
+          (prevRow[j] ?? 0) + 1, // deletion
+          (prevRow[j - 1] ?? 0) + cost // substitution
         );
         currRow[j] = dist;
         if (dist < minInRow) minInRow = dist;
@@ -142,11 +144,12 @@ export class SymSpellEngine {
       if (minInRow > maxLimit) return maxLimit + 1;
 
       for (let j = 0; j <= lenB; j++) {
-        prevRow[j] = currRow[j]!;
+        prevRow[j] = currRow[j] ?? 0;
       }
     }
 
-    return currRow[lenB]! <= maxLimit ? currRow[lenB]! : maxLimit + 1;
+    const finalDist = currRow[lenB] ?? maxLimit + 1;
+    return finalDist <= maxLimit ? finalDist : maxLimit + 1;
   }
 
   /**
@@ -164,7 +167,7 @@ export class SymSpellEngine {
         {
           term,
           distance: 0,
-          frequency: this.words.get(term)!,
+          frequency: this.words.get(term) ?? 1,
         },
       ];
     }

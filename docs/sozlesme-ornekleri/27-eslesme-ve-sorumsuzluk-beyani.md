@@ -1,7 +1,7 @@
 # EŞLEŞTIRME VE SORUMLULUK REDDI
 > **Alt Başlık:** Platform Rolü ve Mali/Hukuki Muafiyet Bildirimi  
 > **Sürüm:** v1.0 | **Son Güncelleme:** 07.09.2026 | **Rozet:** Kesin Sorumluluk Reddi • Aracı Muafiyeti  
-> **Kriptografik İçerik Özeti (SHA-256):** `c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2`  
+> **Kriptografik İçerik Özeti (SHA-256):** `083797d7d865eae2f6982e5b57631fdfc91134eb0ae1c0cffaf433c73f0ca992`  
 
 ---
 

@@ -1,0 +1,71 @@
+diff --git a/dist/esm/server/load-manifest.external.js b/dist/esm/server/load-manifest.external.js
+index e51b34071295f35909b9971bcadf944e5325433a..fb635a2e3bc760e1c278504f81cff0492aa875d4 100644
+--- a/dist/esm/server/load-manifest.external.js
++++ b/dist/esm/server/load-manifest.external.js
+@@ -1,5 +1,5 @@
+ import { join } from 'path';
+-import { readFileSync } from 'fs';
++import { readFileSync, writeFileSync } from 'fs';
+ import { runInNewContext } from 'vm';
+ import { deepFreeze } from '../shared/lib/deep-freeze';
+ const sharedCache = new Map();
+@@ -21,7 +21,26 @@ export function loadManifest(path, shouldCache = true, cache = sharedCache, skip
+         manifest = readFileSync(/* turbopackIgnore: true */ path, 'utf8');
+     }
+     if (!skipParse) {
+-        manifest = JSON.parse(manifest);
++        try {
++            manifest = JSON.parse(manifest);
++        } catch (parseErr) {
++            const lastBrace = manifest.lastIndexOf('}');
++            const lastBracket = manifest.lastIndexOf(']');
++            const cutIndex = Math.max(lastBrace, lastBracket);
++            if (cutIndex !== -1) {
++                try {
++                    const cleaned = manifest.slice(0, cutIndex + 1);
++                    manifest = JSON.parse(cleaned);
++                    try {
++                        writeFileSync(path, cleaned, 'utf8');
++                    } catch {}
++                } catch {
++                    throw parseErr;
++                }
++            } else {
++                throw parseErr;
++            }
++        }
+         // Freeze the manifest so it cannot be modified if we're caching it.
+         if (shouldCache) {
+             manifest = deepFreeze(manifest);
+diff --git a/dist/server/load-manifest.external.js b/dist/server/load-manifest.external.js
+index 40811b698e8403fa2c806b54ea01b5d3b9aa5275..d1e41c12c4787461ec4eb63ed2d0f41f54520ab1 100644
+--- a/dist/server/load-manifest.external.js
++++ b/dist/server/load-manifest.external.js
+@@ -51,7 +51,26 @@ function loadManifest(path, shouldCache = true, cache = sharedCache, skipParse =
+         manifest = (0, _fs.readFileSync)(/* turbopackIgnore: true */ path, 'utf8');
+     }
+     if (!skipParse) {
+-        manifest = JSON.parse(manifest);
++        try {
++            manifest = JSON.parse(manifest);
++        } catch (parseErr) {
++            const lastBrace = manifest.lastIndexOf('}');
++            const lastBracket = manifest.lastIndexOf(']');
++            const cutIndex = Math.max(lastBrace, lastBracket);
++            if (cutIndex !== -1) {
++                try {
++                    const cleaned = manifest.slice(0, cutIndex + 1);
++                    manifest = JSON.parse(cleaned);
++                    try {
++                        (0, _fs.writeFileSync)(path, cleaned, 'utf8');
++                    } catch {}
++                } catch {
++                    throw parseErr;
++                }
++            } else {
++                throw parseErr;
++            }
++        }
+         // Freeze the manifest so it cannot be modified if we're caching it.
+         if (shouldCache) {
+             manifest = (0, _deepfreeze.deepFreeze)(manifest);

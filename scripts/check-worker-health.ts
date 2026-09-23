@@ -89,9 +89,10 @@ async function main() {
             `[OBSERVER_ALERT_DELIVERY_EXHAUSTED] Operational alert '${pendingAlert.event}' failed after 5 attempts. Escalated to stderr log: ${JSON.stringify(pendingAlert.details)}`
           );
         } else {
+          const fallbackDelay =
+            RETRY_BACKOFF_DELAYS_MS[RETRY_BACKOFF_DELAYS_MS.length - 1] ?? 60000;
           const delay =
-            RETRY_BACKOFF_DELAYS_MS[pendingAlert.attemptCount - 1] ||
-            RETRY_BACKOFF_DELAYS_MS[RETRY_BACKOFF_DELAYS_MS.length - 1]!;
+            RETRY_BACKOFF_DELAYS_MS[pendingAlert.attemptCount - 1] ?? fallbackDelay;
           pendingAlert.nextAttemptAt = new Date(Date.now() + delay).toISOString();
         }
       }
@@ -103,6 +104,11 @@ async function main() {
     reasons: string[];
     heartbeatAgeSeconds: number;
     dbProbeStatus: "UP" | "DOWN";
+  } = {
+    healthy: false,
+    reasons: ["Uninitialized observer evaluation"],
+    heartbeatAgeSeconds: 999999,
+    dbProbeStatus: "DOWN",
   };
 
   let independentDbProbe: { status: "UP" | "DOWN"; latencyMs: number; error?: string } | null =
@@ -159,20 +165,20 @@ async function main() {
   if (probeDb) {
     independentDbProbe = await probeDatabaseDirectly(5000);
     if (independentDbProbe.status !== "UP") {
-      evalResult!.healthy = false;
-      evalResult!.reasons.push(
+      evalResult.healthy = false;
+      evalResult.reasons.push(
         `Independent DB probe failed: ${independentDbProbe.error || "unknown"}`
       );
     }
   }
 
-  const currentStatus: "UP" | "DOWN" = evalResult!.healthy ? "UP" : "DOWN";
+  const currentStatus: "UP" | "DOWN" = evalResult.healthy ? "UP" : "DOWN";
 
   // Transition alerts: UNKNOWN/UP -> DOWN or DOWN -> UP
   if (prevState.lastStatus !== "DOWN" && currentStatus === "DOWN") {
     const alertDetails = {
-      reasons: evalResult!.reasons,
-      heartbeatAgeSeconds: evalResult!.heartbeatAgeSeconds,
+      reasons: evalResult.reasons,
+      heartbeatAgeSeconds: evalResult.heartbeatAgeSeconds,
       independentDbProbe,
     };
     const sent = await sendOperationalAlert(webhookUrl, "worker_health_down", alertDetails);
@@ -182,13 +188,13 @@ async function main() {
         details: alertDetails,
         attemptCount: 1,
         createdAt: new Date().toISOString(),
-        nextAttemptAt: new Date(Date.now() + RETRY_BACKOFF_DELAYS_MS[0]!).toISOString(),
+        nextAttemptAt: new Date(Date.now() + (RETRY_BACKOFF_DELAYS_MS[0] ?? 60000)).toISOString(),
       };
     }
   } else if (prevState.lastStatus === "DOWN" && currentStatus === "UP") {
     const alertDetails = {
       recoveredAt: new Date().toISOString(),
-      heartbeatAgeSeconds: evalResult!.heartbeatAgeSeconds,
+      heartbeatAgeSeconds: evalResult.heartbeatAgeSeconds,
       independentDbProbe,
     };
     const sent = await sendOperationalAlert(webhookUrl, "worker_health_recovered", alertDetails);
@@ -198,7 +204,7 @@ async function main() {
         details: alertDetails,
         attemptCount: 1,
         createdAt: new Date().toISOString(),
-        nextAttemptAt: new Date(Date.now() + RETRY_BACKOFF_DELAYS_MS[0]!).toISOString(),
+        nextAttemptAt: new Date(Date.now() + (RETRY_BACKOFF_DELAYS_MS[0] ?? 60000)).toISOString(),
       };
     }
   }
@@ -212,14 +218,14 @@ async function main() {
 
   const output = {
     status: currentStatus,
-    healthy: evalResult!.healthy,
-    heartbeatAgeSeconds: Math.round(evalResult!.heartbeatAgeSeconds * 10) / 10,
-    reasons: evalResult!.reasons,
+    healthy: evalResult.healthy,
+    heartbeatAgeSeconds: Math.round(evalResult.heartbeatAgeSeconds * 10) / 10,
+    reasons: evalResult.reasons,
     independentDbProbe,
     timestamp: new Date().toISOString(),
   };
 
-  if (evalResult!.healthy) {
+  if (evalResult.healthy) {
     console.info(JSON.stringify(output, null, 2));
     process.exit(0);
   } else {

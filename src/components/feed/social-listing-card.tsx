@@ -2,6 +2,7 @@
 
 import { useState, useMemo, memo } from "react";
 import Link from "next/link";
+import { formatBudgetRange } from "@/src/lib/format/budget";
 import {
   ArrowUpRight,
   Zap,
@@ -111,10 +112,8 @@ export const SocialListingCard = memo(function SocialListingCard({
 
   // Budget label formatting
   let budgetLabel = isTr ? "Bütçe Belirtilmedi" : "Budget not specified";
-  if (item.budgetMin && item.budgetMax) {
-    budgetLabel = `${parseFloat(item.budgetMin).toLocaleString(isTr ? "tr-TR" : "en-US")} – ${parseFloat(item.budgetMax).toLocaleString(isTr ? "tr-TR" : "en-US")} ${item.budgetCurrency ?? ""}`;
-  } else if (item.budgetMin) {
-    budgetLabel = `${isTr ? "Min" : "From"} ${parseFloat(item.budgetMin).toLocaleString(isTr ? "tr-TR" : "en-US")} ${item.budgetCurrency ?? ""}`;
+  if (item.budgetMin || item.budgetMax) {
+    budgetLabel = formatBudgetRange(item.budgetMin, item.budgetMax, item.budgetCurrency, isTr);
   } else if (item.budgetMode === "NEGOTIABLE") {
     budgetLabel = isTr ? "Pazarlığa Açık" : "Negotiable";
   } else if (item.budgetMode === "OPEN_OFFER" || item.budgetMode === "UNSPECIFIED") {

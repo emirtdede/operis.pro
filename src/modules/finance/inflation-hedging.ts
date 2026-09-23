@@ -151,8 +151,8 @@ export class InflationHedgingEngine {
   static getTuikIndex(monthStr: string, indexType: InflationIndexType = "HYBRID"): number {
     const normMonth = this.normalizeMonth(monthStr);
 
-    if (TUIK_INDEX_DATABASE[normMonth]) {
-      const entry = TUIK_INDEX_DATABASE[normMonth]!;
+    const entry = TUIK_INDEX_DATABASE[normMonth];
+    if (entry) {
       if (indexType === "TUFE") return entry.tufe;
       if (indexType === "YI_UFE") return entry.yiUfe;
       // HYBRID: 50% TÜFE + 50% Yİ-ÜFE
@@ -160,19 +160,19 @@ export class InflationHedgingEngine {
     }
 
     // Extrapolate smoothly for future dates beyond 2026
-    const [yearStr, monthNumStr] = normMonth.split("-");
-    const year = parseInt(yearStr!, 10);
-    const monthNum = parseInt(monthNumStr!, 10);
+    const [yearStr = "2026", monthNumStr = "12"] = normMonth.split("-");
+    const year = parseInt(yearStr, 10);
+    const monthNum = parseInt(monthNumStr, 10);
 
-    const base2026Dec = TUIK_INDEX_DATABASE["2026-12"]!;
+    const base2026Dec = TUIK_INDEX_DATABASE["2026-12"] ?? { tufe: 100, yiUfe: 100 };
     const monthsElapsed = (year - 2026) * 12 + (monthNum - 12);
 
     if (monthsElapsed <= 0) {
       // Prior to 2024, fallback to 2024-01
-      const entry = TUIK_INDEX_DATABASE["2024-01"]!;
-      if (indexType === "TUFE") return entry.tufe;
-      if (indexType === "YI_UFE") return entry.yiUfe;
-      return roundCurrency((entry.tufe + entry.yiUfe) / 2);
+      const fallbackEntry = TUIK_INDEX_DATABASE["2024-01"] ?? { tufe: 100, yiUfe: 100 };
+      if (indexType === "TUFE") return fallbackEntry.tufe;
+      if (indexType === "YI_UFE") return fallbackEntry.yiUfe;
+      return roundCurrency((fallbackEntry.tufe + fallbackEntry.yiUfe) / 2);
     }
 
     // Compounded monthly estimate ~1.8% for future projections

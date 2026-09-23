@@ -18,20 +18,20 @@ export async function GET(
   const isEn = lang === "en";
   const ip = getClientIp(req);
 
-  const access = await evaluateSecurityAccessAsync({
-    ip,
-    purpose: "work:runbook:export:get",
-    subject: normalizeIp(ip),
-    limit: 60,
-    windowMs: 60 * 1000,
-    isEn,
-  });
-
-  if (!access.allowed) {
-    return access.response;
-  }
-
   try {
+    const access = await evaluateSecurityAccessAsync({
+      ip,
+      purpose: "work:runbook:export:get",
+      subject: normalizeIp(ip),
+      limit: 60,
+      windowMs: 60 * 1000,
+      isEn,
+    });
+
+    if (!access.allowed) {
+      return access.response;
+    }
+
     const session = await getSession();
     if (!session?.userId) {
       return NextResponse.json(

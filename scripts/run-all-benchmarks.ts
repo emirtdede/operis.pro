@@ -80,7 +80,9 @@ for (const c of goldData.cases) {
   // True nDCG@5 based on query's actual available relevant items
   let dcg = 0;
   for (let i = 0; i < Math.min(5, res.length); i++) {
-    const slug = res[i]!.slug;
+    const item = res[i];
+    if (!item) continue;
+    const slug = item.slug;
     let rel = 0;
     if (slug === c.preferredTop1) rel = 3;
     else if (c.allowedTop1 && c.allowedTop1.includes(slug)) rel = 2;
@@ -108,7 +110,9 @@ for (const c of goldData.cases) {
 
   let idcg = 0;
   for (let i = 0; i < Math.min(5, relevantGrades.length); i++) {
-    idcg += (Math.pow(2, relevantGrades[i]!) - 1) / Math.log2(i + 2);
+    const grade = relevantGrades[i];
+    if (grade === undefined) continue;
+    idcg += (Math.pow(2, grade) - 1) / Math.log2(i + 2);
   }
 
   const ndcg = idcg > 0 ? dcg / idcg : 1.0;

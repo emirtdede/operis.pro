@@ -17,16 +17,31 @@ function getLogoNumericHeight(size: number | "sm" | "md" | "lg"): number {
   return 32;
 }
 
+const SIZE_CLASSES = {
+  sm: { icon: "w-6 h-6", full: "h-6 w-[75px]" },
+  md: { icon: "w-8 h-8", full: "h-8 w-[100px]" },
+  lg: { icon: "w-10 h-10", full: "h-10 w-[125px]" },
+} as const;
+
+function getLogoSizeClass(size: number | "sm" | "md" | "lg", showText: boolean): string {
+  if (size === "sm" || (typeof size === "number" && size <= 24)) {
+    return showText ? SIZE_CLASSES.sm.full : SIZE_CLASSES.sm.icon;
+  }
+  if (size === "lg" || (typeof size === "number" && size >= 40)) {
+    return showText ? SIZE_CLASSES.lg.full : SIZE_CLASSES.lg.icon;
+  }
+  return showText ? SIZE_CLASSES.md.full : SIZE_CLASSES.md.icon;
+}
+
 export function BrandLogo({ className = "", size = "md", showText = true }: BrandLogoProps) {
   const numericHeight = getLogoNumericHeight(size);
-
   const numericWidth = Math.round(numericHeight * (350 / 112));
+  const sizeClass = getLogoSizeClass(size, showText);
 
   if (!showText) {
     return (
       <div
-        className={`inline-flex items-center justify-center select-none ${className}`}
-        style={{ width: numericHeight, height: numericHeight }}
+        className={`inline-flex items-center justify-center select-none ${sizeClass} ${className}`}
       >
         <svg
           width={numericHeight}
@@ -76,8 +91,7 @@ export function BrandLogo({ className = "", size = "md", showText = true }: Bran
 
   return (
     <div
-      className={`relative inline-flex items-center select-none ${className}`}
-      style={{ width: numericWidth, height: numericHeight }}
+      className={`relative inline-flex items-center select-none ${sizeClass} ${className}`}
     >
       {/* Light Theme Logo (#09090B on transparent background) */}
       <img

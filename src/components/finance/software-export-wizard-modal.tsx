@@ -134,18 +134,18 @@ export function SoftwareExportWizardModal({
 
   // Generated Texts
   const invoiceNote = useMemo(() => {
-    return SoftwareExportEngine.generateInvoiceNote(currentConfig, locale);
-  }, [currentConfig, locale]);
+    return SoftwareExportEngine.generateInvoiceNote(currentConfig, isTr ? "tr" : "en");
+  }, [currentConfig, isTr]);
 
   const bankDeclaration = useMemo(() => {
     return SoftwareExportEngine.generateBankRemittanceDeclaration(
       currentConfig,
-      locale,
+      isTr ? "tr" : "en",
       clientName,
       contractorName,
       budgetLabel
     );
-  }, [currentConfig, locale, clientName, contractorName, budgetLabel]);
+  }, [currentConfig, isTr, clientName, contractorName, budgetLabel]);
 
   const annexMarkdown = useMemo(() => {
     return SoftwareExportEngine.generateExportAnnexMarkdown(

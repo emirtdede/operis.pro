@@ -148,11 +148,12 @@ export async function migrateDatabase(options: MigrateDatabaseOptions): Promise<
 
   // Pre-validate throughTag if specified
   if (options.throughTag) {
+    const throughTag = options.throughTag;
     const hasMatchingThroughTag = journal.entries.some(
       (e) =>
-        e.tag === options.throughTag ||
-        e.tag.startsWith(options.throughTag!) ||
-        e.tag.startsWith(`${options.throughTag}_`)
+        e.tag === throughTag ||
+        e.tag.startsWith(throughTag) ||
+        e.tag.startsWith(`${throughTag}_`)
     );
     if (!hasMatchingThroughTag) {
       throw new Error(
@@ -278,10 +279,10 @@ export async function migrateDatabase(options: MigrateDatabaseOptions): Promise<
 
     let reachedThroughTag = false;
 
-    for (const entry of journal.entries) {
-      if (reachedThroughTag) {
-        break;
-      }
+    async function applyEntry(i: number): Promise<void> {
+      if (i >= journal.entries.length || reachedThroughTag) return;
+      const entry = journal.entries[i];
+      if (!entry) return;
 
       const isTargetThroughTag =
         options.throughTag &&
@@ -305,8 +306,12 @@ export async function migrateDatabase(options: MigrateDatabaseOptions): Promise<
         if (isTargetThroughTag) {
           reachedThroughTag = true;
         }
-        continue;
+        await applyEntry(i + 1);
+        return;
       }
+
+      const entryWhen = entry.when;
+      const entryTag = entry.tag;
 
       // Execute migration file in atomic transaction
       await client.query("BEGIN;");
@@ -316,21 +321,28 @@ export async function migrateDatabase(options: MigrateDatabaseOptions): Promise<
         }
         await client.query(sqlContent);
 
-        for (const t of tablesToUpdate) {
-          await client.query(
-            `INSERT INTO "${t.schema}"."${t.table}" (hash, created_at) VALUES ($1, $2);`,
-            [sqlHash, entry.when]
-          );
+        async function insertTableMeta(tableIdx: number): Promise<void> {
+          if (tableIdx >= tablesToUpdate.length) return;
+          const t = tablesToUpdate[tableIdx];
+          if (t) {
+            await client.query(
+              `INSERT INTO "${t.schema}"."${t.table}" (hash, created_at) VALUES ($1, $2);`,
+              [sqlHash, entryWhen]
+            );
+          }
+          await insertTableMeta(tableIdx + 1);
         }
+        await insertTableMeta(0);
+
         await client.query("COMMIT;");
 
-        appliedTimestamps.add(entry.when);
+        appliedTimestamps.add(entryWhen);
         appliedHashes.add(sqlHash);
-        appliedHashes.add(entry.tag);
+        appliedHashes.add(entryTag);
       } catch (migrationErr) {
         await client.query("ROLLBACK;");
         throw new Error(
-          `Migration ${entry.tag} failed and was rolled back: ${migrationErr instanceof Error ? migrationErr.message : String(migrationErr)}`,
+          `Migration ${entryTag} failed and was rolled back: ${migrationErr instanceof Error ? migrationErr.message : String(migrationErr)}`,
           { cause: migrationErr }
         );
       }
@@ -338,7 +350,11 @@ export async function migrateDatabase(options: MigrateDatabaseOptions): Promise<
       if (isTargetThroughTag) {
         reachedThroughTag = true;
       }
+
+      await applyEntry(i + 1);
     }
+
+    await applyEntry(0);
   } finally {
     await client.end();
   }

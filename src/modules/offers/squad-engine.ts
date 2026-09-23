@@ -193,11 +193,12 @@ export class SquadRevenueEngine {
 
     // Residual rounding delta balancing
     const remainder = Math.round((totalBudget - allocatedSum) * 100) / 100;
-    if (remainder !== 0 && leadIndex >= 0 && results[leadIndex]) {
-      const balanced = Math.round((results[leadIndex]!.allocatedAmount + remainder) * 100) / 100;
-      results[leadIndex]!.allocatedAmount = balanced;
-      results[leadIndex]!.calculatedAmount = balanced;
-      results[leadIndex]!.formattedAmount = `${new Intl.NumberFormat("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(balanced)} ${currency}`;
+    const lead = leadIndex >= 0 ? results[leadIndex] : undefined;
+    if (remainder !== 0 && lead) {
+      const balanced = Math.round((lead.allocatedAmount + remainder) * 100) / 100;
+      lead.allocatedAmount = balanced;
+      lead.calculatedAmount = balanced;
+      lead.formattedAmount = `${new Intl.NumberFormat("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(balanced)} ${currency}`;
     }
 
     return results;

@@ -212,20 +212,13 @@ export function NotificationPopover({
       {/* Notification Dropdown Popover */}
       {isOpen && (
         <div
-          className="absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-2xl border border-[var(--color-border-subtle)] shadow-2xl backdrop-blur-2xl animate-in fade-in-0 zoom-in-95 duration-150 z-50 overflow-hidden text-xs"
-          style={{
-            backgroundColor: "var(--color-surface-base)",
-            borderColor: "var(--color-border-subtle)",
-            boxShadow:
-              "0 20px 40px -15px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--color-border-subtle)",
-          }}
+          className="absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] shadow-2xl shadow-black/35 backdrop-blur-2xl animate-in fade-in-0 zoom-in-95 duration-150 z-50 overflow-hidden text-xs"
           role="region"
           aria-label={isTr ? "Bildirim Listesi" : "Notifications List"}
         >
           {/* Header */}
           <div
-            className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--color-border-subtle)]"
-            style={{ backgroundColor: "var(--color-surface-hover)" }}
+            className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]"
           >
             <div className="flex items-center gap-2">
               <span className="font-bold text-sm text-[var(--color-text-primary)]">
@@ -346,8 +339,7 @@ export function NotificationPopover({
 
           {/* Sticky Pinned Footer: "Tüm Bildirimleri Göster" */}
           <div
-            className="border-t border-[var(--color-border-subtle)] p-2"
-            style={{ backgroundColor: "var(--color-surface-hover)" }}
+            className="border-t border-[var(--color-border-subtle)] p-2 bg-[var(--color-surface-hover)]"
           >
             <Link
               href={getLocalizedRoute("dashboardNotifications", locale)}

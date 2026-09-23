@@ -309,22 +309,20 @@ export class AdminUsersService {
                 );
 
               const now = new Date();
+              const activeIds: string[] = [];
+              const inactiveIds: string[] = [];
+              const eventsToInsert: Array<typeof schema.listingStatusEvents.$inferInsert> = [];
+
               for (const hl of hiddenListings) {
                 const isStillActive = Boolean(hl.activeUntil && new Date(hl.activeUntil) > now);
-                let newListingStatus = "INACTIVE_OWNER";
+                const newListingStatus = isStillActive ? "ACTIVE" : "INACTIVE_OWNER";
                 if (isStillActive) {
-                  newListingStatus = "ACTIVE";
+                  activeIds.push(hl.id);
+                } else {
+                  inactiveIds.push(hl.id);
                 }
 
-                await tx
-                  .update(schema.listings)
-                  .set({
-                    status: newListingStatus,
-                    updatedAt: now,
-                  })
-                  .where(eq(schema.listings.id, hl.id));
-
-                await tx.insert(schema.listingStatusEvents).values({
+                eventsToInsert.push({
                   listingId: hl.id,
                   fromStatus: "HIDDEN_MODERATION",
                   toStatus: newListingStatus,
@@ -333,6 +331,30 @@ export class AdminUsersService {
                   actorId: adminUserId,
                   activationSeq: hl.activationSeq,
                 });
+              }
+
+              if (activeIds.length > 0) {
+                await tx
+                  .update(schema.listings)
+                  .set({
+                    status: "ACTIVE",
+                    updatedAt: now,
+                  })
+                  .where(inArray(schema.listings.id, activeIds));
+              }
+
+              if (inactiveIds.length > 0) {
+                await tx
+                  .update(schema.listings)
+                  .set({
+                    status: "INACTIVE_OWNER",
+                    updatedAt: now,
+                  })
+                  .where(inArray(schema.listings.id, inactiveIds));
+              }
+
+              if (eventsToInsert.length > 0) {
+                await tx.insert(schema.listingStatusEvents).values(eventsToInsert);
               }
             }
           }

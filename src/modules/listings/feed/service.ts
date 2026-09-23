@@ -180,14 +180,15 @@ export class FeedService {
       if (params.search && params.search.trim().length > 0) {
         const sanitized = params.search.trim().slice(0, 100);
         const pattern = `%${sanitized}%`;
-        conditions.push(
-          or(
-            ilike(schema.listings.title, pattern),
-            ilike(schema.listings.summary, pattern),
-            ilike(schema.listings.scope, pattern),
-            sql`array_to_string(${schema.listings.tags}, ' ') ILIKE ${pattern}`
-          )!
+        const searchCondition = or(
+          ilike(schema.listings.title, pattern),
+          ilike(schema.listings.summary, pattern),
+          ilike(schema.listings.scope, pattern),
+          sql`array_to_string(${schema.listings.tags}, ' ') ILIKE ${pattern}`
         );
+        if (searchCondition) {
+          conditions.push(searchCondition);
+        }
       }
 
       // Server-side filter: last 24 hours (B21, K04)

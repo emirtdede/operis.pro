@@ -1,7 +1,7 @@
 # KABUL EDILEBILIR KULLANIM POLITIKASI
 > **Alt Başlık:** 5237 Sayılı TCK ve Siber Güvenlik Esasları  
 > **Sürüm:** v1.0 | **Son Güncelleme:** 17.09.2026 | **Rozet:** Siber Güvenlik & Kötüye Kullanım Kalkanı  
-> **Kriptografik İçerik Özeti (SHA-256):** `e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4`  
+> **Kriptografik İçerik Özeti (SHA-256):** `9068c0def79422d3089cd48c26f4a568b058c83d8be36a39cbd6def7a3ba2aa0`  
 
 ---
 

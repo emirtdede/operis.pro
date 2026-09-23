@@ -1,4 +1,4 @@
-import { eq, and, desc, or, lte } from "drizzle-orm";
+import { eq, and, desc, or, lte, inArray } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
 import { EMOJI_REGEX, validateContentAppropriateness } from "@/src/lib/security/content-moderator";
 import { NotificationService } from "@/src/modules/notifications/service";
@@ -659,7 +659,7 @@ export class ReviewService {
   static async checkPendingMandatoryReviews(
     userId: string
   ): Promise<PendingMandatoryReviewDto[]> {
-    if (Boolean(process.env.VITEST)) {
+    if (process.env.VITEST) {
       return [];
     }
 
@@ -689,56 +689,86 @@ export class ReviewService {
           )
         );
 
+      const validCandidates = candidateEngagements.filter((row) => {
+        const completedAt = row.engagement.completedAt || row.engagement.matchedAt;
+        return completedAt >= windowCutoff;
+      });
+
+      if (validCandidates.length === 0) {
+        return [];
+      }
+
+      const candidateEngagementIds = validCandidates.map((r) => r.engagement.id);
+
+      // 1. Batch query existing reviews by this author in a single roundtrip
+      const existingReviews = await db
+        .select({ engagementId: schema.engagementReviews.engagementId })
+        .from(schema.engagementReviews)
+        .where(
+          and(
+            inArray(schema.engagementReviews.engagementId, candidateEngagementIds),
+            eq(schema.engagementReviews.authorUserId, userId)
+          )
+        );
+
+      const reviewedEngagementIds = new Set(existingReviews.map((r) => r.engagementId));
+      const unreviewedCandidates = validCandidates.filter(
+        (r) => !reviewedEngagementIds.has(r.engagement.id)
+      );
+
+      if (unreviewedCandidates.length === 0) {
+        return [];
+      }
+
+      // 2. Batch query counterparty profiles in a single roundtrip
+      const counterpartyMap = new Map<string, string>();
+      const counterpartyUserIds: string[] = [];
+
+      for (const row of unreviewedCandidates) {
+        const isOwner = row.engagement.ownerUserId === userId;
+        const cUserId = isOwner ? row.engagement.freelancerUserId : row.engagement.ownerUserId;
+        counterpartyMap.set(row.engagement.id, cUserId);
+        if (!counterpartyUserIds.includes(cUserId)) {
+          counterpartyUserIds.push(cUserId);
+        }
+      }
+
+      const counterpartyProfiles = await db
+        .select({
+          userId: schema.profiles.userId,
+          displayName: schema.profiles.displayName,
+          handle: schema.profiles.handle,
+        })
+        .from(schema.profiles)
+        .where(inArray(schema.profiles.userId, counterpartyUserIds));
+
+      const profileByUserId = new Map(counterpartyProfiles.map((p) => [p.userId, p]));
       const pending: PendingMandatoryReviewDto[] = [];
 
-      for (const row of candidateEngagements) {
+      for (const row of unreviewedCandidates) {
         const eng = row.engagement;
         const completedAt = eng.completedAt || eng.matchedAt;
-        if (completedAt < windowCutoff) {
-          continue; // Past 14-day review window
-        }
+        const isOwner = eng.ownerUserId === userId;
+        const cUserId = counterpartyMap.get(eng.id);
+        if (!cUserId) continue;
+        const counterpartyProfile = profileByUserId.get(cUserId);
 
-        // Check if user has already reviewed
-        const myReviews = await db
-          .select({ id: schema.engagementReviews.id })
-          .from(schema.engagementReviews)
-          .where(
-            and(
-              eq(schema.engagementReviews.engagementId, eng.id),
-              eq(schema.engagementReviews.authorUserId, userId)
-            )
-          )
-          .limit(1);
+        const expiresAt = new Date(completedAt.getTime() + REVIEW_WINDOW_DAYS * 24 * 60 * 60 * 1000);
+        const daysRemaining = Math.max(
+          0,
+          Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+        );
 
-        if (myReviews.length === 0) {
-          const isOwner = eng.ownerUserId === userId;
-          const counterpartyUserId = isOwner ? eng.freelancerUserId : eng.ownerUserId;
-          const [counterpartyProfile] = await db
-            .select({
-              displayName: schema.profiles.displayName,
-              handle: schema.profiles.handle,
-            })
-            .from(schema.profiles)
-            .where(eq(schema.profiles.userId, counterpartyUserId))
-            .limit(1);
-
-          const expiresAt = new Date(completedAt.getTime() + REVIEW_WINDOW_DAYS * 24 * 60 * 60 * 1000);
-          const daysRemaining = Math.max(
-            0,
-            Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
-          );
-
-          pending.push({
-            engagementId: eng.id,
-            projectTitle: eng.listingTitleSnapshot,
-            counterpartyName: counterpartyProfile?.displayName || "İş Ortağı",
-            counterpartyHandle: counterpartyProfile?.handle || "ortak",
-            counterpartyRole: isOwner ? "FREELANCER" : "EMPLOYER",
-            completedAt,
-            reviewWindowExpiresAt: expiresAt,
-            daysRemaining,
-          });
-        }
+        pending.push({
+          engagementId: eng.id,
+          projectTitle: eng.listingTitleSnapshot,
+          counterpartyName: counterpartyProfile?.displayName || "İş Ortağı",
+          counterpartyHandle: counterpartyProfile?.handle || "ortak",
+          counterpartyRole: isOwner ? "FREELANCER" : "EMPLOYER",
+          completedAt,
+          reviewWindowExpiresAt: expiresAt,
+          daysRemaining,
+        });
       }
 
       return pending;
@@ -752,7 +782,7 @@ export class ReviewService {
    * Automatically reveals single-sided reviews whose 14-day review window has expired.
    */
   static async autoRevealExpiredReviews(): Promise<number> {
-    if (Boolean(process.env.VITEST)) {
+    if (process.env.VITEST) {
       const now = new Date();
       let revealedCount = 0;
       for (const r of inMemoryReviews) {

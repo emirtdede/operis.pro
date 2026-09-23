@@ -15,26 +15,7 @@ const THEME_STORAGE_KEY = "fp_theme_pref";
 const THEME_COOKIE_KEY = "fp_theme";
 
 export function ThemeScript() {
-  const code = `(function() {
-    try {
-      const cookieTheme = document.cookie.match(/(?:^|; )fp_theme=([^;]*)/);
-      let theme = cookieTheme ? decodeURIComponent(cookieTheme[1]) : null;
-      if (!theme) {
-        theme = localStorage.getItem("${THEME_STORAGE_KEY}") || localStorage.getItem("fp_theme");
-      }
-      if (!theme || (theme !== "light" && theme !== "dark" && theme !== "black")) {
-        theme = "dark";
-      }
-      document.documentElement.setAttribute("data-theme", theme);
-      if (theme === "dark" || theme === "black") {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    } catch (e) {}
-  })();`;
-
-  return <script dangerouslySetInnerHTML={{ __html: code }} />;
+  return <script src="/scripts/theme-init.js" />;
 }
 
 export function ThemeProvider({

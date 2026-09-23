@@ -321,33 +321,43 @@ export const PLATFORM_REGISTRY: Record<string, PlatformConfig> = {
  * Detects platform config either by explicit type or by parsing the URL
  */
 export function getPlatformConfig(type?: string, url?: string): PlatformConfig {
-  if (type && PLATFORM_REGISTRY[type.toLowerCase()]) {
-    return PLATFORM_REGISTRY[type.toLowerCase()]!;
+  const fallback = PLATFORM_REGISTRY.other ?? {
+    label: "Diğer Bağlantı",
+    placeholder: "https://...",
+    brandColor: "#71717a",
+    badgeClass:
+      "border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)]",
+    icon: Globe,
+  };
+
+  if (type) {
+    const fromType = PLATFORM_REGISTRY[type.toLowerCase()];
+    if (fromType) return fromType;
   }
 
   if (url) {
     const u = url.toLowerCase();
-    if (u.includes("github.com")) return PLATFORM_REGISTRY.github!;
-    if (u.includes("gitlab.com")) return PLATFORM_REGISTRY.gitlab!;
-    if (u.includes("linkedin.com")) return PLATFORM_REGISTRY.linkedin!;
-    if (u.includes("behance.net")) return PLATFORM_REGISTRY.behance!;
-    if (u.includes("dribbble.com")) return PLATFORM_REGISTRY.dribbble!;
-    if (u.includes("figma.com")) return PLATFORM_REGISTRY.figma!;
-    if (u.includes("artstation.com")) return PLATFORM_REGISTRY.artstation!;
-    if (u.includes("sketchfab.com")) return PLATFORM_REGISTRY.sketchfab!;
-    if (u.includes("medium.com")) return PLATFORM_REGISTRY.medium!;
-    if (u.includes("substack.com")) return PLATFORM_REGISTRY.substack!;
-    if (u.includes("youtube.com") || u.includes("youtu.be")) return PLATFORM_REGISTRY.youtube!;
-    if (u.includes("vimeo.com")) return PLATFORM_REGISTRY.vimeo!;
-    if (u.includes("soundcloud.com")) return PLATFORM_REGISTRY.soundcloud!;
-    if (u.includes("spotify.com")) return PLATFORM_REGISTRY.spotify!;
-    if (u.includes("kaggle.com")) return PLATFORM_REGISTRY.kaggle!;
-    if (u.includes("huggingface.co")) return PLATFORM_REGISTRY.huggingface!;
-    if (u.includes("stackoverflow.com")) return PLATFORM_REGISTRY.stackoverflow!;
-    if (u.includes("codepen.io")) return PLATFORM_REGISTRY.codepen!;
-    if (u.includes("dev.to")) return PLATFORM_REGISTRY.devto!;
-    if (u.includes("x.com") || u.includes("twitter.com")) return PLATFORM_REGISTRY.x!;
+    if (u.includes("github.com")) return PLATFORM_REGISTRY.github ?? fallback;
+    if (u.includes("gitlab.com")) return PLATFORM_REGISTRY.gitlab ?? fallback;
+    if (u.includes("linkedin.com")) return PLATFORM_REGISTRY.linkedin ?? fallback;
+    if (u.includes("behance.net")) return PLATFORM_REGISTRY.behance ?? fallback;
+    if (u.includes("dribbble.com")) return PLATFORM_REGISTRY.dribbble ?? fallback;
+    if (u.includes("figma.com")) return PLATFORM_REGISTRY.figma ?? fallback;
+    if (u.includes("artstation.com")) return PLATFORM_REGISTRY.artstation ?? fallback;
+    if (u.includes("sketchfab.com")) return PLATFORM_REGISTRY.sketchfab ?? fallback;
+    if (u.includes("medium.com")) return PLATFORM_REGISTRY.medium ?? fallback;
+    if (u.includes("substack.com")) return PLATFORM_REGISTRY.substack ?? fallback;
+    if (u.includes("youtube.com") || u.includes("youtu.be")) return PLATFORM_REGISTRY.youtube ?? fallback;
+    if (u.includes("vimeo.com")) return PLATFORM_REGISTRY.vimeo ?? fallback;
+    if (u.includes("soundcloud.com")) return PLATFORM_REGISTRY.soundcloud ?? fallback;
+    if (u.includes("spotify.com")) return PLATFORM_REGISTRY.spotify ?? fallback;
+    if (u.includes("kaggle.com")) return PLATFORM_REGISTRY.kaggle ?? fallback;
+    if (u.includes("huggingface.co")) return PLATFORM_REGISTRY.huggingface ?? fallback;
+    if (u.includes("stackoverflow.com")) return PLATFORM_REGISTRY.stackoverflow ?? fallback;
+    if (u.includes("codepen.io")) return PLATFORM_REGISTRY.codepen ?? fallback;
+    if (u.includes("dev.to")) return PLATFORM_REGISTRY.devto ?? fallback;
+    if (u.includes("x.com") || u.includes("twitter.com")) return PLATFORM_REGISTRY.x ?? fallback;
   }
 
-  return PLATFORM_REGISTRY.other!;
+  return fallback;
 }

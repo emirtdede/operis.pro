@@ -53,9 +53,9 @@ export function AvatarInitials({ name, avatarUrl, size = "md", className }: Avat
         )
       )}
     >
-      {hasValidUrl ? (
+      {hasValidUrl && avatarUrl ? (
         <img
-          src={avatarUrl!}
+          src={avatarUrl}
           alt={name}
           className="w-full h-full object-cover rounded-full"
           onError={() => setImageError(true)}

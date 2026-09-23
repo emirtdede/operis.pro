@@ -1,5 +1,6 @@
 import { and, asc, eq, or, sql } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
+import { mapConcurrent } from "@/src/lib/async/concurrency";
 import { NotificationService } from "@/src/modules/notifications/service";
 import { DEFAULT_USER } from "@/src/modules/auth/demo-user";
 import { inMemoryReceivedOffers, inMemorySentOffers } from "@/src/modules/offers/service";
@@ -33,11 +34,9 @@ export class ListingLifecycleService {
       }
 
       const BATCH_SIZE = 50;
-      let lastUserId: string | null = null;
-      let hasMore = true;
       const notifiedUserIds: string[] = [];
 
-      while (hasMore) {
+      const processRadarBatch = async (cursorUserId?: string): Promise<void> => {
         const conditions = [
           sql`${schema.profiles.userId} != ${ownerUserId}`,
           sql`cardinality(${schema.profiles.trackedSkills}) > 0`,
@@ -55,8 +54,8 @@ export class ListingLifecycleService {
           )`,
         ];
 
-        if (lastUserId) {
-          conditions.push(sql`${schema.profiles.userId} > ${lastUserId}`);
+        if (cursorUserId) {
+          conditions.push(sql`${schema.profiles.userId} > ${cursorUserId}`);
         }
 
         const candidateProfiles = await db
@@ -70,15 +69,9 @@ export class ListingLifecycleService {
           .orderBy(asc(schema.profiles.userId))
           .limit(BATCH_SIZE);
 
-        if (candidateProfiles.length < BATCH_SIZE) {
-          hasMore = false;
-        }
-
         if (candidateProfiles.length === 0) {
-          break;
+          return;
         }
-
-        lastUserId = candidateProfiles[candidateProfiles.length - 1]!.userId;
 
         const batchNotifications: Array<{
           userId: string;
@@ -140,8 +133,17 @@ export class ListingLifecycleService {
             notifiedUserIds.push(n.userId);
           }
         }
-      }
 
+        if (candidateProfiles.length < BATCH_SIZE) {
+          return;
+        }
+
+        const lastCandidate = candidateProfiles[candidateProfiles.length - 1];
+        if (!lastCandidate) return;
+        return processRadarBatch(lastCandidate.userId);
+      };
+
+      await processRadarBatch();
       return notifiedUserIds;
     } catch (err) {
       if (
@@ -241,7 +243,6 @@ export class ListingLifecycleService {
 
       const notifiedUserIds: string[] = [];
       const CHUNK_SIZE = 50;
-      let lastFollowerUserId: string | null = null;
 
       const formatBudgetStr = (isEn: boolean) => {
         const mode = budgetDetails?.budgetMode;
@@ -265,10 +266,10 @@ export class ListingLifecycleService {
         return isEn ? "Negotiable" : "Görüşülebilir";
       };
 
-      while (true) {
+      const processCategoryRadarBatch = async (cursorFollowerId?: string): Promise<void> => {
         let afterCondition = sql`1 = 1`;
-        if (lastFollowerUserId) {
-          afterCondition = sql`${schema.categoryFollows.userId} > ${lastFollowerUserId}`;
+        if (cursorFollowerId) {
+          afterCondition = sql`${schema.categoryFollows.userId} > ${cursorFollowerId}`;
         }
 
         let excludeCondition = sql`1 = 1`;
@@ -313,13 +314,25 @@ export class ListingLifecycleService {
           .limit(CHUNK_SIZE);
 
         if (chunk.length === 0) {
-          break;
+          return;
         }
 
-        const lastChunkFollower = chunk[chunk.length - 1];
-        if (lastChunkFollower) {
-          lastFollowerUserId = lastChunkFollower.userId;
-        }
+        const chunkNotifications: Array<{
+          userId: string;
+          payload: {
+            listingId: string;
+            activationSeq: number;
+            title: string;
+            message: string;
+            actionUrl: string;
+            budget: string;
+            categoryName: string;
+            summary: string;
+            tags: string;
+            relevanceBadge: string;
+          };
+          idempotencyKey: string;
+        }> = [];
 
         for (const follower of chunk) {
           if (excludeUserIds.includes(follower.userId)) {
@@ -366,12 +379,9 @@ export class ListingLifecycleService {
             actionUrl = `/en/listings/${slug}`;
           }
 
-          await NotificationService.createNotification(
-            follower.userId,
-            "CATEGORY_FOLLOW_MATCH",
-            "listing",
-            listingId,
-            {
+          chunkNotifications.push({
+            userId: follower.userId,
+            payload: {
               listingId,
               activationSeq,
               title: titleText,
@@ -383,16 +393,44 @@ export class ListingLifecycleService {
               tags: (budgetDetails?.tags || []).join(", "),
               relevanceBadge,
             },
-            undefined,
-            `listing:${listingId}:act:${activationSeq}:user:${follower.userId}`
+            idempotencyKey: `listing:${listingId}:act:${activationSeq}:user:${follower.userId}`,
+          });
+        }
+
+        if (chunkNotifications.length > 0) {
+          const results = await Promise.allSettled(
+            chunkNotifications.map((n) =>
+              NotificationService.createNotification(
+                n.userId,
+                "CATEGORY_FOLLOW_MATCH",
+                "listing",
+                listingId,
+                n.payload,
+                undefined,
+                n.idempotencyKey
+              )
+            )
           );
-          notifiedUserIds.push(follower.userId);
+          results.forEach((r, idx) => {
+            if (r.status === "fulfilled") {
+              const item = chunkNotifications[idx];
+              if (item) {
+                notifiedUserIds.push(item.userId);
+              }
+            }
+          });
         }
 
         if (chunk.length < CHUNK_SIZE) {
-          break;
+          return;
         }
-      }
+
+        const lastChunkFollower = chunk[chunk.length - 1];
+        if (!lastChunkFollower) return;
+        return processCategoryRadarBatch(lastChunkFollower.userId);
+      };
+
+      await processCategoryRadarBatch();
       return notifiedUserIds;
     } catch (err) {
       if (process.env.NODE_ENV === "production") {
@@ -425,7 +463,14 @@ export class ListingLifecycleService {
       ownerUserId: string,
       excludeUserIds?: string[],
       activationSeq?: number,
-      budgetDetails?: any
+      budgetDetails?: {
+        budgetMode?: string;
+        budgetCurrency?: string;
+        budgetMin?: string | null;
+        budgetMax?: string | null;
+        summary?: string | null;
+        tags?: string[];
+      }
     ) => Promise<string[]>
   ): Promise<void> {
     const radarNotifier = dispatchRadarFn || ListingLifecycleService.dispatchRadarNotifications;
@@ -445,11 +490,10 @@ export class ListingLifecycleService {
           .where(and(eq(schema.listings.id, listingId), eq(schema.listings.ownerUserId, userId)))
           .limit(1);
 
-        if (listingRows.length === 0) {
+        const listing = listingRows[0];
+        if (!listing) {
           throw new Error("Listing not found or you are not authorized.");
         }
-
-        const listing = listingRows[0]!;
 
         if (listing.status !== "INACTIVE_EXPIRED" && listing.status !== "INACTIVE_OWNER") {
           throw new Error(`Cannot reactivate listing in ${listing.status} status.`);
@@ -698,11 +742,10 @@ export class ListingLifecycleService {
           .where(and(eq(schema.listings.id, listingId), eq(schema.listings.ownerUserId, userId)))
           .limit(1);
 
-        if (listingRows.length === 0) {
+        const listing = listingRows[0];
+        if (!listing) {
           throw new Error("Listing not found or you are not authorized.");
         }
-
-        const listing = listingRows[0]!;
         if (listing.status !== "ACTIVE") {
           throw new Error("Only ACTIVE listings can be deactivated.");
         }
@@ -894,9 +937,8 @@ export class ListingLifecycleService {
         return 0;
       }
 
-      let expiredCount = 0;
-
-      for (const item of expiredListings) {
+      const archiveSingleListing = async (item: { id: string; seq: number }): Promise<number> => {
+        let singleExpiredCount = 0;
         const pendingNotifications: Array<{
           userId: string;
           type: "LISTING_EXPIRED" | "OFFER_EXPIRED_LISTING";
@@ -924,7 +966,7 @@ export class ListingLifecycleService {
             .returning({ id: schema.listings.id });
 
           if (updated.length > 0) {
-            expiredCount++;
+            singleExpiredCount = 1;
 
             // Query pending offers before updating
             const pendingOffers = await tx
@@ -1047,8 +1089,12 @@ export class ListingLifecycleService {
             )
           );
         }
-      }
 
+        return singleExpiredCount;
+      };
+
+      const results = await mapConcurrent(expiredListings, 5, archiveSingleListing);
+      const expiredCount = results.reduce((acc, count) => acc + count, 0);
       return expiredCount;
     } catch (err) {
       if (process.env.NODE_ENV === "production") {
@@ -1204,23 +1250,16 @@ export class ListingLifecycleService {
         );
 
       let notifiedCount = 0;
-      for (const item of expiringSoon) {
-        try {
+      if (expiringSoon.length > 0) {
+        const tasks = expiringSoon.map((item) => {
           const isEn = item.locale === "en";
-          let titleText = "İlanınızın Süresi Dolmak Üzere";
-          if (isEn) {
-            titleText = "Listing Expiring Soon";
-          }
-          let messageText = `"${item.title}" başlıklı ilanınızın 7 günlük yayın süresi 24 saat içerisinde dolacaktır. Gerekirse ilanınızı tazeleyebilirsiniz.`;
-          if (isEn) {
-            messageText = `Your project "${item.title}" will expire in 24 hours. You can refresh your listing if you want to extend it.`;
-          }
-          let actionUrl = `/tr/ilanlar/${item.slug}`;
-          if (isEn) {
-            actionUrl = `/en/listings/${item.slug}`;
-          }
+          const titleText = isEn ? "Listing Expiring Soon" : "İlanınızın Süresi Dolmak Üzere";
+          const messageText = isEn
+            ? `Your project "${item.title}" will expire in 24 hours. You can refresh your listing if you want to extend it.`
+            : `"${item.title}" başlıklı ilanınızın 7 günlük yayın süresi 24 saat içerisinde dolacaktır. Gerekirse ilanınızı tazeleyebilirsiniz.`;
+          const actionUrl = isEn ? `/en/listings/${item.slug}` : `/tr/ilanlar/${item.slug}`;
 
-          await NotificationService.createNotification(
+          return NotificationService.createNotification(
             item.ownerUserId,
             "LISTING_EXPIRING_SOON",
             "listing",
@@ -1231,11 +1270,11 @@ export class ListingLifecycleService {
               message: messageText,
               actionUrl,
             }
-          );
-          notifiedCount++;
-        } catch {
-          // ignore individual notification failure
-        }
+          ).then(() => true).catch(() => false);
+        });
+
+        const results = await Promise.allSettled(tasks);
+        notifiedCount = results.filter((r) => r.status === "fulfilled" && r.value === true).length;
       }
       if (notifiedCount > 0 || process.env.NODE_ENV === "production") {
         return notifiedCount;
@@ -1245,6 +1284,7 @@ export class ListingLifecycleService {
     }
 
     let count = 0;
+    const inMemoryTasks: Promise<boolean>[] = [];
     for (const item of inMemoryListings) {
       if (
         item.status === "ACTIVE" &&
@@ -1255,8 +1295,8 @@ export class ListingLifecycleService {
         const key = `${item.id}-${item.activationSeq}`;
         if (!inMemoryExpiringNotified.has(key)) {
           inMemoryExpiringNotified.add(key);
-          try {
-            await NotificationService.createNotification(
+          inMemoryTasks.push(
+            NotificationService.createNotification(
               item.ownerUserId,
               "LISTING_EXPIRING_SOON",
               "listing",
@@ -1266,13 +1306,16 @@ export class ListingLifecycleService {
                 message: `"${item.title}" başlıklı ilanınızın 7 günlük yayın süresi 24 saat içerisinde dolacaktır. Gerekirse ilanınızı tazeleyebilirsiniz.`,
                 actionUrl: `/tr/ilanlar/${item.slug}`,
               }
-            );
-            count++;
-          } catch {
-            // ignore individual notification failure
-          }
+            )
+              .then(() => true)
+              .catch(() => false)
+          );
         }
       }
+    }
+    if (inMemoryTasks.length > 0) {
+      const inMemResults = await Promise.allSettled(inMemoryTasks);
+      count = inMemResults.filter((r) => r.status === "fulfilled" && r.value === true).length;
     }
     return count;
   }

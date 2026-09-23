@@ -165,6 +165,7 @@ export class AuthService {
       const legalDocKeys = ["terms", "privacy", "matching-disclaimer"];
       const docLocale = (input.locale === "en" ? "en" : "tr") as "tr" | "en";
 
+      const legalAcceptanceRecords = [];
       for (const docKey of legalDocKeys) {
         let version = "v1";
         let contentHash: string;
@@ -177,13 +178,17 @@ export class AuthService {
           contentHash = sha256(JSON.stringify(fallbackDoc || `${docKey}-v1`));
         }
 
-        await tx.insert(schema.legalAcceptances).values({
+        legalAcceptanceRecords.push({
           userId,
           documentKey: docKey,
           documentVersion: version,
           contentHash,
           acceptedAt: now,
         });
+      }
+
+      if (legalAcceptanceRecords.length > 0) {
+        await tx.insert(schema.legalAcceptances).values(legalAcceptanceRecords);
       }
 
       // E. Follow initial focus categories
@@ -193,37 +198,43 @@ export class AuthService {
           .select({ id: schema.categories.id, key: schema.categories.key })
           .from(schema.categories);
 
-        for (const catKey of uniqueCategoryKeys) {
-          const match = matchingCategories.find((c) => c.key === catKey);
-          if (match) {
-            await tx
-              .insert(schema.categoryFollows)
-              .values({
-                userId,
-                categoryId: match.id,
-              })
-              .onConflictDoNothing();
-          }
+        const categoryFollowRecords = uniqueCategoryKeys
+          .map((catKey) => matchingCategories.find((c) => c.key === catKey))
+          .filter((match): match is NonNullable<typeof match> => Boolean(match))
+          .map((match) => ({
+            userId,
+            categoryId: match.id,
+          }));
+
+        if (categoryFollowRecords.length > 0) {
+          await tx
+            .insert(schema.categoryFollows)
+            .values(categoryFollowRecords)
+            .onConflictDoNothing();
         }
       }
 
-      const sessionToken = createSessionToken(newUser!);
+      if (!newUser || !newProfile) {
+        throw new Error("Failed to register user: database transaction returned incomplete record");
+      }
+
+      const sessionToken = createSessionToken(newUser);
 
       return {
         user: {
-          id: newUser!.id,
-          email: newUser!.email,
+          id: newUser.id,
+          email: newUser.email,
           emailVerified: false,
           phoneVerified: false,
-          role: newUser!.role,
-          status: newUser!.status,
+          role: newUser.role,
+          status: newUser.status,
           profile: {
-            handle: newProfile!.handle,
-            displayName: newProfile!.displayName,
-            about: newProfile!.about,
-            showLocation: newProfile!.showLocation,
-            locale: newProfile!.locale,
-            theme: newProfile!.theme,
+            handle: newProfile.handle,
+            displayName: newProfile.displayName,
+            about: newProfile.about,
+            showLocation: newProfile.showLocation,
+            locale: newProfile.locale,
+            theme: newProfile.theme,
           },
         },
         sessionToken,
@@ -234,7 +245,7 @@ export class AuthService {
     try {
       const emailToken = createEmailVerificationToken(result.user.id, input.email);
       const appUrl =
-        process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+        process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:8000";
       const verificationUrl = `${appUrl}/api/auth/verify-email?token=${emailToken}`;
       const emailRes = await emailProvider.send({
         to: input.email,
@@ -408,7 +419,10 @@ export class AuthService {
         throw new Error("Invalid email or password.");
       }
 
-      const user = userRows[0]!;
+      const user = userRows[0];
+      if (!user) {
+        throw new Error("Invalid email or password.");
+      }
 
       if (user.status === "SUSPENDED") {
         throw new Error("This account has been suspended by platform moderation.");

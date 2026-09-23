@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
+import { NextRequest } from "next/server";
 import {
   DisputeArbiterService,
   type DisputeAnalysisInput,
@@ -248,8 +249,8 @@ describe("⚖️ Operis AI Dispute Arbiter & Evidence Analyzer Suite", () => {
 
   describe("API Route Handlers", () => {
     it("should allow admin to fetch dispute arbitration report via /api/admin/engagements/[id]/dispute-report", async () => {
-      const req = new Request("http://localhost:3000/api/admin/engagements/eng-dispute-test/dispute-report");
-      const res = await adminReportRouteHandler(req as any, {
+      const req = new NextRequest("http://localhost:3000/api/admin/engagements/eng-dispute-test/dispute-report");
+      const res = await adminReportRouteHandler(req, {
         params: Promise.resolve({ id: "eng-dispute-test" }),
       });
 
@@ -261,8 +262,8 @@ describe("⚖️ Operis AI Dispute Arbiter & Evidence Analyzer Suite", () => {
     });
 
     it("should allow authenticated participant to fetch report via /api/work/[id]/dispute-report", async () => {
-      const req = new Request("http://localhost:3000/api/work/eng-dispute-test/dispute-report");
-      const res = await workReportRouteHandler(req as any, {
+      const req = new NextRequest("http://localhost:3000/api/work/eng-dispute-test/dispute-report");
+      const res = await workReportRouteHandler(req, {
         params: Promise.resolve({ id: "eng-dispute-test" }),
       });
 

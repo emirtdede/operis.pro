@@ -9,10 +9,10 @@ import {
   ActiveEngagementsDashboard,
   ActiveEngagementItem,
 } from "@/src/components/dashboard/active-engagements-dashboard";
-import { DashboardTabs } from "@/src/components/dashboard/dashboard-tabs";
 import { MandatoryReviewBanner } from "@/src/components/dashboard/mandatory-review-banner";
 import { Button } from "@/src/components/ui/button";
-import { serializeJsonLd } from "@/src/lib/security/json-ld";
+import { JsonLd } from "@/src/components/seo/json-ld";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -73,7 +73,7 @@ export default async function ActiveWorkPage({ params }: { params: Promise<{ loc
     );
   }
 
-  let engagements: ActiveEngagementItem[] = [];
+  let engagements: ActiveEngagementItem[];
   let fetchError = false;
 
   try {
@@ -88,10 +88,7 @@ export default async function ActiveWorkPage({ params }: { params: Promise<{ loc
     engagements = [];
   }
 
-  const activeCount = engagements.filter(
-    (e) => e.status === "MATCHED" || e.status === "COMPLETION_PENDING"
-  ).length;
-
+  const baseUrl = getBaseUrl();
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -100,37 +97,31 @@ export default async function ActiveWorkPage({ params }: { params: Promise<{ loc
         "@type": "ListItem",
         position: 1,
         name: isTr ? "Ana Sayfa" : "Home",
-        item: `https://operis.pro/${locale}`,
+        item: `${baseUrl}/${locale}`,
       },
       {
         "@type": "ListItem",
         position: 2,
         name: isTr ? "Aktif Projelerim" : "Active Projects",
-        item: `https://operis.pro/${locale}/dashboard/work`,
+        item: `${baseUrl}/${locale}/dashboard/work`,
       },
     ],
   };
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-      {/* Schema.org Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
-
-      {/* Header */}
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-6">
+    <div className="space-y-6">
+      {/* Header Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400">
               <Rocket className="h-5 w-5 text-blue-400" />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
               {isTr ? "Aktif İlanlar & Projelerim" : "My Active Projects"}
             </h1>
           </div>
-          <p className="text-sm text-[var(--color-text-secondary)]">
+          <p className="text-xs sm:text-sm text-[var(--color-text-secondary)]">
             {isTr
               ? "Devam eden iş birlikleriniz, tamamlanma süreçleri ve özel çalışma alanları."
               : "Your ongoing active collaborations, completion stages, and private workspaces."}
@@ -138,20 +129,17 @@ export default async function ActiveWorkPage({ params }: { params: Promise<{ loc
         </div>
 
         <Link href={isTr ? "/tr/ilanlar" : "/en/listings"}>
-          <Button variant="shimmer" size="sm" className="gap-2">
-            <Compass className="h-4 w-4" aria-hidden="true" />
+          <Button variant="shimmer" size="sm" className="gap-2 text-xs">
+            <Compass className="h-3.5 w-3.5" aria-hidden="true" />
             <span>{isTr ? "Yeni İlanları Keşfet" : "Browse Opportunities"}</span>
           </Button>
         </Link>
-      </header>
+      </div>
 
       {/* Mandatory Review Banner */}
       <MandatoryReviewBanner locale={locale} />
 
-      {/* Navigation Tabs */}
-      <DashboardTabs locale={locale} counts={{ activeEngagements: activeCount }} />
-
-      {/* Error state */}
+      {/* Content Stream */}
       {fetchError ? (
         <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-6 text-center space-y-3">
           <p className="text-sm font-semibold text-rose-400">
@@ -168,6 +156,9 @@ export default async function ActiveWorkPage({ params }: { params: Promise<{ loc
       ) : (
         <ActiveEngagementsDashboard initialEngagements={engagements} locale={locale} />
       )}
-    </main>
+
+      {/* Schema.org Structured Data */}
+      <JsonLd data={jsonLd} />
+    </div>
   );
 }

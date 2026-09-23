@@ -5,13 +5,15 @@ import { getEnv } from "@/src/config/env";
 
 const { Pool } = pg;
 
-let pool: pg.Pool | null = null;
-let dbInstance: ReturnType<typeof drizzle<typeof schema>> | null = null;
-let shutdownRegistered = false;
+const globalForDb = globalThis as unknown as {
+  operisDbPool?: pg.Pool;
+  operisDbInstance?: ReturnType<typeof drizzle<typeof schema>>;
+  shutdownRegistered?: boolean;
+};
 
 function registerGracefulShutdown(p: pg.Pool) {
-  if (shutdownRegistered) return;
-  shutdownRegistered = true;
+  if (globalForDb.shutdownRegistered) return;
+  globalForDb.shutdownRegistered = true;
 
   const closePool = async () => {
     try {
@@ -32,40 +34,40 @@ function registerGracefulShutdown(p: pg.Pool) {
 }
 
 export function getDbPool(): pg.Pool {
-  if (!pool) {
+  if (!globalForDb.operisDbPool) {
     const env = getEnv();
     const isSupabase =
       env.DATABASE_URL.includes("supabase.co") || env.DATABASE_URL.includes("pooler.supabase.com");
-    pool = new Pool({
+    globalForDb.operisDbPool = new Pool({
       connectionString: env.DATABASE_URL,
-      max: 20,
+      max: process.env.NODE_ENV === "production" ? 20 : 10,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 10000,
       ssl: isSupabase ? { rejectUnauthorized: false } : undefined,
     });
-    registerGracefulShutdown(pool);
+    registerGracefulShutdown(globalForDb.operisDbPool);
   }
-  return pool;
+  return globalForDb.operisDbPool;
 }
 
 export function getDb() {
-  if (!dbInstance) {
+  if (!globalForDb.operisDbInstance) {
     const p = getDbPool();
-    dbInstance = drizzle(p, { schema });
+    globalForDb.operisDbInstance = drizzle(p, { schema });
   }
-  return dbInstance;
+  return globalForDb.operisDbInstance;
 }
 
 export function setDbForTesting(mockDb: unknown, testPool?: pg.Pool) {
-  dbInstance = mockDb as ReturnType<typeof drizzle<typeof schema>>;
+  globalForDb.operisDbInstance = mockDb as ReturnType<typeof drizzle<typeof schema>>;
   if (testPool) {
-    pool = testPool;
+    globalForDb.operisDbPool = testPool;
   }
 }
 
 export function resetDbForTesting() {
-  dbInstance = null;
-  pool = null;
+  globalForDb.operisDbInstance = undefined;
+  globalForDb.operisDbPool = undefined;
 }
 
 export { schema };

@@ -138,7 +138,7 @@ export class HandoverGeneratorService {
 
     const sha256Seal = this.calculateSha256(canonicalText);
 
-    let markdown = "";
+    let markdown: string;
     if (isTr) {
       markdown = `# TÜRK BORÇLAR KANUNU (TBK M. 474 VE M. 477) VE 5846 SAYILI FSEK UYARINCA
 # RESMİ YAZILIM ESERİ TESLİM-TESELLÜM VE KABUL TUTANAĞI

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { getSession } from "@/src/modules/auth/session";
 import { getLocalizedRoute } from "@/src/lib/i18n/routes";
+import { getBaseUrl } from "@/src/lib/config/url";
 import {
   ArrowRight,
   Code2,
@@ -23,7 +24,7 @@ import {
 import { SEED_SECTORS, SEED_CATEGORIES } from "@/db/seeds/categories";
 import { Button } from "@/src/components/ui/button";
 import { SpotlightCard } from "@/src/components/ui/spotlight-card";
-import { serializeJsonLd } from "@/src/lib/security/json-ld";
+import { JsonLd } from "@/src/components/seo/json-ld";
 import { InteractiveArchitectureShowcase } from "@/src/components/diagrams/interactive-architecture-showcase";
 import { HowItWorksSection } from "@/src/components/onboarding/how-it-works-section";
 import { FaqAccordion } from "@/src/components/onboarding/faq-accordion";
@@ -59,6 +60,7 @@ export async function generateMetadata({
       languages: {
         tr: "/tr",
         en: "/en",
+        "x-default": "/tr",
       },
     },
     openGraph: {
@@ -177,13 +179,14 @@ export default async function LandingPage({
     };
   });
 
+  const baseUrl = getBaseUrl();
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "WebSite",
-        "@id": `https://operis.pro/${locale}/#website`,
-        url: `https://operis.pro/${locale}`,
+        "@id": `${baseUrl}/${locale}/#website`,
+        url: `${baseUrl}/${locale}`,
         name: "Operis",
         description: isTr
           ? "Teknoloji ve Yazılım Serbest Çalışan Platformu"
@@ -195,7 +198,7 @@ export default async function LandingPage({
         "@id": "https://vellium.dev/#organization",
         name: "Vellium",
         url: "https://vellium.dev",
-        logo: "https://operis.pro/operis.svg",
+        logo: `${baseUrl}/operis.svg`,
         contactPoint: {
           "@type": "ContactPoint",
           telephone: "+90-212-555-0100",
@@ -210,7 +213,7 @@ export default async function LandingPage({
             "@type": "ListItem",
             position: 1,
             name: isTr ? "Ana Sayfa" : "Home",
-            item: `https://operis.pro/${locale}`,
+            item: `${baseUrl}/${locale}`,
           },
         ],
       },
@@ -220,10 +223,7 @@ export default async function LandingPage({
   return (
     <main className="flex flex-col w-full overflow-hidden">
       {/* Schema.org Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
 
       {/* 1. Expansive Hero Section (Full Viewport Height & Centered) */}
       <section className="relative flex flex-col justify-center items-center w-full min-h-[calc(100dvh-4rem)] px-4 sm:px-6 lg:px-8 text-center py-10 sm:py-16 snap-start">

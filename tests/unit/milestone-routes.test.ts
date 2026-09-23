@@ -11,11 +11,11 @@ vi.mock("@/src/modules/auth/session", () => ({
     role: "CLIENT",
     email: "client@operis.pro",
     status: "ACTIVE",
-    type: "specialist",
+    type: "SESSION",
     authVersion: 1,
     createdAt: Date.now(),
     expiresAt: Date.now() + 86400000,
-  } as any),
+  }),
 }));
 
 vi.mock("@/src/lib/security/rate-limit", () => ({
@@ -34,11 +34,11 @@ describe("Zero-Escrow Milestone API Routes", () => {
       role: "CLIENT",
       email: "client@operis.pro",
       status: "ACTIVE",
-      type: "specialist",
+      type: "SESSION",
       authVersion: 1,
       createdAt: Date.now(),
       expiresAt: Date.now() + 86400000,
-    } as any);
+    });
   });
 
   it("GET /api/work/[id]/milestones returns synthesized roadmap and metrics", async () => {

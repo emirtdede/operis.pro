@@ -441,7 +441,7 @@ export class RetainerService {
       cancellationNoticeDays: retainer.cancellationNoticeDays,
     });
 
-    const [updated] = await (db as any)
+    const [updated] = await db
       .update(schema.engagementRetainers)
       .set({
         status: "ACTIVE",
@@ -460,7 +460,7 @@ export class RetainerService {
     // Create Period 1
     const startDate = new Date().toISOString().slice(0, 10);
     const endDate = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
-    await (db as any).insert(schema.engagementRetainerPeriods).values({
+    await db.insert(schema.engagementRetainerPeriods).values({
       retainerId: retainer.id,
       periodIndex: 1,
       startDate,
@@ -524,7 +524,7 @@ export class RetainerService {
     }
 
     const db = getDb();
-    const [period] = await (db as any)
+    const [period] = await db
       .select()
       .from(schema.engagementRetainerPeriods)
       .where(eq(schema.engagementRetainerPeriods.retainerId, input.retainerId))
@@ -535,7 +535,7 @@ export class RetainerService {
       throw new Error("Active period not found");
     }
 
-    const [retainer] = await (db as any)
+    const [retainer] = await db
       .select()
       .from(schema.engagementRetainers)
       .where(eq(schema.engagementRetainers.id, input.retainerId))
@@ -556,7 +556,7 @@ export class RetainerService {
       hoursLogged: newHours,
     });
 
-    const [updatedPeriod] = await (db as any)
+    const [updatedPeriod] = await db
       .update(schema.engagementRetainerPeriods)
       .set({
         hoursLogged: newHours.toString(),

@@ -55,7 +55,7 @@ export function scoreSearchMatch(
   const preparedFields = fields
     .filter((f) => Boolean(f.text && f.text.trim()))
     .map((f) => {
-      const norm = normalizeSearchQuery(f.text!);
+      const norm = normalizeSearchQuery(f.text ?? "");
       const shadow = toAsciiShadow(norm);
       return {
         norm,
@@ -135,7 +135,8 @@ export function filterAndSortByRelevance<T>(
   const scored: Array<{ item: T; score: number; index: number }> = [];
 
   for (let i = 0; i < items.length; i++) {
-    const item = items[i]!;
+    const item = items[i];
+    if (item === undefined) continue;
     const fields = extractFields(item);
     const { matches, score } = scoreSearchMatch(query, fields);
 

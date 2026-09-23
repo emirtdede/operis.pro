@@ -503,7 +503,7 @@ export class ChangeRequestService {
     // Look for previous addendum SHA-256 for cryptographic chaining
     const allRecords = await this.getRecords(record.engagementId);
     const previousApproved = allRecords
-      .filter((cr) => cr.status === "APPROVED" && cr.sequenceNumber < record!.sequenceNumber)
+      .filter((cr) => cr.status === "APPROVED" && cr.sequenceNumber < record.sequenceNumber)
       .sort((a, b) => b.sequenceNumber - a.sequenceNumber);
 
     const parentContractSha256 =

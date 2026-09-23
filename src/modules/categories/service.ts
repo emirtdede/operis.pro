@@ -131,6 +131,22 @@ export class CategoryService {
   }
 
   /**
+   * Returns the count of categories followed by the user.
+   */
+  static async getFollowedCount(userId: string): Promise<number> {
+    try {
+      const db = getDb();
+      const [res] = await db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(schema.categoryFollows)
+        .where(eq(schema.categoryFollows.userId, userId));
+      return Number(res?.count ?? 0);
+    } catch {
+      return inMemoryFollows.get(userId)?.size ?? 0;
+    }
+  }
+
+  /**
    * Returns all active categories grouped by sectors localized to the requested locale.
    */
   static async getSectorsWithCategories(locale: Locale, userId?: string): Promise<SectorDto[]> {
@@ -284,11 +300,12 @@ export class CategoryService {
         )
         .limit(1);
 
-      if (categoryRows.length === 0) {
+      const targetCategory = categoryRows[0];
+      if (!targetCategory) {
         throw new Error("Category not found");
       }
 
-      const targetId = categoryRows[0]!.id;
+      const targetId = targetCategory.id;
 
       const existing = await db
         .select()
@@ -364,11 +381,12 @@ export class CategoryService {
         .where(isUuid ? eq(schema.categories.id, categoryId) : eq(schema.categories.key, categoryId))
         .limit(1);
 
-      if (categoryRows.length === 0) {
+      const targetCategory = categoryRows[0];
+      if (!targetCategory) {
         throw new Error("Category not found");
       }
 
-      const targetId = categoryRows[0]!.id;
+      const targetId = targetCategory.id;
       const updateData: { emailAlerts?: boolean; minBudget?: number | null } = {};
       if (typeof preferences.emailAlerts === "boolean") {
         updateData.emailAlerts = preferences.emailAlerts;
@@ -411,10 +429,11 @@ export class CategoryService {
             )
           );
 
+        const existingRow = existing[0];
         return {
           success: true,
-          emailAlerts: preferences.emailAlerts !== undefined ? preferences.emailAlerts : existing[0]!.emailAlerts,
-          minBudget: preferences.minBudget !== undefined ? preferences.minBudget : existing[0]!.minBudget,
+          emailAlerts: preferences.emailAlerts !== undefined ? preferences.emailAlerts : (existingRow?.emailAlerts ?? true),
+          minBudget: preferences.minBudget !== undefined ? preferences.minBudget : (existingRow?.minBudget ?? null),
         };
       }
     } catch (err) {

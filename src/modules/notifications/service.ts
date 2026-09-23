@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import { and, desc, eq, inArray, isNull, lte, or, sql, gt } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
 import { EmailAdapter } from "@/src/lib/email";
+import { runSequentially } from "@/src/lib/async/concurrency";
 
 import { inMemoryFallbackNotifications } from "./in-memory";
 import { notificationPubSub } from "./pubsub";
@@ -203,6 +204,24 @@ export class NotificationService {
   }
 
   /**
+   * Fast aggregate count of unread notifications for a user.
+   */
+  static async getUnreadCount(userId: string): Promise<number> {
+    try {
+      const db = getDb();
+      const [res] = await db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(schema.notifications)
+        .where(
+          and(eq(schema.notifications.userId, userId), isNull(schema.notifications.readAt))
+        );
+      return Number(res?.count ?? 0);
+    } catch {
+      return inMemoryFallbackNotifications.filter((n) => n.userId === userId && !n.readAt).length;
+    }
+  }
+
+  /**
    * Retrieves notifications for a user with unread filter and pagination.
    */
   static async getUserNotifications(userId: string, unreadOnly = false, limit = 20) {
@@ -333,7 +352,7 @@ export class NotificationService {
 
       let processedCount = 0;
 
-      for (const event of pendingEvents) {
+      const processSingleEvent = async (event: typeof pendingEvents[0]): Promise<boolean> => {
         const workerLeaseToken = crypto.randomUUID();
         const leaseUntil = new Date(Date.now() + leaseDurationMs);
 
@@ -365,7 +384,7 @@ export class NotificationService {
 
         if (claimResult.length === 0) {
           // Another worker claimed this event concurrently, skip it
-          continue;
+          return false;
         }
 
         try {
@@ -398,7 +417,7 @@ export class NotificationService {
                   )
                 );
             }
-            continue;
+            return result === "COMPLETED";
           }
 
           const recipientUserId = payload.recipientUserId as string | undefined;
@@ -418,7 +437,7 @@ export class NotificationService {
                   eq(schema.outboxEvents.leaseToken, workerLeaseToken)
                 )
               );
-            continue;
+            return false;
           }
 
           // Fetch recipient email and locale (supporting both encrypted and legacy email)
@@ -466,7 +485,7 @@ export class NotificationService {
                   eq(schema.outboxEvents.leaseToken, workerLeaseToken)
                 )
               );
-            continue;
+            return false;
           }
 
           const locale = user.locale === "en" ? "en" : "tr";
@@ -528,8 +547,7 @@ export class NotificationService {
                     eq(schema.outboxEvents.leaseToken, workerLeaseToken)
                   )
                 );
-              processedCount++;
-              continue;
+              return true;
             }
           }
 
@@ -577,7 +595,7 @@ export class NotificationService {
               )
             );
 
-          processedCount++;
+          return true;
         } catch (deliveryErr: unknown) {
           const errMsg = deliveryErr instanceof Error ? deliveryErr.message : String(deliveryErr);
           const nextAttempts = event.attemptCount + 1;
@@ -615,8 +633,12 @@ export class NotificationService {
                 eq(schema.outboxEvents.leaseToken, workerLeaseToken)
               )
             );
+          return false;
         }
-      }
+      };
+
+      const results = await runSequentially(pendingEvents, processSingleEvent);
+      processedCount = results.filter(Boolean).length;
 
       return processedCount;
     } catch (err) {

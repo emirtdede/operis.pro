@@ -12,6 +12,8 @@ import {
 import { ContactHubInteractive } from "@/src/components/contact/contact-hub-interactive";
 import { RegistryInteractive } from "@/src/components/contact/registry-interactive";
 import { getLocalizedRoute } from "@/src/lib/i18n/routes";
+import { JsonLd } from "@/src/components/seo/json-ld";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -46,9 +48,9 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   const metrics = [
     {
       icon: Layers,
-      value: isTr ? "5 Masa" : "5 Desks",
+      value: isTr ? "6 Masa" : "6 Desks",
       label: isTr ? "Yetkili Destek Birimi" : "Dedicated Desks",
-      detail: isTr ? "Kurumsal, Güvenlik, Hukuk, Destek, Basın" : "Enterprise, Security, Legal, Ops, PR",
+      detail: isTr ? "Kurumsal, Güvenlik, Hukuk, Destek, KVKK, Finans" : "Enterprise, Security, Legal, Support, Privacy, Billing",
       color: "text-blue-400 border-blue-500/20 bg-blue-500/10",
       accent: "bg-blue-500",
     },
@@ -78,8 +80,98 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
     },
   ];
 
+  const baseUrl = getBaseUrl();
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ContactPage",
+        name: isTr
+          ? "İletişim & Kurumsal Destek Masaları — Resmi Şirket Merkezi"
+          : "Contact & Enterprise Operations Desks — Headquarters",
+        description: isTr
+          ? "Operis kurumsal masalarıyla iletişime geçin: Girişim çözümleri, 7/24 güvenlik & bug bounty, hukuk müşavirliği ve resmi şirket künyesi."
+          : "Connect directly with Operis official desks: enterprise partnerships, 24/7 security & bug bounty, legal counsel, and statutory registry.",
+        url: `${baseUrl}${getLocalizedRoute("contact", locale)}`,
+        inLanguage: locale,
+        mainEntity: {
+          "@type": "Organization",
+          name: "Vellium",
+          legalName: "Vellium",
+          url: "https://vellium.dev",
+          logo: `${baseUrl}/operis.svg`,
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "Büyükdere Caddesi, No: 199",
+            addressLocality: "İstanbul",
+            addressRegion: "İstanbul",
+            postalCode: "34394",
+            addressCountry: "TR",
+          },
+          contactPoint: [
+            {
+              "@type": "ContactPoint",
+              contactType: "customer support",
+              email: "support@vellium.dev",
+              availableLanguage: ["Turkish", "English"],
+            },
+            {
+              "@type": "ContactPoint",
+              contactType: "security",
+              email: "security@vellium.dev",
+              availableLanguage: ["Turkish", "English"],
+            },
+            {
+              "@type": "ContactPoint",
+              contactType: "legal",
+              email: "legal@vellium.dev",
+              availableLanguage: ["Turkish", "English"],
+            },
+            {
+              "@type": "ContactPoint",
+              contactType: "sales",
+              email: "contact@vellium.dev",
+              availableLanguage: ["Turkish", "English"],
+            },
+            {
+              "@type": "ContactPoint",
+              contactType: "privacy",
+              email: "privacy@vellium.dev",
+              availableLanguage: ["Turkish", "English"],
+            },
+            {
+              "@type": "ContactPoint",
+              contactType: "billing",
+              email: "billing@vellium.dev",
+              availableLanguage: ["Turkish", "English"],
+            },
+          ],
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: isTr ? "Ana Sayfa" : "Home",
+            item: `${baseUrl}/${locale}`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: isTr ? "İletişim" : "Contact",
+            item: `${baseUrl}${getLocalizedRoute("contact", locale)}`,
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <main className="relative mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 space-y-16 lg:space-y-20">
+      {/* Schema.org Structured Data */}
+      <JsonLd data={jsonLd} />
       {/* Ambient background lighting for corporate luxury feel */}
       <div
         className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[350px] rounded-full bg-blue-500/10 blur-[120px]"

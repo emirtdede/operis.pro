@@ -224,13 +224,7 @@ export function CategorySearchFilter({
           {/* Dropdown Menu (With Search Filter Inside Popover, Right Aligned) */}
           {isSectorDropdownOpen && (
             <div
-              className="absolute top-full right-0 mt-2 w-[calc(100vw-2rem)] sm:w-full min-w-0 max-w-[calc(100vw-2rem)] sm:max-w-[480px] sm:min-w-[420px] rounded-2xl border p-1.5 z-[100] animate-in fade-in zoom-in-95 duration-150"
-              style={{
-                backgroundColor: "var(--bg-elevated)",
-                borderColor: "var(--border-strong)",
-                boxShadow:
-                  "0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border-subtle)",
-              }}
+              className="absolute top-full right-0 mt-2 w-[calc(100vw-2rem)] sm:w-full min-w-0 max-w-[calc(100vw-2rem)] sm:max-w-[480px] sm:min-w-[420px] rounded-2xl border border-[var(--border-strong)] bg-[var(--bg-elevated)] shadow-2xl shadow-black/50 p-1.5 z-[100] animate-in fade-in zoom-in-95 duration-150"
             >
               <div className="p-1 mb-1">
                 <div className="relative">

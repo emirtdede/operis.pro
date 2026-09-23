@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { Bell, ArrowLeft } from "lucide-react";
+import { Bell } from "lucide-react";
 import { eq, desc } from "drizzle-orm";
 import { getSession } from "@/src/modules/auth/session";
 import { getDb, schema } from "@/src/lib/db";
 import { NotificationsView, NotificationItem } from "@/src/components/dashboard/notifications-view";
-import { DashboardTabs } from "@/src/components/dashboard/dashboard-tabs";
 
 export async function generateMetadata({
   params,
@@ -68,37 +66,28 @@ export default async function DashboardNotificationsPage({
   }
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-      {/* Header */}
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-6">
+    <div className="space-y-6">
+      {/* Header Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-4">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs text-[var(--color-text-tertiary)]">
-            <Link
-              href={isTr ? "/tr/panel/ilanlarim" : "/en/dashboard/listings"}
-              className="hover:text-[var(--color-text-primary)] transition-colors inline-flex items-center gap-1"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>{isTr ? "Çalışma Alanım" : "Workspace"}</span>
-            </Link>
-            <span>/</span>
-            <span>{isTr ? "Bildirimler" : "Notifications"}</span>
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400">
+              <Bell className="h-5 w-5 fill-blue-400/20 text-blue-400" />
+            </div>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
+              {isTr ? "Bildirim Merkezi" : "Notification Center"}
+            </h1>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-text-primary)] flex items-center gap-2.5">
-            <Bell className="h-6 w-6 text-blue-400" aria-hidden="true" />
-            <span>{isTr ? "Bildirim Merkezi" : "Notification Center"}</span>
-          </h1>
-          <p className="text-sm text-[var(--color-text-secondary)]">
+          <p className="text-xs sm:text-sm text-[var(--color-text-secondary)]">
             {isTr
               ? "Projelerinize gelen teklifler, onaylanan eşleşmeler ve hesap hareketlerinizin güncel dökümü."
               : "Track incoming proposals, approved matches, and activity alerts across your projects."}
           </p>
         </div>
-      </header>
-
-      <DashboardTabs locale={locale} />
+      </div>
 
       {/* Notifications List */}
       <NotificationsView initialNotifications={notifications} locale={locale} />
-    </main>
+    </div>
   );
 }

@@ -17,6 +17,53 @@ export interface HiringIntentBadgeProps {
   locale?: string;
 }
 
+function getHiringIntentDisplay(level: HiringIntentLevel, score: number, isTr: boolean) {
+  switch (level) {
+    case "VERIFIED_NEW_CLIENT":
+      return {
+        label: isTr ? `✨ Yeni İşveren (%${score} Güven)` : `✨ Verified New Client (${score}%)`,
+        shortLabel: isTr ? "✨ Yeni İşveren" : "✨ New Client",
+        badgeClass:
+          "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/15 shadow-[0_0_12px_rgba(16,185,129,0.15)]",
+        dotClass: "bg-emerald-400 animate-pulse",
+        Icon: Sparkles,
+      };
+    case "PROVEN_HIGH_INTENT":
+      return {
+        label: isTr ? `🟢 %${score} İşe Alım Niyeti` : `🟢 ${score}% High Intent`,
+        shortLabel: isTr ? `%${score} Niyet` : `${score}% Intent`,
+        badgeClass:
+          "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/15 shadow-[0_0_12px_rgba(16,185,129,0.15)]",
+        dotClass: "bg-emerald-400 animate-pulse",
+        Icon: ShieldCheck,
+      };
+    case "ACTIVE_HIRING_LIKELY":
+      return {
+        label: isTr ? `🔵 %${score} İşe Alım Bekleniyor` : `🔵 ${score}% Hiring Expected`,
+        shortLabel: isTr ? `%${score} Niyet` : `${score}% Intent`,
+        badgeClass: "bg-sky-500/10 text-sky-400 border-sky-500/30 hover:bg-sky-500/15",
+        dotClass: "bg-sky-400",
+        Icon: TrendingUp,
+      };
+    case "MODERATE_INTENT":
+      return {
+        label: isTr ? `🟡 %${score} Orta Düzey Niyet` : `🟡 ${score}% Moderate Intent`,
+        shortLabel: isTr ? `%${score} Niyet` : `${score}% Intent`,
+        badgeClass: "bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/15",
+        dotClass: "bg-amber-400",
+        Icon: AlertTriangle,
+      };
+    default:
+      return {
+        label: isTr ? `🟠 %${score} Piyasa Yoklama Riski` : `🟠 ${score}% Price Discovery Risk`,
+        shortLabel: isTr ? `%${score} Riskli` : `${score}% Risk`,
+        badgeClass: "bg-rose-500/10 text-rose-400 border-rose-500/30 hover:bg-rose-500/15",
+        dotClass: "bg-rose-400",
+        Icon: AlertTriangle,
+      };
+  }
+}
+
 export function HiringIntentBadge({
   score: propScore,
   level: propLevel,
@@ -29,48 +76,14 @@ export function HiringIntentBadge({
   const isTr = locale === "tr";
 
   const effectiveScore = typeof breakdown?.overallScore === "number" ? breakdown.overallScore : (propScore ?? 85);
-  const effectiveLevel: HiringIntentLevel =
-    breakdown?.level || propLevel || (effectiveScore >= 85 ? "PROVEN_HIGH_INTENT" : "ACTIVE_HIRING_LIKELY");
+  const fallbackLevel: HiringIntentLevel = effectiveScore >= 85 ? "PROVEN_HIGH_INTENT" : "ACTIVE_HIRING_LIKELY";
+  const effectiveLevel: HiringIntentLevel = breakdown?.level || propLevel || fallbackLevel;
 
-  let label = isTr ? `%${effectiveScore} İşe Alım Niyeti` : `${effectiveScore}% Hiring Intent`;
-  let shortLabel = isTr ? `%${effectiveScore} Niyet` : `${effectiveScore}% Intent`;
-  let badgeClass = "bg-sky-500/10 text-sky-400 border-sky-500/30 hover:bg-sky-500/15";
-  let dotClass = "bg-sky-400";
-  let Icon = TrendingUp;
-
-  if (effectiveLevel === "VERIFIED_NEW_CLIENT") {
-    label = isTr ? `✨ Yeni İşveren (%${effectiveScore} Güven)` : `✨ Verified New Client (${effectiveScore}%)`;
-    shortLabel = isTr ? "✨ Yeni İşveren" : "✨ New Client";
-    badgeClass =
-      "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/15 shadow-[0_0_12px_rgba(16,185,129,0.15)]";
-    dotClass = "bg-emerald-400 animate-pulse";
-    Icon = Sparkles;
-  } else if (effectiveLevel === "PROVEN_HIGH_INTENT") {
-    label = isTr ? `🟢 %${effectiveScore} İşe Alım Niyeti` : `🟢 ${effectiveScore}% High Intent`;
-    shortLabel = isTr ? `%${effectiveScore} Niyet` : `${effectiveScore}% Intent`;
-    badgeClass =
-      "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/15 shadow-[0_0_12px_rgba(16,185,129,0.15)]";
-    dotClass = "bg-emerald-400 animate-pulse";
-    Icon = ShieldCheck;
-  } else if (effectiveLevel === "ACTIVE_HIRING_LIKELY") {
-    label = isTr ? `🔵 %${effectiveScore} İşe Alım Bekleniyor` : `🔵 ${effectiveScore}% Hiring Expected`;
-    shortLabel = isTr ? `%${effectiveScore} Niyet` : `${effectiveScore}% Intent`;
-    badgeClass = "bg-sky-500/10 text-sky-400 border-sky-500/30 hover:bg-sky-500/15";
-    dotClass = "bg-sky-400";
-    Icon = TrendingUp;
-  } else if (effectiveLevel === "MODERATE_INTENT") {
-    label = isTr ? `🟡 %${effectiveScore} Orta Düzey Niyet` : `🟡 ${effectiveScore}% Moderate Intent`;
-    shortLabel = isTr ? `%${effectiveScore} Niyet` : `${effectiveScore}% Intent`;
-    badgeClass = "bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/15";
-    dotClass = "bg-amber-400";
-    Icon = AlertTriangle;
-  } else {
-    label = isTr ? `🟠 %${effectiveScore} Piyasa Yoklama Riski` : `🟠 ${effectiveScore}% Price Discovery Risk`;
-    shortLabel = isTr ? `%${effectiveScore} Riskli` : `${effectiveScore}% Risk`;
-    badgeClass = "bg-rose-500/10 text-rose-400 border-rose-500/30 hover:bg-rose-500/15";
-    dotClass = "bg-rose-400";
-    Icon = AlertTriangle;
-  }
+  const { label, shortLabel, badgeClass, dotClass, Icon } = getHiringIntentDisplay(
+    effectiveLevel,
+    effectiveScore,
+    isTr
+  );
 
   const tooltipTitle = isTr
     ? "Operis İşe Alım Niyet Endeksi: Şirket VKN doğrulaması, piyasa benchmark bütçe uyumu ve teknik kapsam zenginliği analizi"

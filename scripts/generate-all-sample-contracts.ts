@@ -422,7 +422,7 @@ const sampleMilestones: ContractMilestone[] = [
     titleEn: "System Architecture, Database Modeling & Auth Layer",
     descriptionTr: "PostgreSQL şema tasarımı, Next.js 16 altyapısı, AES-256 şifreleme ve RBAC yetkilendirme.",
     descriptionEn: "PostgreSQL schema design, Next.js 16 scaffolding, AES-256 data protection and RBAC auth.",
-    acceptanceCriteria: [sampleAcceptanceCriteria[0]!],
+    acceptanceCriteria: sampleAcceptanceCriteria.slice(0, 1),
   },
   {
     phase: 2,
@@ -431,7 +431,7 @@ const sampleMilestones: ContractMilestone[] = [
     titleEn: "Financial Analytics Engine & Reporting APIs",
     descriptionTr: "Yüksek performanslı veri işleme hattı, webhook bildirimleri ve PDF/CSV dışa aktarım motoru.",
     descriptionEn: "High-throughput data pipeline, webhook dispatchers and automated PDF/CSV export engine.",
-    acceptanceCriteria: [sampleAcceptanceCriteria[1]!],
+    acceptanceCriteria: sampleAcceptanceCriteria.slice(1, 2),
   },
   {
     phase: 3,
@@ -440,7 +440,7 @@ const sampleMilestones: ContractMilestone[] = [
     titleEn: "User Acceptance Testing (UAT), CI/CD Deployment & IP Transfer",
     descriptionTr: "Staging ve canlı ortam dağıtımı, FSEK m. 52 telif devir senedi ve kaynak kod teslimi.",
     descriptionEn: "Production deployment, FSEK Art. 52 statutory IP transfer deed and full repository handover.",
-    acceptanceCriteria: [sampleAcceptanceCriteria[2]!],
+    acceptanceCriteria: sampleAcceptanceCriteria.slice(2, 3),
   },
 ];
 
@@ -510,7 +510,7 @@ const sampleInflationConfig: InflationShieldConfig = {
 // ---------------------------------------------------------------------------
 // 1. Ana Hizmet ve Eser Sözleşmesi (Bireysel - Türkçe)
 // ---------------------------------------------------------------------------
-console.log("1. Ana Hizmet ve Eser Sözleşmesi (Bireysel - TR) oluşturuluyor...");
+console.info("1. Ana Hizmet ve Eser Sözleşmesi (Bireysel - TR) oluşturuluyor...");
 const mainContractTr = ContractGeneratorService.generateContract({
   engagementId: "ENG-2026-B2B-FINANCE-01",
   listingTitle: "Kurumsal B2B Finansal Raporlama ve Analitik Platformu",
@@ -567,7 +567,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 2. Ana Hizmet Sözleşmesi (Squad Konsorsiyumu - TBK m. 620)
 // ---------------------------------------------------------------------------
-console.log("2. Squad Konsorsiyumu Eser Sözleşmesi (TR) oluşturuluyor...");
+console.info("2. Squad Konsorsiyumu Eser Sözleşmesi (TR) oluşturuluyor...");
 const squadContract = ContractGeneratorService.generateContract({
   engagementId: "ENG-2026-SQUAD-LOGISTICS-02",
   listingTitle: "Yeni Nesil B2B Lojistik ve Tedarik Zinciri Yönetim Portalı",
@@ -634,7 +634,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 3. Master Software Service Agreement (Full English)
 // ---------------------------------------------------------------------------
-console.log("3. Master Software Agreement (EN) oluşturuluyor...");
+console.info("3. Master Software Agreement (EN) oluşturuluyor...");
 const mainContractEn = ContractGeneratorService.generateContract({
   engagementId: "ENG-2026-GLOBAL-SAAS-03",
   listingTitle: "Cross-Border FinTech Payment Gateway & Microservices Platform",
@@ -683,7 +683,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 4. Çift Dilli Paralel Sözleşme (Bilingual - TR/EN)
 // ---------------------------------------------------------------------------
-console.log("4. Çift Dilli Sözleşme (Bilingual TR/EN) oluşturuluyor...");
+console.info("4. Çift Dilli Sözleşme (Bilingual TR/EN) oluşturuluyor...");
 const bilingualContract = ContractGeneratorService.generateContract({
   engagementId: "ENG-2026-BILINGUAL-04",
   listingTitle: "Uluslararası E-Ticaret ve Pazar Yeri Altyapısı / Global E-Commerce Core",
@@ -723,7 +723,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 5. Ek 1: Hakediş ve Objektif Muayene-Kabul Kriterleri Protokolü
 // ---------------------------------------------------------------------------
-console.log("5. Ek 1: Kabul Kriterleri Protokolü oluşturuluyor...");
+console.info("5. Ek 1: Kabul Kriterleri Protokolü oluşturuluyor...");
 const annex1Content = AcceptanceEngine.generateContractAnnexMarkdown(sampleAcceptanceCriteria, "tr");
 fs.writeFileSync(
   path.join(OUTPUT_DIR, "05-ek-1-hakedis-ve-kabul-kriterleri-protokolu.md"),
@@ -781,7 +781,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 6. Ek 2: Kişisel Veri İşleme Sözleşmesi (KVKK m. 12 & GDPR Art. 28 DPA)
 // ---------------------------------------------------------------------------
-console.log("6. Ek 2: Veri İşleme Sözleşmesi (DPA) oluşturuluyor...");
+console.info("6. Ek 2: Veri İşleme Sözleşmesi (DPA) oluşturuluyor...");
 const annex2Content = DpaEngine.generateDpaAnnexMarkdown(
   sampleDpaConfig,
   "tr",
@@ -819,7 +819,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 7. Ek 3: Güvenli Liman ve Bağımsız Yüklenici Protokolü (Safe Harbor)
 // ---------------------------------------------------------------------------
-console.log("7. Ek 3: Güvenli Liman Protokolü oluşturuluyor...");
+console.info("7. Ek 3: Güvenli Liman Protokolü oluşturuluyor...");
 const annex3Content = SafeHarborEngine.generateSafeHarborAnnexMarkdown(
   sampleSafeHarborConfig,
   "tr",
@@ -857,7 +857,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 8. Ek 4: Yapay Zeka ve Telif Devir Protokolü (AI Governance & Anti-Copyleft)
 // ---------------------------------------------------------------------------
-console.log("8. Ek 4: Yapay Zeka ve Telif Devir Protokolü oluşturuluyor...");
+console.info("8. Ek 4: Yapay Zeka ve Telif Devir Protokolü oluşturuluyor...");
 const annex4Content = AiGovernanceEngine.generateAiGovernanceAnnexMarkdown(
   sampleAiGovernanceConfig,
   "tr",
@@ -895,7 +895,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 9. Ek 5: Yazılım İhracatı ve Vergi Teşvik Protokolü (GVK 89/13 & KDVK 11/1-a)
 // ---------------------------------------------------------------------------
-console.log("9. Ek 5: Yazılım İhracatı Protokolü oluşturuluyor...");
+console.info("9. Ek 5: Yazılım İhracatı Protokolü oluşturuluyor...");
 const annex5Content = SoftwareExportEngine.generateExportAnnexMarkdown(
   sampleExportConfig,
   "tr",
@@ -933,7 +933,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 10. Ek 6: Enflasyon ve Kur Koruma Zeyilnamesi (TBK m. 138 & 32 Sayılı Karar)
 // ---------------------------------------------------------------------------
-console.log("10. Ek 6: Enflasyon ve Kur Koruma Zeyilnamesi oluşturuluyor...");
+console.info("10. Ek 6: Enflasyon ve Kur Koruma Zeyilnamesi oluşturuluyor...");
 const annex6Content = InflationHedgingEngine.generateInflationClauseText(
   sampleInflationConfig,
   "tr",
@@ -970,7 +970,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 11. Ek 7: Temiz Kod ve Siber Güvenlik Garantisi (TCK m. 243-245 & TBK m. 474)
 // ---------------------------------------------------------------------------
-console.log("11. Ek 7: Temiz Kod ve Siber Güvenlik Garantisi oluşturuluyor...");
+console.info("11. Ek 7: Temiz Kod ve Siber Güvenlik Garantisi oluşturuluyor...");
 const cleanCodeWarranty = ComprehensiveDeedEngine.generateCleanCodeWarranty({
   engagementId: "ENG-2026-B2B-FINANCE-01",
   listingTitle: "Kurumsal B2B Finansal Raporlama ve Analitik Platformu",
@@ -1026,7 +1026,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 12. Ek 8: Açık Kaynak Kod (FOSS) ve Lisans Hijyeni Senedi
 // ---------------------------------------------------------------------------
-console.log("12. Ek 8: FOSS ve Lisans Hijyeni Senedi oluşturuluyor...");
+console.info("12. Ek 8: FOSS ve Lisans Hijyeni Senedi oluşturuluyor...");
 const fossWarranty = ComprehensiveDeedEngine.generateFossComplianceWarranty({
   engagementId: "ENG-2026-B2B-FINANCE-01",
   listingTitle: "Kurumsal B2B Finansal Raporlama ve Analitik Platformu",
@@ -1080,7 +1080,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 13. Ek 9: Müşteri ve Personel Ayartmama Protokolü (TTK m. 54-55)
 // ---------------------------------------------------------------------------
-console.log("13. Ek 9: Müşteri ve Personel Ayartmama Protokolü oluşturuluyor...");
+console.info("13. Ek 9: Müşteri ve Personel Ayartmama Protokolü oluşturuluyor...");
 const nonSolicitationProtocol = ComprehensiveDeedEngine.generateNonSolicitationProtocol({
   engagementId: "ENG-2026-B2B-FINANCE-01",
   listingTitle: "Kurumsal B2B Finansal Raporlama ve Analitik Platformu",
@@ -1129,7 +1129,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 14. Teslimat Protokolü: Kaynak Kod ve Dijital Varlık Devir Teslim Protokolü
 // ---------------------------------------------------------------------------
-console.log("14. Kaynak Kod ve Dijital Varlık Devir Teslim Protokolü oluşturuluyor...");
+console.info("14. Kaynak Kod ve Dijital Varlık Devir Teslim Protokolü oluşturuluyor...");
 const handoverProtocol = HandoverGeneratorService.generateProtocol({
   engagementId: "ENG-2026-B2B-FINANCE-01",
   listingTitle: "Kurumsal B2B Finansal Raporlama ve Analitik Platformu",
@@ -1189,7 +1189,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 15. Canlıya Alma ve Operasyonel Runbook Protokolü
 // ---------------------------------------------------------------------------
-console.log("15. Canlıya Alma ve Operasyonel Runbook Protokolü oluşturuluyor...");
+console.info("15. Canlıya Alma ve Operasyonel Runbook Protokolü oluşturuluyor...");
 const runbookProtocol = RunbookGeneratorService.generateRunbook({
   engagementId: "ENG-2026-B2B-FINANCE-01",
   listingTitle: "Kurumsal B2B Finansal Raporlama ve Analitik Platformu",
@@ -1255,7 +1255,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 16. Kapsam Değişikliği Zeyilnamesi (Scope Shield - TBK m. 480/2)
 // ---------------------------------------------------------------------------
-console.log("16. Kapsam Değişikliği Zeyilnamesi oluşturuluyor...");
+console.info("16. Kapsam Değişikliği Zeyilnamesi oluşturuluyor...");
 const addendum = AddendumGeneratorService.generateAddendum({
   engagementId: "ENG-2026-B2B-FINANCE-01",
   sequenceNumber: 1,
@@ -1297,7 +1297,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 17. Sözleşme Sonu Karşılıklı İbraname ve Sulh Senedi (TBK m. 132 / HMK m. 313)
 // ---------------------------------------------------------------------------
-console.log("17. Sözleşme Sonu Karşılıklı İbraname oluşturuluyor...");
+console.info("17. Sözleşme Sonu Karşılıklı İbraname oluşturuluyor...");
 const mutualRelease = ComprehensiveDeedEngine.generateMutualReleaseDeed({
   engagementId: "ENG-2026-B2B-FINANCE-01",
   listingTitle: "Kurumsal B2B Finansal Raporlama ve Analitik Platformu",
@@ -1343,7 +1343,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 18. Sözleşme Fesih ve Tasfiye Senedi (TBK m. 484-486)
 // ---------------------------------------------------------------------------
-console.log("18. Sözleşme Fesih ve Tasfiye Senedi oluşturuluyor...");
+console.info("18. Sözleşme Fesih ve Tasfiye Senedi oluşturuluyor...");
 const terminationDeed = ComprehensiveDeedEngine.generateTerminationLiquidationDeed({
   engagementId: "ENG-2026-EARLY-TERM-EXAMPLE",
   listingTitle: "Örnek E-Ticaret Entegrasyon ve Mobil Sadakat Projesi",
@@ -1431,7 +1431,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 19. Yazılım Muayene ve Kabul Tutanağı (SaaS / Web UAT)
 // ---------------------------------------------------------------------------
-console.log("19. Yazılım Muayene ve Kabul Tutanağı oluşturuluyor...");
+console.info("19. Yazılım Muayene ve Kabul Tutanağı oluşturuluyor...");
 const acceptanceReportMd = `# YAZILIM MUAYENE VE KULLANICI KABUL TESTİ (UAT) TUTANAĞI
 > **Dayanak:** 6098 Sayılı Türk Borçlar Kanunu Madde 474 ve Madde 477  
 > **Hukuki Statüsü:** HMK m. 193 Uyarınca Kesin Delil Sözleşmesi Niteliğinde Resmi Tutanak  
@@ -1518,7 +1518,7 @@ fs.writeFileSync(
 // ---------------------------------------------------------------------------
 // 20-27. Platform Yasal Metinleri ve Politikaları
 // ---------------------------------------------------------------------------
-console.log("20-27. Platform Yasal Metinleri (MD ve HTML) oluşturuluyor...");
+console.info("20-27. Platform Yasal Metinleri (MD ve HTML) oluşturuluyor...");
 
 function renderLegalDocumentToMarkdown(doc: LegalDocumentModel): string {
   let md = `# ${doc.title.toUpperCase()}\n`;
@@ -1605,7 +1605,7 @@ for (const [key, meta] of Object.entries(legalDocsMap)) {
 // ---------------------------------------------------------------------------
 // 28. Sözleşmeler Kataloğu ve Rehberi
 // ---------------------------------------------------------------------------
-console.log("28. Sözleşmeler Kataloğu ve Hukuki Rehber oluşturuluyor...");
+console.info("28. Sözleşmeler Kataloğu ve Hukuki Rehber oluşturuluyor...");
 const catalogReadme = `# OPERİS SÖZLEŞME ÖRNEKLERİ KATALOĞU VE HUKUKİ MEVZUAT REHBERİ
 
 Bu dizin (\`docs/sozlesme-ornekleri/\`), Operis platformunda kullanılan **tüm bağımsız yazılım, teknoloji, telif devir, teslimat, tasfiye ve platform yasal sözleşmelerinin** eksiksiz ve gerçekçi örneklerini içerir.
@@ -1681,4 +1681,4 @@ fs.writeFileSync(
   "utf8"
 );
 
-console.log(`\nBAŞARILI! Toplam 82 adet dosya (27 Markdown + 27 Görsel HTML + 27 Resmi PDF + 1 Katalog Rehberi) başarıyla '${OUTPUT_DIR}' klasörüne kaydedildi.`);
+console.info(`\nBAŞARILI! Toplam 82 adet dosya (27 Markdown + 27 Görsel HTML + 27 Resmi PDF + 1 Katalog Rehberi) başarıyla '${OUTPUT_DIR}' klasörüne kaydedildi.`);

@@ -16,28 +16,28 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const isEn = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
-  const access = await evaluateSecurityAccessAsync({
-    ip,
-    purpose: "work:cancel",
-    subject: normalizeIp(ip),
-    limit: 20,
-    windowMs: 60 * 1000,
-    isEn,
-  });
-
-  if (!access.allowed) {
-    return access.response;
-  }
-
-  const session = await getSession();
-  if (!session) {
-    return NextResponse.json(
-      { error: isEn ? "Unauthorized. Please sign in." : "Oturum açmanız gerekmektedir." },
-      { status: 401 }
-    );
-  }
-
   try {
+    const access = await evaluateSecurityAccessAsync({
+      ip,
+      purpose: "work:cancel",
+      subject: normalizeIp(ip),
+      limit: 20,
+      windowMs: 60 * 1000,
+      isEn,
+    });
+
+    if (!access.allowed) {
+      return access.response;
+    }
+
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json(
+        { error: isEn ? "Unauthorized. Please sign in." : "Oturum açmanız gerekmektedir." },
+        { status: 401 }
+      );
+    }
+
     const { id } = await params;
     const body = await req.json().catch(() => ({}));
     const parsed = cancelSchema.parse(body);

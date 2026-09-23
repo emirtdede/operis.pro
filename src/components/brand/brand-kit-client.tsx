@@ -3,7 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import { getLocalizedRoute } from "@/src/lib/i18n/routes";
-import { Download, Copy, Check, CheckCircle2, XCircle, ArrowRight } from "lucide-react";
+import {
+  Download,
+  Copy,
+  Check,
+  CheckCircle2,
+  XCircle,
+  ArrowRight,
+  Mail,
+  Building2,
+} from "lucide-react";
 
 interface BrandKitClientProps {
   locale: string;
@@ -32,6 +41,7 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
     {
       name: isTr ? "Obsidiyen Siyahı" : "Obsidian Black",
       hex: "#09090B",
+      bgClass: "bg-[#09090B]",
       rgb: "rgb(9, 9, 11)",
       usage: isTr
         ? "Açık tema metinleri & koyu tema derinlik"
@@ -41,6 +51,7 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
     {
       name: isTr ? "Platin Beyazı" : "Platinum White",
       hex: "#FAFAFA",
+      bgClass: "bg-[#FAFAFA]",
       rgb: "rgb(250, 250, 250)",
       usage: isTr
         ? "Koyu tema metinleri & resmi beyaz logo"
@@ -51,6 +62,7 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
     {
       name: isTr ? "Zemin Koyu (Surface)" : "Surface Dark",
       hex: "#121417",
+      bgClass: "bg-[#121417]",
       rgb: "rgb(18, 20, 23)",
       usage: isTr
         ? "Koyu tema kart ve popover arka planı"
@@ -60,6 +72,7 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
     {
       name: isTr ? "Marka Mavisi (Electric Blue)" : "Brand Electric Blue",
       hex: "#3B82F6",
+      bgClass: "bg-[#3B82F6]",
       rgb: "rgb(59, 130, 246)",
       usage: isTr ? "Birincil akış, aksiyon ve butonlar" : "Primary brand accents, buttons & links",
       textColor: "text-white",
@@ -67,6 +80,7 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
     {
       name: isTr ? "Mühendislik İndigo" : "Engineering Indigo",
       hex: "#6366F1",
+      bgClass: "bg-[#6366F1]",
       rgb: "rgb(99, 102, 241)",
       usage: isTr
         ? "Teklifler, kod ve sözleşme vurguları"
@@ -76,6 +90,7 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
     {
       name: isTr ? "Siber Zümrüt (Cyber Emerald)" : "Cyber Emerald",
       hex: "#10B981",
+      bgClass: "bg-[#10B981]",
       rgb: "rgb(16, 185, 129)",
       usage: isTr
         ? "Güvenlik onayları ve aktif canlılık"
@@ -91,20 +106,34 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
         aria-label={isTr ? "Resmi Logo İndirme ve Önizleme" : "Official Logo Vectors"}
         className="space-y-8"
       >
-        <div className="space-y-2">
-          <span className="text-xs font-mono uppercase tracking-wider text-blue-400 font-bold">
-            {isTr ? "01. Vektörel Varlıklar" : "01. Vector Brand Assets"}
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)]">
-            {isTr
-              ? "Resmi Operis Logosu & Vektör Paketleri"
-              : "Official Operis Logos & Vector Assets"}
-          </h2>
-          <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] max-w-2xl leading-relaxed">
-            {isTr
-              ? "Operis logosu; 4 akış şeridinden oluşan 'O' Stream Mark sembolü ile matematiksel olarak 10px eşit kerning ile kalibre edilmiş küçük harfli 'peris' kelime markasının bileşimidir."
-              : "The official Operis logo combines the calibrated 4-band 'O' Stream Mark with the lowercase 'peris' wordmark, set with optical 10px equal kerning."}
-          </p>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="space-y-2 max-w-2xl">
+            <span className="text-xs font-mono uppercase tracking-wider text-blue-400 font-bold">
+              {isTr ? "01. Vektörel Varlıklar" : "01. Vector Brand Assets"}
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)]">
+              {isTr
+                ? "Resmi Operis Logosu & Vektör Paketleri"
+                : "Official Operis Logos & Vector Assets"}
+            </h2>
+            <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
+              {isTr
+                ? "Operis logosu; 4 akış şeridinden oluşan 'O' Stream Mark sembolü ile matematiksel olarak 10px eşit kerning ile kalibre edilmiş küçük harfli 'peris' kelime markasının bileşimidir."
+                : "The official Operis logo combines the calibrated 4-band 'O' Stream Mark with the lowercase 'peris' wordmark, set with optical 10px equal kerning."}
+            </p>
+          </div>
+
+          <div className="shrink-0">
+            <a
+              href="/operis-brand-assets.zip"
+              download="operis-brand-assets.zip"
+              className="inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all cursor-pointer"
+            >
+              <Download className="h-4 w-4" aria-hidden="true" />
+              <span>{isTr ? "Tüm Varlıkları İndir (.ZIP Paketi)" : "Download All Assets (.ZIP Package)"}</span>
+              <span className="text-[10px] font-mono opacity-80 px-2 py-0.5 rounded-full bg-black/25">42 KB</span>
+            </a>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
@@ -360,16 +389,12 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
               key={color.hex}
               onClick={() => copyToClipboard(color.hex, color.hex)}
               className="group rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-5 shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all cursor-pointer relative overflow-hidden"
-              style={{
-                backgroundColor: "var(--color-surface-base)",
-              }}
             >
               {/* Color Swatch Block */}
               <div
                 className={`h-24 w-full rounded-2xl flex items-end justify-between p-4 shadow-inner mb-4 transition-transform group-hover:scale-[1.02] ${
-                  color.border ? "border border-zinc-200" : ""
-                }`}
-                style={{ backgroundColor: color.hex }}
+                  color.bgClass
+                } ${color.border ? "border border-zinc-200" : ""}`}
               >
                 <span className={`text-xs font-mono font-bold ${color.textColor}`}>
                   {color.hex}
@@ -410,9 +435,6 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
       <section
         aria-label={isTr ? "Tipografi Standartları" : "Typography Standards"}
         className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-8 sm:p-10 shadow-2xl relative overflow-hidden space-y-8"
-        style={{
-          backgroundColor: "var(--color-surface-base)",
-        }}
       >
         <div className="space-y-2">
           <span className="text-xs font-mono uppercase tracking-wider text-blue-400 font-bold">
@@ -594,6 +616,121 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
               </li>
             </ul>
           </div>
+        </div>
+      </section>
+
+      {/* 6. Press & Corporate Inquiries (Vellium Communications Desks) */}
+      <section
+        aria-label={isTr ? "Basın ve Kurumsal İletişim" : "Press & Corporate Inquiries"}
+        className="rounded-3xl border border-blue-500/25 bg-gradient-to-r from-blue-500/10 via-[var(--color-surface-base)] to-[var(--color-surface-base)] p-6 sm:p-9 shadow-xl space-y-6"
+      >
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-semibold text-blue-400">
+              <Building2 className="h-3.5 w-3.5" />
+              <span>{isTr ? "Basın & Kurumsal İletişim Masaları" : "Press & Corporate Desks"}</span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-text-primary)]">
+              {isTr
+                ? "Medya Talepleri ve Resmi Kurumsal Kanallar"
+                : "Media Inquiries & Official Corporate Channels"}
+            </h2>
+            <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
+              {isTr
+                ? "Operis bir Vellium ürünüdür. Röportaj, basın bülteni, resmi marka kullanımı ve kurumsal iş birlikleri için doğrudan yetkili Vellium iletişim masalarıyla irtibata geçebilirsiniz."
+                : "Operis is operated under Vellium. For press releases, executive interviews, or strategic partnerships, connect directly with designated Vellium communications desks."}
+            </p>
+          </div>
+
+          <Link href={getLocalizedRoute("contact", locale)} className="shrink-0">
+            <button
+              type="button"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-md shadow-blue-500/25 transition-all cursor-pointer"
+            >
+              <span>{isTr ? "Resmi Masaları İncele" : "View Operations Desks"}</span>
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 pt-2 border-t border-[var(--color-border-subtle)] text-xs">
+          <a
+            href="mailto:contact@vellium.dev?subject=Basin%20ve%20Medya%20Talebi"
+            className="flex items-center justify-between p-3 rounded-xl bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] hover:border-blue-500/40 transition-colors group"
+          >
+            <div className="space-y-0.5">
+              <div className="text-[11px] text-[var(--color-text-tertiary)] font-medium">
+                {isTr ? "Basın & Kurumsal" : "Press & Corporate"}
+              </div>
+              <div className="font-mono text-xs text-blue-400 group-hover:underline">contact@vellium.dev</div>
+            </div>
+            <Mail className="h-4 w-4 text-[var(--color-text-tertiary)] group-hover:text-blue-400 shrink-0" />
+          </a>
+
+          <a
+            href="mailto:legal@vellium.dev?subject=Marka%20ve%20Telif%20Hakki"
+            className="flex items-center justify-between p-3 rounded-xl bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] hover:border-blue-500/40 transition-colors group"
+          >
+            <div className="space-y-0.5">
+              <div className="text-[11px] text-[var(--color-text-tertiary)] font-medium">
+                {isTr ? "Hukuk & Marka Telifi" : "Legal & Trademark"}
+              </div>
+              <div className="font-mono text-xs text-purple-400 group-hover:underline">legal@vellium.dev</div>
+            </div>
+            <Mail className="h-4 w-4 text-[var(--color-text-tertiary)] group-hover:text-purple-400 shrink-0" />
+          </a>
+
+          <a
+            href="mailto:support@vellium.dev?subject=Genel%20Destek"
+            className="flex items-center justify-between p-3 rounded-xl bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] hover:border-blue-500/40 transition-colors group"
+          >
+            <div className="space-y-0.5">
+              <div className="text-[11px] text-[var(--color-text-tertiary)] font-medium">
+                {isTr ? "Genel Üye Desteği" : "General Support"}
+              </div>
+              <div className="font-mono text-xs text-emerald-400 group-hover:underline">support@vellium.dev</div>
+            </div>
+            <Mail className="h-4 w-4 text-[var(--color-text-tertiary)] group-hover:text-emerald-400 shrink-0" />
+          </a>
+
+          <a
+            href="mailto:security@vellium.dev?subject=Guvenlik%20Bildirimi"
+            className="flex items-center justify-between p-3 rounded-xl bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] hover:border-blue-500/40 transition-colors group"
+          >
+            <div className="space-y-0.5">
+              <div className="text-[11px] text-[var(--color-text-tertiary)] font-medium">
+                {isTr ? "Güvenlik & Zafiyet" : "Security & Bounty"}
+              </div>
+              <div className="font-mono text-xs text-rose-400 group-hover:underline">security@vellium.dev</div>
+            </div>
+            <Mail className="h-4 w-4 text-[var(--color-text-tertiary)] group-hover:text-rose-400 shrink-0" />
+          </a>
+
+          <a
+            href="mailto:privacy@vellium.dev?subject=KVKK%20ve%20Gizlilik"
+            className="flex items-center justify-between p-3 rounded-xl bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] hover:border-blue-500/40 transition-colors group"
+          >
+            <div className="space-y-0.5">
+              <div className="text-[11px] text-[var(--color-text-tertiary)] font-medium">
+                {isTr ? "KVKK & Gizlilik Masası" : "Privacy & Data"}
+              </div>
+              <div className="font-mono text-xs text-cyan-400 group-hover:underline">privacy@vellium.dev</div>
+            </div>
+            <Mail className="h-4 w-4 text-[var(--color-text-tertiary)] group-hover:text-cyan-400 shrink-0" />
+          </a>
+
+          <a
+            href="mailto:billing@vellium.dev?subject=Fatura%20ve%20Finans"
+            className="flex items-center justify-between p-3 rounded-xl bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] hover:border-blue-500/40 transition-colors group"
+          >
+            <div className="space-y-0.5">
+              <div className="text-[11px] text-[var(--color-text-tertiary)] font-medium">
+                {isTr ? "Faturalandırma & Finans" : "Billing & Accounting"}
+              </div>
+              <div className="font-mono text-xs text-amber-400 group-hover:underline">billing@vellium.dev</div>
+            </div>
+            <Mail className="h-4 w-4 text-[var(--color-text-tertiary)] group-hover:text-amber-400 shrink-0" />
+          </a>
         </div>
       </section>
 

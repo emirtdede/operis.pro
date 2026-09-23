@@ -100,7 +100,7 @@ export async function POST(req: Request) {
       const rawAppUrl =
         process.env.APP_URL ||
         process.env.NEXT_PUBLIC_APP_URL ||
-        (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+        (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:8000");
       const appUrl = rawAppUrl.replace(/\/+$/, "");
       const isEn = userLocale === "en";
       const resetPath = isEn ? "/en/reset-password" : "/tr/sifre-sifirla";

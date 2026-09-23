@@ -23,7 +23,9 @@ vi.mock("@/src/lib/security/rate-limit", () => ({
 
 describe("Proof-of-Work (PoW) Delivery Health & Uptime Inspector Suite", () => {
   beforeEach(() => {
-    vi.mocked(evaluateSecurityAccessAsync).mockResolvedValue({ allowed: true } as any);
+    vi.mocked(evaluateSecurityAccessAsync).mockResolvedValue({
+      allowed: true,
+    } as unknown as Awaited<ReturnType<typeof evaluateSecurityAccessAsync>>);
     vi.spyOn(dns.promises, "lookup").mockImplementation(async (hostname: string) => {
       const lower = hostname.toLowerCase();
       if (
@@ -36,9 +38,9 @@ describe("Proof-of-Work (PoW) Delivery Health & Uptime Inspector Suite", () => {
         lower === "10.0.0.1" ||
         lower === "private.corp"
       ) {
-        return [{ address: "127.0.0.1", family: 4 }] as any;
+        return [{ address: "127.0.0.1", family: 4 }] as unknown as dns.LookupAddress;
       }
-      return [{ address: "93.184.216.34", family: 4 }] as any;
+      return [{ address: "93.184.216.34", family: 4 }] as unknown as dns.LookupAddress;
     });
   });
 

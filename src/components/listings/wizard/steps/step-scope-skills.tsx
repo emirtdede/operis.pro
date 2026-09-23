@@ -100,19 +100,6 @@ export function StepScopeSkills({
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h2 className="text-xl font-bold text-[var(--color-text-primary)] flex items-center gap-2">
-          <FileText className="h-5 w-5 text-cyan-400" />
-          <span>
-            {isTr ? "2. Teknik Kapsam ve Yetkinlikler" : "2. Scope & Technical Skills"}
-          </span>
-        </h2>
-        <p className="text-xs sm:text-sm text-[var(--color-text-secondary)]">
-          {isTr
-            ? "Sektöre özel soruları tek tıkla yanıtlayın; sistem profesyonel 4 bölümlü bir teknik şartnameyi anında oluştursun."
-            : "Answer category-adaptive questions with single clicks to generate an industry-standard 4-part RFP."}
-        </p>
-      </div>
 
       {/* Accepted Scope Package (Acceptance Criteria Active Banner) */}
       {acceptedScopePackage && (
@@ -257,7 +244,7 @@ export function StepScopeSkills({
                       type="button"
                       onClick={() => setAnswers({ ...answers, [q.key]: true })}
                       className={`px-3 py-1.5 rounded-xl text-xs font-medium border transition-all cursor-pointer flex items-center gap-1.5 ${
-                        Boolean(currentVal)
+                        currentVal
                           ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/50 shadow-xs"
                           : "bg-[var(--color-surface-base)] text-[var(--color-text-secondary)] border-[var(--color-border-subtle)] hover:bg-[var(--color-surface-hover)]"
                       }`}
@@ -341,7 +328,7 @@ export function StepScopeSkills({
               className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-500/30 transition-all cursor-pointer shadow-xs"
             >
               <Sparkles className="h-3 w-3 text-indigo-400" />
-              <span>{isTr ? "🤖 AI PRD & Kapsam Mimarı" : "🤖 AI PRD Architect"}</span>
+              <span>{isTr ? "AI PRD & Kapsam Mimarı" : "AI PRD Architect"}</span>
             </button>
 
             <button

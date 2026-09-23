@@ -13,7 +13,9 @@ import {
   AlertCircle,
   Briefcase,
   UserCheck,
-  ShieldCheck,
+  ListFilter,
+  ChevronDown,
+  ArrowUpDown,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
@@ -52,6 +54,7 @@ export interface ActiveEngagementsDashboardProps {
 
 type RoleFilter = "all" | "freelancer" | "owner";
 type StatusFilter = "active" | "completed" | "all";
+export type ActiveEngagementSortOption = "recent_activity" | "newest" | "budget_desc";
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
   TRY: "₺",
@@ -65,10 +68,10 @@ function getCurrencySymbol(currency: string): string {
 
 function getStatusFilterLabel(st: "active" | "completed" | "all", activeCount: number, isTr: boolean): string {
   if (st === "active") {
-    return isTr ? `Devam Edenler (${activeCount})` : `Active (${activeCount})`;
+    return isTr ? `Devam Eden (${activeCount})` : `Active (${activeCount})`;
   }
   if (st === "completed") {
-    return isTr ? "Tamamlananlar" : "Completed";
+    return isTr ? "Tamamlanan" : "Completed";
   }
   return isTr ? "Tümü" : "All";
 }
@@ -78,9 +81,9 @@ function getRoleFilterLabel(r: "all" | "freelancer" | "owner", isTr: boolean): s
     return isTr ? "Tüm Roller" : "All Roles";
   }
   if (r === "freelancer") {
-    return isTr ? "Freelancer" : "As Specialist";
+    return isTr ? "Freelancer" : "Freelancer";
   }
-  return isTr ? "İşveren" : "As Employer";
+  return isTr ? "İşveren" : "Employer";
 }
 
 function getEmptyStateTitle(searchQuery: string, statusFilter: string, isTr: boolean): string {
@@ -120,6 +123,7 @@ export function ActiveEngagementsDashboard({
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("active");
+  const [sortBy, setSortBy] = useState<ActiveEngagementSortOption>("recent_activity");
 
   // 1. Role and Status Filter
   const filteredByControls = useMemo(() => {
@@ -139,19 +143,43 @@ export function ActiveEngagementsDashboard({
     });
   }, [engagements, roleFilter, statusFilter]);
 
-  // 2. Turkish-Aware Token Search
+  // 2. Turkish-Aware Token Search & Multi-criteria Sort
   const displayEngagements = useMemo(() => {
+    let list: ActiveEngagementItem[];
     if (!searchQuery.trim()) {
-      return filteredByControls;
+      list = [...filteredByControls];
+    } else {
+      list = filterAndSortByRelevance(filteredByControls, searchQuery, (item) => [
+        { text: item.listingTitle, weight: 10 },
+        { text: item.listingSummary, weight: 4 },
+        { text: item.categoryTitle, weight: 4 },
+        { text: item.counterparty.displayName, weight: 3 },
+        { text: item.counterparty.handle, weight: 3 },
+      ]);
     }
-    return filterAndSortByRelevance(filteredByControls, searchQuery, (item) => [
-      { text: item.listingTitle, weight: 10 },
-      { text: item.listingSummary, weight: 4 },
-      { text: item.categoryTitle, weight: 4 },
-      { text: item.counterparty.displayName, weight: 3 },
-      { text: item.counterparty.handle, weight: 3 },
-    ]);
-  }, [filteredByControls, searchQuery]);
+
+    const sorted = [...list];
+    switch (sortBy) {
+      case "budget_desc":
+        return sorted.sort((a, b) => {
+          const maxA = Number(a.budgetMax || a.budgetMin || 0);
+          const maxB = Number(b.budgetMax || b.budgetMin || 0);
+          return maxB - maxA;
+        });
+      case "newest":
+        return sorted.sort(
+          (a, b) => new Date(b.matchedAt).getTime() - new Date(a.matchedAt).getTime()
+        );
+      case "recent_activity":
+      default:
+        if (searchQuery.trim()) return list;
+        return sorted.sort((a, b) => {
+          const timeA = new Date(a.completedAt || a.cancelledAt || a.matchedAt).getTime();
+          const timeB = new Date(b.completedAt || b.cancelledAt || b.matchedAt).getTime();
+          return timeB - timeA;
+        });
+    }
+  }, [filteredByControls, searchQuery, sortBy]);
 
   // Active count for badge preview
   const activeCount = useMemo(() => {
@@ -173,9 +201,9 @@ export function ActiveEngagementsDashboard({
   return (
     <div className="space-y-6">
       {/* Search and Filter Controls */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[var(--color-surface-card)] border border-[var(--color-border-subtle)] p-4 rounded-2xl shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Search */}
-        <div className="relative flex-1 min-w-[240px]">
+        <div className="relative flex-1 min-w-[200px]">
           <Search
             className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-text-tertiary)]"
             aria-hidden="true"
@@ -184,12 +212,8 @@ export function ActiveEngagementsDashboard({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={
-              isTr
-                ? "Aktif projelerde ara (proje başlığı, karşı taraf adı)..."
-                : "Search active projects (title, counterparty)..."
-            }
-            className="w-full pl-10 pr-9 py-2 rounded-xl text-xs sm:text-sm bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+            placeholder={isTr ? "Projelerde ara..." : "Search projects..."}
+            className="w-full pl-10 pr-9 py-2 rounded-xl text-xs sm:text-sm bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all truncate"
           />
           {searchQuery && (
             <button
@@ -203,83 +227,100 @@ export function ActiveEngagementsDashboard({
           )}
         </div>
 
-        {/* Role & Status Filter Tabs */}
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Status Tabs */}
-          <div className="flex items-center p-1 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs">
-            {(["active", "completed", "all"] as const).map((st) => (
-              <button
-                key={st}
-                type="button"
-                onClick={() => setStatusFilter(st)}
-                className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
-                  statusFilter === st
-                    ? "bg-blue-600 text-white shadow-sm font-semibold"
-                    : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
-                }`}
-              >
-                {getStatusFilterLabel(st, activeCount, isTr)}
-              </button>
-            ))}
+        {/* Controls: Single Status Filter Button + Single Role Filter Button + Single Sort Button */}
+        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+          {/* Single Status Filter Dropdown Button */}
+          <div className="relative inline-flex items-center">
+            <ListFilter className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
+              aria-label={isTr ? "Durum Filtresi" : "Status Filter"}
+              className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
+            >
+              {(["active", "completed", "all"] as const).map((st) => (
+                <option key={st} value={st} className="bg-[#141517] text-[var(--color-text-primary)]">
+                  {getStatusFilterLabel(st, activeCount, isTr)}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
           </div>
 
-          {/* Role Tabs */}
-          <div className="flex items-center p-1 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs">
-            {(["all", "freelancer", "owner"] as const).map((r) => (
-              <button
-                key={r}
-                type="button"
-                onClick={() => setRoleFilter(r)}
-                className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
-                  roleFilter === r
-                    ? "bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] font-semibold shadow-xs"
-                    : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
-                }`}
-              >
-                {getRoleFilterLabel(r, isTr)}
-              </button>
-            ))}
+          {/* Single Role Filter Dropdown Button */}
+          <div className="relative inline-flex items-center">
+            <UserCheck className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <select
+              value={roleFilter}
+              onChange={(e) => setRoleFilter(e.target.value as RoleFilter)}
+              aria-label={isTr ? "Rol Filtresi" : "Role Filter"}
+              className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
+            >
+              {(["all", "freelancer", "owner"] as const).map((r) => (
+                <option key={r} value={r} className="bg-[#141517] text-[var(--color-text-primary)]">
+                  {getRoleFilterLabel(r, isTr)}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+          </div>
+
+          {/* Single Sort Dropdown Button */}
+          <div className="relative inline-flex items-center">
+            <ArrowUpDown className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as ActiveEngagementSortOption)}
+              aria-label={isTr ? "Sıralama ölçütü" : "Sort by"}
+              className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
+            >
+              <option value="recent_activity" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "Son Aktivite" : "Recent Activity"}</option>
+              <option value="newest" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yeni" : "Newest"}</option>
+              <option value="budget_desc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yüksek Bütçe" : "Highest Budget"}</option>
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
           </div>
         </div>
       </div>
 
-      {/* Concurrent Work Summary Banner */}
-      <div className="rounded-2xl border border-blue-500/20 bg-blue-500/5 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-400 shrink-0">
-            <Rocket className="h-5 w-5" />
-          </div>
-          <div>
-            <h2 className="text-sm font-bold text-[var(--color-text-primary)]">
-              {isTr
-                ? "Çoklu Aktif İlan & Eşzamanlı Proje Takibi"
-                : "Concurrent Active Projects Hub"}
-            </h2>
-            <p className="text-xs text-[var(--color-text-secondary)] mt-0.5 leading-relaxed">
-              {isTr
-                ? "Aynı anda birden fazla ilanda çalışabilir veya projeler yürütebilirsiniz. Her projenin çalışma alanına tek tıkla ulaşabilirsiniz."
-                : "Manage and collaborate across multiple active engagements seamlessly. Enter workspace channels in one click."}
-            </p>
-          </div>
+      {/* Result Count and Active Filter Indicator */}
+      {(searchQuery.trim() || roleFilter !== "all" || statusFilter !== "active") && (
+        <div className="flex items-center justify-between text-xs text-[var(--color-text-secondary)] px-1">
+          <span>
+            {isTr
+              ? `${displayEngagements.length} proje listeleniyor`
+              : `Showing ${displayEngagements.length} projects`}
+            {searchQuery.trim() && ` ("${searchQuery.trim()}")`}
+          </span>
+          {searchQuery.trim() && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              className="text-blue-400 hover:text-blue-300 font-medium cursor-pointer"
+            >
+              {isTr ? "Aramayı Temizle" : "Clear Search"}
+            </button>
+          )}
         </div>
-
-        <div className="shrink-0 flex items-center gap-2 text-xs text-[var(--color-text-secondary)]">
-          <ShieldCheck className="h-4 w-4 text-emerald-400" />
-          <span>{isTr ? "Gizli İletişim Kanalları" : "Protected Workspaces"}</span>
-        </div>
-      </div>
+      )}
 
       {/* Engagements List */}
       {displayEngagements.length === 0 ? (
         <EmptyState
-          icon={<Briefcase className="h-6 w-6" />}
+          variant="card"
+          icon={<Briefcase className="h-7 w-7 text-blue-400" />}
           title={getEmptyStateTitle(searchQuery, statusFilter, isTr)}
           description={getEmptyStateDescription(searchQuery, isTr)}
           action={
-            !searchQuery && (
+            searchQuery ? (
+              <Button variant="secondary" size="sm" onClick={() => setSearchQuery("")}>
+                {isTr ? "Aramayı Temizle" : "Clear Search"}
+              </Button>
+            ) : (
               <Link href={isTr ? "/tr/ilanlar" : "/en/listings"}>
-                <Button variant="shimmer" size="sm">
-                  {isTr ? "Yeni İlanları Keşfet" : "Browse Opportunities"}
+                <Button variant="shimmer" size="md" className="gap-2 shadow-lg shadow-blue-500/15">
+                  <Rocket className="h-4 w-4" />
+                  <span>{isTr ? "Yeni İlanları Keşfet" : "Browse Opportunities"}</span>
                 </Button>
               </Link>
             )

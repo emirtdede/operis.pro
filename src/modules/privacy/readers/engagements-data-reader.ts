@@ -18,12 +18,13 @@ export async function* readEngagementsData(
   const { txDb, userId, options, signal } = ctx;
 
   yield `  "engagements": [\n`;
-  let lastEngageMatchedAtText: string | null = null;
-  let lastEngageId: string | null = null;
   let firstEngage = true;
   let engagePageCount = 0;
 
-  while (true) {
+  async function* streamEngagementsPages(
+    lastEngageMatchedAtText: string | null,
+    lastEngageId: string | null
+  ): AsyncGenerator<string, void, unknown> {
     if (signal?.aborted) {
       throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
     }
@@ -50,7 +51,7 @@ export async function* readEngagementsData(
       .orderBy(desc(schema.engagements.matchedAt), desc(schema.engagements.id))
       .limit(PAGE_SIZE);
 
-    if (engagePage.length === 0) break;
+    if (engagePage.length === 0) return;
     if (options?.onProgress) {
       await options.onProgress({
         section: "engagements",
@@ -77,10 +78,15 @@ export async function* readEngagementsData(
       firstEngage = false;
     }
 
-    const last = engagePage[engagePage.length - 1]!;
-    lastEngageMatchedAtText = last.matchedAtText;
-    lastEngageId = last.id;
+    if (engagePage.length < PAGE_SIZE) return;
+
+    const last = engagePage[engagePage.length - 1];
+    if (last) {
+      yield* streamEngagementsPages(last.matchedAtText, last.id);
+    }
   }
+
+  yield* streamEngagementsPages(null, null);
   yield `\n  ],\n`;
 
   if (options?.onSection) await options.onSection("engagements");
@@ -99,12 +105,13 @@ export async function* readEndorsementsData(
 
   // 1. Authored endorsements
   yield `  "endorsements": {\n    "authored": [\n`;
-  let lastAuthoredCreatedAtText: string | null = null;
-  let lastAuthoredId: string | null = null;
   let firstAuthored = true;
   let authEndPageCount = 0;
 
-  while (true) {
+  async function* streamAuthoredPages(
+    lastAuthoredCreatedAtText: string | null,
+    lastAuthoredId: string | null
+  ): AsyncGenerator<string, void, unknown> {
     if (signal?.aborted) {
       throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
     }
@@ -127,7 +134,7 @@ export async function* readEndorsementsData(
       .orderBy(desc(schema.endorsements.createdAt), desc(schema.endorsements.id))
       .limit(PAGE_SIZE);
 
-    if (authoredPage.length === 0) break;
+    if (authoredPage.length === 0) return;
     if (options?.onProgress) {
       await options.onProgress({
         section: "endorsements.authored",
@@ -149,19 +156,25 @@ export async function* readEndorsementsData(
       firstAuthored = false;
     }
 
-    const last = authoredPage[authoredPage.length - 1]!;
-    lastAuthoredCreatedAtText = last.createdAtText;
-    lastAuthoredId = last.id;
+    if (authoredPage.length < PAGE_SIZE) return;
+
+    const last = authoredPage[authoredPage.length - 1];
+    if (last) {
+      yield* streamAuthoredPages(last.createdAtText, last.id);
+    }
   }
+
+  yield* streamAuthoredPages(null, null);
 
   // 2. Received endorsements
   yield `\n    ],\n    "received": [\n`;
-  let lastReceivedCreatedAtText: string | null = null;
-  let lastReceivedId: string | null = null;
   let firstReceived = true;
   let recEndPageCount = 0;
 
-  while (true) {
+  async function* streamReceivedPages(
+    lastReceivedCreatedAtText: string | null,
+    lastReceivedId: string | null
+  ): AsyncGenerator<string, void, unknown> {
     if (signal?.aborted) {
       throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
     }
@@ -184,7 +197,7 @@ export async function* readEndorsementsData(
       .orderBy(desc(schema.endorsements.createdAt), desc(schema.endorsements.id))
       .limit(PAGE_SIZE);
 
-    if (receivedPage.length === 0) break;
+    if (receivedPage.length === 0) return;
     if (options?.onProgress) {
       await options.onProgress({
         section: "endorsements.received",
@@ -206,10 +219,15 @@ export async function* readEndorsementsData(
       firstReceived = false;
     }
 
-    const last = receivedPage[receivedPage.length - 1]!;
-    lastReceivedCreatedAtText = last.createdAtText;
-    lastReceivedId = last.id;
+    if (receivedPage.length < PAGE_SIZE) return;
+
+    const last = receivedPage[receivedPage.length - 1];
+    if (last) {
+      yield* streamReceivedPages(last.createdAtText, last.id);
+    }
   }
+
+  yield* streamReceivedPages(null, null);
   yield `\n    ]\n  },\n`;
 
   if (options?.onSection) await options.onSection("endorsements");

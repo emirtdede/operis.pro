@@ -39,8 +39,8 @@ export class MilestoneEvidenceService {
         "Yetkisiz erişim: Fikri Mülkiyet Devir Senetleri yalnızca sözleşmenin tarafları tarafından görüntülenebilir."
       );
     }
-    return plan.milestones
-      .filter((m) => m.paymentStatus === "CONFIRMED_PAID" && m.ipAssignmentDeed)
-      .map((m) => m.ipAssignmentDeed!);
+    return plan.milestones.flatMap((m) =>
+      m.paymentStatus === "CONFIRMED_PAID" && m.ipAssignmentDeed ? [m.ipAssignmentDeed] : []
+    );
   }
 }

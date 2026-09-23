@@ -1,6 +1,7 @@
 import { wrapInEmailLayout } from "./layout";
 import type { EmailTemplateKey } from "../index";
 import type { Locale } from "@/src/lib/i18n/config";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export interface RenderTemplateOptions {
   template: EmailTemplateKey;
@@ -59,7 +60,7 @@ export function renderEmailTemplate({
   variables,
 }: RenderTemplateOptions): RenderTemplateResult {
   const isTr = locale === "tr";
-  const appUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || "https://operis.pro";
+  const appUrl = getBaseUrl();
 
   switch (template) {
     case "verify_email": {

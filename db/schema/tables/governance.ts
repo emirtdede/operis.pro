@@ -178,6 +178,7 @@ export const exportJobs = pgTable(
   },
   (table) => [
     index("export_jobs_user_status_created_idx").on(table.userId, table.status, table.createdAt),
+    index("export_jobs_status_next_attempt_idx").on(table.status, table.nextAttemptAt),
     uniqueIndex("export_jobs_one_active_user_idx")
       .on(table.userId)
       .where(sql`status IN ('PENDING', 'PROCESSING')`),

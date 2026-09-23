@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { LegalCenterClient } from "@/src/components/legal/legal-center-client";
-import { serializeJsonLd } from "@/src/lib/security/json-ld";
+import { getLocalizedRoute } from "@/src/lib/i18n/routes";
+import { JsonLd } from "@/src/components/seo/json-ld";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -18,7 +20,8 @@ export async function generateMetadata({
     ? "Operis'in kar amacı gütmeyen, sıfır komisyonlu ve dava muafiyetli tüm yasal sözleşmeleri, KVKK aydınlatma metinleri ve fikri mülkiyet politikaları dizini."
     : "Comprehensive index of Operis terms of service, zero-commission policies, KVKK/GDPR notices, IP protection, and lawsuit immunity frameworks.";
 
-  const url = isTr ? "https://operis.pro/tr/yasal" : "https://operis.pro/en/legal";
+  const baseUrl = getBaseUrl();
+  const url = isTr ? `${baseUrl}/tr/yasal` : `${baseUrl}/en/legal`;
 
   return {
     title,
@@ -51,27 +54,50 @@ export default async function LegalCenterPage({ params }: { params: Promise<{ lo
   setRequestLocale(locale);
   const isTr = locale === "tr";
 
+  const baseUrl = getBaseUrl();
+  const legalUrl = `${baseUrl}${getLocalizedRoute("legalCenter", locale)}`;
+
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: isTr ? "Operis Yasal ve Güven Merkezi" : "Operis Legal & Trust Center",
-    description: isTr
-      ? "Operis platformu yasal sözleşmeleri, gizlilik politikaları ve hukuki güvenceler dizini."
-      : "Directory of Operis platform user agreements, privacy notices, and trust guarantees.",
-    publisher: {
-      "@type": "Organization",
-      name: "Vellium",
-      url: "https://vellium.dev",
-    },
+    "@graph": [
+      {
+        "@type": "WebPage",
+        name: isTr ? "Operis Yasal ve Güven Merkezi" : "Operis Legal & Trust Center",
+        description: isTr
+          ? "Operis platformu yasal sözleşmeleri, gizlilik politikaları ve hukuki güvenceler dizini."
+          : "Directory of Operis platform user agreements, privacy notices, and trust guarantees.",
+        url: legalUrl,
+        inLanguage: locale,
+        publisher: {
+          "@type": "Organization",
+          name: "Vellium",
+          url: "https://vellium.dev",
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: isTr ? "Ana Sayfa" : "Home",
+            item: `${baseUrl}/${locale}`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: isTr ? "Yasal Merkez" : "Legal Center",
+            item: legalUrl,
+          },
+        ],
+      },
+    ],
   };
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 space-y-12">
-      {/* Schema.org Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
+      {/* Structured Schema.org JSON-LD */}
+      <JsonLd data={jsonLd} />
 
       {/* Hero Header Section */}
       <header className="text-center space-y-4 max-w-3xl mx-auto pt-4 pb-2">

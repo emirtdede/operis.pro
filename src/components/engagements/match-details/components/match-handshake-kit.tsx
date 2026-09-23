@@ -604,7 +604,7 @@ export function MatchHandshakeKit({
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => onCopy(counterparty.phone!, "phone")}
+                onClick={() => counterparty.phone && onCopy(counterparty.phone, "phone")}
                 className="gap-1.5 text-xs h-8 cursor-pointer"
                 aria-label={getCopyAriaLabel(
                   copiedField === "phone",

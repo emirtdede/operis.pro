@@ -116,7 +116,7 @@ export async function POST(req: Request) {
       console.error("[Contact API] Database persistence error (non-blocking):", dbErr);
     }
 
-    const supportEmail = process.env.LEGAL_SUPPORT_EMAIL || "destek@operis.pro";
+    const supportEmail = process.env.LEGAL_SUPPORT_EMAIL || "support@vellium.dev";
     const sent = await EmailAdapter.sendTransactionalEmail({
       to: supportEmail,
       replyTo: email,

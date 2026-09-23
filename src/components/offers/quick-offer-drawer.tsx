@@ -189,8 +189,9 @@ export function QuickOfferDrawer({
       }
       const fallbackDefaults = getDefaultTemplates(isTr);
       setTemplates(fallbackDefaults);
-      if (!hasUserEditedRef.current && fallbackDefaults.length > 0) {
-        applyTemplate(fallbackDefaults[0]!);
+      const firstDefault = fallbackDefaults[0];
+      if (!hasUserEditedRef.current && firstDefault) {
+        applyTemplate(firstDefault);
       }
     }
     if (isOpen) {
@@ -262,8 +263,9 @@ export function QuickOfferDrawer({
       });
       if (res.ok) {
         setTemplates((prev) => prev.filter((t) => t.id !== tplId));
-        if (selectedTemplateId === tplId && templates.length > 0) {
-          applyTemplate(templates[0]!);
+        const firstTemplate = templates[0];
+        if (selectedTemplateId === tplId && firstTemplate) {
+          applyTemplate(firstTemplate);
         }
       }
     } catch {

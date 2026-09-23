@@ -50,6 +50,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  experimental: {
+    optimizePackageImports: ["lucide-react"],
+  },
   async headers() {
     return [
       {
@@ -76,8 +79,16 @@ const nextConfig: NextConfig = {
       { source: "/tr/panel/ilanlarim", destination: "/tr/dashboard/listings" },
       { source: "/tr/panel/ilanlar", destination: "/tr/dashboard/listings" },
       { source: "/tr/panel/teklifler/gelen", destination: "/tr/dashboard/offers/received" },
+      { source: "/tr/panel/teklifler/gelenler", destination: "/tr/dashboard/offers/received" },
       { source: "/tr/panel/teklifler/gonderilen", destination: "/tr/dashboard/offers/sent" },
+      { source: "/tr/panel/teklifler/gonderilenler", destination: "/tr/dashboard/offers/sent" },
       { source: "/tr/panel/teklifler/giden", destination: "/tr/dashboard/offers/sent" },
+      { source: "/tr/panel/teklifler/gidenler", destination: "/tr/dashboard/offers/sent" },
+      { source: "/tr/panel/aktif-isler", destination: "/tr/dashboard/work" },
+      { source: "/tr/panel/aktif", destination: "/tr/dashboard/work" },
+      { source: "/tr/panel/projelerim", destination: "/tr/dashboard/work" },
+      { source: "/tr/panel/kaydedilenler", destination: "/tr/dashboard/saved" },
+      { source: "/tr/panel/kaydedilen", destination: "/tr/dashboard/saved" },
       { source: "/tr/panel/ayarlar", destination: "/tr/settings" },
       { source: "/tr/ayarlar", destination: "/tr/settings" },
       { source: "/tr/panel/guvenlik", destination: "/tr/dashboard/security" },

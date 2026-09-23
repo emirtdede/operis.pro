@@ -17,11 +17,77 @@ import { AiGovernanceEngine } from "../ai-governance-engine";
 import type { SoftwareExportConfig } from "../../finance/software-export-types";
 import { SoftwareExportEngine } from "../../finance/software-export-engine";
 import { IpAssignmentDeedEngine } from "../../engagements/ip-assignment/ip-assignment-engine";
+import type { IpAssignmentDeed } from "../../engagements/ip-assignment/ip-assignment-types";
 import { ComprehensiveDeedEngine } from "../comprehensive-deed-engine";
 import type { ComprehensivePartyInfo } from "../comprehensive-deed-types";
-import type { ContractLanguage, ContractParty } from "../types";
+import type { ContractLanguage, ContractParty, AccessTransferChecklist } from "../types";
+import type { DeliveryHealthReport } from "@/src/modules/engagements/delivery-inspector";
 import { DossierIntegrityService } from "./dossier-integrity.service";
 import { DossierExportService } from "./dossier-export.service";
+
+interface DossierMilestone {
+  id?: string;
+  sequenceNumber: number;
+  title: string;
+  description?: string | null;
+  amount: string | number;
+  currency?: string | null;
+  deliverableStatus?: string | null;
+  deliverableUrl?: string | null;
+  deliverableUrlType?: string | null;
+  sha256Seal?: string | null;
+  paymentStatus?: string | null;
+  paymentReference?: string | null;
+  invoiceNumber?: string | null;
+  gitCommitHash?: string | null;
+  submittedAt?: Date | string | null;
+  acceptedAt?: Date | string | null;
+  paidConfirmedAt?: Date | string | null;
+  auditTrailJson?: {
+    ipDeed?: IpAssignmentDeed;
+    dualSeal?: string;
+    clientPaymentProof?: { seal?: string };
+    certificateId?: string;
+    [key: string]: unknown;
+  } | null;
+}
+
+interface DossierChangeRequest {
+  sequenceNumber: number;
+  title: string;
+  description?: string | null;
+  reason: string;
+  additionalBudget: string | number;
+  currency: string;
+  additionalDays: number;
+  status: string;
+  createdAt: Date | string;
+  respondedAt?: Date | string | null;
+  addendumSha256?: string | null;
+  requesterUserId?: string | null;
+}
+
+interface DossierCompletionMark {
+  status: string;
+  updatedAt: Date | string;
+  userId?: string | null;
+}
+
+interface DossierHandoverRow {
+  repositoryUrl: string;
+  commitHash?: string | null;
+  liveUrl?: string | null;
+  documentationNotes?: string | null;
+  status?: "SUBMITTED" | "ACCEPTED_EXPRESS" | "ACCEPTED_TACIT" | "REVISION_REQUESTED";
+  acceptanceType?: "EXPRESS" | "TACIT" | null;
+  submittedAt?: Date | string | null;
+  inspectionExpiresAt?: Date | string | null;
+  acceptedAt?: Date | string | null;
+  sha256Seal?: string | null;
+  accessChecklist?: AccessTransferChecklist | null;
+  deliveryHealth?: DeliveryHealthReport | null;
+  revisionNotes?: string | null;
+}
 
 export interface GenerateDossierOptions {
   engagementId: string;
@@ -63,15 +129,15 @@ export class DossierCompilerService {
 
     let clientParty: DossierPartyInfo;
     let contractorParty: DossierPartyInfo;
-    let listingTitle = "Yazılım / Teknoloji Hizmeti";
+    let listingTitle: string;
     let matchedAtDate = new Date("2026-09-01T10:00:00Z");
     const agreedBudgetLabel = "75.000 TL";
     const agreedTimelineLabel = "4 Hafta";
-    let disputeStatus: LegalDossierManifest["disputeStatus"] = "NO_DISPUTE";
-    let handoverRow: any = null;
-    let changeRequests: any[] = [];
-    let milestones: any[] = [];
-    let completionMarks: any[] = [];
+    let disputeStatus: LegalDossierManifest["disputeStatus"];
+    let handoverRow: DossierHandoverRow | null;
+    let changeRequests: DossierChangeRequest[];
+    let milestones: DossierMilestone[];
+    let completionMarks: DossierCompletionMark[] = [];
 
     if (isMock) {
       clientParty = {
@@ -243,24 +309,24 @@ export class DossierCompilerService {
         .from(schema.engagementHandovers)
         .where(eq(schema.engagementHandovers.engagementId, engagementId))
         .limit(1);
-      handoverRow = handover || null;
+      handoverRow = (handover as unknown as DossierHandoverRow) || null;
 
-      changeRequests = await db
+      changeRequests = (await db
         .select()
         .from(schema.engagementChangeRequests)
         .where(eq(schema.engagementChangeRequests.engagementId, engagementId))
-        .orderBy(asc(schema.engagementChangeRequests.sequenceNumber));
+        .orderBy(asc(schema.engagementChangeRequests.sequenceNumber))) as unknown as DossierChangeRequest[];
 
-      milestones = await db
+      milestones = (await db
         .select()
         .from(schema.engagementMilestones)
         .where(eq(schema.engagementMilestones.engagementId, engagementId))
-        .orderBy(asc(schema.engagementMilestones.sequenceNumber));
+        .orderBy(asc(schema.engagementMilestones.sequenceNumber))) as unknown as DossierMilestone[];
 
-      completionMarks = await db
+      completionMarks = (await db
         .select()
         .from(schema.engagementCompletionMarks)
-        .where(eq(schema.engagementCompletionMarks.engagementId, engagementId));
+        .where(eq(schema.engagementCompletionMarks.engagementId, engagementId))) as unknown as DossierCompletionMark[];
 
       const hasDisputeMark = completionMarks.some((m) => m.status === "DISPUTES_COMPLETION");
       if (row.status === "CANCELLED") {
@@ -678,9 +744,9 @@ Total registered change requests: ${changeRequests.length}
     // ==========================================
     // 4. EXHIBIT: Handover Protocol & Proof of Delivery (TBK m. 474 / 477)
     // ==========================================
-    let handoverProtocolMd = "";
-    let handoverProtocolHtml = "";
-    let handoverProtocolSha = "";
+    let handoverProtocolMd: string;
+    let handoverProtocolHtml: string;
+    let handoverProtocolSha: string;
 
     if (handoverRow) {
       const generatedHandover = HandoverGeneratorService.generateProtocol({
@@ -693,8 +759,8 @@ Total registered change requests: ${changeRequests.length}
         repositoryUrl: handoverRow.repositoryUrl,
         commitHash: handoverRow.commitHash,
         liveUrl: handoverRow.liveUrl,
-        documentationNotes: handoverRow.documentationNotes,
-        accessChecklist: (handoverRow.accessChecklist as any) || {
+        documentationNotes: handoverRow.documentationNotes || "",
+        accessChecklist: handoverRow.accessChecklist || {
           dnsTransferred: true,
           hostingTransferred: true,
           adminAccountsTransferred: true,
@@ -883,40 +949,39 @@ ${
 
     if (confirmedMilestones.length > 0) {
       for (const m of confirmedMilestones) {
-        const anyM = m as any;
-        let deed = anyM.auditTrailJson?.ipDeed;
+        let deed: IpAssignmentDeed | undefined = m.auditTrailJson?.ipDeed;
         if (!deed) {
           const commitHash =
-            anyM.gitCommitHash ||
-            IpAssignmentDeedEngine.extractCommitHashFromUrl(anyM.deliverableUrl) ||
+            m.gitCommitHash ||
+            IpAssignmentDeedEngine.extractCommitHashFromUrl(m.deliverableUrl || "") ||
             handoverRow?.commitHash ||
-            `mock-commit-phase-${m.sequenceNumber}-${anyM.id || "00"}`;
+            `mock-commit-phase-${m.sequenceNumber}-${m.id || "00"}`;
 
           deed = IpAssignmentDeedEngine.generateDeed({
             engagementId,
             listingTitle,
-            milestoneId: anyM.id || `m-${m.sequenceNumber}`,
+            milestoneId: m.id || `m-${m.sequenceNumber}`,
             milestoneSequence: m.sequenceNumber,
             milestoneTitle: m.title,
             milestoneDescription: m.description || m.title,
-            amount: typeof m.amount === "number" ? m.amount : parseFloat(m.amount) || 0,
+            amount: typeof m.amount === "number" ? m.amount : parseFloat(String(m.amount)) || 0,
             currency: m.currency || "TRY",
             repositoryUrl:
               handoverRow?.repositoryUrl || "https://github.com/operis-client/project-core",
             gitCommitHash: commitHash,
-            deliverableUrl: anyM.deliverableUrl,
-            deliverableUrlType: anyM.deliverableUrlType || "CODE_REPO",
-            artifactSha256: anyM.sha256Seal || "MOCK_ARTIFACT_SHA",
-            paymentReference: anyM.paymentReference || "EFT-DEPOSIT",
+            deliverableUrl: m.deliverableUrl || undefined,
+            deliverableUrlType: m.deliverableUrlType || "CODE_REPO",
+            artifactSha256: m.sha256Seal || "MOCK_ARTIFACT_SHA",
+            paymentReference: m.paymentReference || "EFT-DEPOSIT",
             paymentDualSeal:
-              anyM.auditTrailJson?.dualSeal ||
-              anyM.auditTrailJson?.clientPaymentProof?.seal ||
+              m.auditTrailJson?.dualSeal ||
+              m.auditTrailJson?.clientPaymentProof?.seal ||
               "DUAL_SEAL_VERIFIED_HMK193",
             settlementCertificateId:
-              anyM.auditTrailJson?.certificateId || `CERT-${engagementId}-${m.sequenceNumber}`,
-            invoiceNumber: anyM.invoiceNumber,
-            settledAt: anyM.paidConfirmedAt
-              ? new Date(anyM.paidConfirmedAt).toISOString()
+              m.auditTrailJson?.certificateId || `CERT-${engagementId}-${m.sequenceNumber}`,
+            invoiceNumber: m.invoiceNumber || undefined,
+            settledAt: m.paidConfirmedAt
+              ? new Date(m.paidConfirmedAt).toISOString()
               : generatedAtIso,
             assignorUserId: "contractor-id",
             assignorName: contractorParty.displayName,
@@ -1094,17 +1159,16 @@ As no milestone payment has been finalized yet, no executed deeds have been issu
       const settledRecs =
         confirmedMilestones.length > 0
           ? confirmedMilestones.map((m) => {
-              const anyM = m as any;
               return {
                 sequence: m.sequenceNumber,
                 title: m.title,
-                amount: typeof m.amount === "number" ? m.amount : parseFloat(m.amount) || 0,
+                amount: typeof m.amount === "number" ? m.amount : parseFloat(String(m.amount)) || 0,
                 currency: m.currency || "TRY",
                 paymentReference: m.paymentReference || "EFT-DEPOSIT",
                 paidConfirmedAt: m.paidConfirmedAt
                   ? new Date(m.paidConfirmedAt).toISOString()
                   : generatedAtIso,
-                dualSeal: anyM.auditTrailJson?.dualSeal || "DUAL_SEAL_VERIFIED_HMK193",
+                dualSeal: m.auditTrailJson?.dualSeal || "DUAL_SEAL_VERIFIED_HMK193",
               };
             })
           : [

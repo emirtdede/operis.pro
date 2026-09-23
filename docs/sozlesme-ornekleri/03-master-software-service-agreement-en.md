@@ -1,6 +1,6 @@
 # MASTER SOFTWARE AND TECHNOLOGY SERVICES AGREEMENT
 > **Contract Reference:** `OPR-CONTR-ENG2026G`  
-> **Cryptographic SHA-256 Seal:** `8e47d82965b9c99b67e4bd594c2513ad00d6b06e1a55ea5c1befb9cc93bff91e`  
+> **Cryptographic SHA-256 Seal:** `a18d32768146e9ebc6bab607d80402d444633ddff66e1748c7b94d42209bdc96`  
 > **Statutory Law:** Turkish Code of Obligations (Arts. 470 et seq.) & Intellectual Property Law (FSEK Art. 52)
 
 ---
@@ -12,7 +12,7 @@
 # INDEPENDENT SOFTWARE & TECHNOLOGY SERVICES AGREEMENT (CONTRACT FOR WORK & NDA)
 **Reference Code:** `OPR-CONTR-ENG2026G`  
 **Execution Date:** September 10, 2026  
-**Digital Timestamp:** September 20, 2026 at 05:56 AM  
+**Digital Timestamp:** September 21, 2026 at 04:58 AM  
 **Governing Baseline:** Turkish Code of Obligations (TBK Art. 470 et seq.) & Law on Intellectual and Artistic Works (FSEK Art. 52)
 
 ---

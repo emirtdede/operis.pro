@@ -21,6 +21,8 @@ import { Button } from "../ui/button";
 import { TextInput } from "../ui/text-input";
 import { TextArea } from "../ui/text-area";
 import Link from "next/link";
+import { getLocalizedRoute } from "@/src/lib/i18n/routes";
+import { type Locale } from "@/src/lib/i18n/config";
 
 export interface ReportFormProps {
   locale: string;
@@ -173,11 +175,34 @@ function getTargetPlaceholder(targetType: string, isTr: boolean): string {
   }
   if (targetType === "listing") {
     return isTr
-      ? "https://operis.pro/tr/ilanlar/... veya ilan başlığı"
-      : "https://operis.pro/en/listings/... or listing title";
+      ? "/tr/ilanlar/... veya ilan başlığı"
+      : "/en/listings/... or listing title";
   }
   return isTr ? "İlgili teklif, mesaj veya sayfa URL'si" : "Offer ID, message snippet or URL";
 }
+
+const FALLBACK_REASON: ReasonConfig = {
+  value: "SCAM_FRAUD",
+  labelTr: "Dolandırıcılık veya Sahte İlan / Teklif",
+  labelEn: "Fraud, Scam or Fake Listing / Proposal",
+  badgeTr: "Finansal Güvenlik",
+  badgeEn: "Financial Safety",
+  slaTr: "< 2-4 Saat",
+  slaEn: "< 2-4 Hours",
+  evidenceTr:
+    "Platform dışı IBAN/kripto talepleri, şüpheli harici mesajlaşma ekran alıntıları veya sahte portföy bağlantıları.",
+  evidenceEn:
+    "Off-platform wire/crypto requests, external chat screenshots, or counterfeit portfolio links.",
+  icon: ShieldAlert,
+};
+
+const FALLBACK_TARGET = {
+  value: "listing",
+  labelTr: "İlan",
+  labelEn: "Listing",
+  hintTr: "İlan URL veya Başlığı",
+  hintEn: "Listing URL or Title",
+};
 
 export function ReportForm({
   locale,
@@ -189,7 +214,7 @@ export function ReportForm({
 
   const [targetType, setTargetType] = useState(defaultTargetType);
   const [targetIdentifier, setTargetIdentifier] = useState(defaultTargetIdentifier);
-  const [reasonCode, setReasonCode] = useState(REASON_CONFIGS[0]!.value);
+  const [reasonCode, setReasonCode] = useState(FALLBACK_REASON.value);
   const [urgency, setUrgency] = useState("NORMAL");
   const [evidenceUrl, setEvidenceUrl] = useState("");
   const [details, setDetails] = useState("");
@@ -201,10 +226,10 @@ export function ReportForm({
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const selectedReason =
-    REASON_CONFIGS.find((r) => r.value === reasonCode) || REASON_CONFIGS[0]!;
+  const selectedReason: ReasonConfig =
+    REASON_CONFIGS.find((r) => r.value === reasonCode) ?? FALLBACK_REASON;
   const currentTargetMeta =
-    TARGET_TYPES.find((t) => t.value === targetType) || TARGET_TYPES[0]!;
+    TARGET_TYPES.find((t) => t.value === targetType) ?? FALLBACK_TARGET;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -379,7 +404,7 @@ export function ReportForm({
           >
             {isTr ? "Yeni Bir İhbar Gönder" : "Submit Another Report"}
           </Button>
-          <Link href={`/${locale}/sss`}>
+          <Link href={`${getLocalizedRoute("help", locale as Locale)}#sss`}>
             <Button type="button" variant="secondary" size="sm" className="text-xs">
               {isTr ? "Güvenlik Rehberi & SSS" : "Trust Center & FAQ"}
             </Button>

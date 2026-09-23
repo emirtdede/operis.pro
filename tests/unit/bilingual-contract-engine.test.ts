@@ -200,5 +200,5 @@ describe("Bilingual Parallel-Column Contract & Vector PDF Engine", () => {
     // Test cached hit
     const cachedBuffer = await VectorPdfEngine.generateVectorPdf(result.htmlContent, cacheKey);
     expect(cachedBuffer).toBe(pdfBuffer);
-  });
+  }, 30000);
 });

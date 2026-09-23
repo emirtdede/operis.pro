@@ -23,7 +23,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Kullanım Koşulları",
       subtitle: "Vellium — Yasal Kullanım Şartları (Operis bir Vellium ürünüdür)",
       version: "v1.0",
-      contentHash: "c9a1d84f932e5b7194f1c93a401b2fe0f7e8a9c3b2e5d8f4a1c6e9b2d5f8a3c7",
+      contentHash: "ff911a49d0ee9dde62f088860828958515183140ddb58a8f5475668039d82c2a",
       lastUpdated: "07.09.2026",
       badge: "Hukuki Güvence & Aracı Hizmet Sağlayıcı",
       highlight:
@@ -101,7 +101,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Terms of Service",
       subtitle: "Vellium — Binding User Terms (Operis is a product of Vellium)",
       version: "v1.0",
-      contentHash: "f7e8a9c3b2e5d8f4a1c6e9b2d5f8a3c7c9a1d84f932e5b7194f1c93a401b2fe0",
+      contentHash: "d8d560732d20e5bc48fe3534a6e0c775a868e5f92cc08fc34b016ad2f3a1e887",
       lastUpdated: "07.09.2026",
       badge: "Intermediary Protection & Legal Disclaimer",
       highlight:
@@ -162,7 +162,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Gizlilik ve KVKK Aydınlatma Metni",
       subtitle: "6698 Sayılı KVKK Madde 10 ve GDPR Kapsamında Bilgilendirme",
       version: "v1.0",
-      contentHash: "a1b2c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0",
+      contentHash: "c9316aae2e98ef68eb0fd33ee51139f0ee8d6e569747c29752bf0a6cddc9e68f",
       lastUpdated: "07.09.2026",
       badge: "AES-256 Şifreli • KVKK Uyumlu",
       highlight:
@@ -217,7 +217,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Privacy Notice",
       subtitle: "Notice Pursuant to Turkish Data Protection Law (KVKK) & GDPR",
       version: "v1.0",
-      contentHash: "b2c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1",
+      contentHash: "612eeaddaaf2c4ff0d353211d7ac1f0b6a16271d0aeecb174af102dbc4dd7602",
       lastUpdated: "07.09.2026",
       badge: "AES-256 Encrypted • Privacy by Design",
       highlight:
@@ -265,7 +265,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Eşleştirme ve Sorumluluk Reddi",
       subtitle: "Platform Rolü ve Mali/Hukuki Muafiyet Bildirimi",
       version: "v1.0",
-      contentHash: "c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2",
+      contentHash: "083797d7d865eae2f6982e5b57631fdfc91134eb0ae1c0cffaf433c73f0ca992",
       lastUpdated: "07.09.2026",
       badge: "Kesin Sorumluluk Reddi • Aracı Muafiyeti",
       highlight:
@@ -317,7 +317,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Matching & Liability Disclaimer",
       subtitle: "Platform Role and Commercial Exemption Notice",
       version: "v1.0",
-      contentHash: "d4e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3",
+      contentHash: "94f09ea9ab6ad2f84af32096d3e25e55497daaa0dba9ee535cd012b128c6bbb4",
       lastUpdated: "07.09.2026",
       badge: "Absolute Disclaimer • Intermediary Status",
       highlight:
@@ -362,7 +362,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Kabul Edilebilir Kullanım Politikası",
       subtitle: "5237 Sayılı TCK ve Siber Güvenlik Esasları",
       version: "v1.0",
-      contentHash: "e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4",
+      contentHash: "9068c0def79422d3089cd48c26f4a568b058c83d8be36a39cbd6def7a3ba2aa0",
       lastUpdated: "17.09.2026",
       badge: "Siber Güvenlik & Kötüye Kullanım Kalkanı",
       highlight:
@@ -393,7 +393,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Acceptable Use Policy",
       subtitle: "Cybersecurity & Community Integrity Standards",
       version: "v1.0",
-      contentHash: "f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5",
+      contentHash: "88453406407239c0a51c43c4e59c7f2b372185ed694d92492f447b85ea7abc28",
       lastUpdated: "17.09.2026",
       badge: "Cybersecurity Shield",
       highlight:
@@ -420,7 +420,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Çerez Politikası",
       subtitle: "KVKK Çerez Uygulamaları Rehberi Uyarınca Bilgilendirme",
       version: "v1.0",
-      contentHash: "0718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f6",
+      contentHash: "e564cfa36e4c63367f525121a537dd93426a576ca09fac19a6fa2f554aba10f7",
       lastUpdated: "17.09.2026",
       badge: "Sıfır Reklam Takibi • Yalnızca Zorunlu Çerez",
       highlight:
@@ -445,7 +445,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Cookie Policy",
       subtitle: "Strictly Technical Essential Cookies Notice",
       version: "v1.0",
-      contentHash: "18293a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f607",
+      contentHash: "0e35b60f9c46c46f98b196d3e036bcab26026b957889dbf9f4fef0e115928c64",
       lastUpdated: "17.09.2026",
       badge: "Zero Third-Party Trackers",
       highlight:
@@ -466,7 +466,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Fikri Mülkiyet ve Telif Hakları Politikası",
       subtitle: "5846 Sayılı FSEK ve Uyar-Kaldır Bildirim Prosedürü",
       version: "v1.0",
-      contentHash: "293a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f60718",
+      contentHash: "c83b96edf0209f302e8842a1e2eec033c38580534fd34c7a5d3e3b6c657aa336",
       lastUpdated: "17.09.2026",
       badge: "5846 FSEK • 48 Saat Uyar-Kaldır",
       highlight:
@@ -491,7 +491,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Intellectual Property & Copyright Policy",
       subtitle: "Statutory Notice & Takedown Protocol",
       version: "v1.0",
-      contentHash: "3a4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f6071829",
+      contentHash: "16dc7bf1c403226a037fae38d28832ca6795765076370d059ebfc26d29c32961",
       lastUpdated: "17.09.2026",
       badge: "Copyright Protection",
       highlight:
@@ -512,7 +512,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Açık Rıza ve İletişim İzinleri Metni",
       subtitle: "6698 Sayılı KVKK m. 5/1 Uyarınca İsteğe Bağlı Onaylar",
       version: "v1.0",
-      contentHash: "4b5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f60718293a",
+      contentHash: "0683680da726e8ac7040b5c75011742b77cf240a7fca6a5170321b4460c894d9",
       lastUpdated: "17.09.2026",
       badge: "Ayrık Açık Rıza • Dilediğiniz An İptal",
       highlight:
@@ -537,7 +537,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Explicit Consent & Communications",
       subtitle: "Discretionary Privacy & Direct Handshake Consent",
       version: "v1.0",
-      contentHash: "5c6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f60718293a4b",
+      contentHash: "413d243e8eb2af1920cff73a87118194fd9c8bb2ced1fb9ddb311ce4c0414476",
       lastUpdated: "17.09.2026",
       badge: "Revocable Consent",
       highlight:
@@ -558,7 +558,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Uyuşmazlık Çözümü ve Arabuluculuk İlkeleri",
       subtitle: "6325 Sayılı Kanun ve Doğrudan Çözüm Kılavuzu",
       version: "v1.0",
-      contentHash: "6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f60718293a4b5c",
+      contentHash: "b63a4beba793c450ccda019976ce66bfe6cc887ed36b394e741526253b06ea45",
       lastUpdated: "17.09.2026",
       badge: "Arabuluculuk & Kesin Dava Muafiyeti",
       highlight:
@@ -583,7 +583,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Dispute Resolution & Mediation Principles",
       subtitle: "Autonomous Dispute Protocol & Mediation Framework",
       version: "v1.0",
-      contentHash: "7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f60718293a4b5c6d",
+      contentHash: "5f3c88edcee94f981fd6348773a370ca4e52ce535413e5ef7cb544519148bbb0",
       lastUpdated: "17.09.2026",
       badge: "Direct Mediation",
       highlight:
@@ -604,7 +604,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Kurumsal Bilgiler, Yasal Künye ve İletişim",
       subtitle: "TTK m. 1524 ve 6563 Sayılı ETK Uyarınca Resmi Şirket Bilgileri",
       version: "v1.0",
-      contentHash: "8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f60718293a4b5c6d7e",
+      contentHash: "e1cad5b6ad507eb8eeeea4ff107bfcea1adaa6db841fef74ab6be6e1edef4642",
       lastUpdated: "17.09.2026",
       badge: "Resmi Şirket Künyesi • ETBİS Kayıtlı",
       highlight:
@@ -613,7 +613,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
         {
           title: "1. Şirket Bilgileri",
           paragraphs: [
-            "Unvan: Vellium (Operis bir Vellium ürünüdür) | MERSİS: 0123456789000001 | Şişli V.D. 1234567890 | Adres: Büyükdere Cad. No: 100 Şişli, İstanbul.",
+            "Unvan: Vellium (Operis bir Vellium ürünüdür) | MERSİS: 0123456789000001 | İstanbul V.D. 1234567890 | Adres: Büyükdere Cad. No: 199 İstanbul, Türkiye.",
           ],
         },
         {
@@ -629,7 +629,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       title: "Corporate Legal Identity & Contact",
       subtitle: "Official Disclosures Pursuant to Commercial Statutes",
       version: "v1.0",
-      contentHash: "90123456789abcdef0123456789abcdef0a1b2c3d4e5f60718293a4b5c6d7e8f",
+      contentHash: "7dfc338c0f73c958a117aae0458891b7999678131062528bd26cc8bc65a44b38",
       lastUpdated: "17.09.2026",
       badge: "Official Corporate Entity",
       highlight:
@@ -638,7 +638,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
         {
           title: "1. Entity Details",
           paragraphs: [
-            "Company: Vellium (Operis is a product of Vellium) | Address: Buyukdere Cad. No: 100 Sisli, Istanbul, Turkey | Support: support@vellium.dev | Legal: legal@vellium.dev | Contact: contact@vellium.dev | KEP: vellium@hs01.kep.tr",
+            "Company: Vellium (Operis is a product of Vellium) | Address: Buyukdere Cad. No: 199 Istanbul, Turkey | Support: support@vellium.dev | Legal: legal@vellium.dev | Contact: contact@vellium.dev | KEP: vellium@hs01.kep.tr",
           ],
         },
       ],

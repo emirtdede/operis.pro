@@ -34,7 +34,7 @@ export function validateVKN(vkn: string): boolean {
   let sum = 0;
 
   for (let i = 0; i < 9; i++) {
-    const digit = digits[i]!;
+    const digit = digits[i] ?? 0;
     const v = (digit + (9 - i)) % 10;
     let w = 0;
     if (v !== 0) {
@@ -66,8 +66,17 @@ export function validateTCKN(tckn: string): boolean {
   const digits = clean.split("").map(Number);
 
   // 10th digit formula: ((sum of odd digits 1,3,5,7,9 * 7) - (sum of even digits 2,4,6,8)) % 10
-  const oddSum = digits[0]! + digits[2]! + digits[4]! + digits[6]! + digits[8]!;
-  const evenSum = digits[1]! + digits[3]! + digits[5]! + digits[7]!;
+  const d0 = digits[0] ?? 0;
+  const d1 = digits[1] ?? 0;
+  const d2 = digits[2] ?? 0;
+  const d3 = digits[3] ?? 0;
+  const d4 = digits[4] ?? 0;
+  const d5 = digits[5] ?? 0;
+  const d6 = digits[6] ?? 0;
+  const d7 = digits[7] ?? 0;
+  const d8 = digits[8] ?? 0;
+  const oddSum = d0 + d2 + d4 + d6 + d8;
+  const evenSum = d1 + d3 + d5 + d7;
   const check10 = ((oddSum * 7) - evenSum) % 10;
   // Handle potential negative modulus in JS: (val % 10 + 10) % 10
   const normalizedCheck10 = (check10 % 10 + 10) % 10;
@@ -77,7 +86,7 @@ export function validateTCKN(tckn: string): boolean {
   // 11th digit formula: sum of first 10 digits % 10 === 11th digit
   let sum10 = 0;
   for (let i = 0; i < 10; i++) {
-    sum10 += digits[i]!;
+    sum10 += digits[i] ?? 0;
   }
 
   return (sum10 % 10) === digits[10];

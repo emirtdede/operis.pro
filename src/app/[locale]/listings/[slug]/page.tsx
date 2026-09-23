@@ -28,7 +28,9 @@ import {
   getLocalizedProfilePath,
   getLocalizedRoute,
 } from "@/src/lib/i18n/routes";
-import { serializeJsonLd } from "@/src/lib/security/json-ld";
+import { JsonLd } from "@/src/components/seo/json-ld";
+import { formatBudgetRange } from "@/src/lib/format/budget";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -169,13 +171,11 @@ export default async function ListingDetailPage({
   }).format(firstDate);
 
   // Format budget
-  let budgetLabel = isTr ? "Belirtilmedi" : "Not specified";
-  if (listing.budgetMin && listing.budgetMax) {
-    budgetLabel = `${parseFloat(listing.budgetMin).toLocaleString(isTr ? "tr-TR" : "en-US")} – ${parseFloat(listing.budgetMax).toLocaleString(isTr ? "tr-TR" : "en-US")} ${listing.budgetCurrency ?? ""}`;
-  } else if (listing.budgetMin) {
-    budgetLabel = `${isTr ? "Min" : "From"} ${parseFloat(listing.budgetMin).toLocaleString(isTr ? "tr-TR" : "en-US")} ${listing.budgetCurrency ?? ""}`;
-  } else if (listing.budgetMode === "NEGOTIABLE") {
+  let budgetLabel: string;
+  if (listing.budgetMode === "NEGOTIABLE" && !listing.budgetMin && !listing.budgetMax) {
     budgetLabel = isTr ? "Görüşülebilir" : "Negotiable";
+  } else {
+    budgetLabel = formatBudgetRange(listing.budgetMin, listing.budgetMax, listing.budgetCurrency, isTr);
   }
 
   // Format timeline
@@ -185,8 +185,9 @@ export default async function ListingDetailPage({
     timelineLabel = `~${listing.timelineValue} ${unitLabel}`;
   }
 
+  const baseUrl = getBaseUrl();
   const localizedProfilePath = getLocalizedProfilePath(ownerProfile.handle, locale);
-  const localizedListingUrl = `https://operis.pro${getLocalizedListingPath(slug, locale)}`;
+  const localizedListingUrl = `${baseUrl}${getLocalizedListingPath(slug, locale)}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -202,7 +203,7 @@ export default async function ListingDetailPage({
         hiringOrganization: {
           "@type": "Organization",
           name: ownerProfile.displayName,
-          sameAs: `https://operis.pro${localizedProfilePath}`,
+          sameAs: `${baseUrl}${localizedProfilePath}`,
         },
         jobLocationType: "TELECOMMUTE",
         baseSalary: listing.budgetMin
@@ -225,13 +226,13 @@ export default async function ListingDetailPage({
             "@type": "ListItem",
             position: 1,
             name: isTr ? "Ana Sayfa" : "Home",
-            item: `https://operis.pro/${locale}`,
+            item: `${baseUrl}/${locale}`,
           },
           {
             "@type": "ListItem",
             position: 2,
             name: isTr ? "İlanlar" : "Listings",
-            item: `https://operis.pro${getLocalizedRoute("listings", locale)}`,
+            item: `${baseUrl}${getLocalizedRoute("listings", locale)}`,
           },
           {
             "@type": "ListItem",
@@ -247,10 +248,7 @@ export default async function ListingDetailPage({
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-6">
       {/* Schema.org Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
 
       {/* Navigation Breadcrumb */}
       <nav

@@ -3,7 +3,8 @@ import { setRequestLocale } from "next-intl/server";
 import { getSession } from "@/src/modules/auth/session";
 import { CategoryService } from "@/src/modules/categories/service";
 import { CategoryListInteractive } from "@/src/components/categories/category-list-interactive";
-import { serializeJsonLd } from "@/src/lib/security/json-ld";
+import { JsonLd } from "@/src/components/seo/json-ld";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -72,9 +73,10 @@ export default async function CategoriesPage({
   ).catch(() => []);
   const initialFollowedIds = categories.filter((c) => c.isFollowed).map((c) => c.id);
 
+  const baseUrl = getBaseUrl();
   const categoriesUrl = isTr
-    ? "https://operis.pro/tr/kategoriler"
-    : "https://operis.pro/en/categories";
+    ? `${baseUrl}/tr/kategoriler`
+    : `${baseUrl}/en/categories`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -94,8 +96,8 @@ export default async function CategoriesPage({
             position: idx + 1,
             name: cat.name,
             url: isTr
-              ? `https://operis.pro/tr/ilanlar?category=${cat.slug}`
-              : `https://operis.pro/en/listings?category=${cat.slug}`,
+              ? `${baseUrl}/tr/ilanlar?category=${cat.slug}`
+              : `${baseUrl}/en/listings?category=${cat.slug}`,
           })),
         },
       },
@@ -106,7 +108,7 @@ export default async function CategoriesPage({
             "@type": "ListItem",
             position: 1,
             name: isTr ? "Ana Sayfa" : "Home",
-            item: `https://operis.pro/${locale}`,
+            item: `${baseUrl}/${locale}`,
           },
           {
             "@type": "ListItem",
@@ -122,10 +124,7 @@ export default async function CategoriesPage({
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 space-y-10">
       {/* Schema.org Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
 
       {/* Centered Hero Header */}
       <header className="text-center max-w-4xl mx-auto space-y-4 pt-2 pb-2">

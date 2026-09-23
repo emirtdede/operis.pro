@@ -59,7 +59,6 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
 
   // Preference switches
   const [analytics, setAnalytics] = useState(true);
-  const [marketing, setMarketing] = useState(true);
   const [functional, setFunctional] = useState(true);
 
   // Initialize consent on client mount
@@ -70,7 +69,6 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
       if (stored) {
         const parsed = JSON.parse(stored) as CookiePreferences;
         setAnalytics(parsed.analytics ?? true);
-        setMarketing(parsed.marketing ?? true);
         setFunctional(parsed.functional ?? true);
       } else {
         // First-time visit: show initial prompt at bottom-left
@@ -117,11 +115,11 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
   }, [isOpen]);
 
   const saveConsent = useCallback(
-    (prefs: { analytics: boolean; marketing: boolean; functional: boolean }) => {
+    (prefs: { analytics: boolean; functional: boolean }) => {
       const record: CookiePreferences = {
         essential: true,
         analytics: prefs.analytics,
-        marketing: prefs.marketing,
+        marketing: false, // Operis strictly operates with 0% advertising and zero marketing trackers
         functional: prefs.functional,
         updatedAt: new Date().toISOString(),
       };
@@ -141,20 +139,18 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
 
   const handleAcceptAll = () => {
     setAnalytics(true);
-    setMarketing(true);
     setFunctional(true);
-    saveConsent({ analytics: true, marketing: true, functional: true });
+    saveConsent({ analytics: true, functional: true });
   };
 
   const handleOnlyEssential = () => {
     setAnalytics(false);
-    setMarketing(false);
     setFunctional(false);
-    saveConsent({ analytics: false, marketing: false, functional: false });
+    saveConsent({ analytics: false, functional: false });
   };
 
   const handleSavePreferences = () => {
-    saveConsent({ analytics, marketing, functional });
+    saveConsent({ analytics, functional });
   };
 
   if (!isOpen) return null;
@@ -181,11 +177,11 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
               {isTr ? (
                 <>
                   <strong className="font-bold text-[var(--color-text-primary)]">
-                    &ldquo;Kabul Et&rdquo;
+                    &ldquo;Tümünü Kabul Et&rdquo;
                   </strong>{" "}
-                  butonuna tıklayarak, site gezintisini iyileştirmek, kullanımı analiz etmek ve
-                  pazarlama faaliyetlerimizi desteklemek için cihazınızda çerez saklanmasını kabul
-                  etmiş olursunuz. Detaylar için{" "}
+                  butonuna tıklayarak; site gezintisini güvenli kılmak, temel fonksiyonları çalıştırmak
+                  ve tercihlerinizi (tema, dil) hatırlamak amacıyla cihazınızda birinci taraf çerez saklanmasını
+                  kabul etmiş olursunuz. Operis reklam veya pazarlama çerezi kullanmaz. Detaylar için{" "}
                   <Link
                     href={getLocalizedLegalPath("privacy", locale as Locale)}
                     className="font-semibold text-[var(--color-text-primary)] underline underline-offset-4 decoration-[var(--color-border-strong)] hover:text-blue-500 hover:decoration-blue-500 transition-colors"
@@ -207,8 +203,9 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
                   <strong className="font-bold text-[var(--color-text-primary)]">
                     &ldquo;Accept All&rdquo;
                   </strong>
-                  , you consent to the storage of cookies on your device to improve site navigation,
-                  analyze site usage, and support our marketing activities. For details, review our{" "}
+                  , you consent to the storage of first-party cookies on your device to ensure secure
+                  browsing, support vital operations, and remember your preferences (theme, language).
+                  Operis does not use advertising or marketing cookies. For details, review our{" "}
                   <Link
                     href={getLocalizedLegalPath("privacy", locale as Locale)}
                     className="font-semibold text-[var(--color-text-primary)] underline underline-offset-4 decoration-[var(--color-border-strong)] hover:text-blue-500 hover:decoration-blue-500 transition-colors"
@@ -352,28 +349,23 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
             </div>
           </label>
 
-          {/* 3. Pazarlama & Duyurular */}
-          <label className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)]/70 hover:bg-[var(--color-surface-hover)] p-3.5 sm:p-4 flex items-start justify-between gap-3 cursor-pointer transition-colors">
+          {/* 3. Pazarlama & Reklam (Sıfır Reklam / Her Zaman Devre Dışı) */}
+          <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)]/70 p-3.5 sm:p-4 flex items-start justify-between gap-3">
             <div className="space-y-1">
               <div className="font-bold text-sm text-[var(--color-text-primary)] flex items-center gap-2">
                 <Megaphone className="h-4 w-4 text-purple-500 dark:text-purple-400 shrink-0" aria-hidden="true" />
-                <span>{isTr ? "Pazarlama & Duyurular" : "Marketing & Updates"}</span>
+                <span>{isTr ? "Pazarlama & Reklam Çerezleri" : "Marketing & Ad Trackers"}</span>
               </div>
               <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
                 {isTr
-                  ? "İlgi alanlarınıza uygun kişiselleştirilmiş teknoloji duyuruları ve ürün bildirimleri sunmamızı sağlar."
-                  : "Enables tailored engineering announcements and release notes relevant to your focus."}
+                  ? "Operis platformunda üçüncü taraf reklam, profil çıkarma veya pazarlama çerezi KESİNLİKLE KULLANILMAZ."
+                  : "Operis strictly NEVER uses third-party advertising, profiling, or behavioral marketing cookies."}
               </p>
             </div>
-            <div className="shrink-0 pt-0.5">
-              <input
-                type="checkbox"
-                checked={marketing}
-                onChange={(e) => setMarketing(e.target.checked)}
-                className="h-5 w-5 rounded border-[var(--color-border-strong)] text-blue-600 accent-blue-600 focus:ring-blue-500 cursor-pointer"
-              />
-            </div>
-          </label>
+            <span className="shrink-0 text-[10px] sm:text-[11px] font-semibold text-emerald-500 dark:text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 sm:px-2.5 py-1 rounded-lg">
+              {isTr ? "Kullanılmıyor (%0 Reklam)" : "Disabled (Zero Ads)"}
+            </span>
+          </div>
 
           {/* 4. İşlevsel & Yerel Tercihler */}
           <label className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)]/70 hover:bg-[var(--color-surface-hover)] p-3.5 sm:p-4 flex items-start justify-between gap-3 cursor-pointer transition-colors">

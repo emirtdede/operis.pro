@@ -14,11 +14,11 @@ vi.mock("@/src/modules/auth/session", () => ({
     role: "SPECIALIST",
     email: "developer@operis.pro",
     status: "ACTIVE",
-    type: "specialist",
+    type: "SESSION",
     authVersion: 1,
     createdAt: Date.now(),
     expiresAt: Date.now() + 86400000,
-  } as any),
+  }),
 }));
 
 vi.mock("@/src/lib/security/rate-limit", () => ({
@@ -37,11 +37,11 @@ describe("Project Runbook & Architecture Vault API Routes", () => {
       role: "SPECIALIST",
       email: "developer@operis.pro",
       status: "ACTIVE",
-      type: "specialist",
+      type: "SESSION",
       authVersion: 1,
       createdAt: Date.now(),
       expiresAt: Date.now() + 86400000,
-    } as any);
+    });
   });
 
   it("GET /api/work/[id]/runbook returns synthesized runbook and completeness metrics", async () => {
@@ -60,7 +60,7 @@ describe("Project Runbook & Architecture Vault API Routes", () => {
   });
 
   it("GET /api/work/[id]/runbook rejects unauthenticated access with 401", async () => {
-    vi.spyOn(sessionModule, "getSession").mockResolvedValueOnce(null as any);
+    vi.spyOn(sessionModule, "getSession").mockResolvedValueOnce(null);
 
     const req = new Request(`http://localhost/api/work/${engagementId}/runbook`);
     const res = await runbookGetHandler(req, {

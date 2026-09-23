@@ -46,9 +46,7 @@ export async function processFanoutEvent(
     })
     .onConflictDoNothing({ target: schema.notificationFanoutProgress.eventId });
 
-  let done = false;
-
-  while (!done) {
+  const runFanoutStep = async (): Promise<"COMPLETED" | "LEASE_LOST" | "ERROR"> => {
     let pageResult: {
       phase: "RADAR" | "CATEGORY" | "DONE";
       leaseLost?: boolean;
@@ -163,33 +161,35 @@ export async function processFanoutEvent(
             .orderBy(asc(schema.profiles.userId))
             .limit(batchSize);
 
-          for (const c of candidates) {
-            const matchingTag = c.trackedSkills?.find((skill) =>
-              lowerTags.includes(skill.toLowerCase().trim())
-            );
-            const isEn = c.locale === "en";
-            const deliveryKey = `listing:${listingId}:act:${activationSeq}:radar:user:${c.userId}`;
+          await Promise.all(
+            candidates.map((c) => {
+              const matchingTag = c.trackedSkills?.find((skill) =>
+                lowerTags.includes(skill.toLowerCase().trim())
+              );
+              const isEn = c.locale === "en";
+              const deliveryKey = `listing:${listingId}:act:${activationSeq}:radar:user:${c.userId}`;
 
-            await NotificationService.createNotification(
-              c.userId,
-              "RADAR_MATCH",
-              "listing",
-              listingId,
-              {
+              return NotificationService.createNotification(
+                c.userId,
+                "RADAR_MATCH",
+                "listing",
                 listingId,
-                activationSeq,
-                title: isEn
-                  ? `Radar Match: [${matchingTag || "Skill"}]`
-                  : `Radarın Eşleşti: [${matchingTag || "Yetenek"}]`,
-                message: isEn
-                  ? `A new listing matching your tracked skill "${matchingTag || ""}" was published: "${title}"`
-                  : `Takip ettiğin "${matchingTag || ""}" teknolojisiyle yeni bir ilan yayınlandı: "${title}"`,
-                actionUrl: isEn ? `/en/listings/${slug}` : `/tr/ilanlar/${slug}`,
-              },
-              tx,
-              deliveryKey
-            );
-          }
+                {
+                  listingId,
+                  activationSeq,
+                  title: isEn
+                    ? `Radar Match: [${matchingTag || "Skill"}]`
+                    : `Radarın Eşleşti: [${matchingTag || "Yetenek"}]`,
+                  message: isEn
+                    ? `A new listing matching your tracked skill "${matchingTag || ""}" was published: "${title}"`
+                    : `Takip ettiğin "${matchingTag || ""}" teknolojisiyle yeni bir ilan yayınlandı: "${title}"`,
+                  actionUrl: isEn ? `/en/listings/${slug}` : `/tr/ilanlar/${slug}`,
+                },
+                tx,
+                deliveryKey
+              );
+            })
+          );
 
           if (candidates.length < batchSize) {
             // Radar complete, transition to CATEGORY
@@ -200,7 +200,8 @@ export async function processFanoutEvent(
             return { phase: "CATEGORY" as const };
           } else {
             // Advance cursor
-            const lastId = candidates[candidates.length - 1]!.userId;
+            const lastCandidate = candidates[candidates.length - 1];
+            const lastId = lastCandidate?.userId ?? "";
             await tx
               .update(schema.notificationFanoutProgress)
               .set({ lastUserId: lastId, updatedAt: now })
@@ -295,58 +296,67 @@ export async function processFanoutEvent(
             .orderBy(asc(schema.categoryFollows.userId))
             .limit(batchSize);
 
-          for (const f of followers) {
-            // Check minBudget filter
-            if (f.minBudget && payload.budgetMax) {
-              const maxVal = Number(payload.budgetMax);
-              if (maxVal < f.minBudget) {
-                continue; // Below user's min budget threshold
+          const excludeUserIds = [ownerUserId];
+          const budgetDetails = payload;
+
+          await Promise.all(
+            followers.map((f) => {
+              if (excludeUserIds.includes(f.userId)) {
+                return Promise.resolve(null);
               }
-            }
 
-            const isEn = f.locale === "en";
-            const budgetText = formatBudgetStr(isEn);
-            const timelineText = formatTimelineStr(isEn);
-            const deliveryKey = `listing:${listingId}:act:${activationSeq}:cat:user:${f.userId}`;
+              // Check minBudget filter
+              if (f.minBudget && budgetDetails?.budgetMax) {
+                const maxVal = Number(budgetDetails.budgetMax);
+                if (maxVal < f.minBudget) {
+                  return Promise.resolve(null);
+                }
+              }
 
-            // Calculate smart relevance score
-            const lowerTags = (tags || []).map((t) => t.toLowerCase().trim());
-            const hasSkillMatch = (f.trackedSkills || []).some((s) =>
-              lowerTags.includes(s.toLowerCase().trim())
-            );
-            let relevanceBadge = "";
-            if (hasSkillMatch) {
-              relevanceBadge = isEn
-                ? "🔥 95% Match: Verified Skill"
-                : "🔥 %95 Eşleşme: Uzmanlık Yeteneğinizle Uyumlu";
-            }
+              const isEn = f.locale === "en";
+              const budgetText = formatBudgetStr(isEn);
+              const timelineText = formatTimelineStr(isEn);
+              const deliveryKey = `listing:${listingId}:act:${activationSeq}:cat:user:${f.userId}`;
 
-            await NotificationService.createNotification(
-              f.userId,
-              "CATEGORY_FOLLOW_MATCH",
-              "listing",
-              listingId,
-              {
+              // Calculate smart relevance score
+              const lowerTags = (tags || []).map((t) => t.toLowerCase().trim());
+              const hasSkillMatch = (f.trackedSkills || []).some((s) =>
+                lowerTags.includes(s.toLowerCase().trim())
+              );
+              let relevanceBadge = "";
+              if (hasSkillMatch) {
+                relevanceBadge = isEn
+                  ? "🔥 95% Match: Verified Skill"
+                  : "🔥 %95 Eşleşme: Uzmanlık Yeteneğinizle Uyumlu";
+              }
+
+              return NotificationService.createNotification(
+                f.userId,
+                "CATEGORY_FOLLOW_MATCH",
+                "listing",
                 listingId,
-                activationSeq,
-                title: isEn
-                  ? `[${catKey}] New Listing: "${title}" (${budgetText})`
-                  : `[${catKey}] ${budgetText} Bütçeli Yeni İlan`,
-                message: isEn
-                  ? `A new listing was published in a category you follow: "${title}" (${budgetText})`
-                  : `Takip ettiğin "${catKey}" kategorisinde ${budgetText} bütçeli yeni bir ilan yayınlandı: "${title}"`,
-                actionUrl: isEn ? `/en/listings/${slug}` : `/tr/ilanlar/${slug}`,
-                budget: budgetText,
-                categoryName: catKey,
-                summary: payload.summary || "",
-                tags: (tags || []).join(", "),
-                timeline: timelineText,
-                relevanceBadge,
-              },
-              tx,
-              deliveryKey
-            );
-          }
+                {
+                  listingId,
+                  activationSeq,
+                  title: isEn
+                    ? `[${catKey}] New Listing: "${title}" (${budgetText})`
+                    : `[${catKey}] ${budgetText} Bütçeli Yeni İlan`,
+                  message: isEn
+                    ? `A new listing was published in a category you follow: "${title}" (${budgetText})`
+                    : `Takip ettiğin "${catKey}" kategorisinde ${budgetText} bütçeli yeni bir ilan yayınlandı: "${title}"`,
+                  actionUrl: isEn ? `/en/listings/${slug}` : `/tr/ilanlar/${slug}`,
+                  budget: budgetText,
+                  categoryName: catKey,
+                  summary: payload.summary || "",
+                  tags: (tags || []).join(", "),
+                  timeline: timelineText,
+                  relevanceBadge,
+                },
+                tx,
+                deliveryKey
+              );
+            })
+          );
 
           if (followers.length < batchSize) {
             // Category complete, transition to DONE
@@ -357,7 +367,8 @@ export async function processFanoutEvent(
             return { phase: "DONE" as const };
           } else {
             // Advance cursor
-            const lastId = followers[followers.length - 1]!.userId;
+            const lastFollower = followers[followers.length - 1];
+            const lastId = lastFollower?.userId ?? "";
             await tx
               .update(schema.notificationFanoutProgress)
               .set({ lastUserId: lastId, updatedAt: now })
@@ -376,34 +387,36 @@ export async function processFanoutEvent(
       return "LEASE_LOST";
     }
 
-    if (pageResult.phase === "DONE") {
-      done = true;
+    if (pageResult.phase !== "DONE") {
+      return runFanoutStep();
     }
-  }
 
-  // 3. Final step: mark outbox event SENT atomically verifying leaseToken
-  const now = new Date();
-  const completeResult = await db
-    .update(schema.outboxEvents)
-    .set({
-      status: "SENT",
-      leaseToken: null,
-      leaseUntil: null,
-      nextAttemptAt: now,
-    })
-    .where(
-      and(
-        eq(schema.outboxEvents.id, eventId),
-        eq(schema.outboxEvents.leaseToken, leaseToken),
-        eq(schema.outboxEvents.status, "PROCESSING"),
-        gt(schema.outboxEvents.leaseUntil, sql`now()`)
+    // 3. Final step: mark outbox event SENT atomically verifying leaseToken
+    const now = new Date();
+    const completeResult = await db
+      .update(schema.outboxEvents)
+      .set({
+        status: "SENT",
+        leaseToken: null,
+        leaseUntil: null,
+        nextAttemptAt: now,
+      })
+      .where(
+        and(
+          eq(schema.outboxEvents.id, eventId),
+          eq(schema.outboxEvents.leaseToken, leaseToken),
+          eq(schema.outboxEvents.status, "PROCESSING"),
+          gt(schema.outboxEvents.leaseUntil, sql`now()`)
+        )
       )
-    )
-    .returning({ id: schema.outboxEvents.id });
+      .returning({ id: schema.outboxEvents.id });
 
-  if (completeResult.length === 0) {
-    return "LEASE_LOST";
-  }
+    if (completeResult.length === 0) {
+      return "LEASE_LOST";
+    }
 
-  return "COMPLETED";
+    return "COMPLETED";
+  };
+
+  return runFanoutStep();
 }

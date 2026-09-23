@@ -245,26 +245,36 @@ describe("Security & Validation Fuzzing Test Suite (1,250 Test Scenarios)", () =
 
   describe("Offer Submission Fuzzing (250 Scenarios: Negative/Corrupted Budgets and Messages)", () => {
     // 50 combinations * 5 = 250 tests
+    const getFuzzBudgetMin = (mod: number): string => {
+      if (mod === 0) return "-500";
+      if (mod === 1) return "abc";
+      if (mod === 2) return "3000";
+      return "1500";
+    };
+
+    const getFuzzMessage = (mod: number): string => {
+      if (mod === 3) return "Too short";
+      if (mod === 4) return "A".repeat(3001);
+      return "Valid offer message with sufficient technical details exceeding minimum length requirement easily.";
+    };
+
     const offerCases = Array.from({ length: 250 }, (_, i) => {
-      const isNegative = i % 5 === 0;
-      const isNan = i % 5 === 1;
-      const isMinGreater = i % 5 === 2;
-      const isShortMsg = i % 5 === 3;
-      const isLongMsg = i % 5 === 4;
+      const mod = i % 5;
+      const isNegative = mod === 0;
+      const isNan = mod === 1;
+      const isMinGreater = mod === 2;
+      const isShortMsg = mod === 3;
+      const isLongMsg = mod === 4;
 
       return {
         id: i,
         listingId: "11111111-1111-1111-1111-111111111111",
-        budgetMin: isNegative ? "-500" : isNan ? "abc" : isMinGreater ? "3000" : "1500",
+        budgetMin: getFuzzBudgetMin(mod),
         budgetMax: isMinGreater ? "1000" : "5000",
         budgetCurrency: "TRY" as const,
         estimatedDurationValue: 2,
         estimatedDurationUnit: "WEEKS" as const,
-        message: isShortMsg
-          ? "Too short"
-          : isLongMsg
-            ? "A".repeat(3001)
-            : "Valid offer message with sufficient technical details exceeding minimum length requirement easily.",
+        message: getFuzzMessage(mod),
         expectedValid: !isNegative && !isNan && !isMinGreater && !isShortMsg && !isLongMsg,
       };
     });

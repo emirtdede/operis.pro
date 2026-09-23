@@ -144,7 +144,8 @@ export function generateNGrams(tokens: string[]): string[] {
 
   // Unigrams
   for (let i = 0; i < len; i++) {
-    ngrams.push(tokens[i]!);
+    const tok = tokens[i];
+    if (tok) ngrams.push(tok);
   }
 
   // Bigrams
@@ -189,10 +190,13 @@ export function boundedLevenshtein(a: string, b: string, maxAllowed: number): nu
 
     for (let j = 1; j <= bLen; j++) {
       const cost = aChar === b.charCodeAt(j - 1) ? 0 : 1;
+      const prevJ = prevRow[j] ?? 0;
+      const currPrev = currRow[j - 1] ?? 0;
+      const prevPrev = prevRow[j - 1] ?? 0;
       const val = Math.min(
-        prevRow[j]! + 1,      // deletion
-        currRow[j - 1]! + 1,  // insertion
-        prevRow[j - 1]! + cost // substitution
+        prevJ + 1,      // deletion
+        currPrev + 1,  // insertion
+        prevPrev + cost // substitution
       );
       currRow[j] = val;
       if (val < minInRow) {
@@ -210,7 +214,7 @@ export function boundedLevenshtein(a: string, b: string, maxAllowed: number): nu
     currRow = temp;
   }
 
-  const result = prevRow[bLen]!;
+  const result = prevRow[bLen] ?? Infinity;
   return result <= maxAllowed ? result : Infinity;
 }
 

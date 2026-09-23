@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "@/src/styles/tokens.css";
 import { LivingBackground } from "@/src/components/ui/living-background";
 
+import { ThemeScript } from "@/src/components/layout/theme-provider";
+
 export const metadata: Metadata = {
   title: "Operis",
   description: "Modern Tech & Software Convergent Talent Platform",
@@ -26,11 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{const m=document.cookie.match(/(?:^|; )fp_theme=([^;]*)/);let t=m?decodeURIComponent(m[1]):(localStorage.getItem('fp_theme_pref')||localStorage.getItem('fp_theme')||'dark');if(t!=='light'&&t!=='dark'&&t!=='black'){t='dark';}document.documentElement.setAttribute('data-theme',t);if(t==='dark'||t==='black'){document.documentElement.classList.add('dark');}else{document.documentElement.classList.remove('dark');}}catch(e){}})();`,
-          }}
-        />
+        <ThemeScript />
       </head>
       <body className="relative min-h-screen bg-[var(--bg-canvas)] text-[var(--text-primary)] antialiased transition-colors selection:bg-blue-500/20 selection:text-blue-500 overflow-x-hidden">
         <LivingBackground />

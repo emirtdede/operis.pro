@@ -242,17 +242,16 @@ export class OfferCreationService {
           }
 
           if (input.isSquadOffer && input.squadMembers && input.squadMembers.length > 0) {
-            for (const m of input.squadMembers) {
-              await tx.insert(schema.offerSquadMembers).values({
-                offerId: insertedOffer.id,
-                displayName: m.displayName,
-                roleTitle: m.roleTitle,
-                revenueSharePercentage: m.revenueSharePercentage.toString(),
-                scopeSummary: m.scopeSummary || null,
-                handleOrEmail: m.handleOrEmail || null,
-                isLead: Boolean(m.isLead),
-              });
-            }
+            const squadValues = input.squadMembers.map((m) => ({
+              offerId: insertedOffer.id,
+              displayName: m.displayName,
+              roleTitle: m.roleTitle,
+              revenueSharePercentage: m.revenueSharePercentage.toString(),
+              scopeSummary: m.scopeSummary || null,
+              handleOrEmail: m.handleOrEmail || null,
+              isLead: Boolean(m.isLead),
+            }));
+            await tx.insert(schema.offerSquadMembers).values(squadValues);
           }
 
           await tx.insert(schema.offerRevisions).values({
@@ -369,9 +368,10 @@ export class OfferCreationService {
 
     if (newOffer && Boolean(process.env.VITEST)) {
       if (input.isSquadOffer && input.squadMembers) {
+        const createdOfferId = newOffer.id;
         inMemorySquadMembers.set(
-          newOffer.id,
-          input.squadMembers.map((m) => ({ ...m, offerId: newOffer!.id }))
+          createdOfferId,
+          input.squadMembers.map((m) => ({ ...m, offerId: createdOfferId }))
         );
       }
 

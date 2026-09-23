@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import { getBaseUrl } from "@/src/lib/config/url";
 import {
   IpAssignmentDeed,
   GenerateIpDeedInput,
@@ -108,10 +109,11 @@ export class IpAssignmentDeedEngine {
       commitHash = crypto.createHash("sha1").update(hashPayload, "utf8").digest("hex");
     }
 
+    const defaultOrigin = getBaseUrl();
     const repositoryUrl =
       input.repositoryUrl ||
       (input.deliverableUrlType === "CODE_REPO" ? input.deliverableUrl : "") ||
-      `https://operis.pro/work/${input.engagementId}/artifacts/m-${input.milestoneSequence}`;
+      `${defaultOrigin}/work/${input.engagementId}/artifacts/m-${input.milestoneSequence}`;
 
     const assignorMasked = input.assignorVknOrTckn
       ? input.assignorVknOrTckn.replace(/^(.{3})(.*)(.{3})$/, "$1****$3")

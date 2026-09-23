@@ -2,17 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { Clock, ShieldCheck, PlusCircle } from "lucide-react";
+import { Briefcase, Plus } from "lucide-react";
 import { getSession } from "@/src/modules/auth/session";
 import { ListingService } from "@/src/modules/listings/service";
 import {
   OwnerListingsDashboard,
   OwnerListingItem,
 } from "@/src/components/dashboard/owner-listings-dashboard";
-import { DashboardTabs } from "@/src/components/dashboard/dashboard-tabs";
 import { MandatoryReviewBanner } from "@/src/components/dashboard/mandatory-review-banner";
 import { Button } from "@/src/components/ui/button";
-import { serializeJsonLd } from "@/src/lib/security/json-ld";
+import { JsonLd } from "@/src/components/seo/json-ld";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -105,9 +105,10 @@ export default async function DashboardListingsPage({
     initialListings = [];
   }
 
+  const baseUrl = getBaseUrl();
   const dashboardUrl = isTr
-    ? "https://operis.pro/tr/panel/ilanlarim"
-    : "https://operis.pro/en/dashboard/listings";
+    ? `${baseUrl}/tr/panel/ilanlarim`
+    : `${baseUrl}/en/dashboard/listings`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -117,7 +118,7 @@ export default async function DashboardListingsPage({
         "@type": "ListItem",
         position: 1,
         name: isTr ? "Ana Sayfa" : "Home",
-        item: `https://operis.pro/${locale}`,
+        item: `${baseUrl}/${locale}`,
       },
       {
         "@type": "ListItem",
@@ -129,75 +130,45 @@ export default async function DashboardListingsPage({
   };
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-      {/* Schema.org Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
-
-      {/* Header */}
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-6">
+    <div className="space-y-6">
+      {/* Header Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-4">
         <div className="space-y-1">
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">
-            {isTr ? "İlanlarım" : "My Listings"}
-          </h1>
-          <p className="text-sm text-[var(--color-text-secondary)]">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400">
+              <Briefcase className="h-5 w-5 fill-blue-400/20 text-blue-400" />
+            </div>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
+              {isTr ? "Yayınladığım İlanlar" : "My Published Listings"}
+            </h1>
+          </div>
+          <p className="text-xs sm:text-sm text-[var(--color-text-secondary)]">
             {isTr
-              ? "Yayınladığınız ilanların 1 haftalık durumlarını, teklifleri ve eşleşmeleri yönetin."
-              : "Manage your 1-week listing lifecycles, incoming offers, and matched requests."}
+              ? "Yayınladığınız teknoloji ilanlarını yönetin, gelen teklifleri inceleyin ve yaşam döngülerini takip edin."
+              : "Manage your published technology listings, review incoming proposals, and track lifecycles."}
           </p>
         </div>
 
         <Link href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"}>
-          <Button variant="shimmer" size="sm" className="gap-2">
-            <PlusCircle className="h-4 w-4" aria-hidden="true" />
+          <Button variant="shimmer" size="sm" className="gap-2 text-xs">
+            <Plus className="h-3.5 w-3.5" aria-hidden="true" />
             <span>{isTr ? "Yeni İlan Yayınla" : "Post New Listing"}</span>
           </Button>
         </Link>
-      </header>
+      </div>
 
       {/* Mandatory Review Prompt for Completed Engagements */}
       <MandatoryReviewBanner locale={locale} />
 
-      {/* Unified Dashboard Navigation Tabs */}
-      <DashboardTabs locale={locale} counts={{ listings: initialListings.length }} />
+      {/* Owner Listings Dashboard (Segmented Control + Launchpad Empty State / Listing Cards) */}
+      <OwnerListingsDashboard
+        initialListings={initialListings}
+        locale={locale}
+        hasLoadError={hasLoadError}
+      />
 
-      {/* 7-Day Lifecycle Guidance Banner */}
-      <section
-        aria-label={isTr ? "İlan Yönetim Rehberi" : "Listing Management Guide"}
-        className="rounded-2xl border border-blue-500/20 bg-blue-500/5 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-4"
-      >
-        <div className="flex items-start gap-3">
-          <Clock className="h-5 w-5 text-blue-400 shrink-0 mt-0.5" aria-hidden="true" />
-          <div className="space-y-1 text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
-            <span className="font-semibold text-[var(--color-text-primary)] block">
-              {isTr
-                ? "1 Haftalık Canlılık ve Yenileme Kuralı"
-                : "1-Week Freshness & Renewal Policy"}
-            </span>
-            <p>
-              {isTr
-                ? "İlanlarınız 1 hafta boyunca radarımızda aktiftir. Süresi dolan ilanlar silinmez; 'Pasif / Süresi Dolanlar' sekmesinden tek tıkla 1 hafta daha ücretsiz yeniden başlatabilirsiniz."
-                : "Projects stay active on our freshness radar for 1 week. Expired listings are never deleted; reactivate them anytime for another 1 week with a single click at zero cost."}
-            </p>
-          </div>
-        </div>
-
-        <div className="shrink-0 flex items-center gap-1.5 text-xs font-semibold text-emerald-400 self-end sm:self-center">
-          <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-          <span>{isTr ? "%0 Komisyon" : "0% Platform Cut"}</span>
-        </div>
-      </section>
-
-      {/* Listings Table / Cards */}
-      <section aria-label={isTr ? "İlan Yönetimi" : "Listing Management"}>
-        <OwnerListingsDashboard
-          initialListings={initialListings}
-          locale={locale}
-          hasLoadError={hasLoadError}
-        />
-      </section>
-    </main>
+      {/* Schema.org Structured Data */}
+      <JsonLd data={jsonLd} />
+    </div>
   );
 }

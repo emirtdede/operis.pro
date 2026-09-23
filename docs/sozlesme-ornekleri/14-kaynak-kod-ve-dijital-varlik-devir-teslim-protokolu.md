@@ -83,5 +83,5 @@ Yüklenici, işbu kabul tarihinden itibaren **30 (otuz) gün süreyle**, teslim 
 ### MADDE 7 — HMK M. 193 ELEKTRONİK DELİL SÖZLEŞMESİ VE DİJİTAL MÜHÜR
 İşbu tutanak ve içeriği, 6100 sayılı Hukuk Muhakemeleri Kanunu m. 193 uyarınca münhasır delil niteliğinde olup, içeriğin kanonik özeti **SHA-256: `de9207fe799b5417bb7b9811ae632dc296fde155ea26ab9c29d0220ef6fb1290`** kriptografik algoritması ile mühürlenmiştir. Taraflar, Operis platform kayıtlarının kesin delil teşkil edeceğini kabul eder.
 
-**DÜZENLEME TARİHİ:** 20 Eylül 2026 05:56  
+**DÜZENLEME TARİHİ:** 21 Eylül 2026 04:58  
 **DİJİTAL MÜHÜR (SHA-256):** `de9207fe799b5417bb7b9811ae632dc296fde155ea26ab9c29d0220ef6fb1290`

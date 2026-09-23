@@ -14,6 +14,9 @@ import {
   CheckSquare,
   Sparkles,
   Bookmark,
+  ListFilter,
+  ChevronDown,
+  ArrowUpDown,
 } from "lucide-react";
 import { SavedListingItem } from "@/src/modules/listings/saved-service";
 import {
@@ -45,8 +48,8 @@ function getCurrencySymbol(currency: string): string {
 
 function getStatusFilterLabel(st: "all" | "active" | "closed", isTr: boolean): string {
   if (st === "all") return isTr ? "Tümü" : "All";
-  if (st === "active") return isTr ? "Aktif İlanlar" : "Active";
-  return isTr ? "Kapanmış" : "Closed";
+  if (st === "active") return isTr ? "Aktif" : "Active";
+  return isTr ? "Kapanan" : "Closed";
 }
 
 function getEmptyStateTitle(hasSearchQuery: boolean, isTr: boolean): string {
@@ -109,6 +112,14 @@ export function SavedListingsDashboard({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const selectAllRef = useRef<HTMLInputElement | null>(null);
+
+  const statusCounts = useMemo(() => {
+    return {
+      all: items.length,
+      active: items.filter((i) => !i.isClosed).length,
+      closed: items.filter((i) => i.isClosed).length,
+    };
+  }, [items]);
 
   // 1. Status Filter
   const statusFilteredItems = useMemo(() => {
@@ -289,9 +300,9 @@ export function SavedListingsDashboard({
   return (
     <div className="space-y-6">
       {/* Top Search & Filter Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[var(--color-surface-card)] border border-[var(--color-border-subtle)] p-4 rounded-2xl shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Search input */}
-        <div className="relative flex-1 min-w-[240px]">
+        <div className="relative flex-1 min-w-[200px]">
           <Search
             className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-text-tertiary)]"
             aria-hidden="true"
@@ -300,12 +311,8 @@ export function SavedListingsDashboard({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={
-              isTr
-                ? "Kaydedilen ilanlarda ara (başlık, teknoloji, etiket)..."
-                : "Search in saved jobs (title, skills, tags)..."
-            }
-            className="w-full pl-10 pr-9 py-2 rounded-xl text-xs sm:text-sm bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+            placeholder={isTr ? "İlanlarda ara..." : "Search listings..."}
+            className="w-full pl-10 pr-9 py-2 rounded-xl text-xs sm:text-sm bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all truncate"
           />
           {searchQuery && (
             <button
@@ -319,37 +326,42 @@ export function SavedListingsDashboard({
           )}
         </div>
 
-        {/* Lifecycle & Sort controls */}
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Status Filter */}
-          <div className="flex items-center p-1 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs">
-            {(["all", "active", "closed"] as const).map((st) => (
-              <button
-                key={st}
-                type="button"
-                onClick={() => setStatusFilter(st)}
-                className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
-                  statusFilter === st
-                    ? "bg-blue-600 text-white shadow-sm font-semibold"
-                    : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
-                }`}
-              >
-                {getStatusFilterLabel(st, isTr)}
-              </button>
-            ))}
+        {/* Lifecycle & Sort controls: Single Status Filter Button + Single Sort Button */}
+        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+          {/* Single Status Filter Dropdown Button */}
+          <div className="relative inline-flex items-center">
+            <ListFilter className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
+              aria-label={isTr ? "Durum Filtresi" : "Status Filter"}
+              className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
+            >
+              {(["all", "active", "closed"] as const).map((st) => (
+                <option key={st} value={st} className="bg-[#141517] text-[var(--color-text-primary)]">
+                  {getStatusFilterLabel(st, isTr)} ({statusCounts[st]})
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
           </div>
 
-          {/* Sort selection */}
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as SortOption)}
-            className="text-xs py-2 px-3 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="newest">{isTr ? "En Yeni Kaydedilen" : "Newest Saved"}</option>
-            <option value="oldest">{isTr ? "En Eski Kaydedilen" : "Oldest Saved"}</option>
-            <option value="budget_desc">{isTr ? "Bütçe (En Yüksek)" : "Highest Budget"}</option>
-            <option value="budget_asc">{isTr ? "Bütçe (En Düşük)" : "Lowest Budget"}</option>
-          </select>
+          {/* Single Sort Dropdown Button */}
+          <div className="relative inline-flex items-center">
+            <ArrowUpDown className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              aria-label={isTr ? "Sıralama ölçütü" : "Sort by"}
+              className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
+            >
+              <option value="newest" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yeni" : "Newest"}</option>
+              <option value="oldest" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Eski" : "Oldest"}</option>
+              <option value="budget_desc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yüksek Bütçe" : "Highest Budget"}</option>
+              <option value="budget_asc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Düşük Bütçe" : "Lowest Budget"}</option>
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+          </div>
         </div>
       </div>
 
@@ -412,13 +424,23 @@ export function SavedListingsDashboard({
       {/* Listings Grid / List */}
       {displayItems.length === 0 ? (
         <EmptyState
-          icon={<Bookmark className="h-6 w-6" />}
+          variant="card"
+          icon={<Bookmark className="h-7 w-7 text-blue-400" />}
           title={getEmptyStateTitle(Boolean(searchQuery), isTr)}
           description={getEmptyStateDescription(Boolean(searchQuery), isTr)}
           action={
-            !searchQuery && (
+            searchQuery ? (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setSearchQuery("")}
+                className="cursor-pointer"
+              >
+                {isTr ? "Aramayı Temizle" : "Clear Search"}
+              </Button>
+            ) : (
               <Link href={isTr ? "/tr/ilanlar" : "/en/listings"}>
-                <Button variant="shimmer" size="sm" className="gap-2">
+                <Button variant="shimmer" size="md" className="gap-2 shadow-lg shadow-blue-500/15">
                   <Sparkles className="h-4 w-4" />
                   <span>{isTr ? "İlanları Keşfet" : "Browse Listings"}</span>
                 </Button>

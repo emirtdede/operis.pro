@@ -71,12 +71,7 @@ export function LifecycleRadarDiagram() {
           {/* Rotating Radar Sweep Cone (7s duration matching 7 days) */}
           <div
             aria-hidden="true"
-            className="absolute inset-2 rounded-full animate-radar-sweep pointer-events-none"
-            style={{
-              animationDuration: "7s",
-              background:
-                "conic-gradient(from 0deg, transparent 0deg, transparent 270deg, rgba(6, 182, 212, 0.28) 360deg)",
-            }}
+            className="absolute inset-2 rounded-full animate-radar-sweep pointer-events-none [animation-duration:7s] [background:conic-gradient(from_0deg,transparent_0deg,transparent_270deg,rgba(6,182,212,0.28)_360deg)]"
           />
 
           {/* SVG Concentric Rings & Dynamic Radar Markers */}
@@ -238,12 +233,9 @@ export function LifecycleRadarDiagram() {
                     fill={item.passed ? "#06b6d4" : "var(--color-surface-elevated)"}
                     stroke={getLifecyclePointStroke(item.current, item.passed)}
                     strokeWidth={item.current ? "2" : "1.5"}
-                    className="transition-all duration-500 ease-out"
-                    style={{
-                      filter: item.passed
-                        ? "drop-shadow(0 0 5px rgba(6, 182, 212, 0.9))"
-                        : undefined,
-                    }}
+                    className={`transition-all duration-500 ease-out ${
+                      item.passed ? "[filter:drop-shadow(0_0_5px_rgba(6,182,212,0.9))]" : ""
+                    }`}
                   />
                 </g>
               );

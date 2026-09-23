@@ -72,15 +72,26 @@ export function ContactHubInteractive({ locale }: ContactHubInteractiveProps) {
         : "Law No. 5651 intermediary compliance, FSEK copyright disputes, formal court orders, and notary notices.",
     },
     {
-      id: "press",
+      id: "privacy",
+      icon: ShieldCheck,
+      title: isTr ? "KVKK & Veri Gizliliği Masası" : "Privacy & Data Protection Desk",
+      email: "privacy@vellium.dev",
+      sla: isTr ? "< 12 İş Saati" : "< 12 Business Hours",
+      color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
+      description: isTr
+        ? "KVKK Madde 11 hakları, veri imhası, açık rıza güncellemeleri ve GDPR uyumluluk talepleri."
+        : "KVKK Article 11 data subject rights, personal data erasure, consent revocation, and GDPR requests.",
+    },
+    {
+      id: "billing",
       icon: Newspaper,
-      title: isTr ? "Genel İletişim & Basın" : "General Contact & Media Relations",
-      email: "contact@vellium.dev",
-      sla: isTr ? "< 24 İş Saati" : "< 24 Business Hours",
+      title: isTr ? "Faturalandırma & Finans Masası" : "Billing & Accounting Desk",
+      email: "billing@vellium.dev",
+      sla: isTr ? "< 6 İş Saati" : "< 6 Business Hours",
       color: "text-amber-400 bg-amber-500/10 border-amber-500/20",
       description: isTr
-        ? "Medya kiti, röportaj talepleri, resmi basın bültenleri ve sektör analiz raporları paylaşımı."
-        : "Media press kits, interview requests, official announcements, and engineering benchmark reports.",
+        ? "Kurumsal fatura talepleri, e-Arşiv teyitleri, mali mutabakatlar ve vergi mükellefiyeti bildirimleri."
+        : "Enterprise invoices, statutory e-Archive receipts, financial reconciliation, and fiscal inquiries.",
     },
   ];
 
@@ -110,7 +121,7 @@ export function ContactHubInteractive({ locale }: ContactHubInteractiveProps) {
             </div>
             <span className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full shrink-0">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>{isTr ? "5 Masa Çevrim İçi" : "5 Desks Online"}</span>
+              <span>{isTr ? "6 Masa Çevrim İçi" : "6 Desks Online"}</span>
             </span>
           </div>
 

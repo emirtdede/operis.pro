@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { Send, ShieldCheck, Compass } from "lucide-react";
+import { Send, Compass, RefreshCw } from "lucide-react";
 import { getSession } from "@/src/modules/auth/session";
 import { OfferService } from "@/src/modules/offers/service";
 import {
   SentOffersDashboard,
   SentOfferItem,
 } from "@/src/components/dashboard/sent-offers-dashboard";
-import { DashboardTabs } from "@/src/components/dashboard/dashboard-tabs";
 import { Button } from "@/src/components/ui/button";
-import { serializeJsonLd } from "@/src/lib/security/json-ld";
+import { JsonLd } from "@/src/components/seo/json-ld";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -103,9 +103,10 @@ export default async function SentOffersPage({ params }: { params: Promise<{ loc
     initialOffers = [];
   }
 
+  const baseUrl = getBaseUrl();
   const sentOffersUrl = isTr
-    ? "https://operis.pro/tr/panel/teklifler/gonderilen"
-    : "https://operis.pro/en/dashboard/offers/sent";
+    ? `${baseUrl}/tr/panel/teklifler/gonderilen`
+    : `${baseUrl}/en/dashboard/offers/sent`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -115,32 +116,31 @@ export default async function SentOffersPage({ params }: { params: Promise<{ loc
         "@type": "ListItem",
         position: 1,
         name: isTr ? "Ana Sayfa" : "Home",
-        item: `https://operis.pro/${locale}`,
+        item: `${baseUrl}/${locale}`,
       },
       {
         "@type": "ListItem",
         position: 2,
-        name: isTr ? "Teklif Verdiğim İlanlar" : "My Sent Offers",
+        name: isTr ? "Gönderilen Teklifler" : "Sent Offers",
         item: sentOffersUrl,
       },
     ],
   };
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-      {/* Schema.org Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
-
-      {/* Header */}
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-6">
+    <div className="space-y-6">
+      {/* Header Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-4">
         <div className="space-y-1">
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">
-            {isTr ? "Teklif Verdiğim İlanlar" : "Listings I Bid On"}
-          </h1>
-          <p className="text-sm text-[var(--color-text-secondary)]">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400">
+              <Send className="h-5 w-5 fill-blue-400/20 text-blue-400" />
+            </div>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
+              {isTr ? "Teklif Verdiğim İlanlar" : "Listings I Bid On"}
+            </h1>
+          </div>
+          <p className="text-xs sm:text-sm text-[var(--color-text-secondary)]">
             {isTr
               ? "İlanlar için verdiğiniz tekliflerin güncel durumlarını buradan izleyebilirsiniz."
               : "Review and manage all proposals you have submitted to listing owners."}
@@ -148,65 +148,52 @@ export default async function SentOffersPage({ params }: { params: Promise<{ loc
         </div>
 
         <Link href={isTr ? "/tr/ilanlar" : "/en/listings"}>
-          <Button variant="shimmer" size="sm" className="gap-2">
-            <Compass className="h-4 w-4" aria-hidden="true" />
+          <Button variant="shimmer" size="sm" className="gap-2 text-xs">
+            <Compass className="h-3.5 w-3.5" aria-hidden="true" />
             <span>{isTr ? "Yeni İlanları Keşfet" : "Browse Listings"}</span>
           </Button>
         </Link>
-      </header>
-
-      {/* Unified Dashboard Navigation Tabs */}
-      <DashboardTabs locale={locale} counts={{ sentOffers: initialOffers.length }} />
+      </div>
 
       {/* Sent Offers Lifecycle Guidance Banner */}
-      <section
-        aria-label={isTr ? "Teklif Durumları Rehberi" : "Proposal Status Guide"}
-        className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-4"
-      >
-        <div className="flex items-start gap-3">
-          <Send className="h-5 w-5 text-indigo-400 shrink-0 mt-0.5" aria-hidden="true" />
-          <div className="space-y-1 text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
-            <span className="font-semibold text-[var(--color-text-primary)] block">
-              {isTr ? "Teklif Durumları ve Haklarınız" : "Proposal Lifecycles & Rights"}
-            </span>
-            <p>
-              {isTr
-                ? "Teklifleriniz rakiplere kapalıdır. 'Beklemede' olan teklifinizi istediğiniz zaman güncelleyebilir veya geri çekebilirsiniz. İlan sahibi teklifinizi kabul ettiğinde eşleşme alanına yönlendirilirsiniz."
-                : "Your offers are strictly confidential. You may update or withdraw any 'Pending' proposal at any time. Once accepted, you will receive direct contact channels in the workspace."}
-            </p>
-          </div>
-        </div>
-
-        <div className="shrink-0 flex items-center gap-1.5 text-xs font-semibold text-emerald-400 self-end sm:self-center">
-          <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-          <span>{isTr ? "%100 Kazanç" : "100% Take-Home"}</span>
-        </div>
-      </section>
-
-      {/* Sent Offers Dashboard */}
-      {fetchError ? (
-        <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-6 text-center space-y-3">
-          <p className="text-sm font-semibold text-rose-400">
+      <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/60 backdrop-blur-md p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-[var(--color-text-secondary)] shadow-xs">
+        <div className="flex items-start gap-2.5">
+          <Send className="h-4 w-4 text-indigo-400 shrink-0 mt-0.5" aria-hidden="true" />
+          <p>
             {isTr
-              ? "Teklifleriniz yüklenirken bir sorun oluştu."
-              : "An error occurred while loading your proposals."}
+              ? "Teklifleriniz rakiplere kapalıdır. Beklemedeki teklifinizi dilediğinizde güncelleyebilir veya geri çekebilirsiniz."
+              : "Proposals are strictly confidential. You may update or withdraw any pending proposal at any time."}
           </p>
-          <p className="text-xs text-[var(--color-text-secondary)]">
+        </div>
+        <span className="text-[11px] font-semibold text-emerald-400 shrink-0 self-end sm:self-center">
+          {isTr ? "%100 Kazanç" : "100% Take-Home"}
+        </span>
+      </div>
+
+      {/* Soft Error Notice if database query had an issue */}
+      {fetchError && (
+        <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3 flex items-center justify-between gap-3 text-xs text-amber-300">
+          <span>
             {isTr
-              ? "Sunucu bağlantısında anlık bir gecikme yaşanmış olabilir. Lütfen sayfayı yenileyiniz."
-              : "There may have been a temporary network blip. Please refresh the page to try again."}
-          </p>
+              ? "Sunucu bağlantısında anlık bir gecikme yaşandı. Çevrimdışı veriler gösteriliyor."
+              : "Temporary server connection delay. Displaying offline view."}
+          </span>
           <Link href={isTr ? "/tr/panel/teklifler/gonderilen" : "/en/dashboard/offers/sent"}>
-            <Button variant="outline" size="sm" className="mt-2 text-xs">
-              {isTr ? "Sayfayı Yenile" : "Refresh Page"}
+            <Button variant="ghost" size="sm" className="h-7 px-2 text-xs text-amber-300 hover:text-amber-200">
+              <RefreshCw className="h-3 w-3 mr-1" />
+              {isTr ? "Yenile" : "Refresh"}
             </Button>
           </Link>
         </div>
-      ) : (
-        <section aria-label={isTr ? "Gönderilen Teklif Listesi" : "Sent Offer List"}>
-          <SentOffersDashboard initialOffers={initialOffers} locale={locale} />
-        </section>
       )}
-    </main>
+
+      {/* Sent Offers Dashboard */}
+      <section aria-label={isTr ? "Gönderilen Teklif Listesi" : "Sent Offer List"}>
+        <SentOffersDashboard initialOffers={initialOffers} locale={locale} />
+      </section>
+
+      {/* Schema.org Structured Data */}
+      <JsonLd data={jsonLd} />
+    </div>
   );
 }

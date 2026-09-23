@@ -54,10 +54,7 @@ export class OfferQueryService {
         console.error("Database query failed in getSentOffers:", err);
         throw new Error("FAILED_TO_FETCH_SENT_OFFERS", { cause: err });
       }
-      if (!process.env.VITEST) {
-        throw err;
-      }
-      // Fall through to in-memory fallback for Vitest
+      // Fall through to in-memory fallback for development and Vitest
     }
 
     // In-memory fallback
@@ -121,10 +118,7 @@ export class OfferQueryService {
         console.error("Database query failed in getReceivedOffers:", err);
         throw new Error("FAILED_TO_FETCH_RECEIVED_OFFERS", { cause: err });
       }
-      if (!process.env.VITEST) {
-        throw err;
-      }
-      // Fall through to in-memory fallback for Vitest
+      // Fall through to in-memory fallback for development and Vitest
     }
 
     const filtered = inMemoryReceivedOffers.filter(

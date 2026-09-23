@@ -203,11 +203,11 @@ export async function claimAndProcessExportJob(
       attemptCount: schema.exportJobs.attemptCount,
     });
 
-  if (claimResult.length === 0) {
+  const claimed = claimResult[0];
+  if (!claimed) {
     return "LEASE_LOST";
   }
 
-  const claimed = claimResult[0]!;
   const attemptNo = claimed.attemptCount;
 
   if (options?.onProgress) {

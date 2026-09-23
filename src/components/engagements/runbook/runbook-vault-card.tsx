@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   ShieldCheck,
   FileCode2,
@@ -42,7 +42,7 @@ export function RunbookVaultCard({
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [editorModalOpen, setEditorModalOpen] = useState(false);
 
-  const fetchRunbook = async () => {
+  const fetchRunbook = useCallback(async () => {
     try {
       setIsLoading(true);
       const res = await fetch(`/api/work/${engagementId}/runbook`, {
@@ -57,11 +57,11 @@ export function RunbookVaultCard({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [engagementId, locale]);
 
   useEffect(() => {
     fetchRunbook();
-  }, [engagementId, locale]);
+  }, [fetchRunbook]);
 
   const handleCopy = async (text: string, id: string) => {
     try {
@@ -283,7 +283,7 @@ export function RunbookVaultCard({
                   </p>
                 </div>
                 <button
-                  onClick={() => handleCopy(runbook.sha256Seal!, "seal")}
+                  onClick={() => handleCopy(runbook.sha256Seal ?? "", "seal")}
                   className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 font-mono text-[11px] text-emerald-300 transition-colors"
                 >
                   <span>{runbook.sha256Seal.slice(0, 16)}...{runbook.sha256Seal.slice(-8)}</span>
@@ -541,7 +541,7 @@ export function RunbookVaultCard({
                         <div className="rounded-xl bg-black/40 border border-white/10 p-2.5 font-mono text-[11px] text-emerald-400 flex items-center justify-between gap-2">
                           <code>{dr.verificationCommand}</code>
                           <button
-                            onClick={() => handleCopy(dr.verificationCommand!, `dr-${idx}`)}
+                            onClick={() => handleCopy(dr.verificationCommand ?? "", `dr-${idx}`)}
                             className="p-1 text-white/70 hover:text-white"
                           >
                             {copiedKey === `dr-${idx}` ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}

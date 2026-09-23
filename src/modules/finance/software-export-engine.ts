@@ -139,7 +139,7 @@ export class SoftwareExportEngine {
       warningsEn.push("Failure to repatriate foreign exchange revokes statutory GVK 89/13 100% deduction.");
     }
 
-    let status: ExportEligibilityStatus = "FULLY_ELIGIBLE";
+    let status: ExportEligibilityStatus;
     if (!isForeignCountry || !isForeignEntity || !isServiceUtilizedAbroad) {
       status = "NON_COMPLIANT";
     } else if (!repatriationDeclared) {
@@ -155,8 +155,8 @@ export class SoftwareExportEngine {
     const exportTaxBurden = isEligibleForFullTaxDeduction ? 0 : normalTaxBurden;
     const taxSavingsEstimate = roundCurrency(normalTaxBurden - exportTaxBurden);
 
-    let summaryTr = "";
-    let summaryEn = "";
+    let summaryTr: string;
+    let summaryEn: string;
 
     if (status === "FULLY_ELIGIBLE") {
       summaryTr = `Tam Uyumlu Yazılım İhracatı Rejimi: %0 KDV (GİB İstisna Kodu 302) ve GVK 89/13 uyarınca %100 gelir vergisi indirimi şartları eksiksiz sağlanmıştır. Yıllık beyannamede vergi matrahından tam indirim uygulanabilir.`;
@@ -176,7 +176,7 @@ export class SoftwareExportEngine {
     const invoiceNote = this.generateInvoiceNote({
       currency,
       clientCountry: countryUpper,
-    });
+    }) as { tr: string; en: string };
 
     const bankDeclaration = this.generateBankRemittanceDeclaration({
       currency,
@@ -184,7 +184,7 @@ export class SoftwareExportEngine {
       clientCountry: countryUpper,
       remittanceChannel: config.remittanceChannel,
       bankName: config.bankName,
-    });
+    }) as { tr: string; en: string };
 
     return {
       isEligible: isEligibleForFullTaxDeduction,
@@ -233,10 +233,12 @@ export class SoftwareExportEngine {
   /**
    * Generates official GİB-compliant statutory invoice description text.
    */
+  static generateInvoiceNote(paramsOrConfig: unknown, locale: string): string;
+  static generateInvoiceNote(paramsOrConfig?: unknown, locale?: string): string | { tr: string; en: string };
   static generateInvoiceNote(
-    paramsOrConfig?: any,
+    paramsOrConfig?: unknown,
     locale?: string
-  ): any {
+  ): string | { tr: string; en: string } {
     const tr = `3065 sayılı Katma Değer Vergisi Kanunu m. 11/1-a ve m. 12/2 uyarınca "GİB İSTİSNA KODU: 302 - Hizmet İhracatı" istisna kodu kapsamında KDV'den istisnadır (KDV Oranı: %0, Stopaj Kesintisi: %0). İşbu yazılım geliştirme ve teknoloji hizmeti münhasıran yurt dışındaki müşteri için üretilmiş ve Türkiye dışında faydalanılmıştır. 193 sayılı Gelir Vergisi Kanunu'nun 89/13. maddesi (7491 sayılı Kanun) ve 5520 sayılı KVK m. 10/1-ğ hükümleri uyarınca döviz hasılatının yasal süresinde Türkiye'deki bankalara getirilmesi şartıyla kazancın %100'ü vergi matrahından indirilecektir.`;
 
     const en = `VAT EXEMPT (VAT Rate: 0%, Withholding: 0%) pursuant to Value Added Tax Law (KDVK) Art. 11/1-a & 12/2 under EXEMPTION CODE: 302 (Cross-Border Service Export). Software engineering deliverables are rendered to a non-resident foreign client and exclusively consumed outside the Republic of Turkey. In accordance with Income Tax Law (GVK) Art. 89/13 (Law No. 7491) and Corporate Tax Law Art. 10/1-ğ, 100% of export income is deductible from taxable income upon repatriation of foreign exchange to Turkish banks.`;
@@ -253,12 +255,26 @@ export class SoftwareExportEngine {
    * Generates formal bank repatriation and tax inspection declaration letter.
    */
   static generateBankRemittanceDeclaration(
-    paramsOrConfig?: any,
+    paramsOrConfig: unknown,
+    locale: string,
+    clientName?: string,
+    contractorName?: string,
+    budgetLabel?: string
+  ): string;
+  static generateBankRemittanceDeclaration(
+    paramsOrConfig?: unknown,
     locale?: string,
     clientName?: string,
     contractorName?: string,
     budgetLabel?: string
-  ): any {
+  ): string | { tr: string; en: string };
+  static generateBankRemittanceDeclaration(
+    paramsOrConfig?: unknown,
+    locale?: string,
+    clientName?: string,
+    contractorName?: string,
+    budgetLabel?: string
+  ): string | { tr: string; en: string } {
     let client = clientName || "[Yabancı Müşteri Adı]";
     let contractor = contractorName || "[Yüklenici / Yazılımcı Adı]";
     let amt = budgetLabel || "10,000 USD";
@@ -267,17 +283,17 @@ export class SoftwareExportEngine {
     let ref = "OPR-CONTR-EXPO";
 
     if (paramsOrConfig && typeof paramsOrConfig === "object") {
-      if (paramsOrConfig.clientName) client = paramsOrConfig.clientName;
-      if (paramsOrConfig.contractorName) contractor = paramsOrConfig.contractorName;
-      if (paramsOrConfig.budgetLabel) amt = paramsOrConfig.budgetLabel;
-      if (paramsOrConfig.amount) amt = `${paramsOrConfig.amount} ${paramsOrConfig.currency || "USD"}`;
-      if (paramsOrConfig.bankName) {
-        rawBank = paramsOrConfig.bankName.replace(/^T\.C\.\s*/i, "").replace(/\s*\/.*$/, "").trim() || "ZİRAAT BANKASI";
+      const p = paramsOrConfig as Record<string, unknown>;
+      if (typeof p.clientName === "string") client = p.clientName;
+      if (typeof p.contractorName === "string") contractor = p.contractorName;
+      if (typeof p.budgetLabel === "string") amt = p.budgetLabel;
+      if (p.amount !== undefined) amt = `${p.amount} ${(p.currency as string) || "USD"}`;
+      if (typeof p.bankName === "string") {
+        rawBank = p.bankName.replace(/^T\.C\.\s*/i, "").replace(/\s*\/.*$/, "").trim() || "ZİRAAT BANKASI";
       }
-      if (paramsOrConfig.clientCountry || paramsOrConfig.clientCountryName) {
-        country = paramsOrConfig.clientCountry || paramsOrConfig.clientCountryName;
-      }
-      if (paramsOrConfig.contractRef) ref = paramsOrConfig.contractRef;
+      const c = (p.clientCountry || p.clientCountryName) as string | undefined;
+      if (typeof c === "string") country = c;
+      if (typeof p.contractRef === "string") ref = p.contractRef;
     }
 
     const tr = `T.C. ${rawBank.toLocaleUpperCase("tr-TR")} / İLGİLİ ŞUBE MÜDÜRLÜĞÜ'NE VE İLGİLİ VERGİ DAİRESİ BAŞKANLIĞI'NA

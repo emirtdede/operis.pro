@@ -128,11 +128,11 @@ export class BilingualLayoutEngine {
       .map((m, i) => `• Phase ${i + 1} (${m.percentage}%): ${m.titleEn} — ${m.descriptionEn}`)
       .join("\n");
 
-    let taxClauseTr = includeSoftwareExport && input.softwareExportConfig
+    const taxClauseTr = includeSoftwareExport && input.softwareExportConfig
       ? `• **3.2.1. İhracat Rejimi:** Hizmet, GVK m. 89/13 ve KDVK m. 11/1-a uyarınca Yazılım İhracatı mahiyetindedir.\n• **3.2.2. Vergi İstisnası:** %0 KDV (İstisna Kodu: 302) uygulanır, stopaj kesintisi yapılmaz.\n• **3.2.3. Tevsik:** Şartlar ve döviz transferi EK-5 İhracat Şartnamesine tabidir.`
       : `• **3.2.1. Ödeme Şekli:** Bedel, Yüklenici IBAN hesabına havale/EFT veya SMM / e-fatura mukabilinde ödenir.\n• **3.2.2. Tevkifat (GVK m. 94):** Kurumsal işveren kanuni stopajı (%20) kesip muhtasar ile beyan eder.\n• **3.2.3. KDV:** Yasal orandaki Katma Değer Vergisi Yüklenici'ye ödenir; bireysel müşteride stopaj doğmaz.`;
 
-    let taxClauseEn = includeSoftwareExport && input.softwareExportConfig
+    const taxClauseEn = includeSoftwareExport && input.softwareExportConfig
       ? `• **3.2.1. Export Status:** Qualifies as cross-border Software Export under GVK Art. 89/13 & KDVK Art. 11/1-a.\n• **3.2.2. Tax Exemption:** Subject to 0% VAT (Exemption Code 302) with zero statutory withholding.\n• **3.2.3. Certifications:** Governed by ANNEX-5 Software Export & Tax Exemption Addendum.`
       : `• **3.2.1. Payment:** Remitted to Contractor IBAN or against freelance invoice (SMM).\n• **3.2.2. Withholding (GVK Art. 94):** Corporate client remits statutory 20% tax withholding.\n• **3.2.3. VAT:** Applicable VAT is remitted to Contractor; individual consumers are exempt from withholding.`;
 

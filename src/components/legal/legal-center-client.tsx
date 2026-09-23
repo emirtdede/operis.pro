@@ -596,10 +596,7 @@ export function LegalCenterClient({ locale }: LegalCenterClientProps) {
             return (
               <div
                 key={doc.internalKey}
-                className="group flex flex-col justify-between rounded-3xl border border-[var(--color-border-subtle)] p-6 sm:p-7 shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all duration-200 relative overflow-hidden"
-                style={{
-                  backgroundColor: "var(--color-surface-base)",
-                }}
+                className="group flex flex-col justify-between rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-6 sm:p-7 shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all duration-200 relative overflow-hidden"
               >
                 {/* Subtle Hover Ambient Glow */}
                 <div
@@ -670,10 +667,7 @@ export function LegalCenterClient({ locale }: LegalCenterClientProps) {
       {/* Trust Highlights Architecture Pillars */}
       <section
         aria-label={isTr ? "Operis Hukuki ve Güven Mimarisi" : "Operis Trust & Legal Architecture"}
-        className="rounded-3xl border border-[var(--color-border-subtle)] p-8 sm:p-10 shadow-2xl relative overflow-hidden"
-        style={{
-          backgroundColor: "var(--color-surface-base)",
-        }}
+        className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-8 sm:p-10 shadow-2xl relative overflow-hidden"
       >
         <div className="space-y-3 mb-8 text-center sm:text-left">
           <span className="text-xs font-mono uppercase tracking-wider text-blue-400 font-bold">

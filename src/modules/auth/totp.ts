@@ -102,7 +102,7 @@ export function base32Encode(buffer: Buffer): string {
   let output = "";
 
   for (let i = 0; i < buffer.length; i++) {
-    value = (value << 8) | buffer[i]!;
+    value = (value << 8) | (buffer[i] ?? 0);
     bits += 8;
 
     while (bits >= 5) {
@@ -128,7 +128,7 @@ export function base32Decode(base32: string): Buffer {
   const bytes: number[] = [];
 
   for (let i = 0; i < cleaned.length; i++) {
-    const char = cleaned[i]!;
+    const char = cleaned[i] ?? "";
     const val = BASE32_ALPHABET.indexOf(char);
     if (val === -1) {
       throw new Error(`Invalid Base32 character encountered: ${char}`);
@@ -155,18 +155,17 @@ export function generateTotpSecret(lengthBytes = 20): string {
 }
 
 /**
- * Computes an RFC 6238 TOTP code for a given timestamp (in milliseconds).
+ * Generates an RFC 6238 compliant 6-digit TOTP token using HMAC-SHA1.
  */
 export function generateTotpCode(
   secretBase32: string,
-  timeMs: number = Date.now(),
-  stepSec: number = 30,
-  digits: number = 6
+  time = Date.now(),
+  stepSeconds = 30,
+  digits = 6
 ): string {
   const key = base32Decode(secretBase32);
-  const counter = Math.floor(timeMs / 1000 / stepSec);
+  const counter = Math.floor(time / 1000 / stepSeconds);
 
-  // 8-byte big-endian counter
   const counterBuf = Buffer.alloc(8);
   counterBuf.writeBigUInt64BE(BigInt(counter), 0);
 
@@ -175,12 +174,17 @@ export function generateTotpCode(
   const digest = hmac.digest();
 
   // Dynamic truncation
-  const offset = digest[digest.length - 1]! & 0x0f;
+  const lastByte = digest[digest.length - 1] ?? 0;
+  const offset = lastByte & 0x0f;
+  const b0 = digest[offset] ?? 0;
+  const b1 = digest[offset + 1] ?? 0;
+  const b2 = digest[offset + 2] ?? 0;
+  const b3 = digest[offset + 3] ?? 0;
   const binary =
-    ((digest[offset]! & 0x7f) << 24) |
-    ((digest[offset + 1]! & 0xff) << 16) |
-    ((digest[offset + 2]! & 0xff) << 8) |
-    (digest[offset + 3]! & 0xff);
+    ((b0 & 0x7f) << 24) |
+    ((b1 & 0xff) << 16) |
+    ((b2 & 0xff) << 8) |
+    (b3 & 0xff);
 
   const otp = binary % Math.pow(10, digits);
   return otp.toString().padStart(digits, "0");
@@ -239,7 +243,8 @@ export function generateBackupCodes(count = 10): string[] {
     const bytes = crypto.randomBytes(8);
     let code = "";
     for (let j = 0; j < 8; j++) {
-      code += chars[bytes[j]! % chars.length];
+      const byteVal = bytes[j] ?? 0;
+      code += chars[byteVal % chars.length];
       if (j === 3) code += "-";
     }
     codes.push(code);
@@ -275,7 +280,9 @@ export function verifyAndConsumeBackupCode(
 
   let matchIndex = -1;
   for (let i = 0; i < hashedCodes.length; i++) {
-    const storedBuf = Buffer.from(hashedCodes[i]!, "hex");
+    const storedCode = hashedCodes[i];
+    if (!storedCode) continue;
+    const storedBuf = Buffer.from(storedCode, "hex");
     if (storedBuf.length === targetBuf.length && crypto.timingSafeEqual(storedBuf, targetBuf)) {
       matchIndex = i;
       break;

@@ -1,5 +1,6 @@
 import { getDb, schema } from "../src/lib/db";
 import { and, asc, eq, inArray } from "drizzle-orm";
+import { runSequentially } from "../src/lib/async/concurrency";
 
 interface GroupReconcileSummary {
   offerId: string;
@@ -57,11 +58,11 @@ export async function reconcileOfferNotifications(options: {
   // Group by offerId + recipientUserId
   const groups = new Map<string, typeof outboxRows>();
 
-  for (const row of outboxRows) {
+  await runSequentially(outboxRows, async (row) => {
     const payload = (row.payloadJson as Record<string, unknown>) || {};
     // Skip already superseded events from prior reconcile runs for strict idempotency
     if (payload.error === "SUPERSEDED_DUPLICATE") {
-      continue;
+      return;
     }
 
     const offerId = (payload.offerId as string) || (row.aggregateId as string);
@@ -91,18 +92,18 @@ export async function reconcileOfferNotifications(options: {
         offerId: offerId || row.id,
         reason: "Missing offerId or recipientUserId could not be resolved",
       });
-      continue;
+      return;
     }
 
     const groupKey = `${offerId}:${recipientUserId}`;
     const list = groups.get(groupKey) || [];
     list.push(row);
     groups.set(groupKey, list);
-  }
+  });
 
   result.totalGroupsExamined = groups.size;
 
-  for (const [groupKey, rows] of groups.entries()) {
+  await runSequentially(Array.from(groups.entries()), async ([groupKey, rows]) => {
     const [offerId, recipientUserId] = groupKey.split(":") as [string, string];
     const deliveryKey = `offer:${offerId}:received:user:${recipientUserId}`;
 
@@ -114,7 +115,8 @@ export async function reconcileOfferNotifications(options: {
       return a.createdAt.getTime() - b.createdAt.getTime();
     });
 
-    const primaryOutbox = sorted[0]!;
+    const primaryOutbox = sorted[0];
+    if (!primaryOutbox) return;
     const duplicateOutboxes = sorted.slice(1);
 
     // Find all notifications matching this offerId and recipient
@@ -194,12 +196,13 @@ export async function reconcileOfferNotifications(options: {
             return a.createdAt.getTime() - b.createdAt.getTime();
           });
 
-          const lockedPrimary = freshSorted[0]!;
+          const lockedPrimary = freshSorted[0];
+          if (!lockedPrimary) return;
           const lockedDuplicates = freshSorted.slice(1);
 
           // 1. Mark duplicate outbox events FAILED with error payload and cleared deliveryKey
           if (lockedDuplicates.length > 0) {
-            for (const dup of lockedDuplicates) {
+            await runSequentially(lockedDuplicates, async (dup) => {
               const currentPayload = (dup.payloadJson as Record<string, unknown>) || {};
               await tx
                 .update(schema.outboxEvents)
@@ -211,7 +214,7 @@ export async function reconcileOfferNotifications(options: {
                   leaseUntil: null,
                 })
                 .where(eq(schema.outboxEvents.id, dup.id));
-            }
+            });
           }
 
           // 2. Set canonical deliveryKey and resolved recipientUserId on primary outbox if not already matching
@@ -253,7 +256,7 @@ export async function reconcileOfferNotifications(options: {
         });
       }
     }
-  }
+  });
 
   return result;
 }

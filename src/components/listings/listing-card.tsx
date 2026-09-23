@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, memo } from "react";
 import Link from "next/link";
+import { formatBudgetRange } from "@/src/lib/format/budget";
 import {
   Clock,
   ArrowUpRight,
@@ -85,7 +86,7 @@ function getBatchButtonClass(isSelected?: boolean, isExpired: boolean = false): 
   return "bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] border border-[var(--color-border-subtle)]";
 }
 
-export function ListingCard({
+export const ListingCard = memo(function ListingCard({
   id,
   slug,
   title,
@@ -192,13 +193,11 @@ export function ListingCard({
   }).format(firstDate);
 
   // Budget label formatting
-  let budgetLabel = isTr ? "Belirtilmedi" : "Not specified";
-  if (budgetMin && budgetMax) {
-    budgetLabel = `${parseFloat(budgetMin).toLocaleString(isTr ? "tr-TR" : "en-US")} – ${parseFloat(budgetMax).toLocaleString(isTr ? "tr-TR" : "en-US")} ${budgetCurrency ?? ""}`;
-  } else if (budgetMin) {
-    budgetLabel = `${isTr ? "Min" : "From"} ${parseFloat(budgetMin).toLocaleString(isTr ? "tr-TR" : "en-US")} ${budgetCurrency ?? ""}`;
-  } else if (budgetMode === "NEGOTIABLE") {
+  let budgetLabel: string;
+  if (budgetMode === "NEGOTIABLE" && !budgetMin && !budgetMax) {
     budgetLabel = isTr ? "Görüşülebilir" : "Negotiable";
+  } else {
+    budgetLabel = formatBudgetRange(budgetMin, budgetMax, budgetCurrency, isTr);
   }
 
   // Timeline label formatting
@@ -416,4 +415,4 @@ export function ListingCard({
       />
     </article>
   );
-}
+});

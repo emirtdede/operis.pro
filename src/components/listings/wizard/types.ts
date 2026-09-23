@@ -6,6 +6,42 @@ export interface CategoryItem {
   sectorKey?: string;
 }
 
+export interface SavedDraftPayload {
+  categoryId?: string;
+  title: string;
+  summary: string;
+  scope: string;
+  tagsInput: string;
+  budgetMode: string;
+  budgetCurrency: string;
+  budgetMin: string;
+  budgetMax: string;
+  timelineMode: string;
+  timelineValue: string;
+  timelineUnit: string;
+  targetDate: string;
+  projectType: string;
+  projectStage: string;
+  workPreference: string;
+  preferredLanguage: string;
+  answers: Record<string, unknown>;
+  customNotes: string;
+  scopeMode: "wizard" | "manual";
+  step?: number;
+  savedAt?: number;
+}
+
+export interface SavedDraftItem {
+  id: string;
+  title: string;
+  summary: string;
+  categoryId?: string;
+  categoryName?: string;
+  step: number;
+  updatedAt: number;
+  data: SavedDraftPayload;
+}
+
 export interface ListingWizardFormProps {
   categories: CategoryItem[];
   locale: string;

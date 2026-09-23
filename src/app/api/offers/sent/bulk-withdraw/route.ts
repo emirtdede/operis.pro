@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { OfferService } from "@/src/modules/offers/service";
 import { evaluateSecurityAccessAsync, getClientIp } from "@/src/lib/security/rate-limit";
+import { mapConcurrent } from "@/src/lib/async/concurrency";
 
 const MAX_BULK_WITHDRAW_COUNT = 50;
 const BATCH_CONCURRENCY_CHUNK_SIZE = 5;
@@ -39,23 +40,18 @@ export async function POST(req: Request) {
     const successfulWithdrawals: string[] = [];
     const errors: Array<{ id: string; error: string }> = [];
 
-    // Process withdrawals in bounded concurrent chunks of 5 to eliminate Vercel serverless timeouts
-    for (let i = 0; i < targetIds.length; i += BATCH_CONCURRENCY_CHUNK_SIZE) {
-      const chunk = targetIds.slice(i, i + BATCH_CONCURRENCY_CHUNK_SIZE);
-      await Promise.all(
-        chunk.map(async (offerId) => {
-          try {
-            await OfferService.withdrawOffer(session.userId, offerId);
-            successfulWithdrawals.push(offerId);
-          } catch (err: unknown) {
-            errors.push({
-              id: offerId,
-              error: err instanceof Error ? err.message : "Failed to withdraw",
-            });
-          }
-        })
-      );
-    }
+    // Process withdrawals with bounded concurrency of 5 to eliminate Vercel serverless timeouts
+    await mapConcurrent(targetIds, BATCH_CONCURRENCY_CHUNK_SIZE, async (offerId) => {
+      try {
+        await OfferService.withdrawOffer(session.userId, offerId);
+        successfulWithdrawals.push(offerId);
+      } catch (err: unknown) {
+        errors.push({
+          id: offerId,
+          error: err instanceof Error ? err.message : "Failed to withdraw",
+        });
+      }
+    });
 
     return NextResponse.json({
       success: true,

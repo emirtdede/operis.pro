@@ -13,17 +13,24 @@ import { sql } from "drizzle-orm";
 import { users } from "./auth";
 
 // 18. Notifications
-export const notifications = pgTable("notifications", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  type: varchar("type", { length: 50 }).notNull(),
-  payloadJson: jsonb("payload_json").notNull(),
-  deliveryKey: varchar("delivery_key", { length: 191 }).unique(),
-  readAt: timestamp("read_at", { withTimezone: true }),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-});
+export const notifications = pgTable(
+  "notifications",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: varchar("type", { length: 50 }).notNull(),
+    payloadJson: jsonb("payload_json").notNull(),
+    deliveryKey: varchar("delivery_key", { length: 191 }).unique(),
+    readAt: timestamp("read_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("notifications_user_created_idx").on(table.userId, table.createdAt),
+    index("notifications_user_unread_idx").on(table.userId, table.readAt),
+  ]
+);
 
 // 19. Outbox Events (Idempotent transactional notification outbox)
 export const outboxEvents = pgTable(
@@ -42,7 +49,10 @@ export const outboxEvents = pgTable(
     deliveryKey: varchar("delivery_key", { length: 191 }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
-  (table) => [uniqueIndex("outbox_delivery_key_unique_idx").on(table.deliveryKey)]
+  (table) => [
+    uniqueIndex("outbox_delivery_key_unique_idx").on(table.deliveryKey),
+    index("outbox_status_next_attempt_idx").on(table.status, table.nextAttemptAt),
+  ]
 );
 
 // 19b. Notification Fanout Progress (Persistent cursor for radar & category fan-out - B16)

@@ -1,7 +1,7 @@
 # KULLANIM KOŞULLARI
 > **Alt Başlık:** Vellium — Yasal Kullanım Şartları (Operis bir Vellium ürünüdür)  
 > **Sürüm:** v1.0 | **Son Güncelleme:** 07.09.2026 | **Rozet:** Hukuki Güvence & Aracı Hizmet Sağlayıcı  
-> **Kriptografik İçerik Özeti (SHA-256):** `c9a1d84f932e5b7194f1c93a401b2fe0f7e8a9c3b2e5d8f4a1c6e9b2d5f8a3c7`  
+> **Kriptografik İçerik Özeti (SHA-256):** `ff911a49d0ee9dde62f088860828958515183140ddb58a8f5475668039d82c2a`  
 
 ---
 

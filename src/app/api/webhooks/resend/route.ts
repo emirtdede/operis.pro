@@ -98,13 +98,10 @@ export async function POST(req: Request) {
 
     if (eventType === "email.bounced" || eventType === "email.complained") {
       const reason = payload.data?.bounce?.message || eventType;
-      for (const email of recipients) {
-        await ResendPoolService.handleBounceOrComplaint(
-          email,
-          eventType === "email.bounced" ? "bounced" : "complained",
-          reason
-        );
-      }
+      const status = eventType === "email.bounced" ? "bounced" : "complained";
+      await Promise.all(
+        recipients.map((email) => ResendPoolService.handleBounceOrComplaint(email, status, reason))
+      );
     }
 
     return NextResponse.json({ received: true, type: eventType });

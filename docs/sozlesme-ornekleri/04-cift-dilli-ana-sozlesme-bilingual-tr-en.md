@@ -1,6 +1,6 @@
 # ÇİFT DİLLİ PARALEL ANA HİZMET SÖZLEŞMESİ (BILINGUAL MASTER AGREEMENT)
 > **Referans No / Reference:** `OPR-CONTR-ENG2026B`  
-> **SHA-256 Özeti / Hash:** `41ffce5beae8249cd63111270fa43bd9f0f563b2a9d755034633298032215541`  
+> **SHA-256 Özeti / Hash:** `d2c50da9124fe46aeb537c2b6596d5efc6e2ea33c7d46785a9262c21c49d142a`  
 > **Üstün Dil / Prevailing Language:** Türkçe (Turkish text controls in case of statutory ambiguity)
 
 ---
@@ -9,7 +9,7 @@
 **Proje / Project:** Uluslararası E-Ticaret ve Pazar Yeri Altyapısı / Global E-Commerce Core  
 **Referans / Reference:** `OPR-CONTR-ENG2026B`  
 **Tanzim Tarihi / Execution Date:** 12 Eylül 2026  
-**Dijital Zaman Damgası / Timestamp:** 20 Eylül 2026 05:56  
+**Dijital Zaman Damgası / Timestamp:** 21 Eylül 2026 04:58  
 
 > ⚖️ **HÜKÜM ÖNCELİĞİ:** Anlam veya yorum çelişkisi halinde **TÜRKÇE METİN** esas alınacaktır (TBK m. 470).  
 > ⚖️ **PREVALENCE:** In case of discrepancy, the **TURKISH VERSION** shall prevail.
@@ -120,5 +120,5 @@
 | **Tarih / Date:** 12 Eylül 2026 | **Tarih / Date:** 12 Eylül 2026 |
 
 ---
-**HMK m. 199 Dijital Parmak İzi (SHA-256):** `f942ffc08e0bbee96a6d7b6f54af95e3949d1216b3b9dedccf2dc194bcc752f9`
+**HMK m. 199 Dijital Parmak İzi (SHA-256):** `e058196b0809dfd797bbc0b5b81c411076d5e9b5944df543187bbb4a9850fd2a`
 

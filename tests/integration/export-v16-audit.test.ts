@@ -266,11 +266,12 @@ describe("Sürüm 16 Audit: B26-CLEANUP, K01-MEM, K01-TEST, B26-MEM", () => {
 
       // Simulate 100+ progress events per job (100K+ total)
       const eventsPerJob = 100 + (jobIndex % 50);
+      const AUDIT_PHASES = ["reading_page", "part_written", "reading_section"] as const;
       for (let e = 0; e < eventsPerJob; e++) {
         state.onJobProgress({
           jobId,
           lastProgressAt: new Date(),
-          phase: e % 3 === 0 ? "reading_page" : e % 3 === 1 ? "part_written" : "reading_section",
+          phase: AUDIT_PHASES[e % 3] ?? "reading_page",
         });
         totalEventsFired++;
       }

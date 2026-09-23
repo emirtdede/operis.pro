@@ -158,7 +158,7 @@ export async function POST(req: Request) {
 
       const emailToken = createEmailVerificationToken(targetUserId, targetEmail);
       const appUrl =
-        process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+        process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:8000";
       const verificationUrl = `${appUrl}/api/auth/verify-email?token=${emailToken}`;
 
       const res = await emailProvider.send({

@@ -230,15 +230,7 @@ export function Footer() {
 
       {/* Massive Official Operis Watermark Logo at Base */}
       <div className="relative w-full flex justify-center items-end overflow-hidden pointer-events-none select-none -mt-6 sm:-mt-8">
-        <div
-          className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center"
-          style={{
-            maskImage:
-              "linear-gradient(to bottom, rgba(0,0,0,0.85) 15%, rgba(0,0,0,0.12) 80%, transparent 100%)",
-            WebkitMaskImage:
-              "linear-gradient(to bottom, rgba(0,0,0,0.85) 15%, rgba(0,0,0,0.12) 80%, transparent 100%)",
-          }}
-        >
+        <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center [mask-image:linear-gradient(to_bottom,rgba(0,0,0,0.85)_15%,rgba(0,0,0,0.12)_80%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,rgba(0,0,0,0.85)_15%,rgba(0,0,0,0.12)_80%,transparent_100%)]">
           <svg
             viewBox="0 0 350 112"
             width="100%"
@@ -293,13 +285,10 @@ export function Footer() {
                 x="100"
                 y="85"
                 fill="currentColor"
-                style={{
-                  fontFamily:
-                    "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-                  fontWeight: 700,
-                  fontSize: "100px",
-                  letterSpacing: "0.01em",
-                }}
+                fontFamily="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+                fontWeight="700"
+                fontSize="100"
+                letterSpacing="0.01em"
               >
                 peris
               </text>

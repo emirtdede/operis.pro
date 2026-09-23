@@ -11,27 +11,27 @@ export async function POST(req: Request) {
   const locale = req.headers.get("x-locale") || "tr";
   const isEn = locale === "en";
 
-  const access = await evaluateSecurityAccessAsync({
-    ip,
-    purpose: "auth:login",
-    limit: 10,
-    windowMs: 60 * 1000,
-    isEn,
-  });
-
-  if (!access.allowed) {
-    SecurityAuditService.logEvent({
-      eventType: "SUSPICIOUS_ACTIVITY",
-      ipAddress: ip,
-      userAgent,
-      riskMetadata: { reason: access.reason },
-    }).catch(() => {});
-
-    return access.response;
-  }
-
   let requestEmail = "";
   try {
+    const access = await evaluateSecurityAccessAsync({
+      ip,
+      purpose: "auth:login",
+      limit: 10,
+      windowMs: 60 * 1000,
+      isEn,
+    });
+
+    if (!access.allowed) {
+      SecurityAuditService.logEvent({
+        eventType: "SUSPICIOUS_ACTIVITY",
+        ipAddress: ip,
+        userAgent,
+        riskMetadata: { reason: access.reason },
+      }).catch(() => {});
+
+      return access.response;
+    }
+
     const body = await req.json();
     requestEmail = (body?.email || "").toLowerCase().trim();
 

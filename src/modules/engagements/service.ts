@@ -1,3 +1,4 @@
+import { cache } from "react";
 import {
   type CounterpartyContactInfo,
   EngagementLifecycleService,
@@ -70,8 +71,9 @@ export class EngagementService {
   /**
    * Retrieves all engagements for a user (either as employer or freelancer)
    * with counterparty profiles, listing information, and completion status.
+   * Wrapped in React.cache() for request-scoped deduplication across layouts and server components.
    */
-  static async getUserEngagements(
+  static getUserEngagements = cache(async (
     userId: string,
     options: {
       role?: "all" | "owner" | "freelancer";
@@ -79,7 +81,7 @@ export class EngagementService {
       limit?: number;
       offset?: number;
     } = {}
-  ) {
+  ) => {
     return EngagementQueryService.getUserEngagements(userId, options);
-  }
+  });
 }

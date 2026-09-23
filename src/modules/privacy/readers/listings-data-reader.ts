@@ -21,12 +21,77 @@ export async function* readListingsData(
   const { txDb, userId, options, signal, getRemainingMs } = ctx;
 
   yield `  "listings": [\n`;
-  let lastListingCreatedAtText: string | null = null;
-  let lastListingId: string | null = null;
   let firstListing = true;
   let listingPageCount = 0;
 
-  while (true) {
+  type ListingMetaRow = {
+    id: string;
+    title: string;
+    slug: string;
+    status: (typeof schema.listings.$inferSelect)["status"];
+    summary: string | null;
+    budgetMode: (typeof schema.listings.$inferSelect)["budgetMode"];
+    budgetMin: string | null;
+    budgetMax: string | null;
+    budgetCurrency: string | null;
+    createdAt: Date;
+    createdAtText: string;
+    updatedAt: Date;
+    byteLen: number;
+  };
+
+  async function* streamListingGroups(
+    groups: ListingMetaRow[][],
+    idx: number
+  ): AsyncGenerator<string, void, unknown> {
+    if (idx >= groups.length) return;
+    const group = groups[idx];
+    if (!group) return;
+    if (signal?.aborted) {
+      throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
+    }
+    if (getRemainingMs() <= 0) {
+      throw new ExportError("EXPORT_TIMEOUT", "Deadline exceeded", 504, false);
+    }
+
+    const groupIds = group.map((g) => g.id);
+    const payloadRows = await txDb
+      .select({
+        id: schema.listings.id,
+        scope: schema.listings.scope,
+      })
+      .from(schema.listings)
+      .where(inArray(schema.listings.id, groupIds));
+
+    const payloadMap = new Map(payloadRows.map((p) => [p.id, p.scope]));
+
+    for (const r of group) {
+      const scope = payloadMap.get(r.id) ?? "";
+      const itemStr = serializeExportRecord({
+        id: r.id,
+        title: r.title,
+        slug: r.slug,
+        status: r.status,
+        summary: r.summary,
+        scope,
+        budgetMode: r.budgetMode,
+        budgetMin: r.budgetMin,
+        budgetMax: r.budgetMax,
+        budgetCurrency: r.budgetCurrency,
+        createdAt: r.createdAt.toISOString(),
+        updatedAt: r.updatedAt.toISOString(),
+      });
+      yield `${firstListing ? "    " : ",\n    "}${itemStr}`;
+      firstListing = false;
+    }
+
+    yield* streamListingGroups(groups, idx + 1);
+  }
+
+  async function* streamListingsPages(
+    lastListingCreatedAtText: string | null,
+    lastListingId: string | null
+  ): AsyncGenerator<string, void, unknown> {
     if (signal?.aborted) {
       throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
     }
@@ -39,7 +104,7 @@ export async function* readListingsData(
           )
         : eq(schema.listings.ownerUserId, userId);
 
-    const metaRows = await txDb
+    const metaRows: ListingMetaRow[] = await txDb
       .select({
         id: schema.listings.id,
         title: schema.listings.title,
@@ -60,7 +125,7 @@ export async function* readListingsData(
       .orderBy(desc(schema.listings.createdAt), desc(schema.listings.id))
       .limit(PAGE_SIZE);
 
-    if (metaRows.length === 0) break;
+    if (metaRows.length === 0) return;
 
     // Validate single record size BEFORE fetching any heavy payload into memory
     for (const r of metaRows) {
@@ -83,8 +148,8 @@ export async function* readListingsData(
     }
 
     // Group into batches of at most 16 MiB payload to bound resident memory
-    const groups: (typeof metaRows)[] = [];
-    let currentGroup: typeof metaRows = [];
+    const groups: ListingMetaRow[][] = [];
+    let currentGroup: ListingMetaRow[] = [];
     let currentGroupBytes = 0;
 
     for (const row of metaRows) {
@@ -101,50 +166,17 @@ export async function* readListingsData(
       groups.push(currentGroup);
     }
 
-    for (const group of groups) {
-      if (signal?.aborted) {
-        throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
-      }
-      if (getRemainingMs() <= 0) {
-        throw new ExportError("EXPORT_TIMEOUT", "Deadline exceeded", 504, false);
-      }
+    yield* streamListingGroups(groups, 0);
 
-      const groupIds = group.map((g) => g.id);
-      const payloadRows = await txDb
-        .select({
-          id: schema.listings.id,
-          scope: schema.listings.scope,
-        })
-        .from(schema.listings)
-        .where(inArray(schema.listings.id, groupIds));
+    if (metaRows.length < PAGE_SIZE) return;
 
-      const payloadMap = new Map(payloadRows.map((p) => [p.id, p.scope]));
-
-      for (const r of group) {
-        const scope = payloadMap.get(r.id) ?? "";
-        const itemStr = serializeExportRecord({
-          id: r.id,
-          title: r.title,
-          slug: r.slug,
-          status: r.status,
-          summary: r.summary,
-          scope,
-          budgetMode: r.budgetMode,
-          budgetMin: r.budgetMin,
-          budgetMax: r.budgetMax,
-          budgetCurrency: r.budgetCurrency,
-          createdAt: r.createdAt.toISOString(),
-          updatedAt: r.updatedAt.toISOString(),
-        });
-        yield `${firstListing ? "    " : ",\n    "}${itemStr}`;
-        firstListing = false;
-      }
+    const last = metaRows[metaRows.length - 1];
+    if (last) {
+      yield* streamListingsPages(last.createdAtText, last.id);
     }
-
-    const last = metaRows[metaRows.length - 1]!;
-    lastListingCreatedAtText = last.createdAtText;
-    lastListingId = last.id;
   }
+
+  yield* streamListingsPages(null, null);
   yield `\n  ],\n`;
 
   if (options?.onSection) await options.onSection("listings");
@@ -162,12 +194,71 @@ export async function* readListingRevisionsData(
   const { txDb, userId, options, signal, getRemainingMs } = ctx;
 
   yield `  "listingRevisions": [\n`;
-  let lastLRevCreatedAtText: string | null = null;
-  let lastLRevId: string | null = null;
   let firstLRev = true;
   let lRevPageCount = 0;
 
-  while (true) {
+  type RevisionMetaRow = {
+    id: string;
+    listingId: string;
+    editorUserId: string;
+    revisionNo: number;
+    createdAt: Date;
+    createdAtText: string;
+    byteLen: number;
+  };
+
+  async function* streamRevisionGroups(
+    groups: RevisionMetaRow[][],
+    idx: number
+  ): AsyncGenerator<string, void, unknown> {
+    if (idx >= groups.length) return;
+    const group = groups[idx];
+    if (!group) return;
+    if (signal?.aborted) {
+      throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
+    }
+    if (getRemainingMs() <= 0) {
+      throw new ExportError("EXPORT_TIMEOUT", "Deadline exceeded", 504, false);
+    }
+
+    const groupIds = group.map((g) => g.id);
+    const payloadRows = await txDb
+      .select({
+        id: schema.listingRevisions.id,
+        snapshotJson: sql<string>`${schema.listingRevisions.snapshotJson}::text`,
+      })
+      .from(schema.listingRevisions)
+      .where(inArray(schema.listingRevisions.id, groupIds));
+
+    const payloadMap = new Map(payloadRows.map((p) => [p.id, p.snapshotJson]));
+
+    for (const r of group) {
+      const snapshotJson = payloadMap.get(r.id);
+      if (snapshotJson === undefined) throw new Error("Export snapshot row missing");
+      yield firstLRev ? "    " : ",\n    ";
+      yield* streamRecordWithJsonPayload(
+        {
+          id: r.id,
+          listingId: r.listingId,
+          editorUserId: r.editorUserId,
+          revisionNo: r.revisionNo,
+          createdAt: r.createdAt.toISOString(),
+        },
+        "snapshotJson",
+        snapshotJson,
+        MAX_RECORD_BYTES
+      );
+      payloadMap.delete(r.id);
+      firstLRev = false;
+    }
+
+    yield* streamRevisionGroups(groups, idx + 1);
+  }
+
+  async function* streamRevisionPages(
+    lastLRevCreatedAtText: string | null,
+    lastLRevId: string | null
+  ): AsyncGenerator<string, void, unknown> {
     if (signal?.aborted) {
       throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
     }
@@ -183,7 +274,7 @@ export async function* readListingRevisionsData(
           )
         : eq(schema.listings.ownerUserId, userId);
 
-    const metaRows = await txDb
+    const metaRows: RevisionMetaRow[] = await txDb
       .select({
         id: schema.listingRevisions.id,
         listingId: schema.listingRevisions.listingId,
@@ -199,7 +290,7 @@ export async function* readListingRevisionsData(
       .orderBy(desc(schema.listingRevisions.createdAt), desc(schema.listingRevisions.id))
       .limit(REVISION_PAGE_SIZE);
 
-    if (metaRows.length === 0) break;
+    if (metaRows.length === 0) return;
 
     for (const r of metaRows) {
       if ((Number(r.byteLen) || 0) + METADATA_PADDING_BYTES > MAX_RECORD_BYTES) {
@@ -220,8 +311,8 @@ export async function* readListingRevisionsData(
       });
     }
 
-    const groups: (typeof metaRows)[] = [];
-    let currentGroup: typeof metaRows = [];
+    const groups: RevisionMetaRow[][] = [];
+    let currentGroup: RevisionMetaRow[] = [];
     let currentGroupBytes = 0;
 
     for (const row of metaRows) {
@@ -238,50 +329,17 @@ export async function* readListingRevisionsData(
       groups.push(currentGroup);
     }
 
-    for (const group of groups) {
-      if (signal?.aborted) {
-        throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
-      }
-      if (getRemainingMs() <= 0) {
-        throw new ExportError("EXPORT_TIMEOUT", "Deadline exceeded", 504, false);
-      }
+    yield* streamRevisionGroups(groups, 0);
 
-      const groupIds = group.map((g) => g.id);
-      const payloadRows = await txDb
-        .select({
-          id: schema.listingRevisions.id,
-          snapshotJson: sql<string>`${schema.listingRevisions.snapshotJson}::text`,
-        })
-        .from(schema.listingRevisions)
-        .where(inArray(schema.listingRevisions.id, groupIds));
+    if (metaRows.length < REVISION_PAGE_SIZE) return;
 
-      const payloadMap = new Map(payloadRows.map((p) => [p.id, p.snapshotJson]));
-
-      for (const r of group) {
-        const snapshotJson = payloadMap.get(r.id);
-        if (snapshotJson === undefined) throw new Error("Export snapshot row missing");
-        yield firstLRev ? "    " : ",\n    ";
-        yield* streamRecordWithJsonPayload(
-          {
-            id: r.id,
-            listingId: r.listingId,
-            editorUserId: r.editorUserId,
-            revisionNo: r.revisionNo,
-            createdAt: r.createdAt.toISOString(),
-          },
-          "snapshotJson",
-          snapshotJson,
-          MAX_RECORD_BYTES
-        );
-        payloadMap.delete(r.id);
-        firstLRev = false;
-      }
+    const last = metaRows[metaRows.length - 1];
+    if (last) {
+      yield* streamRevisionPages(last.createdAtText, last.id);
     }
-
-    const last = metaRows[metaRows.length - 1]!;
-    lastLRevCreatedAtText = last.createdAtText;
-    lastLRevId = last.id;
   }
+
+  yield* streamRevisionPages(null, null);
   yield `\n  ],\n`;
 
   if (options?.onSection) await options.onSection("listingRevisions");

@@ -92,8 +92,9 @@ export async function findUserByEmail(
     .from(schema.users)
     .where(eq(schema.users.email, canonical));
 
-  if (legacyMatches.length > 0) {
-    return legacyMatches[0]!;
+  const firstLegacy = legacyMatches[0];
+  if (firstLegacy) {
+    return firstLegacy;
   }
 
   return null;

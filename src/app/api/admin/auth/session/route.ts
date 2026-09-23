@@ -5,11 +5,19 @@ import { createSessionToken, SESSION_COOKIE_NAME, getSession } from "@/src/modul
 import { evaluateSecurityAccessAsync, getClientIp } from "@/src/lib/security/rate-limit";
 
 export async function GET() {
-  const session = await getSession();
-  return NextResponse.json({
-    authenticated: Boolean(session),
-    session,
-  });
+  try {
+    const session = await getSession();
+    return NextResponse.json({
+      authenticated: Boolean(session),
+      session,
+    });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to retrieve session";
+    return NextResponse.json(
+      { authenticated: false, session: null, error: message },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -176,12 +184,17 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE() {
-  const response = NextResponse.json({
-    success: true,
-    message: "Admin oturumu sonlandırıldı.",
-  });
+  try {
+    const response = NextResponse.json({
+      success: true,
+      message: "Admin oturumu sonlandırıldı.",
+    });
 
-  response.cookies.delete(SESSION_COOKIE_NAME);
+    response.cookies.delete(SESSION_COOKIE_NAME);
 
-  return response;
+    return response;
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Session termination error";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }

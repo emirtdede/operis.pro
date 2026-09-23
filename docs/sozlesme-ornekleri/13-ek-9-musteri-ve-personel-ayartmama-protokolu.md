@@ -1,8 +1,8 @@
 # EK-8: MÜŞTERİ VE PERSONEL AYARTMAMA & PLATFORM SADAKAT PROTOKOLÜ
-**Protokol No:** `OPR-SOLICIT-ENG2026B-MU985J9H`  
+**Protokol No:** `OPR-SOLICIT-ENG2026B-MUALISFZ`  
 **Sözleşme / İş Referansı:** `ENG-2026-B2B-FINANCE-01`  
 **Yasal Dayanak:** 6102 s. TTK m. 54-55 (Haksız Rekabet) & 6098 s. TBK m. 444-447 (Ölçülü Koruma)  
-**Kriptografik Bütünlük Özeti (SHA-256):** `937dd73d31b7a11a8a9c5a7345e03cbc05ba4f8a465e4b25fbd2cbf7ff3ee67e`  
+**Kriptografik Bütünlük Özeti (SHA-256):** `485e02ee65319cd354264534809e10a87a8e535ca220bc801bcf6de786bbffa2`  
 
 ---
 

@@ -27,8 +27,8 @@ export class ListingCloneService {
         )
         .limit(1);
 
-      if (listingRows.length > 0) {
-        const listing = listingRows[0]!;
+      const listing = listingRows[0];
+      if (listing) {
         if (listing.ownerUserId !== userId) {
           throw new Error("Listing not found or you are not authorized.");
         }

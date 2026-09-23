@@ -122,9 +122,9 @@ export function calculateFreelanceTax(input: TaxCalculationInput): TaxCalculatio
     vatRate = 0;
   }
 
-  let grossKurus = 0n;
-  let netKurus = 0n;
-  let withholdingKurus = 0n;
+  let grossKurus: bigint;
+  let netKurus: bigint;
+  let withholdingKurus: bigint;
 
   const inputKurus = TaxMath.toKurus(amount);
 
@@ -177,8 +177,8 @@ export function calculateFreelanceTax(input: TaxCalculationInput): TaxCalculatio
     val.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   // Generate official proposal note
-  let proposalNoteTr = "";
-  let proposalNoteEn = "";
+  let proposalNoteTr: string;
+  let proposalNoteEn: string;
 
   if (isExport) {
     proposalNoteTr = `[Yazılım Hizmet İhracatı Şerhi: İşbu teklif ${fmt(grossAmount)} ${symbol} Net Bedel üzerinden sunulmuş olup, 3065 sayılı KDVK m. 11/1-a (GİB İstisna Kodu 302) kapsamında %0 KDV ile faturalandırılacaktır. 193 sayılı GVK m. 89/13 uyarınca dövizin Türkiye'deki banka hesabına transfer edilmesi şartıyla kazancın %100'ü gelir/kurumlar vergisinden indirilecektir.]`;
@@ -315,7 +315,7 @@ export function parseBudgetAmount(
   const cleaned = trimmed.replace(/[^0-9.,]/g, "");
   if (!cleaned) return null;
 
-  let numericVal = 0;
+  let numericVal: number;
   if (cleaned.includes(".") && cleaned.includes(",")) {
     const dotIdx = cleaned.indexOf(".");
     const commaIdx = cleaned.indexOf(",");

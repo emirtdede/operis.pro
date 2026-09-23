@@ -1,6 +1,6 @@
 # BAĞIMSIZ YAZILIM VE TEKNOLOJİ HİZMET SÖZLEŞMESİ (TBK m. 470 & FSEK m. 52)
 > **Operis Referans No:** `OPR-CONTR-ENG2026B`  
-> **Kriptografik SHA-256 Mührü:** `fea1a4fcefcd676ba1c52cbe13bad6f1764f46f261c32e476f48471357c920ac`  
+> **Kriptografik SHA-256 Mührü:** `ff4234b80b85e57c3f16907be937cf54c47cb40c37d894d859514cb28efcc3b2`  
 > **Düzenlenme Tarihi:** 01 Eylül 2026  
 > **Hukuki Dayanak:** 6098 Sayılı Türk Borçlar Kanunu (m. 470 vd.) & 5846 Sayılı Fikir ve Sanat Eserleri Kanunu (m. 52)
 
@@ -13,7 +13,7 @@
 # BAĞIMSIZ YAZILIM VE TEKNOLOJİ HİZMET SÖZLEŞMESİ (ESER SÖZLEŞMESİ VE GİZLİLİK PROTOKOLÜ)
 **Referans Kodu:** `OPR-CONTR-ENG2026B`  
 **Tanzim Tarihi:** 1 Eylül 2026  
-**Dijital Üretim Damgası:** 20 Eylül 2026 05:56  
+**Dijital Üretim Damgası:** 21 Eylül 2026 04:58  
 **Mevzuat Dayanağı:** 6098 sayılı Türk Borçlar Kanunu (TBK m. 470 vd.) ve 5846 sayılı Fikir ve Sanat Eserleri Kanunu (FSEK m. 52)
 
 ---
@@ -306,10 +306,10 @@ Yüklenici, KVKK m. 12 uyarınca aşağıdaki asgari güvenlik tedbirlerini eksi
 ---
 
 # EK-6: TEMİZ KOD, ARKA KAPI İÇERMEME VE SİBER GÜVENLİK TAAHHÜTNAMESİ
-**Taahhütname No:** `OPR-SEC-ENG2026B-MU985J8Y`  
+**Taahhütname No:** `OPR-SEC-ENG2026B-MUALISCX`  
 **Sözleşme / İş Referansı:** `ENG-2026-B2B-FINANCE-01`  
 **Yasal Dayanak:** 5237 s. TCK m. 243-245, 6098 s. TBK m. 474-477, ISO 27001 & SOC 2 Standartları  
-**Kriptografik Bütünlük Özeti (SHA-256):** `c3bea6f0bf4b7f983171e3face4c2870b8f1a4f988da4a2b872e42e634b7abd8`  
+**Kriptografik Bütünlük Özeti (SHA-256):** `9326ed6b943e3e24adf2ded05a6691442248a708ac58f144eb31a0a2f54a303b`  
 
 ---
 
@@ -334,10 +334,10 @@ Kasten gizli erişim veya zararlı kod bırakıldığının adli bilişim (foren
 ---
 
 # EK-7: AÇIK KAYNAK LİSANS SAFLIĞI VE COPYLEFT BULAŞMAMA ŞARTNAMESİ
-**Şartname No:** `OPR-FOSS-ENG2026B-MU985J8Y`  
+**Şartname No:** `OPR-FOSS-ENG2026B-MUALISCX`  
 **Sözleşme / İş Referansı:** `ENG-2026-B2B-FINANCE-01`  
 **Yasal Dayanak:** 5846 s. FSEK m. 52, 6098 s. TBK m. 475 & Uluslararası FOSS / OSI Standartları  
-**Kriptografik Bütünlük Özeti (SHA-256):** `4927811381504c2d4364ab24f2a45dc64a5c7e857304a8716c0706c2f0ed6d4c`  
+**Kriptografik Bütünlük Özeti (SHA-256):** `b1c7311192c58b29461089b335b1b0ffec004d75926ae86d367ac7d1064c82d9`  
 
 ---
 
@@ -367,10 +367,10 @@ Teslim edilen kodda kopyalanmış veya yetkisiz şekilde entegre edilmiş yasakl
 ---
 
 # EK-8: MÜŞTERİ VE PERSONEL AYARTMAMA & PLATFORM SADAKAT PROTOKOLÜ
-**Protokol No:** `OPR-SOLICIT-ENG2026B-MU985J8Y`  
+**Protokol No:** `OPR-SOLICIT-ENG2026B-MUALISCY`  
 **Sözleşme / İş Referansı:** `ENG-2026-B2B-FINANCE-01`  
 **Yasal Dayanak:** 6102 s. TTK m. 54-55 (Haksız Rekabet) & 6098 s. TBK m. 444-447 (Ölçülü Koruma)  
-**Kriptografik Bütünlük Özeti (SHA-256):** `2acad33deb1c2a1547f963d8204bb9a89d1f6315718a57afdd187844104e1b5c`  
+**Kriptografik Bütünlük Özeti (SHA-256):** `bbd260a67c9eaab1dfb6d50d73b7dd2982567cb5891c8a33449b0f7673c9d3fd`  
 
 ---
 

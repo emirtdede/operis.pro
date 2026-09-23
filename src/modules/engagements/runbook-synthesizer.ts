@@ -150,8 +150,8 @@ export function parseEnvExampleText(rawText: string): RunbookEnvVar[] {
 
     // Parse KEY=VALUE or export KEY=VALUE
     const match = trimmed.match(/^(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/);
-    if (match) {
-      const key = match[1]!;
+    if (match && match[1]) {
+      const key = match[1];
       let value = match[2] ? match[2].trim() : "";
 
       // Strip quotes if present
@@ -746,7 +746,7 @@ export class RunbookSynthesizer {
           key: "RESEND_API_KEY",
           description: "E-posta bildirimleri ve şifre sıfırlama için Resend API anahtarı",
           isRequired: true,
-          sampleValue: "re_xxxxxxxxxxxxxxxxxxxxxxxx",
+          sampleValue: "re_test_xxxxxxxxxxxxxxxxxxxx",
           secretCategory: "COMMUNICATION",
         },
       ],

@@ -521,20 +521,22 @@ export class CounterOfferService {
               tx
             );
 
-            for (const comp of competingOffers) {
-              await NotificationService.createNotification(
-                comp.offerorUserId,
-                "OFFER_REJECTED_OTHER_SELECTED",
-                "offer",
-                comp.id,
-                {
-                  title: "Teklif Durumu Güncellendi",
-                  message: `"${listing.title}" ilanında başka bir teklif kabul edildiğinden teklifiniz sonuçlandırıldı.`,
-                  actionUrl: "/tr/panel/teklifler/gonderilen",
-                },
-                tx
-              );
-            }
+            await Promise.all(
+              competingOffers.map((comp) =>
+                NotificationService.createNotification(
+                  comp.offerorUserId,
+                  "OFFER_REJECTED_OTHER_SELECTED",
+                  "offer",
+                  comp.id,
+                  {
+                    title: "Teklif Durumu Güncellendi",
+                    message: `"${listing.title}" ilanında başka bir teklif kabul edildiğinden teklifiniz sonuçlandırıldı.`,
+                    actionUrl: "/tr/panel/teklifler/gonderilen",
+                  },
+                  tx
+                )
+              )
+            );
           } catch {
             // non-fatal
           }

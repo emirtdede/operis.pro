@@ -2,82 +2,108 @@ import { NextResponse } from "next/server";
 import { ResendPoolService } from "@/src/modules/email/resend-pool-service";
 
 export async function GET(req: Request) {
-  const url = new URL(req.url);
-  const token = url.searchParams.get("token");
+  try {
+    const url = new URL(req.url);
+    const token = url.searchParams.get("token");
 
-  if (!token) {
-    return new NextResponse(
-      renderUnsubscribeHtml({
-        success: false,
-        title: "Geçersiz İstek",
-        message: "Abonelikten çıkma bağlantısı geçersiz veya eksik parametre içeriyor.",
-      }),
-      {
-        status: 400,
-        headers: {
-          "Content-Type": "text/html; charset=utf-8",
-          "X-Robots-Tag": "noindex, nofollow",
-        },
-      }
-    );
-  }
-
-  const verified = ResendPoolService.verifyUnsubscribeToken(token);
-  if (!verified.valid || !verified.userId) {
-    return new NextResponse(
-      renderUnsubscribeHtml({
-        success: false,
-        title: "Doğrulama Başarısız",
-        message: "Bağlantının süresi dolmuş veya imza doğrulanamadı.",
-      }),
-      {
-        status: 403,
-        headers: {
-          "Content-Type": "text/html; charset=utf-8",
-          "X-Robots-Tag": "noindex, nofollow",
-        },
-      }
-    );
-  }
-
-  await ResendPoolService.optOutUser(verified.userId);
-
-  return new NextResponse(
-    renderUnsubscribeHtml({
-      success: true,
-      title: "Abonelikten Çıkıldı",
-      message:
-        "Bülten ve platform duyurusu e-posta listesinden başarıyla çıkarıldınız. Hesap güvenliği ve işlem bildirimleriniz etkilenmez.",
-    }),
-    {
-      status: 200,
-      headers: {
-        "Content-Type": "text/html; charset=utf-8",
-        "X-Robots-Tag": "noindex, nofollow",
-      },
+    if (!token) {
+      return new NextResponse(
+        renderUnsubscribeHtml({
+          success: false,
+          title: "Geçersiz İstek",
+          message: "Abonelikten çıkma bağlantısı geçersiz veya eksik parametre içeriyor.",
+        }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "text/html; charset=utf-8",
+            "X-Robots-Tag": "noindex, nofollow",
+          },
+        }
+      );
     }
-  );
+
+    const verified = ResendPoolService.verifyUnsubscribeToken(token);
+    if (!verified.valid || !verified.userId) {
+      return new NextResponse(
+        renderUnsubscribeHtml({
+          success: false,
+          title: "Doğrulama Başarısız",
+          message: "Bağlantının süresi dolmuş veya imza doğrulanamadı.",
+        }),
+        {
+          status: 403,
+          headers: {
+            "Content-Type": "text/html; charset=utf-8",
+            "X-Robots-Tag": "noindex, nofollow",
+          },
+        }
+      );
+    }
+
+    await ResendPoolService.optOutUser(verified.userId);
+
+    return new NextResponse(
+      renderUnsubscribeHtml({
+        success: true,
+        title: "Abonelikten Çıkıldı",
+        message:
+          "Bülten ve platform duyurusu e-posta listesinden başarıyla çıkarıldınız. Hesap güvenliği ve işlem bildirimleriniz etkilenmez.",
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "text/html; charset=utf-8",
+          "X-Robots-Tag": "noindex, nofollow",
+        },
+      }
+    );
+  } catch (error: unknown) {
+    console.error("[UNSUBSCRIBE_GET_ERROR]", error);
+    return new NextResponse(
+      renderUnsubscribeHtml({
+        success: false,
+        title: "Sistem Hatası",
+        message: "İşlem sırasında bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.",
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "text/html; charset=utf-8",
+          "X-Robots-Tag": "noindex, nofollow",
+        },
+      }
+    );
+  }
 }
 
 export async function POST(req: Request) {
-  const url = new URL(req.url);
-  const token = url.searchParams.get("token") || (await req.json().catch(() => ({}))).token;
+  try {
+    const url = new URL(req.url);
+    const token = url.searchParams.get("token") || (await req.json().catch(() => ({}))).token;
 
-  if (!token) {
-    return NextResponse.json({ error: "Token is required" }, { status: 400 });
+    if (!token) {
+      return NextResponse.json({ error: "Token is required" }, { status: 400 });
+    }
+
+    const verified = ResendPoolService.verifyUnsubscribeToken(token);
+    if (!verified.valid || !verified.userId) {
+      return NextResponse.json({ error: "Invalid token" }, { status: 403 });
+    }
+
+    await ResendPoolService.optOutUser(verified.userId);
+    return NextResponse.json({
+      success: true,
+      unsubscribed: true,
+      message: "Unsubscribed from marketing emails",
+    });
+  } catch (error: unknown) {
+    console.error("[UNSUBSCRIBE_POST_ERROR]", error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to unsubscribe" },
+      { status: 500 }
+    );
   }
-
-  const verified = ResendPoolService.verifyUnsubscribeToken(token);
-  if (!verified.valid || !verified.userId) {
-    return NextResponse.json({ error: "Invalid token" }, { status: 403 });
-  }
-
-  await ResendPoolService.optOutUser(verified.userId);
-  return NextResponse.json({
-    success: true,
-    unsubscribed: true,
-    message: "Unsubscribed from marketing emails",
-  });
 }
 
 function renderUnsubscribeHtml(props: {

@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { Lock, ShieldCheck } from "lucide-react";
+import { Lock, ShieldCheck, RefreshCw, Inbox } from "lucide-react";
 import { getSession } from "@/src/modules/auth/session";
 import { OfferService } from "@/src/modules/offers/service";
 import {
   ReceivedOffersDashboard,
   ReceivedOfferItem,
 } from "@/src/components/dashboard/received-offers-dashboard";
-import { DashboardTabs } from "@/src/components/dashboard/dashboard-tabs";
 import { Button } from "@/src/components/ui/button";
-import { serializeJsonLd } from "@/src/lib/security/json-ld";
+import { JsonLd } from "@/src/components/seo/json-ld";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -114,9 +114,10 @@ export default async function ReceivedOffersPage({
     initialOffers = [];
   }
 
+  const baseUrl = getBaseUrl();
   const receivedOffersUrl = isTr
-    ? "https://operis.pro/tr/panel/teklifler/gelen"
-    : "https://operis.pro/en/dashboard/offers/received";
+    ? `${baseUrl}/tr/panel/teklifler/gelen`
+    : `${baseUrl}/en/dashboard/offers/received`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -126,13 +127,13 @@ export default async function ReceivedOffersPage({
         "@type": "ListItem",
         position: 1,
         name: isTr ? "Ana Sayfa" : "Home",
-        item: `https://operis.pro/${locale}`,
+        item: `${baseUrl}/${locale}`,
       },
       {
         "@type": "ListItem",
         position: 2,
         name: isTr ? "İlanlarım" : "My Listings",
-        item: `https://operis.pro${isTr ? "/tr/panel/ilanlarim" : "/en/dashboard/listings"}`,
+        item: `${baseUrl}${isTr ? "/tr/panel/ilanlarim" : "/en/dashboard/listings"}`,
       },
       {
         "@type": "ListItem",
@@ -144,20 +145,23 @@ export default async function ReceivedOffersPage({
   };
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-      {/* Schema.org Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
-
-      {/* Header */}
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-6">
+    <div className="space-y-6">
+      {/* Header Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-4">
         <div className="space-y-1">
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">
-            {isTr ? "Gelen Teklifler" : "Received Offers"}
-          </h1>
-          <p className="text-sm text-[var(--color-text-secondary)]">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400">
+              <Inbox className="h-5 w-5 fill-blue-400/20 text-blue-400" />
+            </div>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
+              {isTr ? "Gelen Teklifler" : "Received Offers"}
+            </h1>
+            <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2.5 py-0.5 text-xs font-semibold text-blue-400 border border-blue-500/20">
+              <Lock className="h-3 w-3" />
+              {isTr ? "Şifreli & Gizli" : "Encrypted"}
+            </span>
+          </div>
+          <p className="text-xs sm:text-sm text-[var(--color-text-secondary)]">
             {isTr
               ? "İlanlarınıza gelen tüm teklifler şifrelenmiştir ve yalnızca sizin tarafınızdan görüntülenebilir."
               : "All proposals submitted to your listings are encrypted and visible exclusively to you."}
@@ -165,66 +169,51 @@ export default async function ReceivedOffersPage({
         </div>
 
         <Link href={isTr ? "/tr/panel/ilanlarim" : "/en/dashboard/listings"}>
-          <Button variant="secondary" size="sm">
+          <Button variant="outline" size="sm" className="text-xs">
             {isTr ? "İlanlarıma Dön" : "My Listings"}
           </Button>
         </Link>
-      </header>
-
-      {/* Unified Dashboard Navigation Tabs */}
-      <DashboardTabs locale={locale} counts={{ receivedOffers: initialOffers.length }} />
+      </div>
 
       {/* Acceptance Guidance & Invariant Rules */}
-      <section
-        aria-label={isTr ? "Teklif Değerlendirme Rehberi" : "Proposal Review Guide"}
-        className="rounded-2xl border border-purple-500/20 bg-purple-500/5 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-4"
-      >
-        <div className="flex items-start gap-3">
-          <Lock className="h-5 w-5 text-purple-400 shrink-0 mt-0.5" aria-hidden="true" />
-          <div className="space-y-1 text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
-            <span className="font-semibold text-[var(--color-text-primary)] block">
-              {isTr
-                ? "Teklif Onayı Süreci & Otomatik Ret Kuralları"
-                : "Offer Acceptance & Auto-Decline Mechanics"}
-            </span>
-            <p>
-              {isTr
-                ? "Bir teklifi kabul ettiğinizde sistem o teklif sahibi ile doğrudan çalışma alanınızı açar. İlanınızdaki diğer tüm bekleyen teklifler otomatik olarak 'Diğer teklif seçildi' gerekçesiyle nezaketle reddedilir."
-                : "Accepting a proposal creates an active bilateral workspace and unlocks direct contacts. All other pending offers on the listing are automatically transitioned to declined."}
-            </p>
-          </div>
-        </div>
-
-        <div className="shrink-0 flex items-center gap-1.5 text-xs font-semibold text-emerald-400 self-end sm:self-center">
-          <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-          <span>{isTr ? "Gizli ve Şifreli" : "Encrypted & Safe"}</span>
-        </div>
-      </section>
-
-      {/* Received Offers Dashboard */}
-      {fetchError ? (
-        <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-6 text-center space-y-3">
-          <p className="text-sm font-semibold text-rose-400">
+      <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/60 backdrop-blur-md p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-[var(--color-text-secondary)] shadow-xs">
+        <div className="flex items-start gap-2.5">
+          <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" aria-hidden="true" />
+          <p>
             {isTr
-              ? "Gelen teklifleriniz yüklenirken bir sorun oluştu."
-              : "An error occurred while loading incoming proposals."}
+              ? "Bir teklifi kabul ettiğinizde doğrudan çalışma alanınız açılır. İlandaki diğer bekleyen teklifler otomatik olarak nezaketle reddedilir."
+              : "Accepting a proposal opens your direct workspace. Other pending offers on the listing are politely auto-declined."}
           </p>
-          <p className="text-xs text-[var(--color-text-secondary)]">
+        </div>
+        <span className="text-[11px] font-semibold text-emerald-400 shrink-0 self-end sm:self-center">
+          {isTr ? "%0 Komisyon" : "0% Fee"}
+        </span>
+      </div>
+
+      {/* Soft Error Notice if database query had an issue */}
+      {fetchError && (
+        <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3 flex items-center justify-between gap-3 text-xs text-amber-300">
+          <span>
             {isTr
-              ? "Sunucu bağlantısında anlık bir gecikme yaşanmış olabilir. Lütfen sayfayı yenileyiniz."
-              : "There may have been a temporary network blip. Please refresh the page to try again."}
-          </p>
+              ? "Sunucu bağlantısında anlık bir gecikme yaşandı. Çevrimdışı veriler gösteriliyor."
+              : "Temporary server connection delay. Displaying offline view."}
+          </span>
           <Link href={isTr ? "/tr/panel/teklifler/gelen" : "/en/dashboard/offers/received"}>
-            <Button variant="outline" size="sm" className="mt-2 text-xs">
-              {isTr ? "Sayfayı Yenile" : "Refresh Page"}
+            <Button variant="ghost" size="sm" className="h-7 px-2 text-xs text-amber-300 hover:text-amber-200">
+              <RefreshCw className="h-3 w-3 mr-1" />
+              {isTr ? "Yenile" : "Refresh"}
             </Button>
           </Link>
         </div>
-      ) : (
-        <section aria-label={isTr ? "Gelen Teklif Listesi" : "Received Offer List"}>
-          <ReceivedOffersDashboard initialOffers={initialOffers} locale={locale} />
-        </section>
       )}
-    </main>
+
+      {/* Received Offers Dashboard */}
+      <section aria-label={isTr ? "Gelen Teklif Listesi" : "Received Offer List"}>
+        <ReceivedOffersDashboard initialOffers={initialOffers} locale={locale} />
+      </section>
+
+      {/* Schema.org Structured Data */}
+      <JsonLd data={jsonLd} />
+    </div>
   );
 }

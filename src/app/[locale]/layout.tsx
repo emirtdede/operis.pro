@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { locales, Locale } from "@/src/lib/i18n/config";
+import { getBaseUrl } from "@/src/lib/config/url";
 import { ThemeProvider } from "@/src/components/layout/theme-provider";
 import { Header } from "@/src/components/layout/header";
 import { Footer } from "@/src/components/layout/footer";
@@ -38,21 +39,43 @@ export async function generateMetadata({
       default: title,
       template: `%s | Operis`,
     },
-    metadataBase: new URL(
-      process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || "https://operis.vercel.app"
-    ),
+    metadataBase: new URL(getBaseUrl()),
     alternates: {
       canonical: `/${locale}`,
       languages: {
         tr: "/tr",
         en: "/en",
+        "x-default": "/tr",
       },
     },
     openGraph: {
       title,
       description,
       type: "website",
+      siteName: "Operis",
       locale: locale === "tr" ? "tr_TR" : "en_US",
+      images: [
+        {
+          url: "/operis-logo-koyu.svg",
+          width: 1200,
+          height: 630,
+          alt: isTr
+            ? "Operis — Bağımsız Mühendislik Ağı"
+            : "Operis — Independent Engineering Network",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/operis-logo-koyu.svg"],
+    },
+    other: {
+      "geo.region": "TR-34",
+      "geo.placename": "İstanbul, Türkiye",
+      "geo.position": "41.0766;29.0125",
+      "ICBM": "41.0766, 29.0125",
     },
   };
 }

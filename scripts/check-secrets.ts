@@ -21,6 +21,7 @@ const ALLOWED_TEST_PREFIXES = [
   "sk_test_",
   "pk_test_",
   "whsec_test_",
+  "AKIAIOSFODNN7EXAMPLE",
 ];
 
 const SCAN_DIRS = [

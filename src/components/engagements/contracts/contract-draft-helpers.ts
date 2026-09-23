@@ -40,3 +40,8 @@ export function getDownloadPdfButtonLabel(activeLang: ContractLanguage, isTr: bo
   if (activeLang === "bilingual") return "Çift Dilli Vektörel PDF (.pdf)";
   return isTr ? "Vektörel PDF İndir (.pdf)" : "Download Vector PDF (.pdf)";
 }
+
+export function getWhiteLabelButtonLabel(enabled: boolean, isTr: boolean): string {
+  if (enabled) return isTr ? "🏛️ Kurumsal Mod (White-Label: Açık)" : "🏛️ White-Label (Active)";
+  return isTr ? "🏛️ Kurumsal Sade Mod" : "🏛️ White-Label Mode";
+}

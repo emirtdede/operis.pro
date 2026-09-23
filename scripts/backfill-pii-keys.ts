@@ -58,7 +58,93 @@ export async function runBackfill(options?: BackfillOptions) {
 
     if (cpManager.data.phase === "USERS") {
       console.info("[PII-Backfill] Phase 1: Backfilling users table...");
-      while (true) {
+
+      async function attemptCas(
+        user: typeof schema.users.$inferSelect,
+        retryCount: number
+      ): Promise<boolean> {
+        if (retryCount >= 3) return false;
+        const currentRows = await db
+          .select()
+          .from(schema.users)
+          .where(eq(schema.users.id, user.id))
+          .limit(1);
+
+        const currentUser = currentRows[0];
+        if (!currentUser) {
+          // Record deleted concurrently
+          return true;
+        }
+
+        // Recompute updates from fresh current row
+        const freshUpdates: Partial<typeof schema.users.$inferInsert> = {};
+        let freshNeedsUpdate = false;
+
+        // 1. Blind index HMAC
+        if (!currentUser.emailHmac && currentUser.email) {
+          freshUpdates.emailHmac = hashEmailBlindIndex(currentUser.email);
+          freshNeedsUpdate = true;
+        }
+
+        // 2. Encrypt email using Envelope v2 with AAD
+        if (!currentUser.emailEnc && currentUser.email) {
+          freshUpdates.emailEnc = encryptEnvelopeV2(
+            currentUser.email.trim().toLowerCase(),
+            { table: "users", primaryKey: currentUser.id, column: "email_enc" },
+            targetKeyId
+          );
+          freshNeedsUpdate = true;
+        }
+
+        // 3. Encrypt legacy Base32 twoFactorSecret using Envelope v2 with AAD
+        if (currentUser.twoFactorSecret && !currentUser.twoFactorSecret.includes(":")) {
+          freshUpdates.twoFactorSecret = encryptEnvelopeV2(
+            currentUser.twoFactorSecret,
+            { table: "users", primaryKey: currentUser.id, column: "two_factor_secret" },
+            targetKeyId
+          );
+          freshNeedsUpdate = true;
+        }
+
+        if (!freshNeedsUpdate) {
+          totalSkipped++;
+          return true;
+        }
+
+        const whereConditions = [
+          eq(schema.users.id, currentUser.id),
+          currentUser.email !== null && currentUser.email !== undefined
+            ? eq(schema.users.email, currentUser.email)
+            : isNull(schema.users.email),
+          currentUser.emailEnc !== null && currentUser.emailEnc !== undefined
+            ? eq(schema.users.emailEnc, currentUser.emailEnc)
+            : isNull(schema.users.emailEnc),
+          currentUser.emailHmac !== null && currentUser.emailHmac !== undefined
+            ? eq(schema.users.emailHmac, currentUser.emailHmac)
+            : isNull(schema.users.emailHmac),
+          currentUser.twoFactorSecret !== null && currentUser.twoFactorSecret !== undefined
+            ? eq(schema.users.twoFactorSecret, currentUser.twoFactorSecret)
+            : isNull(schema.users.twoFactorSecret),
+        ];
+
+        const res = await db
+          .update(schema.users)
+          .set({
+            ...freshUpdates,
+            updatedAt: new Date(),
+          })
+          .where(and(...whereConditions))
+          .returning({ id: schema.users.id });
+
+        if (res.length > 0) {
+          totalUpdated++;
+          return true;
+        }
+
+        return attemptCas(user, retryCount + 1);
+      }
+
+      async function processUsersBatches(): Promise<void> {
         const lastUserId = cpManager.data.lastSuccessfulId;
 
         // Select records missing emailHmac, missing emailEnc, or holding unencrypted twoFactorSecret
@@ -82,120 +168,46 @@ export async function runBackfill(options?: BackfillOptions) {
           .limit(BATCH_SIZE);
 
         if (usersBatch.length === 0) {
-          break;
+          return;
         }
 
-        for (const user of usersBatch) {
-          try {
-            // Multi-field Compare-And-Swap (CAS) with fresh row re-reads and update recalculation
-            let casSuccess = false;
+        async function processUserItem(userIndex: number): Promise<void> {
+          if (userIndex >= usersBatch.length) return;
+          const user = usersBatch[userIndex];
+          if (user) {
+            try {
+              const casSuccess = await attemptCas(user, 0);
 
-            for (let retry = 0; retry < 3 && !casSuccess; retry++) {
-              const currentRows = await db
-                .select()
-                .from(schema.users)
-                .where(eq(schema.users.id, user.id))
-                .limit(1);
-
-              const currentUser = currentRows[0];
-              if (!currentUser) {
-                // Record deleted concurrently
-                casSuccess = true;
-                break;
+              if (!casSuccess) {
+                cpManager.recordFailureAndHalt(user.id, "CAS_CONFLICT_EXHAUSTED");
               }
 
-              // Recompute updates from fresh current row
-              const freshUpdates: Partial<typeof schema.users.$inferInsert> = {};
-              let freshNeedsUpdate = false;
-
-              // 1. Blind index HMAC
-              if (!currentUser.emailHmac && currentUser.email) {
-                freshUpdates.emailHmac = hashEmailBlindIndex(currentUser.email);
-                freshNeedsUpdate = true;
-              }
-
-              // 2. Encrypt email using Envelope v2 with AAD
-              if (!currentUser.emailEnc && currentUser.email) {
-                freshUpdates.emailEnc = encryptEnvelopeV2(
-                  currentUser.email.trim().toLowerCase(),
-                  { table: "users", primaryKey: currentUser.id, column: "email_enc" },
-                  targetKeyId
-                );
-                freshNeedsUpdate = true;
-              }
-
-              // 3. Encrypt legacy Base32 twoFactorSecret using Envelope v2 with AAD
-              if (currentUser.twoFactorSecret && !currentUser.twoFactorSecret.includes(":")) {
-                freshUpdates.twoFactorSecret = encryptEnvelopeV2(
-                  currentUser.twoFactorSecret,
-                  { table: "users", primaryKey: currentUser.id, column: "two_factor_secret" },
-                  targetKeyId
-                );
-                freshNeedsUpdate = true;
-              }
-
-              if (!freshNeedsUpdate) {
-                casSuccess = true;
-                totalSkipped++;
-                break;
-              }
-
-              const whereConditions = [
-                eq(schema.users.id, currentUser.id),
-                currentUser.email !== null && currentUser.email !== undefined
-                  ? eq(schema.users.email, currentUser.email)
-                  : isNull(schema.users.email),
-                currentUser.emailEnc !== null && currentUser.emailEnc !== undefined
-                  ? eq(schema.users.emailEnc, currentUser.emailEnc)
-                  : isNull(schema.users.emailEnc),
-                currentUser.emailHmac !== null && currentUser.emailHmac !== undefined
-                  ? eq(schema.users.emailHmac, currentUser.emailHmac)
-                  : isNull(schema.users.emailHmac),
-                currentUser.twoFactorSecret !== null && currentUser.twoFactorSecret !== undefined
-                  ? eq(schema.users.twoFactorSecret, currentUser.twoFactorSecret)
-                  : isNull(schema.users.twoFactorSecret),
-              ];
-
-              const res = await db
-                .update(schema.users)
-                .set({
-                  ...freshUpdates,
-                  updatedAt: new Date(),
-                })
-                .where(and(...whereConditions))
-                .returning({ id: schema.users.id });
-
-              if (res.length > 0) {
-                casSuccess = true;
-                totalUpdated++;
-              }
+              cpManager.recordSuccess(user.id);
+            } catch (err) {
+              cpManager.recordFailureAndHalt(
+                user.id,
+                err instanceof Error ? err.message : String(err)
+              );
             }
-
-            if (!casSuccess) {
-              cpManager.recordFailureAndHalt(user.id, "CAS_CONFLICT_EXHAUSTED");
-            }
-
-            cpManager.recordSuccess(user.id);
-          } catch (err) {
-            cpManager.recordFailureAndHalt(
-              user.id,
-              err instanceof Error ? err.message : String(err)
-            );
           }
+          await processUserItem(userIndex + 1);
         }
+
+        await processUserItem(0);
+        await processUsersBatches();
       }
 
+      await processUsersBatches();
       cpManager.transitionPhase("VERIFY");
     }
 
     // Phase 2: VERIFY
     if (cpManager.data.phase === "VERIFY") {
       console.info("[PII-Backfill] Phase 2: Full verification of backfilled records...");
-      let verifyLastId: string | null = null;
 
-      while (true) {
+      async function verifyBatches(lastId: string | null): Promise<void> {
         const verifyConditions: SQL[] = [
-          verifyLastId ? gt(schema.users.id, verifyLastId) : undefined,
+          lastId ? gt(schema.users.id, lastId) : undefined,
           isNotNull(schema.users.email),
         ].filter((c): c is SQL => Boolean(c));
 
@@ -212,18 +224,22 @@ export async function runBackfill(options?: BackfillOptions) {
           .orderBy(asc(schema.users.id))
           .limit(BATCH_SIZE);
 
-        if (usersToVerify.length === 0) break;
+        if (usersToVerify.length === 0) return;
 
+        let currentLastId = lastId;
         for (const u of usersToVerify) {
-          if (!u.emailEnc) {
+          const emailEnc = u.emailEnc;
+          if (!emailEnc) {
             cpManager.recordFailureAndHalt(u.id, "VERIFY_MISSING_EMAIL_ENC");
+            continue;
           }
           if (!u.emailHmac) {
             cpManager.recordFailureAndHalt(u.id, "VERIFY_MISSING_EMAIL_HMAC");
+            continue;
           }
 
           try {
-            const decEmail = decryptEnvelopeV2(u.emailEnc!, {
+            const decEmail = decryptEnvelopeV2(emailEnc, {
               table: "users",
               primaryKey: u.id,
               column: "email_enc",
@@ -252,10 +268,13 @@ export async function runBackfill(options?: BackfillOptions) {
             }
           }
 
-          verifyLastId = u.id;
+          currentLastId = u.id;
         }
+
+        await verifyBatches(currentLastId);
       }
 
+      await verifyBatches(null);
       cpManager.transitionPhase("DONE");
     }
 

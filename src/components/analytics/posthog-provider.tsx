@@ -77,7 +77,7 @@ export function OperisPostHogProvider({ children, userId }: OperisPostHogProvide
     return () => {
       window.removeEventListener("operis-cookie-consent-updated", handleConsentUpdate);
     };
-  }, [apiKey, apiHost]);
+  }, [apiKey, apiHost, userId]);
 
   if (!apiKey) {
     return <>{children}</>;

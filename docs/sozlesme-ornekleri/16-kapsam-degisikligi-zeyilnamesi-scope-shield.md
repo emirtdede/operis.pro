@@ -1,6 +1,6 @@
 # SÖZLEŞME ZEYİLNAMESİ VE KAPSAM DEĞİŞİKLİK PROTOKOLÜ (TBK m. 480/2)
 > **Zeyilname Ref:** `OPR-ADDENDUM-ENG2026B-01`  
-> **Kriptografik SHA-256 İmzası:** `175d14cc40a8dea15110416f8722754b54fb4f79d6d333d9d6905c6feb768670`  
+> **Kriptografik SHA-256 İmzası:** `a46c854bfa1cf1ff07524bf9cc4b8e212b1d3e6f3683ea2b7da61226d1c43430`  
 > **Hukuki Dayanak:** 6098 sayılı TBK m. 470 ve m. 480/2 (Öngörülemeyen Haller ve Kapsam Aşımı Kalkanı)
 
 ---
@@ -9,7 +9,7 @@
 **Zeyilname Referans Kodu:** `OPR-ADDENDUM-ENG2026B-01`  
 **Dayanak Ana Sözleşme:** `OPR-CONTR-ENG2026B`  
 **Ana Sözleşme Parmak İzi (SHA-256):** `fa3c5d73209434c1682c3e32d8a11df1b838523f032086357cbbd126d34989ae`  
-**Tanzim ve Onay Zamanı:** 20 Eylül 2026 05:56  
+**Tanzim ve Onay Zamanı:** 21 Eylül 2026 04:58  
 **Hukuki Dayanak:** 6098 sayılı Türk Borçlar Kanunu (TBK m. 470 vd. ve m. 480/2)
 
 ---

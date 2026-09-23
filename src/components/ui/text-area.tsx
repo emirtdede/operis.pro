@@ -42,36 +42,40 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
       onChange?.(e);
     };
 
+    const hasHeader = Boolean(label || (showCount && maxLength));
+
     return (
       <div className="w-full flex flex-col gap-1.5">
-        <div className="min-h-[22px] flex items-center justify-between gap-2">
-          {label && (
-            <label
-              htmlFor={inputId}
-              className="text-xs font-medium text-[var(--color-text-secondary)] select-none flex items-center gap-1.5"
-            >
-              <span>{label}</span>
-              {props.required && (
-                <span className="text-red-400/80 text-[11px] font-normal" aria-hidden="true">
-                  *
-                </span>
-              )}
-            </label>
-          )}
-          {showCount && maxLength && (
-            <span
-              className={clsx(
-                "text-[10px] font-mono px-2 py-0.5 rounded-md select-none",
-                charCount >= maxLength
-                  ? "bg-red-500/10 text-red-400 border border-red-500/20"
-                  : "bg-white/[0.04] text-slate-400/80 border border-white/[0.08]"
-              )}
-              aria-live="polite"
-            >
-              {charCount} / {maxLength}
-            </span>
-          )}
-        </div>
+        {hasHeader && (
+          <div className="min-h-[22px] flex items-center justify-between gap-2">
+            {label && (
+              <label
+                htmlFor={inputId}
+                className="text-xs font-medium text-[var(--color-text-secondary)] select-none flex items-center gap-1.5"
+              >
+                <span>{label}</span>
+                {props.required && (
+                  <span className="text-red-400/80 text-[11px] font-normal" aria-hidden="true">
+                    *
+                  </span>
+                )}
+              </label>
+            )}
+            {showCount && maxLength && (
+              <span
+                className={clsx(
+                  "text-[10px] font-mono px-2 py-0.5 rounded-md select-none",
+                  charCount >= maxLength
+                    ? "bg-red-500/10 text-red-400 border border-red-500/20"
+                    : "bg-white/[0.04] text-slate-400/80 border border-white/[0.08]"
+                )}
+                aria-live="polite"
+              >
+                {charCount} / {maxLength}
+              </span>
+            )}
+          </div>
+        )}
         <textarea
           ref={ref}
           id={inputId}

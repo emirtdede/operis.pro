@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import * as Sentry from "@sentry/nextjs";
+import "@/src/styles/tokens.css";
 
 function getCopyButtonLabel(copied: boolean, isTr: boolean): string {
   if (copied) {
@@ -47,49 +48,13 @@ export default function GlobalError({
 
   return (
     <html lang={isEn ? "en" : "tr"} dir="ltr">
-      <body
-        style={{
-          margin: 0,
-          padding: 0,
-          backgroundColor: "#07090e",
-          color: "#f1f5f9",
-          fontFamily:
-            "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+      <body className="m-0 p-0 bg-[#07090e] text-slate-100 font-sans min-h-screen flex items-center justify-center">
         <main
           role="alert"
-          style={{
-            maxWidth: "480px",
-            width: "90%",
-            margin: "40px auto",
-            padding: "32px 24px",
-            borderRadius: "20px",
-            background: "rgba(255, 255, 255, 0.03)",
-            border: "1px solid rgba(244, 63, 94, 0.2)",
-            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
-            textAlign: "center",
-          }}
+          className="max-w-[480px] w-[90%] my-10 mx-auto py-8 px-6 rounded-2xl bg-white/[0.03] border border-rose-500/20 shadow-2xl text-center"
         >
           {/* Warning Icon Badge */}
-          <div
-            style={{
-              width: "56px",
-              height: "56px",
-              margin: "0 auto 20px",
-              borderRadius: "16px",
-              background: "rgba(244, 63, 94, 0.1)",
-              border: "1px solid rgba(244, 63, 94, 0.3)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#fb7185",
-            }}
-          >
+          <div className="w-14 h-14 mx-auto mb-5 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400">
             <svg
               width="28"
               height="28"
@@ -107,78 +72,30 @@ export default function GlobalError({
             </svg>
           </div>
 
-          <div
-            style={{
-              display: "inline-block",
-              padding: "4px 12px",
-              borderRadius: "9999px",
-              fontSize: "11px",
-              fontWeight: "600",
-              letterSpacing: "0.05em",
-              textTransform: "uppercase",
-              background: "rgba(244, 63, 94, 0.1)",
-              color: "#fb7185",
-              border: "1px solid rgba(244, 63, 94, 0.2)",
-              marginBottom: "12px",
-            }}
-          >
+          <div className="inline-block px-3 py-1 rounded-full text-[11px] font-semibold tracking-wider uppercase bg-rose-500/10 text-rose-400 border border-rose-500/20 mb-3">
             CRITICAL ERROR &bull; 500
           </div>
 
-          <h1
-            style={{
-              fontSize: "22px",
-              fontWeight: "700",
-              margin: "0 0 8px",
-              color: "#ffffff",
-            }}
-          >
+          <h1 className="text-[22px] font-bold m-0 mb-2 text-white">
             {isTr ? "Uygulama Başlatılamadı" : "Application Failed to Initialize"}
           </h1>
 
-          <p
-            style={{
-              fontSize: "14px",
-              lineHeight: "1.6",
-              color: "#94a3b8",
-              margin: "0 0 24px",
-            }}
-          >
+          <p className="text-sm leading-relaxed text-slate-400 m-0 mb-6">
             {isTr
               ? "Kök katmanda beklenmeyen bir sorun algılandı. Lütfen sayfayı yenilemeyi veya ana sayfaya dönmeyi deneyin."
               : "An unexpected root-level error occurred. Please try reloading or returning to the home page."}
           </p>
 
           {/* Reference code */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "8px",
-              padding: "10px 16px",
-              borderRadius: "12px",
-              background: "rgba(255, 255, 255, 0.05)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
-              marginBottom: "24px",
-              fontFamily: "monospace",
-              fontSize: "12px",
-            }}
-          >
-            <span style={{ color: "#64748b" }}>{isTr ? "Referans:" : "Ref:"}</span>
-            <span style={{ color: "#f8fafc", fontWeight: "bold" }}>{referenceCode}</span>
+          <div className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-white/[0.05] border border-white/10 mb-6 font-mono text-xs">
+            <span className="text-slate-500">{isTr ? "Referans:" : "Ref:"}</span>
+            <span className="text-slate-50 font-bold">{referenceCode}</span>
             <button
               type="button"
               onClick={handleCopyCode}
-              style={{
-                background: "transparent",
-                border: "none",
-                color: copied ? "#34d399" : "#94a3b8",
-                cursor: "pointer",
-                padding: "2px 6px",
-                borderRadius: "4px",
-                fontSize: "11px",
-              }}
+              className={`bg-transparent border-0 cursor-pointer py-0.5 px-1.5 rounded text-[11px] transition-colors ${
+                copied ? "text-emerald-400" : "text-slate-400 hover:text-slate-200"
+              }`}
               title={isTr ? "Kopyala" : "Copy"}
             >
               {getCopyButtonLabel(copied, isTr)}
@@ -186,28 +103,11 @@ export default function GlobalError({
           </div>
 
           {/* Action buttons */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "12px",
-              flexWrap: "wrap",
-            }}
-          >
+          <div className="flex justify-center gap-3 flex-wrap">
             <button
               type="button"
               onClick={() => reset()}
-              style={{
-                padding: "10px 20px",
-                borderRadius: "10px",
-                background: "#2563eb",
-                color: "#ffffff",
-                border: "none",
-                fontWeight: "600",
-                fontSize: "14px",
-                cursor: "pointer",
-                transition: "opacity 0.2s",
-              }}
+              className="py-2.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm cursor-pointer transition-opacity border-0 active:scale-95"
             >
               {isTr ? "Uygulamayı Yenile" : "Reload Application"}
             </button>
@@ -218,16 +118,7 @@ export default function GlobalError({
                   window.location.href = homePath;
                 }
               }}
-              style={{
-                padding: "10px 20px",
-                borderRadius: "10px",
-                background: "rgba(255, 255, 255, 0.08)",
-                color: "#f8fafc",
-                border: "1px solid rgba(255, 255, 255, 0.15)",
-                fontWeight: "500",
-                fontSize: "14px",
-                cursor: "pointer",
-              }}
+              className="py-2.5 px-5 rounded-xl bg-white/[0.08] hover:bg-white/[0.12] text-slate-50 border border-white/15 font-medium text-sm cursor-pointer transition-all active:scale-95"
             >
               {isTr ? "Ana Sayfa" : "Home Page"}
             </button>

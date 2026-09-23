@@ -5,7 +5,8 @@ import { FeedService, FeedResult } from "@/src/modules/listings/feed/service";
 import { CategoryService } from "@/src/modules/categories/service";
 import { UnifiedListingsHub } from "@/src/components/listings/unified-listings-hub";
 import { getSession } from "@/src/modules/auth/session";
-import { serializeJsonLd } from "@/src/lib/security/json-ld";
+import { JsonLd } from "@/src/components/seo/json-ld";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -111,16 +112,17 @@ export default async function BrowseListingsPage({
     limit: 12,
   }).catch(() => ({ items: [], nextCursor: null, hasMore: false, hasFollowedCategories: true }));
 
+  const baseUrl = getBaseUrl();
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "CollectionPage",
-        name: isTr ? "Aktif İlanlar" : "Active Listings",
+        name: isTr ? "Teknoloji ve Yazılım İlanları" : "Technology & Software Listings",
         description: isTr
           ? "Tüm kategorilerdeki güncel teknoloji ve yazılım ilanları dizini."
           : "Directory of active software and technology listings.",
-        url: `https://operis.pro${listingsPath}`,
+        url: `${baseUrl}${listingsPath}`,
         inLanguage: locale,
         mainEntity: {
           "@type": "ItemList",
@@ -128,7 +130,7 @@ export default async function BrowseListingsPage({
           itemListElement: feedResult.items.map((item, idx) => ({
             "@type": "ListItem",
             position: idx + 1,
-            url: `https://operis.pro${isTr ? `/tr/ilanlar/${item.slug}` : `/en/listings/${item.slug}`}`,
+            url: `${baseUrl}${isTr ? `/tr/ilanlar/${item.slug}` : `/en/listings/${item.slug}`}`,
             name: item.title,
           })),
         },
@@ -140,13 +142,13 @@ export default async function BrowseListingsPage({
             "@type": "ListItem",
             position: 1,
             name: isTr ? "Ana Sayfa" : "Home",
-            item: `https://operis.pro/${locale}`,
+            item: `${baseUrl}/${locale}`,
           },
           {
             "@type": "ListItem",
             position: 2,
             name: isTr ? "İlanlar" : "Listings",
-            item: `https://operis.pro${listingsPath}`,
+            item: `${baseUrl}${listingsPath}`,
           },
         ],
       },
@@ -156,10 +158,7 @@ export default async function BrowseListingsPage({
   return (
     <main className="mx-auto max-w-[1360px] px-2 sm:px-4 lg:px-6 py-4 sm:py-6">
       {/* Schema.org Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
 
       <UnifiedListingsHub
         initialItems={feedResult.items}

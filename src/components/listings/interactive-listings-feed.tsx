@@ -164,7 +164,7 @@ export function InteractiveListingsFeed({
     return () => {
       controller.abort();
     };
-  }, [chipLast24h, chipFixedBudget, locale, mode, categorySlug, searchQuery, filterRetryKey]);
+  }, [chipLast24h, chipFixedBudget, locale, mode, categorySlug, searchQuery, filterRetryKey, initialHasMore, initialNextCursor, isTr, items]);
 
   const handleLoadMore = async () => {
     if (!nextCursor || isLoadingMore || isFilterLoading) return;

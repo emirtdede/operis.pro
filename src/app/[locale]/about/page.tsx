@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { getLocalizedRoute } from "@/src/lib/i18n/routes";
+import { JsonLd } from "@/src/components/seo/json-ld";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -261,8 +263,63 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
     },
   ];
 
+  const baseUrl = getBaseUrl();
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "AboutPage",
+        name: isTr ? "Hakkımızda & Kurumsal Manifesto" : "About Us & Corporate Manifesto",
+        headline: isTr
+          ? "Mühendisin Emeğine Ortak Olmayan Bağımsız Teknoloji Ağı"
+          : "Direct Engineering Discovery Without the Middleman Toll",
+        description: isTr
+          ? "Operis'in bağımsız yazılım mühendisleri ve yenilikçi teknoloji şirketleri için kurduğu %0 komisyonsuz, şeffaf, şifreli ve doğrudan çalışma manifestosu."
+          : "The Operis enterprise manifesto: empowering verified engineers and innovative enterprises through 0% commission, encrypted blind bidding, and direct collaboration.",
+        url: `${baseUrl}${getLocalizedRoute("about", locale)}`,
+        inLanguage: locale,
+        isPartOf: {
+          "@type": "WebSite",
+          name: "Operis",
+          url: baseUrl,
+        },
+        publisher: {
+          "@type": "Organization",
+          name: "Vellium",
+          url: "https://vellium.dev",
+          legalName: "Vellium",
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "İstanbul",
+            addressCountry: "TR",
+          },
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: isTr ? "Ana Sayfa" : "Home",
+            item: `${baseUrl}/${locale}`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: isTr ? "Hakkımızda" : "About Us",
+            item: `${baseUrl}${getLocalizedRoute("about", locale)}`,
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <main className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 space-y-24">
+      {/* Schema.org Structured Data */}
+      <JsonLd data={jsonLd} />
+
       {/* 1. Hero Corporate Manifesto Section */}
       <section className="relative text-center space-y-6 max-w-4xl mx-auto pt-6">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/25 text-xs font-semibold text-blue-400 shadow-sm backdrop-blur-md">
@@ -624,7 +681,59 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </div>
       </section>
 
-      {/* 8. High-Impact Closing Enterprise CTA */}
+      {/* 8. Corporate Governance & Entity Badge */}
+      <section className="rounded-3xl border border-blue-500/25 bg-gradient-to-r from-blue-500/5 via-[var(--color-surface-base)] to-[var(--color-surface-base)] p-8 sm:p-10 shadow-xl space-y-6">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-semibold text-blue-400">
+              <Building2 className="h-3.5 w-3.5" />
+              <span>{isTr ? "Kurumsal Çatı & Tüzel Kişilik" : "Corporate Governance & Entity"}</span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-text-primary)]">
+              {isTr
+                ? "Operis bir Vellium Teknolojileri ve İnovasyon Ürünüdür"
+                : "Operis is Built & Operated by Vellium Technologies"}
+            </h2>
+            <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
+              {isTr
+                ? "Platform; Türkiye Cumhuriyeti kanunlarına tam uyumlu, İstanbul merkezli Vellium tüzel kişiliği güvencesi altında işletilmektedir. MERSİS no, vergi dairesi kaydı, KEP ve resmi şirket künyesi şeffaflık ilkemiz gereği tüm kullanıcılara açıktır."
+                : "The platform operates under the corporate stewardship of Vellium, headquartered in Istanbul, Turkey. Corporate registry, MERSİS, KEP, and official disclosures are fully accessible under our radical transparency commitment."}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <Link href={getLocalizedRoute("contact", locale)}>
+              <Button variant="outline" size="md" className="gap-2 text-xs cursor-pointer">
+                <Building2 className="h-4 w-4 text-blue-400" />
+                <span>{isTr ? "Resmi Şirket Künyesi" : "Corporate Registry"}</span>
+              </Button>
+            </Link>
+            <Link href={getLocalizedRoute("legalCenter", locale)}>
+              <Button variant="outline" size="md" className="gap-2 text-xs cursor-pointer">
+                <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                <span>{isTr ? "Yasal & Güven Merkezi" : "Legal & Trust Center"}</span>
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-2 border-t border-[var(--color-border-subtle)] text-xs text-[var(--color-text-tertiary)]">
+          <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)]">
+            <CheckCircle2 className="h-4 w-4 text-blue-400 shrink-0" />
+            <span>{isTr ? "Genel Merkez: İstanbul, Türkiye" : "Headquarters: Istanbul, Turkey"}</span>
+          </div>
+          <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)]">
+            <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+            <span>{isTr ? "Resmi Tebligat: KEP & UETS Kayıtlı" : "Statutory KEP & Electronic Notice"}</span>
+          </div>
+          <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)]">
+            <CheckCircle2 className="h-4 w-4 text-purple-400 shrink-0" />
+            <span>{isTr ? "5651 Sayılı Yer Sağlayıcı Güvencesi" : "Statutory Intermediary Hosting"}</span>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. High-Impact Closing Enterprise CTA */}
       <section className="relative rounded-3xl border border-blue-500/30 bg-gradient-to-b from-blue-500/10 via-[var(--color-surface-base)] to-[var(--color-surface-base)] p-8 sm:p-14 text-center space-y-6 shadow-2xl overflow-hidden">
         <div
           className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-blue-500/20 blur-3xl"

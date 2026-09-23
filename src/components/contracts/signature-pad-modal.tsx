@@ -66,6 +66,17 @@ export function SignaturePadModal({
     }
   }, [isOpen, activeTab, initCanvas]);
 
+  const getCoordinates = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ): { clientX: number; clientY: number } | null => {
+    if ("touches" in e) {
+      const touch = e.touches[0] ?? e.changedTouches?.[0];
+      if (!touch) return null;
+      return { clientX: touch.clientX, clientY: touch.clientY };
+    }
+    return { clientX: e.clientX, clientY: e.clientY };
+  };
+
   // Drawing handlers
   const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
@@ -73,10 +84,12 @@ export function SignaturePadModal({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const coords = getCoordinates(e);
+    if (!coords) return;
+
     isDrawingRef.current = true;
     const rect = canvas.getBoundingClientRect();
-    const clientX = "touches" in e ? e.touches[0]!.clientX : e.clientX;
-    const clientY = "touches" in e ? e.touches[0]!.clientY : e.clientY;
+    const { clientX, clientY } = coords;
 
     ctx.beginPath();
     ctx.moveTo(clientX - rect.left, clientY - rect.top);
@@ -90,9 +103,11 @@ export function SignaturePadModal({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const coords = getCoordinates(e);
+    if (!coords) return;
+
     const rect = canvas.getBoundingClientRect();
-    const clientX = "touches" in e ? e.touches[0]!.clientX : e.clientX;
-    const clientY = "touches" in e ? e.touches[0]!.clientY : e.clientY;
+    const { clientX, clientY } = coords;
 
     ctx.lineTo(clientX - rect.left, clientY - rect.top);
     ctx.stroke();
@@ -148,7 +163,7 @@ export function SignaturePadModal({
       return;
     }
 
-    let finalDataUrl = "";
+    let finalDataUrl: string;
     if (activeTab === "DRAW") {
       const canvas = canvasRef.current;
       if (!canvas || !hasDrawn) {

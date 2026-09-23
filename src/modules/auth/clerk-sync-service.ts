@@ -44,10 +44,11 @@ export class ClerkSyncService {
     }
     clean = clean.slice(0, 20);
 
-    let candidate = clean;
-    let attempt = 0;
+    const findHandle = async (candidate: string, attempt: number): Promise<string> => {
+      if (attempt >= 10) {
+        return `user_${crypto.randomBytes(4).toString("hex")}`;
+      }
 
-    while (attempt < 10) {
       const [existing] = await db
         .select({ handle: schema.profiles.handle })
         .from(schema.profiles)
@@ -58,12 +59,12 @@ export class ClerkSyncService {
         return candidate;
       }
 
-      attempt++;
       const suffix = crypto.randomInt(100, 999).toString();
-      candidate = `${clean.slice(0, 16)}_${suffix}`;
-    }
+      const nextCandidate = `${clean.slice(0, 16)}_${suffix}`;
+      return findHandle(nextCandidate, attempt + 1);
+    };
 
-    return `user_${crypto.randomBytes(4).toString("hex")}`;
+    return findHandle(clean, 0);
   }
 
   /**
@@ -133,6 +134,7 @@ export class ClerkSyncService {
     const legalDocKeys = ["terms", "privacy", "matching-disclaimer"];
     const now = new Date();
 
+    const legalRecords = [];
     for (const docKey of legalDocKeys) {
       let version = "v1";
       let contentHash: string;
@@ -144,13 +146,17 @@ export class ClerkSyncService {
         contentHash = sha256(`legal-${docKey}-v1`);
       }
 
-      await db.insert(schema.legalAcceptances).values({
+      legalRecords.push({
         userId,
         documentKey: docKey,
         documentVersion: version,
         contentHash,
         acceptedAt: now,
       });
+    }
+
+    if (legalRecords.length > 0) {
+      await db.insert(schema.legalAcceptances).values(legalRecords);
     }
   }
 

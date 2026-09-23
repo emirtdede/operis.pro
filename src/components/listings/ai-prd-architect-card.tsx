@@ -156,11 +156,11 @@ export function AiPrdArchitectCard({
             <div className="flex items-center gap-2">
               <h3 className="text-sm sm:text-base font-bold text-[var(--color-text-primary)]">
                 {isTr
-                  ? "🤖 Operis AI: Akıllı PRD & Kapsam Mimarı"
-                  : "🤖 Operis AI: Smart PRD & Scope Architect"}
+                  ? "Operis AI: Akıllı PRD & Kapsam Mimarı"
+                  : "Operis AI: Smart PRD & Scope Architect"}
               </h3>
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-semibold border border-indigo-500/30">
-                Uma Job Spec Engine
+                {isTr ? "Yapay Zeka Destekli" : "AI Powered"}
               </span>
             </div>
             <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
@@ -567,8 +567,8 @@ export function AiPrdArchitectCard({
           <div className="pt-2 border-t border-[var(--color-border-subtle)] flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="text-[11px] text-[var(--color-text-tertiary)] text-center sm:text-left">
               {isTr
-                ? "💡 PRD'yi ilana aktardığınızda şartname metniniz doğrudan teknik kapsam alanına yerleşir."
-                : "💡 Transferring to listing injects this structured PRD straight into your scope field."}
+                ? "PRD'yi ilana aktardığınızda şartname metniniz doğrudan teknik kapsam alanına yerleşir."
+                : "Transferring to listing injects this structured PRD straight into your scope field."}
             </div>
 
             <div className="flex items-center gap-2 w-full sm:w-auto">

@@ -1,6 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
 import {
-  ShieldCheck,
   Coins,
   TrendingUp,
   Loader2,
@@ -100,19 +99,6 @@ export function StepBudgetReview({
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h2 className="text-xl font-bold text-[var(--color-text-primary)] flex items-center gap-2">
-          <ShieldCheck className="h-5 w-5 text-emerald-400" />
-          <span>
-            {isTr ? "3. Bütçe, Süreç ve Yasal Beyanlar" : "3. Budget, Timeline & Terms"}
-          </span>
-        </h2>
-        <p className="text-xs sm:text-sm text-[var(--color-text-secondary)]">
-          {isTr
-            ? "Bütçe ve zaman planınızı belirleyin, platform kurallarını onaylayarak ilanınızı yayımlayın."
-            : "Specify budget, estimated delivery, and confirm platform terms."}
-        </p>
-      </div>
 
       {/* Budget & Timeline Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -172,7 +172,7 @@ export class RunbookService {
     const db = getDb();
 
     // 1. Check engagement participation
-    const [engagement] = await (db as any)
+    const [engagement] = await db
       .select()
       .from(schema.engagements)
       .where(eq(schema.engagements.id, engagementId))
@@ -190,7 +190,7 @@ export class RunbookService {
     }
 
     // 2. Fetch existing runbook
-    const [existing] = await (db as any)
+    const [existing] = await db
       .select()
       .from(schema.engagementRunbooks)
       .where(eq(schema.engagementRunbooks.engagementId, engagementId))
@@ -201,7 +201,7 @@ export class RunbookService {
         id: existing.id,
         engagementId: existing.engagementId,
         createdById: existing.createdById,
-        status: existing.status,
+        status: existing.status as "PUBLISHED" | "VERIFIED" | "DRAFT",
         version: existing.version,
         architectureSummary: existing.architectureSummary,
         environmentVariables: existing.environmentVariables || [],
@@ -231,21 +231,20 @@ export class RunbookService {
     }
 
     // 3. If none exists, auto-synthesize from listing intent
-    const [listing] = await (db as any)
+    const [listing] = await db
       .select()
       .from(schema.listings)
       .where(eq(schema.listings.id, engagement.listingId))
       .limit(1);
 
     const synthesized = RunbookSynthesizer.synthesizeDefaultRunbook({
-      sectorKey: listing?.sectorKey,
-      categoryKey: listing?.categoryKey,
+      categoryKey: listing?.categoryId,
       title: listing?.title || engagement.listingTitleSnapshot,
       scope: listing?.scope,
       tags: listing?.tags,
     });
 
-    const [inserted] = await (db as any)
+    const [inserted] = await db
       .insert(schema.engagementRunbooks)
       .values({
         engagementId,
@@ -261,11 +260,15 @@ export class RunbookService {
       })
       .returning();
 
+    if (!inserted) {
+      throw new Error("Failed to initialize runbook");
+    }
+
     const newDto: RunbookDto = {
       id: inserted.id,
       engagementId: inserted.engagementId,
       createdById: inserted.createdById,
-      status: inserted.status,
+      status: inserted.status as "PUBLISHED" | "VERIFIED" | "DRAFT",
       version: inserted.version,
       architectureSummary: inserted.architectureSummary,
       environmentVariables: inserted.environmentVariables || [],
@@ -343,7 +346,7 @@ export class RunbookService {
     }
 
     if (isMock) {
-      let existing = inMemoryRunbooks.get(engagementId);
+      const existing = inMemoryRunbooks.get(engagementId);
       const updated: RunbookDto = {
         id: existing?.id || `rb-mock-${engagementId}`,
         engagementId,
@@ -379,13 +382,13 @@ export class RunbookService {
     }
 
     const db = getDb();
-    const [existing] = await (db as any)
+    const [existing] = await db
       .select()
       .from(schema.engagementRunbooks)
       .where(eq(schema.engagementRunbooks.engagementId, engagementId))
       .limit(1);
 
-    const updateData: Record<string, any> = {
+    const updateData: Partial<typeof schema.engagementRunbooks.$inferInsert> = {
       architectureSummary: input.architectureSummary,
       environmentVariables: input.environmentVariables,
       buildAndRunSteps: input.buildAndRunSteps,
@@ -402,23 +405,25 @@ export class RunbookService {
       updateData.publishedAt = new Date();
     }
 
-    let returned: any;
+    let returned: typeof schema.engagementRunbooks.$inferSelect;
     if (existing) {
       updateData.version = (existing.version || 1) + 1;
-      const [up] = await (db as any)
+      const [up] = await db
         .update(schema.engagementRunbooks)
         .set(updateData)
         .where(eq(schema.engagementRunbooks.id, existing.id))
         .returning();
+      if (!up) throw new Error("Runbook update failed");
       returned = up;
     } else {
       updateData.engagementId = engagementId;
       updateData.createdById = userId;
       updateData.version = 1;
-      const [ins] = await (db as any)
+      const [ins] = await db
         .insert(schema.engagementRunbooks)
-        .values(updateData)
+        .values(updateData as typeof schema.engagementRunbooks.$inferInsert)
         .returning();
+      if (!ins) throw new Error("Runbook creation failed");
       returned = ins;
     }
 
@@ -426,7 +431,7 @@ export class RunbookService {
       id: returned.id,
       engagementId: returned.engagementId,
       createdById: returned.createdById,
-      status: returned.status,
+      status: returned.status as "PUBLISHED" | "VERIFIED" | "DRAFT",
       version: returned.version,
       architectureSummary: returned.architectureSummary,
       environmentVariables: returned.environmentVariables || [],

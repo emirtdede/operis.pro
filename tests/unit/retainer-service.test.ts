@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { NextRequest } from "next/server";
 import {
   RetainerService,
   inMemoryRetainers,
@@ -193,8 +194,8 @@ describe("🔄 Smart Retainer & Recurring Maintenance Agreement Suite (TBK m. 50
   });
 
   describe("5. REST API Route Handlers", () => {
-    it("should validate and reject invalid monthly price in /api/work/[id]/retainer", async () => {
-      const req = new Request("http://localhost:3000/api/work/eng-test-api/retainer", {
+    it("should validate and reject non-positive monthlyPrice", async () => {
+      const req = new NextRequest("http://localhost:3000/api/work/eng-test-api/retainer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -204,7 +205,7 @@ describe("🔄 Smart Retainer & Recurring Maintenance Agreement Suite (TBK m. 50
         }),
       });
 
-      const res = await retainerPostHandler(req as any, {
+      const res = await retainerPostHandler(req, {
         params: Promise.resolve({ id: "eng-test-api" }),
       });
       expect(res.status).toBe(400);
@@ -216,7 +217,7 @@ describe("🔄 Smart Retainer & Recurring Maintenance Agreement Suite (TBK m. 50
       const engagementId = "eng-test-api-2";
 
       // Propose via POST
-      const postReq = new Request(`http://localhost:3000/api/work/${engagementId}/retainer`, {
+      const postReq = new NextRequest(`http://localhost:3000/api/work/${engagementId}/retainer`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -228,14 +229,14 @@ describe("🔄 Smart Retainer & Recurring Maintenance Agreement Suite (TBK m. 50
           scopeDescription: "Post-release bugfixing and database indexing",
         }),
       });
-      const postRes = await retainerPostHandler(postReq as any, {
+      const postRes = await retainerPostHandler(postReq, {
         params: Promise.resolve({ id: engagementId }),
       });
       expect(postRes.status).toBe(200);
 
       // Fetch via GET
-      const getReq = new Request(`http://localhost:3000/api/work/${engagementId}/retainer`);
-      const getRes = await retainerGetHandler(getReq as any, {
+      const getReq = new NextRequest(`http://localhost:3000/api/work/${engagementId}/retainer`);
+      const getRes = await retainerGetHandler(getReq, {
         params: Promise.resolve({ id: engagementId }),
       });
       expect(getRes.status).toBe(200);
@@ -246,7 +247,7 @@ describe("🔄 Smart Retainer & Recurring Maintenance Agreement Suite (TBK m. 50
     });
 
     it("should validate hours and reject empty task descriptions in /api/work/[id]/retainer/log", async () => {
-      const req = new Request("http://localhost:3000/api/work/eng-test-api-2/retainer/log", {
+      const req = new NextRequest("http://localhost:3000/api/work/eng-test-api-2/retainer/log", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -256,7 +257,7 @@ describe("🔄 Smart Retainer & Recurring Maintenance Agreement Suite (TBK m. 50
         }),
       });
 
-      const res = await logHoursPostHandler(req as any, {
+      const res = await logHoursPostHandler(req, {
         params: Promise.resolve({ id: "eng-test-api-2" }),
       });
       expect(res.status).toBe(400);

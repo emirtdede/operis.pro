@@ -619,8 +619,8 @@ ${protocol.platformIntegrityEn}
     const deedId = `OPR-LIQUIDATION-${safeRef}-${Date.now().toString(36).toUpperCase()}`;
     const issuedAt = new Date().toISOString();
 
-    let groundDescriptionTr = "";
-    let groundDescriptionEn = "";
+    let groundDescriptionTr: string;
+    let groundDescriptionEn: string;
 
     switch (input.ground) {
       case "CLIENT_TERMINATION_TBK484":

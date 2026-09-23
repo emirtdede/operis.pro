@@ -222,11 +222,10 @@ export class OfferLifecycleService {
 
           const offerRows = await oQuery.limit(1);
 
-          if (offerRows.length === 0) {
+          const offer = offerRows[0];
+          if (!offer) {
             throw new Error("Offer not found");
           }
-
-          const offer = offerRows[0]!;
 
           if (offer.offerorUserId !== offerorUserId) {
             throw new Error("Unauthorized to withdraw this offer");

@@ -23,12 +23,13 @@ export async function* readCategoryFollowsData(
   const { txDb, userId, options, signal } = ctx;
 
   yield `  "categoryFollows": [\n`;
-  let lastCategoryCreatedAtText: string | null = null;
-  let lastCategoryId: string | null = null;
   let firstCategory = true;
   let catPageCount = 0;
 
-  while (true) {
+  async function* streamCategoryPages(
+    lastCategoryCreatedAtText: string | null,
+    lastCategoryId: string | null
+  ): AsyncGenerator<string, void, unknown> {
     if (signal?.aborted) {
       throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
     }
@@ -52,7 +53,7 @@ export async function* readCategoryFollowsData(
       .orderBy(desc(schema.categoryFollows.createdAt), desc(schema.categoryFollows.categoryId))
       .limit(PAGE_SIZE);
 
-    if (categoryPage.length === 0) break;
+    if (categoryPage.length === 0) return;
     if (options?.onProgress) {
       await options.onProgress({
         section: "categoryFollows",
@@ -70,10 +71,15 @@ export async function* readCategoryFollowsData(
       firstCategory = false;
     }
 
-    const last = categoryPage[categoryPage.length - 1]!;
-    lastCategoryCreatedAtText = last.createdAtText;
-    lastCategoryId = last.categoryId;
+    if (categoryPage.length < PAGE_SIZE) return;
+
+    const last = categoryPage[categoryPage.length - 1];
+    if (last) {
+      yield* streamCategoryPages(last.createdAtText, last.categoryId);
+    }
   }
+
+  yield* streamCategoryPages(null, null);
   yield `\n  ],\n`;
 
   if (options?.onSection) await options.onSection("categoryFollows");
@@ -91,12 +97,13 @@ export async function* readOfferTemplatesData(
   const { txDb, userId, options, signal } = ctx;
 
   yield `  "offerTemplates": [\n`;
-  let lastTemplateCreatedAtText: string | null = null;
-  let lastTemplateId: string | null = null;
   let firstTemplate = true;
   let tmplPageCount = 0;
 
-  while (true) {
+  async function* streamTemplatePages(
+    lastTemplateCreatedAtText: string | null,
+    lastTemplateId: string | null
+  ): AsyncGenerator<string, void, unknown> {
     if (signal?.aborted) {
       throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
     }
@@ -119,7 +126,7 @@ export async function* readOfferTemplatesData(
       .orderBy(desc(schema.offerTemplates.createdAt), desc(schema.offerTemplates.id))
       .limit(PAGE_SIZE);
 
-    if (templatePage.length === 0) break;
+    if (templatePage.length === 0) return;
     if (options?.onProgress) {
       await options.onProgress({
         section: "offerTemplates",
@@ -146,10 +153,15 @@ export async function* readOfferTemplatesData(
       firstTemplate = false;
     }
 
-    const last = templatePage[templatePage.length - 1]!;
-    lastTemplateCreatedAtText = last.createdAtText;
-    lastTemplateId = last.id;
+    if (templatePage.length < PAGE_SIZE) return;
+
+    const last = templatePage[templatePage.length - 1];
+    if (last) {
+      yield* streamTemplatePages(last.createdAtText, last.id);
+    }
   }
+
+  yield* streamTemplatePages(null, null);
   yield `\n  ],\n`;
 
   if (options?.onSection) await options.onSection("offerTemplates");
@@ -167,12 +179,63 @@ export async function* readNotificationsData(
   const { txDb, userId, options, signal, getRemainingMs } = ctx;
 
   yield `  "notifications": [\n`;
-  let lastNotifCreatedAtText: string | null = null;
-  let lastNotifId: string | null = null;
   let firstNotif = true;
   let notifPageCount = 0;
 
-  while (true) {
+  type NotifMetaRow = {
+    id: string;
+    type: (typeof schema.notifications.$inferSelect)["type"];
+    readAt: Date | null;
+    createdAt: Date;
+    createdAtText: string;
+    byteLen: number;
+  };
+
+  async function* streamNotifGroups(
+    groups: NotifMetaRow[][],
+    idx: number
+  ): AsyncGenerator<string, void, unknown> {
+    if (idx >= groups.length) return;
+    const group = groups[idx];
+    if (!group) return;
+    if (signal?.aborted) {
+      throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
+    }
+    if (getRemainingMs() <= 0) {
+      throw new ExportError("EXPORT_TIMEOUT", "Deadline exceeded", 504, false);
+    }
+
+    const groupIds = group.map((g) => g.id);
+    const payloadRows = await txDb
+      .select({
+        id: schema.notifications.id,
+        payloadJson: schema.notifications.payloadJson,
+      })
+      .from(schema.notifications)
+      .where(inArray(schema.notifications.id, groupIds));
+
+    const payloadMap = new Map(payloadRows.map((p) => [p.id, p.payloadJson]));
+
+    for (const n of group) {
+      const payloadJson = payloadMap.get(n.id);
+      const itemStr = serializeExportRecord({
+        id: n.id,
+        type: n.type,
+        payloadJson,
+        readAt: n.readAt ? n.readAt.toISOString() : null,
+        createdAt: n.createdAt.toISOString(),
+      });
+      yield `${firstNotif ? "    " : ",\n    "}${itemStr}`;
+      firstNotif = false;
+    }
+
+    yield* streamNotifGroups(groups, idx + 1);
+  }
+
+  async function* streamNotificationPages(
+    lastNotifCreatedAtText: string | null,
+    lastNotifId: string | null
+  ): AsyncGenerator<string, void, unknown> {
     if (signal?.aborted) {
       throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
     }
@@ -186,7 +249,7 @@ export async function* readNotificationsData(
         : eq(schema.notifications.userId, userId);
 
     // Phase 1: Pre-fetch metadata, keyset, and payload byte length WITHOUT fetching large JSON
-    const metaRows = await txDb
+    const metaRows: NotifMetaRow[] = await txDb
       .select({
         id: schema.notifications.id,
         type: schema.notifications.type,
@@ -200,7 +263,7 @@ export async function* readNotificationsData(
       .orderBy(desc(schema.notifications.createdAt), desc(schema.notifications.id))
       .limit(PAGE_SIZE);
 
-    if (metaRows.length === 0) break;
+    if (metaRows.length === 0) return;
 
     // Validate single record size with metadata padding BEFORE fetching any payload into memory
     for (const r of metaRows) {
@@ -223,8 +286,8 @@ export async function* readNotificationsData(
     }
 
     // Phase 2: Group into batches of at most 16 MiB payload to bound resident memory
-    const groups: (typeof metaRows)[] = [];
-    let currentGroup: typeof metaRows = [];
+    const groups: NotifMetaRow[][] = [];
+    let currentGroup: NotifMetaRow[] = [];
     let currentGroupBytes = 0;
 
     for (const row of metaRows) {
@@ -241,43 +304,17 @@ export async function* readNotificationsData(
       groups.push(currentGroup);
     }
 
-    for (const group of groups) {
-      if (signal?.aborted) {
-        throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
-      }
-      if (getRemainingMs() <= 0) {
-        throw new ExportError("EXPORT_TIMEOUT", "Deadline exceeded", 504, false);
-      }
+    yield* streamNotifGroups(groups, 0);
 
-      const groupIds = group.map((g) => g.id);
-      const payloadRows = await txDb
-        .select({
-          id: schema.notifications.id,
-          payloadJson: schema.notifications.payloadJson,
-        })
-        .from(schema.notifications)
-        .where(inArray(schema.notifications.id, groupIds));
+    if (metaRows.length < PAGE_SIZE) return;
 
-      const payloadMap = new Map(payloadRows.map((p) => [p.id, p.payloadJson]));
-
-      for (const n of group) {
-        const payloadJson = payloadMap.get(n.id);
-        const itemStr = serializeExportRecord({
-          id: n.id,
-          type: n.type,
-          payloadJson,
-          readAt: n.readAt ? n.readAt.toISOString() : null,
-          createdAt: n.createdAt.toISOString(),
-        });
-        yield `${firstNotif ? "    " : ",\n    "}${itemStr}`;
-        firstNotif = false;
-      }
+    const last = metaRows[metaRows.length - 1];
+    if (last) {
+      yield* streamNotificationPages(last.createdAtText, last.id);
     }
-
-    const last = metaRows[metaRows.length - 1]!;
-    lastNotifCreatedAtText = last.createdAtText;
-    lastNotifId = last.id;
   }
+
+  yield* streamNotificationPages(null, null);
   yield `\n  ],\n`;
 
   if (options?.onSection) await options.onSection("notifications");
@@ -295,12 +332,13 @@ export async function* readLegalAcceptancesData(
   const { txDb, userId, options, signal } = ctx;
 
   yield `  "legalAcceptances": [\n`;
-  let lastLegalAcceptedAtText: string | null = null;
-  let lastLegalDocKey: string | null = null;
   let firstLegal = true;
   let legalPageCount = 0;
 
-  while (true) {
+  async function* streamLegalPages(
+    lastLegalAcceptedAtText: string | null,
+    lastLegalDocKey: string | null
+  ): AsyncGenerator<string, void, unknown> {
     if (signal?.aborted) {
       throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
     }
@@ -329,7 +367,7 @@ export async function* readLegalAcceptancesData(
       )
       .limit(PAGE_SIZE);
 
-    if (legalPage.length === 0) break;
+    if (legalPage.length === 0) return;
     if (options?.onProgress) {
       await options.onProgress({
         section: "legalAcceptances",
@@ -349,10 +387,15 @@ export async function* readLegalAcceptancesData(
       firstLegal = false;
     }
 
-    const last = legalPage[legalPage.length - 1]!;
-    lastLegalAcceptedAtText = last.acceptedAtText;
-    lastLegalDocKey = last.documentKey;
+    if (legalPage.length < PAGE_SIZE) return;
+
+    const last = legalPage[legalPage.length - 1];
+    if (last) {
+      yield* streamLegalPages(last.acceptedAtText, last.documentKey);
+    }
   }
+
+  yield* streamLegalPages(null, null);
   yield `\n  ],\n`;
 
   if (options?.onSection) await options.onSection("legalAcceptances");
@@ -370,12 +413,13 @@ export async function* readSecurityLogData(
   const { txDb, userId, options, signal } = ctx;
 
   yield `  "securityLog": [\n`;
-  let lastSecCreatedAtText: string | null = null;
-  let lastSecId: string | null = null;
   let firstSec = true;
   let secPageCount = 0;
 
-  while (true) {
+  async function* streamSecurityPages(
+    lastSecCreatedAtText: string | null,
+    lastSecId: string | null
+  ): AsyncGenerator<string, void, unknown> {
     if (signal?.aborted) {
       throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
     }
@@ -401,7 +445,7 @@ export async function* readSecurityLogData(
       .orderBy(desc(schema.securityEvents.createdAt), desc(schema.securityEvents.id))
       .limit(PAGE_SIZE);
 
-    if (secPage.length === 0) break;
+    if (secPage.length === 0) return;
     if (options?.onProgress) {
       await options.onProgress({
         section: "securityLog",
@@ -421,10 +465,15 @@ export async function* readSecurityLogData(
       firstSec = false;
     }
 
-    const last = secPage[secPage.length - 1]!;
-    lastSecCreatedAtText = last.createdAtText;
-    lastSecId = last.id;
+    if (secPage.length < PAGE_SIZE) return;
+
+    const last = secPage[secPage.length - 1];
+    if (last) {
+      yield* streamSecurityPages(last.createdAtText, last.id);
+    }
   }
+
+  yield* streamSecurityPages(null, null);
   yield `\n  ]\n`;
 
   if (options?.onSection) await options.onSection("securityLog");

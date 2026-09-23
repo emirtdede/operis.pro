@@ -1,7 +1,7 @@
 # UYUŞMAZLIK ÇÖZÜMÜ VE ARABULUCULUK İLKELERI
 > **Alt Başlık:** 6325 Sayılı Kanun ve Doğrudan Çözüm Kılavuzu  
 > **Sürüm:** v1.0 | **Son Güncelleme:** 17.09.2026 | **Rozet:** Arabuluculuk & Kesin Dava Muafiyeti  
-> **Kriptografik İçerik Özeti (SHA-256):** `6d7e8f90123456789abcdef0123456789abcdef0a1b2c3d4e5f60718293a4b5c`  
+> **Kriptografik İçerik Özeti (SHA-256):** `b63a4beba793c450ccda019976ce66bfe6cc887ed36b394e741526253b06ea45`  
 
 ---
 

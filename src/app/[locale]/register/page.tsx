@@ -5,7 +5,8 @@ import { RegisterForm } from "@/src/components/auth/register-form";
 import { AuthValueHero } from "@/src/components/onboarding/auth-value-hero";
 import { getSession } from "@/src/modules/auth/session";
 import { getLocalizedRoute } from "@/src/lib/i18n/routes";
-import { serializeJsonLd } from "@/src/lib/security/json-ld";
+import { JsonLd } from "@/src/components/seo/json-ld";
+import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -73,7 +74,8 @@ export default async function RegisterPage({
   }
 
   const isTr = locale === "tr";
-  const registerUrl = isTr ? "https://operis.pro/tr/kayit" : "https://operis.pro/en/register";
+  const baseUrl = getBaseUrl();
+  const registerUrl = `${baseUrl}${getLocalizedRoute("register", locale)}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -83,7 +85,7 @@ export default async function RegisterPage({
         "@type": "ListItem",
         position: 1,
         name: isTr ? "Ana Sayfa" : "Home",
-        item: `https://operis.pro/${locale}`,
+        item: `${baseUrl}/${locale}`,
       },
       {
         "@type": "ListItem",
@@ -97,10 +99,7 @@ export default async function RegisterPage({
   return (
     <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       {/* Schema.org Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Column: Value Proposition & Guarantees */}
         <div className="lg:col-span-5 sticky top-24">

@@ -38,14 +38,18 @@ export async function runE2EWorkflow(
     deps.report(error);
     result = 1;
   } finally {
-    for (const resource of resources.reverse()) {
+    const closeAll = async (list: E2EResource[]): Promise<void> => {
+      const resource = list.pop();
+      if (!resource) return;
       try {
         await resource.close();
       } catch (error) {
         deps.report(error);
         result = 1;
       }
-    }
+      await closeAll(list);
+    };
+    await closeAll([...resources]);
   }
   return signal.aborted ? 1 : result;
 }

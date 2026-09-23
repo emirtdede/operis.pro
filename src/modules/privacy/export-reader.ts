@@ -291,16 +291,26 @@ export async function extractUserDataSnapshot(
   snapshot: ExportDataSnapshot;
   snapshotStartedAt: Date;
 }> {
-  const chunks: string[] = [];
-  const generator = streamUserDataExport(userId, options);
+  const collectChunks = async (
+    gen: AsyncGenerator<string, { snapshotStartedAt: Date }, unknown>
+  ): Promise<{ chunks: string[]; snapshotStartedAt: Date }> => {
+    const next = async (
+      chunksAcc: string[]
+    ): Promise<{ chunks: string[]; snapshotStartedAt: Date }> => {
+      const res = await gen.next();
+      if (res.done) {
+        return { chunks: chunksAcc, snapshotStartedAt: res.value.snapshotStartedAt };
+      }
+      chunksAcc.push(res.value);
+      return next(chunksAcc);
+    };
+    return next([]);
+  };
 
-  let genResult = await generator.next();
-  while (!genResult.done) {
-    chunks.push(genResult.value);
-    genResult = await generator.next();
-  }
+  const generator = streamUserDataExport(userId, options);
+  const { chunks, snapshotStartedAt } = await collectChunks(generator);
 
   const jsonStr = chunks.join("");
   const snapshot = JSON.parse(jsonStr) as ExportDataSnapshot;
-  return { snapshot, snapshotStartedAt: genResult.value.snapshotStartedAt };
+  return { snapshot, snapshotStartedAt };
 }

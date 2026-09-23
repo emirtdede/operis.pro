@@ -11,6 +11,9 @@ import {
   type PaymentSettlementCertificate,
   type HandshakeAuditEntry,
   type TransferChannel,
+  type DeliverableStatus,
+  type MilestoneDeliverableUrlType,
+  type PaymentLedgerStatus,
   inMemoryMilestones,
   calculateSha256Seal,
 } from "./types";
@@ -115,7 +118,7 @@ export class MilestonePayoutService {
       ip: input.clientIp,
     });
 
-    const [existing] = await (db as any)
+    const [existing] = await db
       .select()
       .from(schema.engagementMilestones)
       .where(eq(schema.engagementMilestones.id, milestoneId))
@@ -144,7 +147,7 @@ export class MilestonePayoutService {
 
     const updatedAuditTrail = [...existingAudit, auditEntry];
 
-    const [updated] = await (db as any)
+    const [updated] = await db
       .update(schema.engagementMilestones)
       .set({
         paymentStatus: "MARKED_PAID",
@@ -162,7 +165,7 @@ export class MilestonePayoutService {
 
     // Send real-time notification to freelancer
     try {
-      const [engagement] = await (db as any)
+      const [engagement] = await db
         .select()
         .from(schema.engagements)
         .where(eq(schema.engagements.id, engagementId))
@@ -198,13 +201,13 @@ export class MilestonePayoutService {
         amount: parseFloat(updated.amount),
         currency: updated.currency,
         targetDate: updated.targetDate,
-        deliverableStatus: updated.deliverableStatus,
+        deliverableStatus: updated.deliverableStatus as DeliverableStatus,
         deliverableNote: updated.deliverableNote,
         deliverableUrl: updated.deliverableUrl,
-        deliverableUrlType: updated.deliverableUrlType,
+        deliverableUrlType: updated.deliverableUrlType as MilestoneDeliverableUrlType | null,
         submittedAt: updated.submittedAt ? new Date(updated.submittedAt).toISOString() : null,
         acceptedAt: updated.acceptedAt ? new Date(updated.acceptedAt).toISOString() : null,
-        paymentStatus: updated.paymentStatus,
+        paymentStatus: updated.paymentStatus as PaymentLedgerStatus,
         paymentReference: updated.paymentReference,
         paymentReceiptUrl: updated.paymentReceiptUrl,
         invoiceNumber: updated.invoiceNumber,
@@ -271,7 +274,7 @@ export class MilestonePayoutService {
     }
 
     const db = getDb();
-    const [existing] = await (db as any)
+    const [existing] = await db
       .select()
       .from(schema.engagementMilestones)
       .where(eq(schema.engagementMilestones.id, milestoneId))
@@ -292,7 +295,7 @@ export class MilestonePayoutService {
 
     const updatedAuditTrail = [...existingAudit, auditEntry];
 
-    const [updated] = await (db as any)
+    const [updated] = await db
       .update(schema.engagementMilestones)
       .set({
         paymentStatus: "UNPAID",
@@ -307,7 +310,7 @@ export class MilestonePayoutService {
     if (!updated) throw new Error("Milestone not found");
 
     try {
-      const [engagement] = await (db as any)
+      const [engagement] = await db
         .select()
         .from(schema.engagements)
         .where(eq(schema.engagements.id, engagementId))
@@ -343,13 +346,13 @@ export class MilestonePayoutService {
         amount: parseFloat(updated.amount),
         currency: updated.currency,
         targetDate: updated.targetDate,
-        deliverableStatus: updated.deliverableStatus,
+        deliverableStatus: updated.deliverableStatus as DeliverableStatus,
         deliverableNote: updated.deliverableNote,
         deliverableUrl: updated.deliverableUrl,
-        deliverableUrlType: updated.deliverableUrlType,
+        deliverableUrlType: updated.deliverableUrlType as MilestoneDeliverableUrlType | null,
         submittedAt: updated.submittedAt ? new Date(updated.submittedAt).toISOString() : null,
         acceptedAt: updated.acceptedAt ? new Date(updated.acceptedAt).toISOString() : null,
-        paymentStatus: updated.paymentStatus,
+        paymentStatus: updated.paymentStatus as PaymentLedgerStatus,
         paymentReference: updated.paymentReference,
         paymentReceiptUrl: updated.paymentReceiptUrl,
         invoiceNumber: updated.invoiceNumber,
@@ -480,7 +483,7 @@ export class MilestonePayoutService {
 
     const db = getDb();
     const paidConfirmedAt = new Date();
-    const [existing] = await (db as any)
+    const [existing] = await db
       .select()
       .from(schema.engagementMilestones)
       .where(eq(schema.engagementMilestones.id, milestoneId))
@@ -574,7 +577,7 @@ export class MilestonePayoutService {
 
     const updatedAuditTrail = [...existingAudit, auditEntry];
 
-    const [updated] = await (db as any)
+    const [updated] = await db
       .update(schema.engagementMilestones)
       .set({
         paymentStatus: "CONFIRMED_PAID",
@@ -590,7 +593,7 @@ export class MilestonePayoutService {
     if (!updated) throw new Error("Milestone not found");
 
     try {
-      const [engagement] = await (db as any)
+      const [engagement] = await db
         .select()
         .from(schema.engagements)
         .where(eq(schema.engagements.id, engagementId))
@@ -626,13 +629,13 @@ export class MilestonePayoutService {
         amount: parseFloat(updated.amount),
         currency: updated.currency,
         targetDate: updated.targetDate,
-        deliverableStatus: updated.deliverableStatus,
+        deliverableStatus: updated.deliverableStatus as DeliverableStatus,
         deliverableNote: updated.deliverableNote,
         deliverableUrl: updated.deliverableUrl,
-        deliverableUrlType: updated.deliverableUrlType,
+        deliverableUrlType: updated.deliverableUrlType as MilestoneDeliverableUrlType | null,
         submittedAt: updated.submittedAt ? new Date(updated.submittedAt).toISOString() : null,
         acceptedAt: updated.acceptedAt ? new Date(updated.acceptedAt).toISOString() : null,
-        paymentStatus: updated.paymentStatus,
+        paymentStatus: updated.paymentStatus as PaymentLedgerStatus,
         paymentReference: updated.paymentReference,
         paymentReceiptUrl: updated.paymentReceiptUrl,
         invoiceNumber: updated.invoiceNumber,
@@ -708,7 +711,7 @@ export class MilestonePayoutService {
       timestamp: disputeTimestamp.toISOString(),
     });
 
-    const [existing] = await (db as any)
+    const [existing] = await db
       .select()
       .from(schema.engagementMilestones)
       .where(eq(schema.engagementMilestones.id, milestoneId))
@@ -732,7 +735,7 @@ export class MilestonePayoutService {
 
     const updatedAuditTrail = [...existingAudit, auditEntry];
 
-    const [updated] = await (db as any)
+    const [updated] = await db
       .update(schema.engagementMilestones)
       .set({
         paymentStatus: "DISPUTED_PAID",
@@ -746,7 +749,7 @@ export class MilestonePayoutService {
     if (!updated) throw new Error("Milestone not found");
 
     try {
-      const [engagement] = await (db as any)
+      const [engagement] = await db
         .select()
         .from(schema.engagements)
         .where(eq(schema.engagements.id, engagementId))
@@ -782,13 +785,13 @@ export class MilestonePayoutService {
         amount: parseFloat(updated.amount),
         currency: updated.currency,
         targetDate: updated.targetDate,
-        deliverableStatus: updated.deliverableStatus,
+        deliverableStatus: updated.deliverableStatus as DeliverableStatus,
         deliverableNote: updated.deliverableNote,
         deliverableUrl: updated.deliverableUrl,
-        deliverableUrlType: updated.deliverableUrlType,
+        deliverableUrlType: updated.deliverableUrlType as MilestoneDeliverableUrlType | null,
         submittedAt: updated.submittedAt ? new Date(updated.submittedAt).toISOString() : null,
         acceptedAt: updated.acceptedAt ? new Date(updated.acceptedAt).toISOString() : null,
-        paymentStatus: updated.paymentStatus,
+        paymentStatus: updated.paymentStatus as PaymentLedgerStatus,
         paymentReference: updated.paymentReference,
         paymentReceiptUrl: updated.paymentReceiptUrl,
         invoiceNumber: updated.invoiceNumber,
@@ -853,7 +856,7 @@ export class MilestonePayoutService {
     }
 
     const db = getDb();
-    const [milestone] = await (db as any)
+    const [milestone] = await db
       .select()
       .from(schema.engagementMilestones)
       .where(eq(schema.engagementMilestones.id, milestoneId))
