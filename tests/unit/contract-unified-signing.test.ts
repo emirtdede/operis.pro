@@ -395,4 +395,119 @@ describe("Unified Contract Signing & Recommendation Engine", () => {
       expect(tamperedPkg.version).toBeGreaterThan(1);
     });
   });
+
+  describe("6. WP-04: Authoritative Role Derivation & Dual-Role Signing Prevention", () => {
+    const validSignature =
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+
+    it("rejects client user account attempting to sign with spoofed CONTRACTOR role", async () => {
+      const engId = "eng-test-dual-01";
+      // In demo engagement, viewer "user-client-real" is owner (CLIENT)
+      await expect(
+        ContractSigningService.submitSignature({
+          engagementId: engId,
+          userId: "user-client-real",
+          role: "CONTRACTOR", // Spoofed role!
+          signerName: "Imposter Contractor",
+          signatureType: "DRAWN",
+          signatureDataUrl: validSignature,
+          legalAcknowledged: true,
+        })
+      ).rejects.toThrow(/Yetkisiz rol: İşveren hesabıyla Yüklenici rolünde imza atılamaz/);
+    });
+
+    it("prevents the same user account from signing both client and contractor roles", async () => {
+      const engId = "eng-test-dual-02";
+      // 1. Legitimate client signs
+      const clientRes = await ContractSigningService.submitSignature({
+        engagementId: engId,
+        userId: "user-client-real",
+        role: "CLIENT",
+        signerName: "Real Client",
+        signatureType: "DRAWN",
+        signatureDataUrl: validSignature,
+        legalAcknowledged: true,
+      });
+      expect(clientRes.status).toBe("PARTIALLY_SIGNED");
+
+      // 2. Same user account tries to sign contractor side
+      await expect(
+        ContractSigningService.submitSignature({
+          engagementId: engId,
+          userId: "user-client-real",
+          role: "CLIENT", // Even if role is CLIENT or anything, they can't sign twice
+          signerName: "Real Client Acting As Contractor",
+          signatureType: "DRAWN",
+          signatureDataUrl: validSignature,
+          legalAcknowledged: true,
+        })
+      ).rejects.toThrow();
+    });
+
+    it("allows distinct legitimate parties to execute a FULLY_SIGNED bilateral contract", async () => {
+      const engId = "eng-test-dual-03";
+      // 1. Client signs
+      const clientRes = await ContractSigningService.submitSignature({
+        engagementId: engId,
+        userId: "user-client-real",
+        role: "CLIENT",
+        signerName: "Client Alice",
+        signatureType: "DRAWN",
+        signatureDataUrl: validSignature,
+        legalAcknowledged: true,
+      });
+      expect(clientRes.status).toBe("PARTIALLY_SIGNED");
+
+      // 2. Distinct Contractor ("u-techcorp-1" in demo data) signs
+      const contractorRes = await ContractSigningService.submitSignature({
+        engagementId: engId,
+        userId: "u-techcorp-1",
+        role: "CONTRACTOR",
+        signerName: "Contractor Bob",
+        signatureType: "DRAWN",
+        signatureDataUrl: validSignature,
+        legalAcknowledged: true,
+      });
+      expect(contractorRes.status).toBe("FULLY_SIGNED");
+      expect(contractorRes.packageId).toBeDefined();
+    });
+
+    it("prevents modifying or re-signing an already FULLY_SIGNED package", async () => {
+      const engId = "eng-test-dual-04";
+      // 1. Client signs
+      await ContractSigningService.submitSignature({
+        engagementId: engId,
+        userId: "user-client-real",
+        role: "CLIENT",
+        signerName: "Client Alice",
+        signatureType: "DRAWN",
+        signatureDataUrl: validSignature,
+        legalAcknowledged: true,
+      });
+
+      // 2. Contractor signs -> FULLY_SIGNED
+      await ContractSigningService.submitSignature({
+        engagementId: engId,
+        userId: "u-techcorp-1",
+        role: "CONTRACTOR",
+        signerName: "Contractor Bob",
+        signatureType: "DRAWN",
+        signatureDataUrl: validSignature,
+        legalAcknowledged: true,
+      });
+
+      // 3. Attempt to re-sign or tamper with fully signed contract
+      await expect(
+        ContractSigningService.submitSignature({
+          engagementId: engId,
+          userId: "user-client-real",
+          role: "CLIENT",
+          signerName: "Client Tamper Attempt",
+          signatureType: "DRAWN",
+          signatureDataUrl: validSignature,
+          legalAcknowledged: true,
+        })
+      ).rejects.toThrow(/tam olarak imzalanmış ve yürürlüğe girmiştir/);
+    });
+  });
 });

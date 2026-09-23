@@ -77,7 +77,7 @@ export async function POST(
     const result = await ContractSigningService.submitSignature({
       engagementId: id,
       userId: session.userId,
-      role: role === "CLIENT" ? "CLIENT" : "CONTRACTOR",
+      role: role === "CLIENT" ? "CLIENT" : role === "CONTRACTOR" ? "CONTRACTOR" : ("CLIENT" as const),
       signerName: signerName.trim(),
       signatureType: signatureType === "UPLOADED" ? "UPLOADED" : "DRAWN",
       signatureDataUrl,
@@ -96,7 +96,11 @@ export async function POST(
       message = err.message;
     }
 
-    const status = message.includes("CONCURRENCY_CONFLICT") ? 409 : 400;
+    const status = message.includes("CONCURRENCY_CONFLICT")
+      ? 409
+      : message.includes("Yetkisiz") || message.includes("Güvenlik ihlali")
+      ? 403
+      : 400;
     return NextResponse.json({ error: message }, { status });
   }
 }

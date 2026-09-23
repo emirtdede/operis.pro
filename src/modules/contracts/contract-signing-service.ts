@@ -13,6 +13,7 @@ import type {
   PackageSigningStatus,
   SubmitSignatureInput,
   SubmitSignatureResponse,
+  SigningPartyRole,
 } from "./signing-types";
 import { EngagementService } from "../engagements/service";
 import { DEFAULT_USER } from "../auth/demo-user";
@@ -316,7 +317,31 @@ export class ContractSigningService {
     }
 
     const { engagement, listing, acceptedOffer, counterpartyContact } = engagementData;
-    const isClient = input.role === "CLIENT";
+
+    // Security Verification 1: Employer and Contractor cannot be the same user account
+    if (engagement.ownerUserId === engagement.freelancerUserId) {
+      throw new Error(
+        "Güvenlik ihlali: İşveren ve yüklenici aynı kullanıcı olamaz. Sözleşme tek taraflı akdedilemez."
+      );
+    }
+
+    // Security Verification 2: Derive true legal role from authoritative database record
+    const isOwner = engagement.ownerUserId === input.userId;
+    const isFreelancer = engagement.freelancerUserId === input.userId;
+
+    if (!isOwner && !isFreelancer) {
+      throw new Error("Yetkisiz imzalayan: Kullanıcı bu sözleşmenin meşru tarafı değildir.");
+    }
+
+    const derivedRole: SigningPartyRole = isOwner ? "CLIENT" : "CONTRACTOR";
+    const isClient = derivedRole === "CLIENT";
+
+    // If client supplied input.role, verify it does not contradict derivedRole
+    if (input.role && input.role !== derivedRole) {
+      throw new Error(
+        `Yetkisiz rol: ${isClient ? "İşveren" : "Yüklenici"} hesabıyla ${input.role === "CLIENT" ? "İşveren" : "Yüklenici"} rolünde imza atılamaz.`
+      );
+    }
 
     // 2. Decode signature image buffer and upload to Cloudflare R2 (10 GB free tier ephemeral storage)
     const base64Data = input.signatureDataUrl.split(",")[1] || "";
@@ -326,7 +351,7 @@ export class ContractSigningService {
 
     const r2Result = await uploadEphemeralSignature(
       input.engagementId,
-      input.role,
+      derivedRole,
       imageBuffer,
       mimeType
     );
@@ -336,6 +361,45 @@ export class ContractSigningService {
 
     // 3. Retrieve or create package record
     const { packageDetails } = await this.getOrInitPackage(input.engagementId, input.userId);
+
+    // Security Verification 3: Prevent re-signing already fully signed packages
+    if (packageDetails.status === "FULLY_SIGNED") {
+      throw new Error(
+        "Sözleşme paketi zaten her iki tarafça tam olarak imzalanmış ve yürürlüğe girmiştir. İmzalanmış sözleşme değiştirilemez."
+      );
+    }
+
+    // Security Verification 4: Crucial bilateral protection - One user CANNOT sign both roles!
+    if (
+      isClient &&
+      packageDetails.contractorSignature?.signerUserId &&
+      packageDetails.contractorSignature.signerUserId === input.userId
+    ) {
+      throw new Error(
+        "Güvenlik ihlali: Aynı kullanıcı hem işveren hem yüklenici olarak sözleşmeyi imzalayamaz."
+      );
+    }
+    if (
+      !isClient &&
+      packageDetails.clientSignature?.signerUserId &&
+      packageDetails.clientSignature.signerUserId === input.userId
+    ) {
+      throw new Error(
+        "Güvenlik ihlali: Aynı kullanıcı hem işveren hem yüklenici olarak sözleşmeyi imzalayamaz."
+      );
+    }
+
+    // Security Verification 5: Prevent duplicate signing for the same role without contract modification
+    if (isClient && packageDetails.clientSignature?.signedAt) {
+      throw new Error(
+        "İşveren imzası zaten sisteme kaydedilmiştir. Karşı tarafın (yüklenici) imzalaması beklenmektedir."
+      );
+    }
+    if (!isClient && packageDetails.contractorSignature?.signedAt) {
+      throw new Error(
+        "Yüklenici imzası zaten sisteme kaydedilmiştir. Karşı tarafın (işveren) imzalaması beklenmektedir."
+      );
+    }
 
     // Optimistic Concurrency Control (CAS)
     const currentVersion = Number(packageDetails.version || 1);
@@ -388,10 +452,14 @@ export class ContractSigningService {
       updatedPkg = existing;
     }
 
-    // 4. Check if BOTH parties have now signed
+    // 4. Check if BOTH parties have now signed with distinct signer user IDs
     const hasClientSigned = Boolean(updatedPkg.clientSignedAt);
     const hasFreelancerSigned = Boolean(updatedPkg.freelancerSignedAt);
-    const isFullySigned = hasClientSigned && hasFreelancerSigned;
+    const areSignersDistinct =
+      updatedPkg.clientSignerUserId &&
+      updatedPkg.freelancerSignerUserId &&
+      updatedPkg.clientSignerUserId !== updatedPkg.freelancerSignerUserId;
+    const isFullySigned = hasClientSigned && hasFreelancerSigned && Boolean(areSignersDistinct);
 
     if (isFullySigned) {
       // 5. AUTO-EXECUTE & COMPILE BATCH PACKAGE
