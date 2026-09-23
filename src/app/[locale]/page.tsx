@@ -245,16 +245,24 @@ export default async function LandingPage({
 
           {/* Display Typography with Masked Gradients */}
           <div className="space-y-4 sm:space-y-6">
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-[var(--color-text-primary)] max-w-5xl mx-auto leading-[1.2] sm:leading-[1.2]">
+            <h1 className="flex flex-col items-center gap-2 sm:gap-3.5 text-3xl sm:text-5xl lg:text-[3.75rem] xl:text-[4.25rem] font-extrabold tracking-tight text-[var(--color-text-primary)] max-w-6xl mx-auto leading-tight">
               {isTr ? (
                 <>
-                  <span className="block">Yazılımcılar ve İşverenler İçin</span>
-                  <span className="block text-gradient-accent">Komisyonsuz, Doğrudan İş Birliği</span>
+                  <span className="block whitespace-normal sm:whitespace-nowrap">
+                    Yazılımcılar ve İşverenler İçin
+                  </span>
+                  <span className="block text-gradient-accent whitespace-normal sm:whitespace-nowrap pb-1">
+                    Komisyonsuz, Doğrudan İş Birliği
+                  </span>
                 </>
               ) : (
                 <>
-                  <span className="block">Direct, Zero-Commission Collaboration</span>
-                  <span className="block text-gradient-accent">for Engineers & Teams</span>
+                  <span className="block whitespace-normal sm:whitespace-nowrap">
+                    Direct, Zero-Commission Collaboration
+                  </span>
+                  <span className="block text-gradient-accent whitespace-normal sm:whitespace-nowrap pb-1">
+                    for Engineers & Teams
+                  </span>
                 </>
               )}
             </h1>
