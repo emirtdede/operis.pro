@@ -96,11 +96,16 @@ export async function POST(
       message = err.message;
     }
 
-    const status = message.includes("CONCURRENCY_CONFLICT")
-      ? 409
-      : message.includes("Yetkisiz") || message.includes("Güvenlik ihlali")
-      ? 403
-      : 400;
+    const status =
+      message.includes("CONCURRENCY_CONFLICT") ||
+      message.includes("değiştirilemez") ||
+      message.includes("zaten")
+        ? 409
+        : message.includes("Yetkisiz") ||
+          message.includes("Güvenlik ihlali") ||
+          message.includes("değiştirilemez")
+        ? 403
+        : 400;
     return NextResponse.json({ error: message }, { status });
   }
 }

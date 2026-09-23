@@ -510,4 +510,180 @@ describe("Unified Contract Signing & Recommendation Engine", () => {
       ).rejects.toThrow(/tam olarak imzalanmış ve yürürlüğe girmiştir/);
     });
   });
+
+  describe("7. WP-05: Scope Immutability & Re-signing Prevention", () => {
+    const validSignature =
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+
+    it("rejects signature submission when client attempts to modify contract scope during submitSignature", async () => {
+      const engId = "eng-test-scope-01";
+      await ContractSigningService.getOrInitPackage(engId, "user-client-real");
+
+      // Scope established as default CORE_SERVICE
+      await expect(
+        ContractSigningService.submitSignature({
+          engagementId: engId,
+          userId: "user-client-real",
+          role: "CLIENT",
+          signerName: "Client Alice",
+          signatureType: "DRAWN",
+          signatureDataUrl: validSignature,
+          legalAcknowledged: true,
+          selectedContracts: ["CORE_SERVICE", "IP_ASSIGNMENT", "PENALTY_CLAUSE"], // Attempting to inject new contracts!
+        })
+      ).rejects.toThrow(/İmza aşamasında sözleşme kapsamı değiştirilemez/);
+    });
+
+    it("preserves authoritative contract scope when signing with matching or omitted contracts", async () => {
+      const engId = "eng-test-scope-02";
+      await ContractSigningService.getOrInitPackage(engId, "user-client-real");
+      await ContractSigningService.updateSelectedContracts(engId, "user-client-real", [
+        "CORE_SERVICE",
+        "BILATERAL_NDA",
+      ]);
+
+      const res = await ContractSigningService.submitSignature({
+        engagementId: engId,
+        userId: "user-client-real",
+        role: "CLIENT",
+        signerName: "Client Alice",
+        signatureType: "DRAWN",
+        signatureDataUrl: validSignature,
+        legalAcknowledged: true,
+        selectedContracts: ["CORE_SERVICE", "BILATERAL_NDA"], // Exact match
+      });
+
+      expect(res.status).toBe("PARTIALLY_SIGNED");
+      const currentPkg = await ContractSigningService.getOrInitPackage(engId, "user-client-real");
+      expect(currentPkg.packageDetails.selectedContracts).toEqual(["CORE_SERVICE", "BILATERAL_NDA"]);
+    });
+
+    it("strictly blocks any modification or signature on a FULLY_SIGNED package", async () => {
+      const engId = "eng-test-scope-03";
+      await ContractSigningService.getOrInitPackage(engId, "user-client-real");
+
+      // 1. Client signs
+      await ContractSigningService.submitSignature({
+        engagementId: engId,
+        userId: "user-client-real",
+        role: "CLIENT",
+        signerName: "Client Alice",
+        signatureType: "DRAWN",
+        signatureDataUrl: validSignature,
+        legalAcknowledged: true,
+      });
+
+      // 2. Contractor signs -> FULLY_SIGNED
+      const finalRes = await ContractSigningService.submitSignature({
+        engagementId: engId,
+        userId: "u-techcorp-1",
+        role: "CONTRACTOR",
+        signerName: "Contractor Bob",
+        signatureType: "DRAWN",
+        signatureDataUrl: validSignature,
+        legalAcknowledged: true,
+      });
+      expect(finalRes.status).toBe("FULLY_SIGNED");
+
+      // 3. Attempt to update selected contracts
+      await expect(
+        ContractSigningService.updateSelectedContracts(engId, "user-client-real", [
+          "CORE_SERVICE",
+          "INFLATION_SHIELD",
+        ])
+      ).rejects.toThrow(/Cannot modify contract selection after full bilateral signature execution/);
+
+      // 4. Attempt to sign again
+      await expect(
+        ContractSigningService.submitSignature({
+          engagementId: engId,
+          userId: "user-client-real",
+          role: "CLIENT",
+          signerName: "Client Alice",
+          signatureType: "DRAWN",
+          signatureDataUrl: validSignature,
+          legalAcknowledged: true,
+        })
+      ).rejects.toThrow(/tam olarak imzalanmış ve yürürlüğe girmiştir/);
+    });
+  });
+
+  describe("8. WP-06 & WP-07: Atomic CAS and Ephemeral Lifecycle Verification", () => {
+    const validSignature =
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+
+    it("enforces CAS version increment across sequential operations", async () => {
+      const engId = "eng-cas-lifecycle-01";
+      const init = await ContractSigningService.getOrInitPackage(engId, "user-client-real");
+      expect(init.packageDetails.version).toBe(1);
+
+      const updated = await ContractSigningService.updateSelectedContracts(engId, "user-client-real", [
+        "CORE_SERVICE",
+        "FSEK_IP_TRANSFER",
+      ]);
+      expect(updated.version).toBe(2);
+
+      // Client signs (version 2 -> 3)
+      const clientRes = await ContractSigningService.submitSignature({
+        engagementId: engId,
+        userId: "user-client-real",
+        role: "CLIENT",
+        signerName: "Client Alice",
+        signatureType: "DRAWN",
+        signatureDataUrl: validSignature,
+        legalAcknowledged: true,
+        expectedVersion: 2,
+      });
+      expect(clientRes.version).toBe(3);
+
+      // Contractor signs (version 3 -> 4, compiled -> 5)
+      const contractorRes = await ContractSigningService.submitSignature({
+        engagementId: engId,
+        userId: "u-techcorp-1",
+        role: "CONTRACTOR",
+        signerName: "Contractor Bob",
+        signatureType: "DRAWN",
+        signatureDataUrl: validSignature,
+        legalAcknowledged: true,
+        expectedVersion: 3,
+      });
+      expect(contractorRes.status).toBe("FULLY_SIGNED");
+      expect(contractorRes.version).toBe(5);
+    });
+
+    it("purges ephemeral R2 signature files only upon successful full execution", async () => {
+      const engId = "eng-test-r2-01";
+      await ContractSigningService.getOrInitPackage(engId, "user-client-real");
+
+      const initialCount = getMockEphemeralSignatureCount();
+
+      // Client signs (stores 1 ephemeral signature in R2)
+      await ContractSigningService.submitSignature({
+        engagementId: engId,
+        userId: "user-client-real",
+        role: "CLIENT",
+        signerName: "Client Alice",
+        signatureType: "DRAWN",
+        signatureDataUrl: validSignature,
+        legalAcknowledged: true,
+      });
+
+      expect(getMockEphemeralSignatureCount()).toBe(initialCount + 1);
+
+      // Contractor signs -> Fully signed compiles into HTML/Markdown, then purges both signatures
+      await ContractSigningService.submitSignature({
+        engagementId: engId,
+        userId: "u-techcorp-1",
+        role: "CONTRACTOR",
+        signerName: "Contractor Bob",
+        signatureType: "DRAWN",
+        signatureDataUrl: validSignature,
+        legalAcknowledged: true,
+      });
+
+      // Ephemeral signatures should be purged back to initial baseline
+      expect(getMockEphemeralSignatureCount()).toBe(initialCount);
+    });
+  });
 });
+

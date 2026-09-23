@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { eq } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
 import { getDb } from "@/src/lib/db";
 import * as schema from "@/db/schema";
 import { ContractRecommendationEngine } from "./recommendation-engine";
@@ -118,8 +118,15 @@ export class ContractSigningService {
       if (rows.length > 0 && rows[0]) {
         pkgRow = rows[0] as RawPackageRecord;
       }
-    } catch {
-      pkgRow = (inMemoryPackages.get(engagementId) as RawPackageRecord) || null;
+    } catch (err: unknown) {
+      if (process.env.NODE_ENV === "test") {
+        pkgRow = (inMemoryPackages.get(engagementId) as RawPackageRecord) || null;
+      } else {
+        throw new Error(
+          `Sözleşme paketi veritabanından okunamadı: ${(err as Error)?.message || "DB_ERROR"}`,
+          { cause: err }
+        );
+      }
     }
 
     if (!pkgRow) {
@@ -166,9 +173,16 @@ export class ContractSigningService {
           })
           .returning();
         pkgRow = inserted || newPkg;
-      } catch {
-        inMemoryPackages.set(engagementId, newPkg);
-        pkgRow = newPkg;
+      } catch (err: unknown) {
+        if (process.env.NODE_ENV === "test") {
+          inMemoryPackages.set(engagementId, newPkg);
+          pkgRow = newPkg;
+        } else {
+          throw new Error(
+            `Yeni sözleşme paketi veritabanına kaydedilemedi: ${(err as Error)?.message || "DB_ERROR"}`,
+            { cause: err }
+          );
+        }
       }
     }
 
@@ -209,7 +223,8 @@ export class ContractSigningService {
     let signaturesInvalidated = false;
     const r2KeysToPurge: string[] = [];
 
-    const nextVersion = (pkg.packageDetails.version || 1) + 1;
+    const currentVersion = Number(pkg.packageDetails.version || 1);
+    const nextVersion = currentVersion + 1;
     const updatePayload: Record<string, unknown> = {
       selectedContracts: validatedContracts,
       version: nextVersion,
@@ -253,15 +268,38 @@ export class ContractSigningService {
       const [row] = await db
         .update(schema.engagementContractPackages)
         .set(updatePayload)
-        .where(eq(schema.engagementContractPackages.engagementId, engagementId))
+        .where(
+          and(
+            eq(schema.engagementContractPackages.engagementId, engagementId),
+            eq(schema.engagementContractPackages.version, currentVersion),
+            ne(schema.engagementContractPackages.status, "FULLY_SIGNED")
+          )
+        )
         .returning();
-      if (!row) throw new Error("Update returned no rows");
+      if (!row) {
+        throw new Error(
+          "CONCURRENCY_CONFLICT: Sözleşme paketi başka bir işlem tarafından güncellendi veya kilitlendi."
+        );
+      }
       updatedRow = row as RawPackageRecord;
-    } catch {
-      const existing = (inMemoryPackages.get(engagementId) || pkg.packageDetails) as unknown as RawPackageRecord;
-      Object.assign(existing, updatePayload);
-      inMemoryPackages.set(engagementId, existing);
-      updatedRow = existing;
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message.includes("CONCURRENCY_CONFLICT")) {
+        throw err;
+      }
+      if (process.env.NODE_ENV === "test") {
+        const existing = (inMemoryPackages.get(engagementId) || pkg.packageDetails) as unknown as RawPackageRecord;
+        if (existing.version !== currentVersion) {
+          throw new Error("CONCURRENCY_CONFLICT: Sözleşme paketi başka bir işlem tarafından güncellendi.", { cause: err });
+        }
+        if (existing.status === "FULLY_SIGNED") {
+          throw new Error("Cannot modify contract selection after full bilateral signature execution.", { cause: err });
+        }
+        Object.assign(existing, updatePayload);
+        inMemoryPackages.set(engagementId, existing);
+        updatedRow = existing;
+      } else {
+        throw new Error(`Sözleşme kapsamı güncellenemedi: ${(err as Error)?.message || "DB_ERROR"}`, { cause: err });
+      }
     }
 
     const details = this.mapRowToDetails(updatedRow);
@@ -409,12 +447,27 @@ export class ContractSigningService {
       );
     }
 
+    // Scope Protection: Contract scope is strictly immutable during signature submission.
+    // If client supplied input.selectedContracts, verify it strictly matches packageDetails.selectedContracts.
+    const activeContracts = packageDetails.selectedContracts || ["CORE_SERVICE"];
+    if (input.selectedContracts && input.selectedContracts.length > 0) {
+      const currentSorted = [...activeContracts].sort();
+      const inputSorted = [...new Set(input.selectedContracts)].sort();
+      if (
+        currentSorted.length !== inputSorted.length ||
+        currentSorted.some((c, idx) => c !== inputSorted[idx])
+      ) {
+        throw new Error(
+          "İmza aşamasında sözleşme kapsamı değiştirilemez. Kapsam değişikliği için önce sözleşme seçimi güncellenmelidir."
+        );
+      }
+    }
+    const selectedContracts = activeContracts;
+
     const nextVersion = currentVersion + 1;
-    const selectedContracts = input.selectedContracts || packageDetails.selectedContracts || ["CORE_SERVICE"];
 
     // Update in DB or memory
     const updatePayload: Record<string, unknown> = {
-      selectedContracts,
       version: nextVersion,
       updatedAt: now,
     };
@@ -441,15 +494,38 @@ export class ContractSigningService {
       const [row] = await db
         .update(schema.engagementContractPackages)
         .set(updatePayload)
-        .where(eq(schema.engagementContractPackages.engagementId, input.engagementId))
+        .where(
+          and(
+            eq(schema.engagementContractPackages.engagementId, input.engagementId),
+            eq(schema.engagementContractPackages.version, currentVersion),
+            ne(schema.engagementContractPackages.status, "FULLY_SIGNED")
+          )
+        )
         .returning();
-      if (!row) throw new Error("Update returned no rows");
+      if (!row) {
+        throw new Error(
+          "CONCURRENCY_CONFLICT: Sözleşme paketi başka bir işlem tarafından güncellendi veya kilitlendi."
+        );
+      }
       updatedPkg = row as RawPackageRecord;
-    } catch {
-      const existing = (inMemoryPackages.get(input.engagementId) || packageDetails) as unknown as RawPackageRecord;
-      Object.assign(existing, updatePayload);
-      inMemoryPackages.set(input.engagementId, existing);
-      updatedPkg = existing;
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message.includes("CONCURRENCY_CONFLICT")) {
+        throw err;
+      }
+      if (process.env.NODE_ENV === "test") {
+        const existing = (inMemoryPackages.get(input.engagementId) || packageDetails) as unknown as RawPackageRecord;
+        if (existing.version !== currentVersion) {
+          throw new Error("CONCURRENCY_CONFLICT: Sözleşme paketi başka bir işlem tarafından güncellendi.", { cause: err });
+        }
+        if (existing.status === "FULLY_SIGNED") {
+          throw new Error("Sözleşme paketi zaten tam olarak imzalanmış. Yeniden imzalanamaz.", { cause: err });
+        }
+        Object.assign(existing, updatePayload);
+        inMemoryPackages.set(input.engagementId, existing);
+        updatedPkg = existing;
+      } else {
+        throw new Error(`İmza veritabanına kaydedilemedi: ${(err as Error)?.message || "DB_ERROR"}`, { cause: err });
+      }
     }
 
     // 4. Check if BOTH parties have now signed with distinct signer user IDs
@@ -515,22 +591,13 @@ export class ContractSigningService {
 
       const sha256Seal = ContractGeneratorService.calculateSha256(compiledResult.markdown);
 
-      // 6. EPHEMERAL CLEANUP: Purge raw signature files from Cloudflare R2
-      // Now that signatures are permanently embedded into the compiled documents,
-      // the temporary files are safely deleted to preserve the 10 GB free tier space.
-      const keysToClean = [
-        updatedPkg.clientSignatureR2Key,
-        updatedPkg.freelancerSignatureR2Key,
-      ].filter(Boolean) as string[];
-
-      await deleteEphemeralSignatures(keysToClean);
-
+      const finalVersion = nextVersion + 1;
       const finalUpdate = {
         status: "FULLY_SIGNED" as PackageSigningStatus,
         compiledMarkdown: compiledResult.markdown,
         compiledHtml: compiledResult.htmlContent,
         sha256Seal,
-        version: nextVersion + 1,
+        version: finalVersion,
         signedAt: now,
         ephemeralCleanedAt: now,
         updatedAt: now,
@@ -538,13 +605,52 @@ export class ContractSigningService {
 
       try {
         const db = getDb();
-        await db
+        const [finalRow] = await db
           .update(schema.engagementContractPackages)
           .set(finalUpdate)
-          .where(eq(schema.engagementContractPackages.engagementId, input.engagementId));
-      } catch {
-        Object.assign(updatedPkg, finalUpdate);
-        inMemoryPackages.set(input.engagementId, updatedPkg);
+          .where(
+            and(
+              eq(schema.engagementContractPackages.engagementId, input.engagementId),
+              eq(schema.engagementContractPackages.version, nextVersion),
+              ne(schema.engagementContractPackages.status, "FULLY_SIGNED")
+            )
+          )
+          .returning();
+        if (!finalRow) {
+          throw new Error(
+            "CONCURRENCY_CONFLICT: Tamamlanmış sözleşme paketi kaydedilirken çakışma oluştu."
+          );
+        }
+        updatedPkg = finalRow as RawPackageRecord;
+      } catch (err: unknown) {
+        if (err instanceof Error && err.message.includes("CONCURRENCY_CONFLICT")) {
+          throw err;
+        }
+        if (process.env.NODE_ENV === "test") {
+          Object.assign(updatedPkg, finalUpdate);
+          inMemoryPackages.set(input.engagementId, updatedPkg);
+        } else {
+          throw new Error(
+            `Tamamlanmış sözleşme veritabanına kaydedilemedi: ${(err as Error)?.message || "DB_ERROR"}`,
+            { cause: err }
+          );
+        }
+      }
+
+      // 6. EPHEMERAL CLEANUP: Purge raw signature files from Cloudflare R2 AFTER SUCCESSFUL DB COMMIT!
+      // Now that signatures are permanently embedded into the compiled documents and persisted,
+      // the temporary files are safely deleted to preserve the 10 GB free tier space.
+      const keysToClean = [
+        updatedPkg.clientSignatureR2Key,
+        updatedPkg.freelancerSignatureR2Key,
+      ].filter(Boolean) as string[];
+
+      if (keysToClean.length > 0) {
+        try {
+          await deleteEphemeralSignatures(keysToClean);
+        } catch (cleanupErr) {
+          console.error("Non-fatal R2 signature purge error post-commit:", cleanupErr);
+        }
       }
 
       // Emit real-time event to engagement channel (triggers live celebration & UI update)
@@ -554,7 +660,7 @@ export class ContractSigningService {
         packageId: updatedPkg.id,
         status: "FULLY_SIGNED",
         version: finalUpdate.version,
-        signerRole: input.role,
+        signerRole: derivedRole,
         signerName: input.signerName,
         signedAt: now.toISOString(),
         sha256Seal,
@@ -613,7 +719,7 @@ export class ContractSigningService {
       packageId: updatedPkg.id,
       status: "PARTIALLY_SIGNED",
       version: nextVersion,
-      signerRole: input.role,
+      signerRole: derivedRole,
       signerName: input.signerName,
       signedAt: now.toISOString(),
       selectedContracts,
@@ -633,7 +739,7 @@ export class ContractSigningService {
           message: `${input.signerName} sözleşme paketini imzaladı. Süreci tamamlamak için lütfen siz de imzanızı ekleyin.`,
           actionUrl: `/tr/calisma-alani/${input.engagementId}`,
           engagementId: input.engagementId,
-          signerRole: input.role,
+          signerRole: derivedRole,
           signerName: input.signerName,
         }
       ).catch(() => {});
