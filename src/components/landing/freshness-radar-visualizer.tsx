@@ -319,11 +319,11 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
                   }`}
                 >
                   {/* --- INNER ORBIT RING (Diameter: 44%, Radius: 22%, Clockwise) --- */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[44%] h-[44%] rounded-full anim-orbit-inner pointer-events-none">
+                  <div className="absolute inset-0 m-auto w-[44%] h-[44%] rounded-full anim-orbit-inner pointer-events-none">
                     {/* Inner Blip positioned at 45 deg (top-right) */}
                     <div 
-                      className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
-                      style={{ top: "14.65%", left: "85.35%" }}
+                      className="absolute pointer-events-auto"
+                      style={{ top: "14.65%", left: "85.35%", transform: "translate(-50%, -50%)" }}
                     >
                       <div className="anim-counter-inner">
                         {renderBlip(currentCohort.innerBlip)}
@@ -332,11 +332,11 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
                   </div>
 
                   {/* --- MID ORBIT RING (Diameter: 60%, Radius: 30%, Counter-Clockwise) --- */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] rounded-full anim-orbit-mid pointer-events-none">
+                  <div className="absolute inset-0 m-auto w-[60%] h-[60%] rounded-full anim-orbit-mid pointer-events-none">
                     {/* Mid Blip positioned at 225 deg (bottom-left) */}
                     <div 
-                      className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
-                      style={{ top: "85.35%", left: "14.65%" }}
+                      className="absolute pointer-events-auto"
+                      style={{ top: "85.35%", left: "14.65%", transform: "translate(-50%, -50%)" }}
                     >
                       <div className="anim-counter-mid">
                         {renderBlip(currentCohort.midBlip)}
@@ -345,8 +345,8 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
 
                     {/* Pruned/Expired Job Marker positioned at 315 deg (top-left) */}
                     <div 
-                      className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
-                      style={{ top: "14.65%", left: "14.65%" }}
+                      className="absolute pointer-events-auto"
+                      style={{ top: "14.65%", left: "14.65%", transform: "translate(-50%, -50%)" }}
                     >
                       <div className="anim-counter-mid">
                         <div className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono bg-red-950/70 text-red-400 border border-red-500/30 line-through backdrop-blur-md select-none whitespace-nowrap shadow-xs">
@@ -358,11 +358,11 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
                   </div>
 
                   {/* --- OUTER ORBIT RING (Diameter: 72%, Radius: 36%, Clockwise) --- */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[72%] h-[72%] rounded-full anim-orbit-outer pointer-events-none">
+                  <div className="absolute inset-0 m-auto w-[72%] h-[72%] rounded-full anim-orbit-outer pointer-events-none">
                     {/* Outer Blip positioned at 120 deg (bottom-right) */}
                     <div 
-                      className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
-                      style={{ top: "75%", left: "93.3%" }}
+                      className="absolute pointer-events-auto"
+                      style={{ top: "75%", left: "93.3%", transform: "translate(-50%, -50%)" }}
                     >
                       <div className="anim-counter-outer">
                         {renderBlip(currentCohort.outerBlip)}
