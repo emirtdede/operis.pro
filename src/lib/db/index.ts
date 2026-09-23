@@ -45,6 +45,12 @@ export function getDbPool(): pg.Pool {
       connectionTimeoutMillis: 10000,
       ssl: isSupabase ? { rejectUnauthorized: false } : undefined,
     });
+
+    // WP-10: Register error listener immediately to prevent unhandled EventEmitter exceptions on idle clients from crashing Node process
+    globalForDb.operisDbPool.on("error", (err: Error) => {
+      console.error("[Postgres Pool Error] Unexpected idle client error:", err?.message || err);
+    });
+
     registerGracefulShutdown(globalForDb.operisDbPool);
   }
   return globalForDb.operisDbPool;
