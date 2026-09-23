@@ -70,4 +70,52 @@ describe("Dashboard and Panel Redirects & Aliases in Proxy", () => {
     expect(res?.status).toBe(301);
     expect(res?.headers.get("location")).toBe("https://operis.com/tr/panel/aktif-isler");
   });
+
+  it("redirects /tr/ilan-ver to /tr/ilanlar/yeni with 301", async () => {
+    const req = makeRequest("https://operis.com/tr/ilan-ver");
+    const res = await proxy(req);
+    expect(res).toBeDefined();
+    expect(res?.status).toBe(301);
+    expect(res?.headers.get("location")).toBe("https://operis.com/tr/ilanlar/yeni");
+  });
+
+  it("redirects /tr/kullanim-kosullari to /tr/yasal/kullanim-kosullari with 301", async () => {
+    const req = makeRequest("https://operis.com/tr/kullanim-kosullari");
+    const res = await proxy(req);
+    expect(res).toBeDefined();
+    expect(res?.status).toBe(301);
+    expect(res?.headers.get("location")).toBe("https://operis.com/tr/yasal/kullanim-kosullari");
+  });
+
+  it("redirects /tr/gizlilik to /tr/yasal/gizlilik-ve-kvkk with 301", async () => {
+    const req = makeRequest("https://operis.com/tr/gizlilik");
+    const res = await proxy(req);
+    expect(res).toBeDefined();
+    expect(res?.status).toBe(301);
+    expect(res?.headers.get("location")).toBe("https://operis.com/tr/yasal/gizlilik-ve-kvkk");
+  });
+
+  it("redirects /tr/cerezler to /tr/yasal/cerez-politikasi with 301", async () => {
+    const req = makeRequest("https://operis.com/tr/cerezler");
+    const res = await proxy(req);
+    expect(res).toBeDefined();
+    expect(res?.status).toBe(301);
+    expect(res?.headers.get("location")).toBe("https://operis.com/tr/yasal/cerez-politikasi");
+  });
+
+  it("redirects /en/post-job to /en/listings/new with 301", async () => {
+    const req = makeRequest("https://operis.com/en/post-job");
+    const res = await proxy(req);
+    expect(res).toBeDefined();
+    expect(res?.status).toBe(301);
+    expect(res?.headers.get("location")).toBe("https://operis.com/en/listings/new");
+  });
+
+  it("redirects /en/terms to /en/legal/terms with 301", async () => {
+    const req = makeRequest("https://operis.com/en/terms");
+    const res = await proxy(req);
+    expect(res).toBeDefined();
+    expect(res?.status).toBe(301);
+    expect(res?.headers.get("location")).toBe("https://operis.com/en/legal/terms");
+  });
 });

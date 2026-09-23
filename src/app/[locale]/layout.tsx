@@ -77,6 +77,9 @@ export async function generateMetadata({
       "geo.position": "41.0766;29.0125",
       "ICBM": "41.0766, 29.0125",
     },
+    verification: {
+      google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+    },
   };
 }
 

@@ -87,6 +87,27 @@ const TR_EXACT_REDIRECTS: Record<string, string> = {
   "/tr/contact": "/tr/iletisim",
   "/tr/report": "/tr/sikayet-bildir",
   "/tr/unauthorized": "/tr/yetkisiz",
+  // Intuitive User Aliases & Shortcuts (/tr)
+  "/tr/ilan-ver": "/tr/ilanlar/yeni",
+  "/tr/yeni-ilan": "/tr/ilanlar/yeni",
+  "/tr/kullanim-kosullari": "/tr/yasal/kullanim-kosullari",
+  "/tr/gizlilik": "/tr/yasal/gizlilik-ve-kvkk",
+  "/tr/gizlilik-politikasi": "/tr/yasal/gizlilik-ve-kvkk",
+  "/tr/kvkk": "/tr/yasal/gizlilik-ve-kvkk",
+  "/tr/cerezler": "/tr/yasal/cerez-politikasi",
+  "/tr/cerez-politikasi": "/tr/yasal/cerez-politikasi",
+  "/tr/sikayet": "/tr/sikayet-bildir",
+};
+
+const EN_EXACT_REDIRECTS: Record<string, string> = {
+  "/en/post-job": "/en/listings/new",
+  "/en/new-listing": "/en/listings/new",
+  "/en/terms": "/en/legal/terms",
+  "/en/terms-of-service": "/en/legal/terms",
+  "/en/privacy": "/en/legal/privacy",
+  "/en/privacy-policy": "/en/legal/privacy",
+  "/en/cookies": "/en/legal/cookies",
+  "/en/cookie-policy": "/en/legal/cookies",
 };
 
 function baseProxy(request: NextRequest) {
@@ -137,8 +158,8 @@ function baseProxy(request: NextRequest) {
     return NextResponse.redirect(redirectUrl, 301);
   }
 
-  // 2. 301 Permanent Redirects for legacy English paths requested under /tr
-  const exactRedirect = TR_EXACT_REDIRECTS[pathname];
+  // 2. 301 Permanent Redirects for legacy and intuitive aliases
+  const exactRedirect = TR_EXACT_REDIRECTS[pathname] || EN_EXACT_REDIRECTS[pathname];
   if (exactRedirect) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = exactRedirect;
