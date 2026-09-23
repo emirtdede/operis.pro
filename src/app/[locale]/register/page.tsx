@@ -17,8 +17,8 @@ export async function generateMetadata({
   const isTr = locale === "tr";
 
   const title = isTr
-    ? "Hesap Oluştur — Tek Hesap, Çift Yetenek"
-    : "Join Network — Dual-Role Account";
+    ? "Kayıt Ol — Ücretsiz Tek Hesap, Çift Yetenek | Operis"
+    : "Join Network — Dual-Role Free Account | Operis";
   const description = isTr
     ? "Ücretsiz hesap oluşturarak hem ilan yayınlayabilir hem de ilanlara teklif verebilirsiniz. Tek hesap, çift yetenek."
     : "Create a free single account with dual capabilities to both post technology listings and submit direct proposals.";
@@ -47,7 +47,7 @@ export async function generateMetadata({
       description,
     },
     robots: {
-      index: false,
+      index: true,
       follow: true,
     },
   };

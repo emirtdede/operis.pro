@@ -45,17 +45,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "report",
   ];
   for (const key of staticKeys) {
+    let priority = 0.5;
+    let changeFrequency: "hourly" | "daily" | "weekly" | "monthly" = "monthly";
+
+    if (key === "feed" || key === "listings") {
+      priority = 0.9;
+      changeFrequency = "hourly";
+    } else if (key === "categories") {
+      priority = 0.85;
+      changeFrequency = "daily";
+    } else if (key === "register") {
+      priority = 0.8;
+      changeFrequency = "weekly";
+    } else if (key === "login") {
+      priority = 0.75;
+      changeFrequency = "weekly";
+    } else if (key === "about" || key === "newListing") {
+      priority = 0.7;
+      changeFrequency = "weekly";
+    }
+
     entries.push({
       url: `${baseUrl}${ROUTE_MAP[key].tr}`,
       lastModified: now,
-      changeFrequency: key === "feed" || key === "listings" ? "hourly" : "weekly",
-      priority: key === "feed" || key === "listings" ? 0.9 : 0.6,
+      changeFrequency,
+      priority,
     });
     entries.push({
       url: `${baseUrl}${ROUTE_MAP[key].en}`,
       lastModified: now,
-      changeFrequency: key === "feed" || key === "listings" ? "hourly" : "weekly",
-      priority: key === "feed" || key === "listings" ? 0.9 : 0.6,
+      changeFrequency,
+      priority,
     });
   }
 

@@ -194,6 +194,14 @@ export default async function LandingPage({
           ? "10 sektör ve 110 kategoride komisyonsuz, doğrudan ve güvenli serbest çalışma platformu."
           : "Direct, transparent, zero-commission freelance matching platform across 10 sectors and 110 categories.",
         inLanguage: locale,
+        potentialAction: {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: `${baseUrl}${isTr ? "/tr/ilanlar" : "/en/listings"}?q={search_term_string}`,
+          },
+          "query-input": "required name=search_term_string",
+        },
         publisher: {
           "@id": `${baseUrl}/#organization`,
         },
@@ -219,6 +227,49 @@ export default async function LandingPage({
           contactType: "customer service",
           availableLanguage: ["Turkish", "English"],
         },
+      },
+      {
+        "@type": "ItemList",
+        "@id": `${baseUrl}/${locale}/#sitelinks-navigation`,
+        name: isTr ? "Operis Ana Gezinme Menüsü" : "Operis Main Navigation",
+        itemListElement: [
+          {
+            "@type": "SiteNavigationElement",
+            position: 1,
+            name: isTr ? "İlanları Keşfet" : "Browse Listings",
+            description: isTr
+              ? "7 günlük güncel teknoloji ilanlarını inceleyin, komisyonsuz doğrudan teklif sunun."
+              : "Explore 7-day active technology listings and submit direct proposals.",
+            url: `${baseUrl}${isTr ? "/tr/ilanlar" : "/en/listings"}`,
+          },
+          {
+            "@type": "SiteNavigationElement",
+            position: 2,
+            name: isTr ? "Kategoriler & Sektörler" : "Categories & Sectors",
+            description: isTr
+              ? "10 sektör ve 110 uzmanlık alanında doğrudan freelancer ve iş ilanlarını keşfedin."
+              : "Discover freelance and project listings across 10 sectors and 110 categories.",
+            url: `${baseUrl}${isTr ? "/tr/kategoriler" : "/en/categories"}`,
+          },
+          {
+            "@type": "SiteNavigationElement",
+            position: 3,
+            name: isTr ? "Kayıt Ol" : "Register Free",
+            description: isTr
+              ? "Tek hesap ile hem ilan verin hem teklif sunun. Ücretsiz kayıt olun."
+              : "Create a free dual-role account to post listings and submit direct offers.",
+            url: `${baseUrl}${isTr ? "/tr/kayit" : "/en/register"}`,
+          },
+          {
+            "@type": "SiteNavigationElement",
+            position: 4,
+            name: isTr ? "Giriş Yap" : "Sign In",
+            description: isTr
+              ? "Hesabınıza güvenle giriş yapın ve tekliflerinizi yönetin."
+              : "Log in securely to manage listings and direct proposals.",
+            url: `${baseUrl}${isTr ? "/tr/giris" : "/en/login"}`,
+          },
+        ],
       },
       {
         "@type": "BreadcrumbList",
