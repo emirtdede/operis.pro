@@ -170,6 +170,77 @@ export class DeliveryInspectorService {
   }
 
   /**
+   * Performs an HTTP request while strictly enforcing SSRF protection across all redirects.
+   * Redirects are followed manually (max 5 hops). Each redirect target URL is parsed
+   * and re-evaluated through validateUrlSsrfSafe() before the connection is established.
+   */
+  static async fetchSsrfSafe(
+    initialUrl: string,
+    options: {
+      method?: "HEAD" | "GET";
+      headers?: Record<string, string>;
+      maxRedirects?: number;
+      signal?: AbortSignal;
+    } = {}
+  ): Promise<{ response: Response; finalUrl: string }> {
+    let currentUrl = initialUrl.trim();
+    const maxRedirects = options.maxRedirects ?? 5;
+    let redirectCount = 0;
+    let method = options.method ?? "HEAD";
+
+    while (true) {
+      // 1. SSRF validation on current URL (resolves DNS, checks against loopback/private/cloud IPs)
+      const validatedUrl = await this.validateUrlSsrfSafe(currentUrl);
+
+      // 2. Fetch with manual redirect handling so Node/undici never follows blindly
+      const response = await fetch(validatedUrl.toString(), {
+        method,
+        headers: options.headers,
+        signal: options.signal,
+        redirect: "manual",
+      });
+
+      // 3. Check for redirect status codes (301, 302, 303, 307, 308)
+      const isRedirect =
+        response.status === 301 ||
+        response.status === 302 ||
+        response.status === 303 ||
+        response.status === 307 ||
+        response.status === 308;
+
+      if (isRedirect) {
+        redirectCount++;
+        if (redirectCount > maxRedirects) {
+          throw new Error("Çok fazla yönlendirme: Yönlendirme sınırı aşıldı (max 5).");
+        }
+
+        const location = response.headers.get("location");
+        if (!location) {
+          // Redirect without Location header is treated as final response
+          return { response, finalUrl: currentUrl };
+        }
+
+        // Safely resolve relative redirects against current URL
+        try {
+          const resolved = new URL(location, currentUrl);
+          currentUrl = resolved.toString();
+        } catch (err: unknown) {
+          throw new Error(`Geçersiz yönlendirme adresi: ${location}`, { cause: err });
+        }
+
+        // On 303, HTTP spec converts method to GET (unless HEAD remains HEAD)
+        if (response.status === 303 && method !== "HEAD") {
+          method = "GET";
+        }
+
+        continue;
+      }
+
+      return { response, finalUrl: currentUrl };
+    }
+  }
+
+  /**
    * Probes the live deployment endpoint, verifying HTTP status, SSL certificate,
    * latency and response headers.
    */
@@ -183,75 +254,65 @@ export class DeliveryInspectorService {
       };
     }
 
-    let parsedUrl: URL;
-    try {
-      parsedUrl = await this.validateUrlSsrfSafe(trimmed);
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Geçersiz veya engellenen URL";
-      return {
-        checked: true,
-        url: trimmed,
-        isAccessible: false,
-        error: msg,
-      };
-    }
-
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), this.CONNECT_TIMEOUT_MS);
 
     try {
       const startTime = performance.now();
 
-      // First attempt with HEAD request
-      let response: Response;
+      // First attempt with HEAD request via SSRF-safe manual redirect follower
+      let resResult: { response: Response; finalUrl: string };
       try {
-        response = await fetch(parsedUrl.toString(), {
+        resResult = await this.fetchSsrfSafe(trimmed, {
           method: "HEAD",
           headers: {
             "User-Agent": this.USER_AGENT,
             Accept: "*/*",
           },
           signal: controller.signal,
-          redirect: "follow",
         });
 
         // Some CDNs / web frameworks reject HEAD with 405 or 403, fallback to GET
-        if (response.status === 405 || response.status === 403) {
-          response = await fetch(parsedUrl.toString(), {
+        if (resResult.response.status === 405 || resResult.response.status === 403) {
+          resResult = await this.fetchSsrfSafe(trimmed, {
             method: "GET",
             headers: {
               "User-Agent": this.USER_AGENT,
               Accept: "text/html,application/xhtml+xml,application/json,*/*",
             },
             signal: controller.signal,
-            redirect: "follow",
           });
         }
-      } catch {
+      } catch (headErr: unknown) {
+        // If HEAD failed with an SSRF error, re-throw immediately
+        if (headErr instanceof Error && headErr.message.includes("SSRF Koruması")) {
+          throw headErr;
+        }
         // Fallback to GET if HEAD failed network handshake
-        response = await fetch(parsedUrl.toString(), {
+        resResult = await this.fetchSsrfSafe(trimmed, {
           method: "GET",
           headers: {
             "User-Agent": this.USER_AGENT,
             Accept: "text/html,application/xhtml+xml,application/json,*/*",
           },
           signal: controller.signal,
-          redirect: "follow",
         });
       }
 
+      const { response, finalUrl } = resResult;
+      const parsedFinalUrl = new URL(finalUrl);
       const responseTimeMs = Math.round(performance.now() - startTime);
       const isAccessible = response.status >= 200 && response.status < 400;
 
       return {
         checked: true,
-        url: parsedUrl.toString(),
+        url: finalUrl,
         isAccessible,
         httpStatus: response.status,
         statusText: response.statusText || (response.status === 200 ? "OK" : undefined),
         responseTimeMs,
-        sslValid: parsedUrl.protocol === "https:",
-        protocol: parsedUrl.protocol.replace(":", "").toUpperCase(),
+        sslValid: parsedFinalUrl.protocol === "https:",
+        protocol: parsedFinalUrl.protocol.replace(":", "").toUpperCase(),
         contentType: response.headers.get("content-type") || undefined,
         serverHeader: response.headers.get("server") || undefined,
       };
@@ -267,9 +328,9 @@ export class DeliveryInspectorService {
 
       return {
         checked: true,
-        url: parsedUrl.toString(),
+        url: trimmed,
         isAccessible: false,
-        sslValid: parsedUrl.protocol === "https:",
+        sslValid: trimmed.toLowerCase().startsWith("https://"),
         error: errorMsg,
       };
     } finally {
@@ -331,14 +392,13 @@ export class DeliveryInspectorService {
     const timer = setTimeout(() => controller.abort(), this.CONNECT_TIMEOUT_MS);
 
     try {
-      const res = await fetch(trimmedRepo, {
+      const { response: res } = await this.fetchSsrfSafe(trimmedRepo, {
         method: "HEAD",
         headers: {
           "User-Agent": this.USER_AGENT,
           Accept: "*/*",
         },
         signal: controller.signal,
-        redirect: "follow",
       });
 
       if (res.status === 200) {
@@ -358,7 +418,7 @@ export class DeliveryInspectorService {
       if (provider === "github" && isPublic && cleanCommit && commitValid) {
         try {
           const commitUrl = `${trimmedRepo.replace(/\/$/, "")}/commit/${cleanCommit}`;
-          const commitRes = await fetch(commitUrl, {
+          const { response: commitRes } = await this.fetchSsrfSafe(commitUrl, {
             method: "HEAD",
             headers: { "User-Agent": this.USER_AGENT },
             signal: controller.signal,
@@ -374,6 +434,17 @@ export class DeliveryInspectorService {
         }
       }
     } catch (err: unknown) {
+      if (err instanceof Error && err.message.includes("SSRF Koruması")) {
+        return {
+          checked: true,
+          url: trimmedRepo,
+          isAccessible: false,
+          provider,
+          commitHash: cleanCommit,
+          commitValid: false,
+          error: err.message,
+        };
+      }
       // If network inspection timed out or failed, mark as unconfirmed but do not block private setups
       isAccessible = true;
       error = err instanceof Error ? err.message : "Depo erişim kontrolü yapılamadı.";

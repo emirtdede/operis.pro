@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
+import { EngagementService } from "@/src/modules/engagements/service";
 import { DeliveryInspectorService } from "@/src/modules/engagements/delivery-inspector";
 import {
   evaluateSecurityAccessAsync,
@@ -41,6 +42,18 @@ export async function POST(
       return NextResponse.json(
         { error: isEnHeader ? "Engagement ID is required." : "Çalışma alanı kimliği zorunludur." },
         { status: 400 }
+      );
+    }
+
+    const details = await EngagementService.getEngagementDetails(session.userId, engagementId);
+    if (!details || !details.engagement) {
+      return NextResponse.json(
+        {
+          error: isEnHeader
+            ? "Engagement not found or unauthorized."
+            : "İş birliği bulunamadı veya erişim yetkiniz yok.",
+        },
+        { status: 404 }
       );
     }
 

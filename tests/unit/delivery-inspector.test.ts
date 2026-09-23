@@ -271,6 +271,58 @@ describe("Proof-of-Work (PoW) Delivery Health & Uptime Inspector Suite", () => {
       vi.unstubAllGlobals();
     });
 
+    it("should reject redirect pointing to private IP or cloud metadata", async () => {
+      const mockFetch = vi.fn().mockImplementation(async (url: string) => {
+        if (url.includes("safe-site.com")) {
+          return {
+            status: 302,
+            headers: new Headers({ location: "http://169.254.169.254/latest/meta-data" }),
+          };
+        }
+        return { status: 200, headers: new Headers() };
+      });
+      vi.stubGlobal("fetch", mockFetch);
+
+      await expect(
+        DeliveryInspectorService.fetchSsrfSafe("https://safe-site.com/redirect")
+      ).rejects.toThrow(/SSRF Koruması/);
+    });
+
+    it("should follow safe redirects and return final URL", async () => {
+      const mockFetch = vi.fn().mockImplementation(async (url: string) => {
+        if (url.includes("start")) {
+          return {
+            status: 301,
+            headers: new Headers({ location: "https://safe-site.com/destination" }),
+          };
+        }
+        return {
+          status: 200,
+          statusText: "OK",
+          headers: new Headers({ "content-type": "text/html" }),
+        };
+      });
+      vi.stubGlobal("fetch", mockFetch);
+
+      const result = await DeliveryInspectorService.fetchSsrfSafe("https://safe-site.com/start");
+      expect(result.response.status).toBe(200);
+      expect(result.finalUrl).toBe("https://safe-site.com/destination");
+    });
+
+    it("should abort when redirect count exceeds maxRedirects", async () => {
+      const mockFetch = vi.fn().mockImplementation(async () => {
+        return {
+          status: 302,
+          headers: new Headers({ location: "https://safe-site.com/loop" }),
+        };
+      });
+      vi.stubGlobal("fetch", mockFetch);
+
+      await expect(
+        DeliveryInspectorService.fetchSsrfSafe("https://safe-site.com/loop", { maxRedirects: 3 })
+      ).rejects.toThrow(/Çok fazla yönlendirme/);
+    });
+
     it("should return 400 Bad Request when repositoryUrl is omitted", async () => {
       const req = new Request("http://localhost/api/work/eng-demo-101/handover/inspect", {
         method: "POST",
@@ -285,6 +337,24 @@ describe("Proof-of-Work (PoW) Delivery Health & Uptime Inspector Suite", () => {
       });
 
       expect(res.status).toBe(400);
+    });
+
+    it("should return 404 when user is not authorized for the engagement", async () => {
+      const req = new Request("http://localhost/api/work/eng-unauthorized-xyz/handover/inspect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          repositoryUrl: "https://github.com/techcorp/saas",
+        }),
+      });
+
+      const res = await inspectRouteHandler(req, {
+        params: Promise.resolve({ id: "eng-unauthorized-xyz" }),
+      });
+
+      expect(res.status).toBe(404);
+      const json = await res.json();
+      expect(json.error).toContain("İş birliği bulunamadı veya erişim yetkiniz yok.");
     });
   });
 });
