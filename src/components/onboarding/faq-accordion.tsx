@@ -60,6 +60,22 @@ export function FaqAccordion({ locale }: FaqAccordionProps) {
         ? "Evet. Platformumuzda çift yetenek (dual-role) mimarisi geçerlidir. Ayrı işveren veya çalışan hesabı açmanıza gerek yoktur; tek bir profille hem dilediğiniz zaman ilan yayınlayabilir hem de diğer ilanlara teklif verebilirsiniz."
         : "Yes. Our architecture natively supports dual-capabilities on every account. You do not need separate accounts for client and freelancer; you can publish listings and bid on others using the same verified identity.",
     },
+    {
+      q: isTr
+        ? "Teklif kabul edildikten sonra ödeme ve sözleşme nasıl yürütülür?"
+        : "How are contracts and payments handled after a match is accepted?",
+      a: isTr
+        ? "Teklif kabul edildiğinde her iki tarafın doğrulanmış WhatsApp, telefon ve e-posta bilgileri birbirine açılır. Taraflar kendi standart hizmet sözleşmelerini imzalar; ödemeleri doğrudan banka havalesi (IBAN), şirket faturası veya diledikleri kanalla aracı komisyonsuz gerçekleştirir."
+        : "Once a proposal is approved, verified WhatsApp, phone, and email details unlock for both parties. Counterparties execute their standard service agreements and settle payments directly via bank transfer, corporate invoicing, or their preferred method with zero platform interference.",
+    },
+    {
+      q: isTr
+        ? "Operis komisyon almıyorsa nasıl gelir elde ediyor ve sürdürülüyor?"
+        : "If Operis takes zero commission, how does it stay sustainable?",
+      a: isTr
+        ? "Operis bir Vellium ürünüdür ve açık bir bağımsız protokol olarak tasarlanmıştır. Temel eşleştirme, ilan verme ve teklif sunma her zaman %100 komisyonsuz ve ücretsizdir. Platformun sürdürülebilirliği ileride sunulacak isteğe bağlı kurumsal vitrin özellikleri, API entegrasyonları ve ekosistem sponsorlukları ile sağlanır."
+        : "Operis is built by Vellium as an independent protocol. Core matching, listing publication, and bidding remain forever 100% commission-free. Long-term platform sustainability is powered by optional enterprise tooling, API integrations, and developer ecosystem partnerships.",
+    },
   ];
 
   return (
