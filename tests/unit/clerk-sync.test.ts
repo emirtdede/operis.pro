@@ -61,7 +61,7 @@ describe("ClerkSyncService Unit Tests", () => {
     expect(result.isNewUser).toBe(true);
     expect(result.displayName).toBe("Ahmet Yılmaz");
     expect(result.email).toBe("engineer@operis.pro");
-    expect(result.handle).toBe("ahmet");
+    expect(result.handle).toBe("ahmetyilmaz");
   });
 
   it("links existing user by email and self-heals missing userPrivateIdentity", async () => {

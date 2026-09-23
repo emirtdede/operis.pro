@@ -8,6 +8,7 @@ import {
   sha256,
 } from "@/src/lib/crypto";
 import { LegalService } from "@/src/modules/legal/service";
+import { generateUniqueSequentialHandle } from "./handle-generator";
 
 export interface LegalConsentInput {
   accepted: boolean;
@@ -37,46 +38,6 @@ type AppDb = ReturnType<typeof getDb>;
 type DbOrTx = Parameters<Parameters<AppDb["transaction"]>[0]>[0] | AppDb;
 
 export class ClerkSyncService {
-  /**
-   * Generates a safe, URL-friendly unique handle for the user based on their name or email.
-   */
-  private static async generateUniqueHandle(
-    db: DbOrTx,
-    baseStr: string
-  ): Promise<string> {
-    let clean = baseStr
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9_]/g, "");
-
-    if (clean.length < 3) {
-      clean = `user_${clean}`;
-    }
-    clean = clean.slice(0, 20);
-
-    const findHandle = async (candidate: string, attempt: number): Promise<string> => {
-      if (attempt >= 10) {
-        return `user_${crypto.randomBytes(4).toString("hex")}`;
-      }
-
-      const [existing] = await db
-        .select({ handle: schema.profiles.handle })
-        .from(schema.profiles)
-        .where(eq(schema.profiles.handle, candidate))
-        .limit(1);
-
-      if (!existing) {
-        return candidate;
-      }
-
-      const suffix = crypto.randomInt(100, 999).toString();
-      const nextCandidate = `${clean.slice(0, 16)}_${suffix}`;
-      return findHandle(nextCandidate, attempt + 1);
-    };
-
-    return findHandle(clean, 0);
-  }
-
   /**
    * Ensures the mandatory userPrivateIdentity row exists for KVKK compliance and phone verification readiness.
    */
@@ -213,8 +174,12 @@ export class ClerkSyncService {
 
       // Self-heal: ensure profiles exists if missing (WP-25)
       if (!existingByClerkId.profile) {
-        const baseHandle = input.firstName || normalizedEmail.split("@")[0] || "operis_user";
-        const uniqueHandle = await this.generateUniqueHandle(db, baseHandle);
+        const uniqueHandle = await generateUniqueSequentialHandle(
+          db,
+          input.firstName,
+          input.lastName,
+          normalizedEmail
+        );
         const displayName =
           [input.firstName, input.lastName].filter(Boolean).join(" ").trim() ||
           normalizedEmail.split("@")[0] ||
@@ -400,8 +365,12 @@ export class ClerkSyncService {
 
       // Self-heal: ensure profiles exists if missing (WP-25)
       if (!existingByEmail.profile) {
-        const baseHandle = input.firstName || normalizedEmail.split("@")[0] || "operis_user";
-        const uniqueHandle = await this.generateUniqueHandle(db, baseHandle);
+        const uniqueHandle = await generateUniqueSequentialHandle(
+          db,
+          input.firstName,
+          input.lastName,
+          normalizedEmail
+        );
         const displayName =
           [input.firstName, input.lastName].filter(Boolean).join(" ").trim() ||
           normalizedEmail.split("@")[0] ||
@@ -456,8 +425,12 @@ export class ClerkSyncService {
         normalizedEmail.split("@")[0] ||
         "Operis Kullanıcısı";
 
-      const baseHandle = input.firstName || normalizedEmail.split("@")[0] || "operis_user";
-      const uniqueHandle = await this.generateUniqueHandle(tx, baseHandle);
+      const uniqueHandle = await generateUniqueSequentialHandle(
+        tx,
+        input.firstName,
+        input.lastName,
+        normalizedEmail
+      );
 
       const placeholderHash = `clerk_ext_${crypto.randomBytes(32).toString("hex")}`;
       const emailEnc = encryptEnvelopeV2(normalizedEmail, {
@@ -514,11 +487,31 @@ export class ClerkSyncService {
       };
     };
 
-    if ("transaction" in db && typeof db.transaction === "function") {
-      return await db.transaction(async (tx) => executeCreation(tx));
-    } else {
-      return await executeCreation(db);
-    }
+    const runCreationWithRetry = async () => {
+      let attempts = 0;
+      while (attempts < 3) {
+        try {
+          if ("transaction" in db && typeof db.transaction === "function") {
+            return await db.transaction(async (tx) => executeCreation(tx));
+          } else {
+            return await executeCreation(db);
+          }
+        } catch (err: any) {
+          const isUniqueViolation =
+            err?.code === "23505" ||
+            err?.message?.includes("unique") ||
+            err?.message?.includes("duplicate key");
+          if (isUniqueViolation && attempts < 2) {
+            attempts++;
+            continue;
+          }
+          throw err;
+        }
+      }
+      throw new Error("Kullanıcı profili oluşturulurken beklenmeyen bir çakışma oluştu.");
+    };
+
+    return await runCreationWithRetry();
   }
 
   /**
