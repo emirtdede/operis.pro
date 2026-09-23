@@ -49,11 +49,13 @@ export async function GET(req: Request) {
     const { cleanupExpiredRateLimits } = await import("@/src/lib/security/rate-limit");
     const { OfferService } = await import("@/src/modules/offers/service");
     const { PrivacyService } = await import("@/src/modules/privacy/service");
+    const { ReviewService } = await import("@/src/modules/reviews/service");
     const cleanedOtp = await cleanupExpiredOtpChallenges(24);
     const cleanedRateLimits = await cleanupExpiredRateLimits();
     const cleanedIdempotencyKeys = await OfferService.cleanupExpiredIdempotencyKeys();
     const cleanedExportFiles = await PrivacyService.cleanupExpiredExportFiles();
     const processedExportJobs = await PrivacyService.processPendingExportJobs();
+    const autoRevealedReviewsCount = await ReviewService.autoRevealExpiredReviews();
 
     return NextResponse.json(
       {
@@ -67,6 +69,7 @@ export async function GET(req: Request) {
         cleanedIdempotencyKeysCount: cleanedIdempotencyKeys,
         cleanedExportFilesCount: cleanedExportFiles,
         processedExportJobsCount: processedExportJobs,
+        autoRevealedReviewsCount,
       },
       { status: 200 }
     );

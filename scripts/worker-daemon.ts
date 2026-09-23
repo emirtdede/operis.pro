@@ -282,6 +282,15 @@ async function runMaintenanceCycle(): Promise<void> {
       };
     }
 
+    try {
+      const { ReviewService } = await import("../src/modules/reviews/service");
+      results.autoRevealedReviews = await ReviewService.autoRevealExpiredReviews();
+    } catch (err) {
+      results.autoRevealedReviews = {
+        error: err instanceof Error ? err.message : "Error auto-revealing expired reviews",
+      };
+    }
+
     const hasErrors = Object.values(results).some(
       (val) => typeof val === "object" && val !== null && "error" in val
     );

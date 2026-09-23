@@ -119,7 +119,7 @@ export class ReviewService {
     );
 
     // ================= VITEST / ZERO-CONFIG IN-MEMORY FALLBACK =================
-    if (!isEngUuid || !isAuthorUuid || Boolean(process.env.VITEST)) {
+    if ((!isEngUuid || !isAuthorUuid) && (process.env.NODE_ENV !== "production" || process.env.VITEST)) {
       // In-memory branch
       const isDemoEng = input.engagementId === "eng-demo-101" || input.engagementId.startsWith("eng-");
       if (!isDemoEng && !isEngUuid) {
@@ -248,42 +248,53 @@ export class ReviewService {
       throw new Error("REVIEW_WINDOW_EXPIRED");
     }
 
-    // 3. Check duplicate
-    const existing = await db
-      .select({ id: schema.engagementReviews.id })
-      .from(schema.engagementReviews)
-      .where(
-        and(
-          eq(schema.engagementReviews.engagementId, input.engagementId),
-          eq(schema.engagementReviews.authorUserId, input.authorUserId)
+    // Transactional insert and simultaneous reveal with engagement row lock (WP-31)
+    const { createdReview, shouldReveal } = await db.transaction(async (tx) => {
+      // 1. Lock engagement row to serialize concurrent review submissions for the same engagement
+      let engLockQuery = tx
+        .select({ id: schema.engagements.id })
+        .from(schema.engagements)
+        .where(eq(schema.engagements.id, input.engagementId));
+
+      if (typeof (engLockQuery as { for?: unknown }).for === "function") {
+        engLockQuery = (engLockQuery as { for: (mode: string) => typeof engLockQuery }).for("update");
+      }
+      await engLockQuery.limit(1);
+
+      // 2. Check duplicate under lock
+      const existing = await tx
+        .select({ id: schema.engagementReviews.id })
+        .from(schema.engagementReviews)
+        .where(
+          and(
+            eq(schema.engagementReviews.engagementId, input.engagementId),
+            eq(schema.engagementReviews.authorUserId, input.authorUserId)
+          )
         )
-      )
-      .limit(1);
+        .limit(1);
 
-    if (existing.length > 0) {
-      throw new Error("DUPLICATE_REVIEW");
-    }
+      if (existing.length > 0) {
+        throw new Error("DUPLICATE_REVIEW");
+      }
 
-    // 4. Check if counterparty has submitted
-    const counterpartyRows = await db
-      .select({
-        id: schema.engagementReviews.id,
-        isRevealed: schema.engagementReviews.isRevealed,
-      })
-      .from(schema.engagementReviews)
-      .where(
-        and(
-          eq(schema.engagementReviews.engagementId, input.engagementId),
-          eq(schema.engagementReviews.authorUserId, recipientUserId)
+      // 3. Check if counterparty has submitted under lock
+      const counterpartyRows = await tx
+        .select({
+          id: schema.engagementReviews.id,
+          isRevealed: schema.engagementReviews.isRevealed,
+        })
+        .from(schema.engagementReviews)
+        .where(
+          and(
+            eq(schema.engagementReviews.engagementId, input.engagementId),
+            eq(schema.engagementReviews.authorUserId, recipientUserId)
+          )
         )
-      )
-      .limit(1);
+        .limit(1);
 
-    const hasCounterparty = counterpartyRows.length > 0;
-    const shouldReveal = hasCounterparty;
+      const hasCounterparty = counterpartyRows.length > 0;
+      const willReveal = hasCounterparty;
 
-    // Transactional insert and simultaneous reveal if counterparty exists
-    const createdReview = await db.transaction(async (tx) => {
       const [inserted] = await tx
         .insert(schema.engagementReviews)
         .values({
@@ -297,15 +308,15 @@ export class ReviewService {
           comment: trimmedComment,
           tags: input.tags || [],
           endorsedSkills: input.endorsedSkills || [],
-          isRevealed: shouldReveal,
-          revealedAt: shouldReveal ? now : null,
+          isRevealed: willReveal,
+          revealedAt: willReveal ? now : null,
           reviewWindowExpiresAt,
           createdAt: now,
           updatedAt: now,
         })
         .returning();
 
-      if (shouldReveal && counterpartyRows[0]) {
+      if (willReveal && counterpartyRows[0]) {
         await tx
           .update(schema.engagementReviews)
           .set({
@@ -316,7 +327,7 @@ export class ReviewService {
           .where(eq(schema.engagementReviews.id, counterpartyRows[0].id));
       }
 
-      return inserted;
+      return { createdReview: inserted, shouldReveal: willReveal };
     });
 
     if (!createdReview) {

@@ -4,6 +4,7 @@ import { cleanupExpiredOtpChallenges } from "@/src/modules/auth/verification";
 import { cleanupExpiredRateLimits } from "@/src/lib/security/rate-limit";
 import { OfferService } from "@/src/modules/offers/service";
 import { PrivacyService } from "@/src/modules/privacy/service";
+import { ReviewService } from "@/src/modules/reviews/service";
 
 /**
  * Scheduled system maintenance durable function.
@@ -47,6 +48,10 @@ export const maintenanceCronJob = inngest.createFunction(
       return await PrivacyService.processPendingExportJobs();
     });
 
+    const autoRevealedReviews = await step.run("auto-reveal-expired-reviews", async () => {
+      return await ReviewService.autoRevealExpiredReviews();
+    });
+
     return {
       success: true,
       executedAt: new Date().toISOString(),
@@ -58,6 +63,7 @@ export const maintenanceCronJob = inngest.createFunction(
         cleanedIdempotencyKeys,
         cleanedExportFiles,
         processedExportJobs,
+        autoRevealedReviews,
       },
     };
   }
