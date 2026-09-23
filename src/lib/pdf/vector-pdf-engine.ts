@@ -27,8 +27,15 @@ export class VectorPdfEngine {
       }
     }
 
-    // Dynamic import to support environments gracefully
-    const { chromium } = await import("@playwright/test");
+    // Dynamic import to support environments gracefully without breaking serverless webpack bundle
+    const pkgName = "@playwright/test";
+    const { chromium } = await import(/* webpackIgnore: true */ pkgName).catch(() => ({
+      chromium: null,
+    }));
+
+    if (!chromium || typeof chromium.launch !== "function") {
+      throw new Error("Headless Chromium is not available in serverless execution environment.");
+    }
 
     const browser = await chromium.launch({
       headless: true,
