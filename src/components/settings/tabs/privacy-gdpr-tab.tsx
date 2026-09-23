@@ -13,6 +13,7 @@ export interface PrivacyGdprTabProps {
   exportLoading: boolean;
   exportJobId: string | null;
   exportStatus: string | null;
+  exportDownloadUrl?: string | null;
   locale: string;
   onTriggerExport: () => void;
 }
@@ -21,6 +22,7 @@ export function PrivacyGdprTab({
   exportLoading,
   exportJobId,
   exportStatus,
+  exportDownloadUrl,
   locale,
   onTriggerExport,
 }: PrivacyGdprTabProps) {
@@ -65,10 +67,43 @@ export function PrivacyGdprTab({
           </Button>
         </div>
         {exportJobId && (
-          <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs text-blue-400 mt-2">
-            {isTr
-              ? `Veri İşi: #${exportJobId.slice(0, 8)} — Durum: ${exportStatus || "Hazırlanıyor"}`
-              : `Job: #${exportJobId.slice(0, 8)} — Status: ${exportStatus || "Processing"}`}
+          <div className="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs text-blue-400 mt-2 space-y-2">
+            <div className="flex items-center justify-between">
+              <span>
+                {isTr
+                  ? `Veri İşi: #${exportJobId.slice(0, 8)} — Durum: ${
+                      exportStatus === "READY"
+                        ? "Hazır"
+                        : exportStatus === "FAILED"
+                        ? "Başarısız"
+                        : "Hazırlanıyor"
+                    }`
+                  : `Job: #${exportJobId.slice(0, 8)} — Status: ${
+                      exportStatus === "READY"
+                        ? "Ready"
+                        : exportStatus === "FAILED"
+                        ? "Failed"
+                        : "Processing"
+                    }`}
+              </span>
+              {exportDownloadUrl && exportStatus === "READY" && (
+                <a
+                  href={exportDownloadUrl}
+                  download={`operis-data-export-${exportJobId.slice(0, 8)}.json`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-medium text-xs shadow-xs transition-colors"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  <span>{isTr ? "İndir" : "Download"}</span>
+                </a>
+              )}
+            </div>
+            {exportStatus === "PROCESSING" && (
+              <p className="text-[11px] text-blue-300/80">
+                {isTr
+                  ? "Arşiviniz şifreleniyor ve hazırlanıyor. Bu pencereyi açık tutabilir veya daha sonra tekrar kontrol edebilirsiniz."
+                  : "Your archive is being prepared and encrypted. You can keep this tab open or check back later."}
+              </p>
+            )}
           </div>
         )}
       </div>

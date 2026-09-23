@@ -76,6 +76,7 @@ export function SettingsView({
   const [exportLoading, setExportLoading] = useState(false);
   const [exportJobId, setExportJobId] = useState<string | null>(null);
   const [exportStatus, setExportStatus] = useState<string | null>(null);
+  const [exportDownloadUrl, setExportDownloadUrl] = useState<string | null>(null);
 
   // Status feedback
   const [saving, setSaving] = useState(false);
@@ -96,6 +97,49 @@ export function SettingsView({
       .catch(() => {})
       .finally(() => setLoadingConsent(false));
   }, []);
+
+  // Poll export job status until completed (READY or FAILED) (WP-34)
+  useEffect(() => {
+    if (!exportJobId || exportStatus === "READY" || exportStatus === "FAILED") {
+      return;
+    }
+
+    const intervalId = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/account/export?jobId=${encodeURIComponent(exportJobId)}`, {
+          headers: { "x-locale": locale },
+        });
+        if (!res.ok) return;
+
+        const data = await res.json();
+        const job = data.job || data;
+        const status = job.status;
+        if (status) {
+          setExportStatus(status);
+        }
+        if (status === "READY") {
+          const downloadUrl =
+            job.downloadUrl || `/api/account/export?jobId=${encodeURIComponent(exportJobId)}&download=1`;
+          setExportDownloadUrl(downloadUrl);
+          showFeedback(
+            "success",
+            isTr
+              ? "Veri aktarım dosyanız hazırlandı. İndirebilirsiniz."
+              : "Data export archive is ready for download."
+          );
+        } else if (status === "FAILED") {
+          showFeedback(
+            "error",
+            isTr ? "Veri aktarım işlemi başarısız oldu." : "Data export processing failed."
+          );
+        }
+      } catch {
+        // Retry on next interval tick
+      }
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, [exportJobId, exportStatus, isTr, locale]);
 
   const showFeedback = (type: "success" | "error", message: string) => {
     setFeedback({ type, message });
@@ -144,20 +188,41 @@ export function SettingsView({
       showFeedback("error", isTr ? "Yeni şifreler uyuşmuyor." : "Passwords do not match.");
       return;
     }
-    if (newPassword.length < 8) {
-      showFeedback("error", isTr ? "Şifre en az 8 karakter olmalıdır." : "Password must be at least 8 chars.");
+    if (newPassword.length < 12) {
+      showFeedback(
+        "error",
+        isTr ? "Şifre en az 12 karakter olmalıdır." : "Password must be at least 12 characters."
+      );
+      return;
+    }
+    if (!/[A-Z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
+      showFeedback(
+        "error",
+        isTr
+          ? "Şifre en az bir büyük harf ve bir rakam içermelidir."
+          : "Password must contain at least one uppercase letter and one number."
+      );
+      return;
+    }
+    if (currentPassword === newPassword) {
+      showFeedback(
+        "error",
+        isTr
+          ? "Yeni şifre mevcut şifrenizle aynı olamaz."
+          : "New password cannot be the same as current password."
+      );
       return;
     }
     setSaving(true);
     try {
-      const res = await fetch("/api/account/password", {
+      const res = await fetch("/api/auth/change-password", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ currentPassword, newPassword }),
+        headers: { "Content-Type": "application/json", "x-locale": isTr ? "tr" : "en" },
+        body: JSON.stringify({ currentPassword, newPassword, locale: isTr ? "tr" : "en" }),
       });
       if (!res.ok) {
         const d = await res.json().catch(() => ({}));
-        throw new Error(d.error || "Password change failed");
+        throw new Error(d.error || (isTr ? "Şifre değiştirilemedi." : "Password change failed."));
       }
       setCurrentPassword("");
       setNewPassword("");
@@ -172,17 +237,22 @@ export function SettingsView({
 
   const handleTriggerExport = async () => {
     setExportLoading(true);
+    setExportDownloadUrl(null);
     try {
-      const res = await fetch("/api/account/export", { method: "POST" });
+      const res = await fetch("/api/account/export", {
+        method: "POST",
+        headers: { "x-locale": isTr ? "tr" : "en" },
+      });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Export failed");
-      setExportJobId(data.jobId);
+      const jobId = data.jobId || data.id;
+      setExportJobId(jobId);
       setExportStatus("PROCESSING");
       showFeedback(
         "success",
         isTr
-          ? "Veri aktarım talebiniz oluşturuldu. Hazır olduğunda dosyanız indirilebilir."
-          : "Data export initiated. Your file will be available shortly."
+          ? "Veri aktarım talebiniz oluşturuldu. Dosya hazırlandığında otomatik olarak indirme bağlantısı görünecektir."
+          : "Data export initiated. Download link will appear automatically once ready."
       );
     } catch (err: unknown) {
       showFeedback("error", err instanceof Error ? err.message : "Export error");
@@ -377,6 +447,7 @@ export function SettingsView({
               exportLoading={exportLoading}
               exportJobId={exportJobId}
               exportStatus={exportStatus}
+              exportDownloadUrl={exportDownloadUrl}
               locale={locale}
               onTriggerExport={handleTriggerExport}
             />
