@@ -153,6 +153,9 @@ export const engagementChangeRequests = pgTable(
     index("idx_engagement_change_requests_engagement").on(table.engagementId),
     index("idx_engagement_change_requests_status").on(table.status),
     uniqueIndex("idx_engagement_change_requests_seq").on(table.engagementId, table.sequenceNumber),
+    uniqueIndex("idx_engagement_change_requests_pending")
+      .on(table.engagementId)
+      .where(sql`${table.status} = 'PENDING'`),
   ]
 );
 

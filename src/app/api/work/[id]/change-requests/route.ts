@@ -45,6 +45,16 @@ export async function GET(
     });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Internal Server Error";
+    if (message === "ENGAGEMENT_NOT_FOUND" || message === "UNAUTHORIZED_USER") {
+      return NextResponse.json(
+        {
+          error: isEnHeader
+            ? "Unauthorized or engagement not found."
+            : "İş birliği bulunamadı veya yetkiniz yok.",
+        },
+        { status: 403 }
+      );
+    }
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
@@ -101,7 +111,7 @@ export async function POST(
       description,
       reason,
       additionalBudget: Number(additionalBudget) || 0,
-      currency: currency || "TRY",
+      currency: currency || undefined,
       additionalDays: Number(additionalDays) || 0,
     });
 
@@ -119,6 +129,16 @@ export async function POST(
             : "Bu iş birliği için halihazırda onay bekleyen bir değişiklik talebi bulunmaktadır.",
         },
         { status: 409 }
+      );
+    }
+    if (message === "CURRENCY_MISMATCH") {
+      return NextResponse.json(
+        {
+          error: isEnHeader
+            ? "Change request currency must match the engagement budget currency."
+            : "Değişiklik talebi para birimi iş birliğinin bütçe para birimiyle aynı olmalıdır.",
+        },
+        { status: 400 }
       );
     }
     if (message === "ENGAGEMENT_NOT_FOUND" || message === "UNAUTHORIZED_USER") {

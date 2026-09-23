@@ -36,7 +36,7 @@ export async function POST(
       );
     }
 
-    const { crId } = await params;
+    const { id, crId } = await params;
     const body = await req.json();
     const { action, rejectionReason, locale } = body;
 
@@ -49,6 +49,7 @@ export async function POST(
 
     const updated = await ChangeRequestService.respondChangeRequest({
       changeRequestId: crId,
+      engagementId: id,
       userId: session.userId,
       action,
       rejectionReason,
@@ -61,6 +62,16 @@ export async function POST(
     });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Internal Server Error";
+    if (message === "CHANGE_REQUEST_NOT_PENDING") {
+      return NextResponse.json(
+        {
+          error: isEnHeader
+            ? "Change request is no longer pending."
+            : "Değişiklik talebi artık beklemede değil.",
+        },
+        { status: 409 }
+      );
+    }
     if (message === "CANNOT_APPROVE_OWN_REQUEST") {
       return NextResponse.json(
         {

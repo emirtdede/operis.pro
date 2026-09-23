@@ -20,6 +20,13 @@ export class EngagementQueryService {
           engagementId.startsWith("eng-cas-") ||
           engagementId.startsWith("eng-tamper-"))
       ) {
+        if (
+          engagementId === "eng-demo-101" &&
+          viewerUserId !== DEFAULT_USER.id &&
+          viewerUserId !== "u-techcorp-1"
+        ) {
+          return null;
+        }
         return getDemoEngagement(viewerUserId, engagementId);
       }
       return null;

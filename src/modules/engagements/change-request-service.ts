@@ -1,4 +1,4 @@
-import { eq, asc } from "drizzle-orm";
+import { eq, asc, desc, and } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
 import { NotificationService } from "@/src/modules/notifications/service";
 import { EngagementService } from "./service";
@@ -32,6 +32,7 @@ export interface RespondChangeRequestInput {
   action: "APPROVE" | "REJECT";
   rejectionReason?: string;
   locale?: "tr" | "en";
+  engagementId?: string;
 }
 
 export interface ChangeRequestSummaryDto {
@@ -39,6 +40,7 @@ export interface ChangeRequestSummaryDto {
   totalApprovedDays: number;
   approvedAddendumsCount: number;
   currency: string;
+  budgetsByCurrency?: Record<string, number>;
   pendingRequest: ChangeRequestRecord | null;
   changeRequests: ChangeRequestRecord[];
 }
@@ -196,18 +198,19 @@ export class ChangeRequestService {
 
     const additionalBudget = Math.max(0, Number(input.additionalBudget) || 0);
     const additionalDays = Math.max(0, Math.floor(Number(input.additionalDays) || 0));
-    const currency = (input.currency || "TRY").toUpperCase();
 
-    // Check if there is already a PENDING change request
-    const existingList = await this.getRecords(input.engagementId);
-    const hasPending = existingList.some((cr) => cr.status === "PENDING");
-    if (hasPending) {
-      throw new Error("ACTIVE_CHANGE_REQUEST_EXISTS");
+    // Base currency check (WP-18)
+    const baseCurrency = (
+      details.acceptedOffer?.budgetCurrency ||
+      details.listing?.budgetCurrency ||
+      "TRY"
+    ).toUpperCase();
+
+    const inputCurrency = input.currency ? input.currency.trim().toUpperCase() : baseCurrency;
+    if (inputCurrency !== baseCurrency) {
+      throw new Error("CURRENCY_MISMATCH");
     }
-
-    const nextSeq = existingList.length > 0
-      ? Math.max(...existingList.map((cr) => cr.sequenceNumber)) + 1
-      : 1;
+    const currency = baseCurrency;
 
     const isMock =
       Boolean(process.env.VITEST) ||
@@ -220,6 +223,17 @@ export class ChangeRequestService {
     let savedRecord: ChangeRequestRecord;
 
     if (isMock) {
+      // Check if there is already a PENDING change request
+      const existingList = await this.getRecords(input.engagementId);
+      const hasPending = existingList.some((cr) => cr.status === "PENDING");
+      if (hasPending) {
+        throw new Error("ACTIVE_CHANGE_REQUEST_EXISTS");
+      }
+
+      const nextSeq = existingList.length > 0
+        ? Math.max(...existingList.map((cr) => cr.sequenceNumber)) + 1
+        : 1;
+
       savedRecord = {
         id: newRecordId,
         engagementId: input.engagementId,
@@ -246,9 +260,34 @@ export class ChangeRequestService {
       current.push(savedRecord);
       inMemoryChangeRequests.set(input.engagementId, current);
     } else {
-      try {
-        const db = getDb();
-        const rows = await db
+      // Production database transaction (WP-16, WP-17) - fail-closed, no silent memory fallback
+      const db = getDb();
+      savedRecord = await db.transaction(async (tx) => {
+        const pending = await tx
+          .select({ id: schema.engagementChangeRequests.id })
+          .from(schema.engagementChangeRequests)
+          .where(
+            and(
+              eq(schema.engagementChangeRequests.engagementId, input.engagementId),
+              eq(schema.engagementChangeRequests.status, "PENDING")
+            )
+          )
+          .limit(1);
+
+        if (pending.length > 0) {
+          throw new Error("ACTIVE_CHANGE_REQUEST_EXISTS");
+        }
+
+        const seqRows = await tx
+          .select({ sequenceNumber: schema.engagementChangeRequests.sequenceNumber })
+          .from(schema.engagementChangeRequests)
+          .where(eq(schema.engagementChangeRequests.engagementId, input.engagementId))
+          .orderBy(desc(schema.engagementChangeRequests.sequenceNumber))
+          .limit(1);
+
+        const nextSeq = (seqRows[0]?.sequenceNumber ?? 0) + 1;
+
+        const rows = await tx
           .insert(schema.engagementChangeRequests)
           .values({
             engagementId: input.engagementId,
@@ -275,33 +314,8 @@ export class ChangeRequestService {
         if (!rows[0]) {
           throw new Error("DATABASE_ERROR");
         }
-        savedRecord = rows[0];
-      } catch {
-        savedRecord = {
-          id: newRecordId,
-          engagementId: input.engagementId,
-          requesterUserId: input.requesterUserId,
-          reviewerUserId,
-          sequenceNumber: nextSeq,
-          title: trimmedTitle,
-          description: trimmedDesc,
-          reason: input.reason,
-          additionalBudget: additionalBudget.toFixed(2),
-          currency,
-          additionalDays,
-          status: "PENDING",
-          rejectionReason: null,
-          respondedAt: null,
-          parentContractSha256: null,
-          addendumSha256: null,
-          addendumContentMarkdown: null,
-          createdAt: now,
-          updatedAt: now,
-        };
-        const current = inMemoryChangeRequests.get(input.engagementId) || [];
-        current.push(savedRecord);
-        inMemoryChangeRequests.set(input.engagementId, current);
-      }
+        return rows[0];
+      });
     }
 
     // Send notification to reviewer
@@ -339,51 +353,68 @@ export class ChangeRequestService {
       );
     }
 
-    try {
-      const db = getDb();
-      return await db
-        .select()
-        .from(schema.engagementChangeRequests)
-        .where(eq(schema.engagementChangeRequests.engagementId, engagementId))
-        .orderBy(asc(schema.engagementChangeRequests.sequenceNumber));
-    } catch {
-      return [...(inMemoryChangeRequests.get(engagementId) || [])].sort(
-        (a, b) => a.sequenceNumber - b.sequenceNumber
-      );
-    }
+    // Fail-closed database query in production (WP-16)
+    const db = getDb();
+    return await db
+      .select()
+      .from(schema.engagementChangeRequests)
+      .where(eq(schema.engagementChangeRequests.engagementId, engagementId))
+      .orderBy(asc(schema.engagementChangeRequests.sequenceNumber));
   }
 
   /**
    * Retrieves all change requests and cumulative stats for an engagement.
+   * Strictly enforces viewer participant verification (WP-15) and currency isolation (WP-18).
    */
   static async getChangeRequests(
-    _viewerUserId: string,
+    viewerUserId: string,
     engagementId: string
   ): Promise<ChangeRequestSummaryDto> {
+    const details = await EngagementService.getEngagementDetails(viewerUserId, engagementId);
+    if (!details) {
+      throw new Error("UNAUTHORIZED_USER");
+    }
+
+    const { engagement } = details;
+    const isOwner = engagement.ownerUserId === viewerUserId;
+    const isFreelancer = engagement.freelancerUserId === viewerUserId;
+    if (!isOwner && !isFreelancer) {
+      throw new Error("UNAUTHORIZED_USER");
+    }
+
+    const baseCurrency = (
+      details.acceptedOffer?.budgetCurrency ||
+      details.listing?.budgetCurrency ||
+      "TRY"
+    ).toUpperCase();
+
     const records = await this.getRecords(engagementId);
 
-    let totalApprovedBudget = 0;
     let totalApprovedDays = 0;
     let approvedAddendumsCount = 0;
-    let currency = "TRY";
     let pendingRequest: ChangeRequestRecord | null = null;
+    const budgetsByCurrency: Record<string, number> = {};
 
     for (const cr of records) {
       if (cr.status === "APPROVED") {
-        totalApprovedBudget += Number(cr.additionalBudget) || 0;
+        const cur = (cr.currency || baseCurrency).toUpperCase();
+        const amt = Number(cr.additionalBudget) || 0;
+        budgetsByCurrency[cur] = (budgetsByCurrency[cur] || 0) + amt;
         totalApprovedDays += Number(cr.additionalDays) || 0;
         approvedAddendumsCount += 1;
-        if (cr.currency) currency = cr.currency;
       } else if (cr.status === "PENDING") {
         pendingRequest = cr;
       }
     }
 
+    const totalApprovedBudget = budgetsByCurrency[baseCurrency] || 0;
+
     return {
       totalApprovedBudget,
       totalApprovedDays,
       approvedAddendumsCount,
-      currency,
+      currency: baseCurrency,
+      budgetsByCurrency,
       pendingRequest,
       changeRequests: records,
     };
@@ -391,6 +422,7 @@ export class ChangeRequestService {
 
   /**
    * Responds to a pending change request: APPROVE (creates Addendum) or REJECT.
+   * Uses optimistic concurrency control (CAS) to prevent race conditions (WP-17).
    */
   static async respondChangeRequest(
     input: RespondChangeRequestInput
@@ -410,26 +442,20 @@ export class ChangeRequestService {
         }
       }
     } else {
-      try {
-        const db = getDb();
-        const rows = await db
-          .select()
-          .from(schema.engagementChangeRequests)
-          .where(eq(schema.engagementChangeRequests.id, input.changeRequestId))
-          .limit(1);
-        record = rows[0] ?? null;
-      } catch {
-        for (const [_, list] of inMemoryChangeRequests) {
-          const found = list.find((cr) => cr.id === input.changeRequestId);
-          if (found) {
-            record = found;
-            break;
-          }
-        }
-      }
+      const db = getDb();
+      const rows = await db
+        .select()
+        .from(schema.engagementChangeRequests)
+        .where(eq(schema.engagementChangeRequests.id, input.changeRequestId))
+        .limit(1);
+      record = rows[0] ?? null;
     }
 
     if (!record) {
+      throw new Error("CHANGE_REQUEST_NOT_FOUND");
+    }
+
+    if (input.engagementId && record.engagementId !== input.engagementId) {
       throw new Error("CHANGE_REQUEST_NOT_FOUND");
     }
 
@@ -448,26 +474,37 @@ export class ChangeRequestService {
 
     if (input.action === "REJECT") {
       const trimmedReason = (input.rejectionReason || "").trim() || "Muhatap tarafından talep onaylanmadı.";
-      record.status = "REJECTED";
-      record.rejectionReason = trimmedReason;
-      record.respondedAt = now;
-      record.updatedAt = now;
 
       if (!isMock) {
-        try {
-          const db = getDb();
-          await db
-            .update(schema.engagementChangeRequests)
-            .set({
-              status: "REJECTED",
-              rejectionReason: trimmedReason,
-              respondedAt: now,
-              updatedAt: now,
-            })
-            .where(eq(schema.engagementChangeRequests.id, record.id));
-        } catch {
-          // fallback
+        const db = getDb();
+        const rows = await db
+          .update(schema.engagementChangeRequests)
+          .set({
+            status: "REJECTED",
+            rejectionReason: trimmedReason,
+            respondedAt: now,
+            updatedAt: now,
+          })
+          .where(
+            and(
+              eq(schema.engagementChangeRequests.id, record.id),
+              eq(schema.engagementChangeRequests.status, "PENDING")
+            )
+          )
+          .returning();
+
+        if (!rows[0]) {
+          throw new Error("CHANGE_REQUEST_NOT_PENDING");
         }
+        record = rows[0];
+      } else {
+        if (record.status !== "PENDING") {
+          throw new Error("CHANGE_REQUEST_NOT_PENDING");
+        }
+        record.status = "REJECTED";
+        record.rejectionReason = trimmedReason;
+        record.respondedAt = now;
+        record.updatedAt = now;
       }
 
       // Notify requester
@@ -502,8 +539,9 @@ export class ChangeRequestService {
 
     // Look for previous addendum SHA-256 for cryptographic chaining
     const allRecords = await this.getRecords(record.engagementId);
+    const targetSeq = record.sequenceNumber;
     const previousApproved = allRecords
-      .filter((cr) => cr.status === "APPROVED" && cr.sequenceNumber < record.sequenceNumber)
+      .filter((cr) => cr.status === "APPROVED" && cr.sequenceNumber < targetSeq)
       .sort((a, b) => b.sequenceNumber - a.sequenceNumber);
 
     const parentContractSha256 =
@@ -532,30 +570,40 @@ export class ChangeRequestService {
 
     const generatedAddendum = AddendumGeneratorService.generateAddendum(addendumInput);
 
-    record.status = "APPROVED";
-    record.respondedAt = now;
-    record.parentContractSha256 = parentContractSha256;
-    record.addendumSha256 = generatedAddendum.addendumSha256;
-    record.addendumContentMarkdown = generatedAddendum.markdown;
-    record.updatedAt = now;
-
     if (!isMock) {
-      try {
-        const db = getDb();
-        await db
-          .update(schema.engagementChangeRequests)
-          .set({
-            status: "APPROVED",
-            respondedAt: now,
-            parentContractSha256,
-            addendumSha256: generatedAddendum.addendumSha256,
-            addendumContentMarkdown: generatedAddendum.markdown,
-            updatedAt: now,
-          })
-          .where(eq(schema.engagementChangeRequests.id, record.id));
-      } catch {
-        // fallback
+      const db = getDb();
+      const rows = await db
+        .update(schema.engagementChangeRequests)
+        .set({
+          status: "APPROVED",
+          respondedAt: now,
+          parentContractSha256,
+          addendumSha256: generatedAddendum.addendumSha256,
+          addendumContentMarkdown: generatedAddendum.markdown,
+          updatedAt: now,
+        })
+        .where(
+          and(
+            eq(schema.engagementChangeRequests.id, record.id),
+            eq(schema.engagementChangeRequests.status, "PENDING")
+          )
+        )
+        .returning();
+
+      if (!rows[0]) {
+        throw new Error("CHANGE_REQUEST_NOT_PENDING");
       }
+      record = rows[0];
+    } else {
+      if (record.status !== "PENDING") {
+        throw new Error("CHANGE_REQUEST_NOT_PENDING");
+      }
+      record.status = "APPROVED";
+      record.respondedAt = now;
+      record.parentContractSha256 = parentContractSha256;
+      record.addendumSha256 = generatedAddendum.addendumSha256;
+      record.addendumContentMarkdown = generatedAddendum.markdown;
+      record.updatedAt = now;
     }
 
     // Notify requester
@@ -580,10 +628,12 @@ export class ChangeRequestService {
 
   /**
    * Allows the requester to cancel their own pending change request.
+   * Uses optimistic concurrency control (CAS) (WP-17).
    */
   static async cancelChangeRequest(
     userId: string,
-    changeRequestId: string
+    changeRequestId: string,
+    engagementId?: string
   ): Promise<ChangeRequestRecord> {
     const isMock =
       Boolean(process.env.VITEST) ||
@@ -600,26 +650,20 @@ export class ChangeRequestService {
         }
       }
     } else {
-      try {
-        const db = getDb();
-        const rows = await db
-          .select()
-          .from(schema.engagementChangeRequests)
-          .where(eq(schema.engagementChangeRequests.id, changeRequestId))
-          .limit(1);
-        record = rows[0] ?? null;
-      } catch {
-        for (const [_, list] of inMemoryChangeRequests) {
-          const found = list.find((cr) => cr.id === changeRequestId);
-          if (found) {
-            record = found;
-            break;
-          }
-        }
-      }
+      const db = getDb();
+      const rows = await db
+        .select()
+        .from(schema.engagementChangeRequests)
+        .where(eq(schema.engagementChangeRequests.id, changeRequestId))
+        .limit(1);
+      record = rows[0] ?? null;
     }
 
     if (!record) {
+      throw new Error("CHANGE_REQUEST_NOT_FOUND");
+    }
+
+    if (engagementId && record.engagementId !== engagementId) {
       throw new Error("CHANGE_REQUEST_NOT_FOUND");
     }
 
@@ -632,22 +676,34 @@ export class ChangeRequestService {
     }
 
     const now = new Date();
-    record.status = "CANCELLED";
-    record.updatedAt = now;
 
     if (!isMock) {
-      try {
-        const db = getDb();
-        await db
-          .update(schema.engagementChangeRequests)
-          .set({
-            status: "CANCELLED",
-            updatedAt: now,
-          })
-          .where(eq(schema.engagementChangeRequests.id, record.id));
-      } catch {
-        // fallback
+      const db = getDb();
+      const rows = await db
+        .update(schema.engagementChangeRequests)
+        .set({
+          status: "CANCELLED",
+          updatedAt: now,
+        })
+        .where(
+          and(
+            eq(schema.engagementChangeRequests.id, record.id),
+            eq(schema.engagementChangeRequests.status, "PENDING"),
+            eq(schema.engagementChangeRequests.requesterUserId, userId)
+          )
+        )
+        .returning();
+
+      if (!rows[0]) {
+        throw new Error("CHANGE_REQUEST_NOT_PENDING");
       }
+      record = rows[0];
+    } else {
+      if (record.status !== "PENDING") {
+        throw new Error("CHANGE_REQUEST_NOT_PENDING");
+      }
+      record.status = "CANCELLED";
+      record.updatedAt = now;
     }
 
     return record;

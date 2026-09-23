@@ -36,9 +36,9 @@ export async function POST(
       );
     }
 
-    const { crId } = await params;
+    const { id, crId } = await params;
 
-    const cancelled = await ChangeRequestService.cancelChangeRequest(session.userId, crId);
+    const cancelled = await ChangeRequestService.cancelChangeRequest(session.userId, crId, id);
 
     return NextResponse.json({
       success: true,
@@ -46,6 +46,26 @@ export async function POST(
     });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Internal Server Error";
+    if (message === "CHANGE_REQUEST_NOT_PENDING") {
+      return NextResponse.json(
+        {
+          error: isEnHeader
+            ? "Change request is no longer pending."
+            : "Değişiklik talebi artık beklemede değil.",
+        },
+        { status: 409 }
+      );
+    }
+    if (message === "UNAUTHORIZED_USER" || message === "CHANGE_REQUEST_NOT_FOUND") {
+      return NextResponse.json(
+        {
+          error: isEnHeader
+            ? "Unauthorized or request not found."
+            : "Yetkisiz işlem veya talep bulunamadı.",
+        },
+        { status: 403 }
+      );
+    }
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }
