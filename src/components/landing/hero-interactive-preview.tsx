@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Lock,
   Unlock,
@@ -16,8 +16,8 @@ import {
   Bot,
   TrendingUp,
   Video,
-  Layers,
-  ChevronRight,
+  ChevronDown,
+  Check,
 } from "lucide-react";
 
 interface HeroInteractivePreviewProps {
@@ -189,18 +189,30 @@ export function HeroInteractivePreview({ isTr = true }: HeroInteractivePreviewPr
   const [isDecrypted, setIsDecrypted] = useState(false);
   const [offerSubmitted, setOfferSubmitted] = useState(false);
   const [activeListingIndex, setActiveListingIndex] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   const currentProject = POPULAR_LISTINGS[activeListingIndex] ?? POPULAR_LISTINGS[0]!;
   const IconComponent = currentProject.icon;
 
-  const handleNextListing = () => {
-    setActiveListingIndex((prev) => (prev + 1) % POPULAR_LISTINGS.length);
-    setOfferSubmitted(false);
-    setIsDecrypted(false);
-  };
+  // Close dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    }
+    if (isMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuOpen]);
 
   const handleSelectListing = (index: number) => {
     setActiveListingIndex(index);
+    setIsMenuOpen(false);
     setOfferSubmitted(false);
     setIsDecrypted(false);
   };
@@ -216,23 +228,79 @@ export function HeroInteractivePreview({ isTr = true }: HeroInteractivePreviewPr
           </span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          {/* 5 Popular Listing Types Cycle Button */}
-          <button
-            type="button"
-            onClick={handleNextListing}
-            title={isTr ? "En popüler 5 ilan türü arasında geçiş yap" : "Switch between 5 popular listing types"}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-cyan-500/40 bg-cyan-500/10 text-xs font-semibold text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-400/60 shadow-sm transition-all duration-200 cursor-pointer active:scale-95"
-          >
-            <Layers className="h-3.5 w-3.5 text-cyan-400" aria-hidden="true" />
-            <span className="font-bold">
-              {isTr ? "İlan Türünü Değiştir" : "Switch Listing Type"}
-            </span>
-            <span className="px-1.5 py-0.5 rounded-md bg-cyan-500/20 text-[10px] font-mono font-bold text-cyan-200">
-              {activeListingIndex + 1}/5
-            </span>
-            <ChevronRight className="h-3.5 w-3.5 text-cyan-400" aria-hidden="true" />
-          </button>
+        <div className="flex flex-wrap items-center gap-2.5">
+          {/* Single Listing Type Dropdown Button */}
+          <div className="relative" ref={menuRef}>
+            <button
+              type="button"
+              onClick={() => setIsMenuOpen((prev) => !prev)}
+              aria-expanded={isMenuOpen}
+              aria-haspopup="listbox"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-cyan-500/40 bg-cyan-500/10 text-xs font-semibold text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-400/60 shadow-sm transition-all duration-200 cursor-pointer active:scale-95"
+            >
+              <IconComponent className="h-3.5 w-3.5 text-cyan-400" aria-hidden="true" />
+              <span className="font-bold">
+                {isTr ? currentProject.category : currentProject.categoryEn}
+              </span>
+              <ChevronDown
+                className={`h-3.5 w-3.5 text-cyan-400 transition-transform duration-200 ${
+                  isMenuOpen ? "rotate-180" : ""
+                }`}
+                aria-hidden="true"
+              />
+            </button>
+
+            {/* Dropdown Menu */}
+            {isMenuOpen && (
+              <div
+                role="listbox"
+                className="absolute right-0 top-full mt-2 w-72 sm:w-80 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/95 backdrop-blur-2xl p-1.5 shadow-2xl z-40 space-y-1 animate-in fade-in zoom-in-95 duration-150"
+              >
+                <div className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-tertiary)] border-b border-[var(--color-border-subtle)]/50 mb-1">
+                  {isTr ? "Popüler İlan Türleri (5)" : "Popular Listing Types (5)"}
+                </div>
+                {POPULAR_LISTINGS.map((listing, idx) => {
+                  const LIcon = listing.icon;
+                  const isSelected = idx === activeListingIndex;
+                  return (
+                    <button
+                      key={listing.id}
+                      type="button"
+                      role="option"
+                      aria-selected={isSelected}
+                      onClick={() => handleSelectListing(idx)}
+                      className={`w-full flex items-center justify-between p-2 rounded-xl text-left transition-all cursor-pointer ${
+                        isSelected
+                          ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-xs"
+                          : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] border border-transparent"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div
+                          className={`p-1.5 rounded-lg shrink-0 ${
+                            isSelected
+                              ? "bg-cyan-500/30 text-cyan-300"
+                              : "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)]"
+                          }`}
+                        >
+                          <LIcon className="h-4 w-4" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="font-bold text-xs truncate text-[var(--color-text-primary)]">
+                            {isTr ? listing.category : listing.categoryEn}
+                          </div>
+                          <div className="text-[10px] text-[var(--color-text-tertiary)] truncate">
+                            {isTr ? listing.budgetTr : listing.budgetEn} • {isTr ? listing.daysLeftTr : listing.daysLeftEn}
+                          </div>
+                        </div>
+                      </div>
+                      {isSelected && <Check className="h-4 w-4 text-cyan-400 shrink-0 ml-2" />}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
 
           {/* Perspective Toggle (Developer vs Client) */}
           <div className="inline-flex items-center p-1 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-md shadow-sm">
@@ -268,32 +336,6 @@ export function HeroInteractivePreview({ isTr = true }: HeroInteractivePreviewPr
             </button>
           </div>
         </div>
-      </div>
-
-      {/* Quick Pills for 5 Popular Sectors */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 mb-2 px-2 scrollbar-none">
-        <span className="text-[11px] text-[var(--color-text-tertiary)] font-medium shrink-0 mr-1">
-          {isTr ? "Örnek İlanlar:" : "Sample Listings:"}
-        </span>
-        {POPULAR_LISTINGS.map((item, idx) => {
-          const ItemIcon = item.icon;
-          const isActive = idx === activeListingIndex;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => handleSelectListing(idx)}
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all shrink-0 cursor-pointer ${
-                isActive
-                  ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm shadow-cyan-500/10 font-semibold"
-                  : "bg-[var(--color-surface-base)]/60 text-[var(--color-text-secondary)] border border-[var(--color-border-subtle)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]"
-              }`}
-            >
-              <ItemIcon className="h-3 w-3" aria-hidden="true" />
-              <span>{isTr ? item.category : item.categoryEn}</span>
-            </button>
-          );
-        })}
       </div>
 
       {/* Main Glassmorphic Interactive Card Container */}

@@ -104,10 +104,18 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
                 <span className="text-xs font-bold uppercase tracking-wider text-blue-400">
                   {isTr ? "UZMANA VE FREELANCER'A ÖZEL KAZANIMLAR" : "TALENT & FREELANCER VALUE PROPOSITION"}
                 </span>
-                <h3 className="text-xl sm:text-3xl font-extrabold text-[var(--color-text-primary)]">
-                  {isTr
-                    ? "Emeğinizin %100'ü Sizde Kalır. Sıfır Komisyon, Sıfır Fiyat Kırma Savaşı."
-                    : "Retain 100% of Your Earnings. Zero Fees, Zero Undercutting Wars."}
+                <h3 className="text-xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] leading-tight">
+                  {isTr ? (
+                    <>
+                      <span className="block">Emeğinizin %100&apos;ü Sizde Kalır. Sıfır Komisyon,</span>
+                      <span className="block">Sıfır Fiyat Kırma Savaşı.</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="block">Retain 100% of Your Earnings. Zero Platform Fees,</span>
+                      <span className="block">Zero Undercutting Wars.</span>
+                    </>
+                  )}
                 </h3>
                 <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
                   {isTr
