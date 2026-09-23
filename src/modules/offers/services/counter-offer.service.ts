@@ -1,5 +1,5 @@
-import { and, desc, eq, ne } from "drizzle-orm";
-import { getDb, schema } from "@/src/lib/db";
+import { and, desc, eq, ne, or } from "drizzle-orm";
+import { getDb, schema, acquireUserPairAdvisoryLock } from "@/src/lib/db";
 import { NotificationService } from "@/src/modules/notifications/service";
 import { inMemoryListings } from "@/src/modules/listings/service";
 import {
@@ -353,7 +353,7 @@ export class CounterOfferService {
     if (isCpuUuid) {
       try {
         const db = getDb();
-        return await db.transaction(async (tx) => {
+        const txResult = await db.transaction(async (tx) => {
           let cpQuery = tx
             .select()
             .from(schema.offerCounterProposals)
@@ -373,12 +373,14 @@ export class CounterOfferService {
           }
 
           const now = new Date();
+          // WP-29: If expired, persist EXPIRED status in DB and return { isExpired: true }
+          // so transaction commits instead of rolling back the expiration record.
           if (new Date(counterProposal.expiresAt) <= now) {
             await tx
               .update(schema.offerCounterProposals)
               .set({ status: "EXPIRED", resolvedAt: now })
               .where(eq(schema.offerCounterProposals.id, counterProposal.id));
-            throw new Error("Bu karşı teklifin 48 saatlik süresi doldu.");
+            return { isExpired: true as const };
           }
 
           if (counterProposal.recipientUserId !== actorUserId) {
@@ -389,7 +391,51 @@ export class CounterOfferService {
             throw new Error("Pazarlık turu güncel değil. Lütfen sayfayı yenileyiniz.");
           }
 
-          // Lock offer & listing
+          // Initial lookup to identify listing and both participants
+          const [initialOffer] = await tx
+            .select({
+              id: schema.offers.id,
+              listingId: schema.offers.listingId,
+              offerorUserId: schema.offers.offerorUserId,
+            })
+            .from(schema.offers)
+            .where(eq(schema.offers.id, counterProposal.offerId))
+            .limit(1);
+
+          if (!initialOffer) {
+            throw new Error("Offer not found");
+          }
+
+          const [initialListing] = await tx
+            .select({
+              id: schema.listings.id,
+              ownerUserId: schema.listings.ownerUserId,
+            })
+            .from(schema.listings)
+            .where(eq(schema.listings.id, initialOffer.listingId))
+            .limit(1);
+
+          if (!initialListing) {
+            throw new Error("Listing not found");
+          }
+
+          // 1. WP-27 & WP-28: Acquire transaction-level advisory lock on symmetric user pair (Fixes B07, R02)
+          await acquireUserPairAdvisoryLock(tx, initialListing.ownerUserId, initialOffer.offerorUserId);
+
+          // 2. WP-28: Lock listing FIRST (canonical lock order: listings -> offers)
+          let lQuery = tx
+            .select()
+            .from(schema.listings)
+            .where(eq(schema.listings.id, initialListing.id));
+          if (typeof (lQuery as { for?: unknown }).for === "function") {
+            lQuery = (lQuery as { for: (mode: string) => typeof lQuery }).for("update");
+          }
+          const [listing] = await lQuery.limit(1);
+          if (!listing || listing.status !== "ACTIVE" || !listing.activeUntil || listing.activeUntil <= now) {
+            throw new Error("Listing is not currently active");
+          }
+
+          // 3. WP-28: Lock offer SECOND (after listing row is locked)
           let oQuery = tx
             .select()
             .from(schema.offers)
@@ -402,16 +448,76 @@ export class CounterOfferService {
             throw new Error("Only pending offers can be accepted");
           }
 
-          let lQuery = tx
-            .select()
-            .from(schema.listings)
-            .where(eq(schema.listings.id, offer.listingId));
-          if (typeof (lQuery as { for?: unknown }).for === "function") {
-            lQuery = (lQuery as { for: (mode: string) => typeof lQuery }).for("update");
+          // 4. WP-27: Invariant - Both employer and freelancer accounts must be ACTIVE
+          const activeUsers = await tx
+            .select({ id: schema.users.id })
+            .from(schema.users)
+            .where(
+              and(
+                or(eq(schema.users.id, listing.ownerUserId), eq(schema.users.id, offer.offerorUserId)),
+                eq(schema.users.status, "ACTIVE")
+              )
+            );
+
+          if (activeUsers.length < 2 && process.env.NODE_ENV === "production") {
+            throw new Error(
+              "USER_NOT_ACTIVE: Both employer and freelancer accounts must be ACTIVE to form an engagement."
+            );
           }
-          const [listing] = await lQuery.limit(1);
-          if (!listing || listing.status !== "ACTIVE") {
-            throw new Error("Listing is not currently active");
+
+          // 5. WP-27: Invariant - Verify no active mutual blocks exist between employer and freelancer
+          if (schema.blocks && schema.blocks.blockerUserId) {
+            const blockExists = await tx
+              .select({ blockerUserId: schema.blocks.blockerUserId })
+              .from(schema.blocks)
+              .where(
+                or(
+                  and(
+                    eq(schema.blocks.blockerUserId, listing.ownerUserId),
+                    eq(schema.blocks.blockedUserId, offer.offerorUserId)
+                  ),
+                  and(
+                    eq(schema.blocks.blockerUserId, offer.offerorUserId),
+                    eq(schema.blocks.blockedUserId, listing.ownerUserId)
+                  )
+                )
+              )
+              .limit(1);
+
+            if (blockExists.length > 0) {
+              throw new Error(
+                "Teklif kabul edilemez: Kullanıcılar arasında aktif engelleme bulunmaktadır."
+              );
+            }
+          }
+
+          // 6. WP-27: Invariant - Offer lifecycle sequence must match current listing activation sequence
+          if (
+            offer.listingActivationSeq !== null &&
+            offer.listingActivationSeq !== undefined &&
+            listing.activationSeq !== null &&
+            listing.activationSeq !== undefined &&
+            offer.listingActivationSeq !== listing.activationSeq
+          ) {
+            throw new Error(
+              "OFFER_LIFECYCLE_MISMATCH: Offer was submitted in a previous activation cycle and cannot be accepted."
+            );
+          }
+
+          // 7. Check if already matched (excluding cancelled engagements)
+          const existingMatch = await tx
+            .select({ id: schema.engagements.id })
+            .from(schema.engagements)
+            .where(
+              and(
+                eq(schema.engagements.listingId, listing.id),
+                ne(schema.engagements.status, "CANCELLED")
+              )
+            )
+            .limit(1);
+
+          if (existingMatch.length > 0) {
+            throw new Error("Listing already has an active engagement");
           }
 
           // 1. Mark counter proposal ACCEPTED
@@ -541,8 +647,18 @@ export class CounterOfferService {
             // non-fatal
           }
 
-          return { engagement, acceptedOffer, counterProposal };
+          return { engagement, acceptedOffer, counterProposal, isExpired: false as const };
         });
+
+        if (txResult && "isExpired" in txResult && txResult.isExpired) {
+          throw new Error("Bu karşı teklifin 48 saatlik süresi doldu.");
+        }
+
+        return txResult as {
+          engagement: typeof schema.engagements.$inferSelect;
+          acceptedOffer: typeof schema.offers.$inferSelect;
+          counterProposal: typeof schema.offerCounterProposals.$inferSelect;
+        };
       } catch (err) {
         if (process.env.NODE_ENV === "production" || !process.env.VITEST) {
           throw err;
@@ -552,7 +668,11 @@ export class CounterOfferService {
           (err.message.includes("yalnızca") ||
             err.message.includes("süresi doldu") ||
             err.message.includes("pending") ||
-            err.message.includes("güncel değil"))
+            err.message.includes("güncel değil") ||
+            err.message.includes("USER_NOT_ACTIVE") ||
+            err.message.includes("engelleme") ||
+            err.message.includes("OFFER_LIFECYCLE_MISMATCH") ||
+            err.message.includes("already has an active engagement"))
         ) {
           throw err;
         }
