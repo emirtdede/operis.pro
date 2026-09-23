@@ -33,12 +33,15 @@ export interface SyncClerkUserResult {
   displayName: string;
 }
 
+type AppDb = ReturnType<typeof getDb>;
+type DbOrTx = Parameters<Parameters<AppDb["transaction"]>[0]>[0] | AppDb;
+
 export class ClerkSyncService {
   /**
    * Generates a safe, URL-friendly unique handle for the user based on their name or email.
    */
   private static async generateUniqueHandle(
-    db: any,
+    db: DbOrTx,
     baseStr: string
   ): Promise<string> {
     let clean = baseStr
@@ -78,7 +81,7 @@ export class ClerkSyncService {
    * Ensures the mandatory userPrivateIdentity row exists for KVKK compliance and phone verification readiness.
    */
   private static async ensureUserPrivateIdentity(
-    db: any,
+    db: DbOrTx,
     userId: string,
     firstName?: string | null,
     lastName?: string | null
@@ -136,7 +139,7 @@ export class ClerkSyncService {
    * ONLY when explicit user consent is supplied (R26).
    */
   private static async recordInitialLegalAcceptances(
-    db: any,
+    db: DbOrTx,
     userId: string,
     consent?: LegalConsentInput
   ): Promise<void> {
@@ -446,7 +449,7 @@ export class ClerkSyncService {
     }
 
     // 3. New user: atomically create users + userPrivateIdentity + profiles + optional legalAcceptances (WP-25)
-    const executeCreation = async (tx: any) => {
+    const executeCreation = async (tx: DbOrTx) => {
       const userId = crypto.randomUUID();
       const displayName =
         [input.firstName, input.lastName].filter(Boolean).join(" ").trim() ||
@@ -511,8 +514,8 @@ export class ClerkSyncService {
       };
     };
 
-    if (typeof (db as any).transaction === "function") {
-      return await (db as any).transaction(async (tx: any) => executeCreation(tx));
+    if ("transaction" in db && typeof db.transaction === "function") {
+      return await db.transaction(async (tx) => executeCreation(tx));
     } else {
       return await executeCreation(db);
     }

@@ -245,7 +245,7 @@ describe("WP-23 to WP-26: Auth, Admin Session & Clerk Sync Security Remediation"
 
   describe("WP-26: Legal Consent Separation", () => {
     it("does NOT record legal acceptances when legalConsent is omitted or false", async () => {
-      const insertedTables: any[] = [];
+      const insertedTables: unknown[] = [];
       const mockInsert = vi.fn().mockImplementation((table) => {
         insertedTables.push(table);
         return {
@@ -288,7 +288,7 @@ describe("WP-23 to WP-26: Auth, Admin Session & Clerk Sync Security Remediation"
     });
 
     it("records legal acceptances when legalConsent.accepted is explicitly true", async () => {
-      const insertedTables: any[] = [];
+      const insertedTables: unknown[] = [];
       const mockInsert = vi.fn().mockImplementation((table) => {
         insertedTables.push(table);
         return {

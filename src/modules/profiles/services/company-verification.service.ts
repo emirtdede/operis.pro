@@ -84,8 +84,8 @@ export class CompanyVerificationService {
     );
     const isStrict = process.env.NODE_ENV === "production" || input.strictCorporateProof === true;
 
-    let status: CompanyVerificationStatus = "FORMAT_VERIFIED";
-    let isCompanyVerified = false;
+    let status: CompanyVerificationStatus;
+    let isCompanyVerified: boolean;
 
     if (!isStrict) {
       // Legacy / non-strict compatibility for basic test runs
@@ -245,7 +245,7 @@ export class CompanyVerificationService {
   ): Promise<{ success: boolean; targetUserId: string; status: CompanyVerificationStatus }> {
     const now = new Date();
 
-    if (Boolean(process.env.VITEST)) {
+    if (process.env.VITEST) {
       if (targetUserId === DEFAULT_USER.id) {
         DEFAULT_USER.profile.isCompanyVerified = true;
         DEFAULT_USER.profile.companyVerifiedAt = now;
@@ -295,7 +295,7 @@ export class CompanyVerificationService {
   ): Promise<{ success: boolean; targetUserId: string; status: CompanyVerificationStatus; reason?: string }> {
     const now = new Date();
 
-    if (Boolean(process.env.VITEST)) {
+    if (process.env.VITEST) {
       if (targetUserId === DEFAULT_USER.id) {
         DEFAULT_USER.profile.isCompanyVerified = false;
         DEFAULT_USER.profile.companyVerifiedAt = null;

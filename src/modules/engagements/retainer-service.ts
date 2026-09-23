@@ -749,7 +749,7 @@ export class RetainerService {
       }
 
       const newHours = parseFloat(currentPeriod.hoursLogged) + input.hours;
-      const prevUnused = (currentPeriod.taxSummary as any)?.previousUnusedHours || 0;
+      const prevUnused = ((currentPeriod.taxSummary as Record<string, unknown> | null)?.previousUnusedHours as number) || 0;
       const metrics = this.calculatePeriodMetrics({
         planType: (r?.planType as RetainerPlanType) || "HOURLY_POOL",
         monthlyPrice: parseFloat(currentPeriod.basePrice),
@@ -899,7 +899,7 @@ export class RetainerService {
       }
 
       const newHours = parseFloat(currentPeriod.hoursLogged) + input.hours;
-      const prevUnused = (currentPeriod.taxSummary as any)?.previousUnusedHours || 0;
+      const prevUnused = ((currentPeriod.taxSummary as Record<string, unknown> | null)?.previousUnusedHours as number) || 0;
       const metrics = this.calculatePeriodMetrics({
         planType: retainer.planType as RetainerPlanType,
         monthlyPrice: parseFloat(retainer.monthlyPrice),
@@ -1098,7 +1098,7 @@ export class RetainerService {
               periodIndex: currentPeriod.periodIndex,
               startDate: currentPeriod.startDate,
               endDate: currentPeriod.endDate,
-              previousUnusedHours: (currentPeriod.taxSummary as any)?.previousUnusedHours || 0,
+              previousUnusedHours: ((currentPeriod.taxSummary as Record<string, unknown> | null)?.previousUnusedHours as number) || 0,
             })
           : null;
 
@@ -1176,7 +1176,7 @@ export class RetainerService {
           periodIndex: currentPeriod.periodIndex,
           startDate: currentPeriod.startDate,
           endDate: currentPeriod.endDate,
-          previousUnusedHours: (currentPeriod.taxSummary as any)?.previousUnusedHours || 0,
+          previousUnusedHours: ((currentPeriod.taxSummary as Record<string, unknown> | null)?.previousUnusedHours as number) || 0,
         })
       : null;
 

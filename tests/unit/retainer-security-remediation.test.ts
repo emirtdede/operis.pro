@@ -176,18 +176,21 @@ describe("WP-19 to WP-22: Smart Retainer Remediation Suite", () => {
       const period = log2.period;
       expect(parseFloat(period.hoursLogged)).toBe(6.5);
 
-      const logs = (period as any).workLogsJson as Array<any>;
+      const logs = (period as unknown as { workLogsJson: Array<{ hours: number; taskDescription: string; date: string; userId: string }> }).workLogsJson;
       expect(logs).toHaveLength(2);
 
-      expect(logs[0].hours).toBe(2.5);
-      expect(logs[0].taskDescription).toBe("Sentry hata takibi entegrasyonu");
-      expect(logs[0].date).toBe("2026-09-20");
-      expect(logs[0].userId).toBe(freelancerId);
+      const log0 = logs[0]!;
+      const log1 = logs[1]!;
 
-      expect(logs[1].hours).toBe(4.0);
-      expect(logs[1].taskDescription).toBe("Redis connection pool ayarları");
-      expect(logs[1].date).toBe("2026-09-21");
-      expect(logs[1].userId).toBe(freelancerId);
+      expect(log0.hours).toBe(2.5);
+      expect(log0.taskDescription).toBe("Sentry hata takibi entegrasyonu");
+      expect(log0.date).toBe("2026-09-20");
+      expect(log0.userId).toBe(freelancerId);
+
+      expect(log1.hours).toBe(4.0);
+      expect(log1.taskDescription).toBe("Redis connection pool ayarları");
+      expect(log1.date).toBe("2026-09-21");
+      expect(log1.userId).toBe(freelancerId);
     });
   });
 
