@@ -36,7 +36,7 @@ export async function POST(
       );
     }
 
-    const { id: _engagementId } = await params;
+    const { id: engagementId } = await params;
     const body = await req.json();
     const { retainerId, hours, taskDescription } = body;
 
@@ -62,6 +62,7 @@ export async function POST(
     }
 
     const result = await RetainerService.logHours({
+      engagementId,
       retainerId,
       userId: session.userId,
       hours,
@@ -71,6 +72,7 @@ export async function POST(
     return NextResponse.json(result);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to log hours";
-    return NextResponse.json({ error: message }, { status: 500 });
+    const status = message.includes("Yetkisiz") || message.includes("Güvenlik ihlali") ? 403 : message.includes("bulunamadı") || message.includes("not found") ? 404 : 400;
+    return NextResponse.json({ error: message }, { status });
   }
 }

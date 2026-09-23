@@ -8,6 +8,8 @@ import {
 import { GET as retainerGetHandler, POST as retainerPostHandler } from "@/src/app/api/work/[id]/retainer/route";
 import { POST as logHoursPostHandler } from "@/src/app/api/work/[id]/retainer/log/route";
 
+import * as sessionModule from "@/src/modules/auth/session";
+
 vi.mock("@/src/modules/auth/session", () => ({
   getSession: vi.fn().mockResolvedValue({
     userId: "u-freelancer-ret-1",
@@ -24,9 +26,49 @@ vi.mock("@/src/lib/security/rate-limit", () => ({
 }));
 
 describe("🔄 Smart Retainer & Recurring Maintenance Agreement Suite (TBK m. 502 / m. 470)", () => {
+  function setFreelancerSession() {
+    vi.spyOn(sessionModule, "getSession").mockResolvedValue({
+      userId: "u-freelancer-ret-1",
+      role: "SPECIALIST",
+      email: "freelancer@operis.pro",
+      status: "ACTIVE",
+      type: "SESSION",
+      authVersion: 1,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + 86400000,
+    });
+  }
+
+  function setClientSession() {
+    vi.spyOn(sessionModule, "getSession").mockResolvedValue({
+      userId: "u-client-1",
+      role: "CLIENT",
+      email: "client@operis.pro",
+      status: "ACTIVE",
+      type: "SESSION",
+      authVersion: 1,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + 86400000,
+    });
+  }
+
+  function setOutsiderSession() {
+    vi.spyOn(sessionModule, "getSession").mockResolvedValue({
+      userId: "u-outsider-999",
+      role: "CLIENT",
+      email: "outsider@operis.pro",
+      status: "ACTIVE",
+      type: "SESSION",
+      authVersion: 1,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + 86400000,
+    });
+  }
+
   beforeEach(() => {
     inMemoryRetainers.clear();
     inMemoryRetainerPeriods.clear();
+    setFreelancerSession();
   });
 
   describe("1. SLA Specifications & Response Times", () => {
@@ -261,6 +303,187 @@ describe("🔄 Smart Retainer & Recurring Maintenance Agreement Suite (TBK m. 50
         params: Promise.resolve({ id: "eng-test-api-2" }),
       });
       expect(res.status).toBe(400);
+    });
+  });
+
+  describe("6. WP-03: Retainer Security, Role Authorization & BOLA/IDOR Prevention", () => {
+    const engagementId = "eng-test-security-01";
+
+    it("rejects outsider attempting to propose a retainer (403 Forbidden)", async () => {
+      setOutsiderSession();
+      const req = new NextRequest(`http://localhost:3000/api/work/${engagementId}/retainer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "PROPOSE",
+          planType: "HOURLY_POOL",
+          monthlyPrice: 15000,
+          currency: "TRY",
+          includedHours: 10,
+          scopeDescription: "Outsider unauthorized proposal attempt",
+        }),
+      });
+
+      const res = await retainerPostHandler(req, {
+        params: Promise.resolve({ id: engagementId }),
+      });
+      expect(res.status).toBe(403);
+      const data = await res.json();
+      expect(data.error).toMatch(/Yetkisiz/);
+    });
+
+    it("prevents self-approval: proposer cannot approve their own retainer proposal (403 Forbidden)", async () => {
+      // 1. Freelancer proposes
+      setFreelancerSession();
+      const propReq = new NextRequest(`http://localhost:3000/api/work/${engagementId}/retainer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "PROPOSE",
+          planType: "HOURLY_POOL",
+          monthlyPrice: 15000,
+          currency: "TRY",
+          includedHours: 10,
+          scopeDescription: "Freelancer proposed maintenance scope",
+        }),
+      });
+      const propRes = await retainerPostHandler(propReq, {
+        params: Promise.resolve({ id: engagementId }),
+      });
+      expect(propRes.status).toBe(200);
+
+      // 2. Freelancer attempts to self-approve proposal -> MUST FAIL with 403
+      const selfApproveReq = new NextRequest(`http://localhost:3000/api/work/${engagementId}/retainer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "ACTIVATE" }),
+      });
+      const selfApproveRes = await retainerPostHandler(selfApproveReq, {
+        params: Promise.resolve({ id: engagementId }),
+      });
+      expect(selfApproveRes.status).toBe(403);
+      const data = await selfApproveRes.json();
+      expect(data.error).toMatch(/Teklif sahibi kendi teklifini karşı taraf adına onaylayamaz/);
+
+      // 3. Counterparty (Client) approves proposal -> MUST SUCCEED with 200
+      setClientSession();
+      const clientApproveReq = new NextRequest(`http://localhost:3000/api/work/${engagementId}/retainer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "ACTIVATE" }),
+      });
+      const clientApproveRes = await retainerPostHandler(clientApproveReq, {
+        params: Promise.resolve({ id: engagementId }),
+      });
+      expect(clientApproveRes.status).toBe(200);
+      const clientData = await clientApproveRes.json();
+      expect(clientData.retainer.status).toBe("ACTIVE");
+    });
+
+    it("rejects outsider attempting to view retainer details (403 Forbidden)", async () => {
+      setOutsiderSession();
+      const getReq = new NextRequest(`http://localhost:3000/api/work/${engagementId}/retainer`);
+      const getRes = await retainerGetHandler(getReq, {
+        params: Promise.resolve({ id: engagementId }),
+      });
+      expect(getRes.status).toBe(403);
+      const data = await getRes.json();
+      expect(data.error).toMatch(/Yetkisiz/);
+    });
+
+    async function setupActiveRetainer(engId: string) {
+      setFreelancerSession();
+      await retainerPostHandler(
+        new NextRequest(`http://localhost:3000/api/work/${engId}/retainer`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "PROPOSE",
+            planType: "HOURLY_POOL",
+            monthlyPrice: 15000,
+            currency: "TRY",
+            includedHours: 10,
+            scopeDescription: "Standard maintenance agreement",
+          }),
+        }),
+        { params: Promise.resolve({ id: engId }) }
+      );
+
+      setClientSession();
+      await retainerPostHandler(
+        new NextRequest(`http://localhost:3000/api/work/${engId}/retainer`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "ACTIVATE" }),
+        }),
+        { params: Promise.resolve({ id: engId }) }
+      );
+    }
+
+    it("rejects client/employer from logging hours (only contractor/freelancer can log hours)", async () => {
+      await setupActiveRetainer(engagementId);
+      const retainer = inMemoryRetainers.get(engagementId);
+      expect(retainer).toBeDefined();
+
+      setClientSession();
+      const logReq = new NextRequest(`http://localhost:3000/api/work/${engagementId}/retainer/log`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          retainerId: retainer!.id,
+          hours: 3,
+          taskDescription: "Employer trying to log hours illegally",
+        }),
+      });
+
+      const logRes = await logHoursPostHandler(logReq, {
+        params: Promise.resolve({ id: engagementId }),
+      });
+      expect(logRes.status).toBe(403);
+      const data = await logRes.json();
+      expect(data.error).toMatch(/Yetkisiz/);
+    });
+
+    it("prevents BOLA/IDOR: rejects logging hours against a retainer belonging to another engagement", async () => {
+      await setupActiveRetainer(engagementId);
+      const retainer = inMemoryRetainers.get(engagementId);
+      expect(retainer).toBeDefined();
+
+      const otherEngagementId = "eng-test-other-88";
+
+      setFreelancerSession();
+      const attackReq = new NextRequest(`http://localhost:3000/api/work/${otherEngagementId}/retainer/log`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          retainerId: retainer!.id,
+          hours: 4,
+          taskDescription: "BOLA/IDOR attempt logging hours across different engagement ID",
+        }),
+      });
+
+      const attackRes = await logHoursPostHandler(attackReq, {
+        params: Promise.resolve({ id: otherEngagementId }),
+      });
+      expect(attackRes.status).toBe(403);
+      const data = await attackRes.json();
+      expect(data.error).toMatch(/Güvenlik ihlali|BOLA|IDOR/);
+    });
+
+    it("rejects outsider attempting to cancel a retainer (403 Forbidden)", async () => {
+      setOutsiderSession();
+      const cancelReq = new NextRequest(`http://localhost:3000/api/work/${engagementId}/retainer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "CANCEL" }),
+      });
+
+      const cancelRes = await retainerPostHandler(cancelReq, {
+        params: Promise.resolve({ id: engagementId }),
+      });
+      expect(cancelRes.status).toBe(403);
+      const data = await cancelRes.json();
+      expect(data.error).toMatch(/Yetkisiz/);
     });
   });
 });

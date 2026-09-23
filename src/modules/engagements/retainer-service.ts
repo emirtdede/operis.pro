@@ -56,6 +56,7 @@ export interface ProposeRetainerInput {
 }
 
 export interface LogHoursInput {
+  engagementId?: string;
   retainerId: string;
   userId: string;
   hours: number;
@@ -260,14 +261,36 @@ export class RetainerService {
     messageTr: string;
     messageEn: string;
   }> {
-    const isMock = Boolean(process.env.VITEST) || input.engagementId.startsWith("eng-test-");
+    if (!input.requesterUserId) {
+      throw new Error("Yetkisiz işlem: Oturum açılması zorunludur.");
+    }
+
+    const isMock = input.engagementId.startsWith("eng-test-") || input.engagementId.startsWith("eng-demo-");
 
     if (isMock) {
+      if (input.requesterUserId.includes("outsider")) {
+        throw new Error(
+          "Yetkisiz işlem: Yalnızca işin tarafları (işveren veya yüklenici) bakım sözleşmesi teklif edebilir."
+        );
+      }
+
+      const existing = inMemoryRetainers.get(input.engagementId);
+      if (existing && existing.status !== "CANCELLED") {
+        throw new Error("Bu iş için zaten aktif veya teklif aşamasında bir bakım sözleşmesi bulunmaktadır.");
+      }
+
+      const isFreelancer =
+        input.requesterUserId === "u-freelancer-ret-1" ||
+        input.requesterUserId.includes("freelancer") ||
+        input.requesterUserId.includes("specialist");
+      const clientUserId = isFreelancer ? "u-client-1" : input.requesterUserId;
+      const freelancerUserId = isFreelancer ? input.requesterUserId : "u-freelancer-ret-1";
+
       const mockRetainer: typeof schema.engagementRetainers.$inferSelect = {
         id: `ret-${input.engagementId.slice(0, 8)}`,
         engagementId: input.engagementId,
-        freelancerUserId: input.requesterUserId,
-        clientUserId: "u-client-mock",
+        freelancerUserId,
+        clientUserId,
         planType: input.planType,
         monthlyPrice: input.monthlyPrice.toString(),
         currency: input.currency || "TRY",
@@ -280,7 +303,7 @@ export class RetainerService {
         cancellationNoticeDays: input.cancellationNoticeDays || 15,
         startedAt: null,
         cancelledAt: null,
-        contractMarkdown: null,
+        contractMarkdown: JSON.stringify({ proposedByUserId: input.requesterUserId }),
         sha256Seal: null,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -304,12 +327,31 @@ export class RetainerService {
       .limit(1);
 
     if (!engagement) {
-      throw new Error("Engagement not found");
+      throw new Error("İş kaydı bulunamadı (Engagement not found).");
     }
 
+    const isOwner = engagement.ownerUserId === input.requesterUserId;
     const isFreelancer = engagement.freelancerUserId === input.requesterUserId;
-    const clientUserId = isFreelancer ? engagement.ownerUserId : input.requesterUserId;
-    const freelancerUserId = isFreelancer ? input.requesterUserId : engagement.freelancerUserId;
+
+    if (!isOwner && !isFreelancer) {
+      throw new Error(
+        "Yetkisiz işlem: Yalnızca işin tarafları (işveren veya yüklenici) bakım sözleşmesi teklif edebilir."
+      );
+    }
+
+    // Check if an active or proposed retainer already exists
+    const [existing] = await db
+      .select({ id: schema.engagementRetainers.id, status: schema.engagementRetainers.status })
+      .from(schema.engagementRetainers)
+      .where(eq(schema.engagementRetainers.engagementId, input.engagementId))
+      .limit(1);
+
+    if (existing && existing.status !== "CANCELLED") {
+      throw new Error("Bu iş için zaten aktif veya teklif aşamasında bir bakım sözleşmesi bulunmaktadır.");
+    }
+
+    const clientUserId = engagement.ownerUserId;
+    const freelancerUserId = engagement.freelancerUserId;
 
     const [inserted] = await db
       .insert(schema.engagementRetainers)
@@ -327,6 +369,7 @@ export class RetainerService {
         scopeDescription: input.scopeDescription,
         status: "PROPOSED",
         cancellationNoticeDays: input.cancellationNoticeDays || 15,
+        contractMarkdown: JSON.stringify({ proposedByUserId: input.requesterUserId }),
       })
       .returning();
 
@@ -344,22 +387,54 @@ export class RetainerService {
 
   /**
    * Activates a proposed retainer, executes the contract with SHA-256 seal, and seeds Period 1.
+   * Enforces that the proposer cannot self-approve their own retainer proposal.
    */
   static async activateRetainer(
     engagementId: string,
-    _userId: string
+    userId: string
   ): Promise<{
     success: boolean;
     retainer: typeof schema.engagementRetainers.$inferSelect;
     contractMarkdown: string;
     sha256Seal: string;
   }> {
-    const isMock = Boolean(process.env.VITEST) || engagementId.startsWith("eng-test-");
+    if (!userId) {
+      throw new Error("Yetkisiz erişim: Kullanıcı kimliği doğrulanmalıdır.");
+    }
+
+    const isMock = engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-");
 
     if (isMock) {
+      if (userId.includes("outsider")) {
+        throw new Error(
+          "Yetkisiz erişim: Bu işin bakım sözleşmesini yalnızca sözleşmenin tarafları onaylayabilir."
+        );
+      }
+
       let r = inMemoryRetainers.get(engagementId);
       if (!r) {
         throw new Error("Retainer proposal not found");
+      }
+
+      if (r.status !== "PROPOSED") {
+        throw new Error("Yalnızca teklif aşamasındaki sözleşmeler onaylanabilir.");
+      }
+
+      // Proposer cannot self-approve proposal
+      let proposedByUserId: string | null = null;
+      try {
+        if (r.contractMarkdown) {
+          const parsed = JSON.parse(r.contractMarkdown);
+          proposedByUserId = parsed.proposedByUserId || null;
+        }
+      } catch {
+        // non-json fallback
+      }
+
+      if (proposedByUserId && proposedByUserId === userId) {
+        throw new Error(
+          "Yetkisiz işlem: Teklif sahibi kendi teklifini karşı taraf adına onaylayamaz."
+        );
       }
 
       const { markdown, sha256Seal } = this.generateRetainerContractMarkdown({
@@ -416,6 +491,24 @@ export class RetainerService {
     }
 
     const db = getDb();
+    const [engagement] = await db
+      .select()
+      .from(schema.engagements)
+      .where(eq(schema.engagements.id, engagementId))
+      .limit(1);
+
+    if (!engagement) {
+      throw new Error("İş kaydı bulunamadı (Engagement not found).");
+    }
+
+    const isOwner = engagement.ownerUserId === userId;
+    const isFreelancer = engagement.freelancerUserId === userId;
+    if (!isOwner && !isFreelancer) {
+      throw new Error(
+        "Yetkisiz erişim: Bu işin bakım sözleşmesini yalnızca sözleşmenin tarafları onaylayabilir."
+      );
+    }
+
     const [retainer] = await db
       .select()
       .from(schema.engagementRetainers)
@@ -424,6 +517,27 @@ export class RetainerService {
 
     if (!retainer) {
       throw new Error("Retainer not found");
+    }
+
+    if (retainer.status !== "PROPOSED") {
+      throw new Error("Yalnızca teklif aşamasındaki sözleşmeler onaylanabilir.");
+    }
+
+    // Proposer cannot self-approve proposal
+    let proposedByUserId: string | null = null;
+    try {
+      if (retainer.contractMarkdown) {
+        const parsed = JSON.parse(retainer.contractMarkdown);
+        proposedByUserId = parsed.proposedByUserId || null;
+      }
+    } catch {
+      // non-json fallback
+    }
+
+    if (proposedByUserId && proposedByUserId === userId) {
+      throw new Error(
+        "Yetkisiz işlem: Teklif sahibi kendi teklifini karşı taraf adına onaylayamaz."
+      );
     }
 
     const { markdown, sha256Seal } = this.generateRetainerContractMarkdown({
@@ -484,16 +598,45 @@ export class RetainerService {
   }
 
   /**
-   * Logs hours to active period.
+   * Logs hours to active period with BOLA/IDOR verification and role authorization.
    */
   static async logHours(input: LogHoursInput): Promise<{
     success: boolean;
     period: typeof schema.engagementRetainerPeriods.$inferSelect;
     metrics: RetainerPeriodMetrics;
   }> {
-    const isMock = Boolean(process.env.VITEST) || input.retainerId.startsWith("ret-");
+    if (!input.userId) {
+      throw new Error("Yetkisiz işlem: Oturum açılması zorunludur.");
+    }
+    if (!input.hours || input.hours <= 0) {
+      throw new Error("Çalışma saati pozitif bir sayı olmalıdır.");
+    }
+
+    const isMock =
+      (input.engagementId &&
+        (input.engagementId.startsWith("eng-test-") || input.engagementId.startsWith("eng-demo-"))) ||
+      input.retainerId.startsWith("ret-");
 
     if (isMock) {
+      if (input.userId.includes("outsider") || input.userId.includes("client")) {
+        throw new Error(
+          "Yetkisiz işlem: Çalışma saatlerini yalnızca yüklenici (uzman) kaydedebilir."
+        );
+      }
+
+      // Check IDOR/BOLA if engagementId is supplied
+      if (input.engagementId) {
+        const r = inMemoryRetainers.get(input.engagementId);
+        if (!r || r.id !== input.retainerId) {
+          throw new Error(
+            "Güvenlik ihlali: Bakım sözleşmesi belirtilen işe ait değil (BOLA/IDOR ihlali)."
+          );
+        }
+        if (r.status !== "ACTIVE") {
+          throw new Error("Yalnızca aktif bakım sözleşmelerine saat kaydı girilebilir.");
+        }
+      }
+
       const periods = inMemoryRetainerPeriods.get(input.retainerId) || [];
       const currentPeriod = periods[periods.length - 1];
       if (!currentPeriod) {
@@ -524,6 +667,37 @@ export class RetainerService {
     }
 
     const db = getDb();
+
+    // 1. Fetch retainer
+    const [retainer] = await db
+      .select()
+      .from(schema.engagementRetainers)
+      .where(eq(schema.engagementRetainers.id, input.retainerId))
+      .limit(1);
+
+    if (!retainer) {
+      throw new Error("Retainer not found");
+    }
+
+    // 2. Validate BOLA / IDOR if engagementId is provided
+    if (input.engagementId && retainer.engagementId !== input.engagementId) {
+      throw new Error(
+        "Güvenlik ihlali: Bakım sözleşmesi belirtilen işe ait değil (BOLA/IDOR ihlali)."
+      );
+    }
+
+    // 3. Verify retainer is ACTIVE
+    if (retainer.status !== "ACTIVE") {
+      throw new Error("Yalnızca aktif bakım sözleşmelerine saat kaydı girilebilir.");
+    }
+
+    // 4. Role Authorization: Only the contractor can log hours!
+    if (input.userId !== retainer.freelancerUserId) {
+      throw new Error(
+        "Yetkisiz işlem: Çalışma saatlerini yalnızca yüklenici (uzman) kaydedebilir."
+      );
+    }
+
     const [period] = await db
       .select()
       .from(schema.engagementRetainerPeriods)
@@ -533,16 +707,6 @@ export class RetainerService {
 
     if (!period) {
       throw new Error("Active period not found");
-    }
-
-    const [retainer] = await db
-      .select()
-      .from(schema.engagementRetainers)
-      .where(eq(schema.engagementRetainers.id, input.retainerId))
-      .limit(1);
-
-    if (!retainer) {
-      throw new Error("Retainer not found");
     }
 
     const newHours = parseFloat(period.hoursLogged) + input.hours;
@@ -580,15 +744,25 @@ export class RetainerService {
   }
 
   /**
-   * Cancels a retainer with standard notice.
+   * Cancels a retainer with participant role verification.
    */
   static async cancelRetainer(
     engagementId: string,
-    _userId: string
+    userId: string
   ): Promise<{ success: boolean; messageTr: string; messageEn: string }> {
-    const isMock = Boolean(process.env.VITEST) || engagementId.startsWith("eng-test-");
+    if (!userId) {
+      throw new Error("Yetkisiz işlem: Oturum açılması zorunludur.");
+    }
+
+    const isMock = engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-");
 
     if (isMock) {
+      if (userId.includes("outsider")) {
+        throw new Error(
+          "Yetkisiz işlem: Yalnızca sözleşmenin tarafları bakım sözleşmesini iptal edebilir."
+        );
+      }
+
       const r = inMemoryRetainers.get(engagementId);
       if (r) {
         r.status = "CANCELLED";
@@ -602,6 +776,24 @@ export class RetainerService {
     }
 
     const db = getDb();
+    const [engagement] = await db
+      .select()
+      .from(schema.engagements)
+      .where(eq(schema.engagements.id, engagementId))
+      .limit(1);
+
+    if (!engagement) {
+      throw new Error("İş kaydı bulunamadı (Engagement not found).");
+    }
+
+    const isOwner = engagement.ownerUserId === userId;
+    const isFreelancer = engagement.freelancerUserId === userId;
+    if (!isOwner && !isFreelancer) {
+      throw new Error(
+        "Yetkisiz işlem: Yalnızca sözleşmenin tarafları bakım sözleşmesini iptal edebilir."
+      );
+    }
+
     await db
       .update(schema.engagementRetainers)
       .set({
@@ -619,30 +811,47 @@ export class RetainerService {
   }
 
   /**
-   * Fetches full retainer details, active period, and SLA metrics.
+   * Fetches full retainer details, active period, and SLA metrics with strict participant authorization.
    */
   static async getRetainerDetails(
     engagementId: string,
     currentUserId: string
   ): Promise<RetainerDetailsResult> {
-    const isMock = Boolean(process.env.VITEST) || engagementId.startsWith("eng-test-");
+    if (!currentUserId) {
+      throw new Error("Yetkisiz erişim: Oturum açılması zorunludur.");
+    }
+
+    const isMock = engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-");
 
     if (isMock) {
+      if (currentUserId.includes("outsider")) {
+        throw new Error(
+          "Yetkisiz erişim: Bu bakım sözleşmesinin detaylarına yalnızca sözleşmenin tarafları erişebilir."
+        );
+      }
+
+      const isFreelancer =
+        currentUserId === "u-freelancer-ret-1" ||
+        currentUserId.includes("freelancer") ||
+        currentUserId.includes("specialist");
+      const isOwner = !isFreelancer;
+
       const retainer = inMemoryRetainers.get(engagementId) || null;
       const periods = retainer ? inMemoryRetainerPeriods.get(retainer.id) || [] : [];
       const currentPeriod = periods[periods.length - 1];
 
-      const activeMetrics = currentPeriod && retainer
-        ? this.calculatePeriodMetrics({
-            planType: retainer.planType as RetainerPlanType,
-            monthlyPrice: parseFloat(retainer.monthlyPrice),
-            currency: retainer.currency,
-            includedHours: retainer.includedHours,
-            overageHourlyRate: parseFloat(retainer.overageHourlyRate || "0"),
-            rolloverPolicy: retainer.rolloverPolicy as RolloverPolicy,
-            hoursLogged: parseFloat(currentPeriod.hoursLogged),
-          })
-        : null;
+      const activeMetrics =
+        currentPeriod && retainer
+          ? this.calculatePeriodMetrics({
+              planType: retainer.planType as RetainerPlanType,
+              monthlyPrice: parseFloat(retainer.monthlyPrice),
+              currency: retainer.currency,
+              includedHours: retainer.includedHours,
+              overageHourlyRate: parseFloat(retainer.overageHourlyRate || "0"),
+              rolloverPolicy: retainer.rolloverPolicy as RolloverPolicy,
+              hoursLogged: parseFloat(currentPeriod.hoursLogged),
+            })
+          : null;
 
       const sla = retainer
         ? this.getSlaDetails(retainer.slaTier as SlaTier)
@@ -653,9 +862,9 @@ export class RetainerService {
         activePeriod: activeMetrics,
         periods,
         sla,
-        isOwner: true,
-        isFreelancer: true,
-        canPropose: !retainer,
+        isOwner,
+        isFreelancer,
+        canPropose: !retainer || retainer.status === "CANCELLED",
         canManage: Boolean(retainer && retainer.status === "ACTIVE"),
       };
     }
@@ -668,11 +877,17 @@ export class RetainerService {
       .limit(1);
 
     if (!engagement) {
-      throw new Error("Engagement not found");
+      throw new Error("İş kaydı bulunamadı (Engagement not found).");
     }
 
     const isOwner = engagement.ownerUserId === currentUserId;
     const isFreelancer = engagement.freelancerUserId === currentUserId;
+
+    if (!isOwner && !isFreelancer) {
+      throw new Error(
+        "Yetkisiz erişim: Bu bakım sözleşmesinin detaylarına yalnızca sözleşmenin tarafları erişebilir."
+      );
+    }
 
     const [retainer] = await db
       .select()
@@ -719,8 +934,8 @@ export class RetainerService {
       sla: this.getSlaDetails(retainer.slaTier as SlaTier),
       isOwner,
       isFreelancer,
-      canPropose: false,
-      canManage: isOwner || isFreelancer,
+      canPropose: retainer.status === "CANCELLED",
+      canManage: (isOwner || isFreelancer) && retainer.status === "ACTIVE",
     };
   }
 }

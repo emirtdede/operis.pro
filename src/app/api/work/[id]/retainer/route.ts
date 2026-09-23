@@ -42,7 +42,8 @@ export async function GET(
     return NextResponse.json({ success: true, ...details });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to fetch retainer details";
-    return NextResponse.json({ error: message }, { status: 500 });
+    const status = message.includes("Yetkisiz") || message.includes("Güvenlik ihlali") ? 403 : message.includes("bulunamadı") || message.includes("not found") ? 404 : 500;
+    return NextResponse.json({ error: message }, { status });
   }
 }
 
@@ -139,6 +140,7 @@ export async function POST(
     );
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Retainer action failed";
-    return NextResponse.json({ error: message }, { status: 500 });
+    const status = message.includes("Yetkisiz") || message.includes("Güvenlik ihlali") ? 403 : message.includes("bulunamadı") || message.includes("not found") ? 404 : 400;
+    return NextResponse.json({ error: message }, { status });
   }
 }
