@@ -270,4 +270,100 @@ describe("Statutory Contract Generator Service (TBK 470 & FSEK 52 & NDA)", () =>
     expect(article9Clause?.bodyTr).not.toContain("Operis");
     expect(article9Clause?.bodyEn).not.toContain("Operis");
   });
+
+  describe("WP-08: Raster Signature Validation & XSS/Injection Prevention", () => {
+    const validPng =
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+
+    it("renders valid raster PNG signature safely without attribute break-out", () => {
+      const result = ContractGeneratorService.generateContract({
+        ...sampleInput,
+        clientSignature: {
+          signerName: "Alice Client",
+          signedAt: new Date().toISOString(),
+          ipHash: "hash-123",
+          signatureDataUrl: validPng,
+        },
+      });
+
+      expect(result.htmlContent).toContain('<img src="data:image/png;base64,');
+      expect(result.htmlContent).not.toContain("onerror");
+    });
+
+    it("rejects and neutralizes SVG payloads and onerror event attributes", () => {
+      const maliciousSvg = 'data:image/svg+xml;base64,PHN2ZyBvbmxvYWQ9YWxlcnQoMSk+PC9zdmc+';
+      const maliciousPayload = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJ" onerror="alert(document.cookie)';
+
+      // Svg injection attempt
+      const resultSvg = ContractGeneratorService.generateContract({
+        ...sampleInput,
+        clientSignature: {
+          signerName: "Attacker Svg",
+          signedAt: new Date().toISOString(),
+          ipHash: "hash-123",
+          signatureDataUrl: maliciousSvg,
+        },
+      });
+
+      // Must NOT render malicious img tag
+      expect(resultSvg.htmlContent).not.toContain("<img");
+      expect(resultSvg.htmlContent).not.toContain("alert(1)");
+      expect(resultSvg.htmlContent).toContain("✅ E-İmzalandı");
+
+      // Attribute break-out attempt
+      const resultPayload = ContractGeneratorService.generateContract({
+        ...sampleInput,
+        clientSignature: {
+          signerName: "Attacker Breakout",
+          signedAt: new Date().toISOString(),
+          ipHash: "hash-123",
+          signatureDataUrl: maliciousPayload,
+        },
+      });
+
+      expect(resultPayload.htmlContent).not.toContain("onerror");
+      expect(resultPayload.htmlContent).not.toContain("alert(document.cookie)");
+      expect(resultPayload.htmlContent).not.toContain("<img");
+    });
+  });
+
+  describe("WP-14: Cryptographic Seal Covers Signature Image Integrity", () => {
+    const validPng1 =
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+    // 1x1 red PNG
+    const validPng2 =
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
+
+    it("produces different SHA-256 seal when signature image is changed even if text is identical", () => {
+      const fixedTimestamp = "2026-09-23T10:00:00.000Z";
+
+      const res1 = ContractGeneratorService.generateContract({
+        ...sampleInput,
+        clientSignature: {
+          signerName: "Alice Client",
+          signedAt: fixedTimestamp,
+          ipHash: "hash-123",
+          signatureDataUrl: validPng1,
+        },
+      });
+
+      const res2 = ContractGeneratorService.generateContract({
+        ...sampleInput,
+        clientSignature: {
+          signerName: "Alice Client",
+          signedAt: fixedTimestamp,
+          ipHash: "hash-123",
+          signatureDataUrl: validPng2,
+        },
+      });
+
+      // Both must include signature asset summary
+      expect(res1.markdown).toContain("**İmza Varlık Özeti:**");
+      expect(res2.markdown).toContain("**İmza Varlık Özeti:**");
+
+      // The SHA-256 document fingerprint MUST differ because the signature image is different
+      expect(res1.sha256Fingerprint).not.toBe(res2.sha256Fingerprint);
+    });
+  });
 });
+

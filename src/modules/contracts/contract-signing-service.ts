@@ -3,7 +3,10 @@ import { and, eq, ne } from "drizzle-orm";
 import { getDb } from "@/src/lib/db";
 import * as schema from "@/db/schema";
 import { ContractRecommendationEngine } from "./recommendation-engine";
-import { ContractGeneratorService } from "./generator";
+import {
+  ContractGeneratorService,
+  validateAndSanitizeRasterSignature,
+} from "./generator";
 import {
   uploadEphemeralSignature,
   deleteEphemeralSignatures,
@@ -348,6 +351,14 @@ export class ContractSigningService {
       throw new Error("Geçerli bir dijital imza görseli veya çizim verisi gereklidir.");
     }
 
+    const rasterValidation = validateAndSanitizeRasterSignature(input.signatureDataUrl);
+    if (!rasterValidation.isValid) {
+      throw new Error(
+        `Geçersiz veya güvenli olmayan imza görseli: ${rasterValidation.error || "Yalnızca raster PNG, JPEG, WebP formatları desteklenir."}`
+      );
+    }
+    const cleanSignatureDataUrl = rasterValidation.sanitizedDataUrl;
+
     // 1. Fetch engagement details
     const engagementData = await EngagementService.getEngagementDetails(input.userId, input.engagementId);
     if (!engagementData || !engagementData.engagement) {
@@ -382,10 +393,9 @@ export class ContractSigningService {
     }
 
     // 2. Decode signature image buffer and upload to Cloudflare R2 (10 GB free tier ephemeral storage)
-    const base64Data = input.signatureDataUrl.split(",")[1] || "";
+    const base64Data = cleanSignatureDataUrl.split(",")[1] || "";
     const imageBuffer = Buffer.from(base64Data, "base64");
-    const mimeMatch = input.signatureDataUrl.match(/data:([^;]+);/);
-    const mimeType = mimeMatch ? mimeMatch[1] : "image/webp";
+    const mimeType = rasterValidation.mimeType;
 
     const r2Result = await uploadEphemeralSignature(
       input.engagementId,
@@ -478,14 +488,14 @@ export class ContractSigningService {
       updatePayload.clientSignedAt = now;
       updatePayload.clientIpHash = ipHash;
       updatePayload.clientSignatureR2Key = r2Result.key;
-      updatePayload.clientSignatureDataUrl = input.signatureDataUrl;
+      updatePayload.clientSignatureDataUrl = cleanSignatureDataUrl;
     } else {
       updatePayload.freelancerSignerUserId = input.userId;
       updatePayload.freelancerSignerName = input.signerName;
       updatePayload.freelancerSignedAt = now;
       updatePayload.freelancerIpHash = ipHash;
       updatePayload.freelancerSignatureR2Key = r2Result.key;
-      updatePayload.freelancerSignatureDataUrl = input.signatureDataUrl;
+      updatePayload.freelancerSignatureDataUrl = cleanSignatureDataUrl;
     }
 
     let updatedPkg: RawPackageRecord;

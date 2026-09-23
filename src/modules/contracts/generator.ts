@@ -49,6 +49,138 @@ export const DEFAULT_MILESTONES: ContractMilestone[] = [
   },
 ];
 
+/**
+ * HTML attribute escaper preventing attribute break-out and event injection attacks.
+ */
+export function escapeHtmlAttr(str: string | undefined | null): string {
+  if (!str) return "";
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+/**
+ * Validates, checks magic bytes, and safely re-encodes raster base64 signatures (PNG, JPEG, WebP).
+ * Strictly forbids SVG, scripts, and oversized or malformed payloads.
+ */
+export function validateAndSanitizeRasterSignature(dataUrl: string | undefined | null): {
+  isValid: boolean;
+  sanitizedDataUrl: string;
+  sha256Hash: string;
+  mimeType: string;
+  error?: string;
+} {
+  if (!dataUrl || typeof dataUrl !== "string") {
+    return {
+      isValid: false,
+      sanitizedDataUrl: "",
+      sha256Hash: "",
+      mimeType: "",
+      error: "Signature data URL is empty or missing",
+    };
+  }
+
+  const match = dataUrl.match(/^data:(image\/(png|jpeg|webp));base64,([A-Za-z0-9+/=]+)$/);
+  if (!match || !match[1] || !match[3]) {
+    return {
+      isValid: false,
+      sanitizedDataUrl: "",
+      sha256Hash: "",
+      mimeType: "",
+      error: "Invalid signature format: Only raster images (PNG, JPEG, WebP) in base64 format are allowed.",
+    };
+  }
+
+  const mimeType = match[1];
+  const rawBase64 = match[3];
+
+  // 1 MB payload limit to prevent memory exhaustion
+  if (rawBase64.length > 1024 * 1024) {
+    return {
+      isValid: false,
+      sanitizedDataUrl: "",
+      sha256Hash: "",
+      mimeType,
+      error: "Signature payload exceeds maximum size limit (1MB).",
+    };
+  }
+
+  let buffer: Buffer;
+  try {
+    buffer = Buffer.from(rawBase64, "base64");
+  } catch {
+    return {
+      isValid: false,
+      sanitizedDataUrl: "",
+      sha256Hash: "",
+      mimeType,
+      error: "Failed to decode base64 signature payload.",
+    };
+  }
+
+  if (buffer.length < 12) {
+    return {
+      isValid: false,
+      sanitizedDataUrl: "",
+      sha256Hash: "",
+      mimeType,
+      error: "Signature image buffer is too small to be a valid raster image.",
+    };
+  }
+
+  // Magic bytes verification
+  let isMagicValid = false;
+  if (mimeType === "image/png") {
+    isMagicValid =
+      buffer[0] === 0x89 &&
+      buffer[1] === 0x50 &&
+      buffer[2] === 0x4e &&
+      buffer[3] === 0x47;
+  } else if (mimeType === "image/jpeg") {
+    isMagicValid =
+      buffer[0] === 0xff &&
+      buffer[1] === 0xd8 &&
+      buffer[2] === 0xff;
+  } else if (mimeType === "image/webp") {
+    const isRiff =
+      buffer[0] === 0x52 &&
+      buffer[1] === 0x49 &&
+      buffer[2] === 0x46 &&
+      buffer[3] === 0x46; // "RIFF"
+    const isWebp =
+      buffer[8] === 0x57 &&
+      buffer[9] === 0x45 &&
+      buffer[10] === 0x42 &&
+      buffer[11] === 0x50; // "WEBP"
+    isMagicValid = isRiff && isWebp;
+  }
+
+  if (!isMagicValid) {
+    return {
+      isValid: false,
+      sanitizedDataUrl: "",
+      sha256Hash: "",
+      mimeType,
+      error: "Signature binary header does not match declared raster image type.",
+    };
+  }
+
+  // Re-encode to guarantee clean, unadulterated base64 with no injected characters
+  const cleanBase64 = buffer.toString("base64");
+  const sanitizedDataUrl = `data:${mimeType};base64,${cleanBase64}`;
+  const sha256Hash = createHash("sha256").update(buffer).digest("hex");
+
+  return {
+    isValid: true,
+    sanitizedDataUrl,
+    sha256Hash,
+    mimeType,
+  };
+}
+
 export class ContractGeneratorService {
   /**
    * Generates a deterministic SHA-256 hash for document fingerprinting.
@@ -450,13 +582,23 @@ ${squadMembers.map((m, i) => `| ${i + 1} | **${m.displayName}** ${m.isLead ? "*(
 ---
 `;
 
+    const clientSigAsset = input.clientSignature?.signatureDataUrl
+      ? validateAndSanitizeRasterSignature(input.clientSignature.signatureDataUrl)
+      : null;
+    const contractorSigAsset = input.contractorSignature?.signatureDataUrl
+      ? validateAndSanitizeRasterSignature(input.contractorSignature.signatureDataUrl)
+      : null;
+
+    const clientSigAssetHash = clientSigAsset?.isValid ? clientSigAsset.sha256Hash : null;
+    const contractorSigAssetHash = contractorSigAsset?.isValid ? contractorSigAsset.sha256Hash : null;
+
     // Signatures Markdown block
     const clientSigMd = input.clientSignature
-      ? `✅ **E-İmzalandı:** ${input.clientSignature.signerName}  \n**Tarih:** ${input.clientSignature.signedAt}  \n**HMK m. 199 Damgası:** \`${input.clientSignature.ipHash || "HMK-199-VERIFIED"}\``
+      ? `✅ **E-İmzalandı:** ${input.clientSignature.signerName}  \n**Tarih:** ${input.clientSignature.signedAt}  \n**HMK m. 199 Damgası:** \`${input.clientSignature.ipHash || "HMK-199-VERIFIED"}\`${clientSigAssetHash ? `  \n**İmza Varlık Özeti:** \`${clientSigAssetHash}\`` : ""}`
       : `**İmza / Kaşe:** ___________________  \n**Tarih:** ${matchedDateFormatted}`;
 
     const contractorSigMd = input.contractorSignature
-      ? `✅ **E-İmzalandı:** ${input.contractorSignature.signerName}  \n**Tarih:** ${input.contractorSignature.signedAt}  \n**HMK m. 199 Damgası:** \`${input.contractorSignature.ipHash || "HMK-199-VERIFIED"}\``
+      ? `✅ **E-İmzalandı:** ${input.contractorSignature.signerName}  \n**Tarih:** ${input.contractorSignature.signedAt}  \n**HMK m. 199 Damgası:** \`${input.contractorSignature.ipHash || "HMK-199-VERIFIED"}\`${contractorSigAssetHash ? `  \n**İmza Varlık Özeti:** \`${contractorSigAssetHash}\`` : ""}`
       : `**İmza / Kaşe:** ___________________  \n**Tarih:** ${matchedDateFormatted}`;
 
     // Build canonical Markdown content
@@ -694,11 +836,11 @@ ${
 | **Name:** ${clientName} | **Name:** ${contractorName} |
 | ${
           input.clientSignature
-            ? `✅ **E-Signed:** ${input.clientSignature.signerName}  \n**Timestamp:** ${input.clientSignature.signedAt}  \n**HMK Art. 199 Seal:** \`${input.clientSignature.ipHash || "HMK-199-VERIFIED"}\``
+            ? `✅ **E-Signed:** ${input.clientSignature.signerName}  \n**Timestamp:** ${input.clientSignature.signedAt}  \n**HMK Art. 199 Seal:** \`${input.clientSignature.ipHash || "HMK-199-VERIFIED"}\`${clientSigAssetHash ? `  \n**Signature Asset SHA-256:** \`${clientSigAssetHash}\`` : ""}`
             : `**Signature / Stamp:** ___________________  \n**Date:** ${matchedDateFormatted}`
         } | ${
           input.contractorSignature
-            ? `✅ **E-Signed:** ${input.contractorSignature.signerName}  \n**Timestamp:** ${input.contractorSignature.signedAt}  \n**HMK Art. 199 Seal:** \`${input.contractorSignature.ipHash || "HMK-199-VERIFIED"}\``
+            ? `✅ **E-Signed:** ${input.contractorSignature.signerName}  \n**Timestamp:** ${input.contractorSignature.signedAt}  \n**HMK Art. 199 Seal:** \`${input.contractorSignature.ipHash || "HMK-199-VERIFIED"}\`${contractorSigAssetHash ? `  \n**Signature Asset SHA-256:** \`${contractorSigAssetHash}\`` : ""}`
             : `**Signature / Stamp:** ___________________  \n**Date:** ${matchedDateFormatted}`
         } |
 ${annexMarkdownEn}${includeDpa ? dpaMarkdownEn : ""}${includeSafeHarbor ? safeHarborMarkdownEn : ""}${includeAiGov ? aiGovernanceMarkdownEn : ""}${includeSoftwareExport ? softwareExportMarkdownEn : ""}${includeCleanCode ? cleanCodeMarkdownEn : ""}${includeFoss ? fossMarkdownEn : ""}${includeNonSolicitation ? nonSolicitationMarkdownEn : ""}
@@ -712,7 +854,12 @@ ${annexMarkdownEn}${includeDpa ? dpaMarkdownEn : ""}${includeSafeHarbor ? safeHa
       altText: string
     ) => {
       if (sig?.signatureDataUrl) {
-        return `<div style="margin-top: 8px;"><img src="${sig.signatureDataUrl}" style="max-height: 44px; max-width: 180px; object-fit: contain;" alt="${altText}" /></div>`;
+        const validation = validateAndSanitizeRasterSignature(sig.signatureDataUrl);
+        if (validation.isValid) {
+          const safeSrc = escapeHtmlAttr(validation.sanitizedDataUrl);
+          const safeAlt = escapeHtmlAttr(altText);
+          return `<div style="margin-top: 8px;"><img src="${safeSrc}" style="max-height: 44px; max-width: 180px; object-fit: contain;" alt="${safeAlt}" /></div>`;
+        }
       }
       if (sig) {
         return `<div style="margin-top: 14px; color: #10b981; font-weight: bold;">✅ E-İmzalandı</div>`;

@@ -393,6 +393,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
         status: 200,
         headers: {
           "Content-Type": "text/html; charset=utf-8",
+          "Content-Security-Policy": "default-src 'none'; img-src data:; style-src 'unsafe-inline'; sandbox",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
         },
       });
     }

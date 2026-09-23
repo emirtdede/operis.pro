@@ -57,6 +57,9 @@ export async function GET(
         status: 200,
         headers: {
           "Content-Type": "text/html; charset=utf-8",
+          "Content-Security-Policy": "default-src 'none'; img-src data:; style-src 'unsafe-inline'; sandbox",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
         },
       });
     }
