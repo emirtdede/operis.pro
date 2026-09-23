@@ -11,12 +11,14 @@ import {
 export async function POST(req: Request) {
   const isEn = req.headers.get("x-locale") === "en";
   const allowQuickLogin =
+    process.env.ENABLE_DEMO_LOGIN !== "false" &&
+    process.env.ALLOW_DEMO_CREDENTIALS !== "false" &&
+    process.env.NODE_ENV !== "production" &&
     (process.env.ALLOW_DEMO_CREDENTIALS === "true" ||
       process.env.ENABLE_DEMO_LOGIN === "true" ||
       process.env.VITEST !== undefined ||
       process.env.NODE_ENV === "development" ||
-      process.env.NODE_ENV === "test") &&
-    process.env.NODE_ENV !== "production";
+      process.env.NODE_ENV === "test");
 
   if (!allowQuickLogin) {
     return NextResponse.json(

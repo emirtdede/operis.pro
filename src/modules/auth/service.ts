@@ -324,12 +324,14 @@ export class AuthService {
     const input = loginSchema.parse(rawInput);
 
     const allowDemo =
-      process.env.ALLOW_DEMO_CREDENTIALS === "true" ||
-      process.env.ENABLE_DEMO_LOGIN === "true" ||
-      ((process.env.VITEST !== undefined ||
+      process.env.ENABLE_DEMO_LOGIN !== "false" &&
+      process.env.ALLOW_DEMO_CREDENTIALS !== "false" &&
+      process.env.NODE_ENV !== "production" &&
+      (process.env.ALLOW_DEMO_CREDENTIALS === "true" ||
+        process.env.ENABLE_DEMO_LOGIN === "true" ||
+        process.env.VITEST !== undefined ||
         process.env.NODE_ENV === "test" ||
-        process.env.NODE_ENV === "development") &&
-        process.env.NODE_ENV !== "production");
+        process.env.NODE_ENV === "development");
 
     // 1. Support built-in standard normal user account strictly in allowed demo/test environments
     if (

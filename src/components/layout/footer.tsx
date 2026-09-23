@@ -188,6 +188,20 @@ export function Footer() {
                   {isTr ? "Çerez Tercihleri" : "Cookie Preferences"}
                 </button>
               </li>
+              {isTr && (
+                <li className="pt-2">
+                  <a
+                    href="https://etbis.eticaret.gov.tr"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/40 text-[11px] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-blue-500/40 transition-all group"
+                    title="T.C. Ticaret Bakanlığı Elektronik Ticaret Bilgi Sistemi (ETBİS) Kayıtlı Platform"
+                  >
+                    <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span>ETBİS Kayıtlı Platform</span>
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
         </div>

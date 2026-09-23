@@ -366,11 +366,13 @@ export function verifyPhoneOtp(
   const autoConsume = options.autoConsume ?? false;
 
   const allowDemoOtp =
+    process.env.ENABLE_DEMO_LOGIN !== "false" &&
+    process.env.ALLOW_DEMO_CREDENTIALS !== "false" &&
+    process.env.NODE_ENV !== "production" &&
     (process.env.ALLOW_DEMO_CREDENTIALS === "true" ||
       process.env.ENABLE_DEMO_LOGIN === "true" ||
       process.env.VITEST !== undefined ||
-      process.env.NODE_ENV === "test") &&
-    process.env.NODE_ENV !== "production";
+      process.env.NODE_ENV === "test");
 
   if (
     allowDemoOtp &&

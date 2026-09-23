@@ -15,9 +15,9 @@ function getAdminLoginButtonLabel(isPending: boolean, requires2FA: boolean): str
     return "Doğrulanıyor...";
   }
   if (requires2FA) {
-    return "2FA Kodu ile Konsola Gir (Süper Admin)";
+    return "2FA Kodu ile Giriş Yap (Yönetici)";
   }
-  return "Demir Yıldız (Süper Admin) Olarak Konsola Gir";
+  return "Sistem Yöneticisi Olarak Giriş Yap";
 }
 
 export function AdminAccessDeniedClient({
@@ -25,13 +25,17 @@ export function AdminAccessDeniedClient({
   errorReason = "Standart kullanıcı hesaplarının bu yönetim konsoluna erişim izni bulunmamaktadır.",
 }: AdminAccessDeniedClientProps) {
   const [adminKey, setAdminKey] = useState("");
-  const [adminEmail, setAdminEmail] = useState("admin@operis.pro");
+  const [adminEmail, setAdminEmail] = useState("");
   const [requires2FA, setRequires2FA] = useState(false);
   const [totpCode, setTotpCode] = useState("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const handleAdminLogin = (role: "ADMIN" | "SECURITY_ADMIN") => {
+    if (!adminEmail.trim()) {
+      setErrorMsg("Lütfen yönetici e-posta adresini giriniz.");
+      return;
+    }
     if (!adminKey.trim()) {
       setErrorMsg("Lütfen güvenlik anahtarını / PIN kodunu giriniz.");
       return;
@@ -49,8 +53,8 @@ export function AdminAccessDeniedClient({
           body: JSON.stringify({
             adminKey: adminKey.trim(),
             role,
-            email: adminEmail,
-            displayName: role === "ADMIN" ? "Demir Yıldız (Admin)" : "Güvenlik Sorumlusu",
+            email: adminEmail.trim(),
+            displayName: role === "ADMIN" ? (adminEmail.split("@")[0] || "Yönetici") : "Güvenlik Sorumlusu",
             totpCode: requires2FA ? totpCode.trim() : undefined,
           }),
         });
@@ -126,6 +130,7 @@ export function AdminAccessDeniedClient({
                 type="email"
                 value={adminEmail}
                 onChange={(e) => setAdminEmail(e.target.value)}
+                placeholder="yonetici@operis.pro"
                 className="w-full bg-[#0d0e12] border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-red-500/60"
               />
             </div>
@@ -166,13 +171,13 @@ export function AdminAccessDeniedClient({
               </div>
             )}
 
-            {/* Quick Demo Authentication Buttons */}
+            {/* Authentication Buttons */}
             <div className="pt-2 space-y-2">
               <button
                 type="button"
                 onClick={() => handleAdminLogin("ADMIN")}
                 disabled={isPending}
-                className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20"
+                className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 cursor-pointer disabled:opacity-50"
               >
                 <UserCheck className="h-4 w-4" />
                 <span>
@@ -184,13 +189,13 @@ export function AdminAccessDeniedClient({
                 type="button"
                 onClick={() => handleAdminLogin("SECURITY_ADMIN")}
                 disabled={isPending}
-                className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-xs transition-colors flex items-center justify-center gap-2"
+                className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 <Shield className="h-4 w-4 text-red-400" />
                 <span>
                   {requires2FA
-                    ? "2FA Kodu ile Konsola Gir (Güvenlik)"
-                    : "Güvenlik Sorumlusu (Security Admin) Olarak Konsola Gir"}
+                    ? "2FA Kodu ile Giriş Yap (Güvenlik)"
+                    : "Güvenlik Yöneticisi Olarak Giriş Yap"}
                 </span>
               </button>
             </div>
