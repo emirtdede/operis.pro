@@ -179,6 +179,12 @@ export class ClerkSyncService {
       .limit(1);
 
     if (existingByClerkId) {
+      if (existingByClerkId.user.status !== "ACTIVE") {
+        throw new Error(
+          `Hesap aktif durumda değil (durum: ${existingByClerkId.user.status}). Giriş yapılamaz.`
+        );
+      }
+
       // Self-heal: ensure userPrivateIdentity exists and email encryption fields are populated
       await this.ensureUserPrivateIdentity(
         db,
@@ -243,6 +249,41 @@ export class ClerkSyncService {
       .limit(1);
 
     if (existingByEmail) {
+      // 1. Status check: Inactive or suspended accounts cannot be claimed or logged into
+      if (existingByEmail.user.status !== "ACTIVE") {
+        throw new Error(
+          `Hesap aktif durumda değil (durum: ${existingByEmail.user.status}). Giriş yapılamaz.`
+        );
+      }
+
+      // 2. Email verification invariant: Cannot link an unverified external email to an existing account
+      if (!input.emailVerified) {
+        throw new Error(
+          "Doğrulanmamış e-posta adresi ile mevcut bir hesaba bağlantı yapılamaz."
+        );
+      }
+
+      // 3. Identity conflict invariant: Cannot overwrite an existing, different Clerk identity
+      if (
+        existingByEmail.user.clerkUserId &&
+        existingByEmail.user.clerkUserId !== input.clerkUserId
+      ) {
+        throw new Error(
+          "Hesap çakışması: Bu e-posta adresi başka bir Clerk kimliğine zaten bağlı."
+        );
+      }
+
+      // 4. Privileged role invariant: Administrative accounts cannot be auto-claimed via public SSO
+      const privilegedRoles = ["ADMIN", "SECURITY_ADMIN", "MODERATOR"];
+      if (
+        privilegedRoles.includes(existingByEmail.user.role) &&
+        !existingByEmail.user.clerkUserId
+      ) {
+        throw new Error(
+          "Yönetici hesapları sosyal kimlik sağlayıcı ile otomatik olarak eşleştirilemez. Güvenlik yöneticisiyle iletişime geçin."
+        );
+      }
+
       // Self-heal: ensure userPrivateIdentity exists
       await this.ensureUserPrivateIdentity(
         db,

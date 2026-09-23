@@ -87,7 +87,10 @@ describe("ClerkSyncService Unit Tests", () => {
                   user: {
                     id: "existing-uuid",
                     email: "developer@operis.pro",
+                    status: "ACTIVE",
+                    role: "USER",
                     emailVerified: true,
+                    clerkUserId: null,
                     emailEnc: null,
                     emailHmac: null,
                   },
@@ -130,6 +133,215 @@ describe("ClerkSyncService Unit Tests", () => {
     expect(result.handle).toBe("seniordev");
     expect(result.email).toBe("developer@operis.pro");
     expect(mockUpdate).toHaveBeenCalled();
+  });
+
+  it("rejects account linking when email is not verified", async () => {
+    const mockSelect = vi.fn().mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        leftJoin: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            limit: vi
+              .fn()
+              .mockResolvedValueOnce([]) // Not found by clerkUserId
+              .mockResolvedValueOnce([
+                {
+                  user: {
+                    id: "existing-uuid",
+                    email: "victim@operis.pro",
+                    status: "ACTIVE",
+                    role: "USER",
+                    emailVerified: true,
+                    clerkUserId: null,
+                  },
+                  profile: {
+                    displayName: "Victim User",
+                    handle: "victim",
+                  },
+                },
+              ]),
+          }),
+        }),
+      }),
+    });
+
+    vi.spyOn(dbModule, "getDb").mockReturnValue({
+      select: mockSelect,
+    } as unknown as ReturnType<typeof dbModule.getDb>);
+
+    await expect(
+      ClerkSyncService.syncClerkUser({
+        clerkUserId: "attacker_clerk_id",
+        email: "victim@operis.pro",
+        emailVerified: false, // Unverified external email
+      })
+    ).rejects.toThrow("Doğrulanmamış e-posta adresi ile mevcut bir hesaba bağlantı yapılamaz.");
+  });
+
+  it("rejects account linking when existing account is already bound to a different Clerk identity", async () => {
+    const mockSelect = vi.fn().mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        leftJoin: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            limit: vi
+              .fn()
+              .mockResolvedValueOnce([]) // Not found by clerkUserId
+              .mockResolvedValueOnce([
+                {
+                  user: {
+                    id: "existing-uuid",
+                    email: "alice@operis.pro",
+                    status: "ACTIVE",
+                    role: "USER",
+                    emailVerified: true,
+                    clerkUserId: "original_clerk_id_for_alice",
+                  },
+                  profile: {
+                    displayName: "Alice",
+                    handle: "alice",
+                  },
+                },
+              ]),
+          }),
+        }),
+      }),
+    });
+
+    vi.spyOn(dbModule, "getDb").mockReturnValue({
+      select: mockSelect,
+    } as unknown as ReturnType<typeof dbModule.getDb>);
+
+    await expect(
+      ClerkSyncService.syncClerkUser({
+        clerkUserId: "different_clerk_id_attempting_hijack",
+        email: "alice@operis.pro",
+        emailVerified: true,
+      })
+    ).rejects.toThrow("Hesap çakışması: Bu e-posta adresi başka bir Clerk kimliğine zaten bağlı.");
+  });
+
+  it("rejects automated account linking for administrative accounts (ADMIN, SECURITY_ADMIN, MODERATOR)", async () => {
+    for (const adminRole of ["ADMIN", "SECURITY_ADMIN", "MODERATOR"]) {
+      const mockSelect = vi.fn().mockReturnValue({
+        from: vi.fn().mockReturnValue({
+          leftJoin: vi.fn().mockReturnValue({
+            where: vi.fn().mockReturnValue({
+              limit: vi
+                .fn()
+                .mockResolvedValueOnce([]) // Not found by clerkUserId
+                .mockResolvedValueOnce([
+                  {
+                    user: {
+                      id: "admin-uuid",
+                      email: "admin@operis.pro",
+                      status: "ACTIVE",
+                      role: adminRole,
+                      emailVerified: true,
+                      clerkUserId: null,
+                    },
+                    profile: {
+                      displayName: "Admin",
+                      handle: "admin",
+                    },
+                  },
+                ]),
+            }),
+          }),
+        }),
+      });
+
+      vi.spyOn(dbModule, "getDb").mockReturnValue({
+        select: mockSelect,
+      } as unknown as ReturnType<typeof dbModule.getDb>);
+
+      await expect(
+        ClerkSyncService.syncClerkUser({
+          clerkUserId: "public_sso_id",
+          email: "admin@operis.pro",
+          emailVerified: true,
+        })
+      ).rejects.toThrow("Yönetici hesapları sosyal kimlik sağlayıcı ile otomatik olarak eşleştirilemez.");
+    }
+  });
+
+  it("rejects login when existing account is SUSPENDED or DELETED", async () => {
+    const mockSelect = vi.fn().mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        leftJoin: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            limit: vi
+              .fn()
+              .mockResolvedValueOnce([]) // Not found by clerkUserId
+              .mockResolvedValueOnce([
+                {
+                  user: {
+                    id: "banned-uuid",
+                    email: "banned@operis.pro",
+                    status: "SUSPENDED",
+                    role: "USER",
+                    emailVerified: true,
+                    clerkUserId: null,
+                  },
+                  profile: {
+                    displayName: "Banned User",
+                    handle: "banned",
+                  },
+                },
+              ]),
+          }),
+        }),
+      }),
+    });
+
+    vi.spyOn(dbModule, "getDb").mockReturnValue({
+      select: mockSelect,
+    } as unknown as ReturnType<typeof dbModule.getDb>);
+
+    await expect(
+      ClerkSyncService.syncClerkUser({
+        clerkUserId: "user_banned_clerk",
+        email: "banned@operis.pro",
+        emailVerified: true,
+      })
+    ).rejects.toThrow("Hesap aktif durumda değil");
+  });
+
+  it("rejects existing Clerk-linked user when status is SUSPENDED", async () => {
+    const mockSelect = vi.fn().mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        leftJoin: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            limit: vi.fn().mockResolvedValue([
+              {
+                user: {
+                  id: "banned-uuid",
+                  email: "banned@operis.pro",
+                  status: "SUSPENDED",
+                  role: "USER",
+                  emailVerified: true,
+                  clerkUserId: "user_banned_clerk",
+                },
+                profile: {
+                  displayName: "Banned User",
+                  handle: "banned",
+                },
+              },
+            ]),
+          }),
+        }),
+      }),
+    });
+
+    vi.spyOn(dbModule, "getDb").mockReturnValue({
+      select: mockSelect,
+    } as unknown as ReturnType<typeof dbModule.getDb>);
+
+    await expect(
+      ClerkSyncService.syncClerkUser({
+        clerkUserId: "user_banned_clerk",
+        email: "banned@operis.pro",
+        emailVerified: true,
+      })
+    ).rejects.toThrow("Hesap aktif durumda değil");
   });
 
   it("soft deletes a user when clerk user is deleted", async () => {

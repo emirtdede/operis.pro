@@ -7,6 +7,7 @@ import {
   SESSION_COOKIE_NAME,
   SESSION_MAX_AGE_SECONDS,
 } from "@/src/modules/auth/session";
+import { SecurityAuditService } from "@/src/modules/security/audit-service";
 
 export async function POST(req: Request) {
   const isTr = req.headers.get("x-locale") !== "en";
@@ -19,42 +20,54 @@ export async function POST(req: Request) {
   }
 
   try {
-    let body: { clerkUserId?: string; email?: string } = {};
-    try {
-      body = await req.json();
-    } catch {
-      // Body is optional
-    }
-
     const { auth, currentUser, clerkClient } = await import("@clerk/nextjs/server");
     const clerkAuth = await auth();
 
-    const targetClerkUserId = clerkAuth?.userId || body.clerkUserId;
+    // STRICT: Under NO circumstances should body.clerkUserId or body.email supply identity.
+    // The session MUST originate from a cryptographically verified server-side Clerk session.
+    if (!clerkAuth?.userId) {
+      await SecurityAuditService.logEvent({
+        eventType: "LOGIN_FAILED",
+        riskMetadata: {
+          endpoint: "/api/auth/clerk-sync",
+          reason: "no_active_clerk_session",
+        },
+      });
 
-    if (!targetClerkUserId) {
       return NextResponse.json(
         { error: isTr ? "Aktif bir oturum bulunamadı." : "No active session found." },
         { status: 401 }
       );
     }
 
-    let email = body.email;
+    const targetClerkUserId = clerkAuth.userId;
+
+    let email: string | null = null;
+    let emailVerified = false;
     let firstName: string | null = null;
     let lastName: string | null = null;
     let avatarUrl: string | null = null;
 
+    // Fetch authoritative user profile directly from Clerk server API
     try {
       const clerkUser = await currentUser();
       if (clerkUser) {
-        email =
-          clerkUser.emailAddresses?.find((e: { id: string; emailAddress: string }) => e.id === clerkUser.primaryEmailAddressId)
-            ?.emailAddress || clerkUser.emailAddresses?.[0]?.emailAddress || email;
+        const primaryEmailObj =
+          clerkUser.emailAddresses?.find(
+            (e: { id: string; emailAddress: string; verification?: { status?: string } | null }) =>
+              e.id === clerkUser.primaryEmailAddressId
+          ) || clerkUser.emailAddresses?.[0];
+
+        if (primaryEmailObj) {
+          email = primaryEmailObj.emailAddress;
+          emailVerified = primaryEmailObj.verification?.status === "verified";
+        }
         firstName = clerkUser.firstName;
         lastName = clerkUser.lastName;
         avatarUrl = clerkUser.imageUrl;
       }
     } catch {
-      // Fallback if currentUser() fails
+      // Fallback to clerkClient if currentUser() fails in context
     }
 
     if (!email) {
@@ -62,9 +75,16 @@ export async function POST(req: Request) {
         const client = await clerkClient();
         const user = await client.users.getUser(targetClerkUserId);
         if (user) {
-          email =
-            user.emailAddresses?.find((e: { id: string; emailAddress: string }) => e.id === user.primaryEmailAddressId)?.emailAddress ||
-            user.emailAddresses?.[0]?.emailAddress;
+          const primaryEmailObj =
+            user.emailAddresses?.find(
+              (e: { id: string; emailAddress: string; verification?: { status?: string } | null }) =>
+                e.id === user.primaryEmailAddressId
+            ) || user.emailAddresses?.[0];
+
+          if (primaryEmailObj) {
+            email = primaryEmailObj.emailAddress;
+            emailVerified = primaryEmailObj.verification?.status === "verified";
+          }
           firstName = user.firstName;
           lastName = user.lastName;
           avatarUrl = user.imageUrl;
@@ -85,7 +105,27 @@ export async function POST(req: Request) {
       );
     }
 
-    // Sync Clerk user with PostgreSQL database
+    if (!emailVerified) {
+      await SecurityAuditService.logEvent({
+        eventType: "LOGIN_FAILED",
+        riskMetadata: {
+          endpoint: "/api/auth/clerk-sync",
+          clerkUserId: targetClerkUserId,
+          reason: "unverified_email",
+        },
+      });
+
+      return NextResponse.json(
+        {
+          error: isTr
+            ? "E-posta adresiniz henüz doğrulanmamış. Lütfen e-postanızı doğrulayın."
+            : "Your email address is not verified. Please verify your email before proceeding.",
+        },
+        { status: 403 }
+      );
+    }
+
+    // Sync Clerk user with PostgreSQL database using strictly verified server data
     const syncResult = await ClerkSyncService.syncClerkUser({
       clerkUserId: targetClerkUserId,
       email,
@@ -109,6 +149,16 @@ export async function POST(req: Request) {
       .limit(1);
 
     if (!dbUser || dbUser.status !== "ACTIVE") {
+      await SecurityAuditService.logEvent({
+        userId: dbUser?.id,
+        eventType: "LOGIN_FAILED",
+        riskMetadata: {
+          endpoint: "/api/auth/clerk-sync",
+          reason: "inactive_account",
+          status: dbUser?.status,
+        },
+      });
+
       return NextResponse.json(
         {
           error: isTr
@@ -126,6 +176,15 @@ export async function POST(req: Request) {
       role: dbUser.role,
       status: dbUser.status,
       authVersion: dbUser.authVersion,
+    });
+
+    await SecurityAuditService.logEvent({
+      userId: dbUser.id,
+      eventType: "LOGIN_SUCCESS",
+      riskMetadata: {
+        provider: "clerk",
+        clerkUserId: targetClerkUserId,
+      },
     });
 
     const response = NextResponse.json(

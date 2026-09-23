@@ -161,10 +161,13 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
           if (!dbUser) {
             const clerkUser = await currentUser();
             if (clerkUser) {
-              const primaryEmail =
-                clerkUser.emailAddresses?.find((e) => e.id === clerkUser.primaryEmailAddressId)
-                  ?.emailAddress || clerkUser.emailAddresses?.[0]?.emailAddress;
-              if (primaryEmail) {
+              const primaryEmailObj =
+                clerkUser.emailAddresses?.find((e) => e.id === clerkUser.primaryEmailAddressId) ||
+                clerkUser.emailAddresses?.[0];
+              const primaryEmail = primaryEmailObj?.emailAddress;
+              const isEmailVerified = primaryEmailObj?.verification?.status === "verified";
+
+              if (primaryEmail && isEmailVerified) {
                 const { ClerkSyncService } = await import("./clerk-sync-service");
                 const syncResult = await ClerkSyncService.syncClerkUser({
                   clerkUserId: clerkUser.id,
