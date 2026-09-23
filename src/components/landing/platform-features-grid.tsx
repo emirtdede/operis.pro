@@ -155,8 +155,8 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
         ? "Milisaniyelik Komut Paleti & Radar"
         : "Sub-Millisecond Command Palette (⌘K)",
       description: isTr
-        ? "Klavyeden ⌘K veya Ctrl+K tuşlarına basarak 60 uzmanlık kategorisi, teknoloji yığınları (Next.js, Go, Python, Rust) ve bütçeler arasında anında gezinin."
-        : "Trigger our instant command radar anywhere. Filter across 60 tech niches, frameworks, and budgets without reloading the page.",
+        ? "Klavyeden ⌘K veya Ctrl+K tuşlarına basarak 110 uzmanlık kategorisi, teknoloji yığınları (Next.js, Go, Python, Rust) ve bütçeler arasında anında gezinin."
+        : "Trigger our instant command radar anywhere. Filter across 110 tech niches, frameworks, and budgets without reloading the page.",
       highlight: isTr
         ? "Sayfa Yenilemesiz Hızlı Arama"
         : "Instant Real-Time Filtering",
@@ -190,10 +190,10 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
     {
       id: "deep-categories",
       icon: Layers,
-      badge: isTr ? "60 Uzmanlık" : "60 Niches",
+      badge: isTr ? "110 Uzmanlık" : "110 Niches",
       title: isTr
-        ? "10 Sektör & 60 Niş Teknoloji Radarı"
-        : "10 Industry Sectors & 60 Deep Niches",
+        ? "10 Sektör & 110 Niş Teknoloji Radarı"
+        : "10 Industry Sectors & 110 Deep Niches",
       description: isTr
         ? "Yapay zeka modellerinden akıllı sözleşmelere, mobil uygulamalardan siber güvenliğe kadar özelleştirilmiş derin teknoloji etiketleri ile doğru ilanı bulun."
         : "Granular micro-tagging across AI/LLM, Web3, DevOps, Cloud Infrastructure, and UX Design. Zero clutter, hyper-targeted matches.",
@@ -355,11 +355,16 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-tab-fade">
           {filteredFeatures.map((item, idx) => {
             const Icon = item.icon;
+            const isLastSingleInRow =
+              filteredFeatures.length % 3 === 1 && idx === filteredFeatures.length - 1;
+
             return (
               <SpotlightCard
                 key={item.id}
                 style={{ animationDelay: `${idx * 45}ms` }}
-                className={`p-6 sm:p-7 rounded-2xl flex flex-col justify-between transition-all duration-300 group ${item.accentColor.border}`}
+                className={`p-6 sm:p-7 rounded-2xl flex flex-col justify-between transition-all duration-300 group ${item.accentColor.border} ${
+                  isLastSingleInRow ? "lg:col-start-2" : ""
+                }`}
               >
                 <div className="space-y-4">
                   {/* Card Top: Icon & Badge */}
@@ -432,7 +437,7 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
               className="w-full sm:w-auto"
             >
               <Button variant="secondary" size="md" className="w-full sm:w-auto">
-                <span>{isTr ? "Kategorileri İncele (60)" : "Explore Categories"}</span>
+                <span>{isTr ? "Kategorileri İncele (110)" : "Explore Categories (110)"}</span>
               </Button>
             </Link>
           </div>

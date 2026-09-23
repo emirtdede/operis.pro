@@ -8,6 +8,7 @@ import { getBaseUrl } from "@/src/lib/config/url";
 import {
   ArrowRight,
   Code2,
+  Building2,
   Cpu,
   Palette,
   TrendingUp,
@@ -244,16 +245,16 @@ export default async function LandingPage({
 
           {/* Display Typography with Masked Gradients */}
           <div className="space-y-4 sm:space-y-6">
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-[var(--color-text-primary)] max-w-5xl mx-auto leading-[1.1]">
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-[var(--color-text-primary)] max-w-5xl mx-auto leading-[1.2] sm:leading-[1.2]">
               {isTr ? (
                 <>
-                  Yazılımcılar ve İşverenler İçin{" "}
-                  <span className="text-gradient-accent">Komisyonsuz, Doğrudan</span> İş Birliği
+                  <span className="block">Yazılımcılar ve İşverenler İçin</span>
+                  <span className="block text-gradient-accent">Komisyonsuz, Doğrudan İş Birliği</span>
                 </>
               ) : (
                 <>
-                  Direct, Zero-Commission{" "}
-                  <span className="text-gradient-accent">Collaboration</span> for Engineers & Teams
+                  <span className="block">Direct, Zero-Commission Collaboration</span>
+                  <span className="block text-gradient-accent">for Engineers & Teams</span>
                 </>
               )}
             </h1>
@@ -268,9 +269,10 @@ export default async function LandingPage({
           {/* Living Reactive Dual-Role CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-1">
             <Link href={isTr ? "/tr/akis" : "/en/feed"} className="w-full sm:w-auto">
-              <Button variant="shimmer" size="lg" className="w-full sm:w-auto px-8 py-4 text-base">
+              <Button variant="shimmer" size="lg" className="w-full sm:w-auto px-8 py-4 text-base gap-2">
+                <Code2 className="h-4 w-4" aria-hidden="true" />
                 <span>
-                  {isTr ? "💻 Yazılımcıyım: Canlı Akışı İncele" : "💻 I'm a Developer: Explore Live Feed"}
+                  {isTr ? "Yazılımcıyım: Canlı Akışı İncele" : "I'm a Developer: Explore Live Feed"}
                 </span>
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>
@@ -282,10 +284,11 @@ export default async function LandingPage({
               <Button
                 variant="secondary"
                 size="lg"
-                className="w-full sm:w-auto px-8 py-4 text-base"
+                className="w-full sm:w-auto px-8 py-4 text-base gap-2"
               >
+                <Building2 className="h-4 w-4" aria-hidden="true" />
                 <span>
-                  {isTr ? "🏢 İşverenim: 2 Dakikada İlan Ver" : "🏢 I'm a Client: Post a Free Listing"}
+                  {isTr ? "İşverenim: 2 Dakikada İlan Ver" : "I'm a Client: Post a Free Listing"}
                 </span>
               </Button>
             </Link>
@@ -346,7 +349,10 @@ export default async function LandingPage({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <SpotlightCard className="p-6 sm:p-7 space-y-4 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
+            <SpotlightCard
+              className="p-6 sm:p-7 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]"
+              contentClassName="space-y-4"
+            >
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 <Percent className="h-6 w-6" aria-hidden="true" />
               </div>
@@ -360,7 +366,10 @@ export default async function LandingPage({
               </p>
             </SpotlightCard>
 
-            <SpotlightCard className="p-6 sm:p-7 space-y-4 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
+            <SpotlightCard
+              className="p-6 sm:p-7 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]"
+              contentClassName="space-y-4"
+            >
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
                 <LockIcon className="h-6 w-6" aria-hidden="true" />
               </div>
@@ -374,7 +383,10 @@ export default async function LandingPage({
               </p>
             </SpotlightCard>
 
-            <SpotlightCard className="p-6 sm:p-7 space-y-4 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
+            <SpotlightCard
+              className="p-6 sm:p-7 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]"
+              contentClassName="space-y-4"
+            >
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                 <Clock className="h-6 w-6" aria-hidden="true" />
               </div>
@@ -446,8 +458,8 @@ export default async function LandingPage({
               </div>
               <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-text-primary)] mt-1">
                 {isTr
-                  ? "10 Ana Sektör, 60 Uzmanlık Alanı"
-                  : "10 Industry Sectors, 60 Specializations"}
+                  ? "10 Ana Sektör, 110 Uzmanlık Alanı"
+                  : "10 Industry Sectors, 110 Specializations"}
               </h2>
               <p className="text-sm text-[var(--color-text-secondary)] mt-1 max-w-2xl">
                 {isTr
@@ -459,7 +471,7 @@ export default async function LandingPage({
               href={isTr ? "/tr/kategoriler" : "/en/categories"}
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-500 hover:text-blue-400 transition-colors shrink-0"
             >
-              <span>{isTr ? "Tüm Kategorileri Gör (60)" : "View All Categories (60)"}</span>
+              <span>{isTr ? "Tüm Kategorileri Gör (110)" : "View All Categories (110)"}</span>
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
@@ -518,13 +530,13 @@ export default async function LandingPage({
             })}
           </div>
 
-          {/* Clean "Explore All 60 Categories" Callout Banner */}
+          {/* Clean "Explore All 110 Categories" Callout Banner */}
           <div className="mt-8 rounded-2xl border border-[var(--color-border-subtle)] bg-gradient-to-r from-blue-500/5 via-indigo-500/5 to-purple-500/5 p-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
             <div className="space-y-1">
               <h4 className="text-sm font-bold text-[var(--color-text-primary)]">
                 {isTr
-                  ? "Tüm 10 Sektör ve 60 Uzmanlık Kategorisi"
-                  : "Explore All 10 Sectors & 60 Categories"}
+                  ? "Tüm 10 Sektör ve 110 Uzmanlık Kategorisi"
+                  : "Explore All 10 Sectors & 110 Categories"}
               </h4>
               <p className="text-xs text-[var(--color-text-secondary)]">
                 {isTr

@@ -77,7 +77,7 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
               }`}
             >
               <Code2 className="h-4 w-4" aria-hidden="true" />
-              <span>{isTr ? "💻 Freelancer & Geliştirici Gözünden" : "💻 For Freelancers & Engineers"}</span>
+              <span>{isTr ? "Freelancer & Geliştirici Gözünden" : "For Freelancers & Engineers"}</span>
             </button>
 
             <button
@@ -90,7 +90,7 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
               }`}
             >
               <Building2 className="h-4 w-4" aria-hidden="true" />
-              <span>{isTr ? "🏢 İşveren & Şirket Gözünden" : "🏢 For Clients & Founders"}</span>
+              <span>{isTr ? "İşveren & Şirket Gözünden" : "For Clients & Founders"}</span>
             </button>
           </div>
         </div>

@@ -48,7 +48,7 @@ export function SpotlightCard({
       onMouseLeave={handleMouseLeave}
       className={twMerge(
         clsx(
-          "relative overflow-hidden rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-md transition-all duration-300 hover:border-[var(--color-border-strong)] hover:shadow-lg flex flex-col h-full",
+          "relative overflow-hidden rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] backdrop-blur-md transition-all duration-300 hover:border-[var(--color-border-strong)] hover:shadow-lg flex flex-col h-full",
           className
         )
       )}
@@ -57,7 +57,7 @@ export function SpotlightCard({
       {/* Interactive Radial Spotlight Sheen */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -inset-px rounded-[inherit] transition-opacity duration-300 select-none"
+        className="pointer-events-none absolute -inset-px rounded-[inherit] !m-0 m-0 transition-opacity duration-300 select-none"
         style={{
           opacity,
           background: `radial-gradient(400px circle at ${position.x}px ${position.y}px, ${spotlightColor}, transparent 70%)`,
@@ -66,7 +66,7 @@ export function SpotlightCard({
       {/* Subtle Border Spotlight Line */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -inset-px rounded-[inherit] transition-opacity duration-300 select-none"
+        className="pointer-events-none absolute -inset-px rounded-[inherit] !m-0 m-0 transition-opacity duration-300 select-none"
         style={{
           opacity,
           background: `radial-gradient(300px circle at ${position.x}px ${position.y}px, ${borderColor}, transparent 60%)`,

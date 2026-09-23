@@ -456,10 +456,11 @@ export function RegisterForm({ locale, returnUrl }: RegisterFormProps) {
         {isTr ? "Hesap Oluştur" : "Create Account"}
       </Button>
 
-      {/* 5 Circular Social Sign-Up Buttons */}
+      {/* Social Sign-Up Button */}
       <div className="pt-2">
         <SocialLoginButtons
           locale={locale}
+          mode="register"
           returnUrl={returnUrl}
           onError={(msg) => setError(msg)}
         />

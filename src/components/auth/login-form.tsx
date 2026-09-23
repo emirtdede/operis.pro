@@ -282,7 +282,7 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
         {submitButtonText}
       </Button>
 
-      {/* 5 Circular Social Login Buttons */}
+      {/* Social Login Button */}
       {!requires2FA && (
         <div className="pt-2">
           <SocialLoginButtons
