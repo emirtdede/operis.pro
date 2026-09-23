@@ -1,7 +1,7 @@
 import { createHash } from "crypto";
 import { getDb } from "@/src/lib/db";
 import * as schema from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 import {
   calculateFreelanceTax,
   type TaxCalculationOutput,
@@ -303,6 +303,7 @@ export class RetainerService {
         cancellationNoticeDays: input.cancellationNoticeDays || 15,
         startedAt: null,
         cancelledAt: null,
+        effectiveCancellationAt: null,
         contractMarkdown: JSON.stringify({ proposedByUserId: input.requesterUserId }),
         sha256Seal: null,
         createdAt: new Date(),
@@ -462,25 +463,29 @@ export class RetainerService {
       };
       inMemoryRetainers.set(engagementId, r);
 
-      const period1: typeof schema.engagementRetainerPeriods.$inferSelect = {
-        id: `per-1-${r.id}`,
-        retainerId: r.id,
-        periodIndex: 1,
-        startDate: new Date().toISOString().slice(0, 10),
-        endDate: new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10),
-        basePrice: r.monthlyPrice,
-        hoursLogged: "0",
-        overageHours: "0",
-        overagePrice: "0",
-        totalAmount: r.monthlyPrice,
-        currency: r.currency,
-        taxSummary: {},
-        paymentStatus: "PENDING",
-        paidAt: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-      inMemoryRetainerPeriods.set(r.id, [period1]);
+      const existingPeriods = inMemoryRetainerPeriods.get(r.id) || [];
+      if (existingPeriods.length === 0) {
+        const period1: typeof schema.engagementRetainerPeriods.$inferSelect = {
+          id: `per-1-${r.id}`,
+          retainerId: r.id,
+          periodIndex: 1,
+          startDate: new Date().toISOString().slice(0, 10),
+          endDate: new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10),
+          basePrice: r.monthlyPrice,
+          hoursLogged: "0",
+          overageHours: "0",
+          overagePrice: "0",
+          totalAmount: r.monthlyPrice,
+          currency: r.currency,
+          taxSummary: {},
+          workLogsJson: [],
+          paymentStatus: "PENDING",
+          paidAt: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+        inMemoryRetainerPeriods.set(r.id, [period1]);
+      }
 
       return {
         success: true,
@@ -555,38 +560,62 @@ export class RetainerService {
       cancellationNoticeDays: retainer.cancellationNoticeDays,
     });
 
-    const [updated] = await db
-      .update(schema.engagementRetainers)
-      .set({
-        status: "ACTIVE",
-        startedAt: new Date(),
-        contractMarkdown: markdown,
-        sha256Seal,
-        updatedAt: new Date(),
-      })
-      .where(eq(schema.engagementRetainers.id, retainer.id))
-      .returning();
+    // Atomic transaction for PROPOSED -> ACTIVE transition and initial period seeding (WP-19)
+    const updated = await db.transaction(async (tx) => {
+      const [activatedRetainer] = await tx
+        .update(schema.engagementRetainers)
+        .set({
+          status: "ACTIVE",
+          startedAt: new Date(),
+          contractMarkdown: markdown,
+          sha256Seal,
+          updatedAt: new Date(),
+        })
+        .where(
+          and(
+            eq(schema.engagementRetainers.id, retainer.id),
+            eq(schema.engagementRetainers.status, "PROPOSED")
+          )
+        )
+        .returning();
 
-    if (!updated) {
-      throw new Error("Aylık bakım sözleşmesi yürürlüğe alınamadı.");
-    }
+      if (!activatedRetainer) {
+        throw new Error("Yalnızca teklif aşamasındaki sözleşmeler onaylanabilir.");
+      }
 
-    // Create Period 1
-    const startDate = new Date().toISOString().slice(0, 10);
-    const endDate = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
-    await db.insert(schema.engagementRetainerPeriods).values({
-      retainerId: retainer.id,
-      periodIndex: 1,
-      startDate,
-      endDate,
-      basePrice: retainer.monthlyPrice,
-      hoursLogged: "0",
-      overageHours: "0",
-      overagePrice: "0",
-      totalAmount: retainer.monthlyPrice,
-      currency: retainer.currency,
-      taxSummary: {},
-      paymentStatus: "PENDING",
+      // Check if Period 1 already exists
+      const existingPeriods = await tx
+        .select({ id: schema.engagementRetainerPeriods.id })
+        .from(schema.engagementRetainerPeriods)
+        .where(
+          and(
+            eq(schema.engagementRetainerPeriods.retainerId, retainer.id),
+            eq(schema.engagementRetainerPeriods.periodIndex, 1)
+          )
+        )
+        .limit(1);
+
+      if (existingPeriods.length === 0) {
+        const startDate = new Date().toISOString().slice(0, 10);
+        const endDate = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
+        await tx.insert(schema.engagementRetainerPeriods).values({
+          retainerId: retainer.id,
+          periodIndex: 1,
+          startDate,
+          endDate,
+          basePrice: retainer.monthlyPrice,
+          hoursLogged: "0",
+          overageHours: "0",
+          overagePrice: "0",
+          totalAmount: retainer.monthlyPrice,
+          currency: retainer.currency,
+          taxSummary: {},
+          workLogsJson: [],
+          paymentStatus: "PENDING",
+        });
+      }
+
+      return activatedRetainer;
     });
 
     return {
@@ -598,7 +627,8 @@ export class RetainerService {
   }
 
   /**
-   * Logs hours to active period with BOLA/IDOR verification and role authorization.
+   * Logs hours to active period with BOLA/IDOR verification, role authorization,
+   * period rollover (WP-20), atomic concurrency & immutable task logging (WP-21), and cancellation notice checks (WP-22).
    */
   static async logHours(input: LogHoursInput): Promise<{
     success: boolean;
@@ -624,40 +654,137 @@ export class RetainerService {
         );
       }
 
-      // Check IDOR/BOLA if engagementId is supplied
-      if (input.engagementId) {
-        const r = inMemoryRetainers.get(input.engagementId);
-        if (!r || r.id !== input.retainerId) {
-          throw new Error(
-            "Güvenlik ihlali: Bakım sözleşmesi belirtilen işe ait değil (BOLA/IDOR ihlali)."
-          );
+      let r: typeof schema.engagementRetainers.$inferSelect | undefined;
+      for (const [_, ret] of inMemoryRetainers) {
+        if (ret.id === input.retainerId) {
+          r = ret;
+          break;
         }
-        if (r.status !== "ACTIVE") {
+      }
+
+      if (!r && input.engagementId) {
+        r = inMemoryRetainers.get(input.engagementId);
+      }
+
+      if (!r) {
+        throw new Error("Retainer not found");
+      }
+
+      // Check IDOR/BOLA if engagementId is supplied
+      if (input.engagementId && r.engagementId !== input.engagementId) {
+        throw new Error(
+          "Güvenlik ihlali: Bakım sözleşmesi belirtilen işe ait değil (BOLA/IDOR ihlali)."
+        );
+      }
+
+      const now = new Date();
+      if (r) {
+        if (r.status === "CANCELLED") {
+          if (
+            r.effectiveCancellationAt &&
+            now.getTime() > new Date(r.effectiveCancellationAt).getTime()
+          ) {
+            throw new Error(
+              "Bakım sözleşmesi feshedilmiştir; ihbar süresi veya dönem sonu dolduktan sonra saat kaydedilemez."
+            );
+          }
+        } else if (r.status !== "ACTIVE") {
           throw new Error("Yalnızca aktif bakım sözleşmelerine saat kaydı girilebilir.");
         }
       }
 
       const periods = inMemoryRetainerPeriods.get(input.retainerId) || [];
-      const currentPeriod = periods[periods.length - 1];
+      let currentPeriod = periods[periods.length - 1];
       if (!currentPeriod) {
         throw new Error("No active billing period found");
       }
-      const newHours = parseFloat(currentPeriod.hoursLogged) + input.hours;
 
-      currentPeriod.hoursLogged = newHours.toString();
+      // Period Rollover check (WP-20)
+      if (now.getTime() > new Date(currentPeriod.endDate).getTime()) {
+        if (
+          r &&
+          r.status === "CANCELLED" &&
+          r.effectiveCancellationAt &&
+          now.getTime() >= new Date(r.effectiveCancellationAt).getTime()
+        ) {
+          throw new Error("Bakım sözleşmesi feshedilmiştir; yeni döneme saat kaydedilemez.");
+        }
+
+        const prevHours = parseFloat(currentPeriod.hoursLogged);
+        const incHours = r?.includedHours ?? 20;
+        const prevUnused = Math.max(0, incHours - prevHours);
+        let rolloverHours = 0;
+        if (r?.rolloverPolicy === "MAX_25_PERCENT" && prevUnused > 0) {
+          rolloverHours = Math.min(prevUnused, Math.floor(incHours * 0.25));
+        }
+
+        const nextPeriodIndex = currentPeriod.periodIndex + 1;
+        const nextStartDate = currentPeriod.endDate;
+        const nextEndDate = new Date(new Date(nextStartDate).getTime() + 30 * 86400000)
+          .toISOString()
+          .slice(0, 10);
+
+        const newPeriod: typeof schema.engagementRetainerPeriods.$inferSelect = {
+          id: `per-${nextPeriodIndex}-${input.retainerId}`,
+          retainerId: input.retainerId,
+          periodIndex: nextPeriodIndex,
+          startDate: nextStartDate,
+          endDate: nextEndDate,
+          basePrice: currentPeriod.basePrice,
+          hoursLogged: "0",
+          overageHours: "0",
+          overagePrice: "0",
+          totalAmount: currentPeriod.basePrice,
+          currency: currentPeriod.currency,
+          taxSummary: { previousUnusedHours: prevUnused, rolloverHours },
+          workLogsJson: [],
+          paymentStatus: "PENDING",
+          paidAt: null,
+          createdAt: now,
+          updatedAt: now,
+        };
+        periods.push(newPeriod);
+        inMemoryRetainerPeriods.set(input.retainerId, periods);
+        currentPeriod = newPeriod;
+      }
+
+      const newHours = parseFloat(currentPeriod.hoursLogged) + input.hours;
+      const prevUnused = (currentPeriod.taxSummary as any)?.previousUnusedHours || 0;
       const metrics = this.calculatePeriodMetrics({
-        planType: "HOURLY_POOL",
+        planType: (r?.planType as RetainerPlanType) || "HOURLY_POOL",
         monthlyPrice: parseFloat(currentPeriod.basePrice),
         currency: currentPeriod.currency,
-        includedHours: 20,
-        overageHourlyRate: 1000,
-        rolloverPolicy: "NO_ROLLOVER",
+        includedHours: r?.includedHours ?? 20,
+        overageHourlyRate: parseFloat(r?.overageHourlyRate || "1000"),
+        rolloverPolicy: (r?.rolloverPolicy as RolloverPolicy) || "NO_ROLLOVER",
         hoursLogged: newHours,
+        previousUnusedHours: prevUnused,
+        periodIndex: currentPeriod.periodIndex,
+        startDate: currentPeriod.startDate,
+        endDate: currentPeriod.endDate,
       });
 
+      const workLogEntry = {
+        id: `wl-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        userId: input.userId,
+        hours: input.hours,
+        taskDescription: input.taskDescription || "Bakım görevi",
+        date:
+          typeof input.date === "string"
+            ? input.date
+            : input.date?.toISOString().slice(0, 10) || now.toISOString().slice(0, 10),
+        loggedAt: now.toISOString(),
+      };
+
+      const existingLogs = Array.isArray(currentPeriod.workLogsJson)
+        ? currentPeriod.workLogsJson
+        : [];
+      currentPeriod.workLogsJson = [...existingLogs, workLogEntry];
+      currentPeriod.hoursLogged = newHours.toString();
       currentPeriod.overageHours = metrics.overageHours.toString();
       currentPeriod.overagePrice = metrics.overagePrice.toString();
       currentPeriod.totalAmount = metrics.totalAmount.toString();
+      currentPeriod.updatedAt = now;
 
       return {
         success: true,
@@ -686,8 +813,18 @@ export class RetainerService {
       );
     }
 
-    // 3. Verify retainer is ACTIVE
-    if (retainer.status !== "ACTIVE") {
+    // 3. Status and Cancellation Notice Check (WP-22)
+    const now = new Date();
+    if (retainer.status === "CANCELLED") {
+      if (
+        retainer.effectiveCancellationAt &&
+        now.getTime() > new Date(retainer.effectiveCancellationAt).getTime()
+      ) {
+        throw new Error(
+          "Bakım sözleşmesi feshedilmiştir; ihbar süresi veya dönem sonu dolduktan sonra saat kaydedilemez."
+        );
+      }
+    } else if (retainer.status !== "ACTIVE") {
       throw new Error("Yalnızca aktif bakım sözleşmelerine saat kaydı girilebilir.");
     }
 
@@ -698,53 +835,129 @@ export class RetainerService {
       );
     }
 
-    const [period] = await db
-      .select()
-      .from(schema.engagementRetainerPeriods)
-      .where(eq(schema.engagementRetainerPeriods.retainerId, input.retainerId))
-      .orderBy(desc(schema.engagementRetainerPeriods.periodIndex))
-      .limit(1);
+    // 5. Atomic rollover & hour logging transaction (WP-20, WP-21)
+    return await db.transaction(async (tx) => {
+      let [currentPeriod] = await tx
+        .select()
+        .from(schema.engagementRetainerPeriods)
+        .where(eq(schema.engagementRetainerPeriods.retainerId, input.retainerId))
+        .orderBy(desc(schema.engagementRetainerPeriods.periodIndex))
+        .limit(1)
+        .for("update");
 
-    if (!period) {
-      throw new Error("Active period not found");
-    }
+      if (!currentPeriod) {
+        throw new Error("Active period not found");
+      }
 
-    const newHours = parseFloat(period.hoursLogged) + input.hours;
-    const metrics = this.calculatePeriodMetrics({
-      planType: retainer.planType as RetainerPlanType,
-      monthlyPrice: parseFloat(retainer.monthlyPrice),
-      currency: retainer.currency,
-      includedHours: retainer.includedHours,
-      overageHourlyRate: parseFloat(retainer.overageHourlyRate || "0"),
-      rolloverPolicy: retainer.rolloverPolicy as RolloverPolicy,
-      hoursLogged: newHours,
+      // Check if period needs rollover
+      if (now.getTime() > new Date(currentPeriod.endDate).getTime()) {
+        if (
+          retainer.status === "CANCELLED" &&
+          retainer.effectiveCancellationAt &&
+          now.getTime() >= new Date(retainer.effectiveCancellationAt).getTime()
+        ) {
+          throw new Error("Bakım sözleşmesi feshedilmiştir; yeni döneme saat kaydedilemez.");
+        }
+
+        const prevHours = parseFloat(currentPeriod.hoursLogged);
+        const incHours = retainer.includedHours;
+        const prevUnused = Math.max(0, incHours - prevHours);
+        let rolloverHours = 0;
+        if (retainer.rolloverPolicy === "MAX_25_PERCENT" && prevUnused > 0) {
+          rolloverHours = Math.min(prevUnused, Math.floor(incHours * 0.25));
+        }
+
+        const nextPeriodIndex = currentPeriod.periodIndex + 1;
+        const nextStartDate = currentPeriod.endDate;
+        const nextEndDate = new Date(new Date(nextStartDate).getTime() + 30 * 86400000)
+          .toISOString()
+          .slice(0, 10);
+
+        const [createdPeriod] = await tx
+          .insert(schema.engagementRetainerPeriods)
+          .values({
+            retainerId: input.retainerId,
+            periodIndex: nextPeriodIndex,
+            startDate: nextStartDate,
+            endDate: nextEndDate,
+            basePrice: retainer.monthlyPrice,
+            hoursLogged: "0",
+            overageHours: "0",
+            overagePrice: "0",
+            totalAmount: retainer.monthlyPrice,
+            currency: retainer.currency,
+            taxSummary: { previousUnusedHours: prevUnused, rolloverHours },
+            workLogsJson: [],
+            paymentStatus: "PENDING",
+          })
+          .returning();
+
+        if (!createdPeriod) {
+          throw new Error("Failed to create billing period");
+        }
+        currentPeriod = createdPeriod;
+      }
+
+      const newHours = parseFloat(currentPeriod.hoursLogged) + input.hours;
+      const prevUnused = (currentPeriod.taxSummary as any)?.previousUnusedHours || 0;
+      const metrics = this.calculatePeriodMetrics({
+        planType: retainer.planType as RetainerPlanType,
+        monthlyPrice: parseFloat(retainer.monthlyPrice),
+        currency: retainer.currency,
+        includedHours: retainer.includedHours,
+        overageHourlyRate: parseFloat(retainer.overageHourlyRate || "0"),
+        rolloverPolicy: retainer.rolloverPolicy as RolloverPolicy,
+        hoursLogged: newHours,
+        previousUnusedHours: prevUnused,
+        periodIndex: currentPeriod.periodIndex,
+        startDate: currentPeriod.startDate,
+        endDate: currentPeriod.endDate,
+      });
+
+      const workLogEntry = {
+        id: `wl-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        userId: input.userId,
+        hours: input.hours,
+        taskDescription: input.taskDescription || "Bakım görevi",
+        date:
+          typeof input.date === "string"
+            ? input.date
+            : input.date?.toISOString().slice(0, 10) || now.toISOString().slice(0, 10),
+        loggedAt: now.toISOString(),
+      };
+
+      const existingLogs = Array.isArray(currentPeriod.workLogsJson)
+        ? currentPeriod.workLogsJson
+        : [];
+      const updatedLogs = [...existingLogs, workLogEntry];
+
+      const [updatedPeriod] = await tx
+        .update(schema.engagementRetainerPeriods)
+        .set({
+          hoursLogged: newHours.toFixed(2),
+          overageHours: metrics.overageHours.toFixed(2),
+          overagePrice: metrics.overagePrice.toFixed(2),
+          totalAmount: metrics.totalAmount.toFixed(2),
+          workLogsJson: updatedLogs,
+          updatedAt: now,
+        })
+        .where(eq(schema.engagementRetainerPeriods.id, currentPeriod.id))
+        .returning();
+
+      if (!updatedPeriod) {
+        throw new Error("Failed to update billing period");
+      }
+
+      return {
+        success: true,
+        period: updatedPeriod,
+        metrics,
+      };
     });
-
-    const [updatedPeriod] = await db
-      .update(schema.engagementRetainerPeriods)
-      .set({
-        hoursLogged: newHours.toString(),
-        overageHours: metrics.overageHours.toString(),
-        overagePrice: metrics.overagePrice.toString(),
-        totalAmount: metrics.totalAmount.toString(),
-        updatedAt: new Date(),
-      })
-      .where(eq(schema.engagementRetainerPeriods.id, period.id))
-      .returning();
-
-    if (!updatedPeriod) {
-      throw new Error("Failed to update billing period");
-    }
-
-    return {
-      success: true,
-      period: updatedPeriod,
-      metrics,
-    };
   }
 
   /**
-   * Cancels a retainer with participant role verification.
+   * Cancels a retainer with participant role verification, calculating notice window (WP-22).
    */
   static async cancelRetainer(
     engagementId: string,
@@ -765,8 +978,17 @@ export class RetainerService {
 
       const r = inMemoryRetainers.get(engagementId);
       if (r) {
+        const periods = inMemoryRetainerPeriods.get(r.id) || [];
+        const currentPeriod = periods[periods.length - 1];
+        const noticeDays = r.cancellationNoticeDays || 15;
+        const noticeEnd = new Date(Date.now() + noticeDays * 86400000);
+        const periodEnd = currentPeriod ? new Date(currentPeriod.endDate) : noticeEnd;
+        const effectiveCancellationAt = noticeEnd > periodEnd ? noticeEnd : periodEnd;
+
         r.status = "CANCELLED";
         r.cancelledAt = new Date();
+        r.effectiveCancellationAt = effectiveCancellationAt;
+        r.updatedAt = new Date();
       }
       return {
         success: true,
@@ -794,14 +1016,37 @@ export class RetainerService {
       );
     }
 
+    const [retainer] = await db
+      .select()
+      .from(schema.engagementRetainers)
+      .where(eq(schema.engagementRetainers.engagementId, engagementId))
+      .limit(1);
+
+    if (!retainer) {
+      throw new Error("Retainer not found");
+    }
+
+    const [currentPeriod] = await db
+      .select()
+      .from(schema.engagementRetainerPeriods)
+      .where(eq(schema.engagementRetainerPeriods.retainerId, retainer.id))
+      .orderBy(desc(schema.engagementRetainerPeriods.periodIndex))
+      .limit(1);
+
+    const noticeDays = retainer.cancellationNoticeDays || 15;
+    const noticeEnd = new Date(Date.now() + noticeDays * 86400000);
+    const periodEnd = currentPeriod ? new Date(currentPeriod.endDate) : noticeEnd;
+    const effectiveCancellationAt = noticeEnd > periodEnd ? noticeEnd : periodEnd;
+
     await db
       .update(schema.engagementRetainers)
       .set({
         status: "CANCELLED",
         cancelledAt: new Date(),
+        effectiveCancellationAt,
         updatedAt: new Date(),
       })
-      .where(eq(schema.engagementRetainers.engagementId, engagementId));
+      .where(eq(schema.engagementRetainers.id, retainer.id));
 
     return {
       success: true,
@@ -850,6 +1095,10 @@ export class RetainerService {
               overageHourlyRate: parseFloat(retainer.overageHourlyRate || "0"),
               rolloverPolicy: retainer.rolloverPolicy as RolloverPolicy,
               hoursLogged: parseFloat(currentPeriod.hoursLogged),
+              periodIndex: currentPeriod.periodIndex,
+              startDate: currentPeriod.startDate,
+              endDate: currentPeriod.endDate,
+              previousUnusedHours: (currentPeriod.taxSummary as any)?.previousUnusedHours || 0,
             })
           : null;
 
@@ -924,6 +1173,10 @@ export class RetainerService {
           overageHourlyRate: parseFloat(retainer.overageHourlyRate || "0"),
           rolloverPolicy: retainer.rolloverPolicy as RolloverPolicy,
           hoursLogged: parseFloat(currentPeriod.hoursLogged),
+          periodIndex: currentPeriod.periodIndex,
+          startDate: currentPeriod.startDate,
+          endDate: currentPeriod.endDate,
+          previousUnusedHours: (currentPeriod.taxSummary as any)?.previousUnusedHours || 0,
         })
       : null;
 

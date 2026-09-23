@@ -185,6 +185,7 @@ export const engagementRetainers = pgTable(
     cancellationNoticeDays: integer("cancellation_notice_days").default(15).notNull(),
     startedAt: timestamp("started_at", { withTimezone: true }),
     cancelledAt: timestamp("cancelled_at", { withTimezone: true }),
+    effectiveCancellationAt: timestamp("effective_cancellation_at", { withTimezone: true }),
     contractMarkdown: text("contract_markdown"),
     sha256Seal: varchar("sha256_seal", { length: 64 }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
@@ -214,6 +215,17 @@ export const engagementRetainerPeriods = pgTable(
     totalAmount: numeric("total_amount", { precision: 12, scale: 2 }).notNull(),
     currency: varchar("currency", { length: 10 }).default("TRY").notNull(),
     taxSummary: jsonb("tax_summary"),
+    workLogsJson: jsonb("work_logs_json")
+      .$type<Array<{
+        id: string;
+        userId: string;
+        hours: number;
+        taskDescription: string;
+        date: string;
+        loggedAt: string;
+      }>>()
+      .default([])
+      .notNull(),
     paymentStatus: varchar("payment_status", { length: 30 }).default("PENDING").notNull(), // PENDING, PAID, OVERDUE
     paidAt: timestamp("paid_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
