@@ -1,4 +1,4 @@
-import { eq, and } from "drizzle-orm";
+import { eq, and, inArray } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
 import { NotificationService } from "@/src/modules/notifications/service";
 import { PaymentHandshakeEngine } from "../payment-handshake/payment-handshake-engine";
@@ -29,7 +29,19 @@ export class MilestonePayoutService {
     input: MarkPaymentInput,
     userId: string
   ): Promise<{ success: boolean; milestone: MilestoneDto }> {
-    await MilestoneAuthHelper.assertAccess(engagementId, milestoneId, userId, "CLIENT");
+    const authResult = await MilestoneAuthHelper.assertAccess(
+      engagementId,
+      milestoneId,
+      userId,
+      "CLIENT"
+    );
+
+    if (
+      authResult.engagement.status === "COMPLETED" ||
+      authResult.engagement.status === "CANCELLED"
+    ) {
+      throw new Error("Kapalı veya iptal edilmiş iş üzerinde ödeme işlemi yapılamaz.");
+    }
 
     const isMock =
       engagementId.startsWith("eng-test-") ||
@@ -59,6 +71,12 @@ export class MilestonePayoutService {
         (item) => item.id === milestoneId || item.sequenceNumber.toString() === milestoneId
       );
       if (!m) throw new Error("Milestone not found");
+
+      if (m.paymentStatus === "CONFIRMED_PAID") {
+        throw new Error(
+          "Bu hakedişin ödemesi zaten kesinleşmiştir; tekrar ödeme bildirimi yapılamaz."
+        );
+      }
 
       m.paymentStatus = "MARKED_PAID";
       m.paymentReference = ref;
@@ -131,6 +149,14 @@ export class MilestonePayoutService {
       )
       .limit(1);
 
+    if (!existing) throw new Error("Milestone not found");
+
+    if (existing.paymentStatus === "CONFIRMED_PAID") {
+      throw new Error(
+        "Bu hakedişin ödemesi zaten kesinleşmiştir; tekrar ödeme bildirimi yapılamaz."
+      );
+    }
+
     const existingAudit: HandshakeAuditEntry[] = Array.isArray(existing?.auditTrailJson)
       ? existing.auditTrailJson
       : [];
@@ -168,12 +194,15 @@ export class MilestonePayoutService {
       .where(
         and(
           eq(schema.engagementMilestones.id, milestoneId),
-          eq(schema.engagementMilestones.engagementId, engagementId)
+          eq(schema.engagementMilestones.engagementId, engagementId),
+          inArray(schema.engagementMilestones.paymentStatus, ["UNPAID", "DISPUTED_PAID"])
         )
       )
       .returning();
 
-    if (!updated) throw new Error("Milestone not found");
+    if (!updated) {
+      throw new Error("Hakediş bulunamadı veya ödeme durumu bildirim için uygun değil.");
+    }
 
     // Send real-time notification to freelancer
     try {
@@ -246,7 +275,19 @@ export class MilestonePayoutService {
     milestoneId: string,
     userId: string
   ): Promise<{ success: boolean; milestone: MilestoneDto }> {
-    await MilestoneAuthHelper.assertAccess(engagementId, milestoneId, userId, "CLIENT");
+    const authResult = await MilestoneAuthHelper.assertAccess(
+      engagementId,
+      milestoneId,
+      userId,
+      "CLIENT"
+    );
+
+    if (
+      authResult.engagement.status === "COMPLETED" ||
+      authResult.engagement.status === "CANCELLED"
+    ) {
+      throw new Error("Kapalı veya iptal edilmiş iş üzerinde ödeme işlemi yapılamaz.");
+    }
 
     const isMock =
       engagementId.startsWith("eng-test-") ||
@@ -258,6 +299,13 @@ export class MilestonePayoutService {
         (item) => item.id === milestoneId || item.sequenceNumber.toString() === milestoneId
       );
       if (!m) throw new Error("Milestone not found");
+
+      if (m.paymentStatus === "CONFIRMED_PAID") {
+        throw new Error("Kesinleşmiş (onaylanmış) ödeme geri alınamaz.");
+      }
+      if (m.paymentStatus === "UNPAID") {
+        throw new Error("Ödeme bildirimi yapılmamış bir hakediş geri alınamaz.");
+      }
 
       m.paymentStatus = "UNPAID";
       m.paidMarkedAt = null;
@@ -298,6 +346,15 @@ export class MilestonePayoutService {
       )
       .limit(1);
 
+    if (!existing) throw new Error("Milestone not found");
+
+    if (existing.paymentStatus === "CONFIRMED_PAID") {
+      throw new Error("Kesinleşmiş (onaylanmış) ödeme geri alınamaz.");
+    }
+    if (existing.paymentStatus === "UNPAID") {
+      throw new Error("Ödeme bildirimi yapılmamış bir hakediş geri alınamaz.");
+    }
+
     const existingAudit: HandshakeAuditEntry[] = Array.isArray(existing?.auditTrailJson)
       ? existing.auditTrailJson
       : [];
@@ -325,12 +382,15 @@ export class MilestonePayoutService {
       .where(
         and(
           eq(schema.engagementMilestones.id, milestoneId),
-          eq(schema.engagementMilestones.engagementId, engagementId)
+          eq(schema.engagementMilestones.engagementId, engagementId),
+          eq(schema.engagementMilestones.paymentStatus, "MARKED_PAID")
         )
       )
       .returning();
 
-    if (!updated) throw new Error("Milestone not found");
+    if (!updated) {
+      throw new Error("Hakediş bulunamadı veya geri alınabilecek bir ödeme bildirimi yok.");
+    }
 
     try {
       const [engagement] = await db
@@ -397,7 +457,16 @@ export class MilestonePayoutService {
     input: ConfirmPaymentInput,
     userId: string
   ): Promise<{ success: boolean; milestone: MilestoneDto }> {
-    await MilestoneAuthHelper.assertAccess(engagementId, milestoneId, userId, "CONTRACTOR");
+    const authResult = await MilestoneAuthHelper.assertAccess(
+      engagementId,
+      milestoneId,
+      userId,
+      "CONTRACTOR"
+    );
+
+    if (authResult.engagement.status === "CANCELLED") {
+      throw new Error("İptal edilmiş iş üzerinde ödeme teyidi yapılamaz.");
+    }
 
     const isMock =
       engagementId.startsWith("eng-test-") ||
@@ -409,6 +478,13 @@ export class MilestonePayoutService {
         (item) => item.id === milestoneId || item.sequenceNumber.toString() === milestoneId
       );
       if (!m) throw new Error("Milestone not found");
+
+      if (m.paymentStatus === "CONFIRMED_PAID") {
+        return { success: true, milestone: m };
+      }
+      if (m.paymentStatus === "UNPAID") {
+        throw new Error("İşveren henüz ödeme bildirimi yapmamıştır; ödeme teyit edilemez.");
+      }
 
       m.paymentStatus = "CONFIRMED_PAID";
       m.invoiceNumber = input.invoiceNumber || null;
@@ -440,13 +516,13 @@ export class MilestonePayoutService {
         milestoneTitle: m.title,
         amount: m.amount,
         currency: m.currency,
-        payerUserId: "employer",
+        payerUserId: authResult.engagement.ownerUserId,
         senderBank: m.senderBank || "GARANTI_BBVA",
         transferChannel: (m.transferChannel as TransferChannel) || "FAST",
         referenceNumber: m.paymentReference || "REF-BANK",
         declaredAt: m.paidMarkedAt || new Date().toISOString(),
         declarationSeal,
-        payeeUserId: userId,
+        payeeUserId: authResult.engagement.freelancerUserId,
         invoiceNumber: m.invoiceNumber || undefined,
         confirmedAt: m.paidConfirmedAt,
         confirmationSeal,
@@ -476,11 +552,11 @@ export class MilestonePayoutService {
         settlementCertificateId: cert.certificateId,
         invoiceNumber: m.invoiceNumber || input.invoiceNumber,
         settledAt: m.paidConfirmedAt,
-        assignorUserId: userId,
-        assignorName: "Yazılımcı / Eser Sahibi",
-        assignorEmail: "yazilimci@operis.pro",
-        assigneeUserId: "employer",
-        assigneeName: "İşveren / Hak Sahibi",
+        assignorUserId: authResult.engagement.freelancerUserId,
+        assignorName: "Yüklenici Uzman",
+        assignorEmail: "uzman@operis.pro",
+        assigneeUserId: authResult.engagement.ownerUserId,
+        assigneeName: "İşveren Müşteri",
         assigneeEmail: "isveren@operis.pro",
       });
 
@@ -496,6 +572,7 @@ export class MilestonePayoutService {
           invoiceNumber: m.invoiceNumber,
           dualSeal,
           certificateId: cert.certificateId,
+          certificate: cert,
           ipDeedId: ipDeed.deedId,
           ipDeed,
         },
@@ -518,7 +595,70 @@ export class MilestonePayoutService {
       )
       .limit(1);
 
-    const declarationSeal = existing?.sha256Seal || "LEGACY_SEAL";
+    if (!existing) throw new Error("Milestone not found");
+
+    if (existing.paymentStatus === "CONFIRMED_PAID") {
+      return {
+        success: true,
+        milestone: {
+          id: existing.id,
+          engagementId: existing.engagementId,
+          sequenceNumber: existing.sequenceNumber,
+          title: existing.title,
+          description: existing.description,
+          deliverableCriteria: existing.deliverableCriteria,
+          percentage: parseFloat(existing.percentage),
+          amount: parseFloat(existing.amount),
+          currency: existing.currency,
+          targetDate: existing.targetDate,
+          deliverableStatus: existing.deliverableStatus as DeliverableStatus,
+          deliverableNote: existing.deliverableNote,
+          deliverableUrl: existing.deliverableUrl,
+          deliverableUrlType: existing.deliverableUrlType as MilestoneDeliverableUrlType | null,
+          submittedAt: existing.submittedAt ? new Date(existing.submittedAt).toISOString() : null,
+          acceptedAt: existing.acceptedAt ? new Date(existing.acceptedAt).toISOString() : null,
+          paymentStatus: existing.paymentStatus as PaymentLedgerStatus,
+          paymentReference: existing.paymentReference,
+          paymentReceiptUrl: existing.paymentReceiptUrl,
+          invoiceNumber: existing.invoiceNumber,
+          paidMarkedAt: existing.paidMarkedAt ? new Date(existing.paidMarkedAt).toISOString() : null,
+          paidConfirmedAt: existing.paidConfirmedAt
+            ? new Date(existing.paidConfirmedAt).toISOString()
+            : null,
+          sha256Seal: existing.sha256Seal,
+        },
+      };
+    }
+
+    if (existing.paymentStatus === "UNPAID") {
+      throw new Error("İşveren henüz ödeme bildirimi yapmamıştır; ödeme teyit edilemez.");
+    }
+
+    // WP-13: Resolve true participant identities from engagements and users/profiles
+    const userRows = await db
+      .select({
+        id: schema.users.id,
+        email: schema.users.email,
+        displayName: schema.profiles.displayName,
+      })
+      .from(schema.users)
+      .leftJoin(schema.profiles, eq(schema.users.id, schema.profiles.userId))
+      .where(
+        inArray(schema.users.id, [
+          authResult.engagement.ownerUserId,
+          authResult.engagement.freelancerUserId,
+        ])
+      );
+
+    const ownerUser = userRows.find((u) => u.id === authResult.engagement.ownerUserId);
+    const freelancerUser = userRows.find((u) => u.id === authResult.engagement.freelancerUserId);
+
+    const employerName = ownerUser?.displayName || "İşveren";
+    const employerEmail = ownerUser?.email || "isveren@operis.pro";
+    const freelancerName = freelancerUser?.displayName || "Yüklenici";
+    const freelancerEmail = freelancerUser?.email || "yuklenici@operis.pro";
+
+    const declarationSeal = existing.sha256Seal || "LEGACY_SEAL";
     const confirmationSeal = calculateSha256Seal({
       milestoneId,
       action: "PAYMENT_CONFIRMED_BY_FREELANCER",
@@ -539,22 +679,29 @@ export class MilestonePayoutService {
       ? existing.auditTrailJson
       : [];
 
+    const declEntry = [...existingAudit].reverse().find((a) => a.action === "PAYMENT_DECLARED");
+    const senderBank = (declEntry?.metadata?.senderBank as string) || "BANK_TRANSFER";
+    const transferChannel = (declEntry?.metadata?.transferChannel as TransferChannel) || "FAST";
+    const referenceNumber =
+      existing.paymentReference || (declEntry?.metadata?.referenceNumber as string) || "N/A";
+    const declaredAt = existing.paidMarkedAt
+      ? new Date(existing.paidMarkedAt).toISOString()
+      : (declEntry?.timestamp as string) || paidConfirmedAt.toISOString();
+
     const cert = PaymentHandshakeEngine.generateSettlementCertificate({
       engagementId,
-      milestoneId: existing?.id || milestoneId,
-      milestoneSequence: existing?.sequenceNumber || 1,
-      milestoneTitle: existing?.title || "Milestone",
-      amount: existing ? parseFloat(existing.amount) : 0,
-      currency: existing?.currency || "TRY",
-      payerUserId: "employer",
-      senderBank: "BANK_TRANSFER",
-      transferChannel: "FAST",
-      referenceNumber: existing?.paymentReference || "N/A",
-      declaredAt: existing?.paidMarkedAt
-        ? new Date(existing.paidMarkedAt).toISOString()
-        : paidConfirmedAt.toISOString(),
+      milestoneId: existing.id,
+      milestoneSequence: existing.sequenceNumber,
+      milestoneTitle: existing.title,
+      amount: parseFloat(existing.amount),
+      currency: existing.currency,
+      payerUserId: authResult.engagement.ownerUserId,
+      senderBank,
+      transferChannel,
+      referenceNumber,
+      declaredAt,
       declarationSeal,
-      payeeUserId: userId,
+      payeeUserId: authResult.engagement.freelancerUserId,
       invoiceNumber: input.invoiceNumber || undefined,
       confirmedAt: paidConfirmedAt.toISOString(),
       confirmationSeal,
@@ -563,30 +710,30 @@ export class MilestonePayoutService {
 
     const ipDeed = IpAssignmentDeedEngine.generateDeed({
       engagementId,
-      listingTitle: existing?.title || "Yazılım / Teknoloji Projesi",
-      milestoneId: existing?.id || milestoneId,
-      milestoneSequence: existing?.sequenceNumber || 1,
-      milestoneTitle: existing?.title || "Milestone",
-      milestoneDescription: existing?.description || "",
-      amount: existing ? parseFloat(existing.amount) : 0,
-      currency: existing?.currency || "TRY",
+      listingTitle: existing.title || "Yazılım / Teknoloji Projesi",
+      milestoneId: existing.id,
+      milestoneSequence: existing.sequenceNumber,
+      milestoneTitle: existing.title,
+      milestoneDescription: existing.description,
+      amount: parseFloat(existing.amount),
+      currency: existing.currency,
       repositoryUrl:
-        existing?.deliverableUrlType === "CODE_REPO" ? existing.deliverableUrl : undefined,
+        existing.deliverableUrlType === "CODE_REPO" ? existing.deliverableUrl : undefined,
       gitCommitHash: null,
-      deliverableUrl: existing?.deliverableUrl,
-      deliverableUrlType: existing?.deliverableUrlType,
+      deliverableUrl: existing.deliverableUrl,
+      deliverableUrlType: existing.deliverableUrlType,
       artifactSha256: dualSeal,
-      paymentReference: existing?.paymentReference,
+      paymentReference: referenceNumber,
       paymentDualSeal: dualSeal,
       settlementCertificateId: cert.certificateId,
       invoiceNumber: input.invoiceNumber || undefined,
       settledAt: paidConfirmedAt.toISOString(),
-      assignorUserId: userId,
-      assignorName: "Yazılımcı / Eser Sahibi",
-      assignorEmail: "yazilimci@operis.pro",
-      assigneeUserId: "employer",
-      assigneeName: "İşveren / Hak Sahibi",
-      assigneeEmail: "isveren@operis.pro",
+      assignorUserId: authResult.engagement.freelancerUserId,
+      assignorName: freelancerName,
+      assignorEmail: freelancerEmail,
+      assigneeUserId: authResult.engagement.ownerUserId,
+      assigneeName: employerName,
+      assigneeEmail: employerEmail,
     });
 
     const auditEntry: HandshakeAuditEntry = {
@@ -599,6 +746,7 @@ export class MilestonePayoutService {
         invoiceNumber: input.invoiceNumber,
         dualSeal,
         certificateId: cert.certificateId,
+        certificate: cert,
         ipDeedId: ipDeed.deedId,
         ipDeed,
       },
@@ -619,12 +767,17 @@ export class MilestonePayoutService {
       .where(
         and(
           eq(schema.engagementMilestones.id, milestoneId),
-          eq(schema.engagementMilestones.engagementId, engagementId)
+          eq(schema.engagementMilestones.engagementId, engagementId),
+          inArray(schema.engagementMilestones.paymentStatus, ["MARKED_PAID", "DISPUTED_PAID"])
         )
       )
       .returning();
 
-    if (!updated) throw new Error("Milestone not found");
+    if (!updated) {
+      throw new Error(
+        "Hakediş bulunamadı veya teyit edilebilecek durumda değil (yalnızca MARKED_PAID durumundaki hakedişler teyit edilebilir)."
+      );
+    }
 
     try {
       const [engagement] = await db
@@ -694,7 +847,19 @@ export class MilestonePayoutService {
     input: DisputePaymentInput,
     userId: string
   ): Promise<{ success: boolean; milestone: MilestoneDto }> {
-    await MilestoneAuthHelper.assertAccess(engagementId, milestoneId, userId, "CONTRACTOR");
+    const authResult = await MilestoneAuthHelper.assertAccess(
+      engagementId,
+      milestoneId,
+      userId,
+      "CONTRACTOR"
+    );
+
+    if (
+      authResult.engagement.status === "COMPLETED" ||
+      authResult.engagement.status === "CANCELLED"
+    ) {
+      throw new Error("Kapalı veya iptal edilmiş iş üzerinde ödeme işlemi yapılamaz.");
+    }
 
     const isMock =
       engagementId.startsWith("eng-test-") ||
@@ -706,6 +871,13 @@ export class MilestonePayoutService {
         (item) => item.id === milestoneId || item.sequenceNumber.toString() === milestoneId
       );
       if (!m) throw new Error("Milestone not found");
+
+      if (m.paymentStatus === "CONFIRMED_PAID") {
+        throw new Error("Kesinleşmiş (onaylanmış) ödeme için itiraz bildirilemez.");
+      }
+      if (m.paymentStatus === "UNPAID") {
+        throw new Error("Bildirilmemiş ödeme için itiraz yapılamaz.");
+      }
 
       m.paymentStatus = "DISPUTED_PAID";
       m.disputeReason = input.disputeReason;
@@ -757,6 +929,15 @@ export class MilestonePayoutService {
       )
       .limit(1);
 
+    if (!existing) throw new Error("Milestone not found");
+
+    if (existing.paymentStatus === "CONFIRMED_PAID") {
+      throw new Error("Kesinleşmiş (onaylanmış) ödeme için itiraz bildirilemez.");
+    }
+    if (existing.paymentStatus === "UNPAID") {
+      throw new Error("Bildirilmemiş ödeme için itiraz yapılamaz.");
+    }
+
     const existingAudit: HandshakeAuditEntry[] = Array.isArray(existing?.auditTrailJson)
       ? existing.auditTrailJson
       : [];
@@ -787,12 +968,17 @@ export class MilestonePayoutService {
       .where(
         and(
           eq(schema.engagementMilestones.id, milestoneId),
-          eq(schema.engagementMilestones.engagementId, engagementId)
+          eq(schema.engagementMilestones.engagementId, engagementId),
+          eq(schema.engagementMilestones.paymentStatus, "MARKED_PAID")
         )
       )
       .returning();
 
-    if (!updated) throw new Error("Milestone not found");
+    if (!updated) {
+      throw new Error(
+        "Hakediş bulunamadı veya itiraz edilebilecek bir ödeme bildirimi yok."
+      );
+    }
 
     try {
       const [engagement] = await db
@@ -881,7 +1067,15 @@ export class MilestonePayoutService {
 
       if (m.settlementCertificate) return m.settlementCertificate;
 
-      // Dynamically construct if not already stored
+      const auditTrail = m.auditTrail || [];
+      const confEntry = auditTrail.find(
+        (a) => a.action === "PAYMENT_CONFIRMED" && a.metadata?.certificate
+      );
+      if (confEntry?.metadata?.certificate) {
+        return confEntry.metadata.certificate as PaymentSettlementCertificate;
+      }
+
+      // Dynamically construct if not already stored (legacy mock)
       const declarationSeal = m.sha256Seal || "LEGACY_SEAL";
       const cert = PaymentHandshakeEngine.generateSettlementCertificate({
         engagementId,
@@ -921,6 +1115,27 @@ export class MilestonePayoutService {
 
     if (!milestone || milestone.paymentStatus !== "CONFIRMED_PAID") return null;
 
+    // WP-13: Return stored immutable certificate snapshot from audit trail if present
+    const auditTrail: HandshakeAuditEntry[] = Array.isArray(milestone.auditTrailJson)
+      ? (milestone.auditTrailJson as unknown as HandshakeAuditEntry[])
+      : [];
+    const confEntry = auditTrail.find(
+      (a) => a.action === "PAYMENT_CONFIRMED" && a.metadata?.certificate
+    );
+    if (confEntry?.metadata?.certificate) {
+      return confEntry.metadata.certificate as PaymentSettlementCertificate;
+    }
+
+    // Fallback: reconstruct using true engagement parties and audit entry bank info
+    const declEntry = [...auditTrail].reverse().find((a) => a.action === "PAYMENT_DECLARED");
+    const senderBank = (declEntry?.metadata?.senderBank as string) || "BANK_TRANSFER";
+    const transferChannel = (declEntry?.metadata?.transferChannel as TransferChannel) || "FAST";
+    const referenceNumber =
+      milestone.paymentReference || (declEntry?.metadata?.referenceNumber as string) || "N/A";
+    const declaredAt = milestone.paidMarkedAt
+      ? new Date(milestone.paidMarkedAt).toISOString()
+      : (declEntry?.timestamp as string) || new Date().toISOString();
+
     return PaymentHandshakeEngine.generateSettlementCertificate({
       engagementId,
       milestoneId: milestone.id,
@@ -929,12 +1144,10 @@ export class MilestonePayoutService {
       amount: parseFloat(milestone.amount),
       currency: milestone.currency,
       payerUserId: authResult.engagement.ownerUserId,
-      senderBank: "BANK_TRANSFER",
-      transferChannel: "FAST",
-      referenceNumber: milestone.paymentReference || "N/A",
-      declaredAt: milestone.paidMarkedAt
-        ? new Date(milestone.paidMarkedAt).toISOString()
-        : new Date().toISOString(),
+      senderBank,
+      transferChannel,
+      referenceNumber,
+      declaredAt,
       declarationSeal: milestone.sha256Seal || "SEAL",
       payeeUserId: authResult.engagement.freelancerUserId,
       invoiceNumber: milestone.invoiceNumber || undefined,

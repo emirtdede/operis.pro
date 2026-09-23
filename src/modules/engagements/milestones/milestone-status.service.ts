@@ -286,9 +286,19 @@ export class MilestoneStatusService {
     const insertedRows = await db
       .insert(schema.engagementMilestones)
       .values(toInsert)
+      .onConflictDoNothing()
       .returning();
 
-    const mappedInserted: MilestoneDto[] = insertedRows.map((m) => ({
+    let activeRows = insertedRows;
+    if (activeRows.length === 0) {
+      activeRows = await db
+        .select()
+        .from(schema.engagementMilestones)
+        .where(eq(schema.engagementMilestones.engagementId, engagementId))
+        .orderBy(asc(schema.engagementMilestones.sequenceNumber));
+    }
+
+    const mappedInserted: MilestoneDto[] = activeRows.map((m) => ({
       id: m.id,
       engagementId: m.engagementId,
       sequenceNumber: m.sequenceNumber,
@@ -318,13 +328,14 @@ export class MilestoneStatusService {
   }
 
   /**
-   * Initializes or updates the entire milestone plan (CRUD), strictly validating 100% percentage sum.
+   * Updates/re-plans milestone distribution for an engagement.
+   * Total percentages must sum up to 100%.
    */
   static async updateMilestonePlan(
     engagementId: string,
     items: CustomMilestoneInputItem[],
     userId: string,
-    clientIp = "127.0.0.1"
+    clientIp?: string
   ): Promise<{
     success: boolean;
     milestones: MilestoneDto[];
@@ -337,12 +348,9 @@ export class MilestoneStatusService {
       throw new Error("En az 1 adet kilometre taşı tanımlanmalıdır.");
     }
 
-    // 1. Strict 100% percentage validation (tolerance 0.05)
     const totalPercentage = items.reduce((sum, item) => sum + item.percentage, 0);
-    if (Math.abs(totalPercentage - 100) > 0.05) {
-      throw new Error(
-        `Kilometre taşı yüzdelerinin toplamı %100 olmalıdır. Mevcut toplam: %${totalPercentage.toFixed(2)}`
-      );
+    if (Math.round(totalPercentage) !== 100) {
+      throw new Error("Toplam hakediş yüzdesi tam olarak %100 olmalıdır.");
     }
 
     const isMock =
@@ -350,8 +358,18 @@ export class MilestoneStatusService {
       engagementId.startsWith("eng-demo-");
 
     if (isMock) {
+      const existingList = inMemoryMilestones.get(engagementId) || [];
+      const hasPaidMilestones = existingList.some(
+        (m) => m.paymentStatus === "MARKED_PAID" || m.paymentStatus === "CONFIRMED_PAID"
+      );
+      if (hasPaidMilestones) {
+        throw new Error(
+          "Ödemesi yapılmış veya teyit edilmiş hakedişler varken hakediş planı yeniden düzenlenemez."
+        );
+      }
+
       const mapped: MilestoneDto[] = items.map((item, idx) => ({
-        id: `m-mock-${engagementId}-${idx + 1}`,
+        id: `mock-ms-${idx + 1}`,
         engagementId,
         sequenceNumber: idx + 1,
         title: item.title,
@@ -365,17 +383,17 @@ export class MilestoneStatusService {
         deliverableNote: null,
         deliverableUrl: null,
         deliverableUrlType: item.deliverableUrlType || "CODE_REPO",
-        submittedAt: null,
-        acceptedAt: null,
         paymentStatus: "UNPAID",
         paymentReference: null,
         paymentReceiptUrl: null,
         invoiceNumber: null,
+        submittedAt: null,
+        acceptedAt: null,
         paidMarkedAt: null,
         paidConfirmedAt: null,
         sha256Seal: calculateSha256Seal({
           engagementId,
-          seq: idx + 1,
+          sequenceNumber: idx + 1,
           title: item.title,
           amount: item.amount,
           actor: userId,
@@ -394,29 +412,6 @@ export class MilestoneStatusService {
 
     const db = getDb();
 
-    // Check if any existing milestones are already paid
-    const existingList = await db
-      .select({
-        id: schema.engagementMilestones.id,
-        paymentStatus: schema.engagementMilestones.paymentStatus,
-      })
-      .from(schema.engagementMilestones)
-      .where(eq(schema.engagementMilestones.engagementId, engagementId));
-
-    const hasPaidMilestones = existingList.some(
-      (m) => m.paymentStatus === "MARKED_PAID" || m.paymentStatus === "CONFIRMED_PAID"
-    );
-    if (hasPaidMilestones) {
-      throw new Error(
-        "Ödemesi yapılmış veya teyit edilmiş hakedişler varken hakediş planı yeniden düzenlenemez."
-      );
-    }
-
-    // Delete existing and replace using correct engagementId foreign key
-    await db
-      .delete(schema.engagementMilestones)
-      .where(eq(schema.engagementMilestones.engagementId, engagementId));
-
     const toInsert = items.map((item, idx) => {
       const seal = calculateSha256Seal({
         engagementId,
@@ -425,7 +420,7 @@ export class MilestoneStatusService {
         amount: item.amount,
         percentage: item.percentage,
         userId,
-        clientIp,
+        clientIp: clientIp || "127.0.0.1",
       });
 
       return {
@@ -446,17 +441,43 @@ export class MilestoneStatusService {
             action: "PLAN_UPDATED",
             actorUserId: userId,
             timestamp: new Date().toISOString(),
-            ip: clientIp,
+            ip: clientIp || "127.0.0.1",
           },
         ],
         sha256Seal: seal,
       };
     });
 
-    const insertedRows = await db
-      .insert(schema.engagementMilestones)
-      .values(toInsert)
-      .returning();
+    // WP-11: Atomic transaction for plan check, deletion, and insertion
+    const insertedRows = await db.transaction(async (tx) => {
+      // Check if any existing milestones are already paid
+      const existingList = await tx
+        .select({
+          id: schema.engagementMilestones.id,
+          paymentStatus: schema.engagementMilestones.paymentStatus,
+        })
+        .from(schema.engagementMilestones)
+        .where(eq(schema.engagementMilestones.engagementId, engagementId));
+
+      const hasPaidMilestones = existingList.some(
+        (m) => m.paymentStatus === "MARKED_PAID" || m.paymentStatus === "CONFIRMED_PAID"
+      );
+      if (hasPaidMilestones) {
+        throw new Error(
+          "Ödemesi yapılmış veya teyit edilmiş hakedişler varken hakediş planı yeniden düzenlenemez."
+        );
+      }
+
+      // Delete existing and replace using correct engagementId foreign key
+      await tx
+        .delete(schema.engagementMilestones)
+        .where(eq(schema.engagementMilestones.engagementId, engagementId));
+
+      return tx
+        .insert(schema.engagementMilestones)
+        .values(toInsert)
+        .returning();
+    });
 
     const resultMapped: MilestoneDto[] = insertedRows.map((m) => ({
       id: m.id,

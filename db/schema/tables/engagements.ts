@@ -152,7 +152,7 @@ export const engagementChangeRequests = pgTable(
   (table) => [
     index("idx_engagement_change_requests_engagement").on(table.engagementId),
     index("idx_engagement_change_requests_status").on(table.status),
-    index("idx_engagement_change_requests_seq").on(table.engagementId, table.sequenceNumber),
+    uniqueIndex("idx_engagement_change_requests_seq").on(table.engagementId, table.sequenceNumber),
   ]
 );
 
@@ -219,6 +219,7 @@ export const engagementRetainerPeriods = pgTable(
   (table) => [
     index("idx_engagement_retainer_periods_retainer").on(table.retainerId),
     index("idx_engagement_retainer_periods_status").on(table.paymentStatus),
+    uniqueIndex("idx_engagement_retainer_periods_unique").on(table.retainerId, table.periodIndex),
   ]
 );
 
@@ -265,7 +266,7 @@ export const engagementMilestones = pgTable(
   (table) => [
     index("idx_engagement_milestones_engagement").on(table.engagementId),
     index("idx_engagement_milestones_status").on(table.deliverableStatus, table.paymentStatus),
-    index("idx_engagement_milestones_seq").on(table.engagementId, table.sequenceNumber),
+    uniqueIndex("idx_engagement_milestones_seq").on(table.engagementId, table.sequenceNumber),
   ]
 );
 

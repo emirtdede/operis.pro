@@ -255,7 +255,15 @@ describe("Zero-Escrow Milestone API Routes", () => {
     expect(revertJson.milestone.paymentStatus).toBe("UNPAID");
 
     // 3. Re-mark as CLIENT and then Confirm Paid as FREELANCER
-    await paymentPostHandler(markReq, {
+    const remarkReq = new Request(`http://localhost/api/work/${engagementId}/milestones/${mId}/payment`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "MARK_PAID",
+        paymentReference: "EFT-8839210",
+      }),
+    });
+    await paymentPostHandler(remarkReq, {
       params: Promise.resolve({ id: engagementId, milestoneId: mId }),
     });
 
