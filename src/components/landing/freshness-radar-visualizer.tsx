@@ -34,22 +34,22 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
     {
       sectorLabel: isTr ? "Yazılım & SaaS Akışı" : "Software & SaaS Feed",
       categoryName: isTr ? "Full Stack & Bulut" : "Full Stack & Cloud",
-      prunedText: isTr ? "PHP 5.4 Script (Silindi)" : "PHP 5.4 Script (Pruned)",
+      prunedText: isTr ? "PHP Script (Silindi)" : "PHP Script (Pruned)",
       innerBlip: {
         id: "c1-inner",
-        name: "Next.js 15 SaaS",
+        name: "Next.js",
         timeLeft: "42h",
         color: "emerald",
       },
       midBlip: {
         id: "c1-mid",
-        name: "FastAPI Servis",
+        name: "FastAPI",
         timeLeft: "18h",
         color: "blue",
       },
       outerBlip: {
         id: "c1-outer",
-        name: isTr ? "Go Dağıtık Sistem" : "Go Distributed",
+        name: isTr ? "Go Micro" : "Go Micro",
         timeLeft: "68h",
         color: "cyan",
       },
@@ -57,22 +57,22 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
     {
       sectorLabel: isTr ? "UI/UX & Tasarım Akışı" : "UI/UX & Design Feed",
       categoryName: isTr ? "Tasarım Sistemleri" : "Design Systems",
-      prunedText: isTr ? "Logo Yarışması (İptal)" : "Logo Contest (Banned)",
+      prunedText: isTr ? "Logo İptal (Silindi)" : "Logo Contest (Banned)",
       innerBlip: {
         id: "c2-inner",
-        name: "Figma Design Sys",
+        name: "Figma UI",
         timeLeft: "86h",
         color: "cyan",
       },
       midBlip: {
         id: "c2-mid",
-        name: "Mobile UX Flow",
+        name: "Mobile UX",
         timeLeft: "34h",
         color: "purple",
       },
       outerBlip: {
         id: "c2-outer",
-        name: "3D Blender Motion",
+        name: "3D Motion",
         timeLeft: "56h",
         color: "emerald",
       },
@@ -80,22 +80,22 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
     {
       sectorLabel: isTr ? "Yapay Zeka & LLM Akışı" : "AI & LLM Feed",
       categoryName: isTr ? "Otonom Ajanlar" : "Autonomous Agents",
-      prunedText: isTr ? "Spam Botu (Engellendi)" : "Spam Bot (Blacklisted)",
+      prunedText: isTr ? "Spam Bot (Silindi)" : "Spam Bot (Blacklisted)",
       innerBlip: {
         id: "c3-inner",
-        name: "RAG & LangChain",
+        name: "LangChain",
         timeLeft: "16h",
         color: "purple",
       },
       midBlip: {
         id: "c3-mid",
-        name: "Vector DB Qdrant",
+        name: "Qdrant DB",
         timeLeft: "48h",
         color: "cyan",
       },
       outerBlip: {
         id: "c3-outer",
-        name: "Python AI Agent",
+        name: "AI Agent",
         timeLeft: "72h",
         color: "blue",
       },
@@ -103,22 +103,22 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
     {
       sectorLabel: isTr ? "Büyüme & Mobil Akışı" : "Growth & Mobile Feed",
       categoryName: isTr ? "Performans & App" : "Performance & App",
-      prunedText: isTr ? "3 Aylık Ölü İlan (Silindi)" : "3mo Ghost Job (Pruned)",
+      prunedText: isTr ? "Ölü İlan (Silindi)" : "Ghost Job (Pruned)",
       innerBlip: {
         id: "c4-inner",
-        name: "Flutter iOS/Android",
+        name: "Flutter",
         timeLeft: "62h",
         color: "emerald",
       },
       midBlip: {
         id: "c4-mid",
-        name: "PostHog Funnel CRO",
+        name: "PostHog",
         timeLeft: "28h",
         color: "blue",
       },
       outerBlip: {
         id: "c4-outer",
-        name: "React Native App",
+        name: "React Native",
         timeLeft: "80h",
         color: "cyan",
       },
@@ -285,7 +285,7 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
 
             {/* Right Interactive Dynamic Radar Column */}
             <div className="lg:col-span-6 flex flex-col justify-center items-center gap-4">
-              <div className="relative w-full max-w-[390px] aspect-square rounded-full border border-cyan-500/30 bg-[#05070d] shadow-2xl shadow-cyan-500/10 flex items-center justify-center overflow-hidden select-none">
+              <div className="relative w-full max-w-[400px] aspect-square rounded-full border border-cyan-500/30 bg-[#05070d] shadow-2xl shadow-cyan-500/10 flex items-center justify-center overflow-hidden select-none">
                 
                 {/* Concentric Reference Rings */}
                 <div className="absolute inset-5 rounded-full border border-cyan-500/15 pointer-events-none" />
@@ -318,8 +318,8 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
                     isTransitioning ? "opacity-0 scale-95" : "opacity-100 scale-100"
                   }`}
                 >
-                  {/* --- INNER ORBIT RING (Diameter: 32%, Radius: 16%, Clockwise) --- */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[32%] h-[32%] rounded-full anim-orbit-inner pointer-events-none">
+                  {/* --- INNER ORBIT RING (Diameter: 44%, Radius: 22%, Clockwise) --- */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[44%] h-[44%] rounded-full anim-orbit-inner pointer-events-none">
                     {/* Inner Blip positioned at 45 deg (top-right) */}
                     <div 
                       className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
@@ -331,8 +331,8 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
                     </div>
                   </div>
 
-                  {/* --- MID ORBIT RING (Diameter: 54%, Radius: 27%, Counter-Clockwise) --- */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[54%] h-[54%] rounded-full anim-orbit-mid pointer-events-none">
+                  {/* --- MID ORBIT RING (Diameter: 60%, Radius: 30%, Counter-Clockwise) --- */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] rounded-full anim-orbit-mid pointer-events-none">
                     {/* Mid Blip positioned at 225 deg (bottom-left) */}
                     <div 
                       className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
@@ -371,9 +371,9 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
                   </div>
                 </div>
 
-                {/* Radar Core Hub */}
-                <div className="relative z-20 flex h-11 w-11 items-center justify-center rounded-full bg-cyan-950/95 border border-cyan-400 text-cyan-300 shadow-xl shadow-cyan-500/50 pointer-events-none">
-                  <Radar className="h-5 w-5" />
+                {/* Radar Core Hub (Sleek 36px) */}
+                <div className="relative z-20 flex h-9 w-9 items-center justify-center rounded-full bg-cyan-950/95 border border-cyan-400 text-cyan-300 shadow-xl shadow-cyan-500/50 pointer-events-none">
+                  <Radar className="h-4 w-4" />
                 </div>
 
                 {/* Bottom Radar Status Readout */}
