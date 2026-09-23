@@ -1,8 +1,9 @@
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
 import { NotificationService } from "@/src/modules/notifications/service";
 import { PaymentHandshakeEngine } from "../payment-handshake/payment-handshake-engine";
 import { IpAssignmentDeedEngine } from "../ip-assignment/ip-assignment-engine";
+import { MilestoneAuthHelper } from "./milestone-auth";
 import {
   type MilestoneDto,
   type MarkPaymentInput,
@@ -28,8 +29,9 @@ export class MilestonePayoutService {
     input: MarkPaymentInput,
     userId: string
   ): Promise<{ success: boolean; milestone: MilestoneDto }> {
+    await MilestoneAuthHelper.assertAccess(engagementId, milestoneId, userId, "CLIENT");
+
     const isMock =
-      Boolean(process.env.VITEST) ||
       engagementId.startsWith("eng-test-") ||
       engagementId.startsWith("eng-demo-");
 
@@ -121,7 +123,12 @@ export class MilestonePayoutService {
     const [existing] = await db
       .select()
       .from(schema.engagementMilestones)
-      .where(eq(schema.engagementMilestones.id, milestoneId))
+      .where(
+        and(
+          eq(schema.engagementMilestones.id, milestoneId),
+          eq(schema.engagementMilestones.engagementId, engagementId)
+        )
+      )
       .limit(1);
 
     const existingAudit: HandshakeAuditEntry[] = Array.isArray(existing?.auditTrailJson)
@@ -158,7 +165,12 @@ export class MilestonePayoutService {
         paidMarkedAt,
         updatedAt: paidMarkedAt,
       })
-      .where(eq(schema.engagementMilestones.id, milestoneId))
+      .where(
+        and(
+          eq(schema.engagementMilestones.id, milestoneId),
+          eq(schema.engagementMilestones.engagementId, engagementId)
+        )
+      )
       .returning();
 
     if (!updated) throw new Error("Milestone not found");
@@ -234,8 +246,9 @@ export class MilestonePayoutService {
     milestoneId: string,
     userId: string
   ): Promise<{ success: boolean; milestone: MilestoneDto }> {
+    await MilestoneAuthHelper.assertAccess(engagementId, milestoneId, userId, "CLIENT");
+
     const isMock =
-      Boolean(process.env.VITEST) ||
       engagementId.startsWith("eng-test-") ||
       engagementId.startsWith("eng-demo-");
 
@@ -277,7 +290,12 @@ export class MilestonePayoutService {
     const [existing] = await db
       .select()
       .from(schema.engagementMilestones)
-      .where(eq(schema.engagementMilestones.id, milestoneId))
+      .where(
+        and(
+          eq(schema.engagementMilestones.id, milestoneId),
+          eq(schema.engagementMilestones.engagementId, engagementId)
+        )
+      )
       .limit(1);
 
     const existingAudit: HandshakeAuditEntry[] = Array.isArray(existing?.auditTrailJson)
@@ -304,7 +322,12 @@ export class MilestonePayoutService {
         auditTrailJson: updatedAuditTrail,
         updatedAt: new Date(),
       })
-      .where(eq(schema.engagementMilestones.id, milestoneId))
+      .where(
+        and(
+          eq(schema.engagementMilestones.id, milestoneId),
+          eq(schema.engagementMilestones.engagementId, engagementId)
+        )
+      )
       .returning();
 
     if (!updated) throw new Error("Milestone not found");
@@ -374,8 +397,9 @@ export class MilestonePayoutService {
     input: ConfirmPaymentInput,
     userId: string
   ): Promise<{ success: boolean; milestone: MilestoneDto }> {
+    await MilestoneAuthHelper.assertAccess(engagementId, milestoneId, userId, "CONTRACTOR");
+
     const isMock =
-      Boolean(process.env.VITEST) ||
       engagementId.startsWith("eng-test-") ||
       engagementId.startsWith("eng-demo-");
 
@@ -486,7 +510,12 @@ export class MilestonePayoutService {
     const [existing] = await db
       .select()
       .from(schema.engagementMilestones)
-      .where(eq(schema.engagementMilestones.id, milestoneId))
+      .where(
+        and(
+          eq(schema.engagementMilestones.id, milestoneId),
+          eq(schema.engagementMilestones.engagementId, engagementId)
+        )
+      )
       .limit(1);
 
     const declarationSeal = existing?.sha256Seal || "LEGACY_SEAL";
@@ -587,7 +616,12 @@ export class MilestonePayoutService {
         paidConfirmedAt,
         updatedAt: paidConfirmedAt,
       })
-      .where(eq(schema.engagementMilestones.id, milestoneId))
+      .where(
+        and(
+          eq(schema.engagementMilestones.id, milestoneId),
+          eq(schema.engagementMilestones.engagementId, engagementId)
+        )
+      )
       .returning();
 
     if (!updated) throw new Error("Milestone not found");
@@ -660,8 +694,9 @@ export class MilestonePayoutService {
     input: DisputePaymentInput,
     userId: string
   ): Promise<{ success: boolean; milestone: MilestoneDto }> {
+    await MilestoneAuthHelper.assertAccess(engagementId, milestoneId, userId, "CONTRACTOR");
+
     const isMock =
-      Boolean(process.env.VITEST) ||
       engagementId.startsWith("eng-test-") ||
       engagementId.startsWith("eng-demo-");
 
@@ -714,7 +749,12 @@ export class MilestonePayoutService {
     const [existing] = await db
       .select()
       .from(schema.engagementMilestones)
-      .where(eq(schema.engagementMilestones.id, milestoneId))
+      .where(
+        and(
+          eq(schema.engagementMilestones.id, milestoneId),
+          eq(schema.engagementMilestones.engagementId, engagementId)
+        )
+      )
       .limit(1);
 
     const existingAudit: HandshakeAuditEntry[] = Array.isArray(existing?.auditTrailJson)
@@ -730,6 +770,7 @@ export class MilestonePayoutService {
       metadata: {
         disputeReason: input.disputeReason,
         disputeNote: input.disputeNote,
+        seal: disputeSeal,
       },
     };
 
@@ -743,7 +784,12 @@ export class MilestonePayoutService {
         auditTrailJson: updatedAuditTrail,
         updatedAt: disputeTimestamp,
       })
-      .where(eq(schema.engagementMilestones.id, milestoneId))
+      .where(
+        and(
+          eq(schema.engagementMilestones.id, milestoneId),
+          eq(schema.engagementMilestones.engagementId, engagementId)
+        )
+      )
       .returning();
 
     if (!updated) throw new Error("Milestone not found");
@@ -815,8 +861,14 @@ export class MilestonePayoutService {
     milestoneId: string,
     userId: string
   ): Promise<PaymentSettlementCertificate | null> {
+    const authResult = await MilestoneAuthHelper.assertAccess(
+      engagementId,
+      milestoneId,
+      userId,
+      "PARTICIPANT"
+    );
+
     const isMock =
-      Boolean(process.env.VITEST) ||
       engagementId.startsWith("eng-test-") ||
       engagementId.startsWith("eng-demo-");
 
@@ -838,13 +890,13 @@ export class MilestonePayoutService {
         milestoneTitle: m.title,
         amount: m.amount,
         currency: m.currency,
-        payerUserId: "employer",
+        payerUserId: authResult.engagement.ownerUserId,
         senderBank: m.senderBank || "BANK_TRANSFER",
         transferChannel: (m.transferChannel as TransferChannel) || "FAST",
         referenceNumber: m.paymentReference || "N/A",
         declaredAt: m.paidMarkedAt || new Date().toISOString(),
         declarationSeal,
-        payeeUserId: userId,
+        payeeUserId: authResult.engagement.freelancerUserId,
         invoiceNumber: m.invoiceNumber || undefined,
         confirmedAt: m.paidConfirmedAt || new Date().toISOString(),
         confirmationSeal: declarationSeal,
@@ -859,7 +911,12 @@ export class MilestonePayoutService {
     const [milestone] = await db
       .select()
       .from(schema.engagementMilestones)
-      .where(eq(schema.engagementMilestones.id, milestoneId))
+      .where(
+        and(
+          eq(schema.engagementMilestones.id, milestoneId),
+          eq(schema.engagementMilestones.engagementId, engagementId)
+        )
+      )
       .limit(1);
 
     if (!milestone || milestone.paymentStatus !== "CONFIRMED_PAID") return null;
@@ -871,7 +928,7 @@ export class MilestonePayoutService {
       milestoneTitle: milestone.title,
       amount: parseFloat(milestone.amount),
       currency: milestone.currency,
-      payerUserId: "employer",
+      payerUserId: authResult.engagement.ownerUserId,
       senderBank: "BANK_TRANSFER",
       transferChannel: "FAST",
       referenceNumber: milestone.paymentReference || "N/A",
@@ -879,7 +936,7 @@ export class MilestonePayoutService {
         ? new Date(milestone.paidMarkedAt).toISOString()
         : new Date().toISOString(),
       declarationSeal: milestone.sha256Seal || "SEAL",
-      payeeUserId: userId,
+      payeeUserId: authResult.engagement.freelancerUserId,
       invoiceNumber: milestone.invoiceNumber || undefined,
       confirmedAt: milestone.paidConfirmedAt
         ? new Date(milestone.paidConfirmedAt).toISOString()

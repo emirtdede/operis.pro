@@ -1,8 +1,9 @@
-import { eq, asc } from "drizzle-orm";
+import { eq, asc, and } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
 import { MilestoneSynthesizer } from "../milestone-synthesizer";
 import { PaymentHandshakeEngine } from "../payment-handshake/payment-handshake-engine";
 import { IpAssignmentDeedEngine } from "../ip-assignment/ip-assignment-engine";
+import { MilestoneAuthHelper } from "./milestone-auth";
 import {
   type MilestoneDto,
   type MilestonePlanResult,
@@ -28,8 +29,9 @@ export class MilestoneStatusService {
     engagementId: string,
     currentUserId: string
   ): Promise<MilestonePlanResult> {
+    await MilestoneAuthHelper.assertAccess(engagementId, null, currentUserId, "PARTICIPANT");
+
     const isMock =
-      Boolean(process.env.VITEST) ||
       engagementId.startsWith("eng-test-") ||
       engagementId.startsWith("eng-demo-");
 
@@ -84,7 +86,7 @@ export class MilestoneStatusService {
     }
 
     const db = getDb();
-    // 1. Fetch engagement
+    // 1. Fetch engagement and verify participant access
     const [engagement] = await db
       .select()
       .from(schema.engagements)
@@ -98,11 +100,11 @@ export class MilestoneStatusService {
     const isOwner = engagement.ownerUserId === currentUserId;
     const isFreelancer = engagement.freelancerUserId === currentUserId;
 
-    // 2. Fetch existing milestones
+    // 2. Fetch existing milestones using correct engagementId foreign key
     const existing = await db
       .select()
       .from(schema.engagementMilestones)
-      .where(eq(schema.engagementMilestones.id, engagementId))
+      .where(eq(schema.engagementMilestones.engagementId, engagementId))
       .orderBy(asc(schema.engagementMilestones.sequenceNumber));
 
     if (existing.length > 0) {
@@ -329,6 +331,8 @@ export class MilestoneStatusService {
     messageTr: string;
     messageEn: string;
   }> {
+    await MilestoneAuthHelper.assertAccess(engagementId, null, userId, "CLIENT");
+
     if (!items || items.length === 0) {
       throw new Error("En az 1 adet kilometre taşı tanımlanmalıdır.");
     }
@@ -342,7 +346,6 @@ export class MilestoneStatusService {
     }
 
     const isMock =
-      Boolean(process.env.VITEST) ||
       engagementId.startsWith("eng-test-") ||
       engagementId.startsWith("eng-demo-");
 
@@ -390,10 +393,29 @@ export class MilestoneStatusService {
     }
 
     const db = getDb();
-    // Delete existing and replace
+
+    // Check if any existing milestones are already paid
+    const existingList = await db
+      .select({
+        id: schema.engagementMilestones.id,
+        paymentStatus: schema.engagementMilestones.paymentStatus,
+      })
+      .from(schema.engagementMilestones)
+      .where(eq(schema.engagementMilestones.engagementId, engagementId));
+
+    const hasPaidMilestones = existingList.some(
+      (m) => m.paymentStatus === "MARKED_PAID" || m.paymentStatus === "CONFIRMED_PAID"
+    );
+    if (hasPaidMilestones) {
+      throw new Error(
+        "Ödemesi yapılmış veya teyit edilmiş hakedişler varken hakediş planı yeniden düzenlenemez."
+      );
+    }
+
+    // Delete existing and replace using correct engagementId foreign key
     await db
       .delete(schema.engagementMilestones)
-      .where(eq(schema.engagementMilestones.id, engagementId));
+      .where(eq(schema.engagementMilestones.engagementId, engagementId));
 
     const toInsert = items.map((item, idx) => {
       const seal = calculateSha256Seal({
@@ -479,8 +501,9 @@ export class MilestoneStatusService {
     input: UpdateDeliverableInput,
     userId: string
   ): Promise<{ success: boolean; milestone: MilestoneDto }> {
+    await MilestoneAuthHelper.assertAccess(engagementId, milestoneId, userId, "CONTRACTOR");
+
     const isMock =
-      Boolean(process.env.VITEST) ||
       engagementId.startsWith("eng-test-") ||
       engagementId.startsWith("eng-demo-");
 
@@ -525,7 +548,12 @@ export class MilestoneStatusService {
     const [updated] = await db
       .update(schema.engagementMilestones)
       .set(updateData)
-      .where(eq(schema.engagementMilestones.id, milestoneId))
+      .where(
+        and(
+          eq(schema.engagementMilestones.id, milestoneId),
+          eq(schema.engagementMilestones.engagementId, engagementId)
+        )
+      )
       .returning();
 
     if (!updated) throw new Error("Milestone not found");
@@ -570,8 +598,9 @@ export class MilestoneStatusService {
     milestoneId: string,
     userId: string
   ): Promise<{ success: boolean; milestone: MilestoneDto }> {
+    await MilestoneAuthHelper.assertAccess(engagementId, milestoneId, userId, "CLIENT");
+
     const isMock =
-      Boolean(process.env.VITEST) ||
       engagementId.startsWith("eng-test-") ||
       engagementId.startsWith("eng-demo-");
 
@@ -603,7 +632,12 @@ export class MilestoneStatusService {
         acceptedAt,
         updatedAt: acceptedAt,
       })
-      .where(eq(schema.engagementMilestones.id, milestoneId))
+      .where(
+        and(
+          eq(schema.engagementMilestones.id, milestoneId),
+          eq(schema.engagementMilestones.engagementId, engagementId)
+        )
+      )
       .returning();
 
     if (!updated) throw new Error("Milestone not found");

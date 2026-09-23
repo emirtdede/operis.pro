@@ -45,7 +45,8 @@ export async function GET(
     });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Failed to retrieve certificate";
-    return NextResponse.json({ error: msg }, { status: 400 });
+    const status = msg.includes("Yetkisiz") || msg.includes("Güvenlik ihlali") ? 403 : msg.includes("bulunamadı") ? 404 : 400;
+    return NextResponse.json({ error: msg }, { status });
   }
 }
 
@@ -165,7 +166,8 @@ export async function POST(
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to process milestone payment";
-    return NextResponse.json({ error: message }, { status: 400 });
+    const status = message.includes("Yetkisiz") || message.includes("Güvenlik ihlali") ? 403 : message.includes("bulunamadı") ? 404 : 400;
+    return NextResponse.json({ error: message }, { status });
   }
 }
 

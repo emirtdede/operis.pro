@@ -74,6 +74,7 @@ export async function POST(
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to update milestone deliverable";
-    return NextResponse.json({ error: message }, { status: 400 });
+    const status = message.includes("Yetkisiz") || message.includes("Güvenlik ihlali") ? 403 : message.includes("bulunamadı") ? 404 : 400;
+    return NextResponse.json({ error: message }, { status });
   }
 }

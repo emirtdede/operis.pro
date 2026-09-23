@@ -312,12 +312,10 @@ describe("MilestoneService Core Business Logic", () => {
       "https://secret-internal-git.corp/vault/code"
     );
 
-    // 4. Outsider sees deliverableUrl masked as null
-    const outsiderView = await MilestoneService.getMilestones(
-      engagementId,
-      outsiderUserId
-    );
-    expect(outsiderView.milestones[0]!.deliverableUrl).toBeNull();
+    // 4. Outsider is strictly rejected with authorization error (HMK m. 193 & KVKK privacy)
+    await expect(
+      MilestoneService.getMilestones(engagementId, outsiderUserId)
+    ).rejects.toThrow(/Yetkisiz erişim/);
   });
 
   it("executes full Bilateral Handshake Protocol with bank details, channel, dispute, and dual-seal certificate", async () => {

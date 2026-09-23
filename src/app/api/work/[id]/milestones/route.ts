@@ -42,7 +42,8 @@ export async function GET(
     return NextResponse.json({ success: true, ...plan });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to fetch milestones";
-    return NextResponse.json({ error: message }, { status: 500 });
+    const status = message.includes("Yetkisiz") || message.includes("Güvenlik ihlali") ? 403 : message.includes("bulunamadı") ? 404 : 500;
+    return NextResponse.json({ error: message }, { status });
   }
 }
 
@@ -100,6 +101,7 @@ export async function POST(
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to update milestone plan";
-    return NextResponse.json({ error: message }, { status: 400 });
+    const status = message.includes("Yetkisiz") || message.includes("Güvenlik ihlali") ? 403 : message.includes("bulunamadı") ? 404 : 400;
+    return NextResponse.json({ error: message }, { status });
   }
 }
