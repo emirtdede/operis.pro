@@ -9,7 +9,7 @@ import { evaluateSecurityAccessAsync } from "@/src/lib/security/rate-limit";
 
 vi.mock("@/src/modules/auth/session", () => ({
   getSession: vi.fn().mockResolvedValue({
-    userId: "u-freelancer-test",
+    userId: "u-techcorp-1",
     role: "SPECIALIST",
     email: "specialist@operis.pro",
   }),

@@ -478,6 +478,7 @@ export class ContractSigningService {
 
     // Update in DB or memory
     const updatePayload: Record<string, unknown> = {
+      status: "PARTIALLY_SIGNED",
       version: nextVersion,
       updatedAt: now,
     };
@@ -781,10 +782,16 @@ export class ContractSigningService {
       }
     }
 
+    let computedStatus: PackageSigningStatus =
+      (row.status as PackageSigningStatus) || "PENDING_SIGNATURES";
+    if (computedStatus !== "FULLY_SIGNED" && (row.clientSignedAt || row.freelancerSignedAt)) {
+      computedStatus = "PARTIALLY_SIGNED";
+    }
+
     return {
       id: row.id || "pkg-default",
       engagementId: row.engagementId || "",
-      status: (row.status as PackageSigningStatus) || "PENDING_SIGNATURES",
+      status: computedStatus,
       selectedContracts,
       version: Number(row.version ?? 1),
       tamperResetCount: Number(row.tamperResetCount ?? 0),

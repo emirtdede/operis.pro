@@ -72,4 +72,18 @@ export class ProfileService {
   static async verifyCompany(userId: string, input: VerifyCompanyInput): Promise<VerifyCompanyResult> {
     return CompanyVerificationService.verifyCompany(userId, input);
   }
+
+  /**
+   * Approves corporate verification and activates corporate badge (Admin only).
+   */
+  static async approveCompanyVerification(adminUserId: string, targetUserId: string) {
+    return CompanyVerificationService.approveCompanyVerification(adminUserId, targetUserId);
+  }
+
+  /**
+   * Rejects corporate verification (Admin only).
+   */
+  static async rejectCompanyVerification(adminUserId: string, targetUserId: string, reason?: string) {
+    return CompanyVerificationService.rejectCompanyVerification(adminUserId, targetUserId, reason);
+  }
 }

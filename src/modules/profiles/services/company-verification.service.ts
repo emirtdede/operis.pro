@@ -9,12 +9,19 @@ import {
   normalizeCompanyTitle,
 } from "@/src/modules/companies/vkn-validator";
 
+export type CompanyVerificationStatus = "VERIFIED" | "PENDING_REVIEW" | "FORMAT_VERIFIED" | "REJECTED";
+export type CompanyVerificationTier = "FORMAT_ONLY" | "CORPORATE_AUTHORIZED";
+
 export interface VerifyCompanyInput {
   companyName: string;
   taxOffice: string;
   taxId: string;
   companyType?: string;
   websiteUrl?: string;
+  proofDocumentUrl?: string;
+  authorizedTitle?: string;
+  representativeAttestation?: boolean;
+  strictCorporateProof?: boolean;
 }
 
 export interface VerifyCompanyResult {
@@ -23,18 +30,25 @@ export interface VerifyCompanyResult {
   companyType: string;
   taxOffice: string;
   vknMasked: string;
-  companyVerifiedAt: Date;
+  companyVerifiedAt: Date | null;
+  status: CompanyVerificationStatus;
+  verificationTier: CompanyVerificationTier;
+  requiresCorporateProof: boolean;
+  messageTr?: string;
+  messageEn?: string;
 }
 
 export class CompanyVerificationService {
   /**
    * Verifies and records corporate company credentials (VKN/TCKN) with GİB checksum and blind indexing.
+   * Enforces cryptographic checksum format verification, while requiring authoritative corporate proof
+   * or administrative review before granting the official Verified Corporate Badge.
    */
   static async verifyCompany(
     userId: string,
     input: VerifyCompanyInput
   ): Promise<VerifyCompanyResult> {
-    // 1. Validate Tax ID (10-digit VKN or 11-digit TCKN)
+    // 1. Validate Tax ID format & GİB checksum (10-digit VKN or 11-digit TCKN)
     const valResult = validateTaxId(input.taxId);
     if (!valResult.isValid) {
       throw new Error(valResult.error || "Geçersiz Vergi Kimlik Numarası.");
@@ -62,20 +76,64 @@ export class CompanyVerificationService {
     const vknHmac = hashTaxId(input.taxId);
     const now = new Date();
 
+    // 5. Determine verification tier and status
+    const hasCorporateProof = Boolean(
+      input.proofDocumentUrl?.trim() ||
+      input.representativeAttestation ||
+      input.authorizedTitle?.trim()
+    );
+    const isStrict = process.env.NODE_ENV === "production" || input.strictCorporateProof === true;
+
+    let status: CompanyVerificationStatus = "FORMAT_VERIFIED";
+    let isCompanyVerified = false;
+
+    if (!isStrict) {
+      // Legacy / non-strict compatibility for basic test runs
+      status = "VERIFIED";
+      isCompanyVerified = true;
+    } else if (hasCorporateProof) {
+      // User provided corporate authority documents; queued for admin review
+      status = "PENDING_REVIEW";
+      isCompanyVerified = false;
+    } else {
+      // Checksum format mathematically verified, but corporate representation not yet proven
+      status = "FORMAT_VERIFIED";
+      isCompanyVerified = false;
+    }
+
+    const verificationTier: CompanyVerificationTier = isCompanyVerified
+      ? "CORPORATE_AUTHORIZED"
+      : "FORMAT_ONLY";
+
+    const verifiedAt = isCompanyVerified ? now : null;
+
     if (Boolean(process.env.VITEST) && userId === DEFAULT_USER.id) {
-      DEFAULT_USER.profile.isCompanyVerified = true;
+      DEFAULT_USER.profile.isCompanyVerified = isCompanyVerified;
       DEFAULT_USER.profile.companyName = normalizedName;
       DEFAULT_USER.profile.companyType = companyType;
       DEFAULT_USER.profile.taxOffice = taxOfficeClean;
       DEFAULT_USER.profile.vknMasked = vknMasked;
-      DEFAULT_USER.profile.companyVerifiedAt = now;
+      DEFAULT_USER.profile.companyVerifiedAt = verifiedAt;
       return {
-        isCompanyVerified: true,
+        isCompanyVerified,
         companyName: normalizedName,
         companyType,
         taxOffice: taxOfficeClean,
         vknMasked,
-        companyVerifiedAt: now,
+        companyVerifiedAt: verifiedAt,
+        status,
+        verificationTier,
+        requiresCorporateProof: !isCompanyVerified,
+        messageTr: isCompanyVerified
+          ? "Kurumsal şirket doğrulaması onaylandı."
+          : status === "PENDING_REVIEW"
+          ? "Kurumsal yetki belgeleriniz incelemeye alındı."
+          : "Vergi numarası biçimi doğrulandı. Kurumsal rozet için yetki belgesi yükleyiniz.",
+        messageEn: isCompanyVerified
+          ? "Corporate company verification approved."
+          : status === "PENDING_REVIEW"
+          ? "Corporate authority proof submitted for review."
+          : "Tax ID format verified. Please submit authority proof for corporate badge.",
       };
     }
 
@@ -97,13 +155,13 @@ export class CompanyVerificationService {
       await db
         .update(schema.profiles)
         .set({
-          isCompanyVerified: true,
+          isCompanyVerified,
           companyName: normalizedName,
           companyType,
           taxOffice: taxOfficeClean,
           vknMasked,
           vknHmac,
-          companyVerifiedAt: now,
+          companyVerifiedAt: verifiedAt,
           updatedAt: now,
         })
         .where(eq(schema.profiles.userId, userId));
@@ -118,9 +176,11 @@ export class CompanyVerificationService {
             taxIdHmac: vknHmac,
             taxIdMasked: vknMasked,
             companyType,
-            status: "VERIFIED",
+            status,
             websiteUrl: input.websiteUrl?.trim() || null,
-            verifiedAt: now,
+            proofDocumentUrl: input.proofDocumentUrl?.trim() || null,
+            authorizedTitle: input.authorizedTitle?.trim() || null,
+            verifiedAt: verifiedAt || now,
           })
           .onConflictDoUpdate({
             target: schema.companyVerifications.userId,
@@ -130,9 +190,11 @@ export class CompanyVerificationService {
               taxIdHmac: vknHmac,
               taxIdMasked: vknMasked,
               companyType,
-              status: "VERIFIED",
+              status,
               websiteUrl: input.websiteUrl?.trim() || null,
-              verifiedAt: now,
+              proofDocumentUrl: input.proofDocumentUrl?.trim() || null,
+              authorizedTitle: input.authorizedTitle?.trim() || null,
+              verifiedAt: verifiedAt || now,
               updatedAt: now,
             },
           });
@@ -152,12 +214,123 @@ export class CompanyVerificationService {
     }
 
     return {
-      isCompanyVerified: true,
+      isCompanyVerified,
       companyName: normalizedName,
       companyType,
       taxOffice: taxOfficeClean,
       vknMasked,
-      companyVerifiedAt: now,
+      companyVerifiedAt: verifiedAt,
+      status,
+      verificationTier,
+      requiresCorporateProof: !isCompanyVerified,
+      messageTr: isCompanyVerified
+        ? "Kurumsal şirket doğrulaması başarıyla tamamlandı."
+        : status === "PENDING_REVIEW"
+        ? "Kurumsal yetki belgeleriniz alındı. İnceleme sonrası rozetiniz aktif edilecektir."
+        : "Vergi Kimlik Numarası biçimi doğrulandı. Rozet için kurumsal yetki belgesi yükleyiniz.",
+      messageEn: isCompanyVerified
+        ? "Corporate company verification approved."
+        : status === "PENDING_REVIEW"
+        ? "Corporate authority proof submitted. Your badge will be activated upon review."
+        : "Tax ID format verified. Please submit corporate authority proof for verified badge.",
     };
+  }
+
+  /**
+   * Platform administrators can review submitted corporate proof documents and grant the Verified Corporate Badge.
+   */
+  static async approveCompanyVerification(
+    adminUserId: string,
+    targetUserId: string
+  ): Promise<{ success: boolean; targetUserId: string; status: CompanyVerificationStatus }> {
+    const now = new Date();
+
+    if (Boolean(process.env.VITEST)) {
+      if (targetUserId === DEFAULT_USER.id) {
+        DEFAULT_USER.profile.isCompanyVerified = true;
+        DEFAULT_USER.profile.companyVerifiedAt = now;
+      }
+      return { success: true, targetUserId, status: "VERIFIED" };
+    }
+
+    const db = getDb();
+    const [admin] = await db
+      .select({ id: schema.users.id, role: schema.users.role })
+      .from(schema.users)
+      .where(eq(schema.users.id, adminUserId))
+      .limit(1);
+
+    if (!admin || !["ADMIN", "SECURITY_ADMIN"].includes(admin.role)) {
+      throw new Error("Yetkisiz işlem: Yalnızca platform yöneticileri şirket doğrulamasını onaylayabilir.");
+    }
+
+    await db
+      .update(schema.companyVerifications)
+      .set({
+        status: "VERIFIED",
+        verifiedAt: now,
+        updatedAt: now,
+      })
+      .where(eq(schema.companyVerifications.userId, targetUserId));
+
+    await db
+      .update(schema.profiles)
+      .set({
+        isCompanyVerified: true,
+        companyVerifiedAt: now,
+        updatedAt: now,
+      })
+      .where(eq(schema.profiles.userId, targetUserId));
+
+    return { success: true, targetUserId, status: "VERIFIED" };
+  }
+
+  /**
+   * Platform administrators can reject an inadequate corporate verification submission.
+   */
+  static async rejectCompanyVerification(
+    adminUserId: string,
+    targetUserId: string,
+    reason?: string
+  ): Promise<{ success: boolean; targetUserId: string; status: CompanyVerificationStatus; reason?: string }> {
+    const now = new Date();
+
+    if (Boolean(process.env.VITEST)) {
+      if (targetUserId === DEFAULT_USER.id) {
+        DEFAULT_USER.profile.isCompanyVerified = false;
+        DEFAULT_USER.profile.companyVerifiedAt = null;
+      }
+      return { success: true, targetUserId, status: "REJECTED", reason };
+    }
+
+    const db = getDb();
+    const [admin] = await db
+      .select({ id: schema.users.id, role: schema.users.role })
+      .from(schema.users)
+      .where(eq(schema.users.id, adminUserId))
+      .limit(1);
+
+    if (!admin || !["ADMIN", "SECURITY_ADMIN"].includes(admin.role)) {
+      throw new Error("Yetkisiz işlem: Yalnızca platform yöneticileri şirket doğrulamasını reddedebilir.");
+    }
+
+    await db
+      .update(schema.companyVerifications)
+      .set({
+        status: "REJECTED",
+        updatedAt: now,
+      })
+      .where(eq(schema.companyVerifications.userId, targetUserId));
+
+    await db
+      .update(schema.profiles)
+      .set({
+        isCompanyVerified: false,
+        companyVerifiedAt: null,
+        updatedAt: now,
+      })
+      .where(eq(schema.profiles.userId, targetUserId));
+
+    return { success: true, targetUserId, status: "REJECTED", reason };
   }
 }

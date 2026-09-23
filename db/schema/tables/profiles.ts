@@ -94,8 +94,10 @@ export const companyVerifications = pgTable(
     taxIdHmac: varchar("tax_id_hmac", { length: 64 }).notNull().unique(), // Blind index prevents multi-account theft
     taxIdMasked: varchar("tax_id_masked", { length: 20 }).notNull(), // KVKK safe representation: 123***7890
     companyType: varchar("company_type", { length: 30 }).default("LTD").notNull(), // LTD, AS, SAHIS, OTHER
-    status: varchar("status", { length: 30 }).default("VERIFIED").notNull(), // VERIFIED, REVOKED
+    status: varchar("status", { length: 30 }).default("VERIFIED").notNull(), // VERIFIED, REVOKED, FORMAT_VERIFIED, PENDING_REVIEW, REJECTED
     websiteUrl: text("website_url"),
+    proofDocumentUrl: text("proof_document_url"),
+    authorizedTitle: varchar("authorized_title", { length: 100 }),
     verifiedAt: timestamp("verified_at", { withTimezone: true }).defaultNow().notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),

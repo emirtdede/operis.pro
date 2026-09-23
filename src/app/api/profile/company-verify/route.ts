@@ -37,7 +37,17 @@ export async function POST(req: Request) {
       return access.response;
     }
 
-    const { companyName, taxId, taxOffice, companyType, websiteUrl } = body || {};
+    const {
+      companyName,
+      taxId,
+      taxOffice,
+      companyType,
+      websiteUrl,
+      proofDocumentUrl,
+      authorizedTitle,
+      representativeAttestation,
+      strictCorporateProof,
+    } = body || {};
 
     if (!companyName || !taxId || !taxOffice) {
       return NextResponse.json(
@@ -56,15 +66,27 @@ export async function POST(req: Request) {
       taxOffice,
       companyType,
       websiteUrl,
+      proofDocumentUrl,
+      authorizedTitle,
+      representativeAttestation,
+      strictCorporateProof,
     });
+
+    const defaultMsg = isEn
+      ? verificationResult.isCompanyVerified
+        ? "Company verified successfully. Corporate badge is now active on your listings."
+        : "Tax ID format verified. Please submit authority proof for official corporate badge."
+      : verificationResult.isCompanyVerified
+      ? "Kurumsal şirket doğrulaması başarıyla tamamlandı. Rozetiniz ilanlarınızda ve profilinizde aktif edildi."
+      : "Vergi Kimlik Numarası biçimi doğrulandı. Resmi rozet için kurumsal yetki belgesi yükleyiniz.";
 
     return NextResponse.json(
       {
         success: true,
         data: verificationResult,
         message: isEn
-          ? "Company verified successfully. Corporate badge is now active on your listings."
-          : "Kurumsal şirket doğrulaması başarıyla tamamlandı. Rozetiniz ilanlarınızda ve profilinizde aktif edildi.",
+          ? verificationResult.messageEn || defaultMsg
+          : verificationResult.messageTr || defaultMsg,
       },
       { status: 200 }
     );
