@@ -6,6 +6,8 @@ export default defineConfig({
   dialect: "postgresql",
   dbCredentials: {
     url:
-      process.env.DATABASE_URL || "postgres://postgres:postgres@localhost:5432/freelance_platform",
+      process.env.DATABASE_MIGRATION_URL ||
+      process.env.DATABASE_URL ||
+      "postgres://postgres:postgres@localhost:5432/freelance_platform",
   },
 });

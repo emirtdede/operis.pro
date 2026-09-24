@@ -36,12 +36,14 @@ function registerGracefulShutdown(p: pg.Pool) {
 export function getDbPool(): pg.Pool {
   if (!globalForDb.operisDbPool) {
     const env = getEnv();
-    let connString = env.DATABASE_URL;
+    const connString = env.DATABASE_URL;
 
-    // Supabase Pooler: automatically use Transaction Mode (Port 6543) instead of Session Mode (Port 5432)
-    // in serverless production to prevent (EMAXCONNSESSION) pool_size: 15 exhaustion.
+    // Architecture Audit: Warn if legacy Session Pooler (port 5432) is configured in environment variables
     if (connString.includes("pooler.supabase.com:5432")) {
-      connString = connString.replace(":5432", ":6543");
+      console.warn(
+        "[Database Architecture Warning] DATABASE_URL is configured with Supabase Session Mode (:5432). " +
+          "In serverless production, configure the official Supabase Transaction Pooler URI (:6543) directly in environment variables."
+      );
     }
 
     const isSupabase =
@@ -49,7 +51,8 @@ export function getDbPool(): pg.Pool {
 
     globalForDb.operisDbPool = new Pool({
       connectionString: connString,
-      max: process.env.NODE_ENV === "production" ? 4 : 10,
+      // Section 7 & 18: Serverless target pool max = 1 to prevent connection exhaustion during lambda fan-out
+      max: process.env.NODE_ENV === "production" ? 1 : 10,
       idleTimeoutMillis: 5000,
       connectionTimeoutMillis: 5000,
       ssl: isSupabase ? { rejectUnauthorized: false } : undefined,

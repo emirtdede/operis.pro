@@ -1,9 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
-import type pg from "pg";
+import pg from "pg";
 import { z } from "zod";
-import { getDb, getDbPool } from "../../src/lib/db";
+import { getDb } from "../../src/lib/db";
+import { getEnv } from "../../src/config/env";
 import { sql } from "drizzle-orm";
 
 export const CheckpointV2PhaseEnum = z.enum([
@@ -36,7 +37,7 @@ export type CheckpointV2 = z.infer<typeof CheckpointV2Schema>;
 export const PII_ADVISORY_LOCK_ID = 987654321;
 
 export interface PiiAdvisoryLockHandle {
-  client: pg.PoolClient;
+  client: pg.PoolClient | pg.Client;
   release: () => Promise<void>;
 }
 
@@ -80,18 +81,29 @@ export async function getDatabaseFingerprint(): Promise<string> {
 
 /**
  * Acquires a session-level PostgreSQL advisory lock using a dedicated client
- * to prevent lock leaks across connection pool reallocations.
+ * to prevent lock leaks across connection pool reallocations and avoid starving
+ * the application pool when pool max is 1.
  */
 export async function acquireDedicatedPiiAdvisoryLock(): Promise<PiiAdvisoryLockHandle | null> {
-  const pool = getDbPool();
-  const client = await pool.connect();
+  const env = getEnv();
+  const connectionString =
+    process.env.DATABASE_MIGRATION_URL || env.DATABASE_MIGRATION_URL || env.DATABASE_URL;
+  const isSupabase =
+    connectionString.includes("supabase.co") || connectionString.includes("pooler.supabase.com");
+
+  const client = new pg.Client({
+    connectionString,
+    ssl: isSupabase ? { rejectUnauthorized: false } : undefined,
+  });
+
+  await client.connect();
   try {
     const res = await client.query<{ acquired: boolean }>(
       `SELECT pg_try_advisory_lock(${PII_ADVISORY_LOCK_ID}) as acquired;`
     );
     const acquired = Boolean(res.rows[0]?.acquired);
     if (!acquired) {
-      client.release();
+      await client.end().catch(() => {});
       return null;
     }
 
@@ -100,15 +112,15 @@ export async function acquireDedicatedPiiAdvisoryLock(): Promise<PiiAdvisoryLock
       if (released) return;
       released = true;
       try {
-        await client.query(`SELECT pg_advisory_unlock(${PII_ADVISORY_LOCK_ID});`);
+        await client.query(`SELECT pg_advisory_unlock(${PII_ADVISORY_LOCK_ID});`).catch(() => {});
       } finally {
-        client.release();
+        await client.end().catch(() => {});
       }
     };
 
     return { client, release };
   } catch (err) {
-    client.release();
+    await client.end().catch(() => {});
     throw err;
   }
 }

@@ -372,7 +372,10 @@ async function runCliMigrations() {
 
   const env = getEnv();
   const connectionString =
-    process.env.DATABASE_URL || env.DATABASE_MIGRATION_URL || env.DATABASE_URL;
+    process.env.DATABASE_MIGRATION_URL ||
+    env.DATABASE_MIGRATION_URL ||
+    process.env.DATABASE_URL ||
+    env.DATABASE_URL;
   console.info("Running database migrations on:", connectionString.replace(/:[^:@]+@/, ":***@"));
 
   try {

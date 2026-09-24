@@ -26,7 +26,15 @@ interface SchemaColumnMatch {
 
 async function runSchemaSyncCheck(): Promise<void> {
   const env = getEnv();
-  const client = new Client({ connectionString: env.DATABASE_URL });
+  const connectionString =
+    process.env.DATABASE_MIGRATION_URL || env.DATABASE_MIGRATION_URL || env.DATABASE_URL;
+  const isSupabase =
+    connectionString.includes("supabase.co") || connectionString.includes("pooler.supabase.com");
+
+  const client = new Client({
+    connectionString,
+    ssl: isSupabase ? { rejectUnauthorized: false } : undefined,
+  });
 
   try {
     await client.connect();

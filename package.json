@@ -26,6 +26,7 @@
     "audit:i18n": "tsx scripts/check-i18n-parity.ts",
     "audit:schema": "tsx scripts/check-db-schema-sync.ts",
     "audit:secrets": "tsx scripts/check-secrets.ts",
+    "test:concurrency": "tsx scripts/test-db-concurrency.ts",
     "worker": "tsx scripts/worker-daemon.ts",
     "worker:daemon": "tsx scripts/worker-daemon.ts",
     "backfill:pii": "tsx scripts/backfill-pii-keys.ts",
