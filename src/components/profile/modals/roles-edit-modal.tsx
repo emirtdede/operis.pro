@@ -72,6 +72,41 @@ export function RolesEditModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const currentPersonaMode: "freelancer" | "employer" | "hybrid" =
+    (availabilityStatus !== "BUSY" && isActivelyHiring) ||
+    (roles.includes("employer") && roles.includes("freelancer"))
+      ? "hybrid"
+      : isActivelyHiring || (roles.includes("employer") && !roles.includes("freelancer"))
+        ? "employer"
+        : "freelancer";
+
+  const handleApplyPersona = (mode: "freelancer" | "employer" | "hybrid") => {
+    if (mode === "freelancer") {
+      setIsActivelyHiring(false);
+      setAvailabilityStatus("AVAILABLE_NOW");
+      setRoles((prev) => {
+        const cleaned = prev.filter((r) => r !== "employer");
+        return cleaned.includes("freelancer") ? cleaned : [...cleaned, "freelancer"];
+      });
+    } else if (mode === "employer") {
+      setIsActivelyHiring(true);
+      setAvailabilityStatus("BUSY");
+      setRoles((prev) => {
+        const cleaned = prev.filter((r) => r !== "freelancer");
+        return cleaned.includes("employer") ? cleaned : [...cleaned, "employer"];
+      });
+    } else {
+      setIsActivelyHiring(true);
+      setAvailabilityStatus("AVAILABLE_NOW");
+      setRoles((prev) => {
+        const next = new Set(prev);
+        next.add("freelancer");
+        next.add("employer");
+        return Array.from(next);
+      });
+    }
+  };
+
   const availableRoleOptions = [
     {
       id: "employer",
@@ -204,7 +239,61 @@ export function RolesEditModal({
           </div>
         )}
 
-        {/* Roles Multi-Select */}
+        {/* 1. Quick Persona Mode Selector (Freelancer / Client / Hybrid) */}
+        <div className="space-y-2">
+          <label className="block text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">
+            {isTr ? "Profil Çalışma ve Görünüm Modu" : "Profile Orientation & Intent"}
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            {[
+              {
+                id: "freelancer" as const,
+                icon: Sparkles,
+                label: isTr ? "Bağımsız Uzman" : "Specialist / Freelancer",
+                desc: isTr ? "Hizmet satışı & portfolyo" : "Offer services & work",
+              },
+              {
+                id: "employer" as const,
+                icon: Briefcase,
+                label: isTr ? "İş Veren / Müşteri" : "Client / Employer",
+                desc: isTr ? "İlan açma & ekip kurma" : "Post briefs & hire talent",
+              },
+              {
+                id: "hybrid" as const,
+                icon: Building2,
+                label: isTr ? "Her İkisi (Hibrit)" : "Both (Hybrid)",
+                desc: isTr ? "Hem uzman hem işveren" : "Both work & hire talent",
+              },
+            ].map((p) => {
+              const active = currentPersonaMode === p.id;
+              const Icon = p.icon;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => handleApplyPersona(p.id)}
+                  className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
+                    active
+                      ? "border-blue-500 bg-blue-500/15 text-blue-400 ring-1 ring-blue-500/30"
+                      : "border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)] hover:border-[var(--color-border-strong)]"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <Icon className="h-4 w-4" />
+                    <span className="text-xs font-bold text-[var(--color-text-primary)]">
+                      {p.label}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-[var(--color-text-tertiary)] leading-snug">
+                    {p.desc}
+                  </p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 2. Roles Multi-Select */}
         <div className="space-y-2">
           <label className="block text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">
             {isTr ? "Platform Kimlikleriniz (Çoklu Seçim)" : "Your Roles (Multi-Select)"}

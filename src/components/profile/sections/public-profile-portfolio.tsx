@@ -8,11 +8,13 @@ import {
   ShieldCheck,
   Briefcase,
   CheckCircle2,
+  Sparkles,
 } from "lucide-react";
 import { Badge } from "@/src/components/ui/badge";
 import { EmptyState } from "@/src/components/ui/empty-state";
 import { Button } from "@/src/components/ui/button";
-import { PublicProfileDto } from "@/src/modules/profiles/service";
+import type { PublicProfileDto } from "@/src/modules/profiles/service";
+import type { PersonaMode } from "@/src/modules/profiles/utils/persona";
 import {
   getEmptyListingsDescription,
   formatListingBudget,
@@ -23,6 +25,7 @@ export interface PublicProfilePortfolioProps {
   locale: string;
   isSelf: boolean;
   activeTab: "listings" | "projects";
+  personaMode?: PersonaMode;
 }
 
 export function PublicProfilePortfolio({
@@ -30,6 +33,7 @@ export function PublicProfilePortfolio({
   locale,
   isSelf,
   activeTab,
+  personaMode = "freelancer",
 }: PublicProfilePortfolioProps) {
   const isTr = locale === "tr";
   const activeListings = profile.activeListings || [];
@@ -73,10 +77,17 @@ export function PublicProfilePortfolio({
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                     <div className="space-y-1.5 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">
-                          <span className="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse" />
-                          {isTr ? "Aktif İlan (7 Günlük Radar)" : "Active Listing (7d Radar)"}
-                        </span>
+                        {personaMode === "employer" ? (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">
+                            <span className="h-1.5 w-1.5 rounded-full bg-sky-400 animate-pulse" />
+                            {isTr ? "Proje İlanı • Freelancer Aranıyor" : "Hiring Brief • Seeking Talent"}
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">
+                            <span className="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse" />
+                            {isTr ? "Aktif İlan (7 Günlük Radar)" : "Active Listing (7d Radar)"}
+                          </span>
+                        )}
                       </div>
                       <h3 className="text-base font-bold text-[var(--color-text-primary)] group-hover:text-blue-500 transition-colors leading-snug">
                         {listing.title}
@@ -158,9 +169,22 @@ export function PublicProfilePortfolio({
                       {work.title}
                     </span>
                   </div>
-                  <Badge variant="outline" size="sm" className="self-start sm:self-auto">
-                    {work.category}
-                  </Badge>
+                  <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+                    {work.roleInEngagement === "client" ? (
+                      <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border font-semibold bg-sky-500/10 text-sky-400 border-sky-500/25">
+                        <Briefcase className="h-3 w-3" />
+                        <span>{isTr ? "İşveren Olarak Yönetti" : "Client / Employer"}</span>
+                      </span>
+                    ) : work.roleInEngagement === "contractor" ? (
+                      <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border font-semibold bg-purple-500/10 text-purple-400 border-purple-500/25">
+                        <Sparkles className="h-3 w-3" />
+                        <span>{isTr ? "Uzman Olarak Teslim Etti" : "Delivered as Specialist"}</span>
+                      </span>
+                    ) : null}
+                    <Badge variant="outline" size="sm">
+                      {work.category}
+                    </Badge>
+                  </div>
                 </div>
 
                 <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[var(--color-text-secondary)] pt-2 border-t border-[var(--color-border-subtle)]/70">

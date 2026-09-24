@@ -8,8 +8,10 @@ import {
   Star,
   Check,
   AlertCircle,
+  Sparkles,
 } from "lucide-react";
-import { PublicProfileDto } from "@/src/modules/profiles/service";
+import type { PublicProfileDto } from "@/src/modules/profiles/service";
+import { resolveUserPersonaMode } from "@/src/modules/profiles/utils/persona";
 import {
   HeaderEditModal,
   RolesEditModal,
@@ -116,6 +118,17 @@ export function PublicProfileView({
 
   const isReviewsActive = activeTab === "reviews" || activeTab === "endorsements";
 
+  const personaMode =
+    profile.personaMode ||
+    resolveUserPersonaMode({
+      roles: profile.roles,
+      isAvailableForHire: profile.isAvailableForHire,
+      isActivelyHiring: profile.isActivelyHiring,
+      isCompanyVerified: profile.isCompanyVerified,
+      activeListingsCount: activeListings.length,
+    });
+  const [hybridPerspective, setHybridPerspective] = useState<"ALL" | "EMPLOYER" | "FREELANCER">("ALL");
+
   return (
     <div className="space-y-6">
       {/* Toast Feedback Notification */}
@@ -164,8 +177,43 @@ export function PublicProfileView({
 
         {/* RIGHT COLUMN: Portfolio & Activity Tabs */}
         <main className="lg:col-span-8 space-y-5">
+          {/* Hybrid Perspective Switcher (Dual Identity Perspective Sieve) */}
+          {personaMode === "hybrid" && (
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2 rounded-2xl border border-indigo-500/20 bg-indigo-500/5 backdrop-blur-md shadow-2xs">
+              <div className="flex items-center gap-2 text-xs font-semibold text-indigo-400 pl-2">
+                <Sparkles className="h-3.5 w-3.5" />
+                <span>{isTr ? "Hibrit Görünüm:" : "Perspective:"}</span>
+              </div>
+              <div className="flex items-center gap-1 self-end sm:self-auto">
+                {(["ALL", "EMPLOYER", "FREELANCER"] as const).map((mode) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() => {
+                      setHybridPerspective(mode);
+                      if (mode === "EMPLOYER") setActiveTab("listings");
+                      if (mode === "FREELANCER") setActiveTab("projects");
+                    }}
+                    className={`px-3 py-1 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                      hybridPerspective === mode
+                        ? "bg-indigo-600 text-white shadow-xs"
+                        : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]"
+                    }`}
+                  >
+                    {mode === "ALL" && (isTr ? "🌟 Tümü (Hibrit)" : "🌟 Overview")}
+                    {mode === "EMPLOYER" && (isTr ? "💼 İşveren İlanları" : "💼 Client Briefs")}
+                    {mode === "FREELANCER" && (isTr ? "🛠️ Uzman Portfolyosu" : "🛠️ Specialist Work")}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Segmented Tab Navigation */}
-          <div className="flex items-center gap-1.5 p-1.5 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/85 backdrop-blur-xl shadow-xs">
+          <div
+            id="profile-tabs"
+            className="flex items-center gap-1.5 p-1.5 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/85 backdrop-blur-xl shadow-xs scroll-mt-20"
+          >
             <button
               type="button"
               onClick={() => setActiveTab("listings")}
@@ -176,7 +224,19 @@ export function PublicProfileView({
               }`}
             >
               <Briefcase className="h-3.5 w-3.5" />
-              <span>{isTr ? "Aktif İlanları" : "Active Listings"}</span>
+              <span>
+                {personaMode === "employer"
+                  ? isTr
+                    ? "Açık Proje İlanları"
+                    : "Project Postings"
+                  : personaMode === "hybrid"
+                    ? isTr
+                      ? "İlanlar & Hizmetler"
+                      : "Listings & Briefs"
+                    : isTr
+                      ? "Aktif İlanları"
+                      : "Active Listings"}
+              </span>
               <span
                 className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
                   activeTab === "listings"
@@ -240,6 +300,7 @@ export function PublicProfileView({
               locale={locale}
               isSelf={isSelf}
               activeTab={activeTab}
+              personaMode={personaMode}
             />
           )}
 

@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { AvatarInitials } from "@/src/components/ui/avatar-initials";
 import { EmptyState } from "@/src/components/ui/empty-state";
-import { PublicProfileDto } from "@/src/modules/profiles/service";
+import type { PublicProfileDto } from "@/src/modules/profiles/service";
 import { getReviewsRoleFilterLabel } from "./types";
 
 export interface PublicProfileReviewsProps {

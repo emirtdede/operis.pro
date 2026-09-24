@@ -12,7 +12,11 @@ import {
   ChevronRight,
   Sparkles,
 } from "lucide-react";
-import { PublicProfileDto } from "@/src/modules/profiles/service";
+import type { PublicProfileDto } from "@/src/modules/profiles/service";
+import {
+  type PersonaMode,
+  resolveUserPersonaMode,
+} from "@/src/modules/profiles/utils/persona";
 import { getPlatformConfig } from "../platform-icons";
 import { VerifiedCompanyBadge } from "@/src/components/ui/verified-company-badge";
 
@@ -34,6 +38,14 @@ export function PublicProfileSidebar({
   onOpenLinksModal,
 }: PublicProfileSidebarProps) {
   const isTr = locale === "tr";
+  const personaMode: PersonaMode =
+    profile.personaMode ||
+    resolveUserPersonaMode({
+      roles: profile.roles,
+      isAvailableForHire: profile.isAvailableForHire,
+      isActivelyHiring: profile.isActivelyHiring,
+      isCompanyVerified: profile.isCompanyVerified,
+    });
 
   return (
     <aside className="lg:col-span-4 space-y-5">
@@ -42,7 +54,15 @@ export function PublicProfileSidebar({
         <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-2.5">
           <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-primary)] flex items-center gap-2">
             <Layers className="h-3.5 w-3.5 text-blue-400" />
-            <span>{isTr ? "Hakkında & Deneyim" : "About & Background"}</span>
+            <span>
+              {personaMode === "employer"
+                ? isTr
+                  ? "Şirket & Ekip Hakkında"
+                  : "About & Company"
+                : isTr
+                  ? "Hakkında & Deneyim"
+                  : "About & Background"}
+            </span>
           </h2>
           {isSelf && (
             <div className="flex items-center gap-1">
@@ -71,10 +91,26 @@ export function PublicProfileSidebar({
                 className="hover:text-blue-400 transition-colors cursor-pointer inline-flex items-center gap-1.5 font-medium"
               >
                 <Sparkles className="h-3 w-3 text-blue-400" />
-                <span>{isTr ? "Kendinizi tanıtan profesyonel bir özet ekleyin..." : "Add your professional bio..."}</span>
+                <span>
+                  {personaMode === "employer"
+                    ? isTr
+                      ? "Şirketinizi, vizyonunuzu ve aradığınız ekip arkadaşlarını anlatan bir özet ekleyin..."
+                      : "Add your company mission and hiring background..."
+                    : isTr
+                      ? "Kendinizi tanıtan profesyonel bir özet ekleyin..."
+                      : "Add your professional bio..."}
+                </span>
               </button>
             ) : (
-              <span>{isTr ? "Kullanıcı henüz bir biyografi eklemedi." : "No bio added yet."}</span>
+              <span>
+                {personaMode === "employer"
+                  ? isTr
+                    ? "İşveren henüz bir tanıtım eklemedi."
+                    : "No company overview added yet."
+                  : isTr
+                    ? "Kullanıcı henüz bir biyografi eklemedi."
+                    : "No bio added yet."}
+              </span>
             )}
           </div>
         )}
@@ -98,7 +134,15 @@ export function PublicProfileSidebar({
         <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-2.5">
           <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-primary)] flex items-center gap-2">
             <Radar className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
-            <span>{isTr ? "Teknoloji & Yetenek Radarı" : "Tech Stack & Skills"}</span>
+            <span>
+              {personaMode === "employer"
+                ? isTr
+                  ? "Aranan / Kullanılan Teknolojiler"
+                  : "Tech Stack Hired For"
+                : isTr
+                  ? "Teknoloji & Yetenek Radarı"
+                  : "Tech Stack & Skills"}
+            </span>
           </h2>
           {isSelf && (
             <button
@@ -132,10 +176,26 @@ export function PublicProfileSidebar({
                   className="hover:text-cyan-400 transition-colors cursor-pointer inline-flex items-center gap-1.5 font-medium"
                 >
                   <Sparkles className="h-3 w-3 text-cyan-400" />
-                  <span>{isTr ? "Teknoloji ve uzmanlık alanları ekleyin..." : "Add your tech stack..."}</span>
+                  <span>
+                    {personaMode === "employer"
+                      ? isTr
+                        ? "Projelerinizde aradığınız teknolojileri ekleyin..."
+                        : "Add tech stack you hire for..."
+                      : isTr
+                        ? "Teknoloji ve uzmanlık alanları ekleyin..."
+                        : "Add your tech stack..."}
+                  </span>
                 </button>
               ) : (
-                <span>{isTr ? "Belirtilmiş yetenek bulunmuyor." : "No skills specified."}</span>
+                <span>
+                  {personaMode === "employer"
+                    ? isTr
+                      ? "Aranan teknoloji belirtilmedi."
+                      : "No target tech stack specified."
+                    : isTr
+                      ? "Belirtilmiş yetenek bulunmuyor."
+                      : "No skills specified."}
+                </span>
               )}
             </div>
           )}

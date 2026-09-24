@@ -16,6 +16,12 @@ import {
   inMemoryUserLinks,
 } from "./services/profile-data.service";
 
+import {
+  PersonaMode,
+  resolveUserPersonaMode,
+  getPersonaBadgeConfig,
+} from "./utils/persona";
+
 export type {
   AvailabilityStatus,
   DynamicAvailabilityResult,
@@ -23,6 +29,7 @@ export type {
   VerifyCompanyResult,
   PublicProfileDto,
   UpdateProfileInput,
+  PersonaMode,
 };
 
 export {
@@ -30,6 +37,8 @@ export {
   CompanyVerificationService,
   ProfileDataService,
   inMemoryUserLinks,
+  resolveUserPersonaMode,
+  getPersonaBadgeConfig,
 };
 
 /**

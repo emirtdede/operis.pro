@@ -1,5 +1,5 @@
 import { Briefcase, Sparkles, Rocket, Building2 } from "lucide-react";
-import { PublicProfileDto } from "@/src/modules/profiles/service";
+import type { PublicProfileDto } from "@/src/modules/profiles/service";
 
 export interface PublicProfileViewProps {
   initialProfile: PublicProfileDto;

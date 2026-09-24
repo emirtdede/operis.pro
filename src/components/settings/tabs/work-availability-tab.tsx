@@ -11,6 +11,7 @@ import {
   Check,
   Sliders,
   ExternalLink,
+  Building2,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { TextInput } from "@/src/components/ui/text-input";
@@ -59,6 +60,44 @@ export function WorkAvailabilityTab({
       }
     } else {
       setRoles([...roles, roleKey]);
+    }
+  };
+
+  const currentPersonaMode: "freelancer" | "employer" | "hybrid" =
+    (isAvailableForHire && isActivelyHiring) ||
+    (roles.includes("employer") && roles.includes("freelancer"))
+      ? "hybrid"
+      : isActivelyHiring || (roles.includes("employer") && !roles.includes("freelancer"))
+        ? "employer"
+        : "freelancer";
+
+  const handleApplyPersona = (mode: "freelancer" | "employer" | "hybrid") => {
+    if (mode === "freelancer") {
+      setIsActivelyHiring(false);
+      setIsAvailableForHire(true);
+      setAvailabilityStatus("AVAILABLE_NOW");
+      setRoles((prev) => {
+        const cleaned = prev.filter((r) => r !== "employer");
+        return cleaned.includes("freelancer") ? cleaned : [...cleaned, "freelancer"];
+      });
+    } else if (mode === "employer") {
+      setIsActivelyHiring(true);
+      setIsAvailableForHire(false);
+      setAvailabilityStatus("BUSY");
+      setRoles((prev) => {
+        const cleaned = prev.filter((r) => r !== "freelancer");
+        return cleaned.includes("employer") ? cleaned : [...cleaned, "employer"];
+      });
+    } else {
+      setIsActivelyHiring(true);
+      setIsAvailableForHire(true);
+      setAvailabilityStatus("AVAILABLE_NOW");
+      setRoles((prev) => {
+        const next = new Set(prev);
+        next.add("freelancer");
+        next.add("employer");
+        return Array.from(next);
+      });
     }
   };
 
@@ -212,8 +251,68 @@ export function WorkAvailabilityTab({
 
       {/* 4. Platform Rolleri ve Çalışma Modu */}
       <div className="pt-4 border-t border-[var(--color-border-subtle)] space-y-4">
-        <label className="text-xs font-bold text-[var(--color-text-primary)] block">
-          {isTr ? "Platformdaki Rol ve Hedefleriniz" : "Roles & Platform Objectives"}
+        <div>
+          <label className="text-xs font-bold text-[var(--color-text-primary)] block">
+            {isTr ? "Profil Çalışma ve Görünüm Modu" : "Profile Orientation & Intent"}
+          </label>
+          <p className="text-[11px] text-[var(--color-text-tertiary)] mt-0.5">
+            {isTr
+              ? "Profilinizin iş arayan bir uzman mı, ekip kuran bir işveren mi, yoksa her ikisi olarak mı görüntüleneceğini belirleyin."
+              : "Choose whether your profile highlights freelance availability, active hiring, or both."}
+          </p>
+        </div>
+
+        {/* 3-Choice Persona Mode Segmented Control */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          {[
+            {
+              id: "freelancer" as const,
+              icon: Sparkles,
+              label: isTr ? "Bağımsız Uzman" : "Specialist / Freelancer",
+              desc: isTr ? "Hizmet satışı & portfolyo odağı" : "Offer services & portfolio focus",
+            },
+            {
+              id: "employer" as const,
+              icon: Briefcase,
+              label: isTr ? "İş Veren / Müşteri" : "Client / Employer",
+              desc: isTr ? "İlan açma & ekip kurma odağı" : "Post briefs & hire talent focus",
+            },
+            {
+              id: "hybrid" as const,
+              icon: Building2,
+              label: isTr ? "Her İkisi (Hibrit)" : "Both (Hybrid)",
+              desc: isTr ? "Hem uzmanlık hem işverenlik" : "Both work & hire talent",
+            },
+          ].map((p) => {
+            const active = currentPersonaMode === p.id;
+            const Icon = p.icon;
+            return (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => handleApplyPersona(p.id)}
+                className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer ${
+                  active
+                    ? "border-blue-500 bg-blue-500/15 text-blue-400 ring-1 ring-blue-500/30 shadow-xs"
+                    : "border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)] hover:border-[var(--color-border-strong)]"
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <Icon className="h-4 w-4" />
+                  <span className="text-xs font-bold text-[var(--color-text-primary)]">
+                    {p.label}
+                  </span>
+                </div>
+                <p className="text-[11px] text-[var(--color-text-tertiary)] leading-snug">
+                  {p.desc}
+                </p>
+              </button>
+            );
+          })}
+        </div>
+
+        <label className="text-xs font-bold text-[var(--color-text-primary)] block pt-2">
+          {isTr ? "Detaylı Platform Rolleri" : "Detailed Platform Roles"}
         </label>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">

@@ -13,12 +13,19 @@ import {
   Copy,
   Check,
   Sparkles,
+  Briefcase,
+  Building2,
 } from "lucide-react";
 import { AvatarInitials } from "@/src/components/ui/avatar-initials";
 import { Button } from "@/src/components/ui/button";
 import { ProfileShareButton } from "@/src/components/profile/profile-share-button";
 import { ProfileActionsMenu } from "@/src/components/profile/profile-actions-menu";
-import { PublicProfileDto } from "@/src/modules/profiles/service";
+import type { PublicProfileDto } from "@/src/modules/profiles/service";
+import {
+  type PersonaMode,
+  resolveUserPersonaMode,
+  getPersonaBadgeConfig,
+} from "@/src/modules/profiles/utils/persona";
 import { AvailabilityBadge } from "../availability-badge";
 import { VerifiedCompanyBadge } from "@/src/components/ui/verified-company-badge";
 import { getRoleBadges } from "./types";
@@ -35,13 +42,35 @@ export interface PublicProfileHeroProps {
 }
 
 function renderAvailabilityIndicator(
+  personaMode: PersonaMode,
   availabilityStatus: string | null | undefined,
   isAvailableForHire: boolean | null | undefined,
+  isActivelyHiring: boolean | null | undefined,
+  hasActiveListings: boolean,
   isTr: boolean
 ) {
   const dotClasses =
     "absolute bottom-0 right-0 sm:bottom-0.5 sm:right-0.5 h-4 w-4 sm:h-5 sm:w-5 rounded-full ring-2 ring-[var(--color-surface-base)] shadow-md z-10 pointer-events-none";
 
+  // Employer perspective: Show active hiring status signal
+  if (personaMode === "employer") {
+    if (isActivelyHiring || hasActiveListings) {
+      return (
+        <span
+          className={`${dotClasses} bg-sky-400 animate-pulse`}
+          title={isTr ? "Aktif İşe Alım Yapıyor (Hiring)" : "Actively Hiring"}
+        />
+      );
+    }
+    return (
+      <span
+        className={`${dotClasses} bg-slate-500`}
+        title={isTr ? "İşe Alım Kapalı" : "Hiring Inactive"}
+      />
+    );
+  }
+
+  // Freelancer & Hybrid perspective: Show availability
   if (availabilityStatus === "AVAILABLE_NOW") {
     return (
       <span
@@ -93,6 +122,21 @@ export function PublicProfileHero({
   const activeListings = profile.activeListings || [];
   const completedWork = profile.completedWork || [];
   const endorsements = profile.endorsements || [];
+
+  const personaMode =
+    profile.personaMode ||
+    resolveUserPersonaMode({
+      roles: profile.roles,
+      isAvailableForHire: profile.isAvailableForHire,
+      isActivelyHiring: profile.isActivelyHiring,
+      isCompanyVerified: profile.isCompanyVerified,
+      activeListingsCount: activeListings.length,
+    });
+  const personaBadgeConfig = getPersonaBadgeConfig(
+    personaMode,
+    Boolean(profile.isCompanyVerified),
+    isTr
+  );
 
   const [copiedHandle, setCopiedHandle] = useState(false);
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
@@ -157,10 +201,13 @@ export function PublicProfileHero({
                     className="border-0"
                   />
                 </div>
-                {/* Active Availability Dot */}
+                {/* Active Availability / Hiring Dot */}
                 {renderAvailabilityIndicator(
+                  personaMode,
                   profile.availabilityStatus,
                   profile.isAvailableForHire,
+                  profile.isActivelyHiring,
+                  activeListings.length > 0,
                   isTr
                 )}
 
@@ -187,7 +234,7 @@ export function PublicProfileHero({
                   {profile.displayName}
                 </h1>
 
-                {/* Verification Badges */}
+                {/* Verification Badges (Adaptive to Employer / Specialist / Hybrid) */}
                 {profile.isCompanyVerified ? (
                   <VerifiedCompanyBadge
                     companyName={profile.companyName}
@@ -198,9 +245,18 @@ export function PublicProfileHero({
                     isEn={!isTr}
                   />
                 ) : (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 shadow-2xs">
-                    <ShieldCheck className="h-3.5 w-3.5 text-blue-400" />
-                    <span>{isTr ? "Doğrulanmış Uzman" : "Verified Specialist"}</span>
+                  <span
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border shadow-2xs ${personaBadgeConfig.colorClasses}`}
+                    title={personaBadgeConfig.sublabel}
+                  >
+                    {personaMode === "employer" ? (
+                      <Building2 className="h-3.5 w-3.5" />
+                    ) : personaMode === "hybrid" ? (
+                      <Sparkles className="h-3.5 w-3.5" />
+                    ) : (
+                      <ShieldCheck className="h-3.5 w-3.5" />
+                    )}
+                    <span>{personaBadgeConfig.badgeText}</span>
                   </span>
                 )}
 
@@ -278,17 +334,81 @@ export function PublicProfileHero({
                   );
                 })}
 
-                {/* Status Indicator Badge */}
-                <AvailabilityBadge
-                  status={effectiveAvailabilityStatus}
-                  hoursPerWeek={profile.availabilityHoursPerWeek}
-                  availableFromDate={profile.availableFromDate}
-                  notice={profile.availabilityNotice}
-                  isStale={profile.isAvailabilityStale}
-                  locale={locale}
-                  variant="pill"
-                  showHours={true}
-                />
+                {/* Status Indicator Badge (Persona-Adaptive) */}
+                {personaMode === "employer" ? (
+                  profile.isActivelyHiring || activeListings.length > 0 ? (
+                    <div
+                      className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-medium shadow-xs transition-all bg-sky-500/10 text-sky-400 border-sky-500/30"
+                      title={isTr ? "Aktif İşe Alım Yapıyor" : "Actively Hiring"}
+                    >
+                      <span className="relative flex h-2 w-2 shrink-0">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-sky-400" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-400" />
+                      </span>
+                      <span className="font-semibold">{isTr ? "Aktif İşe Alım Yapıyor" : "Actively Hiring"}</span>
+                      {activeListings.length > 0 && (
+                        <>
+                          <span className="opacity-40">•</span>
+                          <span className="opacity-90 font-mono text-[11px]">
+                            {activeListings.length} {isTr ? "Açık İlan" : "Active Postings"}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  ) : (
+                    <div
+                      className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-medium shadow-xs bg-slate-500/10 text-slate-400 border-slate-500/20"
+                      title={isTr ? "İşe Alım Kapalı" : "Hiring Inactive"}
+                    >
+                      <span className="h-2 w-2 rounded-full bg-slate-400" />
+                      <span className="font-semibold">{isTr ? "İşe Alım Kapalı" : "Not Hiring"}</span>
+                    </div>
+                  )
+                ) : personaMode === "hybrid" ? (
+                  <>
+                    <AvailabilityBadge
+                      status={effectiveAvailabilityStatus}
+                      hoursPerWeek={profile.availabilityHoursPerWeek}
+                      availableFromDate={profile.availableFromDate}
+                      notice={profile.availabilityNotice}
+                      isStale={profile.isAvailabilityStale}
+                      locale={locale}
+                      variant="pill"
+                      showHours={true}
+                    />
+                    {(profile.isActivelyHiring || activeListings.length > 0) && (
+                      <div
+                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-medium shadow-xs transition-all bg-sky-500/10 text-sky-400 border-sky-500/30"
+                        title={isTr ? "İşveren: Aktif İşe Alım Yapıyor" : "Client: Actively Hiring"}
+                      >
+                        <span className="relative flex h-2 w-2 shrink-0">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-sky-400" />
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-400" />
+                        </span>
+                        <span className="font-semibold">{isTr ? "İşe Alım Yapıyor" : "Actively Hiring"}</span>
+                        {activeListings.length > 0 && (
+                          <>
+                            <span className="opacity-40">•</span>
+                            <span className="opacity-90 font-mono text-[11px]">
+                              {activeListings.length} {isTr ? "İlan" : "Postings"}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <AvailabilityBadge
+                    status={effectiveAvailabilityStatus}
+                    hoursPerWeek={profile.availabilityHoursPerWeek}
+                    availableFromDate={profile.availableFromDate}
+                    notice={profile.availabilityNotice}
+                    isStale={profile.isAvailabilityStale}
+                    locale={locale}
+                    variant="pill"
+                    showHours={true}
+                  />
+                )}
 
                 {isSelf && (
                   <button
@@ -450,6 +570,61 @@ export function PublicProfileHero({
                     )}
                   </div>
                 </>
+              ) : personaMode === "employer" ? (
+                activeListings.length > 0 ? (
+                  <a href="#profile-tabs" className="w-full sm:w-auto">
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      className="w-full sm:w-auto shadow-xs gap-2 bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-600 text-white"
+                    >
+                      <Briefcase className="h-3.5 w-3.5" />
+                      <span>
+                        {isTr
+                          ? `Açık İlanları İncele (${activeListings.length})`
+                          : `View Open Postings (${activeListings.length})`}
+                      </span>
+                    </Button>
+                  </a>
+                ) : (
+                  <Link
+                    href={isTr ? `/tr/iletisim?to=${profile.handle}` : `/en/contact?to=${profile.handle}`}
+                    className="w-full sm:w-auto"
+                  >
+                    <Button variant="primary" size="sm" className="w-full sm:w-auto shadow-xs gap-2">
+                      <Briefcase className="h-3.5 w-3.5" />
+                      <span>{isTr ? "İletişime Geç" : "Contact Client"}</span>
+                    </Button>
+                  </Link>
+                )
+              ) : personaMode === "hybrid" ? (
+                <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                  {activeListings.length > 0 && (
+                    <a href="#profile-tabs" className="w-full sm:w-auto">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full sm:w-auto gap-1.5 border-sky-500/30 text-sky-400 hover:bg-sky-500/10"
+                      >
+                        <Briefcase className="h-3.5 w-3.5" />
+                        <span>
+                          {isTr
+                            ? `İlanları Gör (${activeListings.length})`
+                            : `Postings (${activeListings.length})`}
+                        </span>
+                      </Button>
+                    </a>
+                  )}
+                  <Link
+                    href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"}
+                    className="w-full sm:w-auto"
+                  >
+                    <Button variant="primary" size="sm" className="w-full sm:w-auto shadow-xs gap-2">
+                      <Sparkles className="h-3.5 w-3.5" />
+                      <span>{isTr ? "Projeye Davet Et" : "Invite to Project"}</span>
+                    </Button>
+                  </Link>
+                </div>
               ) : (
                 <Link href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"} className="w-full sm:w-auto">
                   <Button variant="primary" size="sm" className="w-full sm:w-auto shadow-xs gap-2">

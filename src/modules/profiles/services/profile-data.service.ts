@@ -13,12 +13,15 @@ import {
 } from "./availability.service";
 import { z } from "zod";
 
+import { PersonaMode, resolveUserPersonaMode } from "../utils/persona";
+
 export interface PublicProfileDto {
   userId: string;
   handle: string;
   displayName: string;
   headline?: string | null;
   roles: string[];
+  personaMode?: PersonaMode;
   isAvailableForHire: boolean;
   isActivelyHiring: boolean;
   availabilityStatus: AvailabilityStatus;
@@ -43,6 +46,7 @@ export interface PublicProfileDto {
     title: string;
     category: string;
     completedAt: Date;
+    roleInEngagement?: "client" | "contractor";
     counterparty: {
       displayName: string;
       handle: string;
@@ -130,6 +134,11 @@ export class ProfileDataService {
         displayName: DEFAULT_USER.profile.displayName,
         headline: DEFAULT_USER.profile.headline || null,
         roles: DEFAULT_USER.profile.roles || ["freelancer"],
+        personaMode: resolveUserPersonaMode({
+          roles: DEFAULT_USER.profile.roles,
+          isAvailableForHire: DEFAULT_USER.profile.isAvailableForHire,
+          isActivelyHiring: DEFAULT_USER.profile.isActivelyHiring,
+        }),
         isAvailableForHire: DEFAULT_USER.profile.isAvailableForHire ?? true,
         isActivelyHiring: DEFAULT_USER.profile.isActivelyHiring ?? true,
         availabilityStatus: DEFAULT_USER.profile.availabilityStatus || "AVAILABLE_NOW",
@@ -228,7 +237,7 @@ export class ProfileDataService {
         .limit(20);
 
       // Batch counterparty details safely
-      const completedWork = [];
+      const completedWork: PublicProfileDto["completedWork"] = [];
       const cpUserIds = [
         ...new Set(
           userCompleted.map((eng) =>
@@ -282,6 +291,7 @@ export class ProfileDataService {
           title: eng.listingTitleSnapshot,
           category: eng.listingCategorySnapshot,
           completedAt: eng.completedAt || eng.matchedAt,
+          roleInEngagement: eng.ownerUserId === profile.userId ? "client" : "contractor",
           counterparty: {
             displayName: cpDisplayName,
             handle: cpHandle,
@@ -356,6 +366,13 @@ export class ProfileDataService {
         displayName: profile.displayName,
         headline: profile.headline || null,
         roles: profile.roles || [],
+        personaMode: resolveUserPersonaMode({
+          roles: profile.roles,
+          isAvailableForHire: availability.effectiveStatus !== "BUSY" && Boolean(profile.isAvailableForHire),
+          isActivelyHiring,
+          isCompanyVerified: profile.isCompanyVerified ?? false,
+          activeListingsCount: activeListings.length,
+        }),
         isAvailableForHire: availability.effectiveStatus !== "BUSY",
         isActivelyHiring,
         availabilityStatus: availability.effectiveStatus,
