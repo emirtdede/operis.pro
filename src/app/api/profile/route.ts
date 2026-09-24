@@ -89,11 +89,19 @@ export async function PATCH(req: Request) {
     // Revalidate public profile and settings paths for instant reflection
     try {
       const { revalidatePath } = await import("next/cache");
-      if (body.handle) {
-        revalidatePath(`/tr/u/${body.handle}`);
-        revalidatePath(`/en/u/${body.handle}`);
+      const currentProfile = await ProfileService.getProfileByUserId(session.userId);
+      const effectiveHandle = body.handle || currentProfile?.handle;
+      if (effectiveHandle) {
+        revalidatePath(`/tr/u/${effectiveHandle}`);
+        revalidatePath(`/en/u/${effectiveHandle}`);
+      }
+      if (body.handle && currentProfile?.handle && body.handle !== currentProfile.handle) {
+        revalidatePath(`/tr/u/${currentProfile.handle}`);
+        revalidatePath(`/en/u/${currentProfile.handle}`);
       }
       revalidatePath("/tr/settings");
+      revalidatePath("/en/settings");
+      revalidatePath("/tr/ayarlar");
       revalidatePath("/en/settings");
       revalidatePath("/tr");
       revalidatePath("/en");

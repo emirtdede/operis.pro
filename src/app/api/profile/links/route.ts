@@ -68,6 +68,11 @@ export async function POST(req: Request) {
       const { revalidatePath } = await import("next/cache");
       revalidatePath("/tr/settings");
       revalidatePath("/en/settings");
+      const p = await ProfileService.getProfileByUserId(session.userId);
+      if (p?.handle) {
+        revalidatePath(`/tr/u/${p.handle}`);
+        revalidatePath(`/en/u/${p.handle}`);
+      }
     } catch {
       // Non-fatal
     }
@@ -92,3 +97,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }
+
+export const PUT = POST;
+

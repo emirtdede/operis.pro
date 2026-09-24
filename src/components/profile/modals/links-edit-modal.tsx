@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { Dialog } from "@/src/components/ui/dialog";
 import { Button } from "@/src/components/ui/button";
 import { TextInput } from "@/src/components/ui/text-input";
-import { AlertCircle, Plus, Trash2 } from "lucide-react";
+import { AlertCircle, Plus, Trash2, ChevronRight } from "lucide-react";
 import type { ProfileLinkItem } from "../profile-settings-form";
 import { getErrorMessage, getLoadingButtonLabel } from "./modal-helpers";
 
@@ -204,6 +205,18 @@ export function LinksEditModal({
             <Plus className="h-4 w-4" />
             <span>{isTr ? "Listeye Ekle" : "Add to List"}</span>
           </Button>
+        </div>
+
+        <div className="flex items-center justify-between text-xs text-[var(--color-text-tertiary)] pt-2 border-t border-[var(--color-border-subtle)]/60">
+          <span>{isTr ? "Tüm bağlantıları toplu yönetin:" : "Manage all links in settings:"}</span>
+          <Link
+            href={isTr ? "/tr/ayarlar?tab=identity" : "/en/settings?tab=identity"}
+            onClick={onClose}
+            className="text-purple-400 hover:text-purple-300 font-medium inline-flex items-center gap-1"
+          >
+            <span>{isTr ? "Hesap Ayarları" : "Account Settings"}</span>
+            <ChevronRight className="h-3.5 w-3.5" />
+          </Link>
         </div>
 
         <div className="flex items-center justify-end gap-2 pt-3 border-t border-[var(--color-border-subtle)]">

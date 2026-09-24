@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { Dialog } from "@/src/components/ui/dialog";
 import { Button } from "@/src/components/ui/button";
 import { TextInput } from "@/src/components/ui/text-input";
-import { AlertCircle, Plus } from "lucide-react";
+import { AlertCircle, Plus, ChevronRight } from "lucide-react";
 import { getErrorMessage, getLoadingButtonLabel } from "./modal-helpers";
 
 export interface SkillsEditModalProps {
@@ -178,6 +179,18 @@ export function SkillsEditModal({
               </button>
             ))}
           </div>
+        </div>
+
+        <div className="flex items-center justify-between text-xs text-[var(--color-text-tertiary)] pt-2 border-t border-[var(--color-border-subtle)]/60">
+          <span>{isTr ? "Kapsamlı beceri ve müsaitlik tercihleri:" : "Full skills and availability preferences:"}</span>
+          <Link
+            href={isTr ? "/tr/ayarlar?tab=work" : "/en/settings?tab=work"}
+            onClick={onClose}
+            className="text-cyan-400 hover:text-cyan-300 font-medium inline-flex items-center gap-1"
+          >
+            <span>{isTr ? "Hesap Ayarları" : "Account Settings"}</span>
+            <ChevronRight className="h-3.5 w-3.5" />
+          </Link>
         </div>
 
         <div className="flex items-center justify-end gap-2 pt-3 border-t border-[var(--color-border-subtle)]">

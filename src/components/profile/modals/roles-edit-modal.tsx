@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { Dialog } from "@/src/components/ui/dialog";
 import { Button } from "@/src/components/ui/button";
 import {
@@ -12,6 +13,7 @@ import {
   AlertCircle,
   Clock,
   Calendar,
+  ChevronRight,
 } from "lucide-react";
 import type { AvailabilityStatus } from "@/src/modules/profiles/service";
 import { getErrorMessage, getLoadingButtonLabel } from "./modal-helpers";
@@ -391,6 +393,18 @@ export function RolesEditModal({
               className="h-4 w-4 rounded accent-blue-500 cursor-pointer"
             />
           </label>
+        </div>
+
+        <div className="flex items-center justify-between text-xs text-[var(--color-text-tertiary)] pt-2 border-t border-[var(--color-border-subtle)]/60">
+          <span>{isTr ? "Kapsamlı çalışma ve fatura ayarları:" : "Advanced work and billing settings:"}</span>
+          <Link
+            href={isTr ? "/tr/ayarlar?tab=work" : "/en/settings?tab=work"}
+            onClick={onClose}
+            className="text-blue-400 hover:text-blue-300 font-medium inline-flex items-center gap-1"
+          >
+            <span>{isTr ? "Hesap Ayarlarında Yönet" : "Manage in Settings"}</span>
+            <ChevronRight className="h-3.5 w-3.5" />
+          </Link>
         </div>
 
         <div className="flex items-center justify-end gap-2 pt-3 border-t border-[var(--color-border-subtle)]">

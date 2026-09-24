@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import Link from "next/link";
 import { Dialog } from "@/src/components/ui/dialog";
 import { Button } from "@/src/components/ui/button";
 import { TextInput } from "@/src/components/ui/text-input";
-import { AlertCircle, Camera, Upload, RotateCcw } from "lucide-react";
+import { AlertCircle, Camera, Upload, RotateCcw, ChevronRight } from "lucide-react";
 import {
   getErrorMessage,
   getLoadingButtonLabel,
@@ -297,6 +298,18 @@ export function HeaderEditModal({
               placeholder="https://..."
             />
           </div>
+        </div>
+
+        <div className="flex items-center justify-between text-xs text-[var(--color-text-tertiary)] pt-2 border-t border-[var(--color-border-subtle)]/60">
+          <span>{isTr ? "Kullanıcı adı, dil ve tema için:" : "For username, language, and theme:"}</span>
+          <Link
+            href={isTr ? "/tr/ayarlar?tab=identity" : "/en/settings?tab=identity"}
+            onClick={onClose}
+            className="text-blue-400 hover:text-blue-300 font-medium inline-flex items-center gap-1"
+          >
+            <span>{isTr ? "Hesap Ayarlarına Git" : "Go to Account Settings"}</span>
+            <ChevronRight className="h-3.5 w-3.5" />
+          </Link>
         </div>
 
         <div className="flex items-center justify-end gap-2 pt-3 border-t border-[var(--color-border-subtle)]">

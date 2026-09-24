@@ -5,6 +5,9 @@ import {
   Plus,
   Clock,
   ArrowRight,
+  ShieldCheck,
+  Briefcase,
+  CheckCircle2,
 } from "lucide-react";
 import { Badge } from "@/src/components/ui/badge";
 import { EmptyState } from "@/src/components/ui/empty-state";
@@ -42,7 +45,7 @@ export function PublicProfilePortfolio({
             action={
               isSelf ? (
                 <Link href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"}>
-                  <Button variant="primary" size="sm">
+                  <Button variant="primary" size="sm" className="gap-2">
                     <Plus className="h-4 w-4" />
                     <span>{isTr ? "Yeni İlan Yayınla" : "Publish Listing"}</span>
                   </Button>
@@ -65,24 +68,26 @@ export function PublicProfilePortfolio({
               return (
                 <div
                   key={listing.id}
-                  className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 hover:border-blue-500/30 p-5 transition-all space-y-3 group shadow-xs"
+                  className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/85 hover:border-blue-500/40 p-5 transition-all space-y-3 group shadow-xs hover:shadow-md"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="space-y-1 min-w-0">
-                      <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">
-                        <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
-                        {isTr ? "Aktif İlan" : "Active Listing"}
-                      </span>
-                      <h3 className="text-sm sm:text-base font-bold text-[var(--color-text-primary)] group-hover:text-blue-500 transition-colors">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                    <div className="space-y-1.5 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">
+                          <span className="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse" />
+                          {isTr ? "Aktif İlan (7 Günlük Radar)" : "Active Listing (7d Radar)"}
+                        </span>
+                      </div>
+                      <h3 className="text-base font-bold text-[var(--color-text-primary)] group-hover:text-blue-500 transition-colors leading-snug">
                         {listing.title}
                       </h3>
                     </div>
-                    <span className="text-xs font-bold text-[var(--color-text-primary)] bg-surface px-3 py-1 rounded-xl border border-[var(--color-border-subtle)] shrink-0">
+                    <span className="text-xs font-bold text-[var(--color-text-primary)] bg-[var(--color-surface-hover)] px-3 py-1.5 rounded-xl border border-[var(--color-border-subtle)] shrink-0 self-start">
                       {formattedBudget}
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-[var(--color-border-subtle)] text-xs text-[var(--color-text-tertiary)]">
+                  <div className="flex items-center justify-between pt-3 border-t border-[var(--color-border-subtle)]/70 text-xs text-[var(--color-text-tertiary)]">
                     <div className="flex items-center gap-1.5">
                       <Clock className="h-3.5 w-3.5" />
                       <span>
@@ -98,8 +103,8 @@ export function PublicProfilePortfolio({
                       href={isTr ? `/tr/ilanlar/${listing.slug}` : `/en/listings/${listing.slug}`}
                       className="inline-flex items-center gap-1 text-xs font-semibold text-blue-500 hover:text-blue-400 transition-colors"
                     >
-                      <span>{isTr ? "İlanı İncele" : "View Listing"}</span>
-                      <ArrowRight className="h-3 w-3" />
+                      <span>{isTr ? "İlan Detayını Gör" : "View Listing"}</span>
+                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                     </Link>
                   </div>
                 </div>
@@ -119,13 +124,14 @@ export function PublicProfilePortfolio({
           title={isTr ? "Henüz tamamlanmış proje kaydı bulunmuyor" : "No completed projects yet"}
           description={
             isTr
-              ? "Yalnızca her iki tarafça karşılıklı onaylanan başarıyla tamamlanmış işler burada listelenir. Satın alınamaz veya sahte oluşturulamaz."
+              ? "Operis üzerinde yalnızca her iki tarafça karşılıklı onaylanan başarıyla tamamlanmış işler burada listelenir. Satın alınamaz veya sahte oluşturulamaz."
               : "Only mutually confirmed completed engagements appear here. Cryptographically verifiable, cannot be faked."
           }
           action={
             <Link href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"}>
-              <Button variant="secondary" size="sm">
-                {isTr ? "İlk Projeyi Başlat" : "Start Collaboration"}
+              <Button variant="secondary" size="sm" className="gap-2">
+                <Briefcase className="h-4 w-4" />
+                <span>{isTr ? "İlk Projeyi Başlat" : "Start Collaboration"}</span>
               </Button>
             </Link>
           }
@@ -143,28 +149,44 @@ export function PublicProfilePortfolio({
             return (
               <div
                 key={work.engagementId}
-                className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 p-5 space-y-2.5 shadow-xs"
+                className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/85 hover:border-emerald-500/40 p-5 space-y-3 shadow-xs hover:shadow-md transition-all"
               >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-bold text-sm text-[var(--color-text-primary)]">
-                    {work.title}
-                  </span>
-                  <Badge variant="outline" size="sm">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                    <span className="font-bold text-sm sm:text-base text-[var(--color-text-primary)]">
+                      {work.title}
+                    </span>
+                  </div>
+                  <Badge variant="outline" size="sm" className="self-start sm:self-auto">
                     {work.category}
                   </Badge>
                 </div>
 
-                <div className="flex items-center justify-between text-xs text-[var(--color-text-secondary)] pt-1">
-                  <span>
-                    {isTr ? "Tamamlanma:" : "Completed:"} {formattedDate}
-                  </span>
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[var(--color-text-secondary)] pt-2 border-t border-[var(--color-border-subtle)]/70">
+                  <div className="flex items-center gap-1.5 text-[var(--color-text-tertiary)]">
+                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                    <span>
+                      {isTr ? "Teslimat Onaylandı:" : "Delivered & Confirmed:"} {formattedDate}
+                    </span>
+                  </div>
+
                   <div className="flex items-center gap-1.5">
                     <span className="text-[var(--color-text-tertiary)]">
                       {isTr ? "İş Ortağı:" : "Counterparty:"}
                     </span>
-                    <span className="font-semibold text-blue-400">
-                      {work.counterparty.displayName}
-                    </span>
+                    {work.counterparty.isDeleted ? (
+                      <span className="text-[var(--color-text-tertiary)] italic">
+                        {work.counterparty.displayName}
+                      </span>
+                    ) : (
+                      <Link
+                        href={isTr ? `/tr/u/${work.counterparty.handle}` : `/en/u/${work.counterparty.handle}`}
+                        className="font-semibold text-blue-400 hover:text-blue-300 transition-colors"
+                      >
+                        {work.counterparty.displayName} (@{work.counterparty.handle})
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>

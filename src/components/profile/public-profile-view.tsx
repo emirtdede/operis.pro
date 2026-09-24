@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Briefcase,
   CheckCircle2,
   Star,
+  Check,
+  AlertCircle,
 } from "lucide-react";
 import { PublicProfileDto } from "@/src/modules/profiles/service";
 import {
@@ -29,8 +32,19 @@ export function PublicProfileView({
   isSelf,
 }: PublicProfileViewProps) {
   const isTr = locale === "tr";
+  const router = useRouter();
   const [profile, setProfile] = useState<PublicProfileDto>(initialProfile);
   const [activeTab, setActiveTab] = useState<"listings" | "projects" | "endorsements" | "reviews">("listings");
+
+  // Notification / Toast Feedback
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+
+  const showToast = (message: string, type: "success" | "error" = "success") => {
+    setToast({ message, type });
+    setTimeout(() => {
+      setToast(null);
+    }, 4000);
+  };
 
   // Modal visibility states
   const [headerModalOpen, setHeaderModalOpen] = useState(false);
@@ -39,7 +53,7 @@ export function PublicProfileView({
   const [skillsModalOpen, setSkillsModalOpen] = useState(false);
   const [linksModalOpen, setLinksModalOpen] = useState(false);
 
-  // Save handler for profile fields
+  // Save handler for profile fields (Single Source of Truth)
   const handleSaveProfileFields = async (fields: Record<string, unknown>) => {
     const res = await fetch("/api/profile", {
       method: "PATCH",
@@ -48,12 +62,24 @@ export function PublicProfileView({
     });
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
-      throw new Error(data.error || "Failed to update profile");
+      const errMsg = data.error || (isTr ? "Profil güncellenemedi." : "Failed to update profile.");
+      showToast(errMsg, "error");
+      throw new Error(errMsg);
     }
+
     setProfile((prev) => ({
       ...prev,
       ...fields,
     }));
+
+    showToast(isTr ? "Profiliniz başarıyla güncellendi." : "Profile updated successfully.", "success");
+
+    // If handle changed, update browser URL gracefully
+    if (fields.handle && typeof fields.handle === "string" && fields.handle !== profile.handle) {
+      const newPath = isTr ? `/tr/u/${fields.handle}` : `/en/u/${fields.handle}`;
+      window.history.replaceState(null, "", newPath);
+      router.refresh();
+    }
   };
 
   // Save handler for links
@@ -65,12 +91,17 @@ export function PublicProfileView({
     });
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
-      throw new Error(data.error || "Failed to update links");
+      const errMsg = data.error || (isTr ? "Bağlantılar kaydedilemedi." : "Failed to update links.");
+      showToast(errMsg, "error");
+      throw new Error(errMsg);
     }
+
     setProfile((prev) => ({
       ...prev,
       links: newLinks.map((l, i) => ({ id: `link-${i}`, ...l })),
     }));
+
+    showToast(isTr ? "Dış bağlantılarınız güncellendi." : "External links updated successfully.", "success");
   };
 
   const activeListings = profile.activeListings || [];
@@ -87,18 +118,41 @@ export function PublicProfileView({
 
   return (
     <div className="space-y-6">
-      {/* 1. HERO & BANNER PROFILE CONTAINER */}
+      {/* Toast Feedback Notification */}
+      {toast && (
+        <div
+          role="status"
+          aria-live="polite"
+          className={`fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-2xl border shadow-xl text-xs font-semibold backdrop-blur-xl animate-in slide-in-from-bottom-3 duration-200 ${
+            toast.type === "success"
+              ? "bg-emerald-950/85 border-emerald-500/30 text-emerald-300 shadow-emerald-950/40"
+              : "bg-rose-950/85 border-rose-500/30 text-rose-300 shadow-rose-950/40"
+          }`}
+        >
+          {toast.type === "success" ? (
+            <Check className="h-4 w-4 text-emerald-400 shrink-0" />
+          ) : (
+            <AlertCircle className="h-4 w-4 text-rose-400 shrink-0" />
+          )}
+          <span>{toast.message}</span>
+        </div>
+      )}
+
+      {/* 1. HERO PROFILE CONTAINER (Avatar-Only, Zero Cover Banner) */}
       <PublicProfileHero
         profile={profile}
         locale={locale}
         isSelf={isSelf}
         onOpenHeaderModal={() => setHeaderModalOpen(true)}
         onOpenRolesModal={() => setRolesModalOpen(true)}
+        onOpenAboutModal={() => setAboutModalOpen(true)}
+        onOpenSkillsModal={() => setSkillsModalOpen(true)}
+        onOpenLinksModal={() => setLinksModalOpen(true)}
       />
 
-      {/* 2. ASYMMETRIC TWO-COLUMN WORKSPACE */}
+      {/* 2. ASYMMETRIC TWO-COLUMN BENTO WORKSPACE */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* LEFT COLUMN: Identity, Bio, Skills, Platform Links */}
+        {/* LEFT COLUMN: Identity, Bio, Skills, Platform Links, Verification */}
         <PublicProfileSidebar
           profile={profile}
           locale={locale}
@@ -108,10 +162,10 @@ export function PublicProfileView({
           onOpenLinksModal={() => setLinksModalOpen(true)}
         />
 
-        {/* RIGHT COLUMN: Tabs & Dynamic Content */}
+        {/* RIGHT COLUMN: Portfolio & Activity Tabs */}
         <main className="lg:col-span-8 space-y-5">
           {/* Segmented Tab Navigation */}
-          <div className="flex items-center gap-1.5 p-1.5 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-xl shadow-xs">
+          <div className="flex items-center gap-1.5 p-1.5 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/85 backdrop-blur-xl shadow-xs">
             <button
               type="button"
               onClick={() => setActiveTab("listings")}
@@ -123,9 +177,13 @@ export function PublicProfileView({
             >
               <Briefcase className="h-3.5 w-3.5" />
               <span>{isTr ? "Aktif İlanları" : "Active Listings"}</span>
-              <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                activeTab === "listings" ? "bg-white/20 text-white" : "bg-surface border border-[var(--color-border-subtle)] text-[var(--color-text-tertiary)]"
-              }`}>
+              <span
+                className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                  activeTab === "listings"
+                    ? "bg-white/20 text-white"
+                    : "bg-surface border border-[var(--color-border-subtle)] text-[var(--color-text-tertiary)]"
+                }`}
+              >
                 {activeListings.length}
               </span>
             </button>
@@ -140,10 +198,14 @@ export function PublicProfileView({
               }`}
             >
               <CheckCircle2 className="h-3.5 w-3.5" />
-              <span>{isTr ? "Tamamlanan Projeler" : "Completed"}</span>
-              <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                activeTab === "projects" ? "bg-white/20 text-white" : "bg-surface border border-[var(--color-border-subtle)] text-[var(--color-text-tertiary)]"
-              }`}>
+              <span>{isTr ? "Tamamlanan Projeler" : "Completed Work"}</span>
+              <span
+                className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                  activeTab === "projects"
+                    ? "bg-white/20 text-white"
+                    : "bg-surface border border-[var(--color-border-subtle)] text-[var(--color-text-tertiary)]"
+                }`}
+              >
                 {completedWork.length}
               </span>
             </button>
@@ -159,9 +221,13 @@ export function PublicProfileView({
             >
               <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
               <span>{isTr ? "Değerlendirmeler & Yorumlar" : "Reviews & Ratings"}</span>
-              <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                isReviewsActive ? "bg-white/20 text-white" : "bg-surface border border-[var(--color-border-subtle)] text-[var(--color-text-tertiary)]"
-              }`}>
+              <span
+                className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                  isReviewsActive
+                    ? "bg-white/20 text-white"
+                    : "bg-surface border border-[var(--color-border-subtle)] text-[var(--color-text-tertiary)]"
+                }`}
+              >
                 {reviewsCount}
               </span>
             </button>
@@ -184,7 +250,7 @@ export function PublicProfileView({
         </main>
       </div>
 
-      {/* 3. IN-PLACE EDIT MODALS */}
+      {/* 3. IN-PLACE EDIT MODALS (Instant live customization) */}
       {isSelf && (
         <>
           <HeaderEditModal
