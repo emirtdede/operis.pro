@@ -95,7 +95,7 @@ export function UnifiedListingsHub(props: UnifiedListingsHubProps) {
             />
           </div>
 
-          {/* 3. Right Panel (Freshness Radar Pulse, Trending Tech, Suggested Categories, Publish CTA) */}
+          {/* 3. Right Panel (Publish CTA, Trending Tech, Personalized Suggested Areas) */}
           <FeedRightPanel
             isTr={state.isTr}
             locale={props.locale}
@@ -106,6 +106,7 @@ export function UnifiedListingsHub(props: UnifiedListingsHubProps) {
             handleToggleCategoryFollow={state.handleToggleCategoryFollow}
             totalItemsCount={state.sortedItems.length}
             settings={feedCustomization.settings}
+            listings={state.items}
           />
         </div>
       </div>

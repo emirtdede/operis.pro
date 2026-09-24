@@ -18,6 +18,7 @@ import { VerifiedCompanyBadge } from "../ui/verified-company-badge";
 import { HiringIntentBadge } from "./hiring-intent-badge";
 import { HiringIntentModal } from "./hiring-intent-modal";
 import { HiringIntentEngine } from "@/src/modules/listings/hiring-intent/hiring-intent-engine";
+import { recordUserAffinity } from "@/src/lib/recommendations/user-affinity";
 import type {
   HiringIntentBreakdown,
   HiringIntentLevel,
@@ -29,6 +30,8 @@ export interface ListingCardProps {
   title: string;
   summary: string;
   categoryName: string;
+  categorySlug?: string;
+  tags?: string[];
   budgetMode: string;
   budgetCurrency: string | null;
   budgetMin: string | null;
@@ -92,6 +95,8 @@ export const ListingCard = memo(function ListingCard({
   title,
   summary,
   categoryName,
+  categorySlug,
+  tags,
   budgetMode,
   budgetCurrency,
   budgetMin,
@@ -222,6 +227,11 @@ export const ListingCard = memo(function ListingCard({
         method: "POST",
         keepalive: true,
       }).catch(() => {});
+      recordUserAffinity({
+        type: "click_listing",
+        categorySlug,
+        tags,
+      });
     } catch {
       // Ignore background analytics errors
     }

@@ -16,6 +16,7 @@ import { FeedListingItem } from "@/src/modules/listings/feed/service";
 import { HiringIntentBadge } from "../listings/hiring-intent-badge";
 import { HiringIntentModal } from "../listings/hiring-intent-modal";
 import { HiringIntentEngine } from "@/src/modules/listings/hiring-intent/hiring-intent-engine";
+import { recordUserAffinity } from "@/src/lib/recommendations/user-affinity";
 
 export interface SocialListingCardProps {
   item: FeedListingItem;
@@ -139,6 +140,22 @@ export const SocialListingCard = memo(function SocialListingCard({
 
   const listingHref = isTr ? `/tr/ilanlar/${item.slug}` : `/en/listings/${item.slug}`;
 
+  const handleCardClick = () => {
+    try {
+      fetch(`/api/listings/${item.id}/track?action=click`, {
+        method: "POST",
+        keepalive: true,
+      }).catch(() => {});
+      recordUserAffinity({
+        type: "click_listing",
+        categorySlug: item.categorySlug,
+        tags: item.tags,
+      });
+    } catch {
+      // Ignore background analytics errors
+    }
+  };
+
   const handleShare = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -212,7 +229,7 @@ export const SocialListingCard = memo(function SocialListingCard({
 
           {/* Title & Summary */}
           <div className="space-y-1">
-            <Link href={listingHref} className="block group/link">
+            <Link href={listingHref} onClick={handleCardClick} className="block group/link">
               <h2 className="text-base font-bold text-[var(--color-text-primary)] group-hover/link:text-blue-400 transition-colors leading-snug">
                 {item.title}
               </h2>
@@ -235,9 +252,21 @@ export const SocialListingCard = memo(function SocialListingCard({
             {item.tags && item.tags.length > 0 && (
               <div className="flex items-center gap-1.5 text-xs text-[var(--color-text-tertiary)]">
                 {item.tags.slice(0, 4).map((tag, idx) => (
-                  <span key={idx} className="hover:text-sky-400 transition-colors cursor-pointer">
+                  <Link
+                    key={idx}
+                    href={`/${locale}/ilanlar?q=${encodeURIComponent(tag)}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      recordUserAffinity({
+                        type: "click_tag",
+                        tags: [tag],
+                        categorySlug: item.categorySlug,
+                      });
+                    }}
+                    className="hover:text-sky-400 transition-colors cursor-pointer"
+                  >
                     #{tag}
-                  </span>
+                  </Link>
                 ))}
               </div>
             )}

@@ -3,7 +3,6 @@
 import { useState, type Dispatch, type SetStateAction } from "react";
 import Link from "next/link";
 import {
-  Flame,
   Briefcase,
   Sliders,
   User,
@@ -15,7 +14,6 @@ import {
   ChevronDown,
   Check,
   LogIn,
-  SlidersHorizontal,
 } from "lucide-react";
 import type { CategoryDto } from "@/src/modules/categories/service";
 import { AvatarInitials } from "@/src/components/ui/avatar-initials";
@@ -35,10 +33,10 @@ export interface FeedLeftPanelProps {
   view: "stream" | "catalog";
   locale: string;
   isTr: boolean;
-  chipLast24h: boolean;
-  setChipLast24h: Dispatch<SetStateAction<boolean>>;
-  chipFixedBudget: boolean;
-  setChipFixedBudget: Dispatch<SetStateAction<boolean>>;
+  chipLast24h?: boolean;
+  setChipLast24h?: Dispatch<SetStateAction<boolean>>;
+  chipFixedBudget?: boolean;
+  setChipFixedBudget?: Dispatch<SetStateAction<boolean>>;
   followedCategoryIds: Set<string>;
   settings: FeedCustomizationSettings;
   onOpenCustomizationModal: () => void;
@@ -55,10 +53,6 @@ export function FeedLeftPanel({
   view,
   locale,
   isTr,
-  chipLast24h,
-  setChipLast24h,
-  chipFixedBudget,
-  setChipFixedBudget,
   followedCategoryIds,
   settings,
   onOpenCustomizationModal,
@@ -285,7 +279,51 @@ export function FeedLeftPanel({
         </div>
       )}
 
-      {/* 2. Followed Categories (Takip Ettiğim Kategoriler) */}
+      {/* 2. Workspace Shortcuts (İlanlarım, Tekliflerim, Kaydedilenler) - Positioned directly below Profile Card */}
+      {settings.showWorkspaceShortcuts && isAuthenticated && (
+        <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/85 backdrop-blur-xl p-4 shadow-sm space-y-2">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-primary)] flex items-center gap-1.5">
+            <Bookmark className="h-3.5 w-3.5 text-purple-400" />
+            <span>{isTr ? "Çalışma Alanım" : "Workspace"}</span>
+          </h3>
+
+          <div className="space-y-1">
+            <Link
+              href={isTr ? "/tr/dashboard/listings" : "/en/dashboard/listings"}
+              className="flex items-center gap-2.5 p-2 rounded-xl text-xs font-medium text-[var(--color-text-secondary)] hover:text-blue-400 hover:bg-[var(--color-surface-hover)] transition-colors"
+            >
+              <Briefcase className="h-3.5 w-3.5 text-[var(--color-text-tertiary)]" />
+              <span>{isTr ? "Aktif İlanlarım" : "My Listings"}</span>
+            </Link>
+
+            <Link
+              href={isTr ? "/tr/dashboard/offers/sent" : "/en/dashboard/offers/sent"}
+              className="flex items-center gap-2.5 p-2 rounded-xl text-xs font-medium text-[var(--color-text-secondary)] hover:text-blue-400 hover:bg-[var(--color-surface-hover)] transition-colors"
+            >
+              <Send className="h-3.5 w-3.5 text-[var(--color-text-tertiary)]" />
+              <span>{isTr ? "Verdiğim Teklifler" : "Sent Proposals"}</span>
+            </Link>
+
+            <Link
+              href={isTr ? "/tr/dashboard/offers/received" : "/en/dashboard/offers/received"}
+              className="flex items-center gap-2.5 p-2 rounded-xl text-xs font-medium text-[var(--color-text-secondary)] hover:text-blue-400 hover:bg-[var(--color-surface-hover)] transition-colors"
+            >
+              <Inbox className="h-3.5 w-3.5 text-[var(--color-text-tertiary)]" />
+              <span>{isTr ? "Gelen Teklifler" : "Received Offers"}</span>
+            </Link>
+
+            <Link
+              href={isTr ? "/tr/dashboard/saved" : "/en/dashboard/saved"}
+              className="flex items-center gap-2.5 p-2 rounded-xl text-xs font-medium text-[var(--color-text-secondary)] hover:text-blue-400 hover:bg-[var(--color-surface-hover)] transition-colors"
+            >
+              <Bookmark className="h-3.5 w-3.5 text-[var(--color-text-tertiary)]" />
+              <span>{isTr ? "Kaydedilen İlanlar" : "Saved Bookmarks"}</span>
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* 3. Followed Categories (Takip Ettiğim Alanlar) */}
       {settings.showFollowedCategories && (
         <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/85 backdrop-blur-xl p-4 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
@@ -342,96 +380,6 @@ export function FeedLeftPanel({
               </Link>
             </div>
           )}
-        </div>
-      )}
-
-      {/* 3. Smart Quick Filter Chips */}
-      {settings.showQuickFilters && (
-        <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/85 backdrop-blur-xl p-4 shadow-sm space-y-2.5">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-primary)] flex items-center gap-1.5">
-            <SlidersHorizontal className="h-3.5 w-3.5 text-amber-400" />
-            <span>{isTr ? "Hızlı Filtreler" : "Quick Filters"}</span>
-          </h3>
-
-          <div className="flex flex-col gap-1.5">
-            <button
-              type="button"
-              onClick={() => setChipLast24h((prev) => !prev)}
-              aria-pressed={chipLast24h}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer border ${
-                chipLast24h
-                  ? "bg-amber-500/15 text-amber-400 border-amber-500/30 shadow-2xs font-bold"
-                  : "bg-surface/50 border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:bg-surface hover:text-[var(--color-text-primary)]"
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <Flame className={`h-3.5 w-3.5 ${chipLast24h ? "text-amber-400" : "text-[var(--color-text-tertiary)]"}`} />
-                <span>{isTr ? "Son 24 Saat (Taze)" : "Last 24 Hours"}</span>
-              </div>
-              <span className="text-[10px] font-mono opacity-70">24h</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setChipFixedBudget((prev) => !prev)}
-              aria-pressed={chipFixedBudget}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer border ${
-                chipFixedBudget
-                  ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30 shadow-2xs font-bold"
-                  : "bg-surface/50 border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:bg-surface hover:text-[var(--color-text-primary)]"
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <Briefcase className={`h-3.5 w-3.5 ${chipFixedBudget ? "text-emerald-400" : "text-[var(--color-text-tertiary)]"}`} />
-                <span>{isTr ? "Bütçesi Belirli" : "Specific Budget"}</span>
-              </div>
-              <span className="text-[10px] font-mono opacity-70">TRY</span>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* 4. Workspace Shortcuts (İlanlarım, Tekliflerim, Kaydedilenler) */}
-      {settings.showWorkspaceShortcuts && isAuthenticated && (
-        <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/85 backdrop-blur-xl p-4 shadow-sm space-y-2">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-primary)] flex items-center gap-1.5">
-            <Bookmark className="h-3.5 w-3.5 text-purple-400" />
-            <span>{isTr ? "Çalışma Alanım" : "Workspace"}</span>
-          </h3>
-
-          <div className="space-y-1">
-            <Link
-              href={isTr ? "/tr/dashboard/listings" : "/en/dashboard/listings"}
-              className="flex items-center gap-2.5 p-2 rounded-xl text-xs font-medium text-[var(--color-text-secondary)] hover:text-blue-400 hover:bg-[var(--color-surface-hover)] transition-colors"
-            >
-              <Briefcase className="h-3.5 w-3.5 text-[var(--color-text-tertiary)]" />
-              <span>{isTr ? "Aktif İlanlarım" : "My Listings"}</span>
-            </Link>
-
-            <Link
-              href={isTr ? "/tr/dashboard/offers/sent" : "/en/dashboard/offers/sent"}
-              className="flex items-center gap-2.5 p-2 rounded-xl text-xs font-medium text-[var(--color-text-secondary)] hover:text-blue-400 hover:bg-[var(--color-surface-hover)] transition-colors"
-            >
-              <Send className="h-3.5 w-3.5 text-[var(--color-text-tertiary)]" />
-              <span>{isTr ? "Verdiğim Teklifler" : "Sent Proposals"}</span>
-            </Link>
-
-            <Link
-              href={isTr ? "/tr/dashboard/offers/received" : "/en/dashboard/offers/received"}
-              className="flex items-center gap-2.5 p-2 rounded-xl text-xs font-medium text-[var(--color-text-secondary)] hover:text-blue-400 hover:bg-[var(--color-surface-hover)] transition-colors"
-            >
-              <Inbox className="h-3.5 w-3.5 text-[var(--color-text-tertiary)]" />
-              <span>{isTr ? "Gelen Teklifler" : "Received Offers"}</span>
-            </Link>
-
-            <Link
-              href={isTr ? "/tr/dashboard/saved" : "/en/dashboard/saved"}
-              className="flex items-center gap-2.5 p-2 rounded-xl text-xs font-medium text-[var(--color-text-secondary)] hover:text-blue-400 hover:bg-[var(--color-surface-hover)] transition-colors"
-            >
-              <Bookmark className="h-3.5 w-3.5 text-[var(--color-text-tertiary)]" />
-              <span>{isTr ? "Kaydedilen İlanlar" : "Saved Bookmarks"}</span>
-            </Link>
-          </div>
         </div>
       )}
 

@@ -7,13 +7,10 @@ import {
   Sliders,
   User,
   Tags,
-  Filter,
   Bookmark,
-  Radar,
   TrendingUp,
   Sparkles,
   PlusCircle,
-  ShieldCheck,
   Check,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
@@ -120,6 +117,27 @@ export function FeedCustomizationModal({
                 />
               </label>
 
+              {/* Workspace Shortcuts Toggle - Placed directly below Profile Card */}
+              <label className="flex items-center justify-between p-3 rounded-2xl border border-[var(--color-border-subtle)] bg-surface/50 hover:bg-surface/80 transition-colors cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <Bookmark className="h-4 w-4 text-purple-400" />
+                  <div>
+                    <div className="text-xs font-semibold text-[var(--color-text-primary)]">
+                      {isTr ? "Çalışma Alanı Kısayolları" : "Workspace Shortcuts"}
+                    </div>
+                    <div className="text-[11px] text-[var(--color-text-tertiary)]">
+                      {isTr ? "İlanlarım, tekliflerim ve kaydedilenler linkleri" : "Links to my listings, offers & bookmarks"}
+                    </div>
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={settings.showWorkspaceShortcuts}
+                  onChange={(e) => updateSettings({ showWorkspaceShortcuts: e.target.checked })}
+                  className="h-4 w-4 rounded-md accent-blue-600 cursor-pointer"
+                />
+              </label>
+
               {/* Followed Categories Toggle */}
               <label className="flex items-center justify-between p-3 rounded-2xl border border-[var(--color-border-subtle)] bg-surface/50 hover:bg-surface/80 transition-colors cursor-pointer">
                 <div className="flex items-center gap-3">
@@ -140,48 +158,6 @@ export function FeedCustomizationModal({
                   className="h-4 w-4 rounded-md accent-blue-600 cursor-pointer"
                 />
               </label>
-
-              {/* Quick Filters Toggle */}
-              <label className="flex items-center justify-between p-3 rounded-2xl border border-[var(--color-border-subtle)] bg-surface/50 hover:bg-surface/80 transition-colors cursor-pointer">
-                <div className="flex items-center gap-3">
-                  <Filter className="h-4 w-4 text-amber-400" />
-                  <div>
-                    <div className="text-xs font-semibold text-[var(--color-text-primary)]">
-                      {isTr ? "Akıllı Hızlı Filtreler" : "Smart Quick Filters"}
-                    </div>
-                    <div className="text-[11px] text-[var(--color-text-tertiary)]">
-                      {isTr ? "Son 24 saat ve sabit bütçeli hızlı butonlar" : "Last 24h & specific budget quick chips"}
-                    </div>
-                  </div>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={settings.showQuickFilters}
-                  onChange={(e) => updateSettings({ showQuickFilters: e.target.checked })}
-                  className="h-4 w-4 rounded-md accent-blue-600 cursor-pointer"
-                />
-              </label>
-
-              {/* Workspace Shortcuts Toggle */}
-              <label className="flex items-center justify-between p-3 rounded-2xl border border-[var(--color-border-subtle)] bg-surface/50 hover:bg-surface/80 transition-colors cursor-pointer">
-                <div className="flex items-center gap-3">
-                  <Bookmark className="h-4 w-4 text-purple-400" />
-                  <div>
-                    <div className="text-xs font-semibold text-[var(--color-text-primary)]">
-                      {isTr ? "Çalışma Alanı Kısayolları" : "Workspace Shortcuts"}
-                    </div>
-                    <div className="text-[11px] text-[var(--color-text-tertiary)]">
-                      {isTr ? "İlanlarım, tekliflerim ve kaydedilenler linkleri" : "Links to my listings, offers & bookmarks"}
-                    </div>
-                  </div>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={settings.showWorkspaceShortcuts}
-                  onChange={(e) => updateSettings({ showWorkspaceShortcuts: e.target.checked })}
-                  className="h-4 w-4 rounded-md accent-blue-600 cursor-pointer"
-                />
-              </label>
             </div>
           </div>
 
@@ -192,23 +168,23 @@ export function FeedCustomizationModal({
             </h3>
 
             <div className="space-y-2">
-              {/* Freshness Radar Toggle */}
+              {/* Publish CTA Toggle (Projeniz mi Var? - Positioned at top) */}
               <label className="flex items-center justify-between p-3 rounded-2xl border border-[var(--color-border-subtle)] bg-surface/50 hover:bg-surface/80 transition-colors cursor-pointer">
                 <div className="flex items-center gap-3">
-                  <Radar className="h-4 w-4 text-sky-400" />
+                  <PlusCircle className="h-4 w-4 text-indigo-400" />
                   <div>
                     <div className="text-xs font-semibold text-[var(--color-text-primary)]">
-                      {isTr ? "7 Günlük Tazelik Radarı" : "7-Day Freshness Radar"}
+                      {isTr ? "İlan Yayınla Hızlı Kartı (Projeniz mi Var?)" : "Publish Listing Action Card"}
                     </div>
                     <div className="text-[11px] text-[var(--color-text-tertiary)]">
-                      {isTr ? "Bugün eklenen ve son günlerine giren ilan nabzı" : "Live pulse of fresh & expiring listings"}
+                      {isTr ? "Sağ panelde en üstte hızlı ilan verme çağrısı" : "Top card shortcut to create new listings"}
                     </div>
                   </div>
                 </div>
                 <input
                   type="checkbox"
-                  checked={settings.showFreshnessRadar}
-                  onChange={(e) => updateSettings({ showFreshnessRadar: e.target.checked })}
+                  checked={settings.showPublishCta}
+                  onChange={(e) => updateSettings({ showPublishCta: e.target.checked })}
                   className="h-4 w-4 rounded-md accent-blue-600 cursor-pointer"
                 />
               </label>
@@ -222,7 +198,7 @@ export function FeedCustomizationModal({
                       {isTr ? "Gündemdeki Teknolojiler" : "Trending Technologies"}
                     </div>
                     <div className="text-[11px] text-[var(--color-text-tertiary)]">
-                      {isTr ? "En çok aranan ve ilan açılan teknoloji etiketleri" : "Most demanded technologies & tags"}
+                      {isTr ? "Gerçek arama ve etkileşim trendlerine dayalı piyasa nabzı" : "Real user search & interaction market pulse"}
                     </div>
                   </div>
                 </div>
@@ -240,10 +216,10 @@ export function FeedCustomizationModal({
                   <Sparkles className="h-4 w-4 text-amber-400" />
                   <div>
                     <div className="text-xs font-semibold text-[var(--color-text-primary)]">
-                      {isTr ? "Önerilen Yeni Kategoriler" : "Suggested Specializations"}
+                      {isTr ? "Önerilen Alanlar" : "Suggested Specializations"}
                     </div>
                     <div className="text-[11px] text-[var(--color-text-tertiary)]">
-                      {isTr ? "Takip etmediğiniz ve ilan bulunan kategoriler" : "Discoverable categories with single-click follow"}
+                      {isTr ? "Bireysel ilgi ve arama geçmişinize özel kategori önerileri" : "Personalized category recommendations based on your activity"}
                     </div>
                   </div>
                 </div>
@@ -251,48 +227,6 @@ export function FeedCustomizationModal({
                   type="checkbox"
                   checked={settings.showSuggestedCategories}
                   onChange={(e) => updateSettings({ showSuggestedCategories: e.target.checked })}
-                  className="h-4 w-4 rounded-md accent-blue-600 cursor-pointer"
-                />
-              </label>
-
-              {/* Publish CTA Toggle */}
-              <label className="flex items-center justify-between p-3 rounded-2xl border border-[var(--color-border-subtle)] bg-surface/50 hover:bg-surface/80 transition-colors cursor-pointer">
-                <div className="flex items-center gap-3">
-                  <PlusCircle className="h-4 w-4 text-indigo-400" />
-                  <div>
-                    <div className="text-xs font-semibold text-[var(--color-text-primary)]">
-                      {isTr ? "İlan Yayınla Hızlı Kartı" : "Publish Listing Action Card"}
-                    </div>
-                    <div className="text-[11px] text-[var(--color-text-tertiary)]">
-                      {isTr ? "Sağ panelde hızlı ilan verme çağrısı" : "Fast shortcut card to create new listings"}
-                    </div>
-                  </div>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={settings.showPublishCta}
-                  onChange={(e) => updateSettings({ showPublishCta: e.target.checked })}
-                  className="h-4 w-4 rounded-md accent-blue-600 cursor-pointer"
-                />
-              </label>
-
-              {/* Safe Harbor Trust Toggle */}
-              <label className="flex items-center justify-between p-3 rounded-2xl border border-[var(--color-border-subtle)] bg-surface/50 hover:bg-surface/80 transition-colors cursor-pointer">
-                <div className="flex items-center gap-3">
-                  <ShieldCheck className="h-4 w-4 text-emerald-400" />
-                  <div>
-                    <div className="text-xs font-semibold text-[var(--color-text-primary)]">
-                      {isTr ? "%100 Komisyonsuzluk & Güven Rozeti" : "Zero Commission Trust Badge"}
-                    </div>
-                    <div className="text-[11px] text-[var(--color-text-tertiary)]">
-                      {isTr ? "Platform kuralları ve doğrudan anlaşma güvencesi" : "Safe harbor direct contact guarantee"}
-                    </div>
-                  </div>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={settings.showSafeHarborTrust}
-                  onChange={(e) => updateSettings({ showSafeHarborTrust: e.target.checked })}
                   className="h-4 w-4 rounded-md accent-blue-600 cursor-pointer"
                 />
               </label>

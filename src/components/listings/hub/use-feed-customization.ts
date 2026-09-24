@@ -5,16 +5,16 @@ import { useState, useEffect, useCallback } from "react";
 export interface FeedCustomizationSettings {
   // Left Panel Widgets
   showProfileCard: boolean;
-  showFollowedCategories: boolean;
-  showQuickFilters: boolean;
   showWorkspaceShortcuts: boolean;
+  showFollowedCategories: boolean;
+  showQuickFilters?: boolean;
 
   // Right Panel Widgets
-  showFreshnessRadar: boolean;
+  showPublishCta: boolean;
   showTrendingTech: boolean;
   showSuggestedCategories: boolean;
-  showPublishCta: boolean;
-  showSafeHarborTrust: boolean;
+  showFreshnessRadar?: boolean;
+  showSafeHarborTrust?: boolean;
 
   // Feed Behavior
   defaultFeedMode: "all" | "following";
@@ -23,14 +23,14 @@ export interface FeedCustomizationSettings {
 
 export const DEFAULT_FEED_CUSTOMIZATION: FeedCustomizationSettings = {
   showProfileCard: true,
-  showFollowedCategories: true,
-  showQuickFilters: true,
   showWorkspaceShortcuts: true,
-  showFreshnessRadar: true,
+  showFollowedCategories: true,
+  showQuickFilters: false,
+  showPublishCta: true,
   showTrendingTech: true,
   showSuggestedCategories: true,
-  showPublishCta: true,
-  showSafeHarborTrust: true,
+  showFreshnessRadar: false,
+  showSafeHarborTrust: false,
   defaultFeedMode: "all",
   density: "comfortable",
 };

@@ -323,15 +323,57 @@ export function useListingsHubState({
       .filter(Boolean);
   }, [categorySlug]);
 
-  // Extract trending tags from listings with fallback
+  // Real search trends from search_trends table (auto-refreshed)
+  const [searchTrendKeywords, setSearchTrendKeywords] = useState<string[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`/api/search/trending?locale=${locale}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (isMounted && Array.isArray(data?.trending)) {
+          setSearchTrendKeywords(data.trending.map((t: string) => t.toLowerCase()));
+        }
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, [locale]);
+
+  // Extract trending tags with Time-Decayed Interaction Momentum & Search Blending
+  // Absolutely ZERO hardcoded mock data!
   const trendingTags: TrendingTagItem[] = useMemo(() => {
+    const now = Date.now();
+    const HALF_LIFE_HOURS = 72; // 3 days
+    const searchBoostSet = new Set(searchTrendKeywords);
+
+    // Tag stats tracking: decayed score, occurrence count, primary category
+    const tagScoreMap = new Map<string, number>();
     const tagCountMap = new Map<string, number>();
     const tagCategoryMap = new Map<string, string>();
+
     items.forEach((item) => {
+      // Age in hours
+      const itemTime = item.lastActivatedAt ? new Date(item.lastActivatedAt).getTime() : now;
+      const ageHours = Math.max(0, (now - itemTime) / (1000 * 60 * 60));
+      const timeDecay = Math.pow(2, -ageHours / HALF_LIFE_HOURS);
+
+      // Interaction weight: base 1.0 + clicks * 1.5 + views * 0.5
+      const interactionWeight = 1.0 + (item.clickCount || 0) * 1.5 + (item.viewCount || 0) * 0.5;
+      const listingScore = interactionWeight * timeDecay;
+
       item.tags?.forEach((t) => {
         const cleanTag = t.trim();
         if (cleanTag) {
+          const lower = cleanTag.toLowerCase();
           tagCountMap.set(cleanTag, (tagCountMap.get(cleanTag) || 0) + 1);
+
+          // Additional search boost if users are searching for this tech
+          const searchMultiplier = searchBoostSet.has(lower) ? 2.5 : 1.0;
+          const currentScore = tagScoreMap.get(cleanTag) || 0;
+          tagScoreMap.set(cleanTag, currentScore + listingScore * searchMultiplier);
+
           if (!tagCategoryMap.has(cleanTag)) {
             tagCategoryMap.set(cleanTag, item.categoryName);
           }
@@ -339,33 +381,22 @@ export function useListingsHubState({
       });
     });
 
-    const list = Array.from(tagCountMap.entries())
-      .map(([tag, count]) => ({
+    const list = Array.from(tagScoreMap.entries())
+      .map(([tag, score]) => ({
         tag,
-        count,
+        count: tagCountMap.get(tag) || 1,
         category: tagCategoryMap.get(tag) || (isTr ? "Yazılım & Teknoloji" : "Software & Tech"),
+        score,
       }))
-      .sort((a, b) => b.count - a.count);
+      .sort((a, b) => b.score - a.score || b.count - a.count);
 
-    if (list.length >= 4) return list.slice(0, 5);
-
-    const fallbackList = [
-      { tag: "Go", count: 24, category: isTr ? "Fintech & Backend" : "Fintech & Backend" },
-      { tag: "PostgreSQL", count: 18, category: isTr ? "Veritabanı & API" : "Database & API" },
-      { tag: "React", count: 15, category: isTr ? "Frontend & Web" : "Frontend & Web" },
-      { tag: "Flutter", count: 12, category: isTr ? "Mobil Geliştirme" : "Mobile Development" },
-      { tag: "AI", count: 9, category: isTr ? "Yapay Zeka & Otomasyon" : "AI & Automation" },
-    ];
-
-    const existingNames = new Set(list.map((l) => l.tag.toLowerCase()));
-    const merged = [...list];
-    for (const fb of fallbackList) {
-      if (!existingNames.has(fb.tag.toLowerCase()) && merged.length < 5) {
-        merged.push(fb);
-      }
-    }
-    return merged;
-  }, [items, isTr]);
+    // Return real authentic tags (max 5). Zero hardcoded mock fallback.
+    return list.slice(0, 5).map(({ tag, count, category }) => ({
+      tag,
+      count,
+      category,
+    }));
+  }, [items, isTr, searchTrendKeywords]);
 
   return {
     isTr,

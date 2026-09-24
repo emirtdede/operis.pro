@@ -6,6 +6,7 @@ import { SortDropdown } from "@/src/components/ui/sort-dropdown";
 import { Button } from "@/src/components/ui/button";
 import { getLocalizedRoute } from "@/src/lib/i18n/routes";
 import { AdvancedFilterModal } from "./advanced-filter-modal";
+import { recordUserAffinity } from "@/src/lib/recommendations/user-affinity";
 
 export interface ListingsSearchHeaderProps {
   isTr: boolean;
@@ -62,6 +63,16 @@ export function ListingsSearchHeader({
           <form
             method="GET"
             action={basePath}
+            onSubmit={(e) => {
+              const formData = new FormData(e.currentTarget);
+              const q = formData.get("q") as string;
+              if (q && q.trim()) {
+                recordUserAffinity({
+                  type: "search",
+                  query: q.trim(),
+                });
+              }
+            }}
             className="relative flex-1"
             role="search"
           >

@@ -153,6 +153,8 @@ export function ListingsFeedView({
               title={item.title}
               summary={item.summary}
               categoryName={item.categoryName}
+              categorySlug={item.categorySlug}
+              tags={item.tags}
               budgetMode={item.budgetMode}
               budgetCurrency={item.budgetCurrency}
               budgetMin={item.budgetMin ? String(item.budgetMin) : null}
