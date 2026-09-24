@@ -1,20 +1,30 @@
 import {
+  User,
+  Briefcase,
   Sliders,
-  Shield,
-  Eye,
+  Building2,
   Lock,
-  Megaphone,
   Bell,
+  Shield,
   type LucideIcon,
 } from "lucide-react";
 
 export type SettingsCategory =
+  | "profile"
+  | "work"
   | "account"
+  | "corporate"
   | "security"
-  | "visibility"
-  | "privacy"
-  | "advertising"
-  | "notifications";
+  | "notifications"
+  | "privacy";
+
+export interface ProfileLinkItem {
+  id?: string;
+  type: string;
+  label: string;
+  url: string;
+  sortOrder?: number;
+}
 
 export interface SettingsViewProps {
   initialProfile: {
@@ -23,8 +33,12 @@ export interface SettingsViewProps {
     headline?: string | null;
     about: string | null;
     avatarUrl?: string | null;
+    avatarSource?: string | null;
+    links?: ProfileLinkItem[];
+    roles?: string[];
     showLocation: boolean;
     revealPhoneAfterMatch: boolean;
+    allowSearchIndex?: boolean;
     locale: string;
     theme: string;
     preferredContactChannel?: string | null;
@@ -44,6 +58,10 @@ export interface SettingsViewProps {
     taxOffice?: string | null;
     vknMasked?: string | null;
     companyVerifiedAt?: Date | string | null;
+    invoiceAddress?: string | null;
+    iban?: string | null;
+    bankName?: string | null;
+    accountHolder?: string | null;
   };
   twoFactorEnabled: boolean;
   locale: string;
@@ -54,6 +72,25 @@ export interface SettingsCategoryItem {
   label: string;
   desc: string;
   icon: LucideIcon;
+  badge?: string;
+  keywords: string[];
+}
+
+export function normalizeCategory(tab?: string | null): SettingsCategory {
+  if (tab === "visibility") return "privacy";
+  if (tab === "advertising") return "notifications";
+  if (
+    tab === "profile" ||
+    tab === "work" ||
+    tab === "account" ||
+    tab === "corporate" ||
+    tab === "security" ||
+    tab === "notifications" ||
+    tab === "privacy"
+  ) {
+    return tab;
+  }
+  return "profile";
 }
 
 export function getMarketingConsentFeedback(consent: boolean, isTr: boolean): string {
@@ -87,40 +124,53 @@ export function getExportDataButtonLabel(exportLoading: boolean, isTr: boolean):
 export function getSettingsCategories(isTr: boolean): SettingsCategoryItem[] {
   return [
     {
+      id: "profile",
+      label: isTr ? "Profil & Kimlik" : "Profile & Identity",
+      desc: isTr ? "Kullanıcı adı, isim, ünvan, bio ve bağlantılar" : "Handle, name, headline, bio, and social links",
+      icon: User,
+      keywords: ["handle", "kullanıcı adı", "isim", "ad", "soyad", "name", "bio", "biyografi", "avatar", "fotoğraf", "resim", "link", "github", "linkedin", "website"],
+    },
+    {
+      id: "work",
+      label: isTr ? "Müsaitlik & Çalışma" : "Availability & Work",
+      desc: isTr ? "Müsaitlik durumu, haftalık saat, iş türü tercihleri" : "Availability status, weekly hours, contract type",
+      icon: Briefcase,
+      keywords: ["müsaitlik", "availability", "çalışma", "saat", "hours", "retainer", "freelance", "fulltime", "kontrat", "bütçe", "ücret"],
+    },
+    {
       id: "account",
-      label: isTr ? "Hesap Tercihleri" : "Account preferences",
-      desc: isTr ? "Dil, tema, saat dilimi ve hesap yönetimi" : "Language, theme, time zone, account close",
+      label: isTr ? "Hesap & Bölgesel" : "Account & Region",
+      desc: isTr ? "E-posta, bağlı Google hesabı, dil, tema ve saat dilimi" : "Email, connected Google account, language, theme",
       icon: Sliders,
+      keywords: ["email", "e-posta", "google", "oauth", "dil", "language", "tema", "theme", "karanlık", "dark", "saat dilimi", "timezone", "iletişim", "whatsapp"],
+    },
+    {
+      id: "corporate",
+      label: isTr ? "Kurumsal & Fatura" : "Corporate & Billing",
+      desc: isTr ? "GİB vergi doğrulaması, fatura adresi ve IBAN" : "Tax verification, invoice details, and IBAN payout",
+      icon: Building2,
+      keywords: ["vergi", "tax", "vkn", "tckn", "fatura", "invoice", "şirket", "company", "iban", "banka", "bank", "hakediş", "kurumsal"],
     },
     {
       id: "security",
-      label: isTr ? "Giriş ve Güvenlik" : "Sign in & security",
-      desc: isTr ? "Şifre, 2FA ve aktif oturumlar" : "Password, 2FA, and active sessions",
+      label: isTr ? "Giriş & Güvenlik" : "Sign-in & Security",
+      desc: isTr ? "Şifre, 2FA doğrulaması ve aktif oturum cihazları" : "Password, 2FA auth, and active session devices",
       icon: Lock,
-    },
-    {
-      id: "visibility",
-      label: isTr ? "Görünürlük" : "Visibility",
-      desc: isTr ? "Profil, konum ve telefon gizliliği" : "Profile discovery, location, phone privacy",
-      icon: Eye,
-    },
-    {
-      id: "privacy",
-      label: isTr ? "Veri Gizliliği" : "Data privacy",
-      desc: isTr ? "KVKK/GDPR hakları ve verileri indirme" : "Data rights, export archive, search history",
-      icon: Shield,
-    },
-    {
-      id: "advertising",
-      label: isTr ? "Reklam ve Pazarlama" : "Advertising data",
-      desc: isTr ? "Bülten, eşleştirme ve ticari iletiler" : "Newsletter, match algorithms, commercial notices",
-      icon: Megaphone,
+      keywords: ["şifre", "password", "2fa", "totp", "güvenlik", "security", "oturum", "sessions", "cihaz", "device", "ip"],
     },
     {
       id: "notifications",
-      label: isTr ? "Bildirimler" : "Notifications",
-      desc: isTr ? "İlan, teklif ve e-posta bildirim sıklığı" : "Listings, bids, digest frequency",
+      label: isTr ? "Bildirim Matrisi" : "Notifications Matrix",
+      desc: isTr ? "İlan, teklif, mesaj ve bülten bildirim sıklığı" : "Listings, offers, chats, and newsletter alerts",
       icon: Bell,
+      keywords: ["bildirim", "notification", "ilan", "radar", "teklif", "offer", "mesaj", "bülten", "newsletter", "push", "ses"],
+    },
+    {
+      id: "privacy",
+      label: isTr ? "Gizlilik & KVKK" : "Privacy & KVKK",
+      desc: isTr ? "Telefon/konum gizliliği, veri indirme, tehlike bölgesi" : "Phone/location privacy, data export, danger zone",
+      icon: Shield,
+      keywords: ["gizlilik", "privacy", "telefon", "phone", "konum", "location", "kvkk", "gdpr", "export", "veri indir", "engellenen", "block", "sil", "delete", "dondur"],
     },
   ];
 }

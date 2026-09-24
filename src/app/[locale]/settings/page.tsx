@@ -84,8 +84,11 @@ export default async function SettingsPage({
     headline: (profile as { headline?: string | null })?.headline || null,
     about: profile?.about || "",
     avatarUrl: profile?.avatarUrl || "",
+    links: (profile as { links?: Array<{ id?: string; type: string; label: string; url: string; sortOrder?: number }> })?.links || [],
+    roles: (profile as { roles?: string[] })?.roles || ["freelancer"],
     showLocation: profile?.showLocation ?? true,
     revealPhoneAfterMatch: profile?.revealPhoneAfterMatch ?? false,
+    allowSearchIndex: true,
     preferredContactChannel:
       (profile as { preferredContactChannel?: string | null })?.preferredContactChannel || "any",
     timeZone: (profile as { timeZone?: string | null })?.timeZone || "Europe/Istanbul",
