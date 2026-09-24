@@ -7,6 +7,7 @@ import { verifyPassword, hashPassword } from "@/src/lib/crypto";
 import { DEFAULT_USER } from "@/src/modules/auth/demo-user";
 
 import { evaluateSecurityAccessAsync, getClientIp } from "@/src/lib/security/rate-limit";
+import { SecurityAuditService } from "@/src/modules/security/audit-service";
 
 const createChangePasswordSchema = (isEn: boolean) =>
   z
@@ -159,6 +160,14 @@ export async function POST(req: Request) {
       role: session.role,
       status: "ACTIVE",
       authVersion: newAuthVersion,
+    });
+
+    // Log user-specific security event (B23)
+    await SecurityAuditService.logEvent({
+      userId: session.userId,
+      eventType: "PASSWORD_CHANGED",
+      ipAddress: ip,
+      userAgent: req.headers.get("user-agent"),
     });
 
     const response = NextResponse.json(

@@ -13,7 +13,14 @@ export interface LogSecurityEventInput {
     | "TOTP_ENABLED"
     | "TOTP_DISABLED"
     | "ACCOUNT_DELETED"
-    | "SUSPICIOUS_ACTIVITY";
+    | "SUSPICIOUS_ACTIVITY"
+    | "PROFILE_UPDATED"
+    | "HANDLE_CHANGED"
+    | "AVAILABILITY_CHANGED"
+    | "LINKS_UPDATED"
+    | "BILLING_UPDATED"
+    | "PREFERENCES_UPDATED"
+    | "SESSIONS_TERMINATED";
   ipAddress?: string | null;
   userAgent?: string | null;
   riskMetadata?: Record<string, unknown>;
@@ -40,6 +47,32 @@ export class SecurityAuditService {
       });
     } catch {
       // Non-blocking write: never fail auth flows due to audit logging
+    }
+  }
+
+  /**
+   * Retrieves recent audit logs specifically belonging to the given user.
+   */
+  static async getUserAuditLogs(userId: string, limit: number = 15) {
+    try {
+      const { eq, desc } = await import("drizzle-orm");
+      const db = getDb();
+      const logs = await db
+        .select({
+          id: schema.securityEvents.id,
+          eventType: schema.securityEvents.eventType,
+          ipAddress: schema.securityEvents.ipAddress,
+          createdAt: schema.securityEvents.createdAt,
+          riskMetadata: schema.securityEvents.riskMetadata,
+        })
+        .from(schema.securityEvents)
+        .where(eq(schema.securityEvents.userId, userId))
+        .orderBy(desc(schema.securityEvents.createdAt))
+        .limit(limit);
+
+      return logs;
+    } catch {
+      return [];
     }
   }
 }

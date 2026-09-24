@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import Link from "next/link";
 import {
   Lock,
@@ -12,6 +12,9 @@ import {
   LogOut,
   Loader2,
   CheckCircle2,
+  History,
+  RefreshCw,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { TextInput } from "@/src/components/ui/text-input";
@@ -50,6 +53,39 @@ export function SecuritySettingsTab({
   const [loggingOutOthers, setLoggingOutOthers] = useState(false);
   const [loggedOutMessage, setLoggedOutMessage] = useState<string | null>(null);
 
+  // Audit Logs state
+  const [auditLogs, setAuditLogs] = useState<
+    Array<{
+      id: string;
+      eventType: string;
+      label: string;
+      ipAddress: string;
+      createdAt: string;
+    }>
+  >([]);
+  const [logsLoading, setLogsLoading] = useState(false);
+
+  const fetchAuditLogs = async () => {
+    setLogsLoading(true);
+    try {
+      const res = await fetch("/api/account/audit-logs", {
+        headers: { "x-locale": locale },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setAuditLogs(data.logs || []);
+      }
+    } catch {
+      // Non-blocking
+    } finally {
+      setLogsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAuditLogs();
+  }, [locale]);
+
   // Password strength calculation
   const hasMinLen = newPassword.length >= 12;
   const hasUpper = /[A-Z]/.test(newPassword);
@@ -70,15 +106,27 @@ export function SecuritySettingsTab({
     setLoggingOutOthers(true);
     setLoggedOutMessage(null);
     try {
-      // Clear other sessions
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      const res = await fetch("/api/auth/logout-other-sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-locale": locale },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || "Failed");
+      }
+      setLoggedOutMessage(
+        data.message ||
+          (isTr
+            ? "Bu cihaz haricindeki diğer tüm aktif oturumlar başarıyla sonlandırıldı."
+            : "All other active sessions have been terminated.")
+      );
+      fetchAuditLogs();
+    } catch {
       setLoggedOutMessage(
         isTr
-          ? "Bu cihaz haricindeki diğer tüm aktif oturumlar başarıyla sonlandırıldı."
-          : "All other active sessions have been terminated."
+          ? "Oturumlar sonlandırılırken bir hata oluştu."
+          : "Failed to terminate other sessions."
       );
-    } catch {
-      // Fallback
     } finally {
       setLoggingOutOthers(false);
     }
@@ -312,6 +360,76 @@ export function SecuritySettingsTab({
             {isTr ? "Canlı" : "Active"}
           </Badge>
         </div>
+      </div>
+
+      {/* 4. Hesap Güvenlik ve İşlem Günlüğü (Audit Log) */}
+      <div className="pt-6 border-t border-[var(--color-border-subtle)] space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <label className="text-xs font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
+              <History className="h-4 w-4 text-blue-400" />
+              <span>{isTr ? "Hesap İşlem ve Güvenlik Günlüğü" : "Account Security & Audit Log"}</span>
+            </label>
+            <p className="text-[11px] text-[var(--color-text-tertiary)] mt-0.5">
+              {isTr
+                ? "Hesabınızda gerçekleştirilen son güvenlik, şifre ve profil değişiklikleri."
+                : "Recent authentication, credential, and profile modifications on your account."}
+            </p>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={fetchAuditLogs}
+            disabled={logsLoading}
+            className="text-[11px] gap-1 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] cursor-pointer"
+          >
+            <RefreshCw className={`h-3 w-3 ${logsLoading ? "animate-spin" : ""}`} />
+            <span>{isTr ? "Yenile" : "Refresh"}</span>
+          </Button>
+        </div>
+
+        {logsLoading && auditLogs.length === 0 ? (
+          <div className="p-4 text-center text-xs text-[var(--color-text-tertiary)] flex items-center justify-center gap-2">
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            <span>{isTr ? "İşlem günlüğü yükleniyor..." : "Loading activity log..."}</span>
+          </div>
+        ) : auditLogs.length > 0 ? (
+          <div className="rounded-2xl border border-[var(--color-border-subtle)] overflow-hidden divide-y divide-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/20">
+            {auditLogs.map((log) => {
+              const dateStr = new Date(log.createdAt).toLocaleString(isTr ? "tr-TR" : "en-US", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+              return (
+                <div key={log.id} className="p-3 flex items-center justify-between gap-3 text-xs">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <ShieldCheck className="h-4 w-4 text-blue-400 shrink-0" />
+                    <div className="min-w-0">
+                      <div className="font-semibold text-[var(--color-text-primary)] truncate">
+                        {log.label}
+                      </div>
+                      <div className="text-[10px] text-[var(--color-text-tertiary)] mt-0.5">
+                        IP: {log.ipAddress}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-[10px] text-[var(--color-text-tertiary)] shrink-0 font-mono">
+                    {dateStr}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="p-4 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/20 text-center text-xs text-[var(--color-text-tertiary)]">
+            {isTr
+              ? "Henüz kaydedilmiş bir güvenlik işlemi bulunmuyor."
+              : "No recent security activity recorded yet."}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import {
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
+import { SecurityAuditService } from "@/src/modules/security/audit-service";
 
 export async function POST(req: Request) {
   const headerLocale = req.headers.get("x-locale");
@@ -50,6 +51,26 @@ export async function POST(req: Request) {
 
     const links = body.links;
     await ProfileService.updateLinks(session.userId, links);
+
+    // Log user audit event
+    await SecurityAuditService.logEvent({
+      userId: session.userId,
+      eventType: "LINKS_UPDATED",
+      ipAddress: ip,
+      userAgent: req.headers.get("user-agent"),
+      riskMetadata: {
+        linkCount: links.length,
+      },
+    });
+
+    // Revalidate paths
+    try {
+      const { revalidatePath } = await import("next/cache");
+      revalidatePath("/tr/settings");
+      revalidatePath("/en/settings");
+    } catch {
+      // Non-fatal
+    }
 
     return NextResponse.json(
       {

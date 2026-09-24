@@ -7,6 +7,7 @@ import { getSession } from "@/src/modules/auth/session";
 import { ProfileService } from "@/src/modules/profiles/service";
 import { SettingsView } from "@/src/components/settings/settings-view";
 import { Button } from "@/src/components/ui/button";
+import { getLocalizedProfilePath } from "@/src/lib/i18n/routes";
 
 export async function generateMetadata({
   params,
@@ -152,7 +153,7 @@ export default async function SettingsPage({
 
         <div className="flex items-center gap-2">
           <Link
-            href={isTr ? `/tr/profil/${initialProfile.handle}` : `/en/profile/${initialProfile.handle}`}
+            href={getLocalizedProfilePath(initialProfile.handle, locale)}
           >
             <Button variant="outline" size="sm">
               <span>{isTr ? "Profili Görüntüle" : "View Public Profile"}</span>

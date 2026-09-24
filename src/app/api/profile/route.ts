@@ -6,6 +6,7 @@ import {
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
+import { SecurityAuditService } from "@/src/modules/security/audit-service";
 
 export async function GET(req: Request) {
   const locale = req.headers.get("x-locale") || "tr";
@@ -61,6 +62,44 @@ export async function PATCH(req: Request) {
     }
 
     await ProfileService.updateProfile(session.userId, body);
+
+    // Determine eventType for audit log
+    let eventType: "HANDLE_CHANGED" | "AVAILABILITY_CHANGED" | "PREFERENCES_UPDATED" | "PROFILE_UPDATED" = "PROFILE_UPDATED";
+    if (body.handle) {
+      eventType = "HANDLE_CHANGED";
+    } else if (body.availabilityStatus || body.availabilityHoursPerWeek !== undefined || body.availableFromDate !== undefined) {
+      eventType = "AVAILABILITY_CHANGED";
+    } else if (body.theme || body.preferredContactChannel || body.timeZone) {
+      eventType = "PREFERENCES_UPDATED";
+    }
+
+    // Log account-specific audit event (B23)
+    await SecurityAuditService.logEvent({
+      userId: session.userId,
+      eventType,
+      ipAddress: ip,
+      userAgent: req.headers.get("user-agent"),
+      riskMetadata: {
+        keys: Object.keys(body),
+        handle: body.handle || undefined,
+        availabilityStatus: body.availabilityStatus || undefined,
+      },
+    });
+
+    // Revalidate public profile and settings paths for instant reflection
+    try {
+      const { revalidatePath } = await import("next/cache");
+      if (body.handle) {
+        revalidatePath(`/tr/u/${body.handle}`);
+        revalidatePath(`/en/u/${body.handle}`);
+      }
+      revalidatePath("/tr/settings");
+      revalidatePath("/en/settings");
+      revalidatePath("/tr");
+      revalidatePath("/en");
+    } catch {
+      // Non-fatal cache revalidation
+    }
 
     return NextResponse.json(
       {
