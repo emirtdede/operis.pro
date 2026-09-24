@@ -36,13 +36,22 @@ function registerGracefulShutdown(p: pg.Pool) {
 export function getDbPool(): pg.Pool {
   if (!globalForDb.operisDbPool) {
     const env = getEnv();
+    let connString = env.DATABASE_URL;
+
+    // Supabase Pooler: automatically use Transaction Mode (Port 6543) instead of Session Mode (Port 5432)
+    // in serverless production to prevent (EMAXCONNSESSION) pool_size: 15 exhaustion.
+    if (connString.includes("pooler.supabase.com:5432")) {
+      connString = connString.replace(":5432", ":6543");
+    }
+
     const isSupabase =
-      env.DATABASE_URL.includes("supabase.co") || env.DATABASE_URL.includes("pooler.supabase.com");
+      connString.includes("supabase.co") || connString.includes("pooler.supabase.com");
+
     globalForDb.operisDbPool = new Pool({
-      connectionString: env.DATABASE_URL,
-      max: process.env.NODE_ENV === "production" ? 20 : 10,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 10000,
+      connectionString: connString,
+      max: process.env.NODE_ENV === "production" ? 4 : 10,
+      idleTimeoutMillis: 5000,
+      connectionTimeoutMillis: 5000,
       ssl: isSupabase ? { rejectUnauthorized: false } : undefined,
     });
 

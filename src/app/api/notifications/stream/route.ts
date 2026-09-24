@@ -59,10 +59,9 @@ export async function GET(req: Request) {
           safeEnqueue(`: ping\n\n`);
         }, 15000);
 
-        // 4. Lightweight DB check every 4 seconds for cross-worker / Inngest background job notifications
-        let lastSeenDate = new Date();
-        const dbPollInterval = setInterval(async () => {
-          if (isClosed) return;
+        // 4. Initial check on connection for any unread notifications created in the last 1 minute
+        const oneMinuteAgo = new Date(Date.now() - 60000);
+        (async () => {
           try {
             const db = getDb();
             const rows = await db
@@ -71,15 +70,13 @@ export async function GET(req: Request) {
               .where(
                 and(
                   eq(schema.notifications.userId, userId),
-                  gt(schema.notifications.createdAt, lastSeenDate)
+                  gt(schema.notifications.createdAt, oneMinuteAgo)
                 )
               )
-              .orderBy(schema.notifications.createdAt);
+              .orderBy(schema.notifications.createdAt)
+              .limit(10);
 
             for (const row of rows) {
-              if (row.createdAt > lastSeenDate) {
-                lastSeenDate = row.createdAt;
-              }
               sendNotification({
                 id: row.id,
                 userId: row.userId,
@@ -90,15 +87,20 @@ export async function GET(req: Request) {
               });
             }
           } catch {
-            // Non-critical; fallback to next poll
+            // Non-critical on initial connect
           }
-        }, 4000);
+        })();
+
+        // 5. Serverless lifecycle cap: Cleanly close after 45 seconds to prevent Vercel 300s function timeouts
+        const maxLifetimeTimer = setTimeout(() => {
+          doCleanup();
+        }, 45000);
 
       const doCleanup = () => {
         if (isClosed) return;
         isClosed = true;
         clearInterval(pingInterval);
-        clearInterval(dbPollInterval);
+        clearTimeout(maxLifetimeTimer);
         unsubscribe();
         try {
           controller.close();

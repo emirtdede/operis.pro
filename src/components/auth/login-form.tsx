@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useAuth } from "@clerk/nextjs";
 import { Mail, Lock, ShieldAlert, KeyRound, Eye, EyeOff } from "lucide-react";
 import { Button } from "../ui/button";
 import { TextInput } from "../ui/text-input";
@@ -25,6 +26,7 @@ function getSafeReturnUrl(url: string | undefined | null, fallback: string): str
 
 export function LoginForm({ locale, returnUrl }: LoginFormProps) {
   const isTr = locale === "tr";
+  const { isLoaded: clerkLoaded, isSignedIn: clerkSignedIn, userId: clerkUserId } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,20 +42,26 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
   const targetRedirect = getSafeReturnUrl(returnUrl, defaultRedirect);
 
   useEffect(() => {
-    // If already logged in, silently forward to target page without any intrusive banners
-    if (
-      typeof window !== "undefined" &&
-      (window as unknown as { Clerk?: { session?: unknown } }).Clerk?.session
-    ) {
-      fetch("/api/auth/clerk-sync", { method: "POST" })
+    // If already logged in via Clerk, silently sync and forward to target page immediately
+    if (clerkLoaded && clerkSignedIn && clerkUserId) {
+      setIsLoading(true);
+      fetch("/api/auth/clerk-sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clerkUserId }),
+      })
         .then((res) => {
           if (res.ok) {
             window.location.href = targetRedirect;
+          } else {
+            setIsLoading(false);
           }
         })
-        .catch(() => {});
+        .catch(() => {
+          setIsLoading(false);
+        });
     }
-  }, [targetRedirect]);
+  }, [clerkLoaded, clerkSignedIn, clerkUserId, targetRedirect]);
 
   const handleSocialError = (msg: string) => {
     if (msg.toLowerCase().includes("already signed in") || msg.includes("session_exists")) {

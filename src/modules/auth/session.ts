@@ -263,8 +263,17 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
       status: dbUser.status,
       authVersion: dbUser.authVersion,
     };
-  } catch {
-    // If DB check fails in non-production or test environments, check demo user status or return signed session
+  } catch (dbErr) {
+    // RESILIENCE FALLBACK:
+    // If the database query temporarily fails (e.g. transient pool timeout, cold start latency, connection spike),
+    // DO NOT destroy the user's valid active session or redirect them to the login screen!
+    // The HMAC-SHA256 signature of the session token was ALREADY cryptographically verified above by verifySessionToken().
+    // As long as the session has not expired and token signature is authentic, preserve the session.
+    console.warn(
+      "[Session Auth] Transient DB verification error, preserving cryptographically signed session:",
+      dbErr instanceof Error ? dbErr.message : dbErr
+    );
+
     if (process.env.NODE_ENV !== "production" || process.env.VITEST) {
       try {
         const { DEFAULT_USER } = await import("@/src/modules/auth/demo-user");
@@ -274,7 +283,9 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
       } catch {
         // Ignore demo user lookup error
       }
-      if (session.status !== "ACTIVE") return null;
+    }
+
+    if (session.status === "ACTIVE") {
       return session;
     }
     return null;

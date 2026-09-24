@@ -2,6 +2,7 @@
 
 import React from "react";
 import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkSessionSync } from "./clerk-session-sync";
 
 export interface OperisClerkProviderProps {
   children: React.ReactNode;
@@ -23,6 +24,7 @@ export function OperisClerkProvider({ children, locale = "tr" }: OperisClerkProv
       signInUrl={isTr ? "/tr/giris" : "/en/login"}
       signUpUrl={isTr ? "/tr/kayit" : "/en/register"}
     >
+      <ClerkSessionSync />
       {children}
       <div id="clerk-captcha" />
     </ClerkProvider>
