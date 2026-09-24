@@ -296,7 +296,7 @@ export function HandoverProtocolModal({
   const isAccepted = handover.status === "ACCEPTED_EXPRESS" || handover.status === "ACCEPTED_TACIT";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-200">
       <div className="relative w-full max-w-4xl max-h-[92vh] flex flex-col rounded-3xl border border-cyan-500/40 bg-[var(--color-surface-base)] shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-4 border-b border-[var(--color-border-subtle)] bg-gradient-to-r from-cyan-950/30 via-[var(--color-surface-base)] to-blue-950/30 shrink-0">

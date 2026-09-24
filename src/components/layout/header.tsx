@@ -145,7 +145,11 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
   const sessionCacheRef = useRef<Map<string, SearchListingResult[]>>(new Map());
 
   const isTr = locale === "tr";
-  const session = initialSession;
+  const [session, setSession] = useState<SessionPayload | null>(initialSession ?? null);
+
+  useEffect(() => {
+    setSession(initialSession ?? null);
+  }, [initialSession]);
 
   // Fetch dynamic trending searches with hybrid blending
   useEffect(() => {
@@ -450,9 +454,10 @@ export function Header({ initialSession, initialProfile }: HeaderProps) {
         }
       }
       await fetch("/api/auth/logout", { method: "POST" });
-      router.push(`/${locale}`);
-      router.refresh();
+      setSession(null);
+      window.location.href = `/${locale}`;
     } catch {
+      setSession(null);
       window.location.href = `/${locale}`;
     }
   };

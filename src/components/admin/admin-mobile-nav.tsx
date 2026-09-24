@@ -96,7 +96,7 @@ export function AdminMobileNav({ navItems, alertEngines }: AdminMobileNavProps) 
         >
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 bg-black/80 transition-opacity"
             onClick={() => setIsOpen(false)}
             aria-hidden="true"
           />

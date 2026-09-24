@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Bell, Inbox, Send, Handshake, CheckCheck, Mail, Compass } from "lucide-react";
+import { Bell, Inbox, Send, Handshake, CheckCheck, Mail, Compass, Search, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { EmptyState } from "../ui/empty-state";
 import { getAlternateLocalePath } from "@/src/lib/i18n/routes";
@@ -37,11 +37,21 @@ function getNotificationTitle(item: NotificationItem, isTr: boolean): string {
 export function NotificationsView({ initialNotifications, locale }: NotificationsViewProps) {
   const isTr = locale === "tr";
   const [notifications, setNotifications] = useState<NotificationItem[]>(initialNotifications);
+  const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<"all" | "unread">("all");
   const [isMarkingAll, setIsMarkingAll] = useState(false);
 
+  const query = searchQuery.trim().toLowerCase();
   const filtered = notifications.filter((n) => {
-    if (filter === "unread") return !n.readAt;
+    if (filter === "unread" && n.readAt) return false;
+    if (query) {
+      const title = getNotificationTitle(n, isTr).toLowerCase();
+      const rawMessage = String(n.payloadJson?.message || n.payloadJson?.messageText || "").toLowerCase();
+      const type = n.type.toLowerCase();
+      if (!title.includes(query) && !rawMessage.includes(query) && !type.includes(query)) {
+        return false;
+      }
+    }
     return true;
   });
 
@@ -152,73 +162,121 @@ export function NotificationsView({ initialNotifications, locale }: Notification
 
   return (
     <div className="space-y-6">
-      {/* Action Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-border-subtle)] pb-4">
-        <div className="flex items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => setFilter("all")}
-            className={`rounded-xl px-3.5 py-1.5 text-xs font-medium transition-colors ${
-              filter === "all"
-                ? "bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] font-semibold shadow-sm"
-                : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
-            }`}
-          >
-            {isTr ? "Tümü" : "All"} ({notifications.length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setFilter("unread")}
-            className={`rounded-xl px-3.5 py-1.5 text-xs font-medium transition-colors ${
-              filter === "unread"
-                ? "bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] font-semibold shadow-sm"
-                : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
-            }`}
-          >
-            {isTr ? "Okunmamış" : "Unread"} ({unreadCount})
-          </button>
+      {/* Action Header: Search Input + Filter Tabs + Mark All Read */}
+      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 border-b border-[var(--color-border-subtle)] pb-4">
+        {/* Full-width Search Input */}
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-text-tertiary)]" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={isTr ? "Bildirimlerde ara..." : "Search notifications..."}
+            className="w-full pl-10 pr-9 py-2 rounded-xl text-xs sm:text-sm bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all truncate"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] cursor-pointer"
+              aria-label={isTr ? "Aramayı Temizle" : "Clear Search"}
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
 
-        {unreadCount > 0 && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleMarkAllRead}
-            isLoading={isMarkingAll}
-            className="gap-1.5 text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
-          >
-            <CheckCheck className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>{isTr ? "Tümünü Okundu İşaretle" : "Mark All as Read"}</span>
-          </Button>
-        )}
+        {/* Right side controls: Tabs & Mark All Read */}
+        <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2.5 shrink-0">
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setFilter("all")}
+              className={`rounded-xl px-3.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+                filter === "all"
+                  ? "bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] font-semibold shadow-sm"
+                  : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+              }`}
+            >
+              {isTr ? "Tümü" : "All"} ({notifications.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilter("unread")}
+              className={`rounded-xl px-3.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+                filter === "unread"
+                  ? "bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] font-semibold shadow-sm"
+                  : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+              }`}
+            >
+              {isTr ? "Okunmamış" : "Unread"} ({unreadCount})
+            </button>
+          </div>
+
+          {unreadCount > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleMarkAllRead}
+              isLoading={isMarkingAll}
+              className="gap-1.5 text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] cursor-pointer"
+            >
+              <CheckCheck className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>{isTr ? "Tümünü Okundu İşaretle" : "Mark All as Read"}</span>
+            </Button>
+          )}
+        </div>
       </div>
 
       {filtered.length === 0 ? (
-        <EmptyState
-          variant="card"
-          icon={<Bell className="h-7 w-7 text-blue-400" />}
-          title={emptyTitle}
-          description={emptyDescription}
+        query ? (
+          <EmptyState
+            variant="card"
+            icon={<Search className="h-7 w-7 text-blue-400" />}
+            title={isTr ? "Aramanızla Eşleşen Bildirim Bulunamadı" : "No Matching Notifications Found"}
+            description={
+              isTr
+                ? `"${searchQuery}" aramasıyla eşleşen herhangi bir bildirim bulunamadı.`
+                : `No notifications matched your search "${searchQuery}".`
+            }
             action={
-              filter === "unread" ? (
               <Button
                 variant="secondary"
                 size="sm"
-                onClick={() => setFilter("all")}
+                onClick={() => setSearchQuery("")}
                 className="cursor-pointer"
               >
-                {isTr ? "Tüm Bildirimleri Göster" : "View All Notifications"}
+                {isTr ? "Aramayı Temizle" : "Clear Search"}
               </Button>
-            ) : (
-              <Link href={isTr ? "/tr/ilanlar" : "/en/listings"}>
-                <Button variant="shimmer" size="md" className="gap-2 shadow-lg shadow-blue-500/15">
-                  <Compass className="h-4 w-4" />
-                  <span>{isTr ? "İlanları Keşfet" : "Explore Listings"}</span>
+            }
+          />
+        ) : (
+          <EmptyState
+            variant="card"
+            icon={<Bell className="h-7 w-7 text-blue-400" />}
+            title={emptyTitle}
+            description={emptyDescription}
+            action={
+              filter === "unread" ? (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setFilter("all")}
+                  className="cursor-pointer"
+                >
+                  {isTr ? "Tüm Bildirimleri Göster" : "View All Notifications"}
                 </Button>
-              </Link>
-            )
-          }
-        />
+              ) : (
+                <Link href={isTr ? "/tr/ilanlar" : "/en/listings"}>
+                  <Button variant="shimmer" size="md" className="gap-2 shadow-lg shadow-blue-500/15">
+                    <Compass className="h-4 w-4" />
+                    <span>{isTr ? "İlanları Keşfet" : "Explore Listings"}</span>
+                  </Button>
+                </Link>
+              )
+            }
+          />
+        )
       ) : (
         <div className="space-y-3">
           {filtered.map((item) => {

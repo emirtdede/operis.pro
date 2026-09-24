@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Mail, Lock, ShieldAlert, KeyRound, Eye, EyeOff } from "lucide-react";
 import { Button } from "../ui/button";
 import { TextInput } from "../ui/text-input";
@@ -17,6 +16,8 @@ export interface LoginFormProps {
 function getSafeReturnUrl(url: string | undefined | null, fallback: string): string {
   if (!url) return fallback;
   if (/^\/(tr|en)(\/|$)/.test(url) && !url.startsWith("//")) {
+    if (url === "/tr/akis" || url === "/tr/feed") return "/tr/ilanlar?view=stream";
+    if (url === "/en/feed") return "/en/listings?view=stream";
     return url;
   }
   return fallback;
@@ -24,7 +25,6 @@ function getSafeReturnUrl(url: string | undefined | null, fallback: string): str
 
 export function LoginForm({ locale, returnUrl }: LoginFormProps) {
   const isTr = locale === "tr";
-  const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,7 +36,7 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
-  const defaultRedirect = isTr ? "/tr/akis" : "/en/feed";
+  const defaultRedirect = isTr ? "/tr/ilanlar?view=stream" : "/en/listings?view=stream";
   const targetRedirect = getSafeReturnUrl(returnUrl, defaultRedirect);
 
   useEffect(() => {
@@ -92,8 +92,8 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
         throw new Error(data.error || "Login failed");
       }
 
-      router.push(targetRedirect);
-      router.refresh();
+      // Full browser navigation so SSR layout picks up the new fp_session cookie immediately
+      window.location.href = targetRedirect;
     } catch (err: unknown) {
       const defaultErrMsg = isTr
         ? "Giriş yapılamadı. Bilgilerinizi kontrol ediniz."

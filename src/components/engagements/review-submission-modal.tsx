@@ -213,7 +213,7 @@ export function ReviewSubmissionModal({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md overflow-y-auto animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 overflow-y-auto animate-in fade-in duration-200"
     >
       <div className="relative w-full max-w-xl my-8 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] shadow-2xl p-6 sm:p-8 space-y-6">
         {/* Header */}

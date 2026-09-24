@@ -34,7 +34,7 @@ function SocialLoginButtonsConnected({
   const { isLoaded, signIn } = useSignIn();
   const { isSignedIn, userId, isLoaded: authLoaded } = useAuth();
 
-  const defaultRedirect = isTr ? "/tr/akis" : "/en/feed";
+  const defaultRedirect = isTr ? "/tr/ilanlar?view=stream" : "/en/listings?view=stream";
   const targetRedirect = returnUrl || defaultRedirect;
 
   const handleOAuth = async (strategy: OAuthProvider, providerName: string) => {
@@ -85,7 +85,7 @@ function SocialLoginButtonsConnected({
       await signIn.authenticateWithRedirect({
         strategy,
         redirectUrl: "/sso-callback",
-        redirectUrlComplete: targetRedirect,
+        redirectUrlComplete: `/sso-callback?redirect_url=${encodeURIComponent(targetRedirect)}`,
       });
     } catch (err: unknown) {
       const rawMsg = err instanceof Error ? err.message : String(err);

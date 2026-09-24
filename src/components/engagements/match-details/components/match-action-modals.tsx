@@ -125,7 +125,7 @@ export function MatchActionModals({
 
       {/* Cancel Engagement Confirmation Modal */}
       {cancelModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 animate-in fade-in">
           <div className="relative w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-4 sm:p-6 shadow-2xl">
             <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-3 shrink-0">
               <div className="flex items-center gap-2.5 text-rose-400 font-bold text-sm sm:text-base">
@@ -199,7 +199,7 @@ export function MatchActionModals({
 
       {/* Quick Ping Modal */}
       {pingModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 animate-in fade-in">
           <div className="relative w-full max-w-lg max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-4 sm:p-6 shadow-2xl">
             <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-3 shrink-0">
               <div className="flex items-center gap-2.5 text-amber-400 font-bold text-sm sm:text-base">
@@ -335,7 +335,7 @@ export function MatchActionModals({
 
       {/* Late Night Call Courtesy Notice Modal */}
       {showNightCallModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 animate-in fade-in">
           <div className="relative w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl border border-purple-500/30 bg-[var(--color-surface-base)] p-4 sm:p-6 shadow-2xl">
             <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-3 shrink-0">
               <div className="flex items-center gap-2.5 text-purple-400 font-bold text-sm sm:text-base">

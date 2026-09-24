@@ -393,7 +393,7 @@ export function ThreatsConsoleClient({ initialThreats }: ThreatsConsoleClientPro
 
       {/* Block IP Modal */}
       {blockModalIp && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in">
           <div className="bg-[#12141a] border border-red-500/30 rounded-3xl p-4 sm:p-6 w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden shadow-2xl">
             <div className="flex items-center gap-3 text-red-400 pb-3 border-b border-slate-800/80 shrink-0">
               <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 shrink-0">

@@ -50,9 +50,9 @@ export function Dialog({ isOpen, onClose, title, description, children, classNam
       aria-labelledby="dialog-title"
       aria-describedby={description ? "dialog-desc" : undefined}
     >
-      {/* Backdrop */}
+      {/* Backdrop without blur */}
       <div
-        className="fixed inset-0 bg-black/75 backdrop-blur-md transition-opacity"
+        className="fixed inset-0 bg-black/80 transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />

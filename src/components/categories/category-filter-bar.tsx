@@ -791,7 +791,7 @@ export function CategoryFilterBar({
       {/* Categorized Popover / Modal with Live Search & Dual Views */}
       {modalOpen && mounted && createPortal(
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-3 sm:p-6 animate-in fade-in duration-150"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-3 sm:p-6 animate-in fade-in duration-150"
           role="dialog"
           aria-modal="true"
           aria-labelledby="category-modal-title"

@@ -8,10 +8,19 @@ import {
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
 
-const followSchema = z.object({
-  categoryId: z.string().min(1, "Invalid category ID"),
-  locale: z.enum(["tr", "en"]).optional(),
-});
+const followSchema = z
+  .object({
+    categoryId: z.string().min(1, "Invalid category ID").optional(),
+    categoryIds: z.array(z.string().min(1)).optional(),
+    follow: z.boolean().optional(),
+    locale: z.enum(["tr", "en"]).optional(),
+  })
+  .refine(
+    (data) => Boolean(data.categoryId || (data.categoryIds && data.categoryIds.length > 0)),
+    {
+      message: "Either categoryId or categoryIds is required.",
+    }
+  );
 
 export async function POST(req: Request) {
   const ip = getClientIp(req);
@@ -42,11 +51,19 @@ export async function POST(req: Request) {
 
     const body = await req.json();
     isEn = body?.locale === "en" || isEnHeader;
-    const { categoryId } = followSchema.parse(body);
+    const { categoryId, categoryIds } = followSchema.parse(body);
 
-    const isFollowed = await CategoryService.toggleFollow(session.userId, categoryId);
+    if (categoryIds && categoryIds.length > 0) {
+      const count = await CategoryService.unfollowMultiple(session.userId, categoryIds);
+      return NextResponse.json({ success: true, count, isFollowed: false }, { status: 200 });
+    }
 
-    return NextResponse.json({ success: true, isFollowed }, { status: 200 });
+    if (categoryId) {
+      const isFollowed = await CategoryService.toggleFollow(session.userId, categoryId);
+      return NextResponse.json({ success: true, isFollowed }, { status: 200 });
+    }
+
+    return NextResponse.json({ error: "Missing category identifier" }, { status: 400 });
   } catch (err: unknown) {
     let message = isEn
       ? "Failed to toggle category follow."

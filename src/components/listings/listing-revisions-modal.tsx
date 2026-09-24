@@ -69,7 +69,7 @@ export function ListingRevisionsModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-200"
       role="dialog"
       aria-modal="true"
       aria-label={isTr ? "İlan Revizyon Geçmişi" : "Listing Revision History"}

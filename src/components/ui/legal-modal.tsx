@@ -67,7 +67,7 @@ export function LegalModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="legal-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/65 backdrop-blur-md animate-in fade-in-0 duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 animate-in fade-in-0 duration-200"
       onClick={(e) => {
         if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
           onClose();

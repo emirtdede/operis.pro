@@ -411,7 +411,7 @@ export function UsersTableClient({
 
       {/* User Details Modal / Drawer */}
       {selectedUser && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in-0 duration-200">
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 animate-in fade-in-0 duration-200">
           <div className="w-full max-w-xl max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-[#12141a] p-4 sm:p-6 shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-800 pb-4 shrink-0">
               <div className="flex items-center gap-3">

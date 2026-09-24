@@ -71,7 +71,7 @@ export function CategoryAlertSettingsModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="alert-settings-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-fade-in"
     >
       <div className="relative w-full max-w-md bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] rounded-2xl shadow-2xl p-6 sm:p-7 space-y-6">
         {/* Header */}

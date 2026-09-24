@@ -342,7 +342,7 @@ export function AbuseManagementClient({ initialAbuseItems }: AbuseManagementClie
 
       {/* Details Modal Drawer */}
       {selectedItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in">
           <div className="bg-[#12141a] border border-slate-800 rounded-3xl p-4 sm:p-6 w-full max-w-xl max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-800 pb-4 shrink-0">
               <div className="flex items-center gap-2">
@@ -442,7 +442,7 @@ export function AbuseManagementClient({ initialAbuseItems }: AbuseManagementClie
 
       {/* Suspend Confirmation Modal */}
       {suspendModalItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in">
           <div className="bg-[#12141a] border border-rose-500/30 rounded-3xl p-4 sm:p-6 w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden shadow-2xl">
             <div className="flex items-center gap-3 text-rose-400 pb-3 border-b border-slate-800/80 shrink-0">
               <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 shrink-0">

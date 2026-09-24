@@ -436,7 +436,7 @@ export function NegotiationTimelineModal({
   return (
     <>
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-200"
         role="dialog"
         aria-modal="true"
         aria-label={isTr ? "Pazarlık ve Karşı Teklif Döngüsü" : "Negotiation & Counter-Offer Cycle"}
@@ -537,7 +537,7 @@ export function NegotiationTimelineModal({
 
       {/* Reject Confirmation Dialog */}
       {showRejectConfirm && activeProposal && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/80 animate-in fade-in">
           <div className="bg-[#141824] border border-red-900/50 rounded-2xl w-full max-w-md p-5 space-y-4 shadow-2xl">
             <div className="flex items-center gap-2.5 text-red-400">
               <XCircle className="h-5 w-5" />

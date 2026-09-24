@@ -69,7 +69,7 @@ export function MilestoneEvidenceViewer({
     <>
       {/* Deliverable Submission Modal */}
       {deliverableModalOpen && selectedMilestone && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-200">
           <div className="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4 text-white">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 className="text-sm font-bold flex items-center gap-2">
@@ -222,7 +222,7 @@ export function MilestoneEvidenceViewer({
 
       {/* FSEK IP Assignment Deed Modal */}
       {ipDeedModalOpen && selectedIpDeed && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 animate-in fade-in duration-200">
           <div className="relative w-full max-w-3xl bg-slate-900 border border-cyan-500/30 rounded-3xl p-6 shadow-2xl space-y-4 text-white max-h-[92vh] overflow-y-auto">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">

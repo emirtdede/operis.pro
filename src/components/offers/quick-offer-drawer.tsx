@@ -395,7 +395,7 @@ export function QuickOfferDrawer({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-black/40 backdrop-blur-[2px] transition-opacity animate-in fade-in duration-200 flex justify-end">
+    <div className="fixed inset-0 z-50 overflow-hidden bg-black/70 transition-opacity animate-in fade-in duration-200 flex justify-end">
       <div
         className="relative w-full max-w-lg bg-[var(--color-surface-base)] border-l border-[var(--color-border-subtle)] shadow-2xl flex flex-col h-full transform transition-transform ease-out duration-300 animate-in slide-in-from-right"
         role="dialog"
@@ -679,7 +679,7 @@ export function QuickOfferDrawer({
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in"
         >
           <form
             onSubmit={handleSaveAsTemplate}

@@ -330,7 +330,7 @@ export function ReceivedOffersDashboard({ initialOffers, locale }: ReceivedOffer
       {/* Unified Toolbar: Search Input + Status Filters + Sort Dropdown */}
       <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
         {/* Search Input */}
-        <div className="relative flex-1 min-w-[200px] max-w-md">
+        <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-text-tertiary)]" />
           <input
             type="text"

@@ -224,12 +224,11 @@ const clerkHandler = clerkMiddleware(async (_auth, req) => {
 
 export async function proxy(request: NextRequest, event?: NextFetchEvent) {
   if (
-    event &&
     !process.env.VITEST &&
     process.env.CLERK_SECRET_KEY &&
     process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
   ) {
-    return clerkHandler(request, event);
+    return clerkHandler(request, event ?? ({} as any));
   }
   return baseProxy(request);
 }

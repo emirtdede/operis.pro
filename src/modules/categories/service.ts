@@ -510,6 +510,57 @@ export class CategoryService {
   }
 
   /**
+   * Unfollows multiple categories for a user in a single atomic operation.
+   */
+  static async unfollowMultiple(userId: string, categoryIds: string[]): Promise<number> {
+    if (!categoryIds || categoryIds.length === 0) return 0;
+    try {
+      const db = getDb();
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      const uuids = categoryIds.filter((id) => uuidRegex.test(id));
+      const keys = categoryIds.filter((id) => !uuidRegex.test(id));
+
+      const allTargetIds = [...uuids];
+      if (keys.length > 0) {
+        const matchingCategories = await db
+          .select({ id: schema.categories.id })
+          .from(schema.categories)
+          .where(inArray(schema.categories.key, keys));
+        allTargetIds.push(...matchingCategories.map((c) => c.id));
+      }
+
+      if (allTargetIds.length === 0) return 0;
+
+      await db
+        .delete(schema.categoryFollows)
+        .where(
+          and(
+            eq(schema.categoryFollows.userId, userId),
+            inArray(schema.categoryFollows.categoryId, allTargetIds)
+          )
+        );
+
+      return allTargetIds.length;
+    } catch (err) {
+      if (process.env.NODE_ENV === "production") {
+        throw err;
+      }
+      // In-memory fallback
+      const userSet = inMemoryFollows.get(userId);
+      let removed = 0;
+      if (userSet) {
+        for (const id of categoryIds) {
+          const catUuid = getDeterministicUuid(id);
+          if (userSet.delete(id) || userSet.delete(catUuid)) {
+            removed++;
+          }
+        }
+      }
+      return removed;
+    }
+  }
+
+  /**
    * Fetches user's private followed category IDs.
    * STRICT ACCESS CONTROL: Only account owner or server feed logic can invoke this.
    */

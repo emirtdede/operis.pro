@@ -153,7 +153,7 @@ export function ProfileActionsMenu({
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-150"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-150"
         >
           <div className="relative w-full max-w-sm rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-6 shadow-2xl space-y-5">
             <button

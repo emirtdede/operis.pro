@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { Lock, RefreshCw, Inbox } from "lucide-react";
+import { Lock, RefreshCw, Inbox, Briefcase } from "lucide-react";
 import { getSession } from "@/src/modules/auth/session";
 import { OfferService } from "@/src/modules/offers/service";
 import {
@@ -169,8 +169,9 @@ export default async function ReceivedOffersPage({
         </div>
 
         <Link href={isTr ? "/tr/panel/ilanlarim" : "/en/dashboard/listings"}>
-          <Button variant="outline" size="sm" className="text-xs">
-            {isTr ? "İlanlarıma Dön" : "My Listings"}
+          <Button variant="shimmer" size="sm" className="gap-2 text-xs">
+            <Briefcase className="h-3.5 w-3.5" aria-hidden="true" />
+            <span>{isTr ? "İlanlarıma Dön" : "My Listings"}</span>
           </Button>
         </Link>
       </div>

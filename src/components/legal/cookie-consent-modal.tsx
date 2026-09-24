@@ -259,7 +259,7 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
   // VIEW 2: Preferences Modal (Centered modal, lighter backdrop overlay)
   return (
     <div
-      className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/35 backdrop-blur-[2px] transition-all duration-200 animate-in fade-in"
+      className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/60 transition-all duration-200 animate-in fade-in"
       role="dialog"
       aria-modal="true"
       aria-label={isTr ? "Çerez ve Gizlilik Tercihleri" : "Cookie and Privacy Preferences"}

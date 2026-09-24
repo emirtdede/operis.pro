@@ -10,7 +10,13 @@ export function SSOCallbackHandler() {
   const [syncing, setSyncing] = useState(false);
   const [syncError, setSyncError] = useState<string | null>(null);
 
-  const redirectUrl = searchParams.get("redirect_url") || "/tr/ilanlar";
+  const rawRedirectUrl = searchParams.get("redirect_url") || "/tr/ilanlar";
+  const redirectUrl =
+    rawRedirectUrl === "/tr/akis" || rawRedirectUrl === "/tr/feed"
+      ? "/tr/ilanlar?view=stream"
+      : rawRedirectUrl === "/en/feed"
+        ? "/en/listings?view=stream"
+        : rawRedirectUrl;
 
   useEffect(() => {
     if (!isLoaded || !isSignedIn || !userId || syncing) return;

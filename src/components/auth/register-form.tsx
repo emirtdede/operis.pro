@@ -165,10 +165,15 @@ export function RegisterForm({ locale, returnUrl }: RegisterFormProps) {
     }
   };
 
-  const loginBasePath = isTr ? "/tr/giris" : "/en/login";
-  const successLoginHref = returnUrl
-    ? `${loginBasePath}?returnUrl=${encodeURIComponent(returnUrl)}`
-    : loginBasePath;
+  const defaultFeedPath = isTr ? "/tr/ilanlar?view=stream" : "/en/listings?view=stream";
+  const successDirectHref =
+    returnUrl && /^\/(tr|en)(\/|$)/.test(returnUrl) && !returnUrl.startsWith("//")
+      ? returnUrl === "/tr/akis" || returnUrl === "/tr/feed"
+        ? "/tr/ilanlar?view=stream"
+        : returnUrl === "/en/feed"
+          ? "/en/listings?view=stream"
+          : returnUrl
+      : defaultFeedPath;
 
   let passwordToggleLabel = isTr ? "Şifreyi göster" : "Show password";
   if (showPassword) {
@@ -187,19 +192,24 @@ export function RegisterForm({ locale, returnUrl }: RegisterFormProps) {
           <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
         </div>
         <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-text-primary)]">
-          {isTr ? "Kaydınız Başarıyla Alındı" : "Registration Complete"}
+          {isTr ? "Hesabınız Başarıyla Oluşturuldu" : "Account Successfully Created"}
         </h2>
         <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed max-w-md mx-auto">
           {isTr
-            ? "Hesabınız oluşturuldu. E-posta adresinize gönderilen doğrulama bağlantısına tıklayarak veya doğrudan giriş yaparak başlayabilirsiniz."
-            : "Your account has been created. Please check your email inbox to verify your address or sign in to continue."}
+            ? "Oturumunuz güvenle başlatıldı. E-posta adresinize bir doğrulama bağlantısı gönderildi. Dilediğiniz an doğrulayabilir ve doğrudan platformu kullanmaya başlayabilirsiniz."
+            : "Your session has been securely initiated. We have sent a verification link to your email address. You may start exploring the platform immediately."}
         </p>
-        <div className="pt-3">
-          <Link href={successLoginHref}>
-            <Button variant="primary" size="lg" className="font-semibold">
-              {isTr ? "Giriş Yap Ekranına Git" : "Go to Sign In"}
-            </Button>
-          </Link>
+        <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <Button
+            variant="primary"
+            size="lg"
+            className="font-semibold w-full sm:w-auto"
+            onClick={() => {
+              window.location.href = successDirectHref;
+            }}
+          >
+            {isTr ? "İlanları Keşfetmeye Başla" : "Start Exploring Listings"}
+          </Button>
         </div>
       </div>
     );
