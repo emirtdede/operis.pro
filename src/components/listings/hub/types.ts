@@ -1,6 +1,20 @@
 import type { FeedListingItem } from "@/src/modules/listings/feed/service";
 import type { CategoryDto } from "@/src/modules/categories/service";
 
+export interface CurrentUserProfileBrief {
+  userId: string;
+  displayName: string;
+  handle: string;
+  headline?: string | null;
+  avatarUrl?: string | null;
+  availabilityStatus: "AVAILABLE_NOW" | "PARTIALLY_AVAILABLE" | "BUSY";
+  isAvailableForHire: boolean;
+  isActivelyHiring: boolean;
+  isCompanyVerified: boolean;
+  roles?: string[];
+  trackedSkills?: string[];
+}
+
 export interface UnifiedListingsHubProps {
   initialItems: FeedListingItem[];
   initialCursor: string | null;
@@ -14,6 +28,7 @@ export interface UnifiedListingsHubProps {
   locale: string;
   isAuthenticated: boolean;
   basePath: string;
+  currentUserProfile?: CurrentUserProfileBrief | null;
 }
 
 export interface QuickOfferTarget {

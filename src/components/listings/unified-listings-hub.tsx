@@ -1,7 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import {
   useListingsHubState,
+  useFeedCustomization,
+  FeedLeftPanel,
+  FeedRightPanel,
+  FeedCustomizationModal,
   ListingsSearchHeader,
   ListingsFeedView,
   ListingsModals,
@@ -12,59 +17,108 @@ export type { UnifiedListingsHubProps };
 
 export function UnifiedListingsHub(props: UnifiedListingsHubProps) {
   const state = useListingsHubState(props);
+  const feedCustomization = useFeedCustomization();
+  const [isCustomizationOpen, setIsCustomizationOpen] = useState(false);
 
   return (
     <div className="w-full">
-      {/* Centered Focused Feed Stream (Left & Right Sidebars hidden per request) */}
+      {/* 3-Column Responsive Feed Layout (Left Panel + Main Feed + Right Panel) */}
       <div className="w-full flex justify-center">
-        <div className="w-full max-w-[680px] min-w-0 flex flex-col gap-3.5 mx-auto">
-          <ListingsSearchHeader
-            isTr={state.isTr}
-            locale={props.locale}
-            basePath={props.basePath}
-            categorySlug={props.categorySlug}
-            selectedCategorySlugs={state.selectedCategorySlugs}
+        <div className="w-full max-w-[1400px] flex items-start justify-center gap-5 xl:gap-7 mx-auto px-1 sm:px-2">
+          {/* 1. Left Panel (Identity Snapshot, Availability, Followed Categories, Quick Filters, Shortcuts) */}
+          <FeedLeftPanel
+            currentUserProfile={props.currentUserProfile}
+            isAuthenticated={props.isAuthenticated}
             categories={props.categories}
+            categorySlug={props.categorySlug}
+            basePath={props.basePath}
             searchQuery={props.searchQuery}
             mode={state.mode}
             view={state.view}
-            handleSwitchMode={state.handleSwitchMode}
-            isTabLoading={state.isTabLoading}
-            isAuthenticated={props.isAuthenticated}
-            followedCategoryIds={state.followedCategoryIds}
-            sortBy={state.sortBy}
-            setSortBy={state.setSortBy}
+            locale={props.locale}
+            isTr={state.isTr}
             chipLast24h={state.chipLast24h}
             setChipLast24h={state.setChipLast24h}
             chipFixedBudget={state.chipFixedBudget}
             setChipFixedBudget={state.setChipFixedBudget}
-            totalItemsCount={state.sortedItems.length}
+            followedCategoryIds={state.followedCategoryIds}
+            settings={feedCustomization.settings}
+            onOpenCustomizationModal={() => setIsCustomizationOpen(true)}
           />
 
-          <ListingsFeedView
+          {/* 2. Main Center Feed Stream */}
+          <div className="flex-1 min-w-0 max-w-[680px] xl:max-w-[700px] flex flex-col gap-3.5 mx-auto">
+            <ListingsSearchHeader
+              isTr={state.isTr}
+              locale={props.locale}
+              basePath={props.basePath}
+              categorySlug={props.categorySlug}
+              selectedCategorySlugs={state.selectedCategorySlugs}
+              categories={props.categories}
+              searchQuery={props.searchQuery}
+              mode={state.mode}
+              view={state.view}
+              handleSwitchMode={state.handleSwitchMode}
+              isTabLoading={state.isTabLoading}
+              isAuthenticated={props.isAuthenticated}
+              followedCategoryIds={state.followedCategoryIds}
+              sortBy={state.sortBy}
+              setSortBy={state.setSortBy}
+              chipLast24h={state.chipLast24h}
+              setChipLast24h={state.setChipLast24h}
+              chipFixedBudget={state.chipFixedBudget}
+              setChipFixedBudget={state.setChipFixedBudget}
+              totalItemsCount={state.sortedItems.length}
+            />
+
+            <ListingsFeedView
+              isTr={state.isTr}
+              locale={props.locale}
+              basePath={props.basePath}
+              mode={state.mode}
+              view={state.view}
+              errorMsg={state.errorMsg}
+              isTabLoading={state.isTabLoading}
+              sortedItems={state.sortedItems}
+              hasFollowed={state.hasFollowed}
+              followedCategoryIds={state.followedCategoryIds}
+              selectedIds={state.selectedIds}
+              isLoadingMore={state.isLoadingMore}
+              hasMore={state.hasMore}
+              sentinelRef={state.sentinelRef}
+              handleSwitchMode={state.handleSwitchMode}
+              fetchListings={state.fetchListings}
+              handleToggleCategoryFollow={state.handleToggleCategoryFollow}
+              handleQuickOffer={state.handleQuickOffer}
+              handleToggleSelect={state.handleToggleSelect}
+              handleLoadMore={state.handleLoadMore}
+            />
+          </div>
+
+          {/* 3. Right Panel (Freshness Radar Pulse, Trending Tech, Suggested Categories, Publish CTA) */}
+          <FeedRightPanel
             isTr={state.isTr}
             locale={props.locale}
             basePath={props.basePath}
-            mode={state.mode}
-            view={state.view}
-            errorMsg={state.errorMsg}
-            isTabLoading={state.isTabLoading}
-            sortedItems={state.sortedItems}
-            hasFollowed={state.hasFollowed}
+            trendingTags={state.trendingTags}
+            categories={props.categories}
             followedCategoryIds={state.followedCategoryIds}
-            selectedIds={state.selectedIds}
-            isLoadingMore={state.isLoadingMore}
-            hasMore={state.hasMore}
-            sentinelRef={state.sentinelRef}
-            handleSwitchMode={state.handleSwitchMode}
-            fetchListings={state.fetchListings}
             handleToggleCategoryFollow={state.handleToggleCategoryFollow}
-            handleQuickOffer={state.handleQuickOffer}
-            handleToggleSelect={state.handleToggleSelect}
-            handleLoadMore={state.handleLoadMore}
+            totalItemsCount={state.sortedItems.length}
+            settings={feedCustomization.settings}
           />
         </div>
       </div>
+
+      {/* 4. Feed Customization Modal */}
+      <FeedCustomizationModal
+        isOpen={isCustomizationOpen}
+        onClose={() => setIsCustomizationOpen(false)}
+        settings={feedCustomization.settings}
+        updateSettings={feedCustomization.updateSettings}
+        resetSettings={feedCustomization.resetSettings}
+        isTr={state.isTr}
+      />
 
       {/* 5. Drawers & Modals (Quick Offer, Batch Selection, Full Modal) */}
       <ListingsModals
@@ -84,3 +138,4 @@ export function UnifiedListingsHub(props: UnifiedListingsHubProps) {
     </div>
   );
 }
+

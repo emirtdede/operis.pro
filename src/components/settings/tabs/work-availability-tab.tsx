@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   Briefcase,
   Clock,
@@ -8,6 +9,8 @@ import {
   Sparkles,
   Loader2,
   Check,
+  Sliders,
+  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { TextInput } from "@/src/components/ui/text-input";
@@ -278,6 +281,29 @@ export function WorkAvailabilityTab({
             />
           </div>
         </div>
+      </div>
+
+      {/* Akış & Keşif Sayfası Tercihleri Köprüsü */}
+      <div className="rounded-2xl border border-blue-500/20 bg-blue-500/5 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <Sliders className="h-4 w-4 text-blue-400" />
+            <h4 className="text-xs font-bold text-[var(--color-text-primary)]">
+              {isTr ? "Akış Sayfası ve Panel Tercihleri" : "Feed Page & Panel Preferences"}
+            </h4>
+          </div>
+          <p className="text-xs text-[var(--color-text-secondary)]">
+            {isTr
+              ? "Akış sayfasındaki sağ ve sol panellerdeki widget'ları doğrudan akış üzerinde özelleştirebilirsiniz."
+              : "Customize the widgets in your left and right panels directly on the feed stream."}
+          </p>
+        </div>
+        <Link href={isTr ? "/tr/ilanlar" : "/en/listings"}>
+          <Button variant="outline" size="sm" className="gap-2 shrink-0 border-blue-500/30 text-blue-400 hover:bg-blue-500/10 cursor-pointer">
+            <ExternalLink className="h-3.5 w-3.5" />
+            <span>{isTr ? "Akışa Git & Özelleştir" : "Open Feed & Customize"}</span>
+          </Button>
+        </Link>
       </div>
 
       {/* Kaydet Butonu */}

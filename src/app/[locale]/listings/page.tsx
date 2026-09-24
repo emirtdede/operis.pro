@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { FeedService, FeedResult } from "@/src/modules/listings/feed/service";
 import { CategoryService } from "@/src/modules/categories/service";
+import { ProfileService } from "@/src/modules/profiles/service";
 import { UnifiedListingsHub } from "@/src/components/listings/unified-listings-hub";
 import { getSession } from "@/src/modules/auth/session";
 import { JsonLd } from "@/src/components/seo/json-ld";
@@ -98,6 +99,31 @@ export default async function BrowseListingsPage({
     redirect(`${loginBase}?returnUrl=${encodeURIComponent(returnUrl)}`);
   }
 
+  const userProfile = session?.userId
+    ? await ProfileService.getProfileByUserId(session.userId).catch(() => null)
+    : null;
+
+  const currentUserProfile = userProfile
+    ? {
+        userId: userProfile.userId,
+        displayName: userProfile.displayName,
+        handle: userProfile.handle,
+        headline: (userProfile as { headline?: string | null })?.headline ?? null,
+        avatarUrl: userProfile.avatarUrl ?? null,
+        availabilityStatus:
+          (userProfile as { availabilityStatus?: "AVAILABLE_NOW" | "PARTIALLY_AVAILABLE" | "BUSY" })
+            ?.availabilityStatus ?? "AVAILABLE_NOW",
+        isAvailableForHire:
+          (userProfile as { isAvailableForHire?: boolean })?.isAvailableForHire ?? true,
+        isActivelyHiring:
+          (userProfile as { isActivelyHiring?: boolean })?.isActivelyHiring ?? false,
+        isCompanyVerified:
+          (userProfile as { isCompanyVerified?: boolean })?.isCompanyVerified ?? false,
+        roles: (userProfile as { roles?: string[] })?.roles ?? [],
+        trackedSkills: (userProfile as { trackedSkills?: string[] })?.trackedSkills ?? [],
+      }
+    : null;
+
   const categories = await CategoryService.getAllCategories(
     isTr ? "tr" : "en",
     session?.userId
@@ -156,7 +182,7 @@ export default async function BrowseListingsPage({
   };
 
   return (
-    <main className="mx-auto max-w-[1360px] px-2 sm:px-4 lg:px-6 py-4 sm:py-6">
+    <main className="mx-auto max-w-[1440px] px-2 sm:px-4 lg:px-6 py-4 sm:py-6">
       {/* Schema.org Structured Data */}
       <JsonLd data={jsonLd} />
 
@@ -173,6 +199,7 @@ export default async function BrowseListingsPage({
         locale={locale}
         isAuthenticated={Boolean(session?.userId)}
         basePath={listingsPath}
+        currentUserProfile={currentUserProfile}
       />
     </main>
   );

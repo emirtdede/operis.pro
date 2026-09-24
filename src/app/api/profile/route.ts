@@ -103,6 +103,10 @@ export async function PATCH(req: Request) {
       revalidatePath("/en/settings");
       revalidatePath("/tr/ayarlar");
       revalidatePath("/en/settings");
+      revalidatePath("/tr/ilanlar");
+      revalidatePath("/en/listings");
+      revalidatePath("/tr/feed");
+      revalidatePath("/en/feed");
       revalidatePath("/tr");
       revalidatePath("/en");
     } catch {
