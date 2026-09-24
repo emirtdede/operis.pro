@@ -31,14 +31,8 @@ export function useUserAffinityRecommendations({
   }, []);
 
   const suggestedCategories = useMemo(() => {
-    // Before mounting on the client, use fallback ranking based on active listings
-    // to ensure 100% hydration consistency between SSR and CSR.
     if (!isMounted) {
-      const unfollowed = categories.filter((c) => !followedCategoryIds.has(c.id));
-      const pool = unfollowed.length > 0 ? unfollowed : categories;
-      return [...pool]
-        .sort((a, b) => (b.listingCount ?? 0) - (a.listingCount ?? 0) || a.sortOrder - b.sortOrder)
-        .slice(0, limit);
+      return [];
     }
 
     return rankCategoriesByPersonalizedAffinity({

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useState, useRef, useEffect, type Dispatch, type SetStateAction } from "react";
 import Link from "next/link";
 import {
   Briefcase,
@@ -63,6 +63,22 @@ export function FeedLeftPanel({
   );
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
+  const statusMenuRef = useRef<HTMLDivElement | null>(null);
+
+  // Close status menu when clicking outside
+  useEffect(() => {
+    if (!isStatusMenuOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (statusMenuRef.current && !statusMenuRef.current.contains(e.target as Node)) {
+        setIsStatusMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isStatusMenuOpen]);
+
   // Status Change Handler with Optimistic UI & Settings Sync
   const handleSelectStatus = async (newStatus: "AVAILABLE_NOW" | "PARTIALLY_AVAILABLE" | "BUSY") => {
     if (newStatus === currentStatus || isUpdatingStatus) return;
@@ -121,9 +137,13 @@ export function FeedLeftPanel({
 
   return (
     <aside className="hidden lg:flex flex-col gap-3.5 w-[250px] xl:w-[270px] shrink-0 sticky top-20 self-start">
-      {/* 1. Mini Profile & Live Availability Card */}
+      {/* 1. Mini Profile & Live Availability Card (High Z-Index so popover floats above Workspace card) */}
       {settings.showProfileCard && (
-        <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/85 backdrop-blur-xl p-4 shadow-sm space-y-3.5 transition-all">
+        <div
+          className={`rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/85 backdrop-blur-xl p-4 shadow-sm space-y-3.5 transition-all relative ${
+            isStatusMenuOpen ? "z-40" : "z-20"
+          }`}
+        >
           {isAuthenticated && currentUserProfile ? (
             <>
               {/* Profile Identity Row */}
@@ -167,7 +187,7 @@ export function FeedLeftPanel({
               </div>
 
               {/* In-Place Live Availability Switcher Popover */}
-              <div className="relative">
+              <div className="relative" ref={statusMenuRef}>
                 <button
                   type="button"
                   onClick={() => setIsStatusMenuOpen(!isStatusMenuOpen)}
@@ -183,7 +203,7 @@ export function FeedLeftPanel({
                 </button>
 
                 {isStatusMenuOpen && (
-                  <div className="absolute left-0 right-0 top-full mt-1.5 rounded-2xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] shadow-2xl py-1.5 z-30 animate-in fade-in-50 zoom-in-95">
+                  <div className="absolute left-0 right-0 top-full mt-1.5 rounded-2xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] shadow-2xl py-1.5 z-50 animate-in fade-in-50 zoom-in-95">
                     <button
                       type="button"
                       onClick={() => handleSelectStatus("AVAILABLE_NOW")}
@@ -281,7 +301,7 @@ export function FeedLeftPanel({
 
       {/* 2. Workspace Shortcuts (İlanlarım, Tekliflerim, Kaydedilenler) - Positioned directly below Profile Card */}
       {settings.showWorkspaceShortcuts && isAuthenticated && (
-        <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/85 backdrop-blur-xl p-4 shadow-sm space-y-2">
+        <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/85 backdrop-blur-xl p-4 shadow-sm space-y-2 relative z-10">
           <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-primary)] flex items-center gap-1.5">
             <Bookmark className="h-3.5 w-3.5 text-purple-400" />
             <span>{isTr ? "Çalışma Alanım" : "Workspace"}</span>

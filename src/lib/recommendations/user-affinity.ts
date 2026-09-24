@@ -262,11 +262,17 @@ export function rankCategoriesByPersonalizedAffinity({
   followedCategoryIds: Set<string>;
   limit?: number;
 }): CategoryDto[] {
+  const profile = getDecayedAffinityProfile();
+
+  // If user hasn't interacted yet (no clicks, no searches, no views),
+  // return empty list so we never display false mock/static defaults.
+  if (!profile.hasInteractions) {
+    return [];
+  }
+
   // 1. Filter out followed categories
   const unfollowed = categories.filter((c) => !followedCategoryIds.has(c.id));
   const candidatePool = unfollowed.length > 0 ? unfollowed : categories;
-
-  const profile = getDecayedAffinityProfile();
 
   // 2. Build Category Tag Distribution Vector from real active listings
   const categoryTagMap = new Map<string, Map<string, number>>();

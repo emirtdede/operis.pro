@@ -204,9 +204,21 @@ export function FeedRightPanel({
               })}
             </div>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-tertiary)] py-1">
-              {isTr ? "Tüm kategoriler takip ediliyor." : "All categories are followed."}
-            </p>
+            <div className="p-3.5 rounded-2xl bg-surface/30 border border-dashed border-[var(--color-border-subtle)] text-center space-y-1.5">
+              <Sparkles className="h-4 w-4 text-amber-400/80 mx-auto" />
+              <p className="text-xs font-semibold text-[var(--color-text-secondary)]">
+                {isTr ? "Kişisel Öneriler Hazırlanıyor" : "Awaiting Activity"}
+              </p>
+              <p className="text-[11px] text-[var(--color-text-tertiary)] leading-relaxed">
+                {followedCategoryIds.size >= categories.length && categories.length > 0
+                  ? isTr
+                    ? "Tüm uzmanlık alanlarını takip ediyorsunuz."
+                    : "You are following all specializations."
+                  : isTr
+                  ? "İlanları tıkladıkça ve arama yaptıkça ilgilendiğiniz alanlara özel öneriler burada belirecektir."
+                  : "As you explore listings and search, recommendations tailored to you will appear here."}
+              </p>
+            </div>
           )}
         </div>
       )}
