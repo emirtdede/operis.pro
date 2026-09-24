@@ -7,7 +7,7 @@ import { twMerge } from "tailwind-merge";
 export interface AvatarInitialsProps {
   name: string;
   avatarUrl?: string | null;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: "sm" | "md" | "lg" | "xl" | "2xl";
   className?: string;
 }
 
@@ -36,6 +36,7 @@ export function AvatarInitials({ name, avatarUrl, size = "md", className }: Avat
     md: "w-9 h-9 text-sm",
     lg: "w-12 h-12 text-base font-semibold",
     xl: "w-16 h-16 text-xl font-bold",
+    "2xl": "w-20 h-20 sm:w-24 sm:h-24 text-2xl font-extrabold",
   };
 
   const hasValidUrl = Boolean(avatarUrl && !imageError && avatarUrl.trim().length > 0);

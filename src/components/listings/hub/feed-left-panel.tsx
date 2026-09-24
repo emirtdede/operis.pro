@@ -139,7 +139,7 @@ export function FeedLeftPanel({
                   className="relative shrink-0 group block"
                   title={isTr ? "Profili Görüntüle" : "View Profile"}
                 >
-                  <div className="rounded-2xl overflow-hidden ring-2 ring-blue-500/30 group-hover:ring-blue-500 transition-all">
+                  <div className="rounded-full overflow-hidden ring-2 ring-blue-500/30 group-hover:ring-blue-500 transition-all">
                     <AvatarInitials
                       name={currentUserProfile.displayName}
                       size="md"

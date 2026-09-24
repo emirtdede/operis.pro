@@ -39,10 +39,13 @@ function renderAvailabilityIndicator(
   isAvailableForHire: boolean | null | undefined,
   isTr: boolean
 ) {
+  const dotClasses =
+    "absolute bottom-0 right-0 sm:bottom-0.5 sm:right-0.5 h-4 w-4 sm:h-5 sm:w-5 rounded-full ring-2 ring-[var(--color-surface-base)] shadow-md z-10 pointer-events-none";
+
   if (availabilityStatus === "AVAILABLE_NOW") {
     return (
       <span
-        className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 h-4 w-4 sm:h-5 sm:w-5 rounded-full bg-emerald-500 ring-4 ring-[var(--color-surface-base)] shadow-lg animate-pulse"
+        className={`${dotClasses} bg-emerald-500 animate-pulse`}
         title={isTr ? "Hemen Başlayabilir" : "Available Now"}
       />
     );
@@ -50,7 +53,7 @@ function renderAvailabilityIndicator(
   if (availabilityStatus === "PARTIALLY_AVAILABLE") {
     return (
       <span
-        className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 h-4 w-4 sm:h-5 sm:w-5 rounded-full bg-amber-500 ring-4 ring-[var(--color-surface-base)] shadow-lg"
+        className={`${dotClasses} bg-amber-500`}
         title={isTr ? "Kısmi Zamanlı Müsait" : "Partially Available"}
       />
     );
@@ -58,7 +61,7 @@ function renderAvailabilityIndicator(
   if (availabilityStatus === "BUSY") {
     return (
       <span
-        className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 h-4 w-4 sm:h-5 sm:w-5 rounded-full bg-rose-500 ring-4 ring-[var(--color-surface-base)] shadow-lg"
+        className={`${dotClasses} bg-rose-500`}
         title={isTr ? "Şu An Meşgul" : "Currently Busy"}
       />
     );
@@ -66,7 +69,7 @@ function renderAvailabilityIndicator(
   if (isAvailableForHire) {
     return (
       <span
-        className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 h-4 w-4 sm:h-5 sm:w-5 rounded-full bg-emerald-500 ring-4 ring-[var(--color-surface-base)] shadow-lg animate-pulse"
+        className={`${dotClasses} bg-emerald-500 animate-pulse`}
         title={isTr ? "Projelere Açık" : "Available for Hire"}
       />
     );
@@ -145,12 +148,13 @@ export function PublicProfileHero({
           <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-5 sm:gap-6 flex-1 min-w-0">
             {/* 1. Avatar Container (Only visual photo, high-res & highlighted) */}
             <div className="relative shrink-0">
-              <div className="relative rounded-3xl p-1 bg-gradient-to-b from-blue-500/20 via-[var(--color-border-subtle)] to-purple-500/20 shadow-2xl ring-1 ring-white/10 group">
-                <div className="rounded-[22px] overflow-hidden bg-[var(--color-surface-base)]">
+              <div className="relative rounded-full p-1 bg-gradient-to-tr from-blue-500/40 via-purple-500/25 to-indigo-500/40 shadow-xl ring-1 ring-white/10 group">
+                <div className="rounded-full overflow-hidden bg-[var(--color-surface-base)] flex items-center justify-center">
                   <AvatarInitials
                     name={profile.displayName}
-                    size="xl"
+                    size="2xl"
                     avatarUrl={profile.avatarUrl}
+                    className="border-0"
                   />
                 </div>
                 {/* Active Availability Dot */}
@@ -165,7 +169,7 @@ export function PublicProfileHero({
                   <button
                     type="button"
                     onClick={onOpenHeaderModal}
-                    className="absolute inset-0 flex flex-col items-center justify-center rounded-[22px] bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-xs text-white cursor-pointer"
+                    className="absolute inset-1 flex flex-col items-center justify-center rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-xs text-white cursor-pointer z-20"
                     title={isTr ? "Fotoğrafı Değiştir" : "Change Photo"}
                     aria-label={isTr ? "Profil fotoğrafını değiştir" : "Change profile picture"}
                   >
