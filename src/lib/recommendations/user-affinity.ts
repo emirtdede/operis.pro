@@ -262,7 +262,20 @@ export function rankCategoriesByPersonalizedAffinity({
   followedCategoryIds: Set<string>;
   limit?: number;
 }): CategoryDto[] {
-  // 1. Filter out followed categories so recommendations always discover new areas
+  // 1. Strict Follow-Driven Rule:
+  // If the user has not followed any category yet, we strictly do NOT generate arbitrary suggestions.
+  // The UI will display a dedicated onboarding empty-state inviting the user to follow areas of interest.
+  if (followedCategoryIds.size === 0) {
+    return [];
+  }
+
+  // 2. Identify the categories and sectors currently followed by the user
+  const followedCats = categories.filter((c) => followedCategoryIds.has(c.id));
+  const followedSectorKeySet = new Set(
+    followedCats.map((c) => c.sectorKey).filter((key): key is string => Boolean(key))
+  );
+
+  // Filter out followed categories so recommendations always discover new areas
   const unfollowed = categories.filter((c) => !followedCategoryIds.has(c.id));
   if (unfollowed.length === 0) {
     return [];
@@ -271,7 +284,7 @@ export function rankCategoriesByPersonalizedAffinity({
 
   const profile = getDecayedAffinityProfile();
 
-  // 2. Build Category Tag Distribution Vector from real active listings
+  // 3. Build Category Tag Distribution Vector from real active listings
   const categoryTagMap = new Map<string, Map<string, number>>();
   const categoryActiveListingCount = new Map<string, number>();
 
@@ -299,38 +312,47 @@ export function rankCategoriesByPersonalizedAffinity({
     }
   }
 
-  // Total active listings for market momentum baseline
-  const totalListings = Math.max(1, listings.length);
+  // Find max active listings among candidates for normalized momentum
+  let maxActiveCount = 0;
+  for (const cat of candidatePool) {
+    const count = categoryActiveListingCount.get(cat.slug.toLowerCase()) ?? cat.listingCount ?? 0;
+    if (count > maxActiveCount) {
+      maxActiveCount = count;
+    }
+  }
 
-  // 3. Score each candidate category
+  // 4. Score each candidate category based on sector affinity, market popularity & tag overlap
   const scored = candidatePool.map((cat) => {
     const slug = cat.slug.toLowerCase();
 
-    // A. Direct Category Affinity (normalized 0-1)
-    const directAffinityRaw = profile.categories.get(slug) || 0;
-    const directAffinity = Math.min(1, directAffinityRaw / 10);
-
-    // B. Cosine similarity between user's tag affinity and category tags
-    const catTags = categoryTagMap.get(slug) || new Map<string, number>();
-    const tagSimilarity = computeTagCosineSimilarity(profile.tags, catTags);
-
-    // C. Real market momentum (based on real listings in DB, zero mock data)
-    const activeCount = categoryActiveListingCount.get(slug) ?? cat.listingCount ?? 0;
-    const marketMomentum = Math.min(1, activeCount / Math.max(1, totalListings / candidatePool.length));
-
-    // Composite scoring
-    let score = 0;
-    if (profile.hasInteractions) {
-      score = 0.45 * directAffinity + 0.40 * tagSimilarity + 0.15 * marketMomentum;
-    } else {
-      // Cold-start: Pure real platform momentum + category sort order
-      score = marketMomentum * 0.8 + (1 / Math.max(1, cat.sortOrder + 1)) * 0.2;
+    // A. Sector Affinity Score (0 to 50):
+    // Strongest signal: does this category belong to the same sector as one of user's followed categories?
+    let sectorScore = 0;
+    if (cat.sectorKey && followedSectorKeySet.has(cat.sectorKey)) {
+      const followedInSameSector = followedCats.filter((fc) => fc.sectorKey === cat.sectorKey).length;
+      sectorScore = 40 + Math.min(10, followedInSameSector * 2);
     }
 
-    return { category: cat, score, activeCount };
+    // B. Market Momentum / Listing Popularity (0 to 30):
+    const activeCount = categoryActiveListingCount.get(slug) ?? cat.listingCount ?? 0;
+    const momentumScore = maxActiveCount > 0 ? (activeCount / maxActiveCount) * 30 : 0;
+
+    // C. User Tag / Search Affinity (0 to 15):
+    const catTags = categoryTagMap.get(slug) || new Map<string, number>();
+    const tagSimilarity = computeTagCosineSimilarity(profile.tags, catTags);
+    const directAffinityRaw = profile.categories.get(slug) || 0;
+    const tagScore = Math.min(15, tagSimilarity * 10 + Math.min(5, directAffinityRaw));
+
+    // D. Baseline Category Sort Order Score (0 to 5):
+    const baselineScore = (1 / Math.max(1, cat.sortOrder + 1)) * 5;
+
+    // Composite Score
+    const totalScore = sectorScore + momentumScore + tagScore + baselineScore;
+
+    return { category: cat, score: totalScore, activeCount };
   });
 
-  // Sort descending by recommendation score
+  // Sort descending by score, tiebreak by active listings
   scored.sort((a, b) => b.score - a.score || b.activeCount - a.activeCount);
 
   return scored.slice(0, limit).map((s) => ({
