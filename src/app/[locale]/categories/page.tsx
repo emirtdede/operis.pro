@@ -15,11 +15,11 @@ export async function generateMetadata({
   const isTr = locale === "tr";
 
   const title = isTr
-    ? "Freelance Sektörler & Uzmanlık Kategorileri | Operis"
-    : "Freelance Sectors & Expertise Categories | Operis";
+    ? "Uzmanlık Alanları & Kategoriler — 10 Sektör"
+    : "Expertise & Tech Categories — 10 Sectors";
   const description = isTr
-    ? "Yazılım, tasarım, pazarlama, yapay zeka, video, finans ve hukuk alanlarındaki kategorileri keşfedin, takip edin ve doğrudan ilanlara ulaşın."
-    : "Discover and follow categories across software engineering, design, marketing, AI, video, finance, and legal to customize your direct listings feed.";
+    ? "Yazılımdan yapay zekaya, tasarımdan bulut mimarisine 10 ana sektör ve 110 uzmanlık alanındaki güncel ilanları ve yetenekleri keşfedin."
+    : "Explore 10 core sectors and 110 expertise domains across software engineering, AI, design, and cloud architecture for direct hiring.";
 
   return {
     title,

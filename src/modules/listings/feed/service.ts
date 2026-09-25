@@ -2,6 +2,7 @@ import { and, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
 import { inMemoryListings } from "@/src/modules/listings/service";
 import { evaluateListingVisibility } from "@/src/modules/listings/visibility";
+import { SEED_CATEGORIES } from "@/db/seeds/categories";
 
 export interface FeedQueryParams {
   mode?: "following" | "all";
@@ -90,6 +91,7 @@ export class FeedService {
     let nextCursor: string | null = null;
     let hasMore = false;
     let followedCategoryIds: string[] = [];
+    let hasZeroFollows = false;
 
     try {
       const db = getDb();
@@ -102,14 +104,11 @@ export class FeedService {
 
         followedCategoryIds = userFollows.map((f) => f.categoryId);
 
-        // If user follows 0 categories in following mode, return early with informative signal
+        // If user follows 0 categories in following mode, flag it instead of returning empty array.
+        // Fall back to top active/trending listings with hasFollowedCategories: false
+        // so listings never disappear from the user's screen!
         if (followedCategoryIds.length === 0) {
-          return {
-            items: [],
-            nextCursor: null,
-            hasMore: false,
-            hasFollowedCategories: false,
-          };
+          hasZeroFollows = true;
         }
       }
 
@@ -126,14 +125,14 @@ export class FeedService {
             items: [],
             nextCursor: null,
             hasMore: false,
-            hasFollowedCategories: mode === "following" ? true : undefined,
+            hasFollowedCategories: mode === "following" ? !hasZeroFollows : undefined,
           };
         }
       }
 
       // Determine target category IDs when both following and explicit category filters exist
       let targetCategoryIds: string[] | undefined = filterCategoryIds;
-      if (mode === "following" && params.userId) {
+      if (mode === "following" && params.userId && !hasZeroFollows) {
         if (targetCategoryIds) {
           targetCategoryIds = targetCategoryIds.filter((id) => followedCategoryIds.includes(id));
           if (targetCategoryIds.length === 0) {
@@ -375,24 +374,37 @@ export class FeedService {
       items,
       nextCursor,
       hasMore,
-      hasFollowedCategories: mode === "following" ? true : undefined,
+      hasFollowedCategories: mode === "following" ? !hasZeroFollows : undefined,
     };
   }
 
   /**
    * Retrieves single listing details by slug, enforcing visibility and block rules (Fixes B03).
    */
-  static async getListingBySlug(slug: string, viewerUserId?: string, viewerRole?: string) {
+  static async getListingBySlug(
+    slug: string,
+    viewerUserId?: string,
+    viewerRole?: string,
+    locale: string = "tr"
+  ) {
     try {
       const db = getDb();
       const rows = await db
         .select({
           listing: schema.listings,
           category: schema.categories,
+          categoryName: schema.categoryTranslations.name,
           ownerProfile: schema.profiles,
         })
         .from(schema.listings)
         .innerJoin(schema.categories, eq(schema.listings.categoryId, schema.categories.id))
+        .leftJoin(
+          schema.categoryTranslations,
+          and(
+            eq(schema.categoryTranslations.categoryId, schema.categories.id),
+            eq(schema.categoryTranslations.locale, locale)
+          )
+        )
         .innerJoin(schema.profiles, eq(schema.listings.ownerUserId, schema.profiles.userId))
         .innerJoin(schema.users, eq(schema.listings.ownerUserId, schema.users.id))
         .where(and(eq(schema.listings.slug, slug), eq(schema.users.status, "ACTIVE")))
@@ -400,7 +412,7 @@ export class FeedService {
 
       const firstRow = rows[0];
       if (firstRow) {
-        const { listing, category, ownerProfile } = firstRow;
+        const { listing, category, categoryName, ownerProfile } = firstRow;
 
         const viewerBlockedUserIds: string[] = [];
         const viewerBlockedByUserIds: string[] = [];
@@ -452,9 +464,22 @@ export class FeedService {
           return null;
         }
 
+        let resolvedCategoryName = categoryName;
+        if (!resolvedCategoryName) {
+          const matchedSeed = SEED_CATEGORIES.find(
+            (c) => c.key.toLowerCase() === category.key.toLowerCase()
+          );
+          if (matchedSeed) {
+            const lang = locale === "en" ? "en" : "tr";
+            resolvedCategoryName =
+              matchedSeed.translations[lang]?.name || matchedSeed.translations.tr?.name;
+          }
+        }
+
         return {
           listing,
           category,
+          categoryName: resolvedCategoryName || category.key,
           ownerProfile,
         };
       }

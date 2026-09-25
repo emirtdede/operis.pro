@@ -13,12 +13,18 @@ const followSchema = z
     categoryId: z.string().min(1, "Invalid category ID").optional(),
     categoryIds: z.array(z.string().min(1)).optional(),
     follow: z.boolean().optional(),
+    unfollowAll: z.boolean().optional(),
     locale: z.enum(["tr", "en"]).optional(),
   })
   .refine(
-    (data) => Boolean(data.categoryId || (data.categoryIds && data.categoryIds.length > 0)),
+    (data) =>
+      Boolean(
+        data.categoryId ||
+          (data.categoryIds && data.categoryIds.length > 0) ||
+          data.unfollowAll
+      ),
     {
-      message: "Either categoryId or categoryIds is required.",
+      message: "Either categoryId, categoryIds, or unfollowAll is required.",
     }
   );
 
@@ -51,11 +57,26 @@ export async function POST(req: Request) {
 
     const body = await req.json();
     isEn = body?.locale === "en" || isEnHeader;
-    const { categoryId, categoryIds } = followSchema.parse(body);
+    const { categoryId, categoryIds, follow, unfollowAll } = followSchema.parse(body);
+
+    if (unfollowAll) {
+      await CategoryService.unfollowAll(session.userId);
+      return NextResponse.json({ success: true, count: 0, isFollowed: false }, { status: 200 });
+    }
 
     if (categoryIds && categoryIds.length > 0) {
-      const count = await CategoryService.unfollowMultiple(session.userId, categoryIds);
-      return NextResponse.json({ success: true, count, isFollowed: false }, { status: 200 });
+      if (follow === true) {
+        for (const catId of categoryIds) {
+          await CategoryService.toggleFollow(session.userId, catId);
+        }
+        return NextResponse.json(
+          { success: true, count: categoryIds.length, isFollowed: true },
+          { status: 200 }
+        );
+      } else {
+        const count = await CategoryService.unfollowMultiple(session.userId, categoryIds);
+        return NextResponse.json({ success: true, count, isFollowed: false }, { status: 200 });
+      }
     }
 
     if (categoryId) {

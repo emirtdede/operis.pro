@@ -57,7 +57,7 @@ function getVerifyCompanyButtonLabel(isSubmitting: boolean, isTr: boolean): stri
   if (isSubmitting) {
     return isTr ? "Doğrulanıyor..." : "Verifying...";
   }
-  return isTr ? "🏢 Şirketi Doğrula ve Rozeti Al" : "Verify Company & Get Badge";
+  return isTr ? "Şirketi Doğrula ve Rozeti Al" : "Verify Company & Get Badge";
 }
 
 export function CompanyVerificationCard({

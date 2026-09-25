@@ -45,7 +45,7 @@ export interface SettingsViewProps {
     timeZone?: string | null;
     isAvailableForHire?: boolean;
     isActivelyHiring?: boolean;
-    availabilityStatus?: "AVAILABLE_NOW" | "PARTIALLY_AVAILABLE" | "BUSY";
+    availabilityStatus?: import("@/src/modules/profiles/services/availability.service").AvailabilityStatus;
     availabilityHoursPerWeek?: number;
     availableFromDate?: string | null;
     availabilityNotice?: string | null;

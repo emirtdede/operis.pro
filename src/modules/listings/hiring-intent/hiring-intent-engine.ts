@@ -298,7 +298,7 @@ export class HiringIntentEngine {
         signals.push(`Yüksek işe alım başarı oranı (%${Math.round(rawRate * 100)})`);
       } else if (bayesianRate >= 0.6) {
         score = 16;
-        signals.push(`Düzenli işe alım geçmişi (Bayesian %${Math.round(bayesianRate * 100)})`);
+        signals.push(`Düzenli işe alım geçmişi (Ağırlıklı %${Math.round(bayesianRate * 100)})`);
       } else if (bayesianRate >= 0.4) {
         score = 10;
         signals.push("Orta düzey işe alım tamamlama oranı");
@@ -316,10 +316,10 @@ export class HiringIntentEngine {
 
     if (isFirstTime) {
       explanationTr = isCompanyVerified
-        ? "Platformdaki ilk ilanını açan VKN onaylı yeni işveren (Soğuk başlangıç güvenceli)."
+        ? "Platformdaki ilk ilanını açan VKN onaylı yeni işveren (Doğrulanmış başlangıç güvenceli)."
         : "Platformdaki ilk ilanını açan yeni işveren.";
       explanationEn = isCompanyVerified
-        ? "Verified new employer posting their inaugural job on Operis (Cold-start protected)."
+        ? "Verified new employer posting their inaugural job on Operis (Verified start protection)."
         : "New employer posting their first job.";
     }
 
@@ -423,50 +423,50 @@ export class HiringIntentEngine {
 
     if (isFirstTime && isCompanyVerified && overallScore >= 78) {
       level = "VERIFIED_NEW_CLIENT";
-      badgeLabelTr = `✨ Yeni İşveren (%${overallScore} Güven)`;
-      badgeLabelEn = `✨ Verified New Client (${overallScore}% Trust)`;
-      shortBadgeLabelTr = `✨ Yeni İşveren`;
-      shortBadgeLabelEn = `✨ New Client`;
+      badgeLabelTr = `Yeni İşveren (%${overallScore} Güven)`;
+      badgeLabelEn = `Verified New Client (${overallScore}% Trust)`;
+      shortBadgeLabelTr = `Yeni İşveren`;
+      shortBadgeLabelEn = `New Client`;
       badgeClass = "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.15)]";
       dotColor = "bg-emerald-400 animate-pulse";
       summaryTr = "Platformda ilk ilanını açan VKN onaylı kurumsal işveren. Yüksek işe alım niyeti ve güvenli başlangıç güvencesi taşır.";
       summaryEn = "Verified corporate client posting their inaugural listing on Operis with high intent and verified credentials.";
     } else if (overallScore >= 85) {
       level = "PROVEN_HIGH_INTENT";
-      badgeLabelTr = `🟢 %${overallScore} İşe Alım Niyeti`;
-      badgeLabelEn = `🟢 ${overallScore}% High Hiring Intent`;
-      shortBadgeLabelTr = `🟢 %${overallScore} Niyet`;
-      shortBadgeLabelEn = `🟢 ${overallScore}% Intent`;
+      badgeLabelTr = `%${overallScore} İşe Alım Niyeti`;
+      badgeLabelEn = `${overallScore}% High Hiring Intent`;
+      shortBadgeLabelTr = `%${overallScore} Niyet`;
+      shortBadgeLabelEn = `${overallScore}% Intent`;
       badgeClass = "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.15)]";
       dotColor = "bg-emerald-400 animate-pulse";
       summaryTr = "İşverenin kurumsal doğrulaması, piyasa bütçesi ve detaylı teknik şartnamesi yüksek işe alım ciddiyeti göstermektedir.";
       summaryEn = "Proven high hiring probability backed by verified corporate identity, realistic budget, and clear deliverables.";
     } else if (overallScore >= 70) {
       level = "ACTIVE_HIRING_LIKELY";
-      badgeLabelTr = `🔵 %${overallScore} İşe Alım Bekleniyor`;
-      badgeLabelEn = `🔵 ${overallScore}% Hiring Expected`;
-      shortBadgeLabelTr = `🔵 %${overallScore} Niyet`;
-      shortBadgeLabelEn = `🔵 ${overallScore}% Intent`;
+      badgeLabelTr = `%${overallScore} İşe Alım Bekleniyor`;
+      badgeLabelEn = `${overallScore}% Hiring Expected`;
+      shortBadgeLabelTr = `%${overallScore} Niyet`;
+      shortBadgeLabelEn = `${overallScore}% Intent`;
       badgeClass = "bg-sky-500/10 text-sky-400 border-sky-500/30";
       dotColor = "bg-sky-400";
       summaryTr = "İlan yeterli kapsam ve gerçekçi bütçeye sahiptir; işe alımla sonuçlanma olasılığı yüksektir.";
       summaryEn = "Solid listing scope and feasible budget indicate a genuine hiring timeline.";
     } else if (overallScore >= 50) {
       level = "MODERATE_INTENT";
-      badgeLabelTr = `🟡 %${overallScore} Orta Düzey Niyet`;
-      badgeLabelEn = `🟡 ${overallScore}% Moderate Intent`;
-      shortBadgeLabelTr = `🟡 %${overallScore} Niyet`;
-      shortBadgeLabelEn = `🟡 ${overallScore}% Intent`;
+      badgeLabelTr = `%${overallScore} Orta Düzey Niyet`;
+      badgeLabelEn = `${overallScore}% Moderate Intent`;
+      shortBadgeLabelTr = `%${overallScore} Niyet`;
+      shortBadgeLabelEn = `${overallScore}% Intent`;
       badgeClass = "bg-amber-500/10 text-amber-400 border-amber-500/30";
       dotColor = "bg-amber-400";
       summaryTr = "Bütçe veya teknik şartnamede bazı belirsizlikler bulunmaktadır. Teklif verirken kapsamı teyit etmeniz önerilir.";
       summaryEn = "Some ambiguity present in budget or specifications; clarify milestones prior to committing extensive proposal effort.";
     } else {
       level = "PRICE_CHECK_RISK";
-      badgeLabelTr = `🟠 %${overallScore} Piyasa Yoklama Riski`;
-      badgeLabelEn = `🟠 ${overallScore}% Price Discovery Risk`;
-      shortBadgeLabelTr = `🟠 %${overallScore} Riskli`;
-      shortBadgeLabelEn = `🟠 ${overallScore}% Risk`;
+      badgeLabelTr = `%${overallScore} Piyasa Yoklama Riski`;
+      badgeLabelEn = `${overallScore}% Price Discovery Risk`;
+      shortBadgeLabelTr = `%${overallScore} Riskli`;
+      shortBadgeLabelEn = `${overallScore}% Risk`;
       badgeClass = "bg-rose-500/10 text-rose-400 border-rose-500/30";
       dotColor = "bg-rose-400";
       summaryTr = "Aşırı düşük bütçe, yetersiz teknik detay veya sonuçsuz ilan geçmişi sebebiyle 'hayalet ilan' riski taşımaktadır.";

@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useMemo, memo } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { formatBudgetRange } from "@/src/lib/format/budget";
 import {
   ArrowUpRight,
   Zap,
-  ShieldCheck,
   Share2,
   Check,
 } from "lucide-react";
@@ -16,6 +16,7 @@ import { FeedListingItem } from "@/src/modules/listings/feed/service";
 import { HiringIntentBadge } from "../listings/hiring-intent-badge";
 import { HiringIntentModal } from "../listings/hiring-intent-modal";
 import { HiringIntentEngine } from "@/src/modules/listings/hiring-intent/hiring-intent-engine";
+import { BookmarkButton } from "../listings/bookmark-button";
 import { recordUserAffinity } from "@/src/lib/recommendations/user-affinity";
 
 export interface SocialListingCardProps {
@@ -63,6 +64,7 @@ export const SocialListingCard = memo(function SocialListingCard({
 }: SocialListingCardProps) {
   const isTr = locale === "tr";
   const [copied, setCopied] = useState(false);
+  const [copyToast, setCopyToast] = useState(false);
   const [isIntentModalOpen, setIsIntentModalOpen] = useState(false);
 
   const intentBreakdown = useMemo(() => {
@@ -163,7 +165,11 @@ export const SocialListingCard = memo(function SocialListingCard({
       const shareUrl = `${window.location.origin}${listingHref}`;
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setCopyToast(true);
+      setTimeout(() => {
+        setCopied(false);
+        setCopyToast(false);
+      }, 3000);
     } catch {
       // Fallback
     }
@@ -183,7 +189,7 @@ export const SocialListingCard = memo(function SocialListingCard({
 
         {/* Right Column: Content */}
         <div className="flex-1 min-w-0 space-y-2">
-          {/* Top Row: Author, Handle, Time, Category & Freshness */}
+          {/* Top Row: Author, Handle, Time & Freshness */}
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-1.5 text-xs min-w-0 flex-wrap">
               <span className="font-semibold text-sm text-[var(--color-text-primary)] truncate">
@@ -206,18 +212,6 @@ export const SocialListingCard = memo(function SocialListingCard({
               <span className="text-[var(--color-text-tertiary)]">
                 {formatRelativeTime(item.lastActivatedAt ?? item.firstPublishedAt, isTr)}
               </span>
-              <span className="text-[var(--color-text-tertiary)]">·</span>
-              <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-blue-500/10 text-sky-400 border border-blue-500/20">
-                {item.categoryName}
-              </span>
-              <HiringIntentBadge
-                score={intentBreakdown.overallScore}
-                level={intentBreakdown.level}
-                breakdown={intentBreakdown}
-                compact={true}
-                locale={locale}
-                onClick={() => setIsIntentModalOpen(true)}
-              />
             </div>
 
             {/* Freshness indicator */}
@@ -273,32 +267,24 @@ export const SocialListingCard = memo(function SocialListingCard({
           </div>
 
           {/* Action Row */}
-          <div className="pt-2 flex items-center justify-between text-xs text-[var(--color-text-tertiary)]">
-            <div className="flex items-center gap-1.5 text-[11px] text-emerald-400/90 font-medium">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
-              <span>{isTr ? "Doğrudan & Komisyonsuz" : "Direct & Zero Fee"}</span>
+          <div className="pt-2 flex items-center justify-between gap-2 flex-wrap text-xs text-[var(--color-text-tertiary)]">
+            {/* Left: Category Badge & Hiring Intent Badge */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-sky-400 border border-blue-500/20">
+                {item.categoryName}
+              </span>
+              <HiringIntentBadge
+                score={intentBreakdown.overallScore}
+                level={intentBreakdown.level}
+                breakdown={intentBreakdown}
+                compact={true}
+                locale={locale}
+                onClick={() => setIsIntentModalOpen(true)}
+              />
             </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleShare}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-surface/80 hover:text-[var(--color-text-primary)] transition-all cursor-pointer text-xs"
-                title={isTr ? "İlan bağlantısını kopyala" : "Copy link"}
-              >
-                {copied ? (
-                  <>
-                    <Check className="h-3.5 w-3.5 text-emerald-400" />
-                    <span className="text-emerald-400 font-medium">{isTr ? "Kopyalandı" : "Copied"}</span>
-                  </>
-                ) : (
-                  <>
-                    <Share2 className="h-3.5 w-3.5" />
-                    <span>{isTr ? "Paylaş" : "Share"}</span>
-                  </>
-                )}
-              </button>
-
+            {/* Right: 4 Sleek Icon Actions (Hızlı Teklif -> İncele -> Kaydet -> Paylaş) */}
+            <div className="flex items-center gap-1.5 shrink-0">
               {onQuickOffer && diffMs > 0 && (
                 <button
                   type="button"
@@ -314,20 +300,57 @@ export const SocialListingCard = memo(function SocialListingCard({
                       ownerDisplayName: item.ownerDisplayName,
                     })
                   }
-                  className="inline-flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-semibold text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 hover:border-blue-500/30 transition-all cursor-pointer shadow-2xs"
+                  className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/25 hover:border-blue-500/40 transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95"
+                  title={isTr ? "Hızlı Teklif Ver (1-Tık)" : "Quick Offer"}
+                  aria-label={isTr ? "Hızlı Teklif Ver" : "Quick Offer"}
                 >
-                  <Zap className="h-3 w-3" />
-                  <span>{isTr ? "Hızlı Teklif Ver" : "Quick Offer"}</span>
+                  <Zap className="h-4 w-4 fill-blue-400" />
                 </button>
               )}
 
               <Link
                 href={listingHref}
-                className="inline-flex items-center gap-0.5 px-2.5 py-1 rounded-lg text-xs font-medium text-[var(--color-text-tertiary)] hover:text-blue-400 hover:bg-blue-500/10 transition-colors"
+                onClick={handleCardClick}
+                className="h-8 w-8 inline-flex items-center justify-center rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)] hover:text-blue-400 hover:border-blue-500/30 transition-all cursor-pointer hover:scale-105 active:scale-95"
+                title={isTr ? "İlan Detaylarını İncele" : "View Listing Details"}
+                aria-label={isTr ? "İlan Detaylarını İncele" : "View Listing Details"}
               >
-                <span>{isTr ? "İncele" : "View"}</span>
-                <ArrowUpRight className="h-3.5 w-3.5" />
+                <ArrowUpRight className="h-4 w-4" />
               </Link>
+
+              <BookmarkButton
+                listingId={item.id}
+                locale={locale}
+                variant="icon"
+                size="sm"
+                className="h-8 w-8 rounded-lg hover:scale-105 active:scale-95"
+              />
+
+              <button
+                type="button"
+                onClick={handleShare}
+                className={`h-8 w-8 inline-flex items-center justify-center rounded-lg border transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+                  copied
+                    ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400"
+                    : "border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/30 hover:bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+                }`}
+                title={
+                  copied
+                    ? isTr
+                      ? "Bağlantı Kopyalandı!"
+                      : "Link Copied!"
+                    : isTr
+                    ? "İlan Bağlantısını Paylaş"
+                    : "Share Listing Link"
+                }
+                aria-label={isTr ? "İlanı Paylaş" : "Share Listing"}
+              >
+                {copied ? (
+                  <Check className="h-4 w-4 text-emerald-400" />
+                ) : (
+                  <Share2 className="h-4 w-4" />
+                )}
+              </button>
             </div>
           </div>
         </div>
@@ -340,6 +363,30 @@ export const SocialListingCard = memo(function SocialListingCard({
         listingTitle={item.title}
         locale={locale}
       />
+
+      {/* Floating Link Copied Notification */}
+      {copyToast && typeof document !== "undefined" && createPortal(
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-6 right-6 z-[9999] flex items-center gap-3 px-4 py-3 rounded-2xl border border-emerald-500/40 bg-[var(--color-surface-base)]/95 text-[var(--color-text-primary)] shadow-2xl shadow-black/60 backdrop-blur-xl animate-in slide-in-from-bottom-4 fade-in duration-200"
+        >
+          <div className="h-7 w-7 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0">
+            <Check className="h-4 w-4 text-emerald-400" />
+          </div>
+          <div className="flex flex-col pr-1">
+            <span className="text-xs font-bold text-[var(--color-text-primary)]">
+              {isTr ? "Bağlantı Kopyalandı!" : "Link Copied!"}
+            </span>
+            <span className="text-[11px] text-[var(--color-text-secondary)]">
+              {isTr
+                ? "İlan bağlantısı panoya kopyalandı, dilediğiniz yerde paylaşabilirsiniz."
+                : "Listing link copied to clipboard, ready to share."}
+            </span>
+          </div>
+        </div>,
+        document.body
+      )}
     </article>
   );
 });

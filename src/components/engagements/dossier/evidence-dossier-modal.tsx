@@ -211,8 +211,8 @@ Doğrulama Komutu: sha256sum -c checksums.sha256`;
       onClose={onClose}
       title={
         isTr
-          ? "⚖️ HMK m. 193 Resmi Adli Delil Paketi & Arabulucu İhraç Dosyası"
-          : "⚖️ HMK Art. 193 Legal Evidence & Mediation Dossier"
+          ? "HMK m. 193 Resmi Delil Paketi & Arabulucu Dosyası"
+          : "HMK Art. 193 Legal Evidence & Mediation Dossier"
       }
       description={
         isTr
@@ -269,7 +269,7 @@ Doğrulama Komutu: sha256sum -c checksums.sha256`;
                   <span className="font-semibold text-emerald-400 flex items-center gap-1.5">
                     <ShieldCheck className="h-3.5 w-3.5" />
                     <span>
-                      {isTr ? "Master SHA-256 Delil Kök Karması:" : "Master SHA-256 Root Digest:"}
+                      {isTr ? "Doğrulanmış Dijital Mühür Kodu:" : "Master Cryptographic Digest:"}
                     </span>
                   </span>
                   <button

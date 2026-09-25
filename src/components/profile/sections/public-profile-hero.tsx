@@ -79,11 +79,51 @@ function renderAvailabilityIndicator(
       />
     );
   }
+  if (availabilityStatus === "FULL_TIME") {
+    return (
+      <span
+        className={`${dotClasses} bg-blue-500`}
+        title={isTr ? "Tam Zamanlı Açık" : "Open to Full-Time"}
+      />
+    );
+  }
   if (availabilityStatus === "PARTIALLY_AVAILABLE") {
     return (
       <span
         className={`${dotClasses} bg-amber-500`}
-        title={isTr ? "Kısmi Zamanlı Müsait" : "Partially Available"}
+        title={isTr ? "Yarı Zamanlı" : "Part-Time"}
+      />
+    );
+  }
+  if (availabilityStatus === "PROJECT_BASED") {
+    return (
+      <span
+        className={`${dotClasses} bg-purple-500`}
+        title={isTr ? "Proje Bazlı / Serbest" : "Project-Based"}
+      />
+    );
+  }
+  if (availabilityStatus === "ADVISORY") {
+    return (
+      <span
+        className={`${dotClasses} bg-indigo-500`}
+        title={isTr ? "Danışmanlık & Mentorluk" : "Advisory & Mentorship"}
+      />
+    );
+  }
+  if (availabilityStatus === "VOLUNTEER") {
+    return (
+      <span
+        className={`${dotClasses} bg-teal-500`}
+        title={isTr ? "Gönüllü & Sosyal Fayda" : "Volunteer & Pro Bono"}
+      />
+    );
+  }
+  if (availabilityStatus === "INTERNSHIP") {
+    return (
+      <span
+        className={`${dotClasses} bg-sky-500`}
+        title={isTr ? "Staj & Çıraklık" : "Internship & Apprenticeship"}
       />
     );
   }

@@ -25,15 +25,12 @@ export async function generateMetadata({
     };
   }
 
-  const title = isTr
-    ? `${profile.displayName} (@${profile.handle})${profile.headline ? ` — ${profile.headline}` : " — Doğrulanmış Profil"}`
-    : `${profile.displayName} (@${profile.handle})${profile.headline ? ` — ${profile.headline}` : " — Verified Profile"}`;
-  const description =
-    profile.headline ||
-    profile.about ||
-    (isTr
+  const title = `${profile.displayName} (@${profile.handle})`;
+  const description = profile.headline
+    ? `${profile.displayName} — ${profile.headline}. ${isTr ? "Operis doğrulanmış profili ve portfolyosu." : "Operis verified profile and portfolio."}`
+    : isTr
       ? `${profile.displayName} kullanıcısının Operis profili ve doğrulanmış iş geçmişi.`
-      : `Public profile and verified project history for ${profile.displayName} on Operis.`);
+      : `Public profile and verified project history for ${profile.displayName} on Operis.`;
 
   return {
     title,

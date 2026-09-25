@@ -11,6 +11,9 @@ import {
   Check,
   Download,
   X,
+  Lock,
+  Scale,
+  ScrollText,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import {
@@ -267,11 +270,13 @@ export function MilestoneDisputeTrigger({
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-teal-500 font-mono text-xs"
                 />
                 {paymentReference.length > 0 && paymentReference.trim().length < 6 && (
-                  <p className="text-[10px] text-amber-400">
-                    ⚠️{" "}
-                    {isTr
-                      ? "Referans numarası en az 6 karakter olmalıdır."
-                      : "Reference number must be at least 6 characters."}
+                  <p className="text-[10px] text-amber-400 flex items-center gap-1">
+                    <AlertTriangle className="h-3 w-3 shrink-0" />
+                    <span>
+                      {isTr
+                        ? "Referans numarası en az 6 karakter olmalıdır."
+                        : "Reference number must be at least 6 characters."}
+                    </span>
                   </p>
                 )}
               </div>
@@ -367,10 +372,13 @@ export function MilestoneDisputeTrigger({
                 />
               </div>
 
-              <p className="text-[10px] text-slate-400">
-                {isTr
-                  ? "🔒 Bu işlem HMK m. 193 uyarınca karşılıklı olarak kilitlenir ve yasal ibra kaydı oluşturur."
-                  : "🔒 This confirmation locks the milestone audit trail under statutory rules."}
+              <p className="text-[10px] text-slate-400 flex items-center gap-1.5">
+                <Lock className="h-3 w-3 text-slate-400 shrink-0" aria-hidden="true" />
+                <span>
+                  {isTr
+                    ? "Bu işlem HMK m. 193 uyarınca karşılıklı olarak kilitlenir ve yasal ibra kaydı oluşturur."
+                    : "This confirmation locks the milestone audit trail under statutory rules."}
+                </span>
               </p>
             </div>
 
@@ -738,9 +746,9 @@ export function MilestoneDisputeTrigger({
             {/* Statutory Clauses */}
             <div className="p-3 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-2 text-[11px] text-slate-300">
               <div>
-                <strong className="text-slate-200 block">
-                  ⚖️{" "}
-                  {isTr ? "TBK m. 132 Karşılıklı İbra Hükmü:" : "TBK m. 132 Statutory Discharge:"}
+                <strong className="text-slate-200 flex items-center gap-1.5">
+                  <Scale className="h-3.5 w-3.5 text-purple-400 shrink-0" aria-hidden="true" />
+                  <span>{isTr ? "TBK m. 132 Karşılıklı İbra Hükmü:" : "TBK m. 132 Statutory Discharge:"}</span>
                 </strong>
                 <p className="text-slate-400 italic mt-0.5">
                   &ldquo;
@@ -752,9 +760,9 @@ export function MilestoneDisputeTrigger({
               </div>
 
               <div className="pt-1.5 border-t border-slate-800/80">
-                <strong className="text-slate-200 block">
-                  📜{" "}
-                  {isTr ? "HMK m. 193 Delil Sözleşmesi Hükmü:" : "HMK m. 193 Evidentiary Contract:"}
+                <strong className="text-slate-200 flex items-center gap-1.5">
+                  <ScrollText className="h-3.5 w-3.5 text-indigo-400 shrink-0" aria-hidden="true" />
+                  <span>{isTr ? "HMK m. 193 Delil Sözleşmesi Hükmü:" : "HMK m. 193 Evidentiary Contract:"}</span>
                 </strong>
                 <p className="text-slate-400 italic mt-0.5">
                   &ldquo;

@@ -54,29 +54,29 @@ export function FeedRightPanel({
 
   return (
     <aside className="hidden xl:flex flex-col gap-3.5 w-[290px] xl:w-[310px] shrink-0 sticky top-20 self-start">
-      {/* 1. Publish Listing Action Card (Projeniz mi Var? - Positioned at the very top) */}
+      {/* 1. Publish Listing Action Card (Bir Projeniz mi Var? - Positioned at the very top) */}
       {settings.showPublishCta && (
         <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-gradient-to-br from-blue-500/10 via-[var(--color-surface-base)] to-purple-500/10 backdrop-blur-xl p-4 shadow-sm space-y-3">
           <div className="flex items-center gap-2 text-blue-400">
             <Zap className="h-4 w-4" />
-            <h3 className="text-xs font-bold uppercase tracking-wider">
-              {isTr ? "Projeniz mi Var?" : "Need Developers?"}
+            <h3 className="text-xs font-bold tracking-wide">
+              {isTr ? "Bir Projeniz mi Var?" : "Need a Project Built?"}
             </h3>
           </div>
 
           <p className="text-[11px] text-[var(--color-text-secondary)] leading-relaxed">
             {isTr
-              ? "Ücretsiz ilan oluşturun, gizli ve komisyonsuz teklifler alarak doğrudan eşleşin."
-              : "Post your requirements for free and receive commission-free proposals directly."}
+              ? "İhtiyacınızı ücretsiz ilan olarak paylaşın, alanında uzman profesyonellerden doğrudan teklif alın."
+              : "Post your project requirements for free and receive direct proposals from top professionals."}
           </p>
 
           <Link href={getLocalizedRoute("newListing", locale)} className="block w-full">
             <Button
               variant="shimmer"
-              className="w-full h-9 rounded-2xl font-bold text-xs gap-1.5 shadow-md shadow-blue-500/20"
+              className="w-full h-9 rounded-2xl font-bold text-xs gap-1.5 shadow-md shadow-blue-500/20 cursor-pointer"
             >
               <PlusCircle className="h-3.5 w-3.5" />
-              <span>{isTr ? "Hemen İlan Yayınla" : "Publish Listing Now"}</span>
+              <span>{isTr ? "Ücretsiz İlan Oluştur" : "Post a Free Listing"}</span>
             </Button>
           </Link>
         </div>
@@ -86,18 +86,18 @@ export function FeedRightPanel({
       {settings.showTrendingTech && (
         <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/85 backdrop-blur-xl p-4 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-primary)] flex items-center gap-1.5">
+            <h3 className="text-xs font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
               <TrendingUp className="h-3.5 w-3.5 text-blue-400" />
               <span>{isTr ? "Gündemdeki Teknolojiler" : "Trending Tech"}</span>
             </h3>
 
-            <span className="text-[10px] text-[var(--color-text-tertiary)]">
+            <span className="text-[10px] font-medium text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">
               {isTr ? "Piyasa Nabzı" : "Market Pulse"}
             </span>
           </div>
 
           {trendingTags.length > 0 ? (
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               {trendingTags.map((t, idx) => (
                 <Link
                   key={t.tag}
@@ -108,16 +108,16 @@ export function FeedRightPanel({
                       tags: [t.tag],
                     });
                   }}
-                  className="flex items-center justify-between p-2 rounded-2xl hover:bg-[var(--color-surface-hover)] transition-colors group cursor-pointer"
+                  className="flex items-center justify-between gap-2 p-1.5 px-2 rounded-2xl hover:bg-[var(--color-surface-hover)] transition-colors group cursor-pointer"
                   title={`${t.tag} (${t.category})`}
                 >
-                  <div className="min-w-0 pr-2">
-                    <span className="text-xs font-bold text-[var(--color-text-primary)] group-hover:text-blue-400 transition-colors">
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs font-bold text-[var(--color-text-primary)] group-hover:text-blue-400 transition-colors truncate">
                       #{t.tag}
-                    </span>
-                    <p className="text-[10px] text-[var(--color-text-tertiary)] truncate">
+                    </div>
+                    <div className="text-[10px] text-[var(--color-text-tertiary)] truncate">
                       {t.category}
-                    </p>
+                    </div>
                   </div>
                   <span className="text-[10px] font-semibold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-lg border border-blue-500/20 shrink-0">
                     {getTrendTagBadgeLabel(idx, isTr)}
@@ -126,8 +126,10 @@ export function FeedRightPanel({
               ))}
             </div>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-tertiary)] py-1">
-              {isTr ? "Henüz aktif teknoloji etiketi bulunmuyor." : "No active tech tags yet."}
+            <p className="text-xs text-[var(--color-text-tertiary)] leading-relaxed py-1">
+              {isTr
+                ? "Yeni ilanlar paylaşıldıkça en çok aranan beceri ve teknolojiler burada listelenecektir."
+                : "Popular skills and technologies will appear here as new listings are published."}
             </p>
           )}
         </div>
@@ -137,7 +139,7 @@ export function FeedRightPanel({
       {settings.showSuggestedCategories && (
         <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/85 backdrop-blur-xl p-4 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-primary)] flex items-center gap-1.5">
+            <h3 className="text-xs font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-amber-400" />
               <span>{isTr ? "Önerilen Alanlar" : "Suggested Areas"}</span>
             </h3>
@@ -158,7 +160,7 @@ export function FeedRightPanel({
                 return (
                   <div
                     key={cat.id}
-                    className="flex items-center justify-between gap-2 p-1.5 px-2 rounded-2xl hover:bg-surface/60 transition-colors"
+                    className="flex items-center justify-between gap-2 p-1.5 px-2 rounded-2xl hover:bg-[var(--color-surface-hover)] transition-colors"
                   >
                     <Link
                       href={`${basePath}?category=${cat.slug}`}
@@ -173,8 +175,16 @@ export function FeedRightPanel({
                       <div className="text-xs font-medium text-[var(--color-text-primary)] group-hover:text-blue-400 transition-colors truncate">
                         {cat.name}
                       </div>
-                      <div className="text-[10px] text-[var(--color-text-tertiary)]">
-                        {isTr ? "Uzmanlık Alanı" : "Specialization"}
+                      <div className="text-[10px] text-[var(--color-text-tertiary)] truncate">
+                        {typeof cat.listingCount === "number" && cat.listingCount > 0
+                          ? isTr
+                            ? `${cat.listingCount} aktif ilan`
+                            : `${cat.listingCount} active listings`
+                          : cat.description
+                          ? cat.description
+                          : isTr
+                          ? "Popüler Uzmanlık"
+                          : "Specialization"}
                       </div>
                     </Link>
 
@@ -183,7 +193,7 @@ export function FeedRightPanel({
                       onClick={() => handleToggleCategoryFollow(cat.id)}
                       className={`shrink-0 px-2.5 py-1 rounded-xl text-[11px] font-semibold transition-all flex items-center gap-1 cursor-pointer ${
                         isFollowed
-                          ? "bg-blue-500/15 text-blue-400 border border-blue-500/30 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20"
+                          ? "bg-blue-500/15 text-blue-400 border border-blue-500/30 hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/20"
                           : "bg-surface text-[var(--color-text-secondary)] hover:bg-blue-500/10 hover:text-blue-400 border border-[var(--color-border-subtle)]"
                       }`}
                     >
@@ -204,19 +214,25 @@ export function FeedRightPanel({
               })}
             </div>
           ) : (
-            <div className="p-3.5 rounded-2xl bg-surface/30 border border-dashed border-[var(--color-border-subtle)] text-center space-y-1.5">
-              <Sparkles className="h-4 w-4 text-amber-400/80 mx-auto" />
-              <p className="text-xs font-semibold text-[var(--color-text-secondary)]">
-                {isTr ? "Kişisel Öneriler Hazırlanıyor" : "Awaiting Activity"}
+            <div className="py-2.5 text-center space-y-1">
+              <Sparkles className="h-4 w-4 text-amber-400/80 mx-auto mb-1" />
+              <p className="text-xs font-medium text-[var(--color-text-secondary)]">
+                {followedCategoryIds.size >= categories.length && categories.length > 0
+                  ? isTr
+                    ? "Tüm kategorileri takip ediyorsunuz"
+                    : "You are following all categories"
+                  : isTr
+                  ? "İlginizi Çekebilecek Alanlar"
+                  : "Explore New Categories"}
               </p>
               <p className="text-[11px] text-[var(--color-text-tertiary)] leading-relaxed">
                 {followedCategoryIds.size >= categories.length && categories.length > 0
                   ? isTr
-                    ? "Tüm uzmanlık alanlarını takip ediyorsunuz."
-                    : "You are following all specializations."
+                    ? "Yeni bir kategori eklendiğinde öneriler burada belirecektir."
+                    : "New categories will appear here when added."
                   : isTr
-                  ? "İlanları tıkladıkça ve arama yaptıkça ilgilendiğiniz alanlara özel öneriler burada belirecektir."
-                  : "As you explore listings and search, recommendations tailored to you will appear here."}
+                  ? "İlanları inceledikçe size özel öneriler burada listelenir."
+                  : "Recommendations will adapt as you explore listings."}
               </p>
             </div>
           )}

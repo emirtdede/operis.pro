@@ -42,6 +42,10 @@ next-env.d.ts
 # Postgres local data
 /pgdata/
 
+# Local file uploads
+/public/uploads/*
+!/public/uploads/.gitkeep
+
 .vercel
 .env*
 

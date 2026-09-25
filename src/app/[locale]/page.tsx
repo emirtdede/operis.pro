@@ -45,12 +45,12 @@ export async function generateMetadata({
   const isTr = locale === "tr";
 
   const title = isTr
-    ? "Doğrudan & Komisyonsuz Yazılım İlanları | Operis"
-    : "Direct & Zero-Fee Tech Listings | Operis";
+    ? "Operis — Komisyonsuz Freelance Yazılım Platformu"
+    : "Operis — Zero-Commission Direct Tech Freelance Network";
 
   const description = isTr
-    ? "Türkiye ve küresel teknoloji profesyonelleri için doğrudan ve güvenli serbest çalışma platformu. Komisyon yok, aracı yok, %100 doğrudan iş birliği."
-    : "Direct, transparent freelance matching for software engineers and technology professionals. Zero commission, zero escrow, 100% direct collaboration.";
+    ? "Aracısız ve %0 komisyonlu serbest çalışma ağı. Yazılım ve teknoloji profesyonelleriyle doğrudan iletişim kurun, güvenle iş birliği yapın."
+    : "Direct freelance matching platform for software engineers and technology leaders. 0% commission, direct contracts, and verified clients.";
 
   return {
     title: {

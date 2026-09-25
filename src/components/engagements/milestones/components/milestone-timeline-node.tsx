@@ -14,6 +14,9 @@ import {
   Info,
   FileCheck,
   ScrollText,
+  Target,
+  MessageSquare,
+  Lock,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import {
@@ -183,8 +186,8 @@ export function MilestoneTimelineNode({
       <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800/80 text-xs text-slate-400">
         <div className="flex items-center gap-2">
           {m.deliverableCriteria && (
-            <span className="text-[11px] text-slate-400">
-              🎯{" "}
+            <span className="text-[11px] text-slate-400 flex items-center gap-1.5">
+              <Target className="h-3 w-3 text-cyan-400 shrink-0" />
               <strong className="text-slate-300">{isTr ? "Kriter:" : "Criteria:"}</strong>{" "}
               {m.deliverableCriteria}
             </span>
@@ -213,9 +216,12 @@ export function MilestoneTimelineNode({
 
       {/* Deliverable Note if present */}
       {m.deliverableNote && (
-        <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80 text-[11px] text-slate-300">
-          💬 <strong>{isTr ? "Teslimat Notu:" : "Handover Note:"}</strong>{" "}
-          {m.deliverableNote}
+        <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80 text-[11px] text-slate-300 flex items-start gap-1.5">
+          <MessageSquare className="h-3.5 w-3.5 text-slate-400 shrink-0 mt-0.5" aria-hidden="true" />
+          <div>
+            <strong>{isTr ? "Teslimat Notu:" : "Handover Note:"}</strong>{" "}
+            {m.deliverableNote}
+          </div>
         </div>
       )}
 
@@ -289,15 +295,21 @@ export function MilestoneTimelineNode({
             </span>
           </div>
           {m.disputeNote && (
-            <p className="text-[11px] text-slate-300 bg-black/40 p-2 rounded-xl border border-rose-500/20">
-              💬 <strong>{isTr ? "Yazılımcı Açıklaması:" : "Specialist Note:"}</strong>{" "}
-              {m.disputeNote}
-            </p>
+            <div className="text-[11px] text-slate-300 bg-black/40 p-2 rounded-xl border border-rose-500/20 flex items-start gap-1.5">
+              <MessageSquare className="h-3.5 w-3.5 text-rose-400 shrink-0 mt-0.5" aria-hidden="true" />
+              <div>
+                <strong>{isTr ? "Yazılımcı Açıklaması:" : "Specialist Note:"}</strong>{" "}
+                {m.disputeNote}
+              </div>
+            </div>
           )}
-          <p className="text-[10px] text-rose-200/80">
-            {isTr
-              ? "🔒 TBK m. 470 uyarınca teslimat ve telif devri yükümlülüğü dondurulmuştur. İşverenin banka sorgu numarasını kontrol etmesi veya ödemeyi tekrar teyit etmesi bekleniyor."
-              : "🔒 Delivery obligations frozen under contract terms until payment receipt is verified."}
+          <p className="text-[10px] text-rose-200/80 flex items-start gap-1.5">
+            <Lock className="h-3.5 w-3.5 text-rose-400 shrink-0 mt-0.5" aria-hidden="true" />
+            <span>
+              {isTr
+                ? "TBK m. 470 uyarınca teslimat ve telif devri yükümlülüğü dondurulmuştur. İşverenin banka sorgu numarasını kontrol etmesi veya ödemeyi tekrar teyit etmesi bekleniyor."
+                : "Delivery obligations frozen under contract terms until payment receipt is verified."}
+            </span>
           </p>
         </div>
       )}
@@ -340,7 +352,7 @@ export function MilestoneTimelineNode({
               className="text-xs text-cyan-300 border-cyan-500/40 hover:bg-cyan-500/15 gap-1.5 shadow-sm shadow-cyan-500/10 font-medium cursor-pointer"
             >
               <ScrollText className="h-3.5 w-3.5 text-cyan-400" />
-              <span>{isTr ? "📜 FSEK IP Devir Belgesi" : "📜 IP Assignment Deed"}</span>
+              <span>{isTr ? "FSEK IP Devir Belgesi" : "IP Assignment Deed"}</span>
             </Button>
           </div>
         </div>

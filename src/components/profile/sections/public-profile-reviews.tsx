@@ -56,7 +56,7 @@ export function PublicProfileReviews({ profile, locale }: PublicProfileReviewsPr
               </span>
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-semibold w-fit mt-1">
                 <ShieldCheck className="h-3.5 w-3.5" />
-                <span>{isTr ? "Bayesyen İtibar Skoru:" : "Bayesian Score:"} {reviewsSummary.bayesianScore.toFixed(1)}</span>
+                <span>{isTr ? "Doğrulanmış İtibar Puanı:" : "Verified Reputation Score:"} {reviewsSummary.bayesianScore.toFixed(1)}</span>
               </div>
             </div>
 

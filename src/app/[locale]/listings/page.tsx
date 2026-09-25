@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { FeedService, FeedResult } from "@/src/modules/listings/feed/service";
@@ -18,11 +19,11 @@ export async function generateMetadata({
   const isTr = locale === "tr";
 
   const title = isTr
-    ? "İlanları Keşfedin & Canlı Akış | Operis"
-    : "Explore Listings & Live Feed | Operis";
+    ? "Yazılım & Teknoloji İlanları — Canlı Akış"
+    : "Tech & Software Listings — Live Feed";
   const description = isTr
-    ? "7 günlük güncel yazılım, tasarım ve teknoloji ilanlarını akışta veya katalogda inceleyin, komisyonsuz doğrudan teklif sunun."
-    : "Explore active 7-day software, design, and technology listings in stream or catalog format and submit direct commission-free proposals.";
+    ? "Son 7 günde yayınlanan aktif yazılım, yapay zeka ve teknoloji ilanlarını inceleyin; işverenlerle %0 komisyonla doğrudan masaya oturun."
+    : "Browse active technology and software listings published in the last 7 days. Connect directly with hiring teams with 0% platform fees.";
 
   return {
     title,
@@ -76,7 +77,17 @@ export default async function BrowseListingsPage({
   const selectedCategory = sp.category;
   const searchQuery = sp.q;
   const mode: "following" | "all" = sp.mode === "following" ? "following" : "all";
-  const view: "stream" | "catalog" = sp.view === "catalog" ? "catalog" : "stream";
+
+  const cookieStore = await cookies();
+  const savedViewCookie = cookieStore.get("operis_listings_view_preference")?.value;
+  const view: "stream" | "catalog" =
+    sp.view === "catalog"
+      ? "catalog"
+      : sp.view === "stream"
+      ? "stream"
+      : savedViewCookie === "catalog"
+      ? "catalog"
+      : "stream";
   const listingsPath = isTr ? "/tr/ilanlar" : "/en/listings";
 
   const selectedCategorySlugs = selectedCategory
@@ -111,7 +122,7 @@ export default async function BrowseListingsPage({
         headline: (userProfile as { headline?: string | null })?.headline ?? null,
         avatarUrl: userProfile.avatarUrl ?? null,
         availabilityStatus:
-          (userProfile as { availabilityStatus?: "AVAILABLE_NOW" | "PARTIALLY_AVAILABLE" | "BUSY" })
+          (userProfile as { availabilityStatus?: import("@/src/modules/profiles/services/availability.service").AvailabilityStatus })
             ?.availabilityStatus ?? "AVAILABLE_NOW",
         isAvailableForHire:
           (userProfile as { isAvailableForHire?: boolean })?.isAvailableForHire ?? true,

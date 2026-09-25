@@ -1,6 +1,6 @@
 "use client";
 
-import { Shield, Layers } from "lucide-react";
+import { Shield, Layers, Scale, Bot, Globe, ScrollText } from "lucide-react";
 import type { GeneratedContractResult, ContractLanguage } from "@/src/modules/contracts/types";
 import { DpaBadge } from "@/src/components/contracts/dpa/dpa-badge";
 import { DpaEngine } from "@/src/modules/contracts/dpa-engine";
@@ -46,10 +46,11 @@ export function ContractProtocolBanners({
       {dpaConfig && dpaConfig.enabled && (
         <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-xl bg-emerald-950/20 border border-emerald-500/30 text-xs animate-in fade-in duration-200">
           <div className="flex items-center gap-2">
+            <Shield className="w-3.5 h-3.5 text-emerald-400 shrink-0" aria-hidden="true" />
             <span className="font-semibold text-emerald-300">
               {isTr
-                ? "🛡️ EK-2: Bilişim Veri İşleme Protokolü Sözleşmeye Dahil Edildi"
-                : "🛡️ ANNEX-2: Data Processing Addendum Attached"}
+                ? "EK-2: Bilişim Veri İşleme Protokolü Sözleşmeye Dahil Edildi"
+                : "ANNEX-2: Data Processing Addendum Attached"}
             </span>
             {(() => {
               const evalResult = DpaEngine.evaluateDpaRisk(dpaConfig);
@@ -77,10 +78,11 @@ export function ContractProtocolBanners({
       {safeHarborConfig && safeHarborConfig.enabled && (
         <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-xl bg-purple-950/20 border border-purple-500/30 text-xs animate-in fade-in duration-200">
           <div className="flex items-center gap-2">
+            <Scale className="w-3.5 h-3.5 text-purple-400 shrink-0" aria-hidden="true" />
             <span className="font-semibold text-purple-300">
               {isTr
-                ? "⚖️ EK-3: İş Kanunu Madde 8 Güvenli Liman Sözleşmeye Dahil Edildi"
-                : "⚖️ ANNEX-3: Labor Code Safe Harbor Attached"}
+                ? "EK-3: İş Kanunu Madde 8 Güvenli Liman Sözleşmeye Dahil Edildi"
+                : "ANNEX-3: Labor Code Safe Harbor Attached"}
             </span>
             <SafeHarborBadge
               config={safeHarborConfig}
@@ -102,10 +104,11 @@ export function ContractProtocolBanners({
       {aiGovConfig && aiGovConfig.enabled && (
         <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-xl bg-indigo-950/20 border border-indigo-500/30 text-xs animate-in fade-in duration-200">
           <div className="flex items-center gap-2">
+            <Bot className="w-3.5 h-3.5 text-indigo-400 shrink-0" aria-hidden="true" />
             <span className="font-semibold text-indigo-300">
               {isTr
-                ? "🤖 EK-4: Yapay Zeka Telif Devri ve Lisans Temizliği Şartnamesi Dahil Edildi"
-                : "🤖 ANNEX-4: AI-Assisted Code IP & Warranty Protocol Attached"}
+                ? "EK-4: Yapay Zeka Telif Devri ve Lisans Temizliği Şartnamesi Dahil Edildi"
+                : "ANNEX-4: AI-Assisted Code IP & Warranty Protocol Attached"}
             </span>
             <AiGovernanceBadge
               config={aiGovConfig}
@@ -127,10 +130,11 @@ export function ContractProtocolBanners({
       {softwareExportConfig && softwareExportConfig.enabled && (
         <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-xl bg-teal-950/20 border border-teal-500/30 text-xs animate-in fade-in duration-200">
           <div className="flex items-center gap-2">
+            <Globe className="w-3.5 h-3.5 text-teal-400 shrink-0" aria-hidden="true" />
             <span className="font-semibold text-teal-300">
               {isTr
-                ? "🌍 EK-5: Yazılım İhracatı %100 Vergi İndirimi & %0 KDV Şartnamesi Dahil Edildi"
-                : "🌍 ANNEX-5: Software Export 100% Tax Deduction & Zero-VAT Attached"}
+                ? "EK-5: Yazılım İhracatı %100 Vergi İndirimi & %0 KDV Şartnamesi Dahil Edildi"
+                : "ANNEX-5: Software Export 100% Tax Deduction & Zero-VAT Attached"}
             </span>
             <SoftwareExportBadge
               config={softwareExportConfig}
@@ -172,10 +176,11 @@ export function ContractProtocolBanners({
             locale={activeLang}
             size="sm"
           />
-          <span className="text-[11px] font-semibold text-indigo-300">
+          <span className="flex items-center gap-1.5 text-[11px] font-semibold text-indigo-300">
+            <ScrollText className="w-3.5 h-3.5 text-indigo-400 shrink-0" aria-hidden="true" />
             {isTr
-              ? "📜 TBK m. 620 Adi Ortaklık / Konsorsiyum Şartları Uygulanmaktadır"
-              : "📜 Under TBK Art. 620 & Joint Consortium Terms"}
+              ? "TBK m. 620 Adi Ortaklık / Konsorsiyum Şartları Uygulanmaktadır"
+              : "Under TBK Art. 620 & Joint Consortium Terms"}
           </span>
         </div>
       )}

@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { History, ArrowRightLeft, Search, X, ListFilter, ChevronDown, ArrowUpDown, Inbox, Eye } from "lucide-react";
+import { History, ArrowRightLeft, Search, X, ListFilter, ChevronDown, ArrowUpDown, Inbox, Eye, Users } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { OfferRevisionsModal } from "../offers/offer-revisions-modal";
@@ -513,10 +513,13 @@ export function ReceivedOffersDashboard({ initialOffers, locale }: ReceivedOffer
                 {offer.isSquadOffer && offer.squadMembers && offer.squadMembers.length > 0 && (
                   <div className="space-y-3 rounded-xl border border-indigo-500/25 bg-indigo-950/20 p-4">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="text-xs font-semibold text-indigo-300">
-                        {isTr
-                          ? "👥 Çevik Konsorsiyum Ekip Yapısı & Hakediş Dağılımı"
-                          : "👥 Squad Roster & Revenue Allocation"}
+                      <span className="text-xs font-semibold text-indigo-300 flex items-center gap-1.5">
+                        <Users className="h-3.5 w-3.5 text-indigo-400 shrink-0" aria-hidden="true" />
+                        <span>
+                          {isTr
+                            ? "Çevik Konsorsiyum Ekip Yapısı & Hakediş Dağılımı"
+                            : "Squad Roster & Revenue Allocation"}
+                        </span>
                       </span>
                       <span className="text-[11px] text-indigo-400 font-mono">
                         {offer.squadMembers.length}{" "}

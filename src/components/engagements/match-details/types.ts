@@ -136,9 +136,9 @@ export function resolveTimezonePillLabel(
   counterpartyTime: { isNight: boolean; isBusiness: boolean },
   isTr: boolean
 ): string {
-  if (counterpartyTime.isNight) return isTr ? "🌙 Gece / Mesai Dışı" : "🌙 Night / Off-Hours";
-  if (counterpartyTime.isBusiness) return isTr ? "🟢 Aktif Çalışma Saatleri" : "🟢 Active Hours";
-  return isTr ? "🟡 Akşam Saatleri" : "🟡 Evening Hours";
+  if (counterpartyTime.isNight) return isTr ? "Gece / Mesai Dışı" : "Night / Off-Hours";
+  if (counterpartyTime.isBusiness) return isTr ? "Aktif Çalışma Saatleri" : "Active Hours";
+  return isTr ? "Akşam Saatleri" : "Evening Hours";
 }
 
 export function getPingButtonLabel(pingCooldown: number, isTr: boolean): string {

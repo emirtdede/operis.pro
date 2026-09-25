@@ -17,6 +17,7 @@ import {
   Layers,
   Clock,
   Database,
+  Phone,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Badge } from "@/src/components/ui/badge";
@@ -98,8 +99,8 @@ export function RunbookVaultCard({
               </div>
               <h3 className="font-bold text-base sm:text-lg text-[var(--color-text-primary)]">
                 {isTr
-                  ? "🛡️ Akıllı Proje Devir Kılavuzu & Canlıda Çalıştırma Kütüphanesi"
-                  : "🛡️ Project Runbook & Architecture Vault"}
+                  ? "Akıllı Proje Devir Kılavuzu & Canlıda Çalıştırma Kütüphanesi"
+                  : "Project Runbook & Architecture Vault"}
               </h3>
             </div>
             <p className="text-xs text-[var(--color-text-secondary)]">
@@ -303,8 +304,9 @@ export function RunbookVaultCard({
                   ? "Sistemin çalışması için gerekli çevre değişkenleri sözlüğü:"
                   : "Environment variables required for system operations:"}
               </span>
-              <span className="text-[11px] font-mono text-amber-400/90">
-                {isTr ? "⚠️ Canlı şifreler gizlenmiştir / örnek formattır" : "⚠️ Plaintext secrets excluded"}
+              <span className="text-[11px] font-mono text-amber-400/90 flex items-center gap-1.5">
+                <AlertTriangle className="h-3 w-3 shrink-0" />
+                <span>{isTr ? "Canlı şifreler gizlenmiştir / örnek formattır" : "Plaintext secrets excluded"}</span>
               </span>
             </div>
 
@@ -557,8 +559,9 @@ export function RunbookVaultCard({
             {/* Emergency Contact */}
             {runbook.emergencyContact && (
               <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 text-xs space-y-1.5">
-                <div className="font-semibold text-[var(--color-text-primary)]">
-                  {isTr ? "📞 Acil Durumda Aranacak / Ulaşılacak Kişi" : "Emergency Contact"}
+                <div className="font-semibold text-[var(--color-text-primary)] flex items-center gap-1.5">
+                  <Phone className="h-3.5 w-3.5 text-blue-400 shrink-0" aria-hidden="true" />
+                  <span>{isTr ? "Acil Durumda Aranacak / Ulaşılacak Kişi" : "Emergency Contact"}</span>
                 </div>
                 <p className="text-[var(--color-text-secondary)]">
                   {runbook.emergencyContact.name} • {runbook.emergencyContact.email || runbook.emergencyContact.phone}

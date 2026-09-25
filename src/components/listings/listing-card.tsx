@@ -12,7 +12,6 @@ import {
   Square,
 } from "lucide-react";
 import { AvatarInitials } from "../ui/avatar-initials";
-import { Badge } from "../ui/badge";
 import { BookmarkButton } from "./bookmark-button";
 import { VerifiedCompanyBadge } from "../ui/verified-company-badge";
 import { HiringIntentBadge } from "./hiring-intent-badge";
@@ -258,7 +257,7 @@ export const ListingCard = memo(function ListingCard({
                   if (diffDays > 0 && onToggleSelect) onToggleSelect(id);
                 }}
                 disabled={diffDays <= 0}
-                className={`relative z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold cursor-pointer transition-all ${getBatchButtonClass(isSelected, diffDays <= 0)}`}
+                className={`relative z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold cursor-pointer transition-all ${getBatchButtonClass(isSelected, diffDays <= 0)}`}
                 title={diffDays <= 0 ? expiredListingTitle : undefined}
               >
                 {isSelected ? (
@@ -270,12 +269,9 @@ export const ListingCard = memo(function ListingCard({
               </button>
             )}
 
-            <Badge
-              variant="secondary"
-              className="font-semibold bg-blue-500/15 text-blue-700 dark:text-sky-300 border-blue-500/25 shadow-2xs"
-            >
+            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-sky-400 border border-blue-500/20">
               {categoryName}
-            </Badge>
+            </span>
 
             {ownerIsCompanyVerified && (
               <VerifiedCompanyBadge
@@ -298,38 +294,50 @@ export const ListingCard = memo(function ListingCard({
             />
           </div>
 
-          <div
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold border ${freshnessColor}`}
-          >
-            <span className={`h-2 w-2 rounded-full ${dotColor} shrink-0`} />
-            <span>{freshnessText}</span>
+          {/* Right: Freshness Badge, Bookmark & Details Link */}
+          <div className="flex items-center gap-2 shrink-0">
+            <div
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${freshnessColor}`}
+            >
+              <span className={`h-2 w-2 rounded-full ${dotColor} shrink-0`} />
+              <span>{freshnessText}</span>
+            </div>
+
+            <div className="relative z-20 flex items-center gap-1.5 shrink-0">
+              <BookmarkButton
+                listingId={id}
+                locale={locale}
+                size="sm"
+                variant="icon"
+                className="h-7 w-7 p-0 rounded-lg"
+              />
+              <Link
+                href={isTr ? `/tr/ilanlar/${slug}` : `/en/listings/${slug}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCardClick();
+                }}
+                title={isTr ? "İlan Detayını İncele" : "View Listing Details"}
+                aria-label={isTr ? "İlan Detayını İncele" : "View Listing Details"}
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)] hover:bg-blue-500/10 hover:text-blue-400 transition-colors cursor-pointer"
+              >
+                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
           </div>
         </div>
 
         {/* Title */}
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="text-lg font-bold leading-snug text-[var(--color-text-primary)] group-hover:text-blue-400 transition-colors">
-            <Link
-              href={isTr ? `/tr/ilanlar/${slug}` : `/en/listings/${slug}`}
-              onClick={handleCardClick}
-              className="focus:outline-none"
-            >
-              <span className="absolute inset-0" aria-hidden="true" />
-              {title}
-            </Link>
-          </h3>
-          <div className="relative z-10 flex items-center gap-1.5 shrink-0">
-            <BookmarkButton
-              listingId={id}
-              locale={locale}
-              size="sm"
-              variant="icon"
-            />
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)] group-hover:bg-blue-500/10 group-hover:text-blue-400 transition-colors">
-              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-            </div>
-          </div>
-        </div>
+        <h3 className="text-lg font-bold leading-snug text-[var(--color-text-primary)] group-hover:text-blue-400 transition-colors">
+          <Link
+            href={isTr ? `/tr/ilanlar/${slug}` : `/en/listings/${slug}`}
+            onClick={handleCardClick}
+            className="focus:outline-none"
+          >
+            <span className="absolute inset-0" aria-hidden="true" />
+            {title}
+          </Link>
+        </h3>
 
         {/* Summary Description */}
         <p className="line-clamp-2 text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">

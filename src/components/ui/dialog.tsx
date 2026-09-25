@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -16,6 +17,11 @@ export interface DialogProps {
 export function Dialog({ isOpen, onClose, title, description, children, className }: DialogProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -41,18 +47,19 @@ export function Dialog({ isOpen, onClose, title, description, children, classNam
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
+  if (!isMounted || typeof document === "undefined") return null;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
       role="dialog"
       aria-modal="true"
       aria-labelledby="dialog-title"
       aria-describedby={description ? "dialog-desc" : undefined}
     >
-      {/* Backdrop without blur */}
+      {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/80 transition-opacity"
+        className="fixed inset-0 bg-black/80 backdrop-blur-xs transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -125,6 +132,7 @@ export function Dialog({ isOpen, onClose, title, description, children, classNam
 
         <div className="relative z-10 mt-1 flex-1 overflow-y-auto min-h-0 pr-1 overscroll-contain">{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

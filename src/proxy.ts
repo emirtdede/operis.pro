@@ -4,40 +4,12 @@ import { locales } from "./lib/i18n/config";
 
 const intlMiddleware = createMiddleware({
   locales,
-  defaultLocale: "en",
+  defaultLocale: "tr",
   localePrefix: "always",
   localeDetection: false, // Handled explicitly below for 100% deterministic user requirement
 });
 
-/**
- * Parses Accept-Language header according to RFC 9110 quality values (q-factor).
- * Returns true only if Turkish (tr) is the user's primary/highest preference.
- */
-function isTurkishPreferred(acceptLanguage: string | null): boolean {
-  if (!acceptLanguage || acceptLanguage.trim().length === 0) {
-    return false;
-  }
 
-  const preferences = acceptLanguage
-    .split(",")
-    .map((part) => {
-      const [lang, qPart] = part.trim().split(";");
-      const q = qPart ? parseFloat(qPart.replace("q=", "")) : 1.0;
-      return {
-        lang: (lang || "").trim().toLowerCase(),
-        q: isNaN(q) ? 1.0 : q,
-      };
-    })
-    .filter((item) => item.lang.length > 0)
-    .sort((a, b) => b.q - a.q);
-
-  if (preferences.length === 0) {
-    return false;
-  }
-
-  const top = preferences[0];
-  return Boolean(top && top.lang.startsWith("tr"));
-}
 
 const TR_EXACT_REDIRECTS: Record<string, string> = {
   "/tr/categories": "/tr/kategoriler",
@@ -126,17 +98,21 @@ function baseProxy(request: NextRequest) {
     } else {
       // First-time visit: inspect Accept-Language header
       const acceptLanguage = request.headers.get("accept-language");
-      if (isTurkishPreferred(acceptLanguage)) {
-        targetLocale = "tr";
-      } else {
-        // Different language or undetected: ALWAYS default to English
+      if (
+        acceptLanguage &&
+        acceptLanguage.toLowerCase().startsWith("en") &&
+        !acceptLanguage.toLowerCase().includes("tr")
+      ) {
         targetLocale = "en";
+      } else {
+        // Turkish is the primary market and matches x-default: ALWAYS default to "tr"
+        targetLocale = "tr";
       }
     }
 
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = `/${targetLocale}`;
-    return NextResponse.redirect(redirectUrl, 302);
+    return NextResponse.redirect(redirectUrl, 308);
   }
 
   // 1.5 Feed to Unified Listings Hub: Permanent 301 Redirect

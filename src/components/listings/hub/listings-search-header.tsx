@@ -1,6 +1,6 @@
 import { useState, type Dispatch, SetStateAction } from "react";
 import Link from "next/link";
-import { Search, PlusCircle, Flame, Briefcase, X, SlidersHorizontal } from "lucide-react";
+import { Search, PlusCircle, Flame, Briefcase, X, SlidersHorizontal, LayoutList, LayoutGrid } from "lucide-react";
 import type { CategoryDto } from "@/src/modules/categories/service";
 import { SortDropdown } from "@/src/components/ui/sort-dropdown";
 import { Button } from "@/src/components/ui/button";
@@ -18,6 +18,7 @@ export interface ListingsSearchHeaderProps {
   searchQuery?: string;
   mode: "following" | "all";
   view: "stream" | "catalog";
+  handleSwitchView?: (view: "stream" | "catalog") => void;
   handleSwitchMode: (mode: "following" | "all") => void;
   isTabLoading: boolean;
   isAuthenticated: boolean;
@@ -41,6 +42,7 @@ export function ListingsSearchHeader({
   searchQuery,
   mode,
   view,
+  handleSwitchView,
   handleSwitchMode,
   isTabLoading,
   isAuthenticated,
@@ -51,7 +53,7 @@ export function ListingsSearchHeader({
   setChipLast24h,
   chipFixedBudget,
   setChipFixedBudget,
-  totalItemsCount,
+  totalItemsCount: _totalItemsCount,
 }: ListingsSearchHeaderProps) {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [activeFilterCount, setActiveFilterCount] = useState(0);
@@ -161,14 +163,14 @@ export function ListingsSearchHeader({
           >
             <span>{isTr ? "Sana Özel" : "For You"}</span>
             {isAuthenticated && followedCategoryIds.size > 0 && (
-              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-blue-500/15 text-blue-700 dark:text-sky-300 font-bold border border-blue-500/20">
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-blue-500/15 text-sky-400 font-bold border border-blue-500/20">
                 {followedCategoryIds.size}
               </span>
             )}
           </button>
         </div>
 
-        {/* Right: Sorting and Advanced Filter */}
+        {/* Right: Advanced Filter, Sorting and View Switcher */}
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -188,7 +190,40 @@ export function ListingsSearchHeader({
               </span>
             )}
           </button>
+
           <SortDropdown value={sortBy} onChange={setSortBy} locale={locale} />
+
+          {handleSwitchView && (
+            <div className="flex items-center p-0.5 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/40">
+              <button
+                type="button"
+                onClick={() => handleSwitchView("stream")}
+                className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+                  view === "stream"
+                    ? "bg-blue-500/20 text-blue-400 font-bold shadow-xs"
+                    : "text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]"
+                }`}
+                title={isTr ? "Liste Görünümü" : "List View"}
+                aria-label={isTr ? "Liste Görünümü" : "List View"}
+              >
+                <LayoutList className="h-3.5 w-3.5" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSwitchView("catalog")}
+                className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+                  view === "catalog"
+                    ? "bg-blue-500/20 text-blue-400 font-bold shadow-xs"
+                    : "text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]"
+                }`}
+                title={isTr ? "Kart Görünümü" : "Card View"}
+                aria-label={isTr ? "Kart Görünümü" : "Card View"}
+              >
+                <LayoutGrid className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -212,7 +247,7 @@ export function ListingsSearchHeader({
             return (
               <span
                 key={slug}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold bg-blue-500/15 text-blue-700 dark:text-sky-300 border border-blue-500/30 shadow-2xs"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold bg-blue-500/15 text-sky-400 border border-blue-500/30 shadow-2xs"
               >
                 <span>{cat?.name || slug}</span>
                 <Link
@@ -228,36 +263,17 @@ export function ListingsSearchHeader({
         </div>
       )}
 
-      {/* Active Items Counter & Clear Filters Bar */}
-      <div className="flex items-center justify-between text-xs text-[var(--color-text-tertiary)] px-1">
-        <div>
-          {isTr ? (
-            <>
-              Toplam{" "}
-              <strong className="text-[var(--color-text-primary)] font-semibold">
-                {totalItemsCount}
-              </strong>{" "}
-              aktif ilan listelendi
-            </>
-          ) : (
-            <>
-              <strong className="text-[var(--color-text-primary)] font-semibold">
-                {totalItemsCount}
-              </strong>{" "}
-              active listings listed
-            </>
-          )}
-        </div>
-
-        {(categorySlug || searchQuery || chipLast24h || chipFixedBudget) && (
+      {/* Clear Filters Bar (only when filters are active) */}
+      {(categorySlug || searchQuery || chipLast24h || chipFixedBudget) && (
+        <div className="flex items-center justify-end text-xs text-[var(--color-text-tertiary)] px-1">
           <Link
             href={basePath}
             className="text-blue-600 dark:text-sky-400 hover:underline font-medium transition-colors cursor-pointer"
           >
             {isTr ? "Filtreleri Temizle" : "Clear Filters"}
           </Link>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Advanced Filter Modal */}
       <AdvancedFilterModal

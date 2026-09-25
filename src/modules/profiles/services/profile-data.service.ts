@@ -491,7 +491,16 @@ export class ProfileDataService {
     }
 
     if (input.availabilityStatus !== undefined) {
-      const validStatuses: AvailabilityStatus[] = ["AVAILABLE_NOW", "PARTIALLY_AVAILABLE", "BUSY"];
+      const validStatuses: AvailabilityStatus[] = [
+        "AVAILABLE_NOW",
+        "FULL_TIME",
+        "PARTIALLY_AVAILABLE",
+        "PROJECT_BASED",
+        "ADVISORY",
+        "VOLUNTEER",
+        "INTERNSHIP",
+        "BUSY",
+      ];
       if (!validStatuses.includes(input.availabilityStatus)) {
         throw new Error("Invalid availability status.");
       }

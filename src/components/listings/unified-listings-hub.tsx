@@ -58,6 +58,7 @@ export function UnifiedListingsHub(props: UnifiedListingsHubProps) {
               searchQuery={props.searchQuery}
               mode={state.mode}
               view={state.view}
+              handleSwitchView={state.handleSwitchView}
               handleSwitchMode={state.handleSwitchMode}
               isTabLoading={state.isTabLoading}
               isAuthenticated={props.isAuthenticated}

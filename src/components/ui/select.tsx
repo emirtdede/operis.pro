@@ -29,7 +29,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           <div className="min-h-[22px] flex items-center justify-between gap-2">
             <label
               htmlFor={selectId}
-              className="text-xs font-medium text-[var(--color-text-secondary)] select-none flex items-center gap-1.5"
+              className="text-xs font-medium text-[var(--color-text-secondary)] select-none flex items-center gap-1.5 whitespace-nowrap"
             >
               <span>{label}</span>
               {props.required && (

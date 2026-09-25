@@ -115,7 +115,7 @@ export function AddendumViewerModal({
           <div className="mt-6 p-4 rounded-xl border border-dashed border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] space-y-2">
             <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400">
               <Hash className="w-4 h-4" />
-              <span>{isTr ? "Kriptografik Zincirleme Dijital Mühür (SHA-256)" : "Cryptographic Chained SHA-256 Seal"}</span>
+              <span>{isTr ? "Zaman Damgalı Dijital Onay Mührü" : "Cryptographically Verified Digital Seal"}</span>
             </div>
             <div className="font-mono text-[11px] text-[var(--color-text-secondary)] break-all bg-[var(--color-surface-hover)] p-2.5 rounded-lg border border-[var(--color-border-subtle)]">
               {changeRequest.addendumSha256 || "SHA-256-PENDING"}

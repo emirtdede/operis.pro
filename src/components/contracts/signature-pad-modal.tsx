@@ -222,8 +222,8 @@ export function SignaturePadModal({
       <div className="space-y-4 max-w-lg mx-auto">
         <p className="text-xs text-[var(--color-text-muted)]">
           {isTr
-            ? "İmzanız seçili tüm sözleşmelere ve eklere otomatik olarak uygulanacaktır. Görsel Cloudflare R2 geçici alanında saklanacak, işlem tamamlanıp sözleşme tanzim edilince silinecektir."
-            : "Your signature will automatically be applied to all selected agreements. Stored ephemerally in R2 until document compilation."}
+            ? "İmzanız seçili tüm sözleşmelere ve eklere otomatik olarak uygulanacaktır. Görsel güvenli geçici alanda saklanacak, işlem tamamlanıp sözleşme tanzim edilince silinecektir."
+            : "Your signature will automatically be applied to all selected agreements. Stored securely and ephemerally until document compilation."}
         </p>
 
         {/* Tab Selection */}

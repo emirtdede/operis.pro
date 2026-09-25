@@ -9,6 +9,7 @@ import {
   Check,
   AlertCircle,
   Sparkles,
+  Wrench,
 } from "lucide-react";
 import type { PublicProfileDto } from "@/src/modules/profiles/service";
 import { resolveUserPersonaMode } from "@/src/modules/profiles/utils/persona";
@@ -194,15 +195,30 @@ export function PublicProfileView({
                       if (mode === "EMPLOYER") setActiveTab("listings");
                       if (mode === "FREELANCER") setActiveTab("projects");
                     }}
-                    className={`px-3 py-1 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                    className={`px-3 py-1 rounded-xl text-xs font-semibold transition-all cursor-pointer inline-flex items-center gap-1.5 ${
                       hybridPerspective === mode
                         ? "bg-indigo-600 text-white shadow-xs"
                         : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]"
                     }`}
                   >
-                    {mode === "ALL" && (isTr ? "🌟 Tümü (Hibrit)" : "🌟 Overview")}
-                    {mode === "EMPLOYER" && (isTr ? "💼 İşveren İlanları" : "💼 Client Briefs")}
-                    {mode === "FREELANCER" && (isTr ? "🛠️ Uzman Portfolyosu" : "🛠️ Specialist Work")}
+                    {mode === "ALL" && (
+                      <>
+                        <Sparkles className="h-3 w-3 shrink-0" aria-hidden="true" />
+                        <span>{isTr ? "Tümü (Hibrit)" : "Overview"}</span>
+                      </>
+                    )}
+                    {mode === "EMPLOYER" && (
+                      <>
+                        <Briefcase className="h-3 w-3 shrink-0" aria-hidden="true" />
+                        <span>{isTr ? "İşveren İlanları" : "Client Briefs"}</span>
+                      </>
+                    )}
+                    {mode === "FREELANCER" && (
+                      <>
+                        <Wrench className="h-3 w-3 shrink-0" aria-hidden="true" />
+                        <span>{isTr ? "Uzman Portfolyosu" : "Specialist Work"}</span>
+                      </>
+                    )}
                   </button>
                 ))}
               </div>

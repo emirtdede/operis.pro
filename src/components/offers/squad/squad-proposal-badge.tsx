@@ -48,7 +48,7 @@ export function SquadProposalBadge({
     >
       <Users className={size === "sm" ? "h-3 w-3 text-indigo-400" : "h-3.5 w-3.5 text-indigo-400"} />
       <span className="font-semibold tracking-wide">
-        {squadTitle || (isTr ? "👥 Çevik Kolektif" : "👥 Agile Squad")}
+        {squadTitle || (isTr ? "Çevik Kolektif" : "Agile Squad")}
       </span>
       <span className="text-indigo-400/80 font-normal">
         ({countLabel})

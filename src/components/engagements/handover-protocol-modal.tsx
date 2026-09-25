@@ -663,8 +663,8 @@ export function HandoverProtocolModal({
                     <div className="space-y-1">
                       <div className="text-xs font-bold text-amber-300">
                         {isTr
-                          ? "⚠️ Akıllı Kapsam Kayması Uyarısı (AI Scope Creep Sentinel)"
-                          : "⚠️ Scope Creep Warning (AI Scope Sentinel)"}
+                          ? "Kapsam Dışı Ek İş Uyarısı (AI Destekli)"
+                          : "Out-of-Scope Work Notice (AI-Assisted)"}
                       </div>
                       <p className="text-xs text-amber-200/95 leading-relaxed">
                         {isTr

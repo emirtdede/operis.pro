@@ -21,8 +21,8 @@ function getHiringIntentDisplay(level: HiringIntentLevel, score: number, isTr: b
   switch (level) {
     case "VERIFIED_NEW_CLIENT":
       return {
-        label: isTr ? `✨ Yeni İşveren (%${score} Güven)` : `✨ Verified New Client (${score}%)`,
-        shortLabel: isTr ? "✨ Yeni İşveren" : "✨ New Client",
+        label: isTr ? `Yeni İşveren (%${score} Güven)` : `Verified New Client (${score}%)`,
+        shortLabel: isTr ? "Yeni İşveren" : "New Client",
         badgeClass:
           "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/15 shadow-[0_0_12px_rgba(16,185,129,0.15)]",
         dotClass: "bg-emerald-400 animate-pulse",
@@ -30,7 +30,7 @@ function getHiringIntentDisplay(level: HiringIntentLevel, score: number, isTr: b
       };
     case "PROVEN_HIGH_INTENT":
       return {
-        label: isTr ? `🟢 %${score} İşe Alım Niyeti` : `🟢 ${score}% High Intent`,
+        label: isTr ? `%${score} İşe Alım Niyeti` : `${score}% High Intent`,
         shortLabel: isTr ? `%${score} Niyet` : `${score}% Intent`,
         badgeClass:
           "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/15 shadow-[0_0_12px_rgba(16,185,129,0.15)]",
@@ -39,7 +39,7 @@ function getHiringIntentDisplay(level: HiringIntentLevel, score: number, isTr: b
       };
     case "ACTIVE_HIRING_LIKELY":
       return {
-        label: isTr ? `🔵 %${score} İşe Alım Bekleniyor` : `🔵 ${score}% Hiring Expected`,
+        label: isTr ? `%${score} İşe Alım Bekleniyor` : `${score}% Hiring Expected`,
         shortLabel: isTr ? `%${score} Niyet` : `${score}% Intent`,
         badgeClass: "bg-sky-500/10 text-sky-400 border-sky-500/30 hover:bg-sky-500/15",
         dotClass: "bg-sky-400",
@@ -47,7 +47,7 @@ function getHiringIntentDisplay(level: HiringIntentLevel, score: number, isTr: b
       };
     case "MODERATE_INTENT":
       return {
-        label: isTr ? `🟡 %${score} Orta Düzey Niyet` : `🟡 ${score}% Moderate Intent`,
+        label: isTr ? `%${score} Orta Düzey Niyet` : `${score}% Moderate Intent`,
         shortLabel: isTr ? `%${score} Niyet` : `${score}% Intent`,
         badgeClass: "bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/15",
         dotClass: "bg-amber-400",
@@ -55,7 +55,7 @@ function getHiringIntentDisplay(level: HiringIntentLevel, score: number, isTr: b
       };
     default:
       return {
-        label: isTr ? `🟠 %${score} Piyasa Yoklama Riski` : `🟠 ${score}% Price Discovery Risk`,
+        label: isTr ? `%${score} Piyasa Yoklama Riski` : `${score}% Price Discovery Risk`,
         shortLabel: isTr ? `%${score} Riskli` : `${score}% Risk`,
         badgeClass: "bg-rose-500/10 text-rose-400 border-rose-500/30 hover:bg-rose-500/15",
         dotClass: "bg-rose-400",

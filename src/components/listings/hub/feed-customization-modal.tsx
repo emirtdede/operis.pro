@@ -174,10 +174,10 @@ export function FeedCustomizationModal({
                   <PlusCircle className="h-4 w-4 text-indigo-400" />
                   <div>
                     <div className="text-xs font-semibold text-[var(--color-text-primary)]">
-                      {isTr ? "İlan Yayınla Hızlı Kartı (Projeniz mi Var?)" : "Publish Listing Action Card"}
+                      {isTr ? "İlan Verme Kartı (Projeniz mi Var?)" : "Publish Listing Card"}
                     </div>
                     <div className="text-[11px] text-[var(--color-text-tertiary)]">
-                      {isTr ? "Sağ panelde en üstte hızlı ilan verme çağrısı" : "Top card shortcut to create new listings"}
+                      {isTr ? "Sağ panelde hızlı ilan oluşturma kısayolu" : "Top card shortcut to create new listings"}
                     </div>
                   </div>
                 </div>
@@ -198,7 +198,7 @@ export function FeedCustomizationModal({
                       {isTr ? "Gündemdeki Teknolojiler" : "Trending Technologies"}
                     </div>
                     <div className="text-[11px] text-[var(--color-text-tertiary)]">
-                      {isTr ? "Gerçek arama ve etkileşim trendlerine dayalı piyasa nabzı" : "Real user search & interaction market pulse"}
+                      {isTr ? "İlanlarda öne çıkan beceriler ve teknoloji nabzı" : "Trending skills and technology market pulse"}
                     </div>
                   </div>
                 </div>
@@ -216,10 +216,10 @@ export function FeedCustomizationModal({
                   <Sparkles className="h-4 w-4 text-amber-400" />
                   <div>
                     <div className="text-xs font-semibold text-[var(--color-text-primary)]">
-                      {isTr ? "Önerilen Alanlar" : "Suggested Specializations"}
+                      {isTr ? "Önerilen Alanlar" : "Suggested Categories"}
                     </div>
                     <div className="text-[11px] text-[var(--color-text-tertiary)]">
-                      {isTr ? "Bireysel ilgi ve arama geçmişinize özel kategori önerileri" : "Personalized category recommendations based on your activity"}
+                      {isTr ? "İlginizi çekebilecek kategoriler ve hızlı takip" : "Recommended categories tailored to your activity"}
                     </div>
                   </div>
                 </div>

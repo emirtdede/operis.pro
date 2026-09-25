@@ -1,3 +1,5 @@
+import type { AvailabilityStatus } from "@/src/modules/profiles/services/availability.service";
+
 export interface DemoUser {
   id: string;
   email: string;
@@ -25,7 +27,7 @@ export interface DemoUser {
     roles?: string[];
     isAvailableForHire?: boolean;
     isActivelyHiring?: boolean;
-    availabilityStatus?: "AVAILABLE_NOW" | "PARTIALLY_AVAILABLE" | "BUSY";
+    availabilityStatus?: AvailabilityStatus;
     availabilityHoursPerWeek?: number;
     availableFromDate?: string | null;
     availabilityNotice?: string | null;

@@ -307,10 +307,10 @@ export function RetainerProposalModal({
                   className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
                 >
                   <option value="NO_ROLLOVER">
-                    {isTr ? "❌ Devretmez (Use it or lose it - Tavsiye Edilen)" : "❌ No Rollover (Use it or lose it)"}
+                    {isTr ? "Devretmez (Dönem Sonu Sıfırlanır — Tavsiye Edilen)" : "No Rollover (Resets at End of Period — Recommended)"}
                   </option>
                   <option value="MAX_25_PERCENT">
-                    {isTr ? "🔄 Azami %25 Devreder (1 Ay Geçerli)" : "🔄 Max 25% Rollover (Valid for 1 Month)"}
+                    {isTr ? "Kısmi Devir (Azami %25, 1 Ay Geçerli)" : "Partial Rollover (Max 25%, Valid for 1 Month)"}
                   </option>
                 </select>
               </div>

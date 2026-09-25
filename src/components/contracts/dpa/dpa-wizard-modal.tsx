@@ -43,9 +43,9 @@ const ACCESS_LEVEL_OPTIONS: Array<{
 }> = [
   {
     value: "NO_ACCESS_SYNTHETIC",
-    titleTr: "Canlı Veri Erişimi Yok (Yalnızca Sentetik / Mock)",
+    titleTr: "Canlı Veri Erişimi Yok (Yalnızca Simüle / Test Verisi)",
     titleEn: "No Live Data Access (Synthetic / Mock Only)",
-    descTr: "Geliştirici yalnızca yerel dummy/mock verilerle çalışır, canlı DB veya kullanıcı kayıtlarına dokunmaz.",
+    descTr: "Geliştirici yalnızca yerel test ve simülasyon verileriyle çalışır; üretim veri tabanına veya gerçek kullanıcı kayıtlarına erişmez.",
     descEn: "Contractor works exclusively with local mock data, no direct access to production or real user databases.",
     badgeTr: "0 Risk Puanı",
     badgeEn: "0 Risk Multiplier",
@@ -61,9 +61,9 @@ const ACCESS_LEVEL_OPTIONS: Array<{
   },
   {
     value: "FULL_PRODUCTION_ACCESS",
-    titleTr: "Canlı Ortam & Tam Veritabanı Erişimi (Production DB)",
+    titleTr: "Canlı Ortam & Tam Veri Tabanı Erişimi (Üretim Ortamı)",
     titleEn: "Live Production & Full Database Access",
-    descTr: "Canlı sunucuya, kullanıcı kayıtlarına, loglara ve DB sorgularına doğrudan okuma/yazma erişimi.",
+    descTr: "Canlı sunucuya, kullanıcı kayıtlarına, sistem günlüklerine ve veri tabanı sorgularına doğrudan okuma/yazma erişimi.",
     descEn: "Direct read/write access to production cloud, user records, query engines, and live logs.",
     badgeTr: "1.0x Risk Çarpanı",
     badgeEn: "1.0x Multiplier",

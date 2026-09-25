@@ -19,14 +19,14 @@ export function getLoadingButtonLabel(
 
 export function getAvatarSourceBadgeLabel(source: string, isTr: boolean): string {
   if (source === "custom") {
-    return isTr ? "Özel Resim (R2)" : "Custom Picture (R2)";
+    return isTr ? "Özel Fotoğraf" : "Custom Photo";
   }
   return isTr ? "Google Senkronize" : "Google Synced";
 }
 
 export function getUploadingPhotoLabel(isUploading: boolean, isTr: boolean): string {
   if (isUploading) {
-    return isTr ? "WebP'ye Çevrilip Yükleniyor..." : "Compressing & Uploading...";
+    return isTr ? "Fotoğraf Yükleniyor..." : "Uploading Photo...";
   }
   return isTr ? "Cihazdan Fotoğraf Yükle" : "Upload from Device";
 }

@@ -115,7 +115,7 @@ export function ProposalPitchDoctorCard({
 
   return (
     <section
-      aria-label="Operis AI Proposal Pitch Doctor"
+      aria-label={isTr ? "Akıllı Teklif Asistanı" : "AI Proposal Assistant"}
       className="relative overflow-hidden rounded-2xl border border-indigo-500/30 bg-indigo-500/5 p-4 sm:p-5 backdrop-blur-xl space-y-4 shadow-lg transition-all animate-in fade-in"
     >
       {/* Background ambient glow */}
@@ -129,7 +129,7 @@ export function ProposalPitchDoctorCard({
           </div>
           <div>
             <h4 className="text-xs font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
-              <span>Operis AI — {isTr ? "Akıllı Teklif Asistanı (Pitch Doctor)" : "Proposal Pitch Doctor"}</span>
+              <span>Operis AI — {isTr ? "Akıllı Teklif Asistanı" : "Smart Proposal Assistant"}</span>
             </h4>
             <p className="text-[11px] text-[var(--color-text-secondary)]">
               {isTr
@@ -179,28 +179,28 @@ export function ProposalPitchDoctorCard({
         return (
           <div className="space-y-4 relative z-10">
           {/* Top Score Banner */}
-          <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center p-3.5 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 p-3.5 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80">
             {/* Score Number Gauge */}
-            <div className="sm:col-span-4 flex items-center gap-3">
+            <div className="flex items-center gap-3 shrink-0">
               <div
-                className={`flex h-13 w-13 shrink-0 items-center justify-center rounded-xl border text-xl font-mono font-extrabold ${getScoreColor(
+                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border text-xl font-mono font-extrabold ${getScoreColor(
                   evaluation.overallScore
                 )}`}
               >
                 {evaluation.overallScore}
               </div>
-              <div className="min-w-0">
+              <div className="shrink-0">
                 <span className="text-[10px] text-[var(--color-text-tertiary)] uppercase font-semibold tracking-wider block">
                   {isTr ? "Teklif Gücü Puanı" : "Pitch Strength"}
                 </span>
-                <span className="text-xs font-bold text-[var(--color-text-primary)] truncate block">
+                <span className="text-xs font-bold text-[var(--color-text-primary)] block whitespace-nowrap">
                   {evaluation.tierLabel}
                 </span>
               </div>
             </div>
 
             {/* Score Description */}
-            <div className="sm:col-span-8 text-xs text-[var(--color-text-secondary)] leading-relaxed border-t sm:border-t-0 sm:border-l border-[var(--color-border-subtle)] pt-2 sm:pt-0 sm:pl-3">
+            <div className="text-xs text-[var(--color-text-secondary)] leading-relaxed border-t sm:border-t-0 sm:border-l border-[var(--color-border-subtle)] pt-2 sm:pt-0 sm:pl-3.5 flex-1 min-w-0">
               {evaluation.tierDescription}
             </div>
           </div>
@@ -216,7 +216,7 @@ export function ProposalPitchDoctorCard({
                   : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
               }`}
             >
-              {isTr ? "📊 5 Boyutlu Analiz" : "📊 5-Dimension Audit"}
+              {isTr ? "5 Boyutlu Analiz" : "5-Dimension Audit"}
             </button>
             <button
               type="button"
@@ -228,7 +228,7 @@ export function ProposalPitchDoctorCard({
               }`}
             >
               <Sparkles className="h-3 w-3 text-amber-400" />
-              <span>{isTr ? "✨ 1-Tıkla Güçlendirme" : "✨ 1-Click Enhancement"}</span>
+              <span>{isTr ? "1-Tıkla Güçlendirme" : "1-Click Enhancement"}</span>
             </button>
           </div>
 

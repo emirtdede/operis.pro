@@ -55,24 +55,24 @@ const PRESET_REASON_CHIPS = [
   {
     id: "budget",
     icon: Target,
-    label: "🎯 Bütçe Uyumu",
-    labelEn: "🎯 Budget Alignment",
+    label: "Bütçe Uyumu",
+    labelEn: "Budget Alignment",
     text: "Proje bütçe aralığı ve kaynak optimizasyonu doğrultusunda revize teklifimi sunuyorum.",
     textEn: "I am submitting my revised proposal in line with the project budget range and resource optimization.",
   },
   {
     id: "speed",
     icon: Zap,
-    label: "⚡ Hızlı Teslimat",
-    labelEn: "⚡ Fast Delivery",
+    label: "Hızlı Teslimat",
+    labelEn: "Fast Delivery",
     text: "Daha yoğun sprint ve hızlandırılmış teslimat takvimi gözetilerek süre ve bütçe dengelendi.",
     textEn: "Timeline and budget have been balanced for a more intensive sprint and accelerated delivery.",
   },
   {
     id: "scope",
     icon: Layers,
-    label: "📐 Kapsam Dengesi",
-    labelEn: "📐 Scope Balance",
+    label: "Kapsam Dengesi",
+    labelEn: "Scope Balance",
     text: "İlan teknik gereksinimlerini eksiksiz karşılayacak teslimat adımları doğrultusunda güncellendi.",
     textEn: "Updated in accordance with delivery milestones that will completely satisfy the project requirements.",
   },
@@ -368,22 +368,28 @@ export function CounterOfferModal({
 
             <div className="grid grid-cols-2 gap-3">
               <div>
+                <label className="text-xs font-medium text-slate-400 mb-1.5 block">
+                  {isTr ? "Minimum Tutar (En Az)" : "Minimum Amount"}
+                </label>
                 <input
                   type="number"
                   step="any"
                   required
-                  placeholder={isTr ? "Min Tutar" : "Min Amount"}
+                  placeholder={isTr ? "Örn: 15000" : "e.g. 15000"}
                   value={budgetMin}
                   onChange={(e) => setBudgetMin(e.target.value)}
                   className="w-full bg-slate-900/80 border border-slate-700/80 rounded-xl px-3 py-2 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500"
                 />
               </div>
               <div>
+                <label className="text-xs font-medium text-slate-400 mb-1.5 block">
+                  {isTr ? "Maksimum Tutar (En Çok)" : "Maximum Amount"}
+                </label>
                 <input
                   type="number"
                   step="any"
                   required
-                  placeholder={isTr ? "Maks Tutar" : "Max Amount"}
+                  placeholder={isTr ? "Örn: 35000" : "e.g. 35000"}
                   value={budgetMax}
                   onChange={(e) => setBudgetMax(e.target.value)}
                   className="w-full bg-slate-900/80 border border-slate-700/80 rounded-xl px-3 py-2 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500"

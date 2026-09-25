@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import { createPortal } from "react-dom";
 import {
   X,
   Zap,
@@ -134,6 +135,19 @@ export function QuickOfferDrawer({
   const [error, setError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const hasUserEditedRef = useRef(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   // Apply template with dynamic interpolation
   const applyTemplate = useCallback(
@@ -394,8 +408,11 @@ export function QuickOfferDrawer({
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-black/70 transition-opacity animate-in fade-in duration-200 flex justify-end">
+  if (!isOpen) return null;
+  if (!isMounted || typeof document === "undefined") return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[100] overflow-hidden bg-black/70 backdrop-blur-xs transition-opacity animate-in fade-in duration-200 flex justify-end">
       <div
         className="relative w-full max-w-lg bg-[var(--color-surface-base)] border-l border-[var(--color-border-subtle)] shadow-2xl flex flex-col h-full transform transition-transform ease-out duration-300 animate-in slide-in-from-right"
         role="dialog"
@@ -442,7 +459,7 @@ export function QuickOfferDrawer({
               </h3>
               <p className="text-xs text-[var(--color-text-secondary)] max-w-sm mx-auto leading-relaxed">
                 {isTr
-                  ? `"${listing.title}" ilanına teklifiniz AES-256 şifreli olarak ilan sahibine ulaştırıldı.`
+                  ? `"${listing.title}" ilanına teklifiniz uçtan uca şifrelenerek güvenle ilan sahibine iletildi.`
                   : `Your proposal for "${listing.title}" was securely transmitted to the listing owner.`}
               </p>
               <div className="pt-4">
@@ -745,6 +762,7 @@ export function QuickOfferDrawer({
           </form>
         </div>
       )}
-    </div>
+    </div>,
+    document.body
   );
 }

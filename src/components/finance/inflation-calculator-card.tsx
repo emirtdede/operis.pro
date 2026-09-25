@@ -16,6 +16,13 @@ import {
   Check,
   ChevronRight,
   Info,
+  Snowflake,
+  Scale,
+  ShoppingCart,
+  Factory,
+  Shield,
+  BarChart3,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { TextInput } from "../ui/text-input";
@@ -63,7 +70,7 @@ function getCapToggleButtonLabel(useCap: boolean, isTr: boolean): string {
 
 function getFreezeToggleButtonLabel(isContractorDelayed: boolean, isTr: boolean): string {
   if (isContractorDelayed) {
-    return isTr ? "❄️ Endeks Donduruldu" : "❄️ Index Frozen";
+    return isTr ? "Endeks Donduruldu" : "Index Frozen";
   }
   return isTr ? "Dondurmayı Simüle Et" : "Simulate Freeze";
 }
@@ -195,24 +202,26 @@ export function InflationCalculatorCard({
         <button
           type="button"
           onClick={() => setActiveTab("calculation")}
-          className={`flex-1 py-1.5 px-3 rounded-lg font-medium transition-all ${
+          className={`flex-1 py-1.5 px-3 rounded-lg font-medium transition-all inline-flex items-center justify-center gap-1.5 ${
             activeTab === "calculation"
               ? "bg-[var(--color-surface-base)] text-[var(--color-text-primary)] shadow-sm font-semibold text-amber-400"
               : "text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]"
           }`}
         >
-          {isTr ? "📊 Dinamik Hakediş Hesabı" : "📊 Dynamic Fee Calculation"}
+          <BarChart3 className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          <span>{isTr ? "Dinamik Hakediş Hesabı" : "Dynamic Fee Calculation"}</span>
         </button>
         <button
           type="button"
           onClick={() => setActiveTab("scenarios")}
-          className={`flex-1 py-1.5 px-3 rounded-lg font-medium transition-all ${
+          className={`flex-1 py-1.5 px-3 rounded-lg font-medium transition-all inline-flex items-center justify-center gap-1.5 ${
             activeTab === "scenarios"
               ? "bg-[var(--color-surface-base)] text-[var(--color-text-primary)] shadow-sm font-semibold text-amber-400"
               : "text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]"
           }`}
         >
-          {isTr ? "🔮 Senaryo Projeksiyonu" : "🔮 Scenario Projections"}
+          <Sparkles className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          <span>{isTr ? "Senaryo Projeksiyonu" : "Scenario Projections"}</span>
         </button>
       </div>
 
@@ -319,7 +328,10 @@ export function InflationCalculatorCard({
                 }`}
               >
                 <div className="font-bold flex items-center justify-between text-xs">
-                  <span>⚖️ {isTr ? "Karma Endeks (Tavsiye)" : "Hybrid (Recommended)"}</span>
+                  <span className="flex items-center gap-1.5">
+                    <Scale className="h-3.5 w-3.5 text-amber-400 shrink-0" aria-hidden="true" />
+                    {isTr ? "Karma Endeks (Tavsiye)" : "Hybrid (Recommended)"}
+                  </span>
                   <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 font-mono">%50-%50</span>
                 </div>
                 <p className="text-[10px] opacity-80 mt-1">
@@ -336,7 +348,10 @@ export function InflationCalculatorCard({
                     : "border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)] hover:border-amber-500/40"
                 }`}
               >
-                <div className="font-bold text-xs">🛒 {isTr ? "TÜİK TÜFE (Tüketici)" : "TurkStat CPI"}</div>
+                <div className="font-bold text-xs flex items-center gap-1.5">
+                  <ShoppingCart className="h-3.5 w-3.5 text-amber-400 shrink-0" aria-hidden="true" />
+                  {isTr ? "TÜİK TÜFE (Tüketici)" : "TurkStat CPI"}
+                </div>
                 <p className="text-[10px] opacity-80 mt-1">
                   {isTr ? "Yazılımcının bireysel yaşam ve emek maliyeti." : "Consumer living and labor expenses."}
                 </p>
@@ -351,7 +366,10 @@ export function InflationCalculatorCard({
                     : "border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)] hover:border-amber-500/40"
                 }`}
               >
-                <div className="font-bold text-xs">🏭 {isTr ? "TÜİK Yİ-ÜFE (Üretici)" : "TurkStat PPI"}</div>
+                <div className="font-bold text-xs flex items-center gap-1.5">
+                  <Factory className="h-3.5 w-3.5 text-amber-400 shrink-0" aria-hidden="true" />
+                  {isTr ? "TÜİK Yİ-ÜFE (Üretici)" : "TurkStat PPI"}
+                </div>
                 <p className="text-[10px] opacity-80 mt-1">
                   {isTr ? "Donanım, enerji ve kurumsal girdi maliyetleri." : "Hardware, energy and operational inputs."}
                 </p>
@@ -377,13 +395,14 @@ export function InflationCalculatorCard({
             <button
               type="button"
               onClick={() => setIsContractorDelayed(!isContractorDelayed)}
-              className={`px-3 py-1.5 rounded-lg font-semibold text-xs transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-semibold text-xs transition-all inline-flex items-center gap-1.5 ${
                 isContractorDelayed
                   ? "bg-rose-500 text-white shadow-sm"
                   : "bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
               }`}
             >
-              {getFreezeToggleButtonLabel(isContractorDelayed, isTr)}
+              {isContractorDelayed && <Snowflake className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />}
+              <span>{getFreezeToggleButtonLabel(isContractorDelayed, isTr)}</span>
             </button>
           </div>
 
@@ -396,13 +415,15 @@ export function InflationCalculatorCard({
               </span>
               <div className="flex items-center gap-2">
                 {result.capApplied && (
-                  <span className="rounded bg-amber-500/20 border border-amber-500/40 px-2 py-0.5 text-[10px] font-bold text-amber-300">
-                    🛡️ {isTr ? `Tavan (%${numericCap}) Uygulandı` : `Capped at %${numericCap}`}
+                  <span className="rounded bg-amber-500/20 border border-amber-500/40 px-2 py-0.5 text-[10px] font-bold text-amber-300 flex items-center gap-1">
+                    <Shield className="h-3 w-3" aria-hidden="true" />
+                    <span>{isTr ? `Tavan (%${numericCap}) Uygulandı` : `Capped at %${numericCap}`}</span>
                   </span>
                 )}
                 {result.floorApplied && (
-                  <span className="rounded bg-emerald-500/20 border border-emerald-500/40 px-2 py-0.5 text-[10px] font-bold text-emerald-300">
-                    🛡️ {isTr ? "Taban (%0) Korundu" : "0% Floor Protected"}
+                  <span className="rounded bg-emerald-500/20 border border-emerald-500/40 px-2 py-0.5 text-[10px] font-bold text-emerald-300 flex items-center gap-1">
+                    <Shield className="h-3 w-3" aria-hidden="true" />
+                    <span>{isTr ? "Taban (%0) Korundu" : "0% Floor Protected"}</span>
                   </span>
                 )}
                 <span className="font-mono font-extrabold text-base sm:text-lg text-amber-400">

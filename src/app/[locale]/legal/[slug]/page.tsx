@@ -247,10 +247,10 @@ export async function generateMetadata({
   const titleObj = TITLES[internalKey] ?? { tr: "Yasal Belge", en: "Legal Document" };
   const docTitle = isTr ? titleObj.tr : titleObj.en;
 
-  const title = isTr ? `${docTitle} — Yasal Şeffaflık & Uyum` : `${docTitle} — Legal & Compliance`;
+  const title = docTitle;
   const description = isTr
-    ? `Operis ${docTitle} mevzuat ve uyum dokümanı.`
-    : `Operis ${docTitle} legal and regulatory compliance document.`;
+    ? `Operis ${docTitle} sözleşmesi, şeffaflık ilkeleri ve mevzuat uyum bilgilendirme metni.`
+    : `Operis ${docTitle} terms, compliance standards, and regulatory notice.`;
 
   return {
     title,

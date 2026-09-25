@@ -90,13 +90,13 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
     {
       id: "encrypted-bids",
       icon: Lock,
-      badge: isTr ? "AES-256-GCM" : "AES-256-GCM",
+      badge: isTr ? "Uçtan Uca Gizlilik" : "End-to-End Privacy",
       title: isTr
-        ? "Kriptografik Birebir Kör Teklifler"
-        : "Encrypted 1-to-1 Blind Proposals",
+        ? "Tam Gizlilik Korumalı Teklifler"
+        : "Private & Confidential Proposals",
       description: isTr
-        ? "Teklif mektubunuz, bütçeniz ve teslimat planınız AES-256 ile şifrelenir. Rakipler teklifinizi asla göremez; fiyat kırma savaşı ve fikir hırsızlığı yaşanmaz."
-        : "Your pitch, timeline, and rate are encrypted with AES-256-GCM. Competitors cannot view them, completely eliminating price undercutting wars.",
+        ? "Teklif mektubunuz, bütçeniz ve teslimat planınız uçtan uca şifrelenerek korunur. Rakipler teklifinizi asla göremez; fiyat kırma savaşı ve fikir hırsızlığı yaşanmaz."
+        : "Your pitch, timeline, and rate are protected with advanced encryption. Competitors cannot view them, completely eliminating price undercutting wars.",
       highlight: isTr
         ? "Gizli Teklif Güvencesi"
         : "Zero Price Undercutting",
@@ -112,7 +112,7 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
       icon: EyeOff,
       badge: isTr ? "Teklif Gizliliği" : "Bid Privacy",
       title: isTr
-        ? "Teklif Sayısı Maskeleme (Bid Fatigue Önleme)"
+        ? "Teklif Sayısı Maskeleme (Aday Caydırıcılığını Önleme)"
         : "Masked Bid Counts & Fair Chance",
       description: isTr
         ? "İlanlardaki başvuru sayısı gizlenir. 'Zaten 100 kişi başvurmuş, bana sıra gelmez' korkusu biter; kıdemli yetenekler tereddüt etmeden teklif sunabilir."

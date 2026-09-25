@@ -1,6 +1,6 @@
 import type { RefObject } from "react";
 import Link from "next/link";
-import { Loader2 } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 import type { FeedListingItem } from "@/src/modules/listings/feed/service";
 import { SocialListingCard } from "@/src/components/feed/social-listing-card";
 import { ListingCard } from "../listing-card";
@@ -123,6 +123,27 @@ export function ListingsFeedView({
               }
             />
           )}
+        </div>
+      )}
+
+      {/* Onboarding Suggestion Banner for Sana Özel when user has no followed categories */}
+      {!isTabLoading && mode === "following" && (!hasFollowed || followedCategoryIds.size === 0) && sortedItems.length > 0 && (
+        <div className="rounded-2xl border border-blue-500/20 bg-blue-500/10 p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+          <div className="flex items-start sm:items-center gap-2.5">
+            <Sparkles className="h-4 w-4 text-amber-400 shrink-0 mt-0.5 sm:mt-0" />
+            <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+              {isTr
+                ? "Henüz bir uzmanlık alanı takip etmediğiniz için sizin için öne çıkan güncel ilanları listeliyoruz. Sağdaki önerilen alanlardan takip ederek akışınızı dilediğiniz gibi kişiselleştirebilirsiniz."
+                : "Since you haven't followed any categories yet, we are displaying featured active listings. Follow areas on the right to personalize your feed."}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => handleSwitchMode("all")}
+            className="shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-[var(--color-text-primary)] hover:border-blue-500/40 transition-colors cursor-pointer self-start sm:self-auto"
+          >
+            {isTr ? "Tüm İlanlar" : "All Listings"}
+          </button>
         </div>
       )}
 

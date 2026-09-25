@@ -58,7 +58,7 @@ function getBatchSubmitButtonLabel(isSubmitting: boolean, count: number, isTr: b
 
 function getResultDeliveryNote(isSuccess: boolean, fallbackMsg: string | undefined, isTr: boolean): string {
   if (isSuccess) {
-    return isTr ? "AES-256 şifreli olarak ilan sahibine iletildi" : "Securely delivered to client";
+    return isTr ? "Uçtan uca şifreli olarak ilan sahibine iletildi" : "Securely delivered to client";
   }
   return fallbackMsg || "";
 }

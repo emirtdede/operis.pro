@@ -14,11 +14,11 @@ export async function generateMetadata({
   const isTr = locale === "tr";
 
   const title = isTr
-    ? "Yasal ve Güven Merkezi — Şeffaflık & Hukuki Zırh"
-    : "Legal & Trust Center — Transparency & Protection";
+    ? "Güven & Yasal Şeffaflık Merkezi"
+    : "Trust & Legal Transparency Center";
   const description = isTr
-    ? "Operis'in kar amacı gütmeyen, sıfır komisyonlu ve dava muafiyetli tüm yasal sözleşmeleri, KVKK aydınlatma metinleri ve fikri mülkiyet politikaları dizini."
-    : "Comprehensive index of Operis terms of service, zero-commission policies, KVKK/GDPR notices, IP protection, and lawsuit immunity frameworks.";
+    ? "Operis'in şeffaf kullanım koşulları, sıfır komisyon protokolü, KVKK aydınlatma metinleri ve fikri mülkiyet koruma ilkeleri dizini."
+    : "Review Operis terms of service, zero-commission protocols, GDPR/KVKK compliance notices, and intellectual property protection framework.";
 
   const baseUrl = getBaseUrl();
   const url = isTr ? `${baseUrl}/tr/yasal` : `${baseUrl}/en/legal`;

@@ -9,6 +9,10 @@ import {
   Copy,
   Download,
   X,
+  Lock,
+  Pin,
+  Scale,
+  Shield,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { MilestoneDto } from "@/src/modules/engagements/milestone-service";
@@ -128,10 +132,13 @@ export function MilestoneEvidenceViewer({
                     className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-indigo-500"
                   />
                 </div>
-                <p className="text-[10px] text-slate-500">
-                  {isTr
-                    ? "🔒 Bu bağlantı yalnızca işveren ve sizin aranızda gizli tutulur."
-                    : "🔒 This link is confidential between parties."}
+                <p className="text-[10px] text-slate-500 flex items-center gap-1.5">
+                  <Lock className="h-3 w-3 text-slate-400 shrink-0" aria-hidden="true" />
+                  <span>
+                    {isTr
+                      ? "Bu bağlantı yalnızca işveren ve sizin aranızda gizli tutulur."
+                      : "This link is confidential between parties."}
+                  </span>
                 </p>
               </div>
 
@@ -169,10 +176,13 @@ export function MilestoneEvidenceViewer({
                   }
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 font-mono placeholder:text-slate-600 focus:outline-none focus:border-cyan-500 text-xs"
                 />
-                <p className="text-[10px] text-slate-500">
-                  {isTr
-                    ? "📜 FSEK m. 52 uyarınca ödeme onaylandığında bu commit hash'i resmi Fikri Mülkiyet Devir Senedine mühürlenir."
-                    : "📜 This commit hash will be pinned into the formal FSEK IP Assignment Deed upon payment confirmation."}
+                <p className="text-[10px] text-slate-500 flex items-center gap-1.5">
+                  <ScrollText className="h-3 w-3 text-cyan-400 shrink-0" aria-hidden="true" />
+                  <span>
+                    {isTr
+                      ? "FSEK m. 52 uyarınca ödeme onaylandığında bu commit hash'i resmi Fikri Mülkiyet Devir Senedine mühürlenir."
+                      : "This commit hash will be pinned into the formal FSEK IP Assignment Deed upon payment confirmation."}
+                  </span>
                 </p>
               </div>
 
@@ -405,11 +415,13 @@ export function MilestoneEvidenceViewer({
 
               <div className="pt-1.5 border-t border-slate-800 space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-slate-400 font-medium">
-                    📌{" "}
-                    {isTr
-                      ? "Mühürlenen Git Commit Hash (Kesin Teslimat İmzası):"
-                      : "Pinned Git Commit Hash:"}
+                  <span className="text-[10px] text-slate-400 font-medium flex items-center gap-1">
+                    <Pin className="h-3 w-3 text-cyan-400 shrink-0" aria-hidden="true" />
+                    <span>
+                      {isTr
+                        ? "Mühürlenen Git Commit Hash (Kesin Teslimat İmzası):"
+                        : "Pinned Git Commit Hash:"}
+                    </span>
                   </span>
                   <span className="text-[9px] font-mono text-cyan-400/80 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800/40">
                     SHA-1 / Git Object ID
@@ -476,11 +488,13 @@ export function MilestoneEvidenceViewer({
             {/* Moral Rights & Originality Warranty */}
             <div className="p-3 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-2 text-[11px] text-slate-300">
               <div>
-                <strong className="text-slate-200 block">
-                  ⚖️{" "}
-                  {isTr
-                    ? "FSEK m. 16/2 Değişiklik İzni ve Manevi Haklar Muvafakati:"
-                    : "Moral Rights & Refactoring Consent:"}
+                <strong className="text-slate-200 flex items-center gap-1.5">
+                  <Scale className="h-3.5 w-3.5 text-purple-400 shrink-0" aria-hidden="true" />
+                  <span>
+                    {isTr
+                      ? "FSEK m. 16/2 Değişiklik İzni ve Manevi Haklar Muvafakati:"
+                      : "Moral Rights & Refactoring Consent:"}
+                  </span>
                 </strong>
                 <p className="text-slate-400 italic mt-0.5">
                   &ldquo;
@@ -490,11 +504,13 @@ export function MilestoneEvidenceViewer({
               </div>
 
               <div className="pt-1.5 border-t border-slate-800/80">
-                <strong className="text-slate-200 block">
-                  🛡️{" "}
-                  {isTr
-                    ? "Özgünlük ve Üçüncü Şahıs Hakları Garantisi:"
-                    : "Originality & Non-Infringement Warranty:"}
+                <strong className="text-slate-200 flex items-center gap-1.5">
+                  <Shield className="h-3.5 w-3.5 text-emerald-400 shrink-0" aria-hidden="true" />
+                  <span>
+                    {isTr
+                      ? "Özgünlük ve Üçüncü Şahıs Hakları Garantisi:"
+                      : "Originality & Non-Infringement Warranty:"}
+                  </span>
                 </strong>
                 <p className="text-slate-400 italic mt-0.5">
                   &ldquo;

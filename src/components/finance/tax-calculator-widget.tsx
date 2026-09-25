@@ -21,6 +21,9 @@ import {
   AlertCircle,
   Copy,
   Globe,
+  Target,
+  FileText,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { TextInput } from "../ui/text-input";
@@ -93,7 +96,7 @@ export function TaxCalculatorWidget({
 
   let softwareExportBadgeLabel = isTr ? "Pasif" : "Off";
   if (isSoftwareExport) {
-    softwareExportBadgeLabel = isTr ? "Aktif ✓" : "Active ✓";
+    softwareExportBadgeLabel = isTr ? "Aktif" : "Active";
   }
 
   let amountInputLabel = isTr ? "Teklif Edilecek Brüt Fatura Bedeli" : "Gross Proposed Invoice Fee";
@@ -184,24 +187,26 @@ export function TaxCalculatorWidget({
           <button
             type="button"
             onClick={() => setDirection("NET_TO_GROSS")}
-            className={`px-3 py-2 rounded-xl text-xs font-medium border transition-all cursor-pointer text-center ${
+            className={`px-3 py-2 rounded-xl text-xs font-medium border transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
               direction === "NET_TO_GROSS"
                 ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/50 shadow-xs"
                 : "bg-[var(--color-surface-base)] text-[var(--color-text-secondary)] border-[var(--color-border-subtle)] hover:bg-[var(--color-surface-hover)]"
             }`}
           >
-            {isTr ? "🎯 Netten Brüte (Hedef Net Kazanç)" : "🎯 Net to Gross (Desired Net)"}
+            <Target className="h-3.5 w-3.5 shrink-0" />
+            <span>{isTr ? "Netten Brüte (Hedef Net Kazanç)" : "Net to Gross (Desired Net)"}</span>
           </button>
           <button
             type="button"
             onClick={() => setDirection("GROSS_TO_NET")}
-            className={`px-3 py-2 rounded-xl text-xs font-medium border transition-all cursor-pointer text-center ${
+            className={`px-3 py-2 rounded-xl text-xs font-medium border transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
               direction === "GROSS_TO_NET"
                 ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/50 shadow-xs"
                 : "bg-[var(--color-surface-base)] text-[var(--color-text-secondary)] border-[var(--color-border-subtle)] hover:bg-[var(--color-surface-hover)]"
             }`}
           >
-            {isTr ? "📄 Brütten Nete (Fatura Bedeli)" : "📄 Gross to Net (Invoice Amount)"}
+            <FileText className="h-3.5 w-3.5 shrink-0" />
+            <span>{isTr ? "Brütten Nete (Fatura Bedeli)" : "Gross to Net (Invoice Amount)"}</span>
           </button>
         </div>
       </div>
@@ -350,13 +355,14 @@ export function TaxCalculatorWidget({
         <button
           type="button"
           onClick={() => setIsSoftwareExport(!isSoftwareExport)}
-          className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+          className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all cursor-pointer flex items-center gap-1.5 ${
             isSoftwareExport
               ? "bg-emerald-500 text-slate-950 border-emerald-400 font-bold shadow-sm"
               : "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)] border-[var(--color-border-subtle)] hover:text-[var(--color-text-primary)]"
           }`}
         >
-          {softwareExportBadgeLabel}
+          {isSoftwareExport && <Check className="h-3 w-3 stroke-[2.5]" />}
+          <span>{softwareExportBadgeLabel}</span>
         </button>
       </div>
 
@@ -438,8 +444,9 @@ export function TaxCalculatorWidget({
           <div className="text-base sm:text-lg font-mono font-bold text-blue-400">
             {fmt(taxResult.vatTotalAmount)} {currencySymbol}
           </div>
-          <div className="text-[10px] text-blue-300/80">
-            {isTr ? "⚠️ Devlete ödenecek emanet" : "⚠️ Remitted via VAT return"}
+          <div className="text-[10px] text-blue-300/80 flex items-center gap-1.5">
+            <AlertTriangle className="h-3 w-3 text-amber-400 shrink-0" />
+            <span>{isTr ? "Devlete ödenecek emanet" : "Remitted via VAT return"}</span>
           </div>
         </div>
 

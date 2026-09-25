@@ -16,6 +16,7 @@ import {
   Square,
   CheckSquare,
   Trash2,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { EmptyState } from "../ui/empty-state";
@@ -24,20 +25,27 @@ import { CategoryAlertSettingsModal } from "./category-alert-settings-modal";
 
 export interface FollowedCategoriesViewProps {
   categories: CategoryDto[];
+  allCategories?: CategoryDto[];
   locale: string;
 }
 
-export function FollowedCategoriesView({ categories, locale }: FollowedCategoriesViewProps) {
+export function FollowedCategoriesView({
+  categories,
+  locale,
+}: FollowedCategoriesViewProps) {
   const isTr = locale === "tr";
   const [items, setItems] = useState<CategoryDto[]>(categories);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [isBulkLoading, setIsBulkLoading] = useState(false);
+  const [showConfirmAllModal, setShowConfirmAllModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState<CategoryDto | null>(null);
 
   const query = searchQuery.trim().toLowerCase();
-  const filtered = items.filter((cat) => {
+
+  // Followed Categories Filtered by Search
+  const filteredFollowed = items.filter((cat) => {
     if (!query) return true;
     return (
       cat.name.toLowerCase().includes(query) ||
@@ -47,26 +55,27 @@ export function FollowedCategoriesView({ categories, locale }: FollowedCategorie
     );
   });
 
-  const allVisibleSelected =
-    filtered.length > 0 && filtered.every((c) => selectedIds.has(c.id));
+  // Selection states
+  const allVisibleFollowedSelected =
+    filteredFollowed.length > 0 && filteredFollowed.every((c) => selectedIds.has(c.id));
 
-  const toggleSelectAll = () => {
-    if (allVisibleSelected) {
+  const toggleSelectAllFollowed = () => {
+    if (allVisibleFollowedSelected) {
       setSelectedIds((prev) => {
         const next = new Set(prev);
-        filtered.forEach((c) => next.delete(c.id));
+        filteredFollowed.forEach((c) => next.delete(c.id));
         return next;
       });
     } else {
       setSelectedIds((prev) => {
         const next = new Set(prev);
-        filtered.forEach((c) => next.add(c.id));
+        filteredFollowed.forEach((c) => next.add(c.id));
         return next;
       });
     }
   };
 
-  const toggleSelectOne = (id: string, e: React.MouseEvent) => {
+  const toggleSelectOneFollowed = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectedIds((prev) => {
       const next = new Set(prev);
@@ -79,6 +88,7 @@ export function FollowedCategoriesView({ categories, locale }: FollowedCategorie
     });
   };
 
+  // Single Unfollow
   const handleToggle = async (cat: CategoryDto) => {
     setLoadingId(cat.id);
     try {
@@ -111,7 +121,8 @@ export function FollowedCategoriesView({ categories, locale }: FollowedCategorie
     }
   };
 
-  const handleBulkUnfollow = async () => {
+  // Bulk Unfollow ONLY Selected
+  const handleBulkUnfollowSelected = async () => {
     if (selectedIds.size === 0) return;
     setIsBulkLoading(true);
     const targetIds = Array.from(selectedIds);
@@ -140,7 +151,41 @@ export function FollowedCategoriesView({ categories, locale }: FollowedCategorie
     }
   };
 
-  const handlePreferencesSaved = (catId: string, prefs: { emailAlerts: boolean; minBudget: number | null }) => {
+  // Bulk Unfollow ALL Categories
+  const handleUnfollowAll = async () => {
+    if (items.length === 0) return;
+    setIsBulkLoading(true);
+    const count = items.length;
+    try {
+      const res = await fetch("/api/categories/follow", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          unfollowAll: true,
+        }),
+      });
+
+      if (res.ok) {
+        setItems([]);
+        setSelectedIds(new Set());
+        setShowConfirmAllModal(false);
+        window.dispatchEvent(
+          new CustomEvent("operis:badge-update", {
+            detail: { key: "categories", delta: -count },
+          })
+        );
+      }
+    } catch {
+      // Fallback
+    } finally {
+      setIsBulkLoading(false);
+    }
+  };
+
+  const handlePreferencesSaved = (
+    catId: string,
+    prefs: { emailAlerts: boolean; minBudget: number | null }
+  ) => {
     setItems((prev) =>
       prev.map((c) =>
         c.id === catId
@@ -154,42 +199,24 @@ export function FollowedCategoriesView({ categories, locale }: FollowedCategorie
     );
   };
 
-  if (items.length === 0) {
-    return (
-      <EmptyState
-        variant="card"
-        icon={<FolderTree className="h-7 w-7 text-blue-400" />}
-        title={isTr ? "Henüz Bir Kategori Takip Etmiyorsunuz" : "No Followed Categories Yet"}
-        description={
-          isTr
-            ? "İlgi duyduğunuz teknoloji kategorilerini takip ederek yeni açılan ilanlardan anında haberdar olabilirsiniz."
-            : "Follow tech categories to get notified of newly published projects on our radar."
-        }
-        action={
-          <Link href={isTr ? "/tr/kategoriler" : "/en/categories"}>
-            <Button variant="shimmer" size="md" className="gap-2 shadow-lg shadow-blue-500/15">
-              <FolderTree className="h-4 w-4" aria-hidden="true" />
-              <span>{isTr ? "Kategorileri İncele & Takip Et" : "Explore Categories"}</span>
-            </Button>
-          </Link>
-        }
-      />
-    );
-  }
-
   return (
     <div className="space-y-6">
-      {/* Unified Toolbar: Full-width Search Input + Bulk Controls */}
-      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 pb-2">
-        {/* Search Input */}
+      {/* 1. Flat Toolbar (Search + Selection + Bulk Actions) - Always visible like other dashboard pages */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        {/* Arama Çubuğu (Search Bar) */}
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-text-tertiary)]" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-text-tertiary)]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={isTr ? "Kategorilerde ara..." : "Search categories..."}
-            className="w-full pl-10 pr-9 py-2 rounded-xl text-xs sm:text-sm bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all truncate"
+            disabled={items.length === 0}
+            placeholder={
+              isTr
+                ? "Takip ettiğiniz kategorilerde ara..."
+                : "Search followed categories..."
+            }
+            className="w-full pl-10 pr-9 py-2 rounded-xl text-xs sm:text-sm bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all truncate disabled:opacity-50 disabled:cursor-not-allowed"
           />
           {searchQuery && (
             <button
@@ -203,55 +230,103 @@ export function FollowedCategoriesView({ categories, locale }: FollowedCategorie
           )}
         </div>
 
-        {/* Toolbar Controls */}
-        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-          {/* Select All Toggle Button */}
-          {filtered.length > 0 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleSelectAll}
-              className={`gap-1.5 text-xs border rounded-xl px-3 py-2 cursor-pointer h-auto transition-all ${
-                allVisibleSelected
-                  ? "border-blue-500/40 bg-blue-500/10 text-blue-400 font-medium"
-                  : "border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
-              }`}
-            >
-              {allVisibleSelected ? (
-                <CheckSquare className="h-3.5 w-3.5 text-blue-400" />
-              ) : (
-                <Square className="h-3.5 w-3.5" />
-              )}
-              <span>
-                {allVisibleSelected
-                  ? (isTr ? "Seçimi Kaldır" : "Deselect All")
-                  : (isTr ? "Tümünü Seç" : "Select All")}
-              </span>
-              <span className="text-[10px] opacity-75 font-mono">({filtered.length})</span>
-            </Button>
-          )}
+        {/* Toolbar Selection & Bulk Action Buttons */}
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
+          {/* Seçim Butonu: Tümünü Seç / Seçimi Kaldır */}
+          <Button
+            variant="ghost"
+            size="sm"
+            disabled={items.length === 0}
+            onClick={toggleSelectAllFollowed}
+            className={`gap-1.5 text-xs border rounded-xl px-3 py-2 h-auto transition-all ${
+              items.length === 0
+                ? "border-[var(--color-border-subtle)] text-[var(--color-text-tertiary)] opacity-50 cursor-not-allowed"
+                : allVisibleFollowedSelected
+                ? "border-blue-500/40 bg-blue-500/15 text-blue-400 font-semibold cursor-pointer"
+                : "border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-blue-500/30 cursor-pointer"
+            }`}
+            title={isTr ? "Tümünü seç veya seçimi kaldır" : "Select or deselect all"}
+          >
+            {allVisibleFollowedSelected ? (
+              <CheckSquare className="h-3.5 w-3.5 text-blue-400" />
+            ) : (
+              <Square className="h-3.5 w-3.5" />
+            )}
+            <span>
+              {allVisibleFollowedSelected
+                ? isTr
+                  ? "Seçimi Kaldır"
+                  : "Deselect All"
+                : isTr
+                ? "Tümünü Seç"
+                : "Select All"}
+            </span>
+            <span className="text-[10px] opacity-75 font-mono">({filteredFollowed.length})</span>
+          </Button>
 
-          {/* Bulk Unfollow Action Button */}
+          {/* Sadece Seçtiklerini Takibi Bırak Butonu */}
           {selectedIds.size > 0 && (
             <Button
               variant="secondary"
               size="sm"
-              onClick={handleBulkUnfollow}
+              onClick={handleBulkUnfollowSelected}
               isLoading={isBulkLoading}
-              className="gap-1.5 text-xs bg-red-500/15 hover:bg-red-500/25 text-red-400 hover:text-red-300 border border-red-500/30 rounded-xl px-3 py-2 cursor-pointer h-auto transition-all shadow-sm"
+              className="gap-1.5 text-xs bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 hover:text-rose-300 border border-rose-500/30 rounded-xl px-3 py-2 cursor-pointer h-auto transition-all shadow-sm"
+              title={isTr ? "Sadece işaretlediğiniz kategorileri takipten çıkar" : "Unfollow only selected"}
             >
               <Trash2 className="h-3.5 w-3.5" />
               <span>
                 {isTr
-                  ? `Toplu Takibi Bırak (${selectedIds.size})`
-                  : `Bulk Unfollow (${selectedIds.size})`}
+                  ? `Seçilenleri Takibi Bırak (${selectedIds.size})`
+                  : `Unfollow Selected (${selectedIds.size})`}
               </span>
             </Button>
           )}
+
+          {/* Toplu Takibi Bırak (Tümünü Bırak) Butonu */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowConfirmAllModal(true)}
+            disabled={items.length === 0 || isBulkLoading}
+            className={`gap-1.5 text-xs border border-[var(--color-border-subtle)] rounded-xl px-3 py-2 h-auto transition-all ${
+              items.length === 0
+                ? "text-[var(--color-text-tertiary)] opacity-50 cursor-not-allowed"
+                : "text-[var(--color-text-tertiary)] hover:text-rose-400 hover:bg-rose-500/10 hover:border-rose-500/30 cursor-pointer"
+            }`}
+            title={isTr ? "Takip ettiğiniz tüm kategorileri tek tıkla takipten çıkar" : "Unfollow all categories"}
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+            <span>{isTr ? "Tümünü Takibi Bırak" : "Unfollow All"}</span>
+          </Button>
         </div>
       </div>
 
-      {filtered.length === 0 ? (
+      {/* 2. Content Area: Followed Categories Grid or Standard Empty State Card */}
+      {items.length === 0 ? (
+        <EmptyState
+          variant="card"
+          icon={<FolderTree className="h-7 w-7 text-blue-400" />}
+          title={isTr ? "Henüz Bir Kategori Takip Etmiyorsunuz" : "No Followed Categories Yet"}
+          description={
+            isTr
+              ? "İlgi duyduğunuz teknoloji kategorilerini takip ederek yeni açılan ilanlardan anında haberdar olabilir ve akışınızı özelleştirebilirsiniz."
+              : "Follow tech categories to get notified of newly published projects on our radar."
+          }
+          action={
+            <Link href={isTr ? "/tr/kategoriler" : "/en/categories"}>
+              <Button
+                variant="shimmer"
+                size="md"
+                className="gap-2 shadow-lg shadow-blue-500/15 font-semibold cursor-pointer"
+              >
+                <FolderTree className="h-4 w-4" aria-hidden="true" />
+                <span>{isTr ? "Kategorileri İncele & Takip Et" : "Explore & Follow Categories"}</span>
+              </Button>
+            </Link>
+          }
+        />
+      ) : filteredFollowed.length === 0 ? (
         <EmptyState
           variant="card"
           icon={<Search className="h-7 w-7 text-blue-400" />}
@@ -273,31 +348,31 @@ export function FollowedCategoriesView({ categories, locale }: FollowedCategorie
           }
         />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((cat) => {
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {filteredFollowed.map((cat) => {
             const emailActive = cat.emailAlerts !== false;
             const isSelected = selectedIds.has(cat.id);
 
             return (
               <div
                 key={cat.id}
-                onClick={(e) => toggleSelectOne(cat.id, e)}
-                className={`rounded-2xl border p-5 sm:p-6 backdrop-blur-xl transition-all duration-300 flex flex-col justify-between h-full cursor-pointer relative ${
+                onClick={(e) => toggleSelectOneFollowed(cat.id, e)}
+                className={`rounded-2xl border p-5 sm:p-6 backdrop-blur-xl transition-all duration-200 flex flex-col justify-between h-full cursor-pointer relative ${
                   isSelected
-                    ? "border-blue-500/60 ring-2 ring-blue-500/30 bg-blue-500/[0.05] shadow-md shadow-blue-500/5"
-                    : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 hover:border-blue-500/30 shadow-sm"
+                    ? "border-blue-500/60 ring-2 ring-blue-500/30 bg-blue-500/[0.06] shadow-md shadow-blue-500/10"
+                    : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 hover:border-blue-500/30 shadow-xs"
                 }`}
               >
                 <div className="flex flex-col flex-1">
-                  {/* Header row with checkbox, tags and badges */}
+                  {/* Header row with Checkbox and Status Badges */}
                   <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        onClick={(e) => toggleSelectOne(cat.id, e)}
+                        onClick={(e) => toggleSelectOneFollowed(cat.id, e)}
                         className={`h-5 w-5 rounded-md border flex items-center justify-center transition-all cursor-pointer ${
                           isSelected
-                            ? "bg-blue-600 border-blue-500 text-white shadow-sm"
+                            ? "bg-blue-600 border-blue-500 text-white shadow-xs"
                             : "border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/60 text-transparent hover:border-blue-400"
                         }`}
                         aria-label={
@@ -318,7 +393,7 @@ export function FollowedCategoriesView({ categories, locale }: FollowedCategorie
                     </div>
 
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="inline-flex items-center gap-1 text-[11px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                      <span className="inline-flex items-center gap-1 text-[11px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-medium">
                         <BookmarkCheck className="h-3 w-3" aria-hidden="true" />
                         <span>{isTr ? "Takipte" : "Followed"}</span>
                       </span>
@@ -363,8 +438,8 @@ export function FollowedCategoriesView({ categories, locale }: FollowedCategorie
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Link
-                    href={isTr ? `/tr/akis?category=${cat.key}` : `/en/feed?category=${cat.key}`}
-                    className="text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center gap-1 hover:underline"
+                    href={isTr ? `/tr/ilanlar?category=${cat.key}` : `/en/listings?category=${cat.key}`}
+                    className="text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center gap-1 hover:underline cursor-pointer"
                   >
                     <span>{isTr ? "İlanları Gör" : "View Listings"}</span>
                     <ArrowRight className="h-3 w-3" aria-hidden="true" />
@@ -387,7 +462,7 @@ export function FollowedCategoriesView({ categories, locale }: FollowedCategorie
                       size="sm"
                       onClick={() => handleToggle(cat)}
                       disabled={loadingId === cat.id}
-                      className="text-xs text-[var(--color-text-tertiary)] hover:text-red-400 cursor-pointer h-7 px-2"
+                      className="text-xs text-[var(--color-text-tertiary)] hover:text-rose-400 cursor-pointer h-7 px-2"
                     >
                       {isTr ? "Takipten Çık" : "Unfollow"}
                     </Button>
@@ -399,7 +474,58 @@ export function FollowedCategoriesView({ categories, locale }: FollowedCategorie
         </div>
       )}
 
-      {/* Per-Category Alert Settings Modal */}
+      {/* 3. Confirmation Modal for "Tümünü Takibi Bırak" */}
+      {showConfirmAllModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
+          <div className="w-full max-w-md rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-6 shadow-2xl space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-2xl bg-rose-500/15 text-rose-400 shrink-0">
+                <AlertTriangle className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-[var(--color-text-primary)]">
+                  {isTr ? "Tüm Kategorileri Takipten Çıkar" : "Unfollow All Categories"}
+                </h3>
+                <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
+                  {isTr
+                    ? `Takip ettiğiniz tüm kategorileri (${items.length}) takipten çıkarmak istediğinize emin misiniz?`
+                    : `Are you sure you want to unfollow all ${items.length} categories?`}
+                </p>
+              </div>
+            </div>
+
+            <p className="text-xs text-[var(--color-text-tertiary)] leading-relaxed">
+              {isTr
+                ? "Bu işlem sonrasında kişiselleştirilmiş 'Sana Özel' akışınız sıfırlanacak ve genel popüler ilanlar gösterilecektir. Dilediğiniz zaman kategorileri tekrar takibe alabilirsiniz."
+                : "This action will reset your personalized 'For You' stream and show general listings. You can re-follow categories anytime."}
+            </p>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-[var(--color-border-subtle)]">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowConfirmAllModal(false)}
+                disabled={isBulkLoading}
+                className="cursor-pointer text-xs"
+              >
+                {isTr ? "Vazgeç" : "Cancel"}
+              </Button>
+
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={handleUnfollowAll}
+                isLoading={isBulkLoading}
+                className="bg-rose-600 hover:bg-rose-500 text-white cursor-pointer text-xs font-semibold px-4"
+              >
+                {isTr ? "Evet, Tümünü Bırak" : "Yes, Unfollow All"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 4. Per-Category Alert Settings Modal */}
       {editingCategory && (
         <CategoryAlertSettingsModal
           category={editingCategory}

@@ -262,17 +262,14 @@ export function rankCategoriesByPersonalizedAffinity({
   followedCategoryIds: Set<string>;
   limit?: number;
 }): CategoryDto[] {
-  const profile = getDecayedAffinityProfile();
-
-  // If user hasn't interacted yet (no clicks, no searches, no views),
-  // return empty list so we never display false mock/static defaults.
-  if (!profile.hasInteractions) {
+  // 1. Filter out followed categories so recommendations always discover new areas
+  const unfollowed = categories.filter((c) => !followedCategoryIds.has(c.id));
+  if (unfollowed.length === 0) {
     return [];
   }
+  const candidatePool = unfollowed;
 
-  // 1. Filter out followed categories
-  const unfollowed = categories.filter((c) => !followedCategoryIds.has(c.id));
-  const candidatePool = unfollowed.length > 0 ? unfollowed : categories;
+  const profile = getDecayedAffinityProfile();
 
   // 2. Build Category Tag Distribution Vector from real active listings
   const categoryTagMap = new Map<string, Map<string, number>>();
@@ -336,7 +333,10 @@ export function rankCategoriesByPersonalizedAffinity({
   // Sort descending by recommendation score
   scored.sort((a, b) => b.score - a.score || b.activeCount - a.activeCount);
 
-  return scored.slice(0, limit).map((s) => s.category);
+  return scored.slice(0, limit).map((s) => ({
+    ...s.category,
+    listingCount: s.activeCount ?? s.category.listingCount,
+  }));
 }
 
 /**

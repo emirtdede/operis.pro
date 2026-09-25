@@ -14,6 +14,8 @@ import {
   Bell,
   Clock,
   Moon,
+  Star,
+  MapPin,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { AvatarInitials } from "@/src/components/ui/avatar-initials";
@@ -138,8 +140,9 @@ export function MatchHandshakeKit({
   const preferredKey = counterparty.preferredContactChannel?.toLowerCase().trim() || "any";
 
   const renderBadge = () => (
-    <span className="absolute -top-2.5 -right-1 px-1.5 py-0.5 rounded-full bg-amber-400 text-amber-950 font-bold text-[9px] shadow-sm flex items-center gap-0.5 tracking-tight z-10 animate-pulse">
-      ⭐ {isTr ? "Tercih Edilen" : "Preferred"}
+    <span className="absolute -top-2.5 -right-1 px-1.5 py-0.5 rounded-full bg-amber-400 text-amber-950 font-bold text-[9px] shadow-sm flex items-center gap-1 tracking-tight z-10 animate-pulse">
+      <Star className="h-2.5 w-2.5 fill-amber-950 text-amber-950 shrink-0" aria-hidden="true" />
+      <span>{isTr ? "Tercih Edilen" : "Preferred"}</span>
     </span>
   );
 
@@ -344,9 +347,11 @@ export function MatchHandshakeKit({
         >
           {preferredKey === "phone" && renderBadge()}
           <Phone className="h-4 w-4 shrink-0" aria-hidden="true" />
-          <span className="truncate">
-            {isTr ? "Telefonla Ara" : "Call Directly"}
-            {counterpartyTime.isNight ? " 🌙" : ""}
+          <span className="truncate inline-flex items-center gap-1.5">
+            <span>{isTr ? "Telefonla Ara" : "Call Directly"}</span>
+            {counterpartyTime.isNight && (
+              <Moon className="h-3 w-3 text-amber-300 shrink-0" aria-hidden="true" />
+            )}
           </span>
           <ExternalLink className="h-3 w-3 ml-auto opacity-70" aria-hidden="true" />
         </a>
@@ -405,8 +410,9 @@ export function MatchHandshakeKit({
               </span>
             </div>
             {counterparty.city && (
-              <div className="text-[11px] text-[var(--color-text-secondary)] mt-0.5">
-                📍 {counterparty.city}
+              <div className="text-[11px] text-[var(--color-text-secondary)] mt-0.5 flex items-center gap-1">
+                <MapPin className="h-3 w-3 text-[var(--color-text-tertiary)] shrink-0" aria-hidden="true" />
+                <span>{counterparty.city}</span>
               </div>
             )}
           </div>

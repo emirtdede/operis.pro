@@ -264,7 +264,8 @@ export function ContractDraftModal({
                       : "Dual-column Turkish and English parallel layout"
                   }
                 >
-                  <span>🌐 Çift Dilli (TR+EN)</span>
+                  <Globe className="h-3 w-3 shrink-0" aria-hidden="true" />
+                  <span>{isTr ? "Çift Dilli (TR+EN)" : "Bilingual (TR+EN)"}</span>
                 </button>
               </div>
             </div>

@@ -32,6 +32,7 @@
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-tertiary: var(--text-muted);
+  --color-text-muted: var(--text-muted);
   --color-border-subtle: var(--border-subtle);
   --color-border-strong: var(--border-strong);
   --color-accent-primary: var(--accent);
@@ -94,6 +95,7 @@
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-tertiary: var(--text-muted);
+  --color-text-muted: var(--text-muted);
   --color-border-subtle: var(--border-subtle);
   --color-border-strong: var(--border-strong);
   --color-accent-primary: var(--accent);
@@ -156,6 +158,7 @@
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-tertiary: var(--text-muted);
+  --color-text-muted: var(--text-muted);
   --color-border-subtle: var(--border-subtle);
   --color-border-strong: var(--border-strong);
   --color-accent-primary: var(--accent);

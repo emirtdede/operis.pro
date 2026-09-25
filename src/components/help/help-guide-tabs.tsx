@@ -19,6 +19,7 @@ import {
   Lock,
   MessageSquare,
   Sparkles,
+  Flag,
 } from "lucide-react";
 import { InteractiveFaqHub } from "./interactive-faq-hub";
 import { FAQ_ITEMS } from "./faq-data";
@@ -787,8 +788,9 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm text-[var(--color-text-secondary)]">
                 <div className="p-4 rounded-2xl bg-[var(--color-surface-base)] border border-rose-500/20 space-y-1.5">
-                  <strong className="text-rose-400 font-bold block">
-                    {isTr ? "🚩 Para / Teminat İsteyen İlanlar" : "🚩 Clients Demanding Upfront Fees"}
+                  <strong className="text-rose-400 font-bold flex items-center gap-1.5">
+                    <Flag className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                    <span>{isTr ? "Para / Teminat İsteyen İlanlar" : "Clients Demanding Upfront Fees"}</span>
                   </strong>
                   <p>
                     {isTr
@@ -798,8 +800,9 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
                 </div>
 
                 <div className="p-4 rounded-2xl bg-[var(--color-surface-base)] border border-rose-500/20 space-y-1.5">
-                  <strong className="text-rose-400 font-bold block">
-                    {isTr ? "🚩 Ücretsiz Deneme Projesi Tuzağı" : "🚩 Unpaid 'Trial' Tasks"}
+                  <strong className="text-rose-400 font-bold flex items-center gap-1.5">
+                    <Flag className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                    <span>{isTr ? "Ücretsiz Deneme Projesi Tuzağı" : "Unpaid 'Trial' Tasks"}</span>
                   </strong>
                   <p>
                     {isTr

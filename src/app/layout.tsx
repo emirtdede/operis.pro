@@ -5,8 +5,8 @@ import { LivingBackground } from "@/src/components/ui/living-background";
 import { ThemeScript } from "@/src/components/layout/theme-provider";
 
 export const metadata: Metadata = {
-  title: "Operis",
-  description: "Modern Tech & Software Convergent Talent Platform",
+  title: "Operis — Komisyonsuz Freelance Yazılım Platformu",
+  description: "Aracısız ve %0 komisyonlu serbest çalışma ağı. Yazılım ve teknoloji profesyonelleriyle doğrudan iletişim kurun, güvenle iş birliği yapın.",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },

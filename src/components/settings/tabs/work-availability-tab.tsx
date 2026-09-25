@@ -15,9 +15,10 @@ import {
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { TextInput } from "@/src/components/ui/text-input";
+import type { AvailabilityStatus } from "@/src/modules/profiles/services/availability.service";
 
 export interface WorkAvailabilityTabProps {
-  initialAvailabilityStatus: "AVAILABLE_NOW" | "PARTIALLY_AVAILABLE" | "BUSY";
+  initialAvailabilityStatus: AvailabilityStatus;
   initialAvailabilityHoursPerWeek: number;
   initialAvailableFromDate: string;
   initialAvailabilityNotice: string;
@@ -43,9 +44,9 @@ export function WorkAvailabilityTab({
 }: WorkAvailabilityTabProps) {
   const isTr = locale === "tr";
 
-  const [availabilityStatus, setAvailabilityStatus] = useState<
-    "AVAILABLE_NOW" | "PARTIALLY_AVAILABLE" | "BUSY"
-  >(initialAvailabilityStatus || "AVAILABLE_NOW");
+  const [availabilityStatus, setAvailabilityStatus] = useState<AvailabilityStatus>(
+    initialAvailabilityStatus || "AVAILABLE_NOW"
+  );
   const [hoursPerWeek, setHoursPerWeek] = useState<number>(initialAvailabilityHoursPerWeek || 40);
   const [availableFromDate, setAvailableFromDate] = useState<string>(initialAvailableFromDate || "");
   const [availabilityNotice, setAvailabilityNotice] = useState<string>(initialAvailabilityNotice || "");
@@ -128,27 +129,57 @@ export function WorkAvailabilityTab({
         </p>
       </div>
 
-      {/* 1. Müsaitlik Durumu (3 Seçenek) */}
+      {/* 1. Müsaitlik Durumu */}
       <div className="space-y-3">
         <label className="text-xs font-bold text-[var(--color-text-primary)] block">
           {isTr ? "Güncel Müsaitlik Durumunuz" : "Current Availability Status"}
         </label>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {[
             {
-              id: "AVAILABLE_NOW",
+              id: "AVAILABLE_NOW" as const,
               dot: "bg-emerald-500",
               title: isTr ? "Hemen Müsait" : "Available Now",
               desc: isTr ? "Yeni tekliflere ve acil projelere hemen başlayabilirim." : "Ready to take on new projects immediately.",
             },
             {
-              id: "PARTIALLY_AVAILABLE",
-              dot: "bg-amber-500",
-              title: isTr ? "Kısmen Müsait" : "Partially Available",
-              desc: isTr ? "Sadece danışmanlık veya part-time işler için açığım." : "Open for part-time, retainer or advising.",
+              id: "FULL_TIME" as const,
+              dot: "bg-blue-500",
+              title: isTr ? "Tam Zamanlı Açık" : "Open to Full-Time",
+              desc: isTr ? "Uzun vadeli tam zamanlı sözleşmeli pozisyonlara açığım." : "Open to full-time contracts or positions.",
             },
             {
-              id: "BUSY",
+              id: "PARTIALLY_AVAILABLE" as const,
+              dot: "bg-amber-500",
+              title: isTr ? "Yarı Zamanlı" : "Part-Time",
+              desc: isTr ? "Haftalık 10-20 saat esnek çalışma ve seçili projeler." : "Open for part-time, retainer or advising.",
+            },
+            {
+              id: "PROJECT_BASED" as const,
+              dot: "bg-purple-500",
+              title: isTr ? "Proje Bazlı / Serbest" : "Project-Based / Freelance",
+              desc: isTr ? "Belirli süreli sprintler ve anahtar teslim projeler." : "Available for scoped sprints and milestone deliverables.",
+            },
+            {
+              id: "ADVISORY" as const,
+              dot: "bg-indigo-500",
+              title: isTr ? "Danışmanlık & Mentorluk" : "Advisory & Mentorship",
+              desc: isTr ? "Mimari inceleme, kod denetimi ve teknik rehberlik." : "Architecture review, code audit, and advisory.",
+            },
+            {
+              id: "VOLUNTEER" as const,
+              dot: "bg-teal-500",
+              title: isTr ? "Gönüllü & Sosyal Fayda" : "Volunteer & Pro Bono",
+              desc: isTr ? "Açık kaynak, sivil toplum ve sosyal fayda projeleri." : "Open source, non-profit, and social impact work.",
+            },
+            {
+              id: "INTERNSHIP" as const,
+              dot: "bg-sky-500",
+              title: isTr ? "Staj & Çıraklık" : "Internship & Apprenticeship",
+              desc: isTr ? "Junior geliştirici ve stajyer iş birlikleri." : "Junior tracks, learning partnerships, and internships.",
+            },
+            {
+              id: "BUSY" as const,
               dot: "bg-red-500",
               title: isTr ? "Meşgul / Kapalı" : "Busy / Not Taking Work",
               desc: isTr ? "Şu an tam kapasitedeyim, yeni teklif alamıyorum." : "Fully booked with existing commitments.",

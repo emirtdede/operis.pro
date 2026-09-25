@@ -5,12 +5,13 @@ import {
   Clock,
   Calendar,
 } from "lucide-react";
+import type { AvailabilityStatus } from "@/src/modules/profiles/services/availability.service";
 
 export interface VisibilitySettingsTabProps {
   showLocation: boolean;
   revealPhoneAfterMatch: boolean;
   allowSearchIndex: boolean;
-  availabilityStatus: "AVAILABLE_NOW" | "PARTIALLY_AVAILABLE" | "BUSY";
+  availabilityStatus: AvailabilityStatus;
   availabilityHoursPerWeek: number;
   availableFromDate: string;
   availabilityNotice: string;
@@ -18,7 +19,7 @@ export interface VisibilitySettingsTabProps {
   onShowLocationChange: (val: boolean) => void;
   onRevealPhoneChange: (val: boolean) => void;
   onAllowSearchIndexChange: (val: boolean) => void;
-  onAvailabilityStatusChange: (status: "AVAILABLE_NOW" | "PARTIALLY_AVAILABLE" | "BUSY") => void;
+  onAvailabilityStatusChange: (status: AvailabilityStatus) => void;
   onAvailabilityHoursChange: (hours: number) => void;
   onAvailableFromDateChange: (dateStr: string) => void;
   onAvailabilityNoticeChange: (notice: string) => void;
@@ -132,25 +133,70 @@ export function VisibilitySettingsTab({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
           {[
             {
               id: "AVAILABLE_NOW" as const,
               labelTr: "Hemen Başlayabilir",
               labelEn: "Available Now",
-              subTr: "30+ saat/hafta",
-              subEn: "30+ hrs/wk",
+              subTr: "Acil / hazır",
+              subEn: "Immediate availability",
               border: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",
               dot: "bg-emerald-400 animate-pulse",
             },
             {
+              id: "FULL_TIME" as const,
+              labelTr: "Tam Zamanlı Açık",
+              labelEn: "Open to Full-Time",
+              subTr: "35-40 saat/hafta",
+              subEn: "35-40 hrs/wk",
+              border: "border-blue-500/30 bg-blue-500/10 text-blue-400",
+              dot: "bg-blue-400",
+            },
+            {
               id: "PARTIALLY_AVAILABLE" as const,
-              labelTr: "Kısmi Müsait",
-              labelEn: "Partially Available",
+              labelTr: "Yarı Zamanlı",
+              labelEn: "Part-Time",
               subTr: "10-20 saat/hafta",
               subEn: "10-20 hrs/wk",
               border: "border-amber-500/30 bg-amber-500/10 text-amber-400",
               dot: "bg-amber-400",
+            },
+            {
+              id: "PROJECT_BASED" as const,
+              labelTr: "Proje Bazlı / Serbest",
+              labelEn: "Project-Based / Freelance",
+              subTr: "Sprint ve teslimat",
+              subEn: "Sprints & milestones",
+              border: "border-purple-500/30 bg-purple-500/10 text-purple-400",
+              dot: "bg-purple-400",
+            },
+            {
+              id: "ADVISORY" as const,
+              labelTr: "Danışmanlık & Mentorluk",
+              labelEn: "Advisory & Mentorship",
+              subTr: "Teknik rehberlik",
+              subEn: "Strategic advisory",
+              border: "border-indigo-500/30 bg-indigo-500/10 text-indigo-400",
+              dot: "bg-indigo-400",
+            },
+            {
+              id: "VOLUNTEER" as const,
+              labelTr: "Gönüllü & Sosyal Fayda",
+              labelEn: "Volunteer & Pro Bono",
+              subTr: "Açık kaynak & STK",
+              subEn: "Open source & non-profit",
+              border: "border-teal-500/30 bg-teal-500/10 text-teal-400",
+              dot: "bg-teal-400",
+            },
+            {
+              id: "INTERNSHIP" as const,
+              labelTr: "Staj & Çıraklık",
+              labelEn: "Internship & Apprenticeship",
+              subTr: "Junior iş birlikleri",
+              subEn: "Junior tracks",
+              border: "border-sky-500/30 bg-sky-500/10 text-sky-400",
+              dot: "bg-sky-400",
             },
             {
               id: "BUSY" as const,

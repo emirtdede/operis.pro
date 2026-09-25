@@ -2,10 +2,10 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Operis — Doğrudan & Komisyonsuz Yazılım İlanları",
+    name: "Operis — Komisyonsuz Freelance Yazılım Platformu",
     short_name: "Operis",
     description:
-      "Türkiye ve küresel teknoloji profesyonelleri için doğrudan ve güvenli serbest çalışma platformu. Komisyon yok, aracı yok, %100 doğrudan iş birliği.",
+      "Aracısız ve %0 komisyonlu serbest çalışma ağı. Yazılım ve teknoloji profesyonelleriyle doğrudan iletişim kurun, güvenle iş birliği yapın.",
     start_url: "/",
     display: "standalone",
     background_color: "#141517",

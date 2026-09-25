@@ -36,7 +36,7 @@ export function SquadExplainerCard({
           <div>
             <div className="flex items-center gap-2">
               <h4 className="text-sm font-semibold text-[var(--color-text-primary)]">
-                {isTr ? "👥 Çevik Ekip (Kolektif Teklif) Nedir?" : "👥 What is a Freelance Squad Proposal?"}
+                {isTr ? "Çevik Ekip (Kolektif Teklif) Nedir?" : "What is a Freelance Squad Proposal?"}
               </h4>
               <span className="inline-flex items-center rounded-md bg-indigo-500/15 px-2 py-0.5 text-[10px] font-medium text-indigo-300 border border-indigo-500/30">
                 {isTr ? "İşveren Kılavuzu" : "Employer Guide"}
@@ -128,8 +128,8 @@ export function SquadExplainerCard({
           <div className="rounded-xl border border-indigo-500/20 bg-indigo-500/5 px-3.5 py-2.5 text-[11px] text-indigo-300/90 flex items-center justify-between">
             <span>
               {isTr
-                ? "📌 İşveren olarak tek bir toplam bütçe onaylarsınız. Ekip içi hakediş dağılımı sözleşmede otomatik tescil edilir."
-                : "📌 You approve a single aggregate budget. Inter-squad allocations are automatically registered in the bilateral contract."}
+                ? "İşveren olarak tek bir toplam bütçe onaylarsınız. Ekip içi hakediş dağılımı sözleşmede otomatik tescil edilir."
+                : "You approve a single aggregate budget. Inter-squad allocations are automatically registered in the bilateral contract."}
             </span>
           </div>
         </div>

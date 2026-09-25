@@ -1,5 +1,6 @@
 import type { FeedListingItem } from "@/src/modules/listings/feed/service";
 import type { CategoryDto } from "@/src/modules/categories/service";
+import type { AvailabilityStatus } from "@/src/modules/profiles/services/availability.service";
 
 export interface CurrentUserProfileBrief {
   userId: string;
@@ -7,7 +8,7 @@ export interface CurrentUserProfileBrief {
   handle: string;
   headline?: string | null;
   avatarUrl?: string | null;
-  availabilityStatus: "AVAILABLE_NOW" | "PARTIALLY_AVAILABLE" | "BUSY";
+  availabilityStatus: AvailabilityStatus;
   isAvailableForHire: boolean;
   isActivelyHiring: boolean;
   isCompanyVerified: boolean;

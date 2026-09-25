@@ -53,13 +53,13 @@ function getTotalValidationWarning(roundedTotal: number, isTr: boolean): string 
   if (roundedTotal < 100) {
     const remaining = (100 - roundedTotal).toFixed(1);
     return isTr
-      ? `⚠️ Toplam %100 olmalıdır. Kalan %${remaining} dağıtılmalıdır.`
-      : `⚠️ Total must equal 100%. Remaining %${remaining} to allocate.`;
+      ? `Toplam %100 olmalıdır. Kalan %${remaining} dağıtılmalıdır.`
+      : `Total must equal 100%. Remaining %${remaining} to allocate.`;
   }
   const excess = (roundedTotal - 100).toFixed(1);
   return isTr
-    ? `❌ Toplam %100'ü aştı! Lütfen %${excess} azaltın.`
-    : `❌ Total exceeds 100%! Please reduce by %${excess}.`;
+    ? `Toplam %100'ü aştı! Lütfen %${excess} azaltın.`
+    : `Total exceeds 100%! Please reduce by %${excess}.`;
 }
 
 export function SquadBuilderSection({
@@ -237,7 +237,7 @@ export function SquadBuilderSection({
           </div>
           <div>
             <span className="text-xs font-semibold text-[var(--color-text-primary)] block">
-              {isTr ? "👥 Ekip Arkadaşı Ekle (Ortak Teklif / Kolektif)" : "👥 Add Squad Members (Consortium Offer)"}
+              {isTr ? "Ekip Arkadaşı Ekle (Ortak Teklif / Kolektif)" : "Add Squad Members (Consortium Offer)"}
             </span>
             <span className="text-[11px] text-[var(--color-text-tertiary)]">
               {isTr
@@ -299,28 +299,28 @@ export function SquadBuilderSection({
                 onClick={() => handleApplyPreset("mobile")}
                 className="text-[11px] px-2.5 py-1 rounded-lg border border-indigo-500/30 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-200 transition-colors cursor-pointer"
               >
-                📱 {isTr ? "Mobil Proje (3 Kişi)" : "Mobile App (3)"}
+                {isTr ? "Mobil Proje (3 Kişi)" : "Mobile App (3)"}
               </button>
               <button
                 type="button"
                 onClick={() => handleApplyPreset("fullstack")}
                 className="text-[11px] px-2.5 py-1 rounded-lg border border-indigo-500/30 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-200 transition-colors cursor-pointer"
               >
-                🌐 {isTr ? "Web & Bulut (3 Kişi)" : "Fullstack Web (3)"}
+                {isTr ? "Web & Bulut (3 Kişi)" : "Fullstack Web (3)"}
               </button>
               <button
                 type="button"
                 onClick={() => handleApplyPreset("ai")}
                 className="text-[11px] px-2.5 py-1 rounded-lg border border-indigo-500/30 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-200 transition-colors cursor-pointer"
               >
-                🤖 {isTr ? "Yapay Zeka (3 Kişi)" : "AI / Data (3)"}
+                {isTr ? "Yapay Zeka (3 Kişi)" : "AI / Data (3)"}
               </button>
               <button
                 type="button"
                 onClick={() => handleApplyPreset("design")}
                 className="text-[11px] px-2.5 py-1 rounded-lg border border-indigo-500/30 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-200 transition-colors cursor-pointer"
               >
-                🎨 {isTr ? "UI/UX & Tasarım (3 Kişi)" : "Design & UI (3)"}
+                {isTr ? "UI/UX & Tasarım (3 Kişi)" : "Design & UI (3)"}
               </button>
             </div>
           </div>

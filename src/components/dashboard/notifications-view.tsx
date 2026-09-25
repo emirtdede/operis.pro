@@ -27,9 +27,9 @@ function getNotificationTitle(item: NotificationItem, isTr: boolean): string {
   if (item.type === "COMMUNICATION_PING") {
     const listingTitle = item.payloadJson?.listingTitle;
     if (isTr) {
-      return `💬 İletişim Dürtmesi: ${listingTitle || "Proje Çalışma Alanı"}`;
+      return `İletişim Dürtmesi: ${listingTitle || "Proje Çalışma Alanı"}`;
     }
-    return `💬 Project Ping: ${listingTitle || "Workspace"}`;
+    return `Project Ping: ${listingTitle || "Workspace"}`;
   }
   return isTr ? "Operis Bildirimi" : "Operis Alert";
 }

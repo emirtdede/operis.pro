@@ -2,6 +2,8 @@ import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { getEnv } from "@/src/config/env";
 import crypto from "node:crypto";
+import fs from "node:fs/promises";
+import path from "node:path";
 
 let s3ClientInstance: S3Client | null = null;
 
@@ -107,6 +109,57 @@ export async function createAvatarPresignedUploadUrl(userId: string): Promise<Pr
     key,
     expiresInSeconds,
   };
+}
+
+/**
+ * Directly uploads an optimized WebP avatar buffer to Cloudflare R2 (10 GB free tier).
+ * Automatically falls back to local public uploads storage in dev/test environments.
+ */
+export async function uploadAvatarBuffer(
+  userId: string,
+  buffer: Buffer
+): Promise<{ key: string; publicUrl: string; isR2: boolean }> {
+  const randomSuffix = crypto.randomBytes(6).toString("hex");
+  const filename = `${userId}-${Date.now()}-${randomSuffix}.webp`;
+  const key = `avatars/${filename}`;
+
+  if (isR2Configured()) {
+    const { client, bucketName, publicUrlBase } = getR2Client();
+    await client.send(
+      new PutObjectCommand({
+        Bucket: bucketName,
+        Key: key,
+        Body: buffer,
+        ContentType: "image/webp",
+        CacheControl: "public, max-age=31536000, immutable",
+      })
+    );
+    return {
+      key,
+      publicUrl: `${publicUrlBase}/${key}`,
+      isR2: true,
+    };
+  }
+
+  // Fallback for local development or when Cloudflare R2 credentials are not set
+  try {
+    const uploadsDir = path.join(process.cwd(), "public", "uploads", "avatars");
+    await fs.mkdir(uploadsDir, { recursive: true });
+    await fs.writeFile(path.join(uploadsDir, filename), buffer);
+    return {
+      key,
+      publicUrl: `/uploads/avatars/${filename}`,
+      isR2: false,
+    };
+  } catch (err) {
+    console.error("Local avatar upload fallback error:", err);
+    const base64 = buffer.toString("base64");
+    return {
+      key,
+      publicUrl: `data:image/webp;base64,${base64}`,
+      isR2: false,
+    };
+  }
 }
 
 /**

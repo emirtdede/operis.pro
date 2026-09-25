@@ -12,6 +12,8 @@ import { Calculator, Sparkles } from "lucide-react";
 import { ProposalPitchDoctorCard } from "./proposal-pitch-doctor-card";
 import { SquadBuilderSection, SquadMemberDraft } from "./squad/squad-builder-section";
 import { SquadRevenueEngine } from "@/src/modules/offers/squad-engine";
+import { formatCurrency } from "@/src/lib/i18n/formatters";
+import type { Locale } from "@/src/lib/i18n/config";
 
 export interface SubmitOfferModalProps {
   isOpen: boolean;
@@ -75,8 +77,8 @@ function getPitchDoctorToggleLabel(show: boolean, isTr: boolean): string {
     return isTr ? "Asistanı Gizle" : "Hide Assistant";
   }
   return isTr
-    ? "🤖 Operis AI: Teklifi Değerlendir & Güçlendir"
-    : "🤖 Operis AI: Review & Enhance Pitch";
+    ? "Operis AI: Teklifi Değerlendir & Güçlendir"
+    : "Operis AI: Review & Enhance Pitch";
 }
 
 function getTaxCalculatorToggleLabel(show: boolean, isTr: boolean): string {
@@ -293,6 +295,7 @@ export function SubmitOfferModal({
       onClose={onClose}
       title={getDialogTitle(Boolean(isEditing), isTr)}
       description={getDialogDescription(Boolean(isEditing), listingTitle, isTr)}
+      className="max-w-2xl"
     >
       {success ? (
         <div className="space-y-5 py-4 text-center">
@@ -426,8 +429,9 @@ export function SubmitOfferModal({
               </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr_1fr] gap-3">
               <Select
+                label={isTr ? "Para Birimi" : "Currency"}
                 value={budgetCurrency}
                 onChange={(e) => setBudgetCurrency(e.target.value)}
                 options={[
@@ -438,23 +442,40 @@ export function SubmitOfferModal({
                 ]}
                 className="w-full"
               />
-              <div className="grid grid-cols-2 gap-2 sm:col-span-2">
-                <TextInput
-                  type="number"
-                  min="0"
-                  placeholder={isTr ? "Min Tutar" : "Min Amount"}
-                  value={budgetMin}
-                  onChange={(e) => setBudgetMin(e.target.value)}
-                />
-                <TextInput
-                  type="number"
-                  min="0"
-                  placeholder={isTr ? "Maks Tutar" : "Max Amount"}
-                  value={budgetMax}
-                  onChange={(e) => setBudgetMax(e.target.value)}
-                />
-              </div>
+              <TextInput
+                type="number"
+                min="0"
+                label={isTr ? "Minimum Tutar (En Az)" : "Minimum Amount"}
+                placeholder={isTr ? "Örn: 15000" : "e.g. 15000"}
+                value={budgetMin}
+                onChange={(e) => setBudgetMin(e.target.value)}
+              />
+              <TextInput
+                type="number"
+                min="0"
+                label={isTr ? "Maksimum Tutar (En Çok)" : "Maximum Amount"}
+                placeholder={isTr ? "Örn: 35000" : "e.g. 35000"}
+                value={budgetMax}
+                onChange={(e) => setBudgetMax(e.target.value)}
+              />
             </div>
+
+            {(budgetMin || budgetMax) && (
+              <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs">
+                <span className="text-blue-300/80 font-medium">
+                  {isTr ? "Öngörülen Teklif:" : "Proposed Budget:"}
+                </span>
+                <span className="font-semibold text-blue-200">
+                  {budgetMin && budgetMax
+                    ? budgetMin === budgetMax
+                      ? `${formatCurrency(parseFloat(budgetMin) || 0, budgetCurrency, (locale as Locale) || "tr")} (${isTr ? "Sabit Tutar" : "Fixed"})`
+                      : `${formatCurrency(parseFloat(budgetMin) || 0, budgetCurrency, (locale as Locale) || "tr")} – ${formatCurrency(parseFloat(budgetMax) || 0, budgetCurrency, (locale as Locale) || "tr")} aralığında`
+                    : budgetMin
+                    ? `${isTr ? "En az" : "At least"} ${formatCurrency(parseFloat(budgetMin) || 0, budgetCurrency, (locale as Locale) || "tr")}`
+                    : `${isTr ? "En çok" : "At most"} ${formatCurrency(parseFloat(budgetMax) || 0, budgetCurrency, (locale as Locale) || "tr")}`}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Timeline section */}

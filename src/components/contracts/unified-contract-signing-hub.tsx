@@ -47,12 +47,12 @@ function getCopyTextLabel(copied: boolean, isTr: boolean): string {
 function getSigningHubTitle(hasSigned: boolean, isTr: boolean): string {
   if (hasSigned) {
     return isTr
-      ? "✅ İmzanız Kaydedildi (Karşı Taraf Bekleniyor)"
-      : "✅ Your Signature Recorded (Awaiting Counterparty)";
+      ? "İmzanız Kaydedildi (Karşı Taraf Bekleniyor)"
+      : "Your Signature Recorded (Awaiting Counterparty)";
   }
   return isTr
-    ? "✍️ Tek Sayfada Tüm Sözleşmeleri İmzala"
-    : "✍️ Sign All Agreements on a Single Page";
+    ? "Tek Sayfada Tüm Sözleşmeleri İmzala"
+    : "Sign All Agreements on a Single Page";
 }
 
 function getSigningHubDescription(hasSigned: boolean, isTr: boolean): string {
@@ -242,8 +242,8 @@ export function UnifiedContractSigningHub({
     );
     if (hasAnySigned) {
       const confirmMsg = isTr
-        ? "⚠️ DİKKAT: Sözleşme kapsamını değiştirmek daha önce atılmış olan imzaları geçersiz kılar ve her iki tarafın yeniden imzalamasını gerektirir.\n\nDevam etmek istiyor musunuz?"
-        : "⚠️ WARNING: Changing contract selection will invalidate existing signature(s) and require both parties to re-sign.\n\nDo you want to proceed?";
+        ? "DİKKAT: Sözleşme kapsamını değiştirmek daha önce atılmış olan imzaları geçersiz kılar ve her iki tarafın yeniden imzalamasını gerektirir.\n\nDevam etmek istiyor musunuz?"
+        : "WARNING: Changing contract selection will invalidate existing signature(s) and require both parties to re-sign.\n\nDo you want to proceed?";
       if (!window.confirm(confirmMsg)) return;
     }
 

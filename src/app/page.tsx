@@ -1,30 +1,18 @@
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import { headers, cookies } from "next/headers";
 
-function isTurkishPreferred(acceptLanguage: string | null): boolean {
+function isExplicitEnglishPreferred(acceptLanguage: string | null): boolean {
   if (!acceptLanguage || acceptLanguage.trim().length === 0) {
     return false;
   }
 
-  const preferences = acceptLanguage
-    .split(",")
-    .map((part) => {
-      const [lang, qPart] = part.trim().split(";");
-      const q = qPart ? parseFloat(qPart.replace("q=", "")) : 1.0;
-      return {
-        lang: (lang || "").trim().toLowerCase(),
-        q: isNaN(q) ? 1.0 : q,
-      };
-    })
-    .filter((item) => item.lang.length > 0)
-    .sort((a, b) => b.q - a.q);
-
-  if (preferences.length === 0) {
+  const lower = acceptLanguage.toLowerCase();
+  // If user has tr in preferences, keep Turkish as primary
+  if (lower.includes("tr")) {
     return false;
   }
 
-  const top = preferences[0];
-  return Boolean(top && top.lang.startsWith("tr"));
+  return lower.startsWith("en");
 }
 
 export const dynamic = "force-dynamic";
@@ -33,16 +21,22 @@ export default async function RootPage() {
   const cookieStore = await cookies();
   const cookieLocale = cookieStore.get("NEXT_LOCALE")?.value || cookieStore.get("fp_locale")?.value;
 
-  if (cookieLocale === "tr" || cookieLocale === "en") {
-    redirect(`/${cookieLocale}`);
+  if (cookieLocale === "en") {
+    permanentRedirect("/en");
+  }
+
+  if (cookieLocale === "tr") {
+    permanentRedirect("/tr");
   }
 
   const headerStore = await headers();
   const acceptLanguage = headerStore.get("accept-language");
 
-  if (isTurkishPreferred(acceptLanguage)) {
-    redirect("/tr");
+  if (isExplicitEnglishPreferred(acceptLanguage)) {
+    permanentRedirect("/en");
   }
 
-  redirect("/en");
+  // Primary market default matches x-default: /tr
+  permanentRedirect("/tr");
 }
+

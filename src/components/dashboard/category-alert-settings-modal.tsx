@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Bell, BellOff, DollarSign, Check, Loader2 } from "lucide-react";
+import { X, Bell, BellOff, DollarSign, Check, Loader2, Zap } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { CategoryDto } from "@/src/modules/categories/service";
 
@@ -163,10 +163,13 @@ export function CategoryAlertSettingsModal({
         </div>
 
         {/* Info Note on Frequency Capping */}
-        <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/15 text-[11px] text-blue-300/80 leading-relaxed">
-          ⚡ {isTr
-            ? "Operis akıllı alarm motoru, e-posta kutunuzun dolmasını önlemek için 4 saatlik kayan pencerede maksimum 3 e-posta alarmı iletir. Uygulama içi bildirimleriniz eksiksiz gelmeye devam eder."
-            : "Operis anti-storm engine limits alerts to a maximum of 3 emails per 4-hour window to keep your inbox clean. In-app alerts remain uncapped."}
+        <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/15 text-[11px] text-blue-300/80 leading-relaxed flex items-start gap-2">
+          <Zap className="h-3.5 w-3.5 text-amber-400 shrink-0 mt-0.5" aria-hidden="true" />
+          <span>
+            {isTr
+              ? "Operis akıllı alarm motoru, e-posta kutunuzun dolmasını önlemek için 4 saatlik kayan pencerede maksimum 3 e-posta alarmı iletir. Uygulama içi bildirimleriniz eksiksiz gelmeye devam eder."
+              : "Operis anti-storm engine limits alerts to a maximum of 3 emails per 4-hour window to keep your inbox clean. In-app alerts remain uncapped."}
+          </span>
         </div>
 
         {/* Action Buttons */}

@@ -2,11 +2,13 @@
 
 import { useState, useTransition } from "react";
 import { Bookmark } from "lucide-react";
+import { twMerge } from "tailwind-merge";
+import { Button } from "@/src/components/ui/button";
 
 export interface BookmarkButtonProps {
   listingId: string;
   initialSaved?: boolean;
-  variant?: "icon" | "button" | "pill";
+  variant?: "icon" | "button" | "pill" | "ghost";
   size?: "sm" | "md";
   locale?: string;
   className?: string;
@@ -79,6 +81,12 @@ export function BookmarkButton({
         });
 
         if (!res.ok) {
+          if (res.status === 401) {
+            setSaved(!nextSaved);
+            onToggle?.(!nextSaved);
+            window.location.href = `/${locale}/login?redirect=${encodeURIComponent(window.location.pathname)}`;
+            return;
+          }
           // Revert on failure
           setSaved(!nextSaved);
           onToggle?.(!nextSaved);
@@ -107,29 +115,58 @@ export function BookmarkButton({
     });
   };
 
-  const iconSizes = size === "sm" ? "h-4 w-4" : "h-5 w-5";
+  const iconSizes = size === "sm" ? "h-3.5 w-3.5" : "h-4 w-4";
 
-  if (variant === "button") {
+  if (variant === "ghost") {
     return (
       <button
         type="button"
         onClick={handleToggle}
         disabled={isPending}
+        title={getBookmarkTitle(saved, isTr)}
         aria-label={getBookmarkAriaLabel(saved, isTr)}
-        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all ${
+        className={twMerge(
+          "inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs transition-all cursor-pointer font-medium",
           saved
-            ? "border-blue-500/40 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20"
-            : "border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
-        } ${className}`}
+            ? "bg-blue-500/10 text-blue-400 border border-blue-500/25 shadow-2xs font-semibold"
+            : "hover:bg-surface/80 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]",
+          className
+        )}
       >
         <Bookmark
-          className={`${iconSizes} transition-transform active:scale-125 ${
+          className={`${iconSizes} shrink-0 transition-transform active:scale-125 ${
             saved ? "fill-blue-400 text-blue-400" : ""
           }`}
           aria-hidden="true"
         />
         <span>{getBookmarkButtonText(saved, isTr)}</span>
       </button>
+    );
+  }
+
+  if (variant === "button") {
+    return (
+      <Button
+        type="button"
+        variant="secondary"
+        size={size}
+        onClick={handleToggle}
+        disabled={isPending}
+        aria-label={getBookmarkAriaLabel(saved, isTr)}
+        className={twMerge(
+          "gap-1.5 transition-all text-xs font-medium justify-center",
+          saved && "border-blue-500/40 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20",
+          className
+        )}
+      >
+        <Bookmark
+          className={`${iconSizes} shrink-0 transition-transform active:scale-125 ${
+            saved ? "fill-blue-400 text-blue-400" : "text-[var(--color-text-secondary)]"
+          }`}
+          aria-hidden="true"
+        />
+        <span>{getBookmarkButtonText(saved, isTr)}</span>
+      </Button>
     );
   }
 
@@ -140,11 +177,13 @@ export function BookmarkButton({
       disabled={isPending}
       title={getBookmarkTitle(saved, isTr)}
       aria-label={getBookmarkAriaLabel(saved, isTr)}
-      className={`relative inline-flex items-center justify-center p-2 rounded-xl border transition-all ${
+      className={twMerge(
+        "relative inline-flex items-center justify-center p-2 rounded-xl border transition-all",
         saved
           ? "border-blue-500/30 bg-blue-500/10 text-blue-400 shadow-sm"
-          : "border-[var(--color-border-subtle)] bg-[var(--color-surface-card)] text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]"
-      } ${className}`}
+          : "border-[var(--color-border-subtle)] bg-[var(--color-surface-card)] text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]",
+        className
+      )}
     >
       <Bookmark
         className={`${iconSizes} transition-all duration-200 active:scale-125 ${

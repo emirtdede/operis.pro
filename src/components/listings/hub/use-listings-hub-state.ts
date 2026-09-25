@@ -27,14 +27,40 @@ export function useListingsHubState({
   const [mode, setMode] = useState<"following" | "all">(initialMode);
 
   // View: "stream" (Social timeline list) vs "catalog" (Marketplace grid cards)
-  const [view] = useState<"stream" | "catalog">(() => {
+  const [view, setView] = useState<"stream" | "catalog">(() => {
     if (typeof window !== "undefined") {
       const urlParams = new URLSearchParams(window.location.search);
       const urlView = urlParams.get("view");
       if (urlView === "stream" || urlView === "catalog") return urlView;
+      try {
+        const stored = localStorage.getItem("operis_listings_view_preference");
+        if (stored === "stream" || stored === "catalog") return stored;
+      } catch {
+        // Fallback to initialView
+      }
     }
     return initialView || "stream";
   });
+
+  const handleSwitchView = useCallback((newView: "stream" | "catalog") => {
+    setView(newView);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      if (newView === "stream") {
+        url.searchParams.delete("view");
+      } else {
+        url.searchParams.set("view", newView);
+      }
+      window.history.replaceState(null, "", url.toString());
+
+      try {
+        localStorage.setItem("operis_listings_view_preference", newView);
+        document.cookie = `operis_listings_view_preference=${newView}; path=/; max-age=31536000; SameSite=Lax`;
+      } catch {
+        // Non-blocking storage
+      }
+    }
+  }, []);
 
   // Feed items & cursor state
   const [items, setItems] = useState<FeedListingItem[]>(initialItems);
@@ -268,6 +294,9 @@ export function useListingsHubState({
       if (!isCurrentlyFollowed) {
         setHasFollowed(true);
       }
+      if (mode === "following") {
+        fetchListings("following", false);
+      }
     } catch {
       setFollowedCategoryIds((prev) => {
         const rolledBack = new Set(prev);
@@ -279,7 +308,7 @@ export function useListingsHubState({
         return rolledBack;
       });
     }
-  }, []);
+  }, [mode, fetchListings]);
 
   // Quick Offer Handler
   const handleQuickOffer = useCallback((target: QuickOfferTarget) => {
@@ -402,6 +431,8 @@ export function useListingsHubState({
     isTr,
     mode,
     view,
+    setView,
+    handleSwitchView,
     items,
     cursor,
     hasMore,

@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Share2, Check, LogIn, Zap, SlidersHorizontal, Flag, History, Copy } from "lucide-react";
+import { Share2, Check, LogIn, Send, SlidersHorizontal, Flag, History, Copy } from "lucide-react";
 import { Button } from "../ui/button";
 import { SubmitOfferModal } from "../offers/submit-offer-modal";
 import { QuickOfferDrawer } from "../offers/quick-offer-drawer";
@@ -74,13 +75,18 @@ export function ListingDetailActions({
     | undefined
   >(undefined);
   const [copied, setCopied] = useState(false);
+  const [copyToast, setCopyToast] = useState(false);
 
   const handleCopyLink = async () => {
     try {
       if (typeof window !== "undefined") {
         await navigator.clipboard.writeText(window.location.href);
         setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+        setCopyToast(true);
+        setTimeout(() => {
+          setCopied(false);
+          setCopyToast(false);
+        }, 3000);
       }
     } catch {
       // Fallback
@@ -117,29 +123,56 @@ export function ListingDetailActions({
   const copyButton = (
     <Button
       type="button"
-      variant="outline"
-      size={isOwner ? "md" : "lg"}
+      variant="secondary"
+      size="md"
       onClick={handleCopyLink}
-      className="gap-2 transition-all"
+      className="w-full gap-1.5 transition-all justify-center text-xs h-10 rounded-xl"
       aria-label={getCopyLinkAriaLabel(copied, isTr)}
     >
       {copied ? (
         <>
-          <Check className="h-4 w-4 text-emerald-400" aria-hidden="true" />
+          <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" aria-hidden="true" />
           <span className="text-emerald-400 font-semibold">{isTr ? "Kopyalandı" : "Copied"}</span>
         </>
       ) : (
         <>
-          <Share2 className="h-4 w-4 text-[var(--color-text-secondary)]" aria-hidden="true" />
+          <Share2 className="h-3.5 w-3.5 text-[var(--color-text-secondary)] shrink-0" aria-hidden="true" />
           <span>{isTr ? "Bağlantıyı Kopyala" : "Share Link"}</span>
         </>
       )}
     </Button>
   );
 
+  const copyToastPortal =
+    copyToast && typeof document !== "undefined"
+      ? createPortal(
+          <div
+            role="status"
+            aria-live="polite"
+            className="fixed bottom-6 right-6 z-[9999] flex items-center gap-3 px-4 py-3 rounded-2xl border border-emerald-500/40 bg-[var(--color-surface-base)]/95 text-[var(--color-text-primary)] shadow-2xl shadow-black/60 backdrop-blur-xl animate-in slide-in-from-bottom-4 fade-in duration-200"
+          >
+            <div className="h-7 w-7 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0">
+              <Check className="h-4 w-4 text-emerald-400" />
+            </div>
+            <div className="flex flex-col pr-1">
+              <span className="text-xs font-bold text-[var(--color-text-primary)]">
+                {isTr ? "Bağlantı Kopyalandı!" : "Link Copied!"}
+              </span>
+              <span className="text-[11px] text-[var(--color-text-secondary)]">
+                {isTr
+                  ? "İlan bağlantısı panoya kopyalandı, dilediğiniz yerde paylaşabilirsiniz."
+                  : "Listing link copied to clipboard, ready to share."}
+              </span>
+            </div>
+          </div>,
+          document.body
+        )
+      : null;
+
   if (isOwner) {
     return (
       <div className="flex flex-wrap items-center gap-3">
+        {copyToastPortal}
         <Link
           href={`${getLocalizedRoute("dashboardReceivedOffers", locale)}?listingId=${listingId}`}
         >
@@ -199,6 +232,7 @@ export function ListingDetailActions({
             : "This listing has expired. It is not currently accepting new offers."}
         </div>
         <div>{copyButton}</div>
+        {copyToastPortal}
       </div>
     );
   }
@@ -213,58 +247,89 @@ export function ListingDetailActions({
     budgetCurrency,
     ownerDisplayName,
   };
-
   return (
-    <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-3">
-        <Button
-          variant="primary"
-          size="lg"
-          onClick={handleQuickOfferClick}
-          className="gap-2 shadow-lg shadow-blue-500/20 font-semibold"
-        >
-          {!currentUserId ? (
-            <LogIn className="h-4 w-4" aria-hidden="true" />
-          ) : (
-            <Zap className="h-4 w-4 fill-current text-amber-400" aria-hidden="true" />
-          )}
-          <span>
-            {getOfferButtonLabel(Boolean(currentUserId), isTr)}
-          </span>
-        </Button>
-
-        {currentUserId && (
-          <Button
-            type="button"
-            variant="secondary"
-            size="lg"
-            onClick={handleDetailedOfferClick}
-            className="gap-2"
-          >
-            <SlidersHorizontal className="h-4 w-4 text-blue-400" aria-hidden="true" />
-            <span>{isTr ? "Detaylı Teklif" : "Detailed Proposal"}</span>
-          </Button>
+    <div className="space-y-2">
+      {/* Primary CTA: Quick Offer / Login */}
+      <Button
+        variant="primary"
+        size="md"
+        onClick={handleQuickOfferClick}
+        className="w-full h-11 gap-2 shadow-md shadow-blue-500/20 font-bold justify-center text-sm rounded-xl"
+      >
+        {!currentUserId ? (
+          <LogIn className="h-4 w-4" aria-hidden="true" />
+        ) : (
+          <Send className="h-4 w-4 text-white" aria-hidden="true" />
         )}
+        <span>{getOfferButtonLabel(Boolean(currentUserId), isTr)}</span>
+      </Button>
 
-        <BookmarkButton
-          listingId={listingId}
-          locale={locale}
-          variant="button"
-          size="md"
-        />
+      {/* Secondary & Utility Actions: Balanced 2-Column Grid */}
+      {currentUserId ? (
+        <>
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+              type="button"
+              variant="secondary"
+              size="md"
+              onClick={handleDetailedOfferClick}
+              className="w-full gap-1.5 justify-center text-xs h-10 rounded-xl"
+            >
+              <SlidersHorizontal className="h-3.5 w-3.5 text-blue-400 shrink-0" aria-hidden="true" />
+              <span>{isTr ? "Detaylı Teklif" : "Detailed Offer"}</span>
+            </Button>
 
-        {copyButton}
+            <BookmarkButton
+              listingId={listingId}
+              locale={locale}
+              variant="button"
+              size="md"
+              className="w-full justify-center text-xs h-10 rounded-xl"
+            />
+          </div>
 
-        <Button
-          type="button"
-          variant="ghost"
-          size={isOwner ? "md" : "lg"}
-          onClick={() => setReportOpen(true)}
-          className="text-xs text-[var(--color-text-tertiary)] hover:text-amber-400 cursor-pointer"
-        >
-          <Flag className="h-3.5 w-3.5 mr-1" />
-          <span>{isTr ? "İhbar Et" : "Report"}</span>
-        </Button>
+          <div className="grid grid-cols-2 gap-2">
+            {copyButton}
+
+            <Button
+              type="button"
+              variant="secondary"
+              size="md"
+              onClick={() => setReportOpen(true)}
+              className="group w-full gap-1.5 justify-center text-xs h-10 rounded-xl text-[var(--color-text-secondary)] hover:text-rose-400 hover:border-rose-500/30 transition-colors"
+            >
+              <Flag className="h-3.5 w-3.5 shrink-0 text-[var(--color-text-tertiary)] group-hover:text-rose-400 transition-colors" />
+              <span>{isTr ? "İhbar Et" : "Report"}</span>
+            </Button>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="grid grid-cols-2 gap-2">
+            <BookmarkButton
+              listingId={listingId}
+              locale={locale}
+              variant="button"
+              size="md"
+              className="w-full justify-center text-xs h-10 rounded-xl"
+            />
+            {copyButton}
+          </div>
+
+          <div className="text-center pt-0.5">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setReportOpen(true)}
+              className="group w-full text-xs text-[var(--color-text-tertiary)] hover:text-rose-400 cursor-pointer h-8 rounded-xl flex items-center justify-center gap-1.5 transition-colors"
+            >
+              <Flag className="h-3 w-3 mr-1 text-[var(--color-text-tertiary)] group-hover:text-rose-400 transition-colors" />
+              <span>{isTr ? "İlanı İhbar Et" : "Report Listing"}</span>
+            </Button>
+          </div>
+        </>
+      )}
 
         {drawerOpen && (
           <QuickOfferDrawer
@@ -311,7 +376,6 @@ export function ListingDetailActions({
           onClose={() => setReportOpen(false)}
           locale={locale}
         />
-      </div>
 
       <p className="text-[11px] text-[var(--color-text-tertiary)] flex items-center gap-1.5 pt-1">
         <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />
@@ -329,6 +393,8 @@ export function ListingDetailActions({
           </Link>
         </span>
       </p>
+
+      {copyToastPortal}
     </div>
   );
 }

@@ -575,26 +575,26 @@ export function evaluateProposalPitch(
 
   // Tier classification
   let tier: PitchEvaluationResult["tier"] = "weak";
-  let tierLabel = isTr ? "Zayıf Teklif (İlanı Kaybetme Riski)" : "Weak Proposal (High Risk)";
+  let tierLabel = isTr ? "Zayıf Teklif" : "Weak Proposal";
   let tierDescription = isTr
     ? "Bu teklif işveren tarafından yüzeysel algılanabilir. Lütfen Operis AI güçlendirmesini uygulayın."
     : "This proposal risks being skipped by the client. Apply Operis AI suggestions before submitting.";
 
   if (overallScore >= 85) {
     tier = "top_tier";
-    tierLabel = isTr ? "🚀 Mükemmel & İkna Edici Teklif" : "🚀 Exceptional & Winning Proposal";
+    tierLabel = isTr ? "Mükemmel Teklif" : "Exceptional Proposal";
     tierDescription = isTr
       ? "Tebrikler! Teklifiniz teknik derinlik, teslimat planı ve profesyonel dil açısından üst düzeyde."
       : "Outstanding! Your proposal demonstrates consultative clarity, technical depth, and structured delivery.";
   } else if (overallScore >= 70) {
     tier = "strong";
-    tierLabel = isTr ? "🟢 Güçlü Teklif (Birkaç İyileştirme ile Zirve)" : "🟢 Strong Proposal (Near Peak)";
+    tierLabel = isTr ? "Güçlü Teklif" : "Strong Proposal";
     tierDescription = isTr
       ? "Teklifiniz kaliteli; ufak mimari veya zaman dokunuşlarıyla teklif kabul şansınızı ikiye katlayabilirsiniz."
       : "Very solid proposal; adding minor architecture or milestone touches will maximize conversion.";
   } else if (overallScore >= 50) {
     tier = "average";
-    tierLabel = isTr ? "🟡 Orta Düzey (Geliştirilmeli)" : "🟡 Average (Needs Structure)";
+    tierLabel = isTr ? "Orta Düzey Teklif" : "Average Proposal";
     tierDescription = isTr
       ? "Temel niyetiniz anlaşılıyor ancak aşama ve teknoloji detayları yetersiz."
       : "Basic intent is clear, but lacks technical depth and phased delivery roadmap.";

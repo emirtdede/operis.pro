@@ -473,8 +473,8 @@ export function ScopeShieldPortal({
               <div className="text-xs font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
                 <span>
                   {isTr
-                    ? "Akıllı Kapsam Kayması Gözlemcisi (AI Scope Sentinel)"
-                    : "AI Scope Creep Sentinel"}
+                    ? "Akıllı Kapsam Analizi (AI Destekli)"
+                    : "Smart Scope Analysis (AI-Assisted)"}
                 </span>
                 <span className="px-1.5 py-0.5 rounded text-[10px] bg-indigo-500/20 text-indigo-300 font-mono">
                   TBK m. 480/2
@@ -552,8 +552,8 @@ export function ScopeShieldPortal({
                       <div className="space-y-1">
                         <div className="text-xs font-bold text-amber-300">
                           {isTr
-                            ? "⚠️ Kapsam Dışı Ek İş Tespit Edildi (Scope Creep)"
-                            : "⚠️ Out-of-Scope Addition Detected"}
+                            ? "Kapsam Dışı Ek İş Tespit Edildi"
+                            : "Out-of-Scope Addition Detected"}
                         </div>
                         <p className="text-xs text-amber-200 leading-relaxed">
                           {isTr
@@ -591,8 +591,8 @@ export function ScopeShieldPortal({
                     <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
                     <span>
                       {isTr
-                        ? "✅ Kapsam İçi / Normal Revizyon: Bu talep sözleşmedeki mevcut Madde 2 ve teslimat hedefleri dahilinde görünüyor."
-                        : "✅ In-Scope / Normal Revision: This request aligns with existing Article 2 specifications."}
+                        ? "Kapsam İçi / Normal Revizyon: Bu talep sözleşmedeki mevcut Madde 2 ve teslimat hedefleri dahilinde görünüyor."
+                        : "In-Scope / Normal Revision: This request aligns with existing Article 2 specifications."}
                     </span>
                   </div>
                 )}

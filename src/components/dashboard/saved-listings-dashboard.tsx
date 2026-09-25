@@ -17,6 +17,7 @@ import {
   ListFilter,
   ChevronDown,
   ArrowUpDown,
+  Lightbulb,
 } from "lucide-react";
 import { SavedListingItem } from "@/src/modules/listings/saved-service";
 import {
@@ -413,10 +414,13 @@ export function SavedListingsDashboard({
             </span>
           </label>
 
-          <span className="text-[11px] text-[var(--color-text-tertiary)] hidden sm:inline">
-            {isTr
-              ? "💡 İki kutu arasında Shift tuşuna basılı tutarak toplu aralık seçebilirsiniz."
-              : "💡 Hold Shift between two boxes to select a range."}
+          <span className="text-[11px] text-[var(--color-text-tertiary)] hidden sm:inline-flex items-center gap-1.5">
+            <Lightbulb className="h-3.5 w-3.5 text-amber-400 shrink-0" aria-hidden="true" />
+            <span>
+              {isTr
+                ? "İki kutu arasında Shift tuşuna basılı tutarak toplu aralık seçebilirsiniz."
+                : "Hold Shift between two boxes to select a range."}
+            </span>
           </span>
         </div>
       )}

@@ -17,11 +17,11 @@ export async function generateMetadata({
   const isTr = locale === "tr";
 
   const title = isTr
-    ? "Kayıt Ol — Ücretsiz Tek Hesap, Çift Yetenek"
-    : "Join Network — Dual-Role Free Account";
+    ? "Ücretsiz Kayıt Ol — İlan Ver & Teklif Sun"
+    : "Join Free — Post Listings & Submit Offers";
   const description = isTr
-    ? "Ücretsiz hesap oluşturarak hem ilan yayınlayabilir hem de ilanlara teklif verebilirsiniz. Tek hesap, çift yetenek."
-    : "Create a free single account with dual capabilities to both post technology listings and submit direct proposals.";
+    ? "Saniyeler içinde ücretsiz hesap oluşturun. İster projeniz için teknoloji ilanı yayınlayın, ister komisyonsuz doğrudan teklif verin."
+    : "Create a free account on Operis. Post software projects or submit direct proposals to verified clients with 0% platform commission.";
 
   return {
     title,

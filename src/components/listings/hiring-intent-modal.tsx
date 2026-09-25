@@ -126,12 +126,12 @@ export function HiringIntentModal({
             <Sparkles className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
             <div>
               <strong className="text-emerald-400 font-semibold block mb-0.5">
-                {isTr ? "✨ Yeni İşveren Güvencesi (Cold-Start Koruma Modeli)" : "✨ Verified New Employer Guarantee"}
+                {isTr ? "Yeni İşveren Güvencesi" : "Verified New Employer Guarantee"}
               </strong>
               <span className="text-[var(--color-text-secondary)]">
                 {isTr
                   ? "Bu işveren Operis platformunda ilk ilanını yayınlamaktadır. Operis, kurumsal VKN doğrulamasını ve piyasa bütçe uyumunu teyit ederek yeni işverenlerin güven skorunu yüksek tutar. Bu sayede uzmanlar ilk ilanlara da güvenle teklif verebilir."
-                  : "This client is posting their inaugural project on Operis. By verifying corporate credentials and budget feasibility upfront, Operis protects new employers from cold-start penalties, allowing specialists to bid with high confidence."}
+                  : "This client is posting their inaugural project on Operis. By verifying corporate credentials and budget feasibility upfront, Operis ensures high standards and fair standing, allowing specialists to bid with high confidence."}
               </span>
             </div>
           </div>

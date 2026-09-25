@@ -1,4 +1,12 @@
-export type AvailabilityStatus = "AVAILABLE_NOW" | "PARTIALLY_AVAILABLE" | "BUSY";
+export type AvailabilityStatus =
+  | "AVAILABLE_NOW"
+  | "FULL_TIME"
+  | "PARTIALLY_AVAILABLE"
+  | "PROJECT_BASED"
+  | "ADVISORY"
+  | "VOLUNTEER"
+  | "INTERNSHIP"
+  | "BUSY";
 
 export interface DynamicAvailabilityResult {
   effectiveStatus: AvailabilityStatus;

@@ -96,7 +96,7 @@ export default async function SettingsPage({
     isAvailableForHire: (profile as { isAvailableForHire?: boolean })?.isAvailableForHire ?? true,
     isActivelyHiring: (profile as { isActivelyHiring?: boolean })?.isActivelyHiring ?? false,
     availabilityStatus:
-      (profile as { availabilityStatus?: "AVAILABLE_NOW" | "PARTIALLY_AVAILABLE" | "BUSY" })
+      (profile as { availabilityStatus?: import("@/src/modules/profiles/services/availability.service").AvailabilityStatus })
         ?.availabilityStatus || "AVAILABLE_NOW",
     availabilityHoursPerWeek:
       (profile as { availabilityHoursPerWeek?: number })?.availabilityHoursPerWeek || 40,
