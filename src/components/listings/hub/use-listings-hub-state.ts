@@ -167,6 +167,26 @@ export function useListingsHubState({
         params.set("locale", locale);
         if (categorySlug) params.set("category", categorySlug);
         if (searchQuery) params.set("q", searchQuery);
+        if (typeof window !== "undefined") {
+          const sp = new URLSearchParams(window.location.search);
+          const timeRange = sp.get("timeRange");
+          if (timeRange) params.set("timeRange", timeRange);
+          const budgetType = sp.get("budgetType");
+          if (budgetType) params.set("budgetType", budgetType);
+          const minBudget = sp.get("minBudget");
+          if (minBudget) params.set("minBudget", minBudget);
+          const maxBudget = sp.get("maxBudget");
+          if (maxBudget) params.set("maxBudget", maxBudget);
+          const currency = sp.get("currency");
+          if (currency) params.set("currency", currency);
+          const timelineScope = sp.get("timelineScope");
+          if (timelineScope) params.set("timelineScope", timelineScope);
+          const companyVerified = sp.get("companyVerified");
+          if (companyVerified) params.set("companyVerified", companyVerified);
+          const tags = sp.get("tags");
+          if (tags) params.set("tags", tags);
+        }
+
         if (chipLast24h) params.set("last24Hours", "true");
         if (chipFixedBudget) params.set("budgetSpecific", "true");
         if (isLoadMore && cursor) {

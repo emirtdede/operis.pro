@@ -13,7 +13,15 @@ export interface FeedQueryParams {
   limit?: number;
   locale?: "tr" | "en";
   last24Hours?: boolean;
+  timeRange?: "all" | "24h" | "3d" | "7d";
   budgetSpecific?: boolean;
+  budgetType?: "all" | "fixed" | "hourly" | "open";
+  minBudget?: number;
+  maxBudget?: number;
+  currency?: string;
+  timelineScope?: "all" | "short" | "medium" | "long" | "flexible";
+  companyVerifiedOnly?: boolean;
+  tags?: string[];
   budgetMode?: "SPECIFIED" | "OPEN_OFFER" | "UNSPECIFIED" | string;
   timelineMode?:
     | "TARGET_DATE"
@@ -190,14 +198,30 @@ export class FeedService {
         }
       }
 
-      // Server-side filter: last 24 hours (B21, K04)
-      if (params.last24Hours) {
+      // Server-side filter: time range / recency
+      if (params.timeRange === "24h" || params.last24Hours) {
         const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
         conditions.push(sql`${schema.listings.lastActivatedAt} >= ${twentyFourHoursAgo}`);
+      } else if (params.timeRange === "3d") {
+        const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000);
+        conditions.push(sql`${schema.listings.lastActivatedAt} >= ${threeDaysAgo}`);
+      } else if (params.timeRange === "7d") {
+        const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        conditions.push(sql`${schema.listings.lastActivatedAt} >= ${sevenDaysAgo}`);
       }
 
-      // Server-side filter: budget mode & specified budget (B21, K04, M01)
-      if (params.budgetSpecific) {
+      // Server-side filter: budget type & modes
+      if (params.budgetType === "fixed") {
+        conditions.push(
+          sql`${schema.listings.budgetMode} IN ('FIXED_EXACT', 'FIXED_RANGE', 'EXACT', 'RANGE')`
+        );
+      } else if (params.budgetType === "hourly") {
+        conditions.push(sql`${schema.listings.budgetMode} IN ('HOURLY_EXACT', 'HOURLY_RANGE')`);
+      } else if (params.budgetType === "open") {
+        conditions.push(
+          sql`${schema.listings.budgetMode} IN ('OPEN_BID', 'NEGOTIABLE', 'REQUEST_GUIDANCE')`
+        );
+      } else if (params.budgetSpecific) {
         conditions.push(
           sql`(${schema.listings.budgetMode} IN ('FIXED_EXACT', 'FIXED_RANGE', 'HOURLY_EXACT', 'HOURLY_RANGE', 'EXACT', 'RANGE') AND ${schema.listings.budgetMin} IS NOT NULL)`
         );
@@ -233,8 +257,46 @@ export class FeedService {
         }
       }
 
-      // Server-side filter: timeline mode (B21, K04, M01)
-      if (params.timelineMode) {
+      // Server-side filter: Min & Max Budget
+      if (typeof params.minBudget === "number" && params.minBudget > 0) {
+        conditions.push(
+          sql`COALESCE(${schema.listings.budgetMax}, ${schema.listings.budgetMin}, 0) >= ${params.minBudget}`
+        );
+      }
+      if (typeof params.maxBudget === "number" && params.maxBudget > 0) {
+        conditions.push(
+          sql`COALESCE(${schema.listings.budgetMin}, ${schema.listings.budgetMax}, 999999999) <= ${params.maxBudget}`
+        );
+      }
+
+      // Server-side filter: Currency
+      if (params.currency && params.currency !== "all") {
+        conditions.push(eq(schema.listings.budgetCurrency, params.currency));
+      }
+
+      // Server-side filter: Company Verified Clients
+      if (params.companyVerifiedOnly) {
+        conditions.push(eq(schema.profiles.isCompanyVerified, true));
+      }
+
+      // Server-side filter: Timeline Scope
+      if (params.timelineScope === "short") {
+        conditions.push(
+          sql`(${schema.listings.timelineUnit} IN ('DAYS', 'WEEKS') OR (${schema.listings.timelineUnit} = 'MONTHS' AND ${schema.listings.timelineValue} <= 1))`
+        );
+      } else if (params.timelineScope === "medium") {
+        conditions.push(
+          sql`(${schema.listings.timelineUnit} = 'MONTHS' AND ${schema.listings.timelineValue} > 1 AND ${schema.listings.timelineValue} <= 3)`
+        );
+      } else if (params.timelineScope === "long") {
+        conditions.push(
+          sql`(${schema.listings.timelineUnit} = 'MONTHS' AND ${schema.listings.timelineValue} > 3)`
+        );
+      } else if (params.timelineScope === "flexible") {
+        conditions.push(
+          sql`${schema.listings.timelineMode} IN ('FLEXIBLE', 'IN_NEGOTIATION')`
+        );
+      } else if (params.timelineMode) {
         if (params.timelineMode === "TARGET_DATE" || params.timelineMode === "SPECIFIC_DATE") {
           conditions.push(sql`${schema.listings.timelineMode} IN ('SPECIFIC_DATE', 'TARGET_DATE')`);
         } else if (
@@ -248,6 +310,15 @@ export class FeedService {
           conditions.push(sql`${schema.listings.timelineMode} IN ('FLEXIBLE', 'IN_NEGOTIATION')`);
         } else {
           conditions.push(eq(schema.listings.timelineMode, params.timelineMode));
+        }
+      }
+
+      // Server-side filter: Tech tags
+      if (params.tags && params.tags.length > 0) {
+        const tagConds = params.tags.map((t) => sql`${t} = ANY(${schema.listings.tags})`);
+        const tagOr = or(...tagConds);
+        if (tagOr) {
+          conditions.push(tagOr);
         }
       }
 

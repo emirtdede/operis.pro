@@ -264,7 +264,7 @@ export function ListingsSearchHeader({
       )}
 
       {/* Clear Filters Bar (only when filters are active) */}
-      {(categorySlug || searchQuery || chipLast24h || chipFixedBudget) && (
+      {(categorySlug || searchQuery || chipLast24h || chipFixedBudget || activeFilterCount > 0) && (
         <div className="flex items-center justify-end text-xs text-[var(--color-text-tertiary)] px-1">
           <Link
             href={basePath}
@@ -283,6 +283,9 @@ export function ListingsSearchHeader({
         isTr={isTr}
         basePath={basePath}
         currentCategorySlug={categorySlug}
+        selectedCategorySlugs={selectedCategorySlugs}
+        followedCategoryIds={followedCategoryIds}
+        isAuthenticated={isAuthenticated}
         chipLast24h={chipLast24h}
         setChipLast24h={setChipLast24h}
         chipFixedBudget={chipFixedBudget}

@@ -66,6 +66,16 @@ export default async function BrowseListingsPage({
     q?: string;
     mode?: string;
     view?: string;
+    timeRange?: "all" | "24h" | "3d" | "7d";
+    last24Hours?: string;
+    budgetSpecific?: string;
+    budgetType?: "all" | "fixed" | "hourly" | "open";
+    minBudget?: string;
+    maxBudget?: string;
+    currency?: string;
+    timelineScope?: "all" | "short" | "medium" | "long" | "flexible";
+    companyVerified?: string;
+    tags?: string;
   }>;
 }) {
   const { locale } = await params;
@@ -129,6 +139,10 @@ export default async function BrowseListingsPage({
     session?.userId
   ).catch(() => []);
 
+  const minBudgetNum = sp.minBudget ? Number(sp.minBudget) : undefined;
+  const maxBudgetNum = sp.maxBudget ? Number(sp.maxBudget) : undefined;
+  const tagsList = sp.tags ? sp.tags.split(",").map((t) => t.trim()).filter(Boolean) : undefined;
+
   const feedResult: FeedResult = await FeedService.getFeedListings({
     mode,
     categorySlugs: selectedCategorySlugs.length > 0 ? selectedCategorySlugs : undefined,
@@ -136,6 +150,16 @@ export default async function BrowseListingsPage({
     locale: isTr ? "tr" : "en",
     userId: session?.userId,
     limit: 12,
+    timeRange: sp.timeRange,
+    last24Hours: sp.last24Hours === "true" || sp.timeRange === "24h" || undefined,
+    budgetSpecific: sp.budgetSpecific === "true" || undefined,
+    budgetType: sp.budgetType,
+    minBudget: typeof minBudgetNum === "number" && !isNaN(minBudgetNum) ? minBudgetNum : undefined,
+    maxBudget: typeof maxBudgetNum === "number" && !isNaN(maxBudgetNum) ? maxBudgetNum : undefined,
+    currency: sp.currency,
+    timelineScope: sp.timelineScope,
+    companyVerifiedOnly: sp.companyVerified === "true" || undefined,
+    tags: tagsList,
   }).catch(() => ({ items: [], nextCursor: null, hasMore: false, hasFollowedCategories: true }));
 
   const baseUrl = getBaseUrl();
