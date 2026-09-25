@@ -442,7 +442,7 @@ export function AdvancedFilterModal({
       />
 
       {/* Modal Dialog Card */}
-      <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] shadow-2xl z-10 animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
+      <div className="relative w-full max-w-4xl overflow-hidden rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] shadow-2xl z-10 animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="border-b border-[var(--color-border-subtle)] px-6 py-4 bg-[var(--color-surface-base)]">
           <div className="flex items-center justify-between">
@@ -480,7 +480,7 @@ export function AdvancedFilterModal({
           </div>
 
           {/* Quick Presets & Personalization Bar */}
-          <div className="mt-3.5 pt-3 border-t border-[var(--color-border-subtle)]/60 flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-xs">
+          <div className="mt-3.5 pt-3 border-t border-[var(--color-border-subtle)]/60 flex items-center gap-2 flex-wrap text-xs">
             <span className="text-[11px] font-semibold text-[var(--color-text-tertiary)] flex items-center gap-1 shrink-0 mr-1">
               <Sparkles className="h-3 w-3 text-amber-400" />
               <span>{isTr ? "Hızlı Şablonlar:" : "Presets:"}</span>
@@ -628,7 +628,7 @@ export function AdvancedFilterModal({
             </div>
 
             {/* Horizontal Sector Filter Tabs */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-xs">
+            <div className="flex items-center gap-1.5 flex-wrap text-xs">
               {sectorList.map((sec) => {
                 const isSecSelected = selectedSector === sec.id;
                 return (
@@ -649,7 +649,7 @@ export function AdvancedFilterModal({
             </div>
 
             {/* Filtered Category Chips (Multi-Selectable) */}
-            <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto p-2 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] scrollbar-thin">
+            <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto p-2.5 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] scrollbar-thin">
               {filteredCategories.length === 0 ? (
                 <div className="w-full py-4 text-center text-xs text-[var(--color-text-tertiary)]">
                   {isTr ? "Eşleşen kategori bulunamadı." : "No matching categories."}
