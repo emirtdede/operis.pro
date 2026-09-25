@@ -8,6 +8,7 @@ import {
   Scale,
   Headphones,
   Newspaper,
+  FileText,
   Copy,
   Check,
   ArrowRight,
@@ -84,7 +85,7 @@ export function ContactHubInteractive({ locale }: ContactHubInteractiveProps) {
     },
     {
       id: "billing",
-      icon: Newspaper,
+      icon: FileText,
       title: isTr ? "Faturalandırma & Finans Masası" : "Billing & Accounting Desk",
       email: "billing@vellium.dev",
       sla: isTr ? "< 6 İş Saati" : "< 6 Business Hours",
@@ -92,6 +93,17 @@ export function ContactHubInteractive({ locale }: ContactHubInteractiveProps) {
       description: isTr
         ? "Kurumsal fatura talepleri, e-Arşiv teyitleri, mali mutabakatlar ve vergi mükellefiyeti bildirimleri."
         : "Enterprise invoices, statutory e-Archive receipts, financial reconciliation, and fiscal inquiries.",
+    },
+    {
+      id: "press",
+      icon: Newspaper,
+      title: isTr ? "Basın & Medya İletişimi" : "Press & Media Relations",
+      email: "press@vellium.dev",
+      sla: isTr ? "< 24 İş Saati" : "< 24 Business Hours",
+      color: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+      description: isTr
+        ? "Röportaj talepleri, basın bültenleri, marka materyalleri ve medya iş birlikleri."
+        : "Press inquiries, executive interviews, brand kits, and official media statements.",
     },
   ];
 
@@ -121,7 +133,7 @@ export function ContactHubInteractive({ locale }: ContactHubInteractiveProps) {
             </div>
             <span className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full shrink-0">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>{isTr ? "6 Masa Çevrim İçi" : "6 Desks Online"}</span>
+              <span>{isTr ? `${officialDesks.length} Masa Çevrim İçi` : `${officialDesks.length} Desks Online`}</span>
             </span>
           </div>
 
@@ -234,7 +246,7 @@ export function ContactHubInteractive({ locale }: ContactHubInteractiveProps) {
               {isTr ? "Akıllı İletişim & Talep Formu" : "Smart Inquiry & Dispatch Form"}
             </h2>
             <span className="text-[11px] font-mono px-2.5 py-1 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 font-semibold shrink-0">
-              AES-256 SSL
+              256-bit TLS
             </span>
           </div>
           <p className="text-xs text-[var(--color-text-secondary)]">

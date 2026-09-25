@@ -687,7 +687,9 @@ export function LegalCenterClient({ locale }: LegalCenterClientProps) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] p-5 space-y-2">
-            <div className="text-base font-bold text-blue-400">%0 Komisyon & Ücretsiz</div>
+            <div className="text-base font-bold text-blue-400">
+              {isTr ? "%0 Komisyon & Ücretsiz" : "0% Commission & Free"}
+            </div>
             <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
               {isTr
                 ? "Platform üyeliği, ilan açma ve teklif verme tamamen ücretsizdir; gizli ücret veya kesinti yoktur."
@@ -696,7 +698,9 @@ export function LegalCenterClient({ locale }: LegalCenterClientProps) {
           </div>
 
           <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] p-5 space-y-2">
-            <div className="text-base font-bold text-indigo-400">Emanetsiz Doğrudan İlişki</div>
+            <div className="text-base font-bold text-indigo-400">
+              {isTr ? "Emanetsiz Doğrudan İlişki" : "Escrow-Free Direct Deal"}
+            </div>
             <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
               {isTr
                 ? "Paranız hiçbir havuzda bloke edilmez. Ödemeler münhasıran işveren ile yazılımcı arasında doğrudan yapılır."
@@ -705,7 +709,9 @@ export function LegalCenterClient({ locale }: LegalCenterClientProps) {
           </div>
 
           <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] p-5 space-y-2">
-            <div className="text-base font-bold text-purple-400">AES-256 Şifreli Teklifler</div>
+            <div className="text-base font-bold text-purple-400">
+              {isTr ? "AES-256 Şifreli Teklifler" : "AES-256 Encrypted Offers"}
+            </div>
             <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
               {isTr
                 ? "Teklifleriniz açık ihale usulüyle rakiplere açılmaz; askeri düzeyde şifrelenerek korunur."
@@ -714,7 +720,9 @@ export function LegalCenterClient({ locale }: LegalCenterClientProps) {
           </div>
 
           <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] p-5 space-y-2">
-            <div className="text-base font-bold text-emerald-400">Özel PDF Sözleşme Taslağı</div>
+            <div className="text-base font-bold text-emerald-400">
+              {isTr ? "Özel PDF Sözleşme Taslağı" : "Custom PDF Contract Draft"}
+            </div>
             <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
               {isTr
                 ? "Eşleşen tarafların kendilerini hukuken koruyabilmeleri için tek tıkla özel sözleşme taslağı üretilir."

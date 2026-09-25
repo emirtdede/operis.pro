@@ -15,7 +15,7 @@ function getLifecyclePointStroke(current: boolean, passed: boolean): string {
   return "var(--color-border-strong)";
 }
 
-export function LifecycleRadarDiagram() {
+export function LifecycleRadarDiagram({ isTr = true }: { isTr?: boolean }) {
   const [activeDay, setActiveDay] = useState(1);
 
   useEffect(() => {
@@ -26,13 +26,13 @@ export function LifecycleRadarDiagram() {
   }, []);
 
   const rawDays = [
-    { num: 1, label: "1. Gün" },
-    { num: 2, label: "2. Gün" },
-    { num: 3, label: "3. Gün" },
-    { num: 4, label: "4. Gün" },
-    { num: 5, label: "5. Gün" },
-    { num: 6, label: "6. Gün" },
-    { num: 7, label: "7. Gün" },
+    { num: 1, label: isTr ? "1. Gün" : "Day 1" },
+    { num: 2, label: isTr ? "2. Gün" : "Day 2" },
+    { num: 3, label: isTr ? "3. Gün" : "Day 3" },
+    { num: 4, label: isTr ? "4. Gün" : "Day 4" },
+    { num: 5, label: isTr ? "5. Gün" : "Day 5" },
+    { num: 6, label: isTr ? "6. Gün" : "Day 6" },
+    { num: 7, label: isTr ? "7. Gün" : "Day 7" },
   ];
 
   const days = rawDays.map((item) => ({
@@ -51,16 +51,18 @@ export function LifecycleRadarDiagram() {
           </div>
           <div>
             <h3 className="text-sm sm:text-base font-bold text-[var(--color-text-primary)]">
-              1 Haftalık Canlılık Radarı
+              {isTr ? "1 Haftalık Canlılık Radarı" : "1-Week Freshness Radar"}
             </h3>
             <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
-              Bayatlamayan taze pazar: 1 haftalık otomatik aktiflik ve tek tıkla ücretsiz yenileme
+              {isTr
+                ? "Bayatlamayan taze pazar: 1 haftalık otomatik aktiflik ve tek tıkla ücretsiz yenileme"
+                : "Zero stale listings: 1-week automated freshness and one-click free extension"}
             </p>
           </div>
         </div>
         <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3.5 py-1 text-xs font-medium text-cyan-400 shadow-sm">
           <RefreshCw className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
-          <span>Sürekli Güncel Akış</span>
+          <span>{isTr ? "Sürekli Güncel Akış" : "Always Fresh Feed"}</span>
         </div>
       </div>
 
@@ -242,17 +244,17 @@ export function LifecycleRadarDiagram() {
             })}
           </svg>
 
-          {/* Radar Center Status: User Friendly 1 Hafta (Dörtgen Çerçeve Kaldırıldı) */}
+          {/* Radar Center Status */}
           <div className="relative z-10 flex flex-col items-center justify-center text-center pointer-events-none select-none">
             <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.6)]">
               <Calendar className="h-3 w-3 animate-pulse" aria-hidden="true" />
-              <span>Döngü &bull; {activeDay}. Gün</span>
+              <span>{isTr ? `Döngü • ${activeDay}. Gün` : `Cycle • Day ${activeDay}`}</span>
             </div>
             <div className="font-display text-xl sm:text-2xl font-black text-[var(--color-text-primary)] tracking-tight drop-shadow-sm">
-              1 HAFTA
+              {isTr ? "1 HAFTA" : "1 WEEK"}
             </div>
             <div className="text-[10px] font-medium text-[var(--color-text-tertiary)]">
-              Canlı İlan Süresi
+              {isTr ? "Canlı İlan Süresi" : "Active Listing Duration"}
             </div>
           </div>
         </div>
@@ -265,11 +267,12 @@ export function LifecycleRadarDiagram() {
             </div>
             <div>
               <div className="text-xs font-bold text-[var(--color-text-primary)]">
-                1 Hafta Boyunca Akışta En Üstte
+                {isTr ? "1 Hafta Boyunca Akışta En Üstte" : "Top of the Feed for 1 Full Week"}
               </div>
               <div className="text-[11px] text-[var(--color-text-secondary)] mt-0.5 leading-relaxed">
-                Yayınlanan ilanınız 1 hafta boyunca canlı kalır, ilgili kategorideki uzman
-                geliştiricilere anında önerilir.
+                {isTr
+                  ? "Yayınlanan ilanınız 1 hafta boyunca canlı kalır, ilgili kategorideki uzman geliştiricilere anında önerilir."
+                  : "Your published listing stays live for 1 week and is actively recommended to relevant engineers."}
               </div>
             </div>
           </div>
@@ -280,11 +283,12 @@ export function LifecycleRadarDiagram() {
             </div>
             <div>
               <div className="text-xs font-bold text-[var(--color-text-primary)]">
-                Tek Tıkla Ücretsiz Süre Uzatma
+                {isTr ? "Tek Tıkla Ücretsiz Süre Uzatma" : "One-Click Free Duration Extension"}
               </div>
               <div className="text-[11px] text-[var(--color-text-secondary)] mt-0.5 leading-relaxed">
-                1 hafta bittiğinde ilanınız asla silinmez; panelinizden tek bir tıkla süresini 1
-                hafta daha ücretsiz uzatabilirsiniz.
+                {isTr
+                  ? "1 hafta bittiğinde ilanınız asla silinmez; panelinizden tek bir tıkla süresini 1 hafta daha ücretsiz uzatabilirsiniz."
+                  : "When 1 week expires, your listing is never deleted; extend it for another week free with a single click."}
               </div>
             </div>
           </div>
@@ -295,11 +299,12 @@ export function LifecycleRadarDiagram() {
             </div>
             <div>
               <div className="text-xs font-bold text-[var(--color-text-primary)]">
-                Terk Edilmiş veya Bayat İlan Yok
+                {isTr ? "Terk Edilmiş veya Bayat İlan Yok" : "Zero Stale or Abandoned Listings"}
               </div>
               <div className="text-[11px] text-[var(--color-text-secondary)] mt-0.5 leading-relaxed">
-                Yanıt verilmeyen ve atıl kalan eski projeler otomatik arşivlenir; sitede yalnızca
-                gerçekten aktif işler listelenir.
+                {isTr
+                  ? "Yanıt verilmeyen ve atıl kalan eski projeler otomatik arşivlenir; sitede yalnızca gerçekten aktif işler listelenir."
+                  : "Unresponsive or abandoned projects are automatically pruned; only truly active listings are ever shown."}
               </div>
             </div>
           </div>

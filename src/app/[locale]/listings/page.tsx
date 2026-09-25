@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { FeedService, FeedResult } from "@/src/modules/listings/feed/service";
 import { CategoryService } from "@/src/modules/categories/service";
@@ -76,7 +75,10 @@ export default async function BrowseListingsPage({
   const isTr = locale === "tr";
   const selectedCategory = sp.category;
   const searchQuery = sp.q;
-  const mode: "following" | "all" = sp.mode === "following" ? "following" : "all";
+  const session = await getSession();
+  const isAuthenticated = Boolean(session?.userId);
+  const mode: "following" | "all" =
+    sp.mode === "following" && isAuthenticated ? "following" : "all";
 
   const cookieStore = await cookies();
   const savedViewCookie = cookieStore.get("operis_listings_view_preference")?.value;
@@ -96,19 +98,6 @@ export default async function BrowseListingsPage({
         .map((s) => s.trim())
         .filter(Boolean)
     : [];
-
-  const session = await getSession();
-  if (!session?.userId) {
-    const loginBase = isTr ? "/tr/giris" : "/en/login";
-    const query = new URLSearchParams();
-    if (selectedCategory) query.set("category", selectedCategory);
-    if (searchQuery) query.set("q", searchQuery);
-    if (sp.mode) query.set("mode", sp.mode);
-    if (sp.view) query.set("view", sp.view);
-    const queryString = query.toString();
-    const returnUrl = `${listingsPath}${queryString ? `?${queryString}` : ""}`;
-    redirect(`${loginBase}?returnUrl=${encodeURIComponent(returnUrl)}`);
-  }
 
   const userProfile = session?.userId
     ? await ProfileService.getProfileByUserId(session.userId).catch(() => null)
@@ -197,6 +186,35 @@ export default async function BrowseListingsPage({
       {/* Schema.org Structured Data */}
       <JsonLd data={jsonLd} />
 
+      {/* Semantic Crawlable Heading & Summary for Search Engines & Screen Readers */}
+      <header className="sr-only">
+        <h1>
+          {isTr
+            ? "Yazılım & Teknoloji İlanları — Canlı Akış"
+            : "Tech & Software Listings — Live Feed"}
+        </h1>
+        <p>
+          {isTr
+            ? "Son 7 günde yayınlanan aktif yazılım, yapay zeka ve teknoloji ilanlarını inceleyin; işverenlerle %0 komisyonla doğrudan masaya oturun."
+            : "Browse active technology and software listings published in the last 7 days. Connect directly with hiring teams with 0% platform fees."}
+        </p>
+      </header>
+
+      {/* Crawlable Semantic Listing Links (Indexable by search engine bots prior to JS hydration) */}
+      {feedResult.items.length > 0 && (
+        <nav aria-label={isTr ? "Aktif İlan İndeksi" : "Active Listings Index"} className="sr-only">
+          <ul>
+            {feedResult.items.map((item) => (
+              <li key={item.id}>
+                <a href={isTr ? `/tr/ilanlar/${item.slug}` : `/en/listings/${item.slug}`}>
+                  <span>{item.title}</span> — <span>{item.categoryName}</span> — <span>{item.summary}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
+
       <UnifiedListingsHub
         initialItems={feedResult.items}
         initialCursor={feedResult.nextCursor}
@@ -208,7 +226,7 @@ export default async function BrowseListingsPage({
         categories={categories}
         hasFollowedCategories={feedResult.hasFollowedCategories ?? true}
         locale={locale}
-        isAuthenticated={Boolean(session?.userId)}
+        isAuthenticated={isAuthenticated}
         basePath={listingsPath}
         currentUserProfile={currentUserProfile}
       />

@@ -34,8 +34,8 @@ export async function generateMetadata({
 
   return {
     title: isTr
-      ? "Hakkımızda & Kurumsal Manifesto — Bağımsız Mühendislik Ağı | Operis"
-      : "About Us & Corporate Manifesto — Independent Engineering Network | Operis",
+      ? "Hakkımızda & Kurumsal Manifesto — Bağımsız Mühendislik Ağı"
+      : "About Us & Corporate Manifesto — Independent Engineering Network",
     description: isTr
       ? "Operis'in bağımsız yazılım mühendisleri ve yenilikçi teknoloji şirketleri için kurduğu %0 komisyonsuz, şeffaf, şifreli ve doğrudan çalışma manifestosu."
       : "The Operis enterprise manifesto: empowering verified engineers and innovative enterprises through 0% commission, encrypted blind bidding, and direct collaboration.",

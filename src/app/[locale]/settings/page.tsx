@@ -18,7 +18,7 @@ export async function generateMetadata({
   const isTr = locale === "tr";
 
   return {
-    title: isTr ? "Hesap Ayarları Merkezi — Operis" : "Account Settings — Operis",
+    title: isTr ? "Hesap Ayarları Merkezi" : "Account Settings",
     description: isTr
       ? "Operis hesap tercihlerinizi, güvenliğinizi, görünürlüğünüzü ve bildirimlerinizi yönetin."
       : "Manage your Operis account preferences, security, visibility, and notification settings.",

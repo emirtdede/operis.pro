@@ -2,7 +2,7 @@
 
 import { ShieldCheck, Lock, UserCheck, KeyRound, EyeOff, CheckCircle2 } from "lucide-react";
 
-export function BilateralMatchDiagram() {
+export function BilateralMatchDiagram({ isTr = true }: { isTr?: boolean }) {
   return (
     <div className="relative w-full overflow-hidden rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 p-6 sm:p-8 backdrop-blur-xl shadow-2xl">
       {/* Subtle Ambient Glow */}
@@ -17,17 +17,18 @@ export function BilateralMatchDiagram() {
           </div>
           <div>
             <h3 className="text-sm sm:text-base font-bold text-[var(--color-text-primary)]">
-              Birebir Gizli Teklifleşme
+              {isTr ? "Birebir Gizli Teklifleşme" : "Confidential 1-to-1 Proposals"}
             </h3>
             <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
-              Teklif tutarlarınız ve proje detaylarınız rakiplere kapalıdır; yalnızca siz ve
-              anlaştığınız uzman görebilir.
+              {isTr
+                ? "Teklif tutarlarınız ve proje detaylarınız rakiplere kapalıdır; yalnızca siz ve anlaştığınız uzman görebilir."
+                : "Your proposed rates and project details are hidden from competitors; visible strictly to you and your counterparty."}
             </p>
           </div>
         </div>
         <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-medium text-emerald-400 shadow-sm">
           <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span>Tam Gizlilik Garantisi</span>
+          <span>{isTr ? "Tam Gizlilik Garantisi" : "Zero Competitor Visibility"}</span>
         </div>
       </div>
 
@@ -43,8 +44,12 @@ export function BilateralMatchDiagram() {
             </span>
           </div>
           <div>
-            <div className="font-semibold text-sm text-[var(--color-text-primary)]">İş Veren</div>
-            <div className="text-xs text-[var(--color-text-secondary)]">Proje Sahibi</div>
+            <div className="font-semibold text-sm text-[var(--color-text-primary)]">
+              {isTr ? "İş Veren" : "Client"}
+            </div>
+            <div className="text-xs text-[var(--color-text-secondary)]">
+              {isTr ? "Proje Sahibi" : "Project Owner"}
+            </div>
           </div>
         </div>
 
@@ -103,12 +108,16 @@ export function BilateralMatchDiagram() {
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-4 w-4 text-blue-400" aria-hidden="true" />
               <span className="text-xs font-bold text-[var(--color-text-primary)]">
-                Özel Şifreli Teklif Akışı
+                {isTr ? "Özel Şifreli Teklif Akışı" : "Private Encrypted Proposal Pipeline"}
               </span>
             </div>
             <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-medium">
               <EyeOff className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Rakipler fiyatınızı ve teklifinizi göremez</span>
+              <span>
+                {isTr
+                  ? "Rakipler fiyatınızı ve teklifinizi göremez"
+                  : "Competitors cannot view your bids or price quotes"}
+              </span>
             </div>
           </div>
         </div>
@@ -123,9 +132,11 @@ export function BilateralMatchDiagram() {
             </span>
           </div>
           <div>
-            <div className="font-semibold text-sm text-[var(--color-text-primary)]">Yazılımcı</div>
+            <div className="font-semibold text-sm text-[var(--color-text-primary)]">
+              {isTr ? "Yazılımcı" : "Engineer"}
+            </div>
             <div className="text-xs text-[var(--color-text-secondary)]">
-              Doğrulanmış Profesyonel
+              {isTr ? "Doğrulanmış Profesyonel" : "Verified Professional"}
             </div>
           </div>
         </div>
@@ -137,23 +148,33 @@ export function BilateralMatchDiagram() {
           <CheckCircle2 className="h-4 w-4 text-blue-400 shrink-0" aria-hidden="true" />
           <span className="text-[var(--color-text-secondary)]">
             <strong className="text-[var(--color-text-primary)] font-medium">
-              Fiyat Kırma Savaşı Yok:
+              {isTr ? "Fiyat Kırma Savaşı Yok:" : "No Underbidding Wars:"}
             </strong>{" "}
-            Açık artırma usulü teklif yarışı yaşanmaz.
+            {isTr
+              ? "Açık artırma usulü teklif yarışı yaşanmaz."
+              : "Zero race-to-the-bottom public bidding."}
           </span>
         </div>
         <div className="flex items-center gap-2.5 p-2 rounded-xl bg-[var(--color-surface-hover)]/40">
           <CheckCircle2 className="h-4 w-4 text-cyan-400 shrink-0" aria-hidden="true" />
           <span className="text-[var(--color-text-secondary)]">
-            <strong className="text-[var(--color-text-primary)] font-medium">Tam Gizlilik:</strong>{" "}
-            Teklif detayları arama motorlarına kapalıdır.
+            <strong className="text-[var(--color-text-primary)] font-medium">
+              {isTr ? "Tam Gizlilik:" : "Complete Confidentiality:"}
+            </strong>{" "}
+            {isTr
+              ? "Teklif detayları arama motorlarına kapalıdır."
+              : "Proposal terms are closed to public indexing."}
           </span>
         </div>
         <div className="flex items-center gap-2.5 p-2 rounded-xl bg-[var(--color-surface-hover)]/40">
           <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" aria-hidden="true" />
           <span className="text-[var(--color-text-secondary)]">
-            <strong className="text-[var(--color-text-primary)] font-medium">Birebir Temas:</strong>{" "}
-            Eşleşme onaylandığında doğrudan iletişim başlar.
+            <strong className="text-[var(--color-text-primary)] font-medium">
+              {isTr ? "Birebir Temas:" : "Direct Connection:"}
+            </strong>{" "}
+            {isTr
+              ? "Eşleşme onaylandığında doğrudan iletişim başlar."
+              : "Direct channels unlock once a mutual match is confirmed."}
           </span>
         </div>
       </div>

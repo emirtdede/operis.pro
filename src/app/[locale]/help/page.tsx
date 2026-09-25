@@ -24,8 +24,8 @@ export async function generateMetadata({
 
   return {
     title: isTr
-      ? "Rehber & Sıkça Sorulan Sorular (SSS) — Bilgi Merkezi | Operis"
-      : "Help, Guidelines & Frequently Asked Questions (FAQ) | Operis",
+      ? "Rehber & Sıkça Sorulan Sorular (SSS) — Bilgi Merkezi"
+      : "Help, Guidelines & Frequently Asked Questions (FAQ)",
     description: isTr
       ? "168 saatlik canlılık döngüsü, %0 komisyonsuz doğrudan model, AES-256 şifreli teklifler, vergi ve sözleşme rehberi hakkında kapsamlı bilgi merkezi."
       : "Complete guide to Operis 168-hour lifecycles, zero-commission model, encrypted blind bids, taxes, and legal contracts.",

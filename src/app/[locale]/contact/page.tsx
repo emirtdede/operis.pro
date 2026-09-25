@@ -25,8 +25,8 @@ export async function generateMetadata({
 
   return {
     title: isTr
-      ? "İletişim & Kurumsal Destek Masaları — Resmi Şirket Merkezi | Operis"
-      : "Contact & Enterprise Operations Desks — Headquarters | Operis",
+      ? "İletişim & Kurumsal Destek Masaları — Resmi Şirket Merkezi"
+      : "Contact & Enterprise Operations Desks — Headquarters",
     description: isTr
       ? "Operis kurumsal masalarıyla iletişime geçin: Girişim çözümleri, 7/24 güvenlik & bug bounty, hukuk müşavirliği ve resmi şirket künyesi."
       : "Connect directly with Operis official desks: enterprise partnerships, 24/7 security & bug bounty, legal counsel, and statutory registry.",

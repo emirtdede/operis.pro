@@ -36,8 +36,8 @@ export async function generateMetadata({
 
   return {
     title: isTr
-      ? "İhlal & Şikayet Bildirim Merkezi — Güvenlik, Denetim & Uyum | Operis"
-      : "Trust, Safety & Incident Response Hub — Security & Compliance | Operis",
+      ? "İhlal & Şikayet Bildirim Merkezi — Güvenlik, Denetim & Uyum"
+      : "Trust, Safety & Incident Response Hub — Security & Compliance",
     description: isTr
       ? "Operis topluluk güvenliği, dolandırıcılık önleme, FSEK/telif hakları ve uyuşmazlık çözümü için 5651 ve KVKK standartlarında resmi ihbar masası."
       : "Official incident intake desk for scam prevention, DMCA/IP copyright protection, and neutral dispute resolution under statutory cyber regulations.",
@@ -50,8 +50,8 @@ export async function generateMetadata({
     },
     openGraph: {
       title: isTr
-        ? "İhlal & Şikayet Bildirim Merkezi — Güvenlik, Denetim & Uyum | Operis"
-        : "Trust, Safety & Incident Response Hub — Security & Compliance | Operis",
+        ? "İhlal & Şikayet Bildirim Merkezi — Güvenlik, Denetim & Uyum"
+        : "Trust, Safety & Incident Response Hub — Security & Compliance",
       description: isTr
         ? "Operis topluluk güvenliği, dolandırıcılık önleme, FSEK/telif hakları ve uyuşmazlık çözümü için 5651 ve KVKK standartlarında resmi ihbar masası."
         : "Official incident intake desk for scam prevention, DMCA/IP copyright protection, and neutral dispute resolution under statutory cyber regulations.",
@@ -63,8 +63,8 @@ export async function generateMetadata({
     twitter: {
       card: "summary_large_image",
       title: isTr
-        ? "İhlal & Şikayet Bildirim Merkezi — Operis"
-        : "Trust, Safety & Incident Hub — Operis",
+        ? "İhlal & Şikayet Bildirim Merkezi"
+        : "Trust, Safety & Incident Hub",
       description: isTr
         ? "5651 ve FSEK standartlarında resmi güvenlik ve uyuşmazlık bildirim merkezi."
         : "Official incident intake desk for safety, escrow, and statutory copyright.",

@@ -9,7 +9,6 @@ import {
   Plus,
   PlusCircle,
   Zap,
-  Compass,
 } from "lucide-react";
 import type { CategoryDto } from "@/src/modules/categories/service";
 import type { FeedListingItem } from "@/src/modules/listings/feed/service";
@@ -215,44 +214,27 @@ export function FeedRightPanel({
               })}
             </div>
           ) : (
-            <div className="py-2.5 text-center space-y-3">
+            <div className="py-2.5 text-center space-y-2">
               {followedCategoryIds.size >= categories.length && categories.length > 0 ? (
-                <div className="space-y-1.5">
-                  <div className="h-9 w-9 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto text-emerald-400">
-                    <Check className="h-4 w-4" />
-                  </div>
-                  <p className="text-xs font-semibold text-[var(--color-text-primary)]">
-                    {isTr ? "Tüm Alanları Takip Ediyorsunuz" : "Following All Categories"}
-                  </p>
-                  <p className="text-[11px] text-[var(--color-text-tertiary)] leading-relaxed">
-                    {isTr
-                      ? "Platformdaki tüm uzmanlık alanlarını listenize eklediniz."
-                      : "You have added all available specializations to your list."}
-                  </p>
-                </div>
+                <p className="text-xs text-[var(--color-text-tertiary)] leading-relaxed">
+                  {isTr
+                    ? "Platformdaki tüm uzmanlık alanlarını listenize eklediniz."
+                    : "You have added all available specializations to your list."}
+                </p>
               ) : (
-                <div className="space-y-2.5">
-                  <div className="h-9 w-9 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mx-auto text-blue-400">
-                    <Compass className="h-4 w-4" />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-xs font-semibold text-[var(--color-text-primary)]">
-                      {isTr ? "Henüz Bir Alan Takip Etmiyorsunuz" : "Not Following Any Areas Yet"}
-                    </p>
-                    <p className="text-[11px] text-[var(--color-text-tertiary)] leading-relaxed px-1">
-                      {isTr
-                        ? "İlgi duyduğunuz uzmanlık alanlarını takip etmeye başladığınızda, onlarla ilişkili en popüler alanlar ve size özel öneriler burada listelenecektir."
-                        : "As you follow specializations of interest, related popular categories and personalized suggestions will appear here."}
-                    </p>
-                  </div>
+                <>
+                  <p className="text-xs text-[var(--color-text-tertiary)] leading-relaxed">
+                    {isTr
+                      ? "İlgi duyduğunuz alanları takip ettikçe size özel öneriler burada listelenecektir."
+                      : "As you follow areas of interest, personalized suggestions will appear here."}
+                  </p>
                   <Link
                     href={getLocalizedRoute("categories", locale)}
-                    className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-600 hover:brightness-110 shadow-sm transition-all"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-blue-400 hover:underline cursor-pointer"
                   >
-                    <Compass className="h-3.5 w-3.5" />
                     <span>{isTr ? "Kategorileri Keşfet" : "Explore Categories"}</span>
                   </Link>
-                </div>
+                </>
               )}
             </div>
           )}
