@@ -33,10 +33,13 @@ export const dynamic = "force-dynamic";
 
 export default async function SettingsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ tab?: string }>;
 }) {
   const { locale } = await params;
+  const { tab } = (await searchParams) || {};
   setRequestLocale(locale);
   const isTr = locale === "tr";
 
@@ -167,6 +170,7 @@ export default async function SettingsPage({
         initialProfile={initialProfile}
         twoFactorEnabled={twoFactorEnabled}
         locale={locale}
+        initialTab={tab}
       />
     </main>
   );

@@ -1,10 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback, type FormEvent } from "react";
-import Link from "next/link";
 import {
   Lock,
-  KeyRound,
   Laptop,
   Shield,
   Eye,
@@ -19,7 +17,9 @@ import {
 import { Button } from "@/src/components/ui/button";
 import { TextInput } from "@/src/components/ui/text-input";
 import { Badge } from "@/src/components/ui/badge";
-import { getTwoFactorButtonLabel, getSavePasswordButtonLabel } from "../types";
+import { getSavePasswordButtonLabel } from "../types";
+import { TwoFactorAuthSection } from "@/src/components/security/sections/two-factor-auth-section";
+import type { SecurityFeedback } from "@/src/components/security/types";
 
 export interface SecuritySettingsTabProps {
   twoFactorEnabled: boolean;
@@ -32,6 +32,7 @@ export interface SecuritySettingsTabProps {
   onNewPasswordChange: (val: string) => void;
   onConfirmPasswordChange: (val: string) => void;
   onPasswordSubmit: (e: FormEvent) => void;
+  onFeedback?: (feedback: SecurityFeedback) => void;
 }
 
 export function SecuritySettingsTab({
@@ -45,6 +46,7 @@ export function SecuritySettingsTab({
   onNewPasswordChange,
   onConfirmPasswordChange,
   onPasswordSubmit,
+  onFeedback,
 }: SecuritySettingsTabProps) {
   const isTr = locale === "tr";
 
@@ -148,49 +150,11 @@ export function SecuritySettingsTab({
       </div>
 
       {/* 1. İki Faktörlü Doğrulama (2FA) */}
-      <div className="p-4 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/30 space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div
-              className={`h-10 w-10 rounded-2xl flex items-center justify-center shrink-0 ${
-                twoFactorEnabled
-                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                  : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-              }`}
-            >
-              <KeyRound className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-[var(--color-text-primary)]">
-                  {isTr ? "İki Faktörlü Doğrulama (TOTP 2FA)" : "Two-Factor Authentication (2FA)"}
-                </span>
-                {twoFactorEnabled ? (
-                  <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px]">
-                    {isTr ? "Aktif" : "Enabled"}
-                  </Badge>
-                ) : (
-                  <Badge variant="outline" className="bg-amber-500/10 text-amber-400 border-amber-500/20 text-[10px]">
-                    {isTr ? "Devre Dışı" : "Disabled"}
-                  </Badge>
-                )}
-              </div>
-              <p className="text-[11px] text-[var(--color-text-tertiary)] mt-0.5">
-                {isTr
-                  ? "Google Authenticator veya 1Password ile oturum açarken ek güvenlik kodu talep edilir."
-                  : "Requires an authenticator code alongside your password when signing in."}
-              </p>
-            </div>
-          </div>
-
-          <Link href={isTr ? "/tr/panel/guvenlik" : "/en/dashboard/security"}>
-            <Button variant={twoFactorEnabled ? "outline" : "primary"} size="sm" className="text-xs">
-              <KeyRound className="h-3.5 w-3.5 mr-1.5" />
-              <span>{getTwoFactorButtonLabel(twoFactorEnabled, isTr)}</span>
-            </Button>
-          </Link>
-        </div>
-      </div>
+      <TwoFactorAuthSection
+        locale={locale}
+        twoFactorEnabled={twoFactorEnabled}
+        onFeedback={onFeedback || (() => {})}
+      />
 
       {/* 2. Şifre Değiştirme Formu */}
       <form onSubmit={onPasswordSubmit} className="pt-4 border-t border-[var(--color-border-subtle)] space-y-4">

@@ -66,8 +66,8 @@ export const ROUTE_MAP = {
     en: "/en/settings",
   },
   dashboardSecurity: {
-    tr: "/tr/panel/guvenlik",
-    en: "/en/dashboard/security",
+    tr: "/tr/ayarlar?tab=security",
+    en: "/en/settings?tab=security",
   },
   dashboardNotifications: {
     tr: "/tr/panel/bildirimler",

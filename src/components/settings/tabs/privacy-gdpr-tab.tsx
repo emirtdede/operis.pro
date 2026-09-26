@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   Shield,
@@ -13,6 +14,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { getExportDataButtonLabel } from "../types";
+import { AccountDeleteModal } from "@/src/components/security/modals/account-delete-modal";
+import type { SecurityFeedback } from "@/src/components/security/types";
 
 export interface PrivacyGdprTabProps {
   showLocation: boolean;
@@ -23,11 +26,13 @@ export interface PrivacyGdprTabProps {
   exportStatus: string | null;
   exportDownloadUrl?: string | null;
   locale: string;
+  twoFactorEnabled?: boolean;
   onShowLocationChange: (val: boolean) => void;
   onRevealPhoneChange: (val: boolean) => void;
   onAllowSearchIndexChange: (val: boolean) => void;
   onTriggerExport: () => void;
-  onCloseAccountClick: () => void;
+  onCloseAccountClick?: () => void;
+  onFeedback?: (feedback: SecurityFeedback) => void;
 }
 
 export function PrivacyGdprTab({
@@ -39,13 +44,16 @@ export function PrivacyGdprTab({
   exportStatus,
   exportDownloadUrl,
   locale,
+  twoFactorEnabled = false,
   onShowLocationChange,
   onRevealPhoneChange,
   onAllowSearchIndexChange,
   onTriggerExport,
   onCloseAccountClick,
+  onFeedback,
 }: PrivacyGdprTabProps) {
   const isTr = locale === "tr";
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   return (
     <div className="space-y-8">
@@ -254,7 +262,12 @@ export function PrivacyGdprTab({
             type="button"
             variant="danger"
             size="sm"
-            onClick={onCloseAccountClick}
+            onClick={() => {
+              if (onCloseAccountClick) {
+                onCloseAccountClick();
+              }
+              setIsDeleteModalOpen(true);
+            }}
             className="cursor-pointer gap-1.5 text-xs shrink-0"
           >
             <Trash2 className="h-3.5 w-3.5" />
@@ -262,6 +275,14 @@ export function PrivacyGdprTab({
           </Button>
         </div>
       </div>
+
+      <AccountDeleteModal
+        isOpen={isDeleteModalOpen}
+        locale={locale}
+        is2FAEnabled={Boolean(twoFactorEnabled)}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onFeedback={onFeedback || (() => {})}
+      />
     </div>
   );
 }

@@ -254,10 +254,6 @@ const TAB_PREFIX_MAP: Array<{ key: string; prefixes: string[] }> = [
     ],
   },
   {
-    key: "security",
-    prefixes: ["/tr/panel/guvenlik", "/en/dashboard/security", "/tr/dashboard/security"],
-  },
-  {
     key: "listings",
     prefixes: [
       "/tr/panel/ilanlarim",

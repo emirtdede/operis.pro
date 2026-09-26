@@ -35,8 +35,9 @@ const TR_EXACT_REDIRECTS: Record<string, string> = {
   "/tr/panel/projelerim": "/tr/panel/aktif-isler",
   "/tr/dashboard/settings": "/tr/ayarlar",
   "/tr/panel/ayarlar": "/tr/ayarlar",
-  "/tr/dashboard/security": "/tr/panel/guvenlik",
-  "/tr/guvenlik": "/tr/panel/guvenlik",
+  "/tr/dashboard/security": "/tr/ayarlar?tab=security",
+  "/tr/panel/guvenlik": "/tr/ayarlar?tab=security",
+  "/tr/guvenlik": "/tr/ayarlar?tab=security",
   "/tr/dashboard/notifications": "/tr/panel/bildirimler",
   "/tr/bildirimler": "/tr/panel/bildirimler",
   "/tr/dashboard/categories": "/tr/panel/kategorilerim",
@@ -80,6 +81,8 @@ const EN_EXACT_REDIRECTS: Record<string, string> = {
   "/en/privacy-policy": "/en/legal/privacy",
   "/en/cookies": "/en/legal/cookies",
   "/en/cookie-policy": "/en/legal/cookies",
+  "/en/dashboard/security": "/en/settings?tab=security",
+  "/en/security": "/en/settings?tab=security",
 };
 
 function baseProxy(request: NextRequest) {
@@ -138,7 +141,16 @@ function baseProxy(request: NextRequest) {
   const exactRedirect = TR_EXACT_REDIRECTS[pathname] || EN_EXACT_REDIRECTS[pathname];
   if (exactRedirect) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = exactRedirect;
+    if (exactRedirect.includes("?")) {
+      const parts = exactRedirect.split("?");
+      redirectUrl.pathname = parts[0] || exactRedirect;
+      if (parts[1]) {
+        const params = new URLSearchParams(parts[1]);
+        params.forEach((v, k) => redirectUrl.searchParams.set(k, v));
+      }
+    } else {
+      redirectUrl.pathname = exactRedirect;
+    }
     return NextResponse.redirect(redirectUrl, 301);
   }
 

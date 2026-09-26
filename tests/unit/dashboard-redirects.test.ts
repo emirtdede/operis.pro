@@ -31,12 +31,20 @@ describe("Dashboard and Panel Redirects & Aliases in Proxy", () => {
     expect(res?.headers.get("location")).toBe("https://operis.com/tr/ayarlar");
   });
 
-  it("redirects /tr/guvenlik to /tr/panel/guvenlik with 301", async () => {
+  it("redirects /tr/guvenlik to /tr/ayarlar?tab=security with 301", async () => {
     const req = makeRequest("https://operis.com/tr/guvenlik");
     const res = await proxy(req);
     expect(res).toBeDefined();
     expect(res?.status).toBe(301);
-    expect(res?.headers.get("location")).toBe("https://operis.com/tr/panel/guvenlik");
+    expect(res?.headers.get("location")).toBe("https://operis.com/tr/ayarlar?tab=security");
+  });
+
+  it("redirects /tr/panel/guvenlik to /tr/ayarlar?tab=security with 301", async () => {
+    const req = makeRequest("https://operis.com/tr/panel/guvenlik");
+    const res = await proxy(req);
+    expect(res).toBeDefined();
+    expect(res?.status).toBe(301);
+    expect(res?.headers.get("location")).toBe("https://operis.com/tr/ayarlar?tab=security");
   });
 
   it("redirects /tr/bildirimler to /tr/panel/bildirimler with 301", async () => {

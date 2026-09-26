@@ -31,14 +31,22 @@ export function SettingsView({
   initialProfile,
   twoFactorEnabled,
   locale,
+  initialTab,
 }: SettingsViewProps) {
   const isTr = locale === "tr";
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const initialCat = normalizeCategory(searchParams.get("tab"));
+  const initialCat = normalizeCategory(initialTab || searchParams.get("tab"));
   const [activeCategory, setActiveCategory] = useState<SettingsCategory>(initialCat);
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const tabParam = searchParams.get("tab");
+    if (tabParam) {
+      setActiveCategory(normalizeCategory(tabParam));
+    }
+  }, [searchParams]);
 
   // Profile preferences state
   const [prefLocale, setPrefLocale] = useState(initialProfile.locale || "tr");
@@ -82,6 +90,10 @@ export function SettingsView({
     type: "success" | "error";
     message: string;
   } | null>(null);
+
+  const handleSecurityFeedback = (fb: { type: "success" | "warning" | "error"; message: string }) => {
+    setFeedback({ type: fb.type === "warning" ? "error" : fb.type, message: fb.message });
+  };
 
   // Load initial marketing consent
   useEffect(() => {
@@ -486,6 +498,7 @@ export function SettingsView({
               onNewPasswordChange={setNewPassword}
               onConfirmPasswordChange={setConfirmPassword}
               onPasswordSubmit={handlePasswordChange}
+              onFeedback={handleSecurityFeedback}
             />
           )}
 
@@ -519,6 +532,7 @@ export function SettingsView({
               exportStatus={exportStatus}
               exportDownloadUrl={exportDownloadUrl}
               locale={locale}
+              twoFactorEnabled={twoFactorEnabled}
               onShowLocationChange={(val) => {
                 setShowLocation(val);
                 handleSaveProfileField({ showLocation: val });
@@ -537,9 +551,7 @@ export function SettingsView({
                 );
               }}
               onTriggerExport={handleTriggerExport}
-              onCloseAccountClick={() => {
-                router.push(isTr ? "/tr/panel/guvenlik" : "/en/dashboard/security");
-              }}
+              onFeedback={handleSecurityFeedback}
             />
           )}
         </div>

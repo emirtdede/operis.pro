@@ -65,6 +65,7 @@ export interface SettingsViewProps {
   };
   twoFactorEnabled: boolean;
   locale: string;
+  initialTab?: string;
 }
 
 export interface SettingsCategoryItem {
