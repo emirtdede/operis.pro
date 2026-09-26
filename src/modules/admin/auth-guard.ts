@@ -47,6 +47,17 @@ export async function getAdminSession(
       };
     }
 
+    // Strict 2FA TOTP enforcement for privileged administrative roles
+    const isPrivilegedRole = ["ADMIN", "SECURITY_ADMIN"].includes(session.role);
+    if (isPrivilegedRole && !session.twoFactorVerified) {
+      return {
+        isAuthenticated: true,
+        isAdmin: false,
+        session,
+        error: "Two-factor authentication (2FA) verification is required for administrative operations",
+      };
+    }
+
     return {
       isAuthenticated: true,
       isAdmin: true,

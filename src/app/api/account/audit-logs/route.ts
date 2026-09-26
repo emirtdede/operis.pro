@@ -33,8 +33,8 @@ export async function GET(req: Request) {
 
     // Human-readable labels for events
     const logs = rawLogs.map((log) => {
-      let labelTr = "Hesap İşlemi";
-      let labelEn = "Account Activity";
+      let labelTr: string;
+      let labelEn: string;
 
       switch (log.eventType) {
         case "LOGIN_SUCCESS":
@@ -90,8 +90,8 @@ export async function GET(req: Request) {
           labelEn = "Phone Number Verified";
           break;
         default:
-          labelTr = log.eventType;
-          labelEn = log.eventType;
+          labelTr = log.eventType || "Hesap İşlemi";
+          labelEn = log.eventType || "Account Activity";
       }
 
       return {

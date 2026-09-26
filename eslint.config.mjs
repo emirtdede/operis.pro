@@ -33,6 +33,7 @@ export default tsPlugin.config(
       "*.config.js",
       "*.config.mjs",
       "*.config.ts",
+      "scripts/generate-assets.cjs",
     ],
   }
 );

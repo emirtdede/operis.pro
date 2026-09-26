@@ -4,7 +4,7 @@ import { getSession } from "@/src/modules/auth/session";
 import { CategoryService } from "@/src/modules/categories/service";
 import { CategoryListInteractive } from "@/src/components/categories/category-list-interactive";
 import { JsonLd } from "@/src/components/seo/json-ld";
-import { getBaseUrl } from "@/src/lib/config/url";
+import { getBaseUrl, constructCanonicalUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -21,20 +21,24 @@ export async function generateMetadata({
     ? "Yazılımdan yapay zekaya, tasarımdan bulut mimarisine 10 ana sektör ve 110 uzmanlık alanındaki güncel ilanları ve yetenekleri keşfedin."
     : "Explore 10 core sectors and 110 expertise domains across software engineering, AI, design, and cloud architecture for direct hiring.";
 
+  const trUrl = constructCanonicalUrl("/tr/kategoriler");
+  const enUrl = constructCanonicalUrl("/en/categories");
+
   return {
     title,
     description,
     alternates: {
-      canonical: isTr ? "/tr/kategoriler" : "/en/categories",
+      canonical: isTr ? trUrl : enUrl,
       languages: {
-        tr: "/tr/kategoriler",
-        en: "/en/categories",
+        tr: trUrl,
+        en: enUrl,
+        "x-default": trUrl,
       },
     },
     openGraph: {
       title,
       description,
-      url: isTr ? "/tr/kategoriler" : "/en/categories",
+      url: isTr ? trUrl : enUrl,
       siteName: "Operis",
       locale: isTr ? "tr_TR" : "en_US",
       type: "website",
@@ -96,8 +100,8 @@ export default async function CategoriesPage({
             position: idx + 1,
             name: cat.name,
             url: isTr
-              ? `${baseUrl}/tr/ilanlar?category=${cat.slug}`
-              : `${baseUrl}/en/listings?category=${cat.slug}`,
+              ? `${baseUrl}/tr/kategori/${cat.slug}`
+              : `${baseUrl}/en/category/${cat.slug}`,
           })),
         },
       },

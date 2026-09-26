@@ -49,13 +49,26 @@ export function getDbPool(): pg.Pool {
     const isSupabase =
       connString.includes("supabase.co") || connString.includes("pooler.supabase.com");
 
+    const caCert = process.env.SUPABASE_SSL_CA_CERT || process.env.DATABASE_SSL_CA;
+    const isProd = process.env.NODE_ENV === "production";
+    const explicitReject = process.env.DATABASE_SSL_REJECT_UNAUTHORIZED;
+    const shouldRejectUnauthorized =
+      explicitReject !== undefined
+        ? explicitReject === "true"
+        : isProd || Boolean(caCert);
+
     globalForDb.operisDbPool = new Pool({
       connectionString: connString,
       // Section 7 & 18: Serverless target pool max = 1 to prevent connection exhaustion during lambda fan-out
       max: process.env.NODE_ENV === "production" ? 1 : 10,
       idleTimeoutMillis: 5000,
       connectionTimeoutMillis: 5000,
-      ssl: isSupabase ? { rejectUnauthorized: false } : undefined,
+      ssl: isSupabase
+        ? {
+            rejectUnauthorized: shouldRejectUnauthorized,
+            ca: caCert || undefined,
+          }
+        : undefined,
     });
 
     // WP-10: Register error listener immediately to prevent unhandled EventEmitter exceptions on idle clients from crashing Node process

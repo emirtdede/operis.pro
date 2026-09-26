@@ -11,6 +11,8 @@ const FORBIDDEN_SECRET_PATTERNS = [
   { name: "Private RSA/SSH/EC Key", regex: /-----BEGIN (RSA|OPENSSH|EC|PGP|PRIVATE) KEY-----/g },
   { name: "Clerk Live Secret Key", regex: /sk_live_[a-zA-Z0-9_]{20,}/g },
   { name: "Upstash Redis Token", regex: /AX[a-zA-Z0-9_]{30,}/g },
+  { name: "Google OAuth Client Secret", regex: /GOCSPX-[a-zA-Z0-9_-]{28,}/g },
+  { name: "Google API Key", regex: /AIza[0-9A-Za-z-_]{35}/g },
 ];
 
 const ALLOWED_TEST_PREFIXES = [

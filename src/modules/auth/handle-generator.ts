@@ -92,21 +92,21 @@ export async function generateUniqueSequentialHandle(
   const base = buildBaseHandle(firstName, lastName, fallbackEmail);
 
   // Fetch all existing handles matching base or base% in a single query
-  let queryResult: any = await db
+  let queryResult: unknown = await db
     .select({ handle: schema.profiles.handle })
     .from(schema.profiles)
     .where(
       sql`${schema.profiles.handle} = ${base} OR ${schema.profiles.handle} LIKE ${base + "%"}`
     );
 
-  if (queryResult && typeof queryResult.limit === "function") {
-    queryResult = await queryResult.limit(1000);
+  if (queryResult && typeof (queryResult as { limit?: unknown }).limit === "function") {
+    queryResult = await (queryResult as { limit: (n: number) => Promise<unknown> }).limit(1000);
   }
 
   const existingRows: Array<{ handle: string }> = Array.isArray(queryResult)
-    ? queryResult
-    : Array.isArray(queryResult?.rows)
-    ? queryResult.rows
+    ? (queryResult as Array<{ handle: string }>)
+    : Array.isArray((queryResult as { rows?: Array<{ handle: string }> })?.rows)
+    ? (queryResult as { rows: Array<{ handle: string }> }).rows
     : [];
 
   const existingSet = new Set(

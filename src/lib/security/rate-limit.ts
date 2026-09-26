@@ -318,21 +318,46 @@ if (typeof setInterval !== "undefined") {
 
 /**
  * Extracts client IP from request headers or socket.
+ * Enforces edge proxy priority (Cloudflare -> Vercel -> trusted proxies)
+ * to prevent client IP spoofing and rate limit bypass.
  */
 export function getClientIp(req: Request): string {
+  // 1. Cloudflare authoritative connecting IP (cannot be spoofed if behind CF)
+  const cfConnectingIp = req.headers.get("cf-connecting-ip");
+  if (cfConnectingIp) {
+    const candidate = normalizeIp(cfConnectingIp);
+    if (isValidIp(candidate)) return candidate;
+  }
+
+  // 2. Vercel edge proxy header
+  const vercelIp = req.headers.get("x-vercel-forwarded-for");
+  if (vercelIp) {
+    const rawVercel = vercelIp.split(",")[0]?.trim();
+    if (rawVercel) {
+      const candidate = normalizeIp(rawVercel);
+      if (isValidIp(candidate)) return candidate;
+    }
+  }
+
+  // 3. Standard reverse proxy real IP
   const realIp = req.headers.get("x-real-ip");
   if (realIp) {
-    return realIp.trim();
+    const candidate = normalizeIp(realIp);
+    if (isValidIp(candidate)) return candidate;
   }
+
+  // 4. Fallback to X-Forwarded-For
   const forwarded = req.headers.get("x-forwarded-for");
   if (forwarded) {
     const ips = forwarded
       .split(",")
       .map((p) => p.trim())
       .filter(Boolean);
-    const firstIp = ips[0];
-    if (firstIp) {
-      return firstIp;
+    for (const raw of ips) {
+      const candidate = normalizeIp(raw);
+      if (isValidIp(candidate)) {
+        return candidate;
+      }
     }
   }
   return "127.0.0.1";

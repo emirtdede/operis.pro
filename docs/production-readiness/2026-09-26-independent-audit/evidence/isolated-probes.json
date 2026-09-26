@@ -1,0 +1,55 @@
+[
+  {
+    "case": "session_db_failure",
+    "returnedRole": "ADMIN",
+    "returnedVersion": 1
+  },
+  {
+    "case": "admin_guard_without_mfa_claim",
+    "result": {
+      "isAuthenticated": true,
+      "isAdmin": true,
+      "session": {
+        "userId": "audit-admin",
+        "role": "ADMIN",
+        "status": "ACTIVE",
+        "authVersion": 1
+      }
+    }
+  },
+  {
+    "case": "private_ipv6_classification",
+    "results": [
+      {
+        "ip": "::1",
+        "blocked": true
+      },
+      {
+        "ip": "::ffff:127.0.0.1",
+        "blocked": true
+      },
+      {
+        "ip": "::ffff:7f00:1",
+        "blocked": false
+      },
+      {
+        "ip": "fe90::1",
+        "blocked": false
+      },
+      {
+        "ip": "fe80::1",
+        "blocked": true
+      }
+    ]
+  },
+  {
+    "case": "trending_node_pg_queryresult",
+    "actual": [
+      "seed1",
+      "seed2",
+      "seed3",
+      "seed4",
+      "seed5"
+    ]
+  }
+]

@@ -8,7 +8,7 @@ import { getSession } from "@/src/modules/auth/session";
 import { getLocalizedProfilePath } from "@/src/lib/i18n/routes";
 import { JsonLd } from "@/src/components/seo/json-ld";
 import { PublicProfileView } from "@/src/components/profile/public-profile-view";
-import { getBaseUrl } from "@/src/lib/config/url";
+import { getBaseUrl, constructCanonicalUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -32,20 +32,30 @@ export async function generateMetadata({
       ? `${profile.displayName} kullanıcısının Operis profili ve doğrulanmış iş geçmişi.`
       : `Public profile and verified project history for ${profile.displayName} on Operis.`;
 
+  const trPath = getLocalizedProfilePath(handle, "tr");
+  const enPath = getLocalizedProfilePath(handle, "en");
+  const currentPath = getLocalizedProfilePath(handle, locale);
+
+  // Thin content / index bloat protection: Only index profiles with substantial bio or headline
+  const hasHeadline = Boolean(profile.headline && profile.headline.trim().length >= 5);
+  const hasAbout = Boolean(profile.about && profile.about.trim().length >= 30);
+  const isIndexable = hasHeadline || hasAbout;
+
   return {
     title,
     description,
     alternates: {
-      canonical: getLocalizedProfilePath(handle, locale),
+      canonical: constructCanonicalUrl(currentPath),
       languages: {
-        tr: getLocalizedProfilePath(handle, "tr"),
-        en: getLocalizedProfilePath(handle, "en"),
+        tr: constructCanonicalUrl(trPath),
+        en: constructCanonicalUrl(enPath),
+        "x-default": constructCanonicalUrl(trPath),
       },
     },
     openGraph: {
       title,
       description,
-      url: getLocalizedProfilePath(handle, locale),
+      url: constructCanonicalUrl(currentPath),
       siteName: "Operis",
       locale: isTr ? "tr_TR" : "en_US",
       type: "profile",
@@ -56,8 +66,8 @@ export async function generateMetadata({
       description,
     },
     robots: {
-      index: true,
-      follow: true,
+      index: isIndexable,
+      follow: true, // Internal links remain crawlable
     },
   };
 }

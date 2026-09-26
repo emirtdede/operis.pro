@@ -357,4 +357,26 @@ describe("Proof-of-Work (PoW) Delivery Health & Uptime Inspector Suite", () => {
       expect(json.error).toContain("İş birliği bulunamadı veya erişim yetkiniz yok.");
     });
   });
+
+  describe("isPrivateOrReservedIp Comprehensive Classification", () => {
+    it("blocks IPv6 link-local addresses across full fe80::/10 range", () => {
+      expect(DeliveryInspectorService.isPrivateOrReservedIp("fe80::1")).toBe(true);
+      expect(DeliveryInspectorService.isPrivateOrReservedIp("fe90::1")).toBe(true);
+      expect(DeliveryInspectorService.isPrivateOrReservedIp("fea0::1")).toBe(true);
+      expect(DeliveryInspectorService.isPrivateOrReservedIp("febf::ffff")).toBe(true);
+    });
+
+    it("blocks IPv4-mapped IPv6 in both dotted-decimal and hex notation", () => {
+      expect(DeliveryInspectorService.isPrivateOrReservedIp("::ffff:127.0.0.1")).toBe(true);
+      expect(DeliveryInspectorService.isPrivateOrReservedIp("::ffff:7f00:1")).toBe(true);
+      expect(DeliveryInspectorService.isPrivateOrReservedIp("::ffff:169.254.169.254")).toBe(true);
+      expect(DeliveryInspectorService.isPrivateOrReservedIp("::ffff:a9fe:a9fe")).toBe(true);
+    });
+
+    it("allows public IPv4 and IPv6 addresses", () => {
+      expect(DeliveryInspectorService.isPrivateOrReservedIp("93.184.216.34")).toBe(false);
+      expect(DeliveryInspectorService.isPrivateOrReservedIp("2606:4700:4700::1111")).toBe(false);
+    });
+  });
 });
+

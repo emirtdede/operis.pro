@@ -1,0 +1,191 @@
+{
+  "@clerk/nextjs": {
+    "current": "7.9.2",
+    "latest": "7.9.7",
+    "wanted": "7.9.2",
+    "isDeprecated": false,
+    "dependencyType": "dependencies"
+  },
+  "eslint-config-next": {
+    "current": "16.3.3",
+    "latest": "16.3.6",
+    "wanted": "16.3.3",
+    "isDeprecated": false,
+    "dependencyType": "devDependencies"
+  },
+  "next": {
+    "current": "16.3.3",
+    "latest": "16.3.6",
+    "wanted": "16.3.3",
+    "isDeprecated": false,
+    "dependencyType": "dependencies"
+  },
+  "prettier": {
+    "current": "3.9.6",
+    "latest": "3.9.9",
+    "wanted": "3.9.6",
+    "isDeprecated": false,
+    "dependencyType": "devDependencies"
+  },
+  "tsx": {
+    "current": "4.23.13",
+    "latest": "4.23.15",
+    "wanted": "4.23.13",
+    "isDeprecated": false,
+    "dependencyType": "devDependencies"
+  },
+  "@aws-sdk/client-s3": {
+    "current": "3.1134.0",
+    "latest": "3.1141.0",
+    "wanted": "3.1134.0",
+    "isDeprecated": false,
+    "dependencyType": "dependencies"
+  },
+  "@aws-sdk/s3-request-presigner": {
+    "current": "3.1134.0",
+    "latest": "3.1141.0",
+    "wanted": "3.1134.0",
+    "isDeprecated": false,
+    "dependencyType": "dependencies"
+  },
+  "@types/react": {
+    "current": "19.2.18",
+    "latest": "19.3.0",
+    "wanted": "19.2.18",
+    "isDeprecated": false,
+    "dependencyType": "devDependencies"
+  },
+  "@types/react-dom": {
+    "current": "19.2.7",
+    "latest": "19.3.0",
+    "wanted": "19.2.7",
+    "isDeprecated": false,
+    "dependencyType": "devDependencies"
+  },
+  "@upstash/ratelimit": {
+    "current": "2.0.8",
+    "latest": "2.2.0",
+    "wanted": "2.0.8",
+    "isDeprecated": false,
+    "dependencyType": "dependencies"
+  },
+  "@upstash/redis": {
+    "current": "1.38.4",
+    "latest": "1.39.0",
+    "wanted": "1.38.4",
+    "isDeprecated": false,
+    "dependencyType": "dependencies"
+  },
+  "autoprefixer": {
+    "current": "10.5.5",
+    "latest": "10.6.1",
+    "wanted": "10.5.5",
+    "isDeprecated": false,
+    "dependencyType": "devDependencies"
+  },
+  "inngest": {
+    "current": "4.20.0",
+    "latest": "4.21.0",
+    "wanted": "4.20.0",
+    "isDeprecated": false,
+    "dependencyType": "dependencies"
+  },
+  "lucide-react": {
+    "current": "1.41.0",
+    "latest": "1.48.0",
+    "wanted": "1.41.0",
+    "isDeprecated": false,
+    "dependencyType": "dependencies"
+  },
+  "posthog-js": {
+    "current": "1.430.3",
+    "latest": "1.434.14",
+    "wanted": "1.430.3",
+    "isDeprecated": false,
+    "dependencyType": "dependencies"
+  },
+  "react": {
+    "current": "19.2.7",
+    "latest": "19.3.0",
+    "wanted": "19.2.7",
+    "isDeprecated": false,
+    "dependencyType": "dependencies"
+  },
+  "react-dom": {
+    "current": "19.2.7",
+    "latest": "19.3.0",
+    "wanted": "19.2.7",
+    "isDeprecated": false,
+    "dependencyType": "dependencies"
+  },
+  "tailwind-merge": {
+    "current": "3.6.0",
+    "latest": "3.7.0",
+    "wanted": "3.6.0",
+    "isDeprecated": false,
+    "dependencyType": "dependencies"
+  },
+  "typescript-eslint": {
+    "current": "8.69.0",
+    "latest": "8.70.1",
+    "wanted": "8.69.0",
+    "isDeprecated": false,
+    "dependencyType": "devDependencies"
+  },
+  "@sentry/nextjs": {
+    "current": "10.74.0",
+    "latest": "11.0.0",
+    "wanted": "10.74.0",
+    "isDeprecated": false,
+    "dependencyType": "dependencies"
+  },
+  "@types/node": {
+    "current": "24.13.3",
+    "latest": "26.6.3",
+    "wanted": "24.13.3",
+    "isDeprecated": false,
+    "dependencyType": "devDependencies"
+  },
+  "eslint": {
+    "current": "9.39.5",
+    "latest": "10.11.0",
+    "wanted": "9.39.5",
+    "isDeprecated": false,
+    "dependencyType": "devDependencies"
+  },
+  "next-intl": {
+    "current": "3.26.5",
+    "latest": "4.14.7",
+    "wanted": "3.26.5",
+    "isDeprecated": false,
+    "dependencyType": "dependencies"
+  },
+  "tailwindcss": {
+    "current": "3.4.19",
+    "latest": "4.3.3",
+    "wanted": "3.4.19",
+    "isDeprecated": false,
+    "dependencyType": "devDependencies"
+  },
+  "typescript": {
+    "current": "5.9.3",
+    "latest": "7.0.2",
+    "wanted": "5.9.3",
+    "isDeprecated": false,
+    "dependencyType": "devDependencies"
+  },
+  "vitest": {
+    "current": "3.2.7",
+    "latest": "5.0.2",
+    "wanted": "3.2.7",
+    "isDeprecated": false,
+    "dependencyType": "devDependencies"
+  },
+  "zod": {
+    "current": "3.25.76",
+    "latest": "4.6.5",
+    "wanted": "3.25.76",
+    "isDeprecated": false,
+    "dependencyType": "dependencies"
+  }
+}

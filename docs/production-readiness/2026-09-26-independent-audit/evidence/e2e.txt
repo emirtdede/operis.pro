@@ -1,0 +1,6 @@
+
+> operis@1.1.0 test:e2e:prod C:\Users\DEDE-\Desktop\operis
+> tsx scripts/run-e2e-prod.ts
+
+[E2E] Fatal: TEST_DB_NOT_ALLOWED: TEST_DATABASE_URL is not set.
+ ELIFECYCLE  Command failed with exit code 1.

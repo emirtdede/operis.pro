@@ -308,10 +308,13 @@ export class OfferQueryService {
     userId: string,
     rawInput: OfferTemplateInput
   ): Promise<OfferTemplateDto> {
+    // 1. Strict Zod validation BEFORE any database write to prevent persisting invalid records
+    const validatedInput = offerTemplateSchema.parse(rawInput);
+
     const isUserUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
       userId
     );
-    const inputId = rawInput.id;
+    const inputId = validatedInput.id;
     const isInputUuid =
       typeof inputId === "string" &&
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(inputId);
@@ -344,24 +347,24 @@ export class OfferQueryService {
           .values({
             id: templateId,
             userId,
-            name: rawInput.name,
-            message: rawInput.message,
-            budgetCurrency: rawInput.budgetCurrency ?? null,
-            budgetMin: rawInput.budgetMin ?? null,
-            budgetMax: rawInput.budgetMax ?? null,
-            estimatedDurationValue: rawInput.estimatedDurationValue ?? null,
-            estimatedDurationUnit: rawInput.estimatedDurationUnit ?? null,
+            name: validatedInput.name,
+            message: validatedInput.message,
+            budgetCurrency: validatedInput.budgetCurrency ?? null,
+            budgetMin: validatedInput.budgetMin ?? null,
+            budgetMax: validatedInput.budgetMax ?? null,
+            estimatedDurationValue: validatedInput.estimatedDurationValue ?? null,
+            estimatedDurationUnit: validatedInput.estimatedDurationUnit ?? null,
           })
           .onConflictDoUpdate({
             target: schema.offerTemplates.id,
             set: {
-              name: rawInput.name,
-              message: rawInput.message,
-              budgetCurrency: rawInput.budgetCurrency ?? null,
-              budgetMin: rawInput.budgetMin ?? null,
-              budgetMax: rawInput.budgetMax ?? null,
-              estimatedDurationValue: rawInput.estimatedDurationValue ?? null,
-              estimatedDurationUnit: rawInput.estimatedDurationUnit ?? null,
+              name: validatedInput.name,
+              message: validatedInput.message,
+              budgetCurrency: validatedInput.budgetCurrency ?? null,
+              budgetMin: validatedInput.budgetMin ?? null,
+              budgetMax: validatedInput.budgetMax ?? null,
+              estimatedDurationValue: validatedInput.estimatedDurationValue ?? null,
+              estimatedDurationUnit: validatedInput.estimatedDurationUnit ?? null,
               updatedAt: new Date(),
             },
             where: eq(schema.offerTemplates.userId, userId),
@@ -376,7 +379,7 @@ export class OfferQueryService {
       }
     }
 
-    const template = OfferQueryService.saveOfferTemplate(userId, { ...rawInput, id: templateId });
+    const template = OfferQueryService.saveOfferTemplate(userId, { ...validatedInput, id: templateId });
     return template;
   }
 

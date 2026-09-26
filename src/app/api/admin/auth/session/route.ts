@@ -112,6 +112,20 @@ export async function POST(request: NextRequest) {
           );
         }
 
+        // Enforce 2FA TOTP for privileged admin roles (ADMIN, SECURITY_ADMIN)
+        const isPrivilegedAdmin = ["ADMIN", "SECURITY_ADMIN"].includes(existingUser.role);
+
+        if (isPrivilegedAdmin && (!existingUser.twoFactorEnabled || !existingUser.twoFactorSecret)) {
+          return NextResponse.json(
+            {
+              error:
+                "Yönetici hesapları için iki aşamalı doğrulama (2FA) zorunludur. Lütfen profil ayarlarınızdan 2FA kurulumunu tamamlayın.",
+              requires2FASetup: true,
+            },
+            { status: 403 }
+          );
+        }
+
         // Verify 2FA TOTP if admin user has 2FA enabled
         if (existingUser.twoFactorEnabled && existingUser.twoFactorSecret) {
           const code = (totpCode || "").trim();
@@ -158,6 +172,7 @@ export async function POST(request: NextRequest) {
       role: targetRole,
       status: "ACTIVE",
       authVersion,
+      twoFactorVerified: true,
     });
 
     const response = NextResponse.json({

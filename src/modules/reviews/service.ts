@@ -399,8 +399,11 @@ export class ReviewService {
    * Returns both received reviews and given reviews for dual transparency.
    */
   static async getReviewsForUser(userId: string): Promise<UserReviewsSummaryDto> {
-    // In-memory branch for Vitest or demo fallback
-    if (Boolean(process.env.VITEST) || userId === DEFAULT_USER.id || userId === "u-techcorp-1") {
+    // In-memory branch for Vitest or demo fallback (strictly non-production)
+    if (
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (userId === DEFAULT_USER.id || userId === "u-techcorp-1")
+    ) {
       const received = inMemoryReviews.filter(
         (r) => r.recipientUserId === userId && r.isRevealed
       );
@@ -566,7 +569,10 @@ export class ReviewService {
     engagementId: string,
     currentUserId: string
   ): Promise<EngagementReviewStatusDto> {
-    if (Boolean(process.env.VITEST) || engagementId === "eng-demo-101") {
+    if (
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (engagementId === "eng-demo-101" || engagementId.startsWith("eng-"))
+    ) {
       const myReview = inMemoryReviews.find(
         (r) => r.engagementId === engagementId && r.authorUserId === currentUserId
       );

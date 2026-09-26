@@ -1,0 +1,15 @@
+{
+  "mx": {
+    "error": "ENODATA"
+  },
+  "spf": [
+    [
+      "google-site-verification=ZucZbBA_ZII_HSV1xHFCOeRGxhqz8Rd-g_GtvQfUfDg"
+    ]
+  ],
+  "dmarc": [
+    [
+      "v=DMARC1; p=none;"
+    ]
+  ]
+}

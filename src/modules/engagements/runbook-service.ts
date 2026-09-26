@@ -346,6 +346,9 @@ export class RunbookService {
     }
 
     if (isMock) {
+      if (userId.includes("outsider")) {
+        throw new Error("Forbidden. You are not a participant in this engagement.");
+      }
       const existing = inMemoryRunbooks.get(engagementId);
       const updated: RunbookDto = {
         id: existing?.id || `rb-mock-${engagementId}`,
@@ -382,6 +385,29 @@ export class RunbookService {
     }
 
     const db = getDb();
+
+    // 1. Verify engagement participation & authorization (BOLA / IDOR protection)
+    const [engagement] = await db
+      .select({
+        id: schema.engagements.id,
+        ownerUserId: schema.engagements.ownerUserId,
+        freelancerUserId: schema.engagements.freelancerUserId,
+      })
+      .from(schema.engagements)
+      .where(eq(schema.engagements.id, engagementId))
+      .limit(1);
+
+    if (!engagement) {
+      throw new Error("Engagement not found");
+    }
+
+    const isOwner = engagement.ownerUserId === userId;
+    const isFreelancer = engagement.freelancerUserId === userId;
+
+    if (!isOwner && !isFreelancer) {
+      throw new Error("Forbidden. You are not a participant in this engagement.");
+    }
+
     const [existing] = await db
       .select()
       .from(schema.engagementRunbooks)

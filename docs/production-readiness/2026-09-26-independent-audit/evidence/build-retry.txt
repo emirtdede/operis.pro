@@ -1,0 +1,213 @@
+▲ Next.js 16.3.3 (webpack)
+✓ Running next.config.ts took 46ms
+- Experiments (use with caution):
+  · optimizePackageImports
+
+  Creating an optimized production build ...
+⚠ Compiled with warnings in 19.3s
+
+../../../../Desktop/operis/node_modules/.pnpm/require-in-the-middle@8.0.1/node_modules/require-in-the-middle/index.js
+Critical dependency: require function is used in a way in which dependencies cannot be statically extracted
+
+Import trace for requested module:
+../../../../Desktop/operis/node_modules/.pnpm/require-in-the-middle@8.0.1/node_modules/require-in-the-middle/index.js
+../../../../Desktop/operis/node_modules/.pnpm/@opentelemetry+instrumentat_1ad6a0a9759fd13d0c7cf454d56add20/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+../../../../Desktop/operis/node_modules/.pnpm/@opentelemetry+instrumentat_1ad6a0a9759fd13d0c7cf454d56add20/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+../../../../Desktop/operis/node_modules/.pnpm/@opentelemetry+instrumentat_1ad6a0a9759fd13d0c7cf454d56add20/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+../../../../Desktop/operis/node_modules/.pnpm/@opentelemetry+instrumentat_1ad6a0a9759fd13d0c7cf454d56add20/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+../../../../Desktop/operis/node_modules/.pnpm/@sentry+node@10.74.0_@opent_0d99500e1ca14992d77aa72d8393c14c/node_modules/@sentry/node/build/cjs/integrations/tracing/express.js
+../../../../Desktop/operis/node_modules/.pnpm/@sentry+node@10.74.0_@opent_0d99500e1ca14992d77aa72d8393c14c/node_modules/@sentry/node/build/cjs/index.js
+../../../../Desktop/operis/node_modules/.pnpm/@sentry+nextjs@10.74.0_@ope_04cf68598773db4ea76c73389a35bf9a/node_modules/@sentry/nextjs/build/cjs/index.server.js
+
+  Running TypeScript ...
+  Finished TypeScript in 8.7s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/161) ...
+  Generating static pages using 11 workers (40/161) 
+  Generating static pages using 11 workers (80/161) 
+  Generating static pages using 11 workers (120/161) 
+✓ Generating static pages using 11 workers (161/161) in 4.5s
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ƒ /[locale]
+├ ƒ /[locale]/about
+├ ƒ /[locale]/brand
+├ ƒ /[locale]/categories
+├ ƒ /[locale]/category/[slug]
+├ ƒ /[locale]/contact
+├ ƒ /[locale]/dashboard
+├ ƒ /[locale]/dashboard/categories
+├ ƒ /[locale]/dashboard/listings
+├ ƒ /[locale]/dashboard/notifications
+├ ƒ /[locale]/dashboard/offers/received
+├ ƒ /[locale]/dashboard/offers/sent
+├ ƒ /[locale]/dashboard/saved
+├ ƒ /[locale]/dashboard/security
+├ ƒ /[locale]/dashboard/settings
+├ ƒ /[locale]/dashboard/work
+├ ƒ /[locale]/feed
+├ ƒ /[locale]/forgot-password
+├ ƒ /[locale]/help
+├ ƒ /[locale]/kategori/[slug]
+├ ƒ /[locale]/legal
+├ ƒ /[locale]/legal/[slug]
+├ ƒ /[locale]/listings
+├ ƒ /[locale]/listings/[slug]
+├ ƒ /[locale]/listings/[slug]/edit
+├ ƒ /[locale]/listings/new
+├ ƒ /[locale]/login
+├ ƒ /[locale]/register
+├ ƒ /[locale]/report
+├ ƒ /[locale]/reset-password
+├ ƒ /[locale]/settings
+├ ƒ /[locale]/sso-callback
+├ ƒ /[locale]/test-skeleton
+├ ƒ /[locale]/u/[handle]
+├ ƒ /[locale]/unauthorized
+├ ƒ /[locale]/work/[id]
+├ ƒ /admin
+├ ƒ /admin/engagements
+├ ƒ /admin/listings
+├ ƒ /admin/login
+├ ƒ /admin/logs
+├ ƒ /admin/messages
+├ ƒ /admin/moderation/abuse
+├ ƒ /admin/monitoring
+├ ƒ /admin/offers
+├ ƒ /admin/security/threats
+├ ƒ /admin/users
+├ ƒ /api/account/audit-logs
+├ ƒ /api/account/delete
+├ ƒ /api/account/export
+├ ƒ /api/account/password
+├ ƒ /api/account/phone/challenge
+├ ƒ /api/account/phone/request-change
+├ ƒ /api/account/phone/verify-change
+├ ƒ /api/admin/auth/session
+├ ƒ /api/admin/contact-messages
+├ ƒ /api/admin/contact-messages/[id]
+├ ƒ /api/admin/engagements/[id]/dispute-report
+├ ƒ /api/admin/engagements/[id]/resolve-dispute
+├ ƒ /api/admin/engagements/disputes
+├ ƒ /api/admin/listings/status
+├ ƒ /api/admin/users/status
+├ ƒ /api/ai/prd-architect
+├ ƒ /api/ai/proposal-pitch-doctor
+├ ƒ /api/auth/2fa
+├ ƒ /api/auth/change-password
+├ ƒ /api/auth/clerk-sync
+├ ƒ /api/auth/forgot-password
+├ ƒ /api/auth/login
+├ ƒ /api/auth/logout
+├ ƒ /api/auth/logout-other-sessions
+├ ƒ /api/auth/quick-login
+├ ƒ /api/auth/register
+├ ƒ /api/auth/resend-verification
+├ ƒ /api/auth/reset-password
+├ ƒ /api/auth/verify-email
+├ ƒ /api/auth/verify-phone
+├ ƒ /api/categories/alerts
+├ ƒ /api/categories/benchmark
+├ ƒ /api/categories/follow
+├ ƒ /api/categories/follow-all
+├ ƒ /api/categories/search
+├ ƒ /api/categories/unfollow-all
+├ ƒ /api/contact
+├ ƒ /api/cron/maintenance
+├ ƒ /api/finance/tax-calculate
+├ ƒ /api/health
+├ ƒ /api/inngest
+├ ƒ /api/listings/[id]/clone-data
+├ ƒ /api/listings/[id]/deactivate
+├ ƒ /api/listings/[id]/delete
+├ ƒ /api/listings/[id]/hiring-intent
+├ ƒ /api/listings/[id]/reactivate
+├ ƒ /api/listings/[id]/revisions
+├ ƒ /api/listings/[id]/track
+├ ƒ /api/listings/[id]/update
+├ ƒ /api/listings/feed
+├ ƒ /api/listings/publish
+├ ƒ /api/listings/saved
+├ ƒ /api/listings/saved/bulk
+├ ƒ /api/listings/search
+├ ƒ /api/newsletter/unsubscribe
+├ ƒ /api/notifications
+├ ƒ /api/notifications/stream
+├ ƒ /api/offers/[id]/accept
+├ ƒ /api/offers/[id]/counter
+├ ƒ /api/offers/[id]/counter/accept
+├ ƒ /api/offers/[id]/counter/reject
+├ ƒ /api/offers/[id]/counter/withdraw
+├ ƒ /api/offers/[id]/reject
+├ ƒ /api/offers/[id]/revisions
+├ ƒ /api/offers/[id]/squad
+├ ƒ /api/offers/[id]/update
+├ ƒ /api/offers/[id]/withdraw
+├ ƒ /api/offers/batch-submit
+├ ƒ /api/offers/sent/bulk-withdraw
+├ ƒ /api/offers/submit
+├ ƒ /api/offers/templates
+├ ƒ /api/profile
+├ ƒ /api/profile/check-handle
+├ ƒ /api/profile/company-verify
+├ ƒ /api/profile/links
+├ ƒ /api/profile/marketing-consent
+├ ƒ /api/profile/radar
+├ ƒ /api/reports
+├ ƒ /api/search/trending
+├ ƒ /api/upload/avatar
+├ ƒ /api/upload/avatar/presigned-url
+├ ƒ /api/users/[id]/block
+├ ƒ /api/users/[id]/reviews
+├ ƒ /api/users/[id]/unblock
+├ ƒ /api/users/me/pending-reviews
+├ ƒ /api/webhooks/clerk
+├ ƒ /api/webhooks/resend
+├ ƒ /api/work
+├ ƒ /api/work/[id]/cancel
+├ ƒ /api/work/[id]/change-requests
+├ ƒ /api/work/[id]/change-requests/[crId]/cancel
+├ ƒ /api/work/[id]/change-requests/[crId]/respond
+├ ƒ /api/work/[id]/complete
+├ ƒ /api/work/[id]/contract
+├ ƒ /api/work/[id]/contract/package
+├ ƒ /api/work/[id]/contract/pdf
+├ ƒ /api/work/[id]/contract/recommendations
+├ ƒ /api/work/[id]/contract/sign
+├ ƒ /api/work/[id]/contract/stream
+├ ƒ /api/work/[id]/dispute-report
+├ ƒ /api/work/[id]/dossier
+├ ƒ /api/work/[id]/endorse
+├ ƒ /api/work/[id]/handover
+├ ƒ /api/work/[id]/handover/export
+├ ƒ /api/work/[id]/handover/inspect
+├ ƒ /api/work/[id]/ip-deeds
+├ ƒ /api/work/[id]/milestones
+├ ƒ /api/work/[id]/milestones/[milestoneId]/deliverable
+├ ƒ /api/work/[id]/milestones/[milestoneId]/ip-deed
+├ ƒ /api/work/[id]/milestones/[milestoneId]/payment
+├ ƒ /api/work/[id]/ping
+├ ƒ /api/work/[id]/retainer
+├ ƒ /api/work/[id]/retainer/log
+├ ƒ /api/work/[id]/review
+├ ƒ /api/work/[id]/runbook
+├ ƒ /api/work/[id]/runbook/export
+├ ƒ /api/work/[id]/runbook/parse-env
+├ ○ /apple-icon.png
+├ ○ /icon.png
+├ ○ /icon.svg
+├ ○ /manifest.webmanifest
+├ ○ /robots.txt
+├ ○ /sitemap.xml
+└ ƒ /sso-callback
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

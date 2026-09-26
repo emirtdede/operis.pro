@@ -5,6 +5,12 @@
  */
 
 export function getBaseUrl(): string {
+  // In production, strictly enforce the canonical production domain.
+  // Never leak Vercel deployment preview URLs (*.vercel.app) into canonical tags or sitemaps.
+  if (process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production") {
+    const prodUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL;
+    return (prodUrl || "https://operis.pro").replace(/\/+$/, "");
+  }
   if (process.env.NEXT_PUBLIC_APP_URL) {
     return process.env.NEXT_PUBLIC_APP_URL.replace(/\/+$/, "");
   }
@@ -28,4 +34,21 @@ export function getAbsoluteUrl(path: string = ""): string {
   }
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
   return `${base}${cleanPath}`;
+}
+
+/**
+ * Constructs a strict, normalized canonical URL.
+ * Always resolves to the authoritative production domain (https://operis.pro)
+ * to prevent duplicate indexation across staging, preview, and dev environments.
+ */
+export function constructCanonicalUrl(pathname: string = ""): string {
+  const prodBase = (process.env.CANONICAL_BASE_URL || "https://operis.pro").replace(/\/+$/, "");
+  // Strip any query string or hash if passed accidentally
+  const firstPart = pathname.split("?")[0] ?? "";
+  const cleanPathname = (firstPart.split("#")[0] ?? "").trim();
+  if (!cleanPathname || cleanPathname === "/") {
+    return prodBase;
+  }
+  const normalized = cleanPathname.startsWith("/") ? cleanPathname : `/${cleanPathname}`;
+  return `${prodBase}${normalized.replace(/\/+$/, "")}`;
 }

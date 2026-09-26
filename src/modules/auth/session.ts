@@ -12,6 +12,7 @@ export interface SessionPayload {
   role: string;
   status: string;
   authVersion: number;
+  twoFactorVerified?: boolean;
   createdAt: number;
   expiresAt: number;
 }
@@ -29,6 +30,7 @@ export function createSessionToken(user: {
   role: string;
   status: string;
   authVersion?: number;
+  twoFactorVerified?: boolean;
 }): string {
   const env = getEnv();
   const now = Date.now();
@@ -48,6 +50,7 @@ export function createSessionToken(user: {
     role: user.role,
     status: user.status,
     authVersion: validVersion,
+    twoFactorVerified: Boolean(user.twoFactorVerified),
     createdAt: now,
     expiresAt,
   };
@@ -262,17 +265,29 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
       role: dbUser.role,
       status: dbUser.status,
       authVersion: dbUser.authVersion,
+      twoFactorVerified: session.twoFactorVerified ?? false,
     };
   } catch (dbErr) {
-    // RESILIENCE FALLBACK:
-    // If the database query temporarily fails (e.g. transient pool timeout, cold start latency, connection spike),
-    // DO NOT destroy the user's valid active session or redirect them to the login screen!
-    // The HMAC-SHA256 signature of the session token was ALREADY cryptographically verified above by verifySessionToken().
-    // As long as the session has not expired and token signature is authentic, preserve the session.
     console.warn(
-      "[Session Auth] Transient DB verification error, preserving cryptographically signed session:",
+      "[Session Auth] DB verification query failed:",
       dbErr instanceof Error ? dbErr.message : dbErr
     );
+
+    // SECURITY FAIL-CLOSED:
+    // 1. Privileged administrative roles MUST NEVER bypass live database verification!
+    // If the database is unreachable, administrative privileges must be refused immediately.
+    const isPrivilegedRole = ["ADMIN", "SECURITY_ADMIN", "MODERATOR"].includes(session.role);
+    if (isPrivilegedRole) {
+      console.error(
+        "[Session Auth] Refusing privileged administrative session during database verification failure."
+      );
+      return null;
+    }
+
+    // 2. In strict production runtime, fail-closed: do not trust unverified sessions if DB check fails.
+    if (process.env.NODE_ENV === "production" && !process.env.VITEST) {
+      return null;
+    }
 
     if (process.env.NODE_ENV !== "production" || process.env.VITEST) {
       try {

@@ -7,7 +7,7 @@ import { ProfileService } from "@/src/modules/profiles/service";
 import { UnifiedListingsHub } from "@/src/components/listings/unified-listings-hub";
 import { getSession } from "@/src/modules/auth/session";
 import { JsonLd } from "@/src/components/seo/json-ld";
-import { getBaseUrl } from "@/src/lib/config/url";
+import { getBaseUrl, constructCanonicalUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -16,6 +16,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isTr = locale === "tr";
+  const trUrl = constructCanonicalUrl("/tr/ilanlar");
+  const enUrl = constructCanonicalUrl("/en/listings");
 
   const title = isTr
     ? "Yazılım & Teknoloji İlanları — Canlı Akış"
@@ -28,16 +30,17 @@ export async function generateMetadata({
     title,
     description,
     alternates: {
-      canonical: isTr ? "/tr/ilanlar" : "/en/listings",
+      canonical: isTr ? trUrl : enUrl,
       languages: {
-        tr: "/tr/ilanlar",
-        en: "/en/listings",
+        tr: trUrl,
+        en: enUrl,
+        "x-default": trUrl,
       },
     },
     openGraph: {
       title,
       description,
-      url: isTr ? "/tr/ilanlar" : "/en/listings",
+      url: isTr ? trUrl : enUrl,
       siteName: "Operis",
       locale: isTr ? "tr_TR" : "en_US",
       type: "website",

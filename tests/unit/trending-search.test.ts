@@ -91,5 +91,25 @@ describe("Navbar & Trending Search Ecosystem Specifications", () => {
       expect(goIndex).toBeGreaterThanOrEqual(0);
       expect(rustIndex).toBeLessThan(goIndex); // Rust was searched more, so it should rank higher
     });
+
+    it("correctly extracts database rows from node-postgres QueryResult object", async () => {
+      const dbModule = await import("@/src/lib/db");
+      const { vi } = await import("vitest");
+
+      vi.spyOn(dbModule, "getDb").mockReturnValue({
+        execute: vi.fn().mockResolvedValue({
+          command: "SELECT",
+          rowCount: 1,
+          oid: null,
+          fields: [],
+          rows: [{ query: "PostgreSQL Advanced Architecture" }],
+        }),
+      } as unknown as ReturnType<typeof dbModule.getDb>);
+
+      const top = await TrendingSearchService.getTopTrending("tr");
+      expect(top).toContain("PostgreSQL Advanced Architecture");
+      expect(top.length).toBe(5);
+    });
   });
 });
+

@@ -1,0 +1,32 @@
+[
+  {
+    "case": "production_uuid_runbook_nonparticipant_update",
+    "success": true,
+    "resultingStatus": "DRAFT",
+    "resultingSummary": "Unrelated user update",
+    "queriedTables": [
+      [
+        "select",
+        {
+          "id": "id",
+          "engagementId": "engagementId"
+        }
+      ]
+    ],
+    "participantQueryExecuted": false
+  },
+  {
+    "case": "production_mock_prefix_shared_state",
+    "readerCanEdit": true,
+    "createdBy": "user-one"
+  },
+  {
+    "case": "invalid_template_written_before_validation",
+    "dbWriteCalled": true,
+    "persistedFields": {
+      "name": "x",
+      "message": "x"
+    },
+    "returnedError": "ZodError"
+  }
+]

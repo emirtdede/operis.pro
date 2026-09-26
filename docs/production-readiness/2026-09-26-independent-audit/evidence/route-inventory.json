@@ -1,0 +1,3064 @@
+[
+  {
+    "path": "src/app/api/account/audit-logs/route.ts",
+    "url": "/api/account/audit-logs",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/security/audit-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/account/delete/route.ts",
+    "url": "/api/account/delete",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/privacy/service",
+      "@/src/lib/security/rate-limit",
+      "@/src/lib/db",
+      "drizzle-orm",
+      "@/src/lib/crypto",
+      "@/src/modules/auth/totp",
+      "@/src/modules/auth/demo-user"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/account/export/route.ts",
+    "url": "/api/account/export",
+    "methods": [
+      "POST",
+      "GET",
+      "DELETE"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/lib/security/rate-limit",
+      "@/src/modules/privacy/export-jobs",
+      "@/src/modules/privacy/export-writer",
+      "@/src/modules/privacy/export-errors"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": false
+    }
+  },
+  {
+    "path": "src/app/api/account/password/route.ts",
+    "url": "/api/account/password",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "@/src/app/api/auth/change-password/route"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": false
+    }
+  },
+  {
+    "path": "src/app/api/account/phone/challenge/route.ts",
+    "url": "/api/account/phone/challenge",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/auth/verification"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": false
+    }
+  },
+  {
+    "path": "src/app/api/account/phone/request-change/route.ts",
+    "url": "/api/account/phone/request-change",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "drizzle-orm",
+      "@/src/modules/auth/session",
+      "@/src/lib/db",
+      "@/src/lib/crypto",
+      "@/src/modules/auth/verification",
+      "@/src/lib/sms",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": true,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/account/phone/verify-change/route.ts",
+    "url": "/api/account/phone/verify-change",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "drizzle-orm",
+      "@/src/modules/auth/session",
+      "@/src/lib/db",
+      "@/src/lib/crypto",
+      "@/src/modules/auth/verification",
+      "@/src/modules/security/audit-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": true,
+      "tx": false,
+      "rate": true,
+      "validation": true,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/admin/auth/session/route.ts",
+    "url": "/api/admin/auth/session",
+    "methods": [
+      "GET",
+      "POST",
+      "DELETE"
+    ],
+    "imports": [
+      "node:crypto",
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/lib/security/rate-limit",
+      "@/src/lib/db",
+      "drizzle-orm",
+      "@/src/modules/auth/totp"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": true,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/admin/contact-messages/[id]/route.ts",
+    "url": "/api/admin/contact-messages/[id]",
+    "methods": [
+      "PATCH"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "@/src/modules/admin/auth-guard",
+      "@/src/modules/admin/service"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": true,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/admin/contact-messages/route.ts",
+    "url": "/api/admin/contact-messages",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "@/src/modules/admin/auth-guard",
+      "@/src/modules/admin/service"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": true,
+      "network": false,
+      "rawError": false
+    }
+  },
+  {
+    "path": "src/app/api/admin/engagements/[id]/dispute-report/route.ts",
+    "url": "/api/admin/engagements/[id]/dispute-report",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/admin/auth-guard",
+      "@/src/modules/ai/dispute-arbiter",
+      "@/src/lib/db",
+      "@/db/schema",
+      "@/src/modules/engagements/delivery-inspector",
+      "drizzle-orm"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": true,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/admin/engagements/[id]/resolve-dispute/route.ts",
+    "url": "/api/admin/engagements/[id]/resolve-dispute",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "@/src/modules/admin/auth-guard",
+      "@/src/modules/admin/service"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": true,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/admin/engagements/disputes/route.ts",
+    "url": "/api/admin/engagements/disputes",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/admin/auth-guard",
+      "@/src/modules/admin/service"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/admin/listings/status/route.ts",
+    "url": "/api/admin/listings/status",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/admin/auth-guard",
+      "@/src/modules/admin/service",
+      "zod"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": true,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/admin/users/status/route.ts",
+    "url": "/api/admin/users/status",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/admin/auth-guard",
+      "@/src/modules/admin/service",
+      "zod",
+      "@/src/modules/privacy/service",
+      "@/src/lib/db",
+      "drizzle-orm"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": true,
+      "tx": false,
+      "rate": false,
+      "validation": true,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/ai/prd-architect/route.ts",
+    "url": "/api/ai/prd-architect",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/ai/prd-architect",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/ai/proposal-pitch-doctor/route.ts",
+    "url": "/api/ai/proposal-pitch-doctor",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/ai/pitch-doctor",
+      "@/src/lib/security/rate-limit",
+      "@/src/lib/db",
+      "drizzle-orm",
+      "@/src/modules/listings/service"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": true,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/auth/2fa/route.ts",
+    "url": "/api/auth/2fa",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "drizzle-orm",
+      "@/src/modules/auth/session",
+      "@/src/lib/db",
+      "@/src/modules/auth/totp",
+      "@/src/lib/security/rate-limit",
+      "@/src/modules/auth/demo-user",
+      "@/src/config/env",
+      "node:crypto",
+      "@/src/config/env",
+      "node:crypto",
+      "@/src/lib/crypto",
+      "@/src/lib/crypto"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": true,
+      "tx": false,
+      "rate": true,
+      "validation": true,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/auth/change-password/route.ts",
+    "url": "/api/auth/change-password",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "drizzle-orm",
+      "@/src/modules/auth/session",
+      "@/src/lib/db",
+      "@/src/lib/crypto",
+      "@/src/modules/auth/demo-user",
+      "@/src/lib/security/rate-limit",
+      "@/src/modules/security/audit-service"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": true,
+      "tx": false,
+      "rate": true,
+      "validation": true,
+      "network": false,
+      "rawError": false
+    }
+  },
+  {
+    "path": "src/app/api/auth/clerk-sync/route.ts",
+    "url": "/api/auth/clerk-sync",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "drizzle-orm",
+      "@/src/lib/db",
+      "@/src/modules/auth/clerk-sync-service",
+      "@/src/modules/auth/session",
+      "@/src/modules/security/audit-service",
+      "@clerk/nextjs/server"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/auth/forgot-password/route.ts",
+    "url": "/api/auth/forgot-password",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "drizzle-orm",
+      "@/src/lib/db",
+      "@/src/modules/auth/password-reset",
+      "@/src/lib/email",
+      "@/src/lib/crypto",
+      "@/src/lib/security/rate-limit",
+      "@/src/lib/security/turnstile"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": true,
+      "network": false,
+      "rawError": false
+    }
+  },
+  {
+    "path": "src/app/api/auth/login/route.ts",
+    "url": "/api/auth/login",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/service",
+      "@/src/modules/auth/session",
+      "@/src/lib/security/rate-limit",
+      "@/src/modules/security/audit-service",
+      "@/src/lib/security/turnstile"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/auth/logout-other-sessions/route.ts",
+    "url": "/api/auth/logout-other-sessions",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/security/audit-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/auth/logout/route.ts",
+    "url": "/api/auth/logout",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/auth/quick-login/route.ts",
+    "url": "/api/auth/quick-login",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "drizzle-orm",
+      "@/src/lib/db",
+      "@/src/modules/auth/demo-user",
+      "@/src/modules/auth/session"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/auth/register/route.ts",
+    "url": "/api/auth/register",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/service",
+      "@/src/modules/auth/session",
+      "@/src/lib/security/rate-limit",
+      "@/src/lib/security/turnstile",
+      "@/src/modules/email/resend-pool-service"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/auth/resend-verification/route.ts",
+    "url": "/api/auth/resend-verification",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "drizzle-orm",
+      "@/src/modules/auth/session",
+      "@/src/lib/db",
+      "@/src/modules/auth/verification",
+      "@/src/lib/crypto",
+      "@/src/lib/email",
+      "@/src/lib/sms",
+      "@/src/lib/security/rate-limit",
+      "@/src/modules/auth/demo-user"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": true,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/auth/reset-password/route.ts",
+    "url": "/api/auth/reset-password",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "drizzle-orm",
+      "@/src/lib/db",
+      "@/src/lib/crypto",
+      "@/src/modules/auth/password-reset",
+      "@/src/lib/security/rate-limit",
+      "@/src/modules/auth/demo-user",
+      "@/src/modules/security/audit-service",
+      "@/src/lib/security/turnstile"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": true,
+      "tx": false,
+      "rate": true,
+      "validation": true,
+      "network": false,
+      "rawError": false
+    }
+  },
+  {
+    "path": "src/app/api/auth/verify-email/route.ts",
+    "url": "/api/auth/verify-email",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "drizzle-orm",
+      "@/src/lib/db",
+      "@/src/modules/auth/verification",
+      "@/src/modules/auth/session",
+      "@/src/modules/security/audit-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": true,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/auth/verify-phone/route.ts",
+    "url": "/api/auth/verify-phone",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "drizzle-orm",
+      "@/src/modules/auth/session",
+      "@/src/lib/db",
+      "@/src/modules/auth/verification",
+      "@/src/lib/security/rate-limit",
+      "@/src/modules/auth/demo-user",
+      "@/src/modules/security/audit-service"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": true,
+      "tx": false,
+      "rate": true,
+      "validation": true,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/categories/alerts/route.ts",
+    "url": "/api/categories/alerts",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "@/src/modules/auth/session",
+      "@/src/modules/categories/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": true,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/categories/benchmark/route.ts",
+    "url": "/api/categories/benchmark",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/categories/benchmark-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/categories/follow-all/route.ts",
+    "url": "/api/categories/follow-all",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/categories/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/categories/follow/route.ts",
+    "url": "/api/categories/follow",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "@/src/modules/auth/session",
+      "@/src/modules/categories/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": true,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/categories/search/route.ts",
+    "url": "/api/categories/search",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "@/src/lib/search/engine",
+      "@/src/lib/search/telemetry",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": true,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/categories/unfollow-all/route.ts",
+    "url": "/api/categories/unfollow-all",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/categories/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/contact/route.ts",
+    "url": "/api/contact",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "@/src/lib/email",
+      "@/src/lib/db",
+      "@/src/lib/security/content-moderator",
+      "@/src/lib/security/rate-limit",
+      "@/src/lib/security/turnstile"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": true,
+      "tx": false,
+      "rate": true,
+      "validation": true,
+      "network": false,
+      "rawError": false
+    }
+  },
+  {
+    "path": "src/app/api/cron/maintenance/route.ts",
+    "url": "/api/cron/maintenance",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "node:crypto",
+      "@/src/modules/listings/service",
+      "@/src/modules/notifications/service",
+      "@/src/modules/auth/session",
+      "@/src/modules/auth/verification",
+      "@/src/lib/security/rate-limit",
+      "@/src/modules/offers/service",
+      "@/src/modules/privacy/service",
+      "@/src/modules/reviews/service"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/finance/tax-calculate/route.ts",
+    "url": "/api/finance/tax-calculate",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/finance/tax-calculator",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/health/route.ts",
+    "url": "/api/health",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/lib/db",
+      "@/src/lib/security/upstash"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/inngest/route.ts",
+    "url": "/api/inngest",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT"
+    ],
+    "imports": [
+      "inngest/next",
+      "@/src/lib/inngest/client",
+      "@/src/lib/inngest/functions"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": false
+    }
+  },
+  {
+    "path": "src/app/api/listings/[id]/clone-data/route.ts",
+    "url": "/api/listings/[id]/clone-data",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/listings/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/listings/[id]/deactivate/route.ts",
+    "url": "/api/listings/[id]/deactivate",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/listings/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/listings/[id]/delete/route.ts",
+    "url": "/api/listings/[id]/delete",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/listings/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/listings/[id]/hiring-intent/route.ts",
+    "url": "/api/listings/[id]/hiring-intent",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/listings/hiring-intent/hiring-intent-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/listings/[id]/reactivate/route.ts",
+    "url": "/api/listings/[id]/reactivate",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/listings/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/listings/[id]/revisions/route.ts",
+    "url": "/api/listings/[id]/revisions",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/listings/service"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/listings/[id]/track/route.ts",
+    "url": "/api/listings/[id]/track",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/listings/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": false
+    }
+  },
+  {
+    "path": "src/app/api/listings/[id]/update/route.ts",
+    "url": "/api/listings/[id]/update",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "@/src/modules/auth/session",
+      "@/src/modules/listings/service",
+      "@/src/modules/listings/wizard/schema",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": true,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/listings/feed/route.ts",
+    "url": "/api/listings/feed",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/listings/feed/service",
+      "@/src/modules/auth/session"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/listings/publish/route.ts",
+    "url": "/api/listings/publish",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/listings/service",
+      "@/src/modules/reviews/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/listings/saved/bulk/route.ts",
+    "url": "/api/listings/saved/bulk",
+    "methods": [
+      "DELETE"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/listings/saved-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/listings/saved/route.ts",
+    "url": "/api/listings/saved",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/listings/saved-service"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/listings/search/route.ts",
+    "url": "/api/listings/search",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/listings/service",
+      "@/src/modules/auth/session",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/newsletter/unsubscribe/route.ts",
+    "url": "/api/newsletter/unsubscribe",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/email/resend-pool-service"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/notifications/route.ts",
+    "url": "/api/notifications",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "drizzle-orm",
+      "@/src/modules/auth/session",
+      "@/src/lib/db",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": true,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/notifications/stream/route.ts",
+    "url": "/api/notifications/stream",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "drizzle-orm",
+      "@/src/modules/auth/session",
+      "@/src/lib/db",
+      "@/src/modules/notifications/pubsub"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": true,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/offers/[id]/accept/route.ts",
+    "url": "/api/offers/[id]/accept",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/offers/[id]/counter/accept/route.ts",
+    "url": "/api/offers/[id]/counter/accept",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/offers/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/offers/[id]/counter/reject/route.ts",
+    "url": "/api/offers/[id]/counter/reject",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/offers/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/offers/[id]/counter/route.ts",
+    "url": "/api/offers/[id]/counter",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/offers/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/offers/[id]/counter/withdraw/route.ts",
+    "url": "/api/offers/[id]/counter/withdraw",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/offers/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/offers/[id]/reject/route.ts",
+    "url": "/api/offers/[id]/reject",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/offers/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/offers/[id]/revisions/route.ts",
+    "url": "/api/offers/[id]/revisions",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/offers/service"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/offers/[id]/squad/route.ts",
+    "url": "/api/offers/[id]/squad",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/offers/service",
+      "@/src/modules/offers/squad-engine",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/offers/[id]/update/route.ts",
+    "url": "/api/offers/[id]/update",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/offers/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/offers/[id]/withdraw/route.ts",
+    "url": "/api/offers/[id]/withdraw",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/offers/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/offers/batch-submit/route.ts",
+    "url": "/api/offers/batch-submit",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/offers/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/offers/sent/bulk-withdraw/route.ts",
+    "url": "/api/offers/sent/bulk-withdraw",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/offers/service",
+      "@/src/lib/security/rate-limit",
+      "@/src/lib/async/concurrency"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/offers/submit/route.ts",
+    "url": "/api/offers/submit",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "@/src/modules/auth/session",
+      "@/src/modules/offers/service",
+      "@/src/modules/reviews/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/offers/templates/route.ts",
+    "url": "/api/offers/templates",
+    "methods": [
+      "GET",
+      "POST",
+      "DELETE"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "@/src/modules/auth/session",
+      "@/src/modules/offers/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/profile/check-handle/route.ts",
+    "url": "/api/profile/check-handle",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/auth/validation",
+      "@/src/lib/db",
+      "drizzle-orm"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": false
+    }
+  },
+  {
+    "path": "src/app/api/profile/company-verify/route.ts",
+    "url": "/api/profile/company-verify",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/profiles/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/profile/links/route.ts",
+    "url": "/api/profile/links",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "@/src/modules/auth/session",
+      "@/src/modules/profiles/service",
+      "@/src/lib/security/rate-limit",
+      "@/src/modules/security/audit-service",
+      "next/cache"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/profile/marketing-consent/route.ts",
+    "url": "/api/profile/marketing-consent",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/email/resend-pool-service",
+      "@/src/lib/db",
+      "drizzle-orm"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/profile/radar/route.ts",
+    "url": "/api/profile/radar",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/profiles/service",
+      "@/src/lib/security/content-moderator",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/profile/route.ts",
+    "url": "/api/profile",
+    "methods": [
+      "GET",
+      "PATCH"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/profiles/service",
+      "@/src/lib/security/rate-limit",
+      "@/src/modules/security/audit-service",
+      "next/cache"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/reports/route.ts",
+    "url": "/api/reports",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "zod",
+      "drizzle-orm",
+      "@/src/modules/auth/session",
+      "@/src/lib/db",
+      "@/src/lib/security/rate-limit",
+      "@/src/lib/security/content-moderator",
+      "@/src/modules/moderation/service",
+      "@/src/lib/crypto"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": true,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/search/trending/route.ts",
+    "url": "/api/search/trending",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/lib/search/trending-service",
+      "@/src/lib/search/trending-constants"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": false
+    }
+  },
+  {
+    "path": "src/app/api/upload/avatar/presigned-url/route.ts",
+    "url": "/api/upload/avatar/presigned-url",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/storage/r2-client",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/upload/avatar/route.ts",
+    "url": "/api/upload/avatar",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/storage/r2-client",
+      "@/src/modules/profiles/service",
+      "@/src/lib/security/rate-limit",
+      "sharp"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/users/[id]/block/route.ts",
+    "url": "/api/users/[id]/block",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/moderation/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/users/[id]/reviews/route.ts",
+    "url": "/api/users/[id]/reviews",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/reviews/service",
+      "@/src/modules/profiles/service"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/users/[id]/unblock/route.ts",
+    "url": "/api/users/[id]/unblock",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/moderation/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/users/me/pending-reviews/route.ts",
+    "url": "/api/users/me/pending-reviews",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/reviews/service"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/webhooks/clerk/route.ts",
+    "url": "/api/webhooks/clerk",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "svix",
+      "next/headers",
+      "next/server",
+      "@/src/modules/auth/clerk-sync-service",
+      "@/src/modules/security/audit-service",
+      "@/src/config/env"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/webhooks/resend/route.ts",
+    "url": "/api/webhooks/resend",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "node:crypto",
+      "@/src/modules/email/resend-pool-service"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": true,
+      "tx": false,
+      "rate": false,
+      "validation": true,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/cancel/route.ts",
+    "url": "/api/work/[id]/cancel",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/service",
+      "@/src/lib/security/rate-limit",
+      "zod"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": true,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/change-requests/[crId]/cancel/route.ts",
+    "url": "/api/work/[id]/change-requests/[crId]/cancel",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/change-request-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/change-requests/[crId]/respond/route.ts",
+    "url": "/api/work/[id]/change-requests/[crId]/respond",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/change-request-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/change-requests/route.ts",
+    "url": "/api/work/[id]/change-requests",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/change-request-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/complete/route.ts",
+    "url": "/api/work/[id]/complete",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/contract/package/route.ts",
+    "url": "/api/work/[id]/contract/package",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/contracts/contract-signing-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/contract/pdf/route.ts",
+    "url": "/api/work/[id]/contract/pdf",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "../route"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": false,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/contract/recommendations/route.ts",
+    "url": "/api/work/[id]/contract/recommendations",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/contracts/contract-signing-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/contract/route.ts",
+    "url": "/api/work/[id]/contract",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/service",
+      "@/src/modules/offers/service",
+      "@/src/modules/contracts/generator",
+      "@/src/lib/security/rate-limit",
+      "@/src/lib/db",
+      "drizzle-orm",
+      "@/src/modules/auth/demo-user",
+      "@/src/modules/contracts/types",
+      "@/src/modules/contracts/dpa-types",
+      "@/src/modules/contracts/safe-harbor-types",
+      "@/src/modules/contracts/ai-governance-types",
+      "@/src/modules/finance/software-export-types",
+      "@/src/lib/pdf/vector-pdf-engine"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/contract/sign/route.ts",
+    "url": "/api/work/[id]/contract/sign",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/contracts/contract-signing-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/contract/stream/route.ts",
+    "url": "/api/work/[id]/contract/stream",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/service",
+      "@/src/modules/contracts/contract-signing-service",
+      "@/src/modules/notifications/pubsub"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/dispute-report/route.ts",
+    "url": "/api/work/[id]/dispute-report",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/ai/dispute-arbiter",
+      "@/src/lib/db",
+      "@/db/schema",
+      "@/src/modules/engagements/delivery-inspector",
+      "drizzle-orm"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": true,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/dossier/route.ts",
+    "url": "/api/work/[id]/dossier",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/contracts/dossier-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/endorse/route.ts",
+    "url": "/api/work/[id]/endorse",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/endorsements/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/handover/export/route.ts",
+    "url": "/api/work/[id]/handover/export",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/handover-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/handover/inspect/route.ts",
+    "url": "/api/work/[id]/handover/inspect",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/service",
+      "@/src/modules/engagements/delivery-inspector",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/handover/route.ts",
+    "url": "/api/work/[id]/handover",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/handover-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/ip-deeds/route.ts",
+    "url": "/api/work/[id]/ip-deeds",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/milestone-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/milestones/[milestoneId]/deliverable/route.ts",
+    "url": "/api/work/[id]/milestones/[milestoneId]/deliverable",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/milestone-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/milestones/[milestoneId]/ip-deed/route.ts",
+    "url": "/api/work/[id]/milestones/[milestoneId]/ip-deed",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/milestone-service",
+      "@/src/modules/engagements/ip-assignment/ip-assignment-engine",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/milestones/[milestoneId]/payment/route.ts",
+    "url": "/api/work/[id]/milestones/[milestoneId]/payment",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/milestone-service",
+      "@/src/modules/engagements/payment-handshake/payment-handshake-engine",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/milestones/route.ts",
+    "url": "/api/work/[id]/milestones",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/milestone-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/ping/route.ts",
+    "url": "/api/work/[id]/ping",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/service",
+      "@/src/modules/notifications/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": true,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/retainer/log/route.ts",
+    "url": "/api/work/[id]/retainer/log",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/retainer-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/retainer/route.ts",
+    "url": "/api/work/[id]/retainer",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/retainer-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/review/route.ts",
+    "url": "/api/work/[id]/review",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/reviews/service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/runbook/export/route.ts",
+    "url": "/api/work/[id]/runbook/export",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/runbook-service",
+      "@/src/modules/contracts/runbook-generator",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/runbook/parse-env/route.ts",
+    "url": "/api/work/[id]/runbook/parse-env",
+    "methods": [
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/runbook-synthesizer",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/[id]/runbook/route.ts",
+    "url": "/api/work/[id]/runbook",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/runbook-service",
+      "@/src/lib/security/rate-limit"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": true,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  },
+  {
+    "path": "src/app/api/work/route.ts",
+    "url": "/api/work",
+    "methods": [
+      "GET"
+    ],
+    "imports": [
+      "next/server",
+      "@/src/modules/auth/session",
+      "@/src/modules/engagements/service"
+    ],
+    "flags": {
+      "client": false,
+      "serverAction": false,
+      "memory": false,
+      "auth": true,
+      "mutation": false,
+      "tx": false,
+      "rate": false,
+      "validation": false,
+      "network": false,
+      "rawError": true
+    }
+  }
+]

@@ -203,6 +203,18 @@ export class ListingCrudService {
         })
         .catch(() => {});
 
+      // Instant search engine indexing notification via IndexNow (Bing / Yandex)
+      import("@/src/lib/seo/indexnow")
+        .then(({ notifyIndexNow }) => {
+          import("@/src/lib/config/url").then(({ getAbsoluteUrl }) => {
+            notifyIndexNow([
+              getAbsoluteUrl(`/tr/ilanlar/${txResult.newListing.slug}`),
+              getAbsoluteUrl(`/en/listings/${txResult.newListing.slug}`),
+            ]).catch(() => {});
+          });
+        })
+        .catch(() => {});
+
       // Dispatch directly in test/Vitest environments to satisfy unit assertions
       if (process.env.VITEST !== undefined || process.env.NODE_ENV === "test") {
         try {

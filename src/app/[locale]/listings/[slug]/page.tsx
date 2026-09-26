@@ -6,12 +6,12 @@ import {
   Clock,
   Calendar,
   Layers,
-  ArrowLeft,
   Lock,
   CheckCircle2,
   ShieldCheck,
   ArrowRight,
   Lightbulb,
+  AlertTriangle,
 } from "lucide-react";
 import { FeedService } from "@/src/modules/listings/feed/service";
 import { ListingService } from "@/src/modules/listings/service";
@@ -25,11 +25,10 @@ import { HiringIntentService } from "@/src/modules/listings/hiring-intent/hiring
 import {
   getLocalizedListingPath,
   getLocalizedProfilePath,
-  getLocalizedRoute,
 } from "@/src/lib/i18n/routes";
 import { JsonLd } from "@/src/components/seo/json-ld";
 import { formatBudgetRange } from "@/src/lib/format/budget";
-import { getBaseUrl } from "@/src/lib/config/url";
+import { getBaseUrl, constructCanonicalUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -52,12 +51,33 @@ export async function generateMetadata({
   const isCurrentlyActive =
     listing.status === "ACTIVE" && until !== null && until.getTime() > now.getTime();
 
+  const trPath = getLocalizedListingPath(slug, "tr");
+  const enPath = getLocalizedListingPath(slug, "en");
+  const currentPath = getLocalizedListingPath(slug, locale);
+
+  // Expired listing lifecycle SEO: Gracefully de-index while preserving internal link equity
   if (!isCurrentlyActive) {
+    const expiredTitle = isTr
+      ? `${listing.title} (Süresi Doldu) — Operis`
+      : `${listing.title} (Expired) — Operis`;
+    const expiredDesc = isTr
+      ? `Bu ilanın başvuru süresi dolmuştur. Operis üzerindeki benzer aktif freelance ve yazılım ilanlarını inceleyebilirsiniz.`
+      : `This freelance listing has expired. Explore similar active projects and jobs on Operis.`;
+
     return {
-      title: isTr ? "İlan Bulunamadı" : "Listing Not Found",
+      title: expiredTitle,
+      description: expiredDesc,
+      alternates: {
+        canonical: constructCanonicalUrl(currentPath),
+        languages: {
+          tr: constructCanonicalUrl(trPath),
+          en: constructCanonicalUrl(enPath),
+          "x-default": constructCanonicalUrl(trPath),
+        },
+      },
       robots: {
-        index: false,
-        follow: false,
+        index: false, // Prevents index bloat and search crawler penalty
+        follow: true, // Allows search engines to discover active category and related jobs
       },
     };
   }
@@ -69,16 +89,17 @@ export async function generateMetadata({
     title,
     description,
     alternates: {
-      canonical: getLocalizedListingPath(slug, locale),
+      canonical: constructCanonicalUrl(currentPath),
       languages: {
-        tr: getLocalizedListingPath(slug, "tr"),
-        en: getLocalizedListingPath(slug, "en"),
+        tr: constructCanonicalUrl(trPath),
+        en: constructCanonicalUrl(enPath),
+        "x-default": constructCanonicalUrl(trPath),
       },
     },
     openGraph: {
       title,
       description,
-      url: getLocalizedListingPath(slug, locale),
+      url: constructCanonicalUrl(currentPath),
       siteName: "Operis",
       locale: isTr ? "tr_TR" : "en_US",
       type: "article",
@@ -91,7 +112,7 @@ export async function generateMetadata({
       description,
     },
     robots: {
-      index: listing.status === "ACTIVE",
+      index: true,
       follow: true,
     },
   };
@@ -142,8 +163,8 @@ export default async function ListingDetailPage({
   const isCurrentlyActive =
     listing.status === "ACTIVE" && until !== null && until.getTime() > now.getTime();
 
-  // Deleted listings must never be rendered; non-owners cannot view non-active or expired listings
-  if (listing.status === "DELETED" || (!isOwner && !isCurrentlyActive)) {
+  // Deleted listings must never be rendered; only permanently removed listings return 404
+  if (listing.status === "DELETED") {
     notFound();
   }
 
@@ -151,6 +172,17 @@ export default async function ListingDetailPage({
   if (isCurrentlyActive && !isOwner) {
     ListingService.incrementListingViews(listing.id).catch(() => {});
   }
+
+  // Fetch similar active listings for expired listings to retain users and pass internal link equity
+  const similarActiveListings = !isCurrentlyActive
+    ? await FeedService.getFeedListings({
+        categorySlugs: [category.key],
+        locale: isTr ? "tr" : "en",
+        limit: 4,
+      })
+        .then((r) => r.items.filter((item) => item.slug !== slug))
+        .catch(() => [])
+    : [];
 
   const diffDays = until
     ? Math.max(0, Math.ceil((until.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)))
@@ -185,62 +217,83 @@ export default async function ListingDetailPage({
 
   const baseUrl = getBaseUrl();
   const localizedProfilePath = getLocalizedProfilePath(ownerProfile.handle, locale);
-  const localizedListingUrl = `${baseUrl}${getLocalizedListingPath(slug, locale)}`;
+  const localizedListingUrl = constructCanonicalUrl(getLocalizedListingPath(slug, locale));
+  const categoryCanonicalUrl = constructCanonicalUrl(
+    isTr ? `/tr/kategori/${category.key}` : `/en/category/${category.key}`
+  );
+  const categoriesListUrl = constructCanonicalUrl(isTr ? "/tr/kategoriler" : "/en/categories");
+
+  const jsonLdGraph: Record<string, unknown>[] = [];
+
+  // 1. JobPosting Structured Data: strictly rendered ONLY for active listings
+  if (isCurrentlyActive) {
+    jsonLdGraph.push({
+      "@type": "JobPosting",
+      title: listing.title,
+      description: listing.scope || listing.summary,
+      datePosted:
+        listing.firstPublishedAt?.toISOString() || new Date(listing.createdAt).toISOString(),
+      validThrough: listing.activeUntil?.toISOString(),
+      employmentType: "CONTRACTOR",
+      hiringOrganization: {
+        "@type": "Organization",
+        name: ownerProfile.displayName,
+        sameAs: `${baseUrl}${localizedProfilePath}`,
+      },
+      jobLocationType: "TELECOMMUTE",
+      applicantLocationRequirements: {
+        "@type": "Country",
+        name: "TR",
+      },
+      baseSalary: listing.budgetMin
+        ? {
+            "@type": "MonetaryAmount",
+            currency: listing.budgetCurrency || "TRY",
+            value: {
+              "@type": "QuantitativeValue",
+              minValue: parseFloat(listing.budgetMin),
+              maxValue: listing.budgetMax ? parseFloat(listing.budgetMax) : undefined,
+              unitText: "PROJECT",
+            },
+          }
+        : undefined,
+    });
+  }
+
+  // 2. Hierarchical BreadcrumbList (Home > Categories > Category > Listing)
+  jsonLdGraph.push({
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: isTr ? "Ana Sayfa" : "Home",
+        item: `${baseUrl}/${locale}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: isTr ? "Kategoriler" : "Categories",
+        item: categoriesListUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: categoryDisplayName,
+        item: categoryCanonicalUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 4,
+        name: listing.title,
+        item: localizedListingUrl,
+      },
+    ],
+  });
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "JobPosting",
-        title: listing.title,
-        description: listing.scope || listing.summary,
-        datePosted:
-          listing.firstPublishedAt?.toISOString() || new Date(listing.createdAt).toISOString(),
-        validThrough: listing.activeUntil?.toISOString(),
-        employmentType: "CONTRACTOR",
-        hiringOrganization: {
-          "@type": "Organization",
-          name: ownerProfile.displayName,
-          sameAs: `${baseUrl}${localizedProfilePath}`,
-        },
-        jobLocationType: "TELECOMMUTE",
-        baseSalary: listing.budgetMin
-          ? {
-              "@type": "MonetaryAmount",
-              currency: listing.budgetCurrency || "TRY",
-              value: {
-                "@type": "QuantitativeValue",
-                minValue: parseFloat(listing.budgetMin),
-                maxValue: listing.budgetMax ? parseFloat(listing.budgetMax) : undefined,
-                unitText: "PROJECT",
-              },
-            }
-          : undefined,
-      },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          {
-            "@type": "ListItem",
-            position: 1,
-            name: isTr ? "Ana Sayfa" : "Home",
-            item: `${baseUrl}/${locale}`,
-          },
-          {
-            "@type": "ListItem",
-            position: 2,
-            name: isTr ? "İlanlar" : "Listings",
-            item: `${baseUrl}${getLocalizedRoute("listings", locale)}`,
-          },
-          {
-            "@type": "ListItem",
-            position: 3,
-            name: listing.title,
-            item: localizedListingUrl,
-          },
-        ],
-      },
-    ],
+    "@graph": jsonLdGraph,
   };
 
   return (
@@ -248,20 +301,52 @@ export default async function ListingDetailPage({
       {/* Schema.org Structured Data */}
       <JsonLd data={jsonLd} />
 
-      {/* Navigation Breadcrumb */}
+      {/* Expired Listing Notice Banner */}
+      {!isCurrentlyActive && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 flex items-start gap-3.5 shadow-sm">
+          <AlertTriangle className="h-5 w-5 shrink-0 text-amber-400 mt-0.5" />
+          <div className="space-y-1">
+            <h2 className="font-bold text-sm text-amber-300">
+              {isTr ? "Bu İlanın Başvuru Süresi Dolmuştur" : "This Listing Has Expired"}
+            </h2>
+            <p className="text-xs text-amber-200/80 leading-relaxed">
+              {isTr
+                ? "Bu proje için artık teklif kabul edilmemektedir. İlan kapsamını inceleyebilir veya aşağıdaki aynı kategorideki benzer aktif projelere teklif verebilirsiniz."
+                : "This listing is no longer accepting proposals. You may review the details or explore similar active projects below."}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Semantic Hierarchical Navigation Breadcrumb */}
       <nav
         aria-label="Breadcrumb"
-        className="flex items-center gap-2 text-xs text-[var(--color-text-tertiary)]"
+        className="flex items-center flex-wrap gap-2 text-xs text-[var(--color-text-tertiary)]"
       >
         <Link
-          href={getLocalizedRoute("listings", locale)}
-          className="inline-flex items-center gap-1 hover:text-[var(--color-text-primary)] transition-colors"
+          href={`/${locale}`}
+          className="hover:text-[var(--color-text-primary)] transition-colors"
         >
-          <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>{isTr ? "Tüm İlanlara Dön" : "Back to Listings"}</span>
+          {isTr ? "Ana Sayfa" : "Home"}
         </Link>
         <span aria-hidden="true">/</span>
-        <span className="text-[var(--color-text-secondary)] font-medium">{categoryDisplayName}</span>
+        <Link
+          href={isTr ? "/tr/kategoriler" : "/en/categories"}
+          className="hover:text-[var(--color-text-primary)] transition-colors"
+        >
+          {isTr ? "Kategoriler" : "Categories"}
+        </Link>
+        <span aria-hidden="true">/</span>
+        <Link
+          href={isTr ? `/tr/kategori/${category.key}` : `/en/category/${category.key}`}
+          className="hover:text-[var(--color-text-primary)] transition-colors font-medium text-[var(--color-text-secondary)]"
+        >
+          {categoryDisplayName}
+        </Link>
+        <span aria-hidden="true">/</span>
+        <span className="text-[var(--color-text-primary)] font-medium truncate max-w-[200px] sm:max-w-md">
+          {listing.title}
+        </span>
       </nav>
 
       {/* Mobile Quick Overview & Action Strip (< 1024px) */}
@@ -636,6 +721,58 @@ export default async function ListingDetailPage({
           </article>
         </div>
       </div>
+
+      {/* Similar Active Listings (Rendered for expired listings to retain users and provide crawlable internal link paths) */}
+      {!isCurrentlyActive && similarActiveListings.length > 0 && (
+        <section
+          aria-label={isTr ? "Benzer Aktif İlanlar" : "Similar Active Listings"}
+          className="pt-8 border-t border-[var(--color-border-subtle)] space-y-4"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg sm:text-xl font-bold text-[var(--color-text-primary)]">
+                {isTr
+                  ? `${categoryDisplayName} Alanındaki Aktif Projeler`
+                  : `Active Projects in ${categoryDisplayName}`}
+              </h2>
+              <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
+                {isTr
+                  ? "Süresi dolan bu proje yerine aşağıdaki güncel ilanlara hemen teklif verebilirsiniz."
+                  : "Explore these active listings accepting proposals right now."}
+              </p>
+            </div>
+            <Link
+              href={isTr ? `/tr/kategori/${category.key}` : `/en/category/${category.key}`}
+              className="text-xs text-blue-500 hover:text-blue-400 font-semibold transition-colors"
+            >
+              {isTr ? "Tümünü Gör →" : "View All →"}
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {similarActiveListings.map((item) => (
+              <Link
+                key={item.id}
+                href={isTr ? `/tr/ilanlar/${item.slug}` : `/en/listings/${item.slug}`}
+                className="p-4 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 hover:bg-[var(--color-surface-hover)] hover:border-blue-500/30 transition-all space-y-2.5 block group shadow-sm"
+              >
+                <h3 className="font-bold text-sm text-[var(--color-text-primary)] group-hover:text-blue-400 transition-colors line-clamp-1">
+                  {item.title}
+                </h3>
+                <p className="text-xs text-[var(--color-text-secondary)] line-clamp-2 leading-relaxed">
+                  {item.summary}
+                </p>
+                <div className="flex items-center justify-between text-[11px] pt-1 border-t border-[var(--color-border-subtle)]/60 text-[var(--color-text-tertiary)]">
+                  <span className="truncate max-w-[140px]">{item.categoryName || categoryDisplayName}</span>
+                  <span className="font-mono text-emerald-400 font-semibold">
+                    {formatBudgetRange(item.budgetMin, item.budgetMax, item.budgetCurrency, isTr)}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }

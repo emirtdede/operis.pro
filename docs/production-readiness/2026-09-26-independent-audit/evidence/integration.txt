@@ -1,0 +1,39 @@
+
+ RUN  v3.2.7 C:/Users/DEDE-/Desktop/operis
+
+
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 15 ⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/budget-constraint-migration.test.ts [ tests/integration/budget-constraint-migration.test.ts ]
+ FAIL  tests/integration/export-jobs.test.ts [ tests/integration/export-jobs.test.ts ]
+ FAIL  tests/integration/export-lifecycle.test.ts [ tests/integration/export-lifecycle.test.ts ]
+ FAIL  tests/integration/export-memory-streaming.test.ts [ tests/integration/export-memory-streaming.test.ts ]
+ FAIL  tests/integration/export-races-and-abort.test.ts [ tests/integration/export-races-and-abort.test.ts ]
+ FAIL  tests/integration/export-stream.test.ts [ tests/integration/export-stream.test.ts ]
+ FAIL  tests/integration/export-v16-audit.test.ts [ tests/integration/export-v16-audit.test.ts ]
+ FAIL  tests/integration/export-v18-audit.test.ts [ tests/integration/export-v18-audit.test.ts ]
+ FAIL  tests/integration/listings-budget-comprehensive.test.ts [ tests/integration/listings-budget-comprehensive.test.ts ]
+ FAIL  tests/integration/notification-delivery.test.ts [ tests/integration/notification-delivery.test.ts ]
+ FAIL  tests/integration/otp-attempt-commit.test.ts [ tests/integration/otp-attempt-commit.test.ts ]
+ FAIL  tests/integration/pii-backfill.test.ts [ tests/integration/pii-backfill.test.ts ]
+ FAIL  tests/integration/pii-rotation.test.ts [ tests/integration/pii-rotation.test.ts ]
+ FAIL  tests/integration/reconcile-and-fanout.test.ts [ tests/integration/reconcile-and-fanout.test.ts ]
+ FAIL  tests/integration/security-gateway.test.ts [ tests/integration/security-gateway.test.ts ]
+Error: TEST_DB_NOT_ALLOWED: TEST_DATABASE_URL environment variable is not set. Integration tests cannot run.
+ ❯ tests/setup/integration.ts:6:15
+      4| 
+      5| if (!testDbUrl) {
+      6|   const err = new Error(
+       |               ^
+      7|     "TEST_DB_NOT_ALLOWED: TEST_DATABASE_URL environment variable is no…
+      8|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/15]⎯
+
+
+ Test Files  15 failed (15)
+      Tests  no tests
+   Start at  05:35:20
+   Duration  1.97s (transform 46ms, setup 0ms, collect 0ms, tests 0ms, environment 4ms, prepare 8.44s)
+

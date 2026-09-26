@@ -1,0 +1,28 @@
+▲ Next.js 16.3.3 (webpack)
+✓ Running next.config.ts took 53ms
+- Experiments (use with caution):
+  · optimizePackageImports
+
+  Creating an optimized production build ...
+⚠ Compiled with warnings in 54s
+
+../../../../Desktop/operis/node_modules/.pnpm/require-in-the-middle@8.0.1/node_modules/require-in-the-middle/index.js
+Critical dependency: require function is used in a way in which dependencies cannot be statically extracted
+
+Import trace for requested module:
+../../../../Desktop/operis/node_modules/.pnpm/require-in-the-middle@8.0.1/node_modules/require-in-the-middle/index.js
+../../../../Desktop/operis/node_modules/.pnpm/@opentelemetry+instrumentat_1ad6a0a9759fd13d0c7cf454d56add20/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+../../../../Desktop/operis/node_modules/.pnpm/@opentelemetry+instrumentat_1ad6a0a9759fd13d0c7cf454d56add20/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+../../../../Desktop/operis/node_modules/.pnpm/@opentelemetry+instrumentat_1ad6a0a9759fd13d0c7cf454d56add20/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+../../../../Desktop/operis/node_modules/.pnpm/@opentelemetry+instrumentat_1ad6a0a9759fd13d0c7cf454d56add20/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+../../../../Desktop/operis/node_modules/.pnpm/@sentry+node@10.74.0_@opent_0d99500e1ca14992d77aa72d8393c14c/node_modules/@sentry/node/build/cjs/integrations/tracing/express.js
+../../../../Desktop/operis/node_modules/.pnpm/@sentry+node@10.74.0_@opent_0d99500e1ca14992d77aa72d8393c14c/node_modules/@sentry/node/build/cjs/index.js
+../../../../Desktop/operis/node_modules/.pnpm/@sentry+nextjs@10.74.0_@ope_04cf68598773db4ea76c73389a35bf9a/node_modules/@sentry/nextjs/build/cjs/index.server.js
+
+  Running TypeScript ...
+scripts/run-all-benchmarks.ts(2,21): error TS2307: Cannot find module '../docs/Operis_Search_100_v5_1/tests/regression-queries.json' or its corresponding type declarations.
+scripts/run-all-benchmarks.ts(3,22): error TS2307: Cannot find module '../docs/Operis_Search_100_v5_1/tests/gold-human-style-queries.json' or its corresponding type declarations.
+scripts/run-all-benchmarks.ts(4,29): error TS2307: Cannot find module '../docs/Operis_Search_100_v5_1/tests/contrastive-queries.json' or its corresponding type declarations.
+scripts/run-all-benchmarks.ts(5,21): error TS2307: Cannot find module '../docs/Operis_Search_100_v5_1/tests/adversarial-queries-v5.json' or its corresponding type declarations.
+Failed to type check.
+

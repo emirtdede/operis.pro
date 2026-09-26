@@ -496,11 +496,12 @@ export class ClerkSyncService {
           } else {
             return await executeCreation(db);
           }
-        } catch (err: any) {
+        } catch (err: unknown) {
+          const errObj = err as { code?: string; message?: string } | null;
           const isUniqueViolation =
-            err?.code === "23505" ||
-            err?.message?.includes("unique") ||
-            err?.message?.includes("duplicate key");
+            errObj?.code === "23505" ||
+            errObj?.message?.includes("unique") ||
+            errObj?.message?.includes("duplicate key");
           if (isUniqueViolation && attempts < 2) {
             attempts++;
             continue;

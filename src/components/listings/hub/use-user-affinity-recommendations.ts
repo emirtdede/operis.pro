@@ -35,13 +35,15 @@ export function useUserAffinityRecommendations({
       return [];
     }
 
+    // affinityTick triggers recalculation whenever user clicks or searches
+    void affinityTick;
+
     return rankCategoriesByPersonalizedAffinity({
       categories,
       listings,
       followedCategoryIds,
       limit,
     });
-    // affinityTick triggers recalculation whenever user clicks or searches
   }, [categories, listings, followedCategoryIds, limit, isMounted, affinityTick]);
 
   return suggestedCategories;

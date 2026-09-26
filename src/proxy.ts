@@ -180,6 +180,19 @@ function baseProxy(request: NextRequest) {
     return NextResponse.redirect(redirectUrl, 301);
   }
 
+  // Dynamic canonical redirects for category landing pages
+  if (pathname.startsWith("/tr/category/")) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = pathname.replace("/tr/category/", "/tr/kategori/");
+    return NextResponse.redirect(redirectUrl, 301);
+  }
+
+  if (pathname.startsWith("/en/kategori/")) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = pathname.replace("/en/kategori/", "/en/category/");
+    return NextResponse.redirect(redirectUrl, 301);
+  }
+
   if (
     pathname.startsWith("/api") ||
     pathname.startsWith("/admin") ||
@@ -204,7 +217,7 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
     process.env.CLERK_SECRET_KEY &&
     process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
   ) {
-    return clerkHandler(request, event ?? ({} as any));
+    return clerkHandler(request, event ?? ({} as unknown as NextFetchEvent));
   }
   return baseProxy(request);
 }

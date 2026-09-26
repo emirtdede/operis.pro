@@ -91,7 +91,7 @@ export async function GET(req: Request) {
         ? "Bu kullanıcı adı kullanılabilir!"
         : "This handle is available!",
     });
-  } catch (err: unknown) {
+  } catch {
     return NextResponse.json(
       {
         available: false,

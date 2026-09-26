@@ -31,9 +31,22 @@ async function runSchemaSyncCheck(): Promise<void> {
   const isSupabase =
     connectionString.includes("supabase.co") || connectionString.includes("pooler.supabase.com");
 
+  const caCert = process.env.SUPABASE_SSL_CA_CERT || process.env.DATABASE_SSL_CA;
+  const isProd = process.env.NODE_ENV === "production";
+  const explicitReject = process.env.DATABASE_SSL_REJECT_UNAUTHORIZED;
+  const shouldRejectUnauthorized =
+    explicitReject !== undefined
+      ? explicitReject === "true"
+      : isProd || Boolean(caCert);
+
   const client = new Client({
     connectionString,
-    ssl: isSupabase ? { rejectUnauthorized: false } : undefined,
+    ssl: isSupabase
+      ? {
+          rejectUnauthorized: shouldRejectUnauthorized,
+          ca: caCert || undefined,
+        }
+      : undefined,
   });
 
   try {

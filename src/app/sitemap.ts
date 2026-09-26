@@ -8,6 +8,7 @@ import {
   type RouteKey,
 } from "@/src/lib/i18n/routes";
 import { getBaseUrl } from "@/src/lib/config/url";
+import { SEED_CATEGORIES } from "@/db/seeds/categories";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = getBaseUrl();
@@ -31,7 +32,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Core static routes
   const staticKeys: RouteKey[] = [
-    "feed",
     "listings",
     "newListing",
     "categories",
@@ -48,7 +48,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     let priority = 0.5;
     let changeFrequency: "hourly" | "daily" | "weekly" | "monthly" = "monthly";
 
-    if (key === "feed" || key === "listings") {
+    if (key === "listings") {
       priority = 0.9;
       changeFrequency = "hourly";
     } else if (key === "categories") {
@@ -92,6 +92,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.4,
+    });
+  }
+
+  // 110 Category landing routes (zero DB overhead, verified seeds)
+  for (const cat of SEED_CATEGORIES) {
+    entries.push({
+      url: `${baseUrl}/tr/kategori/${cat.key}`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.85,
+    });
+    entries.push({
+      url: `${baseUrl}/en/category/${cat.key}`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.85,
     });
   }
 

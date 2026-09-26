@@ -45,7 +45,7 @@ describe("GET /api/profile/check-handle", () => {
     vi.spyOn(sessionModule, "getSession").mockResolvedValue({
       userId: "user-123",
       email: "emir@operis.pro",
-    } as any);
+    } as unknown as sessionModule.SessionPayload);
 
     const mockSelect = vi.fn().mockReturnValue({
       from: vi.fn().mockReturnValue({
@@ -57,7 +57,7 @@ describe("GET /api/profile/check-handle", () => {
 
     vi.spyOn(dbModule, "getDb").mockReturnValue({
       select: mockSelect,
-    } as any);
+    } as unknown as ReturnType<typeof dbModule.getDb>);
 
     const req = new Request("https://operis.pro/api/profile/check-handle?handle=emirdedeev");
     const res = await GET(req);
@@ -70,7 +70,7 @@ describe("GET /api/profile/check-handle", () => {
     vi.spyOn(sessionModule, "getSession").mockResolvedValue({
       userId: "user-123",
       email: "emir@operis.pro",
-    } as any);
+    } as unknown as sessionModule.SessionPayload);
 
     const mockSelect = vi.fn().mockReturnValue({
       from: vi.fn().mockReturnValue({
@@ -82,7 +82,7 @@ describe("GET /api/profile/check-handle", () => {
 
     vi.spyOn(dbModule, "getDb").mockReturnValue({
       select: mockSelect,
-    } as any);
+    } as unknown as ReturnType<typeof dbModule.getDb>);
 
     const req = new Request("https://operis.pro/api/profile/check-handle?handle=emirdede");
     const res = await GET(req);
@@ -95,7 +95,7 @@ describe("GET /api/profile/check-handle", () => {
     vi.spyOn(sessionModule, "getSession").mockResolvedValue({
       userId: "user-123",
       email: "emir@operis.pro",
-    } as any);
+    } as unknown as sessionModule.SessionPayload);
 
     const mockSelect = vi.fn().mockReturnValue({
       from: vi.fn().mockReturnValue({
@@ -107,7 +107,7 @@ describe("GET /api/profile/check-handle", () => {
 
     vi.spyOn(dbModule, "getDb").mockReturnValue({
       select: mockSelect,
-    } as any);
+    } as unknown as ReturnType<typeof dbModule.getDb>);
 
     const req = new Request("https://operis.pro/api/profile/check-handle?handle=takenhandle");
     const res = await GET(req);

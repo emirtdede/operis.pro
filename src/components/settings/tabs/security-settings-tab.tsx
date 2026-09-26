@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, type FormEvent } from "react";
+import { useState, useEffect, useCallback, type FormEvent } from "react";
 import Link from "next/link";
 import {
   Lock,
@@ -65,7 +65,7 @@ export function SecuritySettingsTab({
   >([]);
   const [logsLoading, setLogsLoading] = useState(false);
 
-  const fetchAuditLogs = async () => {
+  const fetchAuditLogs = useCallback(async () => {
     setLogsLoading(true);
     try {
       const res = await fetch("/api/account/audit-logs", {
@@ -80,11 +80,11 @@ export function SecuritySettingsTab({
     } finally {
       setLogsLoading(false);
     }
-  };
+  }, [locale]);
 
   useEffect(() => {
     fetchAuditLogs();
-  }, [locale]);
+  }, [fetchAuditLogs]);
 
   // Password strength calculation
   const hasMinLen = newPassword.length >= 12;

@@ -1,0 +1,9 @@
+{
+  "inventoryFiles": 1145,
+  "staticCodeFiles": 870,
+  "sourceLines": 208175,
+  "routeFiles": 117,
+  "methodHandlers": 144,
+  "sqlMigrations": 36,
+  "tableDeclarations": 48
+}

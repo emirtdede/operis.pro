@@ -1,0 +1,51 @@
+ M .github/workflows/ci.yml
+ M README.md
+ D YAYIN_ONCESI_YAPILACAKLAR.md
+ D docs/GOD_CONTEXT_REFACTORING_PROMPTS.md
+ M docs/README.md
+ M eslint.config.mjs
+ M next.config.ts
+ D operis-kod-denetim-raporu.md
+ M package.json
+ M pnpm-lock.yaml
+ M scripts/check-db-schema-sync.ts
+ M scripts/check-secrets.ts
+ M src/app/[locale]/about/page.tsx
+ M src/app/[locale]/categories/page.tsx
+ M src/app/[locale]/legal/[slug]/page.tsx
+ M src/app/[locale]/listings/[slug]/page.tsx
+ M src/app/[locale]/listings/page.tsx
+ M src/app/[locale]/u/[handle]/page.tsx
+ M src/app/api/account/audit-logs/route.ts
+ M src/app/api/admin/auth/session/route.ts
+ M src/app/api/profile/check-handle/route.ts
+ M src/app/robots.ts
+ M src/app/sitemap.ts
+ M src/components/listings/hub/use-user-affinity-recommendations.ts
+ M src/components/settings/tabs/security-settings-tab.tsx
+ M src/lib/config/url.ts
+ M src/lib/db/index.ts
+ M src/lib/security/rate-limit.ts
+ M src/modules/auth/clerk-sync-service.ts
+ M src/modules/auth/handle-generator.ts
+ M src/modules/categories/service.ts
+ M src/modules/listings/services/listing-crud.service.ts
+ M src/modules/reviews/service.ts
+ M src/proxy.ts
+ M tests/unit/feed-auth-guard.test.ts
+ M tests/unit/handle-check.test.ts
+ D walkthrough.md
+?? docs/architecture/GOD_CONTEXT_REFACTORING_PROMPTS.md
+?? docs/audit/ocr-remediation-walkthrough.md
+?? docs/audit/operis-kod-denetim-raporu.md
+?? docs/production-readiness/
+?? docs/search-and-ai/
+?? public/8b11c0f16e3c4e3692dfba5191ec489b.txt
+?? src/app/[locale]/category/
+?? src/app/[locale]/kategori/
+?? src/components/categories/category-landing-view.tsx
+?? src/lib/seo/
+?? tests/unit/admin-auth-2fa-enforcement.test.ts
+?? tests/unit/client-ip-anti-spoofing.test.ts
+?? tests/unit/seo/
+?? vercel.json

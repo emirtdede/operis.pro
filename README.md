@@ -166,10 +166,13 @@ operis-platform/
 │   └── operis-worker-check.timer   # Worker health check timer
 ├── docs/                           # Master specifications, architecture & operations
 │   ├── README.md                   # Central documentation index & navigation map
+│   ├── production-readiness/       # Launch review, risk register & incident runbooks
+│   ├── search-and-ai/              # SEO, GEO, AEO & AI discovery master specs
 │   ├── architecture/               # Master functional spec & build manifest
 │   ├── operations/                 # Worker daemon runbook & go-live checklists
 │   ├── security/                   # Key rotation protocol & cryptosystem docs
 │   ├── audit/                      # Security & compliance audit remediation reports
+│   ├── sozlesme-ornekleri/         # 10 freelance contracts & legal template library
 │   ├── assets/screenshots/         # UI verification & design proof captures
 │   └── Operis_Search_100_v5_1/     # Semantic search taxonomy, specs & benchmark datasets
 ├── i18n/                           # Internationalization setup (next-intl)
@@ -606,10 +609,13 @@ operis-platform/
 │   └── operis-worker-check.timer   # İşçi sağlık kontrolü zamanlayıcısı
 ├── docs/                           # Ana dokümantasyon, mimari ve operasyon merkezi
 │   ├── README.md                   # Dokümantasyon ana indeksi ve mimari haritası
+│   ├── production-readiness/       # Canlıya geçiş denetimi, risk kütüğü ve olay müdahale planları
+│   ├── search-and-ai/              # SEO, GEO, AEO ve yapay zeka arama şartnameleri
 │   ├── architecture/               # Ana ürün şartnamesi ve çalışma zamanı matrisi
 │   ├── operations/                 # İşçi (worker daemon) rehberi ve yayın kontrol listesi
 │   ├── security/                   # Anahtar rotasyonu ve kriptografi kılavuzu
 │   ├── audit/                      # Güvenlik ve denetim çözümleme raporları
+│   ├── sozlesme-ornekleri/         # 10 adet freelance yasal sözleşme şablonları kütüphanesi
 │   ├── assets/screenshots/         # Arayüz ve tasarım doğrulama ekran görüntüleri
 │   └── Operis_Search_100_v5_1/     # Arama motoru taksonomisi ve kıyaslama veri setleri
 ├── i18n/                           # Çoklu dil yönlendirme ve istek yapılandırması

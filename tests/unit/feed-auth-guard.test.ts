@@ -18,14 +18,24 @@ describe("Feed Authentication & Navbar Navigation Guards", () => {
     expect(getLocalizedRoute("dashboardListings", "en")).toBe("/en/dashboard/listings");
   });
 
-  it("ensures unauthenticated visitors to feed API receive 401 Unauthorized", async () => {
+  it("ensures unauthenticated visitors requesting following feed receive 401 Unauthorized", async () => {
     vi.spyOn(sessionModule, "getSession").mockResolvedValue(null);
 
-    const req = new NextRequest("http://localhost:3000/api/listings/feed?mode=all&locale=tr");
+    const req = new NextRequest("http://localhost:3000/api/listings/feed?mode=following&locale=tr");
     const res = await GET(req);
     expect(res.status).toBe(401);
     const json = await res.json();
     expect(json.error).toBe("Unauthorized");
+  });
+
+  it("allows unauthenticated visitors to access public feed (mode=all)", async () => {
+    vi.spyOn(sessionModule, "getSession").mockResolvedValue(null);
+
+    const req = new NextRequest("http://localhost:3000/api/listings/feed?mode=all&locale=tr");
+    const res = await GET(req);
+    expect(res.status).toBe(200);
+    const json = await res.json();
+    expect(json).toHaveProperty("items");
   });
 
   it("verifies navbar logic: unauthenticated state has no discover or howItWorks links", () => {

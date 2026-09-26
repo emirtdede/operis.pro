@@ -351,4 +351,22 @@ describe("RunbookGeneratorService", () => {
     expect(generated.htmlContent).toContain("HMK m. 193");
     expect(generated.htmlContent).toContain("Proje Devir ve İşletim Kılavuzu");
   });
+
+  it("blocks outsiders from saving or updating runbooks with Forbidden error (BOLA protection)", async () => {
+    const input = {
+      architectureSummary: "Malicious attacker modification",
+      environmentVariables: [],
+      buildAndRunSteps: [],
+      thirdPartyServices: [],
+      disasterRecoverySteps: [],
+      backupSchedule: { frequency: "DAILY" as const },
+      publish: false,
+    };
+
+    // Outsider attempt on mock engagement
+    await expect(
+      RunbookService.saveRunbook("eng-test-bola-01", input, "user-outsider-999")
+    ).rejects.toThrow("Forbidden. You are not a participant in this engagement.");
+  });
 });
+

@@ -3,6 +3,21 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
+const isProduction = process.env.NODE_ENV === "production";
+
+const scriptSrcDirectives = [
+  "'self'",
+  ...(isProduction ? [] : ["'unsafe-eval'"]),
+  "'unsafe-inline'",
+  "https://*.clerk.accounts.dev",
+  "https://*.clerk.com",
+  "https://clerk.operis.pro",
+  "https://challenges.cloudflare.com",
+  "https://static.cloudflareinsights.com",
+  "https://eu.i.posthog.com",
+  "https://eu-assets.i.posthog.com",
+].join(" ");
+
 const securityHeaders = [
   {
     key: "X-DNS-Prefetch-Control",
@@ -32,7 +47,7 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.operis.pro https://challenges.cloudflare.com https://static.cloudflareinsights.com https://eu.i.posthog.com https://eu-assets.i.posthog.com", // Next.js, Clerk, Cloudflare & PostHog
+      `script-src ${scriptSrcDirectives}`,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: https: https://img.clerk.com",
       "font-src 'self' https://fonts.gstatic.com",

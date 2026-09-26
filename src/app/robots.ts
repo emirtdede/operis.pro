@@ -4,8 +4,38 @@ import { getBaseUrl } from "@/src/lib/config/url";
 export default function robots(): MetadataRoute.Robots {
   const baseUrl = getBaseUrl();
 
+  const privateAndDisallowedPaths = [
+    "/dashboard/",
+    "/*/dashboard/",
+    "/panel/",
+    "/*/panel/",
+    "/messages/",
+    "/*/messages/",
+    "/mesajlar/",
+    "/*/mesajlar/",
+    "/work/",
+    "/*/work/",
+    "/workspace/",
+    "/*/workspace/",
+    "/calisma-alani/",
+    "/*/calisma-alani/",
+    "/settings/",
+    "/*/settings/",
+    "/ayarlar/",
+    "/*/ayarlar/",
+    "/admin/",
+    "/api/",
+    "/*?*q=*",
+    "/*?*search=*",
+  ];
+
   return {
     rules: [
+      {
+        userAgent: "OAI-SearchBot",
+        allow: ["/", "/llms.txt", "/llms-full.txt"],
+        disallow: privateAndDisallowedPaths,
+      },
       {
         userAgent: [
           "GPTBot",
@@ -16,42 +46,12 @@ export default function robots(): MetadataRoute.Robots {
           "CCBot",
         ],
         allow: ["/", "/llms.txt", "/llms-full.txt"],
-        disallow: [
-          "/dashboard/",
-          "/*/dashboard/",
-          "/panel/",
-          "/*/panel/",
-          "/work/",
-          "/*/work/",
-          "/workspace/",
-          "/*/workspace/",
-          "/calisma-alani/",
-          "/*/calisma-alani/",
-          "/settings/",
-          "/*/settings/",
-          "/admin/",
-          "/api/",
-        ],
+        disallow: privateAndDisallowedPaths,
       },
       {
         userAgent: "*",
         allow: "/",
-        disallow: [
-          "/dashboard/",
-          "/*/dashboard/",
-          "/panel/",
-          "/*/panel/",
-          "/work/",
-          "/*/work/",
-          "/workspace/",
-          "/*/workspace/",
-          "/calisma-alani/",
-          "/*/calisma-alani/",
-          "/settings/",
-          "/*/settings/",
-          "/admin/",
-          "/api/",
-        ],
+        disallow: privateAndDisallowedPaths,
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,

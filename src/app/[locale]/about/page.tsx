@@ -22,7 +22,7 @@ import {
 import { Button } from "@/src/components/ui/button";
 import { getLocalizedRoute } from "@/src/lib/i18n/routes";
 import { JsonLd } from "@/src/components/seo/json-ld";
-import { getBaseUrl } from "@/src/lib/config/url";
+import { getBaseUrl, constructCanonicalUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -31,6 +31,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isTr = locale === "tr";
+  const trUrl = constructCanonicalUrl("/tr/hakkimizda");
+  const enUrl = constructCanonicalUrl("/en/about");
 
   return {
     title: isTr
@@ -40,10 +42,11 @@ export async function generateMetadata({
       ? "Operis'in bağımsız yazılım mühendisleri ve yenilikçi teknoloji şirketleri için kurduğu %0 komisyonsuz, şeffaf, şifreli ve doğrudan çalışma manifestosu."
       : "The Operis enterprise manifesto: empowering verified engineers and innovative enterprises through 0% commission, encrypted blind bidding, and direct collaboration.",
     alternates: {
-      canonical: isTr ? "/tr/hakkimizda" : "/en/about",
+      canonical: isTr ? trUrl : enUrl,
       languages: {
-        tr: "/tr/hakkimizda",
-        en: "/en/about",
+        tr: trUrl,
+        en: enUrl,
+        "x-default": trUrl,
       },
     },
   };

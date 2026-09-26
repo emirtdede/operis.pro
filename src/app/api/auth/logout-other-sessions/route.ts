@@ -38,6 +38,45 @@ export async function POST(req: Request) {
     const newVersion = await bumpUserAuthVersion(session.userId);
     const updatedVersion = newVersion ?? ((session.authVersion ?? 1) + 1);
 
+    // Revoke active Clerk sessions across other devices if Clerk is configured
+    if (
+      process.env.CLERK_SECRET_KEY &&
+      process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+    ) {
+      try {
+        const { getDb, schema } = await import("@/src/lib/db");
+        const { eq } = await import("drizzle-orm");
+        const db = getDb();
+        const [dbUser] = await db
+          .select({ clerkUserId: schema.users.clerkUserId })
+          .from(schema.users)
+          .where(eq(schema.users.id, session.userId))
+          .limit(1);
+
+        if (dbUser?.clerkUserId) {
+          const { clerkClient } = await import("@clerk/nextjs/server");
+          const client = await clerkClient();
+          if (client?.sessions && typeof client.sessions.getSessionList === "function") {
+            const sessionsResponse = await client.sessions.getSessionList({
+              userId: dbUser.clerkUserId,
+              status: "active",
+            });
+            const sessionsList: Array<{ id: string }> = Array.isArray(sessionsResponse)
+              ? (sessionsResponse as unknown as Array<{ id: string }>)
+              : ((sessionsResponse as unknown as { data?: Array<{ id: string }> })?.data || []);
+
+            for (const s of sessionsList) {
+              if (s?.id) {
+                await client.sessions.revokeSession(s.id).catch(() => {});
+              }
+            }
+          }
+        }
+      } catch (clerkErr) {
+        console.warn("[Logout Other Sessions] Clerk session revocation warning:", clerkErr);
+      }
+    }
+
     // Reissue current device's cookie with the new authVersion
     const freshToken = createSessionToken({
       id: session.userId,

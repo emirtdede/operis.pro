@@ -59,12 +59,32 @@ export class DeliveryInspectorService {
     if (trimmed === "::1" || trimmed === "::") return true;
     const lower = trimmed.toLowerCase();
     if (lower.startsWith("fc") || lower.startsWith("fd")) return true; // Unique local (fc00::/7)
-    if (lower.startsWith("fe80")) return true; // Link local (fe80::/10)
 
-    // Handle IPv4-mapped IPv6 (::ffff:127.0.0.1)
+    // Link local (fe80::/10): first 16-bit hextet ranges from 0xfe80 to 0xfebf (RFC 4291)
+    const firstHextet = parseInt(lower.split(":")[0] || "", 16);
+    if (!isNaN(firstHextet) && (firstHextet & 0xffc0) === 0xfe80) return true;
+
+    // Handle IPv4-mapped IPv6 (::ffff:127.0.0.1 or ::ffff:7f00:1)
     let ipv4 = trimmed;
     if (lower.startsWith("::ffff:")) {
-      ipv4 = lower.substring(7);
+      const remainder = lower.substring(7);
+      if (remainder.includes(".")) {
+        ipv4 = remainder;
+      } else if (remainder.includes(":")) {
+        // Hexadecimal notation: high:low (e.g. 7f00:1 -> 127.0.0.1)
+        const hexParts = remainder.split(":");
+        if (hexParts.length === 2) {
+          const high = parseInt(hexParts[0] || "", 16);
+          const low = parseInt(hexParts[1] || "", 16);
+          if (!isNaN(high) && !isNaN(low)) {
+            const p0 = (high >> 8) & 0xff;
+            const p1 = high & 0xff;
+            const p2 = (low >> 8) & 0xff;
+            const p3 = low & 0xff;
+            ipv4 = `${p0}.${p1}.${p2}.${p3}`;
+          }
+        }
+      }
     }
 
     // IPv4 dotted-quad validation

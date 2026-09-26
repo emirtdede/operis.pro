@@ -110,18 +110,20 @@ export class TrendingSearchService {
     // 1. Try DB first
     try {
       const db = getDb();
-      const rows = (await db.execute(sql`
+      const rawResult = await db.execute(sql`
         SELECT query FROM search_trends
         WHERE locale = ${effectiveLocale}
         ORDER BY count DESC, last_searched_at DESC
         LIMIT 5;
-      `)) as unknown as { query: string }[];
+      `);
 
-      if (Array.isArray(rows)) {
-        for (const r of rows) {
-          if (r?.query && !realSearches.includes(r.query)) {
-            realSearches.push(r.query);
-          }
+      const rows: Array<{ query?: string }> = Array.isArray(rawResult)
+        ? (rawResult as unknown as Array<{ query?: string }>)
+        : ((rawResult as unknown as { rows?: Array<{ query?: string }> })?.rows || []);
+
+      for (const r of rows) {
+        if (r?.query && !realSearches.includes(r.query)) {
+          realSearches.push(r.query);
         }
       }
     } catch {

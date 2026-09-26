@@ -147,6 +147,30 @@ export class CategoryService {
   }
 
   /**
+   * Returns a single category by its slug or key, localized to requested locale.
+   */
+  static async getCategoryBySlug(slug: string, locale: Locale = "tr"): Promise<CategoryDto | null> {
+    const lang = locale === "tr" ? "tr" : "en";
+    const found = SEED_CATEGORIES.find(
+      (c) => c.key.toLowerCase() === slug.toLowerCase()
+    );
+    if (!found) return null;
+    const trans = found.translations[lang] || found.translations.tr;
+    const catId = getDeterministicUuid(found.key);
+    return {
+      id: catId,
+      key: found.key,
+      slug: found.key,
+      sectorKey: found.sectorKey,
+      name: trans.name,
+      description: trans.description,
+      sortOrder: found.sortOrder,
+      isActive: true,
+      minBudget: null,
+    };
+  }
+
+  /**
    * Returns all active categories grouped by sectors localized to the requested locale.
    */
   static async getSectorsWithCategories(locale: Locale, userId?: string): Promise<SectorDto[]> {

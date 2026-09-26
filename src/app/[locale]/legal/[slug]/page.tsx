@@ -10,7 +10,7 @@ import { LegalDocumentViewer } from "@/src/components/legal/legal-document-viewe
 import { JsonLd } from "@/src/components/seo/json-ld";
 
 import { TR_TO_INTERNAL_LEGAL_SLUG, getLocalizedLegalPath } from "@/src/lib/i18n/routes";
-import { getBaseUrl } from "@/src/lib/config/url";
+import { getBaseUrl, constructCanonicalUrl } from "@/src/lib/config/url";
 
 const VALID_LEGAL_SLUGS = [
   "terms",
@@ -252,20 +252,25 @@ export async function generateMetadata({
     ? `Operis ${docTitle} sözleşmesi, şeffaflık ilkeleri ve mevzuat uyum bilgilendirme metni.`
     : `Operis ${docTitle} terms, compliance standards, and regulatory notice.`;
 
+  const trPath = getLocalizedLegalPath(internalKey, "tr");
+  const enPath = getLocalizedLegalPath(internalKey, "en");
+  const currentPath = getLocalizedLegalPath(internalKey, locale as Locale);
+
   return {
     title,
     description,
     alternates: {
-      canonical: getLocalizedLegalPath(internalKey, locale as Locale),
+      canonical: constructCanonicalUrl(currentPath),
       languages: {
-        tr: getLocalizedLegalPath(internalKey, "tr"),
-        en: getLocalizedLegalPath(internalKey, "en"),
+        tr: constructCanonicalUrl(trPath),
+        en: constructCanonicalUrl(enPath),
+        "x-default": constructCanonicalUrl(trPath),
       },
     },
     openGraph: {
       title,
       description,
-      url: getLocalizedLegalPath(internalKey, locale as Locale),
+      url: constructCanonicalUrl(currentPath),
       siteName: "Operis",
       locale: isTr ? "tr_TR" : "en_US",
       type: "article",

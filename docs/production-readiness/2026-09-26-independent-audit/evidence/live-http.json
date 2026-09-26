@@ -1,0 +1,109 @@
+[
+  {
+    "path": "/tr",
+    "status": 200,
+    "finalUrl": "https://operis.pro/tr",
+    "headers": {
+      "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.operis.pro https://challenges.cloudflare.com https://static.cloudflareinsights.com https://eu.i.posthog.com https://eu-assets.i.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: https://img.clerk.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.r2.cloudflarestorage.com https://r2.operis.pro https://*.clerk.accounts.dev https://clerk.operis.pro https://api.clerk.com https://cloudflareinsights.com https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://*.ingest.us.sentry.io; worker-src 'self' blob:; frame-src 'self' https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'",
+      "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+      "x-frame-options": "DENY",
+      "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate",
+      "server": "cloudflare",
+      "x-vercel-cache": "MISS"
+    },
+    "bytes": 289234
+  },
+  {
+    "path": "/tr/giris",
+    "status": 200,
+    "finalUrl": "https://operis.pro/tr/giris",
+    "headers": {
+      "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.operis.pro https://challenges.cloudflare.com https://static.cloudflareinsights.com https://eu.i.posthog.com https://eu-assets.i.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: https://img.clerk.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.r2.cloudflarestorage.com https://r2.operis.pro https://*.clerk.accounts.dev https://clerk.operis.pro https://api.clerk.com https://cloudflareinsights.com https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://*.ingest.us.sentry.io; worker-src 'self' blob:; frame-src 'self' https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'",
+      "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+      "x-frame-options": "DENY",
+      "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate",
+      "server": "cloudflare",
+      "x-vercel-cache": "MISS"
+    },
+    "bytes": 66215
+  },
+  {
+    "path": "/tr/kayit",
+    "status": 200,
+    "finalUrl": "https://operis.pro/tr/kayit",
+    "headers": {
+      "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.operis.pro https://challenges.cloudflare.com https://static.cloudflareinsights.com https://eu.i.posthog.com https://eu-assets.i.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: https://img.clerk.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.r2.cloudflarestorage.com https://r2.operis.pro https://*.clerk.accounts.dev https://clerk.operis.pro https://api.clerk.com https://cloudflareinsights.com https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://*.ingest.us.sentry.io; worker-src 'self' blob:; frame-src 'self' https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'",
+      "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+      "x-frame-options": "DENY",
+      "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate",
+      "server": "cloudflare",
+      "x-vercel-cache": "MISS"
+    },
+    "bytes": 85326
+  },
+  {
+    "path": "/robots.txt",
+    "status": 200,
+    "finalUrl": "https://operis.pro/robots.txt",
+    "headers": {
+      "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.operis.pro https://challenges.cloudflare.com https://static.cloudflareinsights.com https://eu.i.posthog.com https://eu-assets.i.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: https://img.clerk.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.r2.cloudflarestorage.com https://r2.operis.pro https://*.clerk.accounts.dev https://clerk.operis.pro https://api.clerk.com https://cloudflareinsights.com https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://*.ingest.us.sentry.io; worker-src 'self' blob:; frame-src 'self' https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'",
+      "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+      "x-frame-options": "DENY",
+      "cache-control": "public, max-age=14400, must-revalidate",
+      "server": "cloudflare",
+      "x-vercel-cache": "MISS"
+    },
+    "bytes": 852,
+    "body": "User-Agent: GPTBot\nUser-Agent: PerplexityBot\nUser-Agent: ClaudeBot\nUser-Agent: Google-Extended\nUser-Agent: Applebot-Extended\nUser-Agent: CCBot\nAllow: /\nAllow: /llms.txt\nAllow: /llms-full.txt\nDisallow: /dashboard/\nDisallow: /*/dashboard/\nDisallow: /panel/\nDisallow: /*/panel/\nDisallow: /work/\nDisallow: /*/work/\nDisallow: /workspace/\nDisallow: /*/workspace/\nDisallow: /calisma-alani/\nDisallow: /*/calisma-alani/\nDisallow: /settings/\nDisallow: /*/settings/\nDisallow: /admin/\nDisallow: /api/\n\nUser-Agent: *\nAllow: /\nDisallow: /dashboard/\nDisallow: /*/dashboard/\nDisallow: /panel/\nDisallow: /*/panel/\nDisallow: /work/\nDisallow: /*/work/\nDisallow: /workspace/\nDisallow: /*/workspace/\nDisallow: /calisma-alani/\nDisallow: /*/calisma-alani/\nDisallow: /settings/\nDisallow: /*/settings/\nDisallow: /admin/\nDisallow: /api/\n\nSitemap: https://operis.pro/sitemap.xml\n"
+  },
+  {
+    "path": "/sitemap.xml",
+    "status": 200,
+    "finalUrl": "https://operis.pro/sitemap.xml",
+    "headers": {
+      "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.operis.pro https://challenges.cloudflare.com https://static.cloudflareinsights.com https://eu.i.posthog.com https://eu-assets.i.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: https://img.clerk.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.r2.cloudflarestorage.com https://r2.operis.pro https://*.clerk.accounts.dev https://clerk.operis.pro https://api.clerk.com https://cloudflareinsights.com https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://*.ingest.us.sentry.io; worker-src 'self' blob:; frame-src 'self' https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'",
+      "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+      "x-frame-options": "DENY",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "server": "cloudflare",
+      "x-vercel-cache": "MISS"
+    },
+    "bytes": 7198,
+    "urlCount": 44,
+    "containsLogin": true,
+    "containsNewListing": true
+  },
+  {
+    "path": "/api/admin/auth/session",
+    "status": 200,
+    "finalUrl": "https://operis.pro/api/admin/auth/session",
+    "headers": {
+      "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.operis.pro https://challenges.cloudflare.com https://static.cloudflareinsights.com https://eu.i.posthog.com https://eu-assets.i.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: https://img.clerk.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.r2.cloudflarestorage.com https://r2.operis.pro https://*.clerk.accounts.dev https://clerk.operis.pro https://api.clerk.com https://cloudflareinsights.com https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://*.ingest.us.sentry.io; worker-src 'self' blob:; frame-src 'self' https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'",
+      "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+      "x-frame-options": "DENY",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "server": "cloudflare",
+      "x-vercel-cache": "MISS"
+    },
+    "bytes": 38,
+    "anonymousResponse": "{\"authenticated\":false,\"session\":null}"
+  }
+]
