@@ -422,18 +422,24 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       version: "v1.0",
       contentHash: "e564cfa36e4c63367f525121a537dd93426a576ca09fac19a6fa2f554aba10f7",
       lastUpdated: "17.09.2026",
-      badge: "Sıfır Reklam Takibi • Yalnızca Zorunlu Çerez",
+      badge: "Sıfır Reklam Takibi • Şeffaf Çerez Politikası",
       highlight:
-        "Platformumuzda üçüncü taraf reklam, pazarlama veya profil çıkarma çerezi KESİNLİKLE KULLANILMAZ. Sadece teknik olarak zorunlu oturum ve güvenlik çerezleri yer alır.",
+        "Platformumuzda üçüncü taraf reklam veya pazarlama pikselleri kesinlikle kullanılmaz. Yalnızca oturum güvenliği (fp_session), Cloudflare bot kalkanı, hata telemetrisi (Sentry) ve anonimleştirilmiş ürün optimizasyonu (AB sunuculu PostHog) çerezleri yer alır.",
       sections: [
         {
-          title: "1. Zorunlu Oturum Çerezleri",
+          title: "1. Zorunlu Oturum & Güvenlik Çerezleri",
           paragraphs: [
-            "fp_session (HttpOnly oturum doğrulama) ve Cloudflare güvenlik çerezleri haricinde hiçbir izleme çerezi kullanılmaz.",
+            "fp_session (HttpOnly oturum doğrulama) ve Cloudflare güvenlik çerezleri oturum güvenliği için kullanılır.",
           ],
         },
         {
-          title: "2. Çerez Yönetimi",
+          title: "2. Performans ve Hata Telemetrisi",
+          paragraphs: [
+            "Sistem stabilitesi ve kritik yazılım hatalarını tespit etmek amacıyla Sentry hata izleme ve Avrupa Birliği (AB) veri merkezinde barındırılan PostHog ürün analitiği kullanılmaktadır. Reklam hedeflemesi veya ticari veri paylaşımı yapılmaz.",
+          ],
+        },
+        {
+          title: "3. Çerez Yönetimi",
           paragraphs: [
             "Tarayıcınızın ayarlarından çerezleri dilediğiniz an silebilir veya engelleyebilirsiniz.",
           ],
@@ -447,14 +453,20 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       version: "v1.0",
       contentHash: "0e35b60f9c46c46f98b196d3e036bcab26026b957889dbf9f4fef0e115928c64",
       lastUpdated: "17.09.2026",
-      badge: "Zero Third-Party Trackers",
+      badge: "Zero Ad Trackers • Transparent Telemetry",
       highlight:
-        "We deploy zero third-party advertising or profiling cookies. Only strictly necessary session tokens and security cookies are used.",
+        "We deploy zero third-party advertising or commercial tracking pixels. Only strictly necessary session tokens, Cloudflare security cookies, crash telemetry (Sentry), and privacy-preserving product analytics (EU-hosted PostHog) are used.",
       sections: [
         {
-          title: "1. Strictly Essential Cookies",
+          title: "1. Strictly Essential & Security Cookies",
           paragraphs: [
             "fp_session and Cloudflare security tokens safeguard authenticated sessions against hijacking.",
+          ],
+        },
+        {
+          title: "2. Performance & Crash Telemetry",
+          paragraphs: [
+            "To monitor platform health and stability, anonymous error telemetry via Sentry and privacy-focused EU-hosted PostHog analytics are deployed. No cross-site profiling or ad targeting is conducted.",
           ],
         },
       ],

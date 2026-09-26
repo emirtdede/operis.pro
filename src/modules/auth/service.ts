@@ -438,6 +438,8 @@ export class AuthService {
         throw new Error("Invalid email or password.");
       }
 
+      let isTwoFactorPassed = false;
+
       // Check 2FA challenge if user has two-factor authentication enabled
       if (user.twoFactorEnabled) {
         if (!input.totpCode || input.totpCode.trim().length === 0) {
@@ -508,6 +510,8 @@ export class AuthService {
             "Geçersiz 2FA doğrulama kodu veya kurtarma kodu. Lütfen Authenticator kodunuzu veya 8 haneli tek kullanımlık kurtarma kodunuzu kontrol ediniz."
           );
         }
+
+        isTwoFactorPassed = true;
       }
 
       const profileRows = await db
@@ -524,7 +528,10 @@ export class AuthService {
 
       const profile = profileRows[0];
       const identity = identityRows[0];
-      const sessionToken = createSessionToken(user);
+      const sessionToken = createSessionToken({
+        ...user,
+        twoFactorVerified: isTwoFactorPassed,
+      });
 
       return {
         user: {

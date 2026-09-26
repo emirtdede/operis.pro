@@ -21,7 +21,9 @@ export async function GET(
   }
 
   try {
-    const isMock = Boolean(process.env.VITEST) || engagementId === "eng-demo-101" || engagementId.startsWith("eng-dispute-");
+    const isMock =
+      process.env.NODE_ENV !== "production" &&
+      (Boolean(process.env.VITEST) || engagementId === "eng-demo-101" || engagementId.startsWith("eng-dispute-"));
 
     if (isMock) {
       const report = DisputeArbiterService.analyzeDispute({

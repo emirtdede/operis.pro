@@ -89,9 +89,9 @@ export function getInitials(name?: string | null, email?: string | null): string
   if (email && email.trim().length > 0) {
     const userPart = email.split("@")[0] || "";
     const cleanUser = userPart.replace(/[^a-zA-Z0-9]/g, "");
-    return cleanUser.slice(0, 2).toUpperCase() || "DY";
+    return cleanUser.slice(0, 2).toUpperCase() || "OP";
   }
-  return "DY";
+  return "OP";
 }
 
 function resolveFallbackDisplayName(email?: string | null): string {

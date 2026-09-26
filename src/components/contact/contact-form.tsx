@@ -608,7 +608,7 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
             className="font-medium text-[var(--color-text-secondary)] select-none flex items-center gap-1.5 cursor-pointer"
           >
             <Paperclip className="h-3.5 w-3.5 text-blue-400" />
-            <span>{isTr ? "Ek Dosya / Ekran Görüntüsü" : "Attachment / Screenshot"}</span>
+            <span>{isTr ? "Ek Dosya / Ekran Görüntüsü Referansı" : "Attachment / File Reference"}</span>
             <span className="text-[11px] text-[var(--color-text-tertiary)] font-normal">
               ({isTr ? "Opsiyonel" : "Optional"})
             </span>
@@ -617,6 +617,11 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
             {isTr ? "Maks. 5 MB" : "Max 5 MB"}
           </span>
         </div>
+        <p className="text-[11px] text-[var(--color-text-tertiary)]">
+          {isTr
+            ? "Dosya ismi ve doğrulanmış boyutu bilet kaydınıza işlenir; gizli sözleşme evrakları için bilet referansınızla ilgili masanın e-posta adresini de kullanabilirsiniz."
+            : "File metadata is attached to your ticket; for confidential documents you may also reference your ticket ID via the dedicated desk email."}
+        </p>
 
         <input
           ref={fileInputRef}

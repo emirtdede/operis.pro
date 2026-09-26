@@ -156,6 +156,7 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
               role: schema.users.role,
               status: schema.users.status,
               authVersion: schema.users.authVersion,
+              twoFactorEnabled: schema.users.twoFactorEnabled,
             })
             .from(schema.users)
             .where(eq(schema.users.clerkUserId, clerkAuth.userId))
@@ -187,6 +188,7 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
                     role: schema.users.role,
                     status: schema.users.status,
                     authVersion: schema.users.authVersion,
+                    twoFactorEnabled: schema.users.twoFactorEnabled,
                   })
                   .from(schema.users)
                   .where(eq(schema.users.id, syncResult.userId))
@@ -203,6 +205,7 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
               role: dbUser.role,
               status: dbUser.status,
               authVersion: dbUser.authVersion ?? 1,
+              twoFactorVerified: Boolean(dbUser.twoFactorEnabled),
               createdAt: Date.now(),
               expiresAt: Date.now() + SESSION_EXPIRY_DAYS * 24 * 60 * 60 * 1000,
             };

@@ -1,5 +1,7 @@
+import crypto from "node:crypto";
 import { and, eq, lt, or } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
+import { encryptOfferMessage } from "../crypto";
 import { NotificationService } from "@/src/modules/notifications/service";
 import { inMemoryListings } from "@/src/modules/listings/service";
 import { DEFAULT_USER } from "@/src/modules/auth/demo-user";
@@ -219,14 +221,18 @@ export class OfferCreationService {
             throw new Error("Listing is not currently active for offers");
           }
 
+          const offerId = crypto.randomUUID();
+          const encryptedMessage = encryptOfferMessage(input.message, offerId);
+
           const [insertedOffer] = await tx
             .insert(schema.offers)
             .values({
+              id: offerId,
               listingId: lockedListing.id,
               offerorUserId,
               listingActivationSeq: lockedListing.activationSeq,
               status: "PENDING",
-              message: input.message,
+              message: encryptedMessage,
               budgetCurrency: input.budgetCurrency ?? null,
               budgetMin: input.budgetMin ?? null,
               budgetMax: input.budgetMax ?? null,

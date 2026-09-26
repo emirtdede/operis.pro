@@ -228,15 +228,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="h-6 w-6 rounded-md bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-bold text-[10px] flex items-center justify-center">
-                DY
+                {(auth.session?.email || "A").charAt(0).toUpperCase()}
               </div>
-              <div>
-                <div className="font-semibold text-white text-[11px] leading-tight">
-                  Demir Yıldız
+              <div className="min-w-0 max-w-[150px]">
+                <div className="font-semibold text-white text-[11px] leading-tight truncate">
+                  {auth.session?.email || "Yönetici"}
                 </div>
                 <div className="text-[9px] font-mono text-emerald-400 flex items-center gap-1">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  SECURITY_ADMIN
+                  {auth.session?.role || "ADMIN"}
                 </div>
               </div>
             </div>

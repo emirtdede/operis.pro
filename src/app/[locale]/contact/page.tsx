@@ -48,9 +48,9 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   const metrics = [
     {
       icon: Layers,
-      value: isTr ? "6 Masa" : "6 Desks",
+      value: isTr ? "7 Masa" : "7 Desks",
       label: isTr ? "Yetkili Destek Birimi" : "Dedicated Desks",
-      detail: isTr ? "Kurumsal, Güvenlik, Hukuk, Destek, KVKK, Finans" : "Enterprise, Security, Legal, Support, Privacy, Billing",
+      detail: isTr ? "Kurumsal, Güvenlik, Hukuk, Destek, KVKK, Finans, Basın" : "Enterprise, Security, Legal, Support, Privacy, Billing, Press",
       color: "text-blue-400 border-blue-500/20 bg-blue-500/10",
       accent: "bg-blue-500",
     },

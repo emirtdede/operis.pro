@@ -1,5 +1,6 @@
 import { getDb, schema } from "@/src/lib/db";
 import { and, desc, eq } from "drizzle-orm";
+import { decryptOfferMessage } from "../crypto";
 import { offerTemplateSchema, type OfferTemplateInput } from "../validation";
 import {
   DEFAULT_STARTER_TEMPLATES,
@@ -42,6 +43,11 @@ export class OfferQueryService {
         .orderBy(desc(schema.offers.createdAt));
 
       const rows = await query;
+      rows.forEach((r) => {
+        if (r.offer?.message) {
+          r.offer.message = decryptOfferMessage(r.offer.message, r.offer.id);
+        }
+      });
 
       if (!statusFilter || statusFilter === "all") {
         return rows as unknown as SentOfferDto[];
@@ -111,6 +117,12 @@ export class OfferQueryService {
         .leftJoin(schema.engagements, eq(schema.offers.id, schema.engagements.acceptedOfferId))
         .where(and(...conditions))
         .orderBy(desc(schema.offers.createdAt));
+
+      rows.forEach((r) => {
+        if (r.offer?.message) {
+          r.offer.message = decryptOfferMessage(r.offer.message, r.offer.id);
+        }
+      });
 
       return rows as unknown as ReceivedOfferDto[];
     } catch (err) {
@@ -184,6 +196,10 @@ export class OfferQueryService {
     // Access control: only offeror or listing owner
     if (row.offer.offerorUserId !== viewerUserId && row.listing.ownerUserId !== viewerUserId) {
       return null;
+    }
+
+    if (row.offer?.message) {
+      row.offer.message = decryptOfferMessage(row.offer.message, row.offer.id);
     }
 
     return row;
