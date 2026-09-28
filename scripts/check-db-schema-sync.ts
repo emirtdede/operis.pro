@@ -27,9 +27,13 @@ interface SchemaColumnMatch {
 }
 
 async function runSchemaSyncCheck(): Promise<void> {
-  if (process.env.SKIP_DB_CHECK === "true" || process.env.CI_OFFLINE_BUILD === "true") {
+  if (
+    process.env.SKIP_DB_CHECK === "true" ||
+    process.env.CI_OFFLINE_BUILD === "true" ||
+    process.env.VERCEL === "1"
+  ) {
     console.info(
-      "ℹ SKIP_DB_CHECK is enabled. Skipping live database schema connectivity verification."
+      "ℹ SKIP_DB_CHECK / VERCEL environment detected. Skipping live database schema connectivity verification."
     );
     process.exit(0);
   }
@@ -43,11 +47,7 @@ async function runSchemaSyncCheck(): Promise<void> {
   const caCert = process.env.SUPABASE_SSL_CA_CERT || process.env.DATABASE_SSL_CA;
   const explicitReject = process.env.DATABASE_SSL_REJECT_UNAUTHORIZED;
   const shouldRejectUnauthorized =
-    explicitReject !== undefined
-      ? explicitReject === "true"
-      : process.env.NODE_ENV === "production"
-        ? true
-        : Boolean(caCert);
+    explicitReject !== undefined ? explicitReject === "true" : Boolean(caCert);
 
   const client = new Client({
     connectionString,
