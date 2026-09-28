@@ -1,13 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  CheckCircle2,
-  XCircle,
-  Code2,
-  Check,
-  ShieldCheck,
-} from "lucide-react";
+import { CheckCircle2, XCircle, Code2, Check, ShieldCheck } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { ContractAcceptanceCriterion } from "@/src/modules/contracts/acceptance-types";
 
@@ -16,11 +10,7 @@ export interface AcceptanceCriteriaChecklistProps {
   locale?: "tr" | "en";
   mode?: "read_only" | "interactive_inspection";
   evaluations?: Record<string, { passed: boolean; failureReason?: string }>;
-  onEvaluationChange?: (
-    criterionId: string,
-    passed: boolean,
-    failureReason?: string
-  ) => void;
+  onEvaluationChange?: (criterionId: string, passed: boolean, failureReason?: string) => void;
   title?: string;
   showPhases?: boolean;
 }
@@ -37,7 +27,9 @@ function getPhaseTitle(phase: number, isTr: boolean): string {
     return isTr ? "Faz 1: Altyapı & Yetkilendirme" : "Phase 1: Scaffolding & Auth";
   }
   if (phase === 2) {
-    return isTr ? "Faz 2: Çekirdek İş Mantığı & Entegrasyonlar" : "Phase 2: Core Logic & Integrations";
+    return isTr
+      ? "Faz 2: Çekirdek İş Mantığı & Entegrasyonlar"
+      : "Phase 2: Core Logic & Integrations";
   }
   return isTr ? "Faz 3: Çıktı, Raporlama & Canlıya Alma" : "Phase 3: Output, Tests & Production";
 }
@@ -108,7 +100,8 @@ export function AcceptanceCriteriaChecklist({
           </div>
           <div>
             <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
-              {title || (isTr ? "Objektif Teslimat ve Kabul Kriterleri" : "Objective Acceptance Criteria")}
+              {title ||
+                (isTr ? "Objektif Teslimat ve Kabul Kriterleri" : "Objective Acceptance Criteria")}
             </h4>
             <p className="text-[11px] text-slate-500 dark:text-slate-400">
               {isTr
@@ -151,17 +144,13 @@ export function AcceptanceCriteriaChecklist({
                   {phaseTitle}
                 </div>
 
-                <div className="space-y-2">
-                  {phaseCriteria.map((c) => renderCriterionItem(c))}
-                </div>
+                <div className="space-y-2">{phaseCriteria.map((c) => renderCriterionItem(c))}</div>
               </div>
             );
           })}
         </div>
       ) : (
-        <div className="space-y-2">
-          {criteria.map((c) => renderCriterionItem(c))}
-        </div>
+        <div className="space-y-2">{criteria.map((c) => renderCriterionItem(c))}</div>
       )}
     </div>
   );
@@ -218,11 +207,14 @@ export function AcceptanceCriteriaChecklist({
             {/* Gherkin Code View Toggle */}
             {showGherkin && (
               <div className="mt-2 rounded bg-slate-900 p-2 font-mono text-[11px] text-emerald-400 dark:bg-slate-900">
-                <span className="text-purple-400">GIVEN</span> {isTr ? criterion.gherkinGivenTr : criterion.gherkinGivenEn}
+                <span className="text-purple-400">GIVEN</span>{" "}
+                {isTr ? criterion.gherkinGivenTr : criterion.gherkinGivenEn}
                 <br />
-                <span className="text-yellow-400">WHEN</span> {isTr ? criterion.gherkinWhenTr : criterion.gherkinWhenEn}
+                <span className="text-yellow-400">WHEN</span>{" "}
+                {isTr ? criterion.gherkinWhenTr : criterion.gherkinWhenEn}
                 <br />
-                <span className="text-emerald-400">THEN</span> {isTr ? criterion.gherkinThenTr : criterion.gherkinThenEn}
+                <span className="text-emerald-400">THEN</span>{" "}
+                {isTr ? criterion.gherkinThenTr : criterion.gherkinThenEn}
               </div>
             )}
 

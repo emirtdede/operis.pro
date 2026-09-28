@@ -13,9 +13,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const isTr = locale === "tr";
 
-  const title = isTr
-    ? "Güven & Yasal Şeffaflık Merkezi"
-    : "Trust & Legal Transparency Center";
+  const title = isTr ? "Güven & Yasal Şeffaflık Merkezi" : "Trust & Legal Transparency Center";
   const description = isTr
     ? "Operis'in şeffaf kullanım koşulları, sıfır komisyon protokolü, KVKK aydınlatma metinleri ve fikri mülkiyet koruma ilkeleri dizini."
     : "Review Operis terms of service, zero-commission protocols, GDPR/KVKK compliance notices, and intellectual property protection framework.";

@@ -1,0 +1,5090 @@
+[
+  {
+    "kind": "column",
+    "table_name": "admin_audit_log",
+    "name": "action",
+    "definition": "character varying(50);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "admin_audit_log",
+    "name": "admin_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "admin_audit_log",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "admin_audit_log",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "admin_audit_log",
+    "name": "reason_code",
+    "definition": "character varying(50);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "admin_audit_log",
+    "name": "safe_summary",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "admin_audit_log",
+    "name": "target_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "admin_audit_log",
+    "name": "target_type",
+    "definition": "character varying(50);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "blocks",
+    "name": "blocked_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "blocks",
+    "name": "blocker_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "blocks",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "categories",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "categories",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "categories",
+    "name": "is_active",
+    "definition": "boolean;notnull=t;default=true;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "categories",
+    "name": "key",
+    "definition": "character varying(80);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "categories",
+    "name": "parent_id",
+    "definition": "uuid;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "categories",
+    "name": "sort_order",
+    "definition": "integer;notnull=t;default=0;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "categories",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "category_follows",
+    "name": "category_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "category_follows",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "category_follows",
+    "name": "email_alerts",
+    "definition": "boolean;notnull=t;default=true;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "category_follows",
+    "name": "min_budget",
+    "definition": "integer;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "category_follows",
+    "name": "user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "category_translations",
+    "name": "category_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "category_translations",
+    "name": "description",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "category_translations",
+    "name": "locale",
+    "definition": "character varying(5);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "category_translations",
+    "name": "name",
+    "definition": "character varying(100);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "company_verifications",
+    "name": "authorized_title",
+    "definition": "character varying(100);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "company_verifications",
+    "name": "company_name",
+    "definition": "character varying(150);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "company_verifications",
+    "name": "company_type",
+    "definition": "character varying(30);notnull=t;default='LTD'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "company_verifications",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "company_verifications",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "company_verifications",
+    "name": "proof_document_url",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "company_verifications",
+    "name": "status",
+    "definition": "character varying(30);notnull=t;default='VERIFIED'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "company_verifications",
+    "name": "tax_id_hmac",
+    "definition": "character varying(64);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "company_verifications",
+    "name": "tax_id_masked",
+    "definition": "character varying(20);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "company_verifications",
+    "name": "tax_office",
+    "definition": "character varying(80);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "company_verifications",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "company_verifications",
+    "name": "user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "company_verifications",
+    "name": "verified_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "company_verifications",
+    "name": "website_url",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "contact_messages",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "contact_messages",
+    "name": "email",
+    "definition": "character varying(255);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "contact_messages",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "contact_messages",
+    "name": "ip_address",
+    "definition": "character varying(64);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "contact_messages",
+    "name": "locale",
+    "definition": "character varying(5);notnull=t;default='tr'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "contact_messages",
+    "name": "message",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "contact_messages",
+    "name": "name",
+    "definition": "character varying(120);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "contact_messages",
+    "name": "status",
+    "definition": "character varying(30);notnull=t;default='NEW'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "contact_messages",
+    "name": "subject",
+    "definition": "character varying(255);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "endorsements",
+    "name": "author_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "endorsements",
+    "name": "content",
+    "definition": "character varying(500);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "endorsements",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "endorsements",
+    "name": "engagement_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "endorsements",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "endorsements",
+    "name": "project_title_snapshot",
+    "definition": "character varying(120);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "endorsements",
+    "name": "recipient_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "addendum_content_markdown",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "addendum_sha256",
+    "definition": "character varying(64);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "additional_budget",
+    "definition": "numeric(12,2);notnull=t;default='0'::numeric;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "additional_days",
+    "definition": "integer;notnull=t;default=0;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "currency",
+    "definition": "character varying(10);notnull=t;default='TRY'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "description",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "engagement_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "parent_contract_sha256",
+    "definition": "character varying(64);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "reason",
+    "definition": "character varying(40);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "rejection_reason",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "requester_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "responded_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "reviewer_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "sequence_number",
+    "definition": "integer;notnull=t;default=1;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "status",
+    "definition": "character varying(30);notnull=t;default='PENDING'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "title",
+    "definition": "character varying(160);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_change_requests",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_completion_marks",
+    "name": "engagement_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_completion_marks",
+    "name": "status",
+    "definition": "character varying(30);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_completion_marks",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_completion_marks",
+    "name": "user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "client_ip_hash",
+    "definition": "character varying(64);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "client_signature_data_url",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "client_signature_r2_key",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "client_signed_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "client_signer_name",
+    "definition": "character varying(120);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "client_signer_user_id",
+    "definition": "uuid;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "compiled_html",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "compiled_markdown",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "engagement_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "ephemeral_cleaned_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "freelancer_ip_hash",
+    "definition": "character varying(64);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "freelancer_signature_data_url",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "freelancer_signature_r2_key",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "freelancer_signed_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "freelancer_signer_name",
+    "definition": "character varying(120);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "freelancer_signer_user_id",
+    "definition": "uuid;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "selected_contracts",
+    "definition": "jsonb;notnull=t;default='[\"CORE_SERVICE\"]'::jsonb;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "sha256_seal",
+    "definition": "character varying(64);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "signed_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "status",
+    "definition": "character varying(30);notnull=t;default='DRAFT'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "tamper_reset_count",
+    "definition": "integer;notnull=t;default=0;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_contract_packages",
+    "name": "version",
+    "definition": "integer;notnull=t;default=1;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "acceptance_type",
+    "definition": "character varying(20);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "accepted_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "accepted_by_user_id",
+    "definition": "uuid;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "access_checklist",
+    "definition": "jsonb;notnull=t;default='{\"dnsTransferred\": false, \"apiKeysTransferred\": false, \"hostingTransferred\": false, \"adminAccountsTransferred\": false}'::jsonb;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "commit_hash",
+    "definition": "character varying(64);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "delivery_health",
+    "definition": "jsonb;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "documentation_notes",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "engagement_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "freelancer_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "inspection_expires_at",
+    "definition": "timestamp with time zone;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "live_url",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "repository_url",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "revision_notes",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "sha256_seal",
+    "definition": "character varying(64);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "status",
+    "definition": "character varying(30);notnull=t;default='SUBMITTED'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "submitted_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_handovers",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "accepted_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "amount",
+    "definition": "numeric(12,2);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "audit_trail_json",
+    "definition": "jsonb;notnull=t;default='[]'::jsonb;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "currency",
+    "definition": "character varying(10);notnull=t;default='TRY'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "deliverable_criteria",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "deliverable_note",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "deliverable_status",
+    "definition": "character varying(30);notnull=t;default='NOT_STARTED'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "deliverable_url",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "deliverable_url_type",
+    "definition": "character varying(30);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "description",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "engagement_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "invoice_number",
+    "definition": "character varying(100);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "paid_confirmed_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "paid_marked_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "payment_receipt_url",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "payment_reference",
+    "definition": "character varying(100);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "payment_status",
+    "definition": "character varying(30);notnull=t;default='UNPAID'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "percentage",
+    "definition": "numeric(5,2);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "sequence_number",
+    "definition": "integer;notnull=t;default=1;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "sha256_seal",
+    "definition": "character varying(64);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "submitted_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "target_date",
+    "definition": "date;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "title",
+    "definition": "character varying(160);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_milestones",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainer_periods",
+    "name": "base_price",
+    "definition": "numeric(12,2);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainer_periods",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainer_periods",
+    "name": "currency",
+    "definition": "character varying(10);notnull=t;default='TRY'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainer_periods",
+    "name": "end_date",
+    "definition": "date;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainer_periods",
+    "name": "hours_logged",
+    "definition": "numeric(6,2);notnull=t;default='0'::numeric;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainer_periods",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainer_periods",
+    "name": "overage_hours",
+    "definition": "numeric(6,2);notnull=t;default='0'::numeric;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainer_periods",
+    "name": "overage_price",
+    "definition": "numeric(12,2);notnull=t;default='0'::numeric;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainer_periods",
+    "name": "paid_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainer_periods",
+    "name": "payment_status",
+    "definition": "character varying(30);notnull=t;default='PENDING'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainer_periods",
+    "name": "period_index",
+    "definition": "integer;notnull=t;default=1;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainer_periods",
+    "name": "retainer_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainer_periods",
+    "name": "start_date",
+    "definition": "date;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainer_periods",
+    "name": "tax_summary",
+    "definition": "jsonb;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainer_periods",
+    "name": "total_amount",
+    "definition": "numeric(12,2);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainer_periods",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainer_periods",
+    "name": "work_logs_json",
+    "definition": "jsonb;notnull=t;default='[]'::jsonb;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "cancellation_notice_days",
+    "definition": "integer;notnull=t;default=15;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "cancelled_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "client_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "contract_markdown",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "currency",
+    "definition": "character varying(10);notnull=t;default='TRY'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "effective_cancellation_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "engagement_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "freelancer_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "included_hours",
+    "definition": "integer;notnull=t;default=0;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "monthly_price",
+    "definition": "numeric(12,2);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "overage_hourly_rate",
+    "definition": "numeric(12,2);notnull=f;default='0'::numeric;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "plan_type",
+    "definition": "character varying(30);notnull=t;default='HOURLY_POOL'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "rollover_policy",
+    "definition": "character varying(30);notnull=t;default='NO_ROLLOVER'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "scope_description",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "sha256_seal",
+    "definition": "character varying(64);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "sla_tier",
+    "definition": "character varying(20);notnull=t;default='STANDARD'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "started_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "status",
+    "definition": "character varying(30);notnull=t;default='PROPOSED'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_retainers",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_reviews",
+    "name": "author_role",
+    "definition": "character varying(20);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_reviews",
+    "name": "author_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_reviews",
+    "name": "comment",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_reviews",
+    "name": "communication_rating",
+    "definition": "smallint;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_reviews",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_reviews",
+    "name": "endorsed_skills",
+    "definition": "text[];notnull=t;default='{}'::text[];identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_reviews",
+    "name": "engagement_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_reviews",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_reviews",
+    "name": "is_revealed",
+    "definition": "boolean;notnull=t;default=false;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_reviews",
+    "name": "overall_rating",
+    "definition": "smallint;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_reviews",
+    "name": "quality_rating",
+    "definition": "smallint;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_reviews",
+    "name": "recipient_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_reviews",
+    "name": "revealed_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_reviews",
+    "name": "review_window_expires_at",
+    "definition": "timestamp with time zone;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_reviews",
+    "name": "tags",
+    "definition": "text[];notnull=t;default='{}'::text[];identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_reviews",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_runbooks",
+    "name": "architecture_summary",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_runbooks",
+    "name": "backup_schedule",
+    "definition": "jsonb;notnull=t;default='{\"frequency\": \"DAILY\"}'::jsonb;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_runbooks",
+    "name": "build_and_run_steps",
+    "definition": "jsonb;notnull=t;default='[]'::jsonb;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_runbooks",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_runbooks",
+    "name": "created_by_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_runbooks",
+    "name": "disaster_recovery_steps",
+    "definition": "jsonb;notnull=t;default='[]'::jsonb;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_runbooks",
+    "name": "emergency_contact",
+    "definition": "jsonb;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_runbooks",
+    "name": "engagement_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_runbooks",
+    "name": "environment_variables",
+    "definition": "jsonb;notnull=t;default='[]'::jsonb;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_runbooks",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_runbooks",
+    "name": "published_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_runbooks",
+    "name": "sha256_seal",
+    "definition": "character varying(64);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_runbooks",
+    "name": "status",
+    "definition": "character varying(30);notnull=t;default='DRAFT'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_runbooks",
+    "name": "third_party_services",
+    "definition": "jsonb;notnull=t;default='[]'::jsonb;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_runbooks",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagement_runbooks",
+    "name": "version",
+    "definition": "integer;notnull=t;default=1;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagements",
+    "name": "accepted_offer_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagements",
+    "name": "cancelled_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagements",
+    "name": "completed_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagements",
+    "name": "freelancer_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagements",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagements",
+    "name": "is_squad_engagement",
+    "definition": "boolean;notnull=t;default=false;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagements",
+    "name": "listing_category_snapshot",
+    "definition": "character varying(80);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagements",
+    "name": "listing_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagements",
+    "name": "listing_title_snapshot",
+    "definition": "character varying(120);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagements",
+    "name": "matched_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagements",
+    "name": "owner_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagements",
+    "name": "squad_title_snapshot",
+    "definition": "character varying(120);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "engagements",
+    "name": "status",
+    "definition": "character varying(30);notnull=t;default='MATCHED'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_job_parts",
+    "name": "attempt_no",
+    "definition": "integer;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_job_parts",
+    "name": "byte_length",
+    "definition": "integer;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_job_parts",
+    "name": "job_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_job_parts",
+    "name": "part_no",
+    "definition": "integer;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_job_parts",
+    "name": "payload_enc",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_job_parts",
+    "name": "plaintext_sha256",
+    "definition": "character(64);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "attempt_count",
+    "definition": "integer;notnull=t;default=0;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "checksum_sha256",
+    "definition": "character varying(64);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "completed_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "error_code",
+    "definition": "character varying(64);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "error_message",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "expires_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "file_content",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "file_size_bytes",
+    "definition": "bigint;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "format_version",
+    "definition": "integer;notnull=t;default=2;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "last_progress_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "lease_token",
+    "definition": "uuid;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "lease_until",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "manifest_json",
+    "definition": "jsonb;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "next_attempt_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "part_count",
+    "definition": "integer;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "progress",
+    "definition": "integer;notnull=t;default=0;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "result_attempt",
+    "definition": "integer;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "snapshot_started_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "started_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "status",
+    "definition": "character varying(30);notnull=t;default='PENDING'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "export_jobs",
+    "name": "user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "idempotency_keys",
+    "name": "action",
+    "definition": "character varying(60);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "idempotency_keys",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "idempotency_keys",
+    "name": "expires_at",
+    "definition": "timestamp with time zone;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "idempotency_keys",
+    "name": "key",
+    "definition": "character varying(255);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "idempotency_keys",
+    "name": "response_json",
+    "definition": "jsonb;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "idempotency_keys",
+    "name": "user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "ip_blocks",
+    "name": "actor_id",
+    "definition": "uuid;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "ip_blocks",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "ip_blocks",
+    "name": "expires_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "ip_blocks",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "ip_blocks",
+    "name": "ip",
+    "definition": "character varying(64);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "ip_blocks",
+    "name": "reason",
+    "definition": "character varying(255);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "ip_blocks",
+    "name": "revoked_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "legal_acceptances",
+    "name": "accepted_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "legal_acceptances",
+    "name": "content_hash",
+    "definition": "character varying(64);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "legal_acceptances",
+    "name": "document_key",
+    "definition": "character varying(50);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "legal_acceptances",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "legal_acceptances",
+    "name": "user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "legal_acceptances",
+    "name": "version",
+    "definition": "character varying(20);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "legal_documents",
+    "name": "content_hash",
+    "definition": "character varying(64);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "legal_documents",
+    "name": "document_key",
+    "definition": "character varying(50);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "legal_documents",
+    "name": "effective_at",
+    "definition": "timestamp with time zone;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "legal_documents",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "legal_documents",
+    "name": "is_current",
+    "definition": "boolean;notnull=t;default=true;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "legal_documents",
+    "name": "locale",
+    "definition": "character varying(5);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "legal_documents",
+    "name": "published_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "legal_documents",
+    "name": "version",
+    "definition": "character varying(20);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_revisions",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_revisions",
+    "name": "editor_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_revisions",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_revisions",
+    "name": "listing_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_revisions",
+    "name": "revision_no",
+    "definition": "integer;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_revisions",
+    "name": "snapshot_json",
+    "definition": "jsonb;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_status_events",
+    "name": "activation_seq",
+    "definition": "integer;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_status_events",
+    "name": "actor_id",
+    "definition": "uuid;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_status_events",
+    "name": "actor_type",
+    "definition": "character varying(20);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_status_events",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_status_events",
+    "name": "from_status",
+    "definition": "character varying(30);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_status_events",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_status_events",
+    "name": "listing_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_status_events",
+    "name": "reason",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_status_events",
+    "name": "to_status",
+    "definition": "character varying(30);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_templates",
+    "name": "category_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_templates",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_templates",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_templates",
+    "name": "is_active",
+    "definition": "boolean;notnull=t;default=true;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_templates",
+    "name": "locale",
+    "definition": "character varying(5);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_templates",
+    "name": "schema_json",
+    "definition": "jsonb;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listing_templates",
+    "name": "schema_version",
+    "definition": "integer;notnull=t;default=1;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "activation_seq",
+    "definition": "integer;notnull=t;default=0;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "active_until",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "answers_json",
+    "definition": "jsonb;notnull=t;default='{}'::jsonb;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "budget_currency",
+    "definition": "character(3);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "budget_max",
+    "definition": "numeric(18,2);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "budget_min",
+    "definition": "numeric(18,2);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "budget_mode",
+    "definition": "character varying(30);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "category_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "click_count",
+    "definition": "integer;notnull=t;default=0;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "completed_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "deleted_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "first_published_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "last_activated_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "matched_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "owner_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "scope",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "slug",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "status",
+    "definition": "character varying(30);notnull=t;default='DRAFT'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "summary",
+    "definition": "character varying(280);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "tags",
+    "definition": "text[];notnull=t;default='{}'::text[];identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "target_date",
+    "definition": "date;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "template_schema_version",
+    "definition": "integer;notnull=t;default=1;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "timeline_mode",
+    "definition": "character varying(30);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "timeline_unit",
+    "definition": "character varying(20);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "timeline_value",
+    "definition": "integer;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "title",
+    "definition": "character varying(120);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "listings",
+    "name": "view_count",
+    "definition": "integer;notnull=t;default=0;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "maintenance_identity",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "maintenance_identity",
+    "name": "deployment_id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "maintenance_identity",
+    "name": "is_singleton",
+    "definition": "boolean;notnull=t;default=true;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "notification_fanout_progress",
+    "name": "event_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "notification_fanout_progress",
+    "name": "last_user_id",
+    "definition": "uuid;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "notification_fanout_progress",
+    "name": "phase",
+    "definition": "character varying(16);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "notification_fanout_progress",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "notifications",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "notifications",
+    "name": "delivery_key",
+    "definition": "character varying(191);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "notifications",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "notifications",
+    "name": "payload_json",
+    "definition": "jsonb;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "notifications",
+    "name": "read_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "notifications",
+    "name": "type",
+    "definition": "character varying(50);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "notifications",
+    "name": "user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_counter_proposals",
+    "name": "budget_currency",
+    "definition": "character(3);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_counter_proposals",
+    "name": "budget_max",
+    "definition": "numeric(18,2);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_counter_proposals",
+    "name": "budget_min",
+    "definition": "numeric(18,2);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_counter_proposals",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_counter_proposals",
+    "name": "estimated_duration_unit",
+    "definition": "character varying(20);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_counter_proposals",
+    "name": "estimated_duration_value",
+    "definition": "integer;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_counter_proposals",
+    "name": "expires_at",
+    "definition": "timestamp with time zone;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_counter_proposals",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_counter_proposals",
+    "name": "message",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_counter_proposals",
+    "name": "offer_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_counter_proposals",
+    "name": "proposer_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_counter_proposals",
+    "name": "recipient_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_counter_proposals",
+    "name": "resolved_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_counter_proposals",
+    "name": "round",
+    "definition": "integer;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_counter_proposals",
+    "name": "status",
+    "definition": "character varying(30);notnull=t;default='PENDING'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_revisions",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_revisions",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_revisions",
+    "name": "offer_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_revisions",
+    "name": "revision_no",
+    "definition": "integer;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_revisions",
+    "name": "snapshot_json",
+    "definition": "jsonb;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_squad_members",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_squad_members",
+    "name": "display_name",
+    "definition": "character varying(80);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_squad_members",
+    "name": "handle_or_email",
+    "definition": "character varying(100);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_squad_members",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_squad_members",
+    "name": "is_lead",
+    "definition": "boolean;notnull=t;default=false;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_squad_members",
+    "name": "offer_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_squad_members",
+    "name": "revenue_share_percentage",
+    "definition": "numeric(5,2);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_squad_members",
+    "name": "role_title",
+    "definition": "character varying(60);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_squad_members",
+    "name": "scope_summary",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_squad_members",
+    "name": "user_id",
+    "definition": "uuid;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_templates",
+    "name": "budget_currency",
+    "definition": "character(3);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_templates",
+    "name": "budget_max",
+    "definition": "numeric(18,2);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_templates",
+    "name": "budget_min",
+    "definition": "numeric(18,2);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_templates",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_templates",
+    "name": "estimated_duration_unit",
+    "definition": "character varying(20);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_templates",
+    "name": "estimated_duration_value",
+    "definition": "integer;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_templates",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_templates",
+    "name": "message",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_templates",
+    "name": "name",
+    "definition": "character varying(80);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_templates",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offer_templates",
+    "name": "user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "active_counter_proposal_id",
+    "definition": "uuid;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "budget_currency",
+    "definition": "character(3);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "budget_max",
+    "definition": "numeric(18,2);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "budget_min",
+    "definition": "numeric(18,2);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "counter_round",
+    "definition": "integer;notnull=t;default=0;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "current_turn_user_id",
+    "definition": "uuid;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "estimated_duration_unit",
+    "definition": "character varying(20);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "estimated_duration_value",
+    "definition": "integer;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "is_countered",
+    "definition": "boolean;notnull=t;default=false;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "is_squad_offer",
+    "definition": "boolean;notnull=t;default=false;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "listing_activation_seq",
+    "definition": "integer;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "listing_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "message",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "offeror_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "rejection_code",
+    "definition": "character varying(50);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "rejection_note",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "resolved_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "squad_title",
+    "definition": "character varying(120);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "status",
+    "definition": "character varying(30);notnull=t;default='PENDING'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "offers",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "otp_challenges",
+    "name": "attempt_count",
+    "definition": "integer;notnull=t;default=0;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "otp_challenges",
+    "name": "code_digest",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "otp_challenges",
+    "name": "consumed_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "otp_challenges",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "otp_challenges",
+    "name": "expires_at",
+    "definition": "timestamp with time zone;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "otp_challenges",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "otp_challenges",
+    "name": "key_version",
+    "definition": "integer;notnull=t;default=1;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "otp_challenges",
+    "name": "purpose",
+    "definition": "character varying(40);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "otp_challenges",
+    "name": "superseded_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "otp_challenges",
+    "name": "target_phone_hmac",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "otp_challenges",
+    "name": "user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "outbox_events",
+    "name": "aggregate_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "outbox_events",
+    "name": "aggregate_type",
+    "definition": "character varying(50);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "outbox_events",
+    "name": "attempt_count",
+    "definition": "integer;notnull=t;default=0;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "outbox_events",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "outbox_events",
+    "name": "delivery_key",
+    "definition": "character varying(191);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "outbox_events",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "outbox_events",
+    "name": "lease_token",
+    "definition": "uuid;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "outbox_events",
+    "name": "lease_until",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "outbox_events",
+    "name": "next_attempt_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "outbox_events",
+    "name": "payload_json",
+    "definition": "jsonb;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "outbox_events",
+    "name": "status",
+    "definition": "character varying(30);notnull=t;default='PENDING'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "outbox_events",
+    "name": "type",
+    "definition": "character varying(50);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profile_links",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profile_links",
+    "name": "label",
+    "definition": "character varying(40);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profile_links",
+    "name": "sort_order",
+    "definition": "smallint;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profile_links",
+    "name": "type",
+    "definition": "character varying(40);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profile_links",
+    "name": "url",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profile_links",
+    "name": "user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "about",
+    "definition": "character varying(1000);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "availability_hours_per_week",
+    "definition": "integer;notnull=t;default=40;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "availability_notice",
+    "definition": "character varying(140);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "availability_status",
+    "definition": "character varying(30);notnull=t;default='AVAILABLE_NOW'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "availability_updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "available_from_date",
+    "definition": "date;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "avatar_source",
+    "definition": "character varying(20);notnull=t;default='oauth'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "avatar_url",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "company_name",
+    "definition": "character varying(150);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "company_type",
+    "definition": "character varying(30);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "company_verified_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "display_name",
+    "definition": "character varying(80);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "handle",
+    "definition": "character varying(30);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "headline",
+    "definition": "character varying(140);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "is_actively_hiring",
+    "definition": "boolean;notnull=t;default=false;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "is_available_for_hire",
+    "definition": "boolean;notnull=t;default=true;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "is_company_verified",
+    "definition": "boolean;notnull=t;default=false;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "locale",
+    "definition": "character varying(5);notnull=t;default='tr'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "preferred_contact_channel",
+    "definition": "character varying(30);notnull=f;default='any'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "reveal_phone_after_match",
+    "definition": "boolean;notnull=t;default=false;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "roles",
+    "definition": "text[];notnull=t;default='{}'::text[];identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "show_location",
+    "definition": "boolean;notnull=t;default=false;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "tax_office",
+    "definition": "character varying(80);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "theme",
+    "definition": "character varying(10);notnull=t;default='light'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "time_zone",
+    "definition": "character varying(60);notnull=f;default='Europe/Istanbul'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "tracked_skills",
+    "definition": "text[];notnull=t;default='{}'::text[];identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "vkn_hmac",
+    "definition": "character varying(64);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "profiles",
+    "name": "vkn_masked",
+    "definition": "character varying(20);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "rate_limits",
+    "name": "count",
+    "definition": "integer;notnull=t;default=1;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "rate_limits",
+    "name": "expires_at",
+    "definition": "timestamp with time zone;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "rate_limits",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "rate_limits",
+    "name": "purpose",
+    "definition": "character varying(60);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "rate_limits",
+    "name": "subject_digest",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "rate_limits",
+    "name": "window_start",
+    "definition": "timestamp with time zone;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "reports",
+    "name": "assigned_admin_id",
+    "definition": "uuid;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "reports",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "reports",
+    "name": "details",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "reports",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "reports",
+    "name": "reason_code",
+    "definition": "character varying(50);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "reports",
+    "name": "reporter_user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "reports",
+    "name": "resolved_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "reports",
+    "name": "status",
+    "definition": "character varying(30);notnull=t;default='OPEN'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "reports",
+    "name": "target_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "reports",
+    "name": "target_type",
+    "definition": "character varying(30);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "resend_contact_pool",
+    "name": "bounce_reason",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "resend_contact_pool",
+    "name": "bounced_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "resend_contact_pool",
+    "name": "consent_given_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "resend_contact_pool",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "resend_contact_pool",
+    "name": "email",
+    "definition": "character varying(255);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "resend_contact_pool",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "resend_contact_pool",
+    "name": "last_active_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "resend_contact_pool",
+    "name": "resend_contact_id",
+    "definition": "character varying(100);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "resend_contact_pool",
+    "name": "status",
+    "definition": "character varying(30);notnull=t;default='PENDING'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "resend_contact_pool",
+    "name": "synced_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "resend_contact_pool",
+    "name": "unsubscribed_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "resend_contact_pool",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "resend_contact_pool",
+    "name": "user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "saved_listings",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "saved_listings",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "saved_listings",
+    "name": "listing_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "saved_listings",
+    "name": "notes",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "saved_listings",
+    "name": "user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "search_trends",
+    "name": "count",
+    "definition": "integer;notnull=t;default=1;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "search_trends",
+    "name": "id",
+    "definition": "integer;notnull=t;default=nextval('search_trends_id_seq'::regclass);identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "search_trends",
+    "name": "last_searched_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "search_trends",
+    "name": "locale",
+    "definition": "character varying(10);notnull=t;default='tr'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "search_trends",
+    "name": "normalized",
+    "definition": "character varying(100);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "search_trends",
+    "name": "query",
+    "definition": "character varying(100);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "security_events",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "security_events",
+    "name": "event_type",
+    "definition": "character varying(50);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "security_events",
+    "name": "expires_at",
+    "definition": "timestamp with time zone;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "security_events",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "security_events",
+    "name": "ip_address",
+    "definition": "character varying(45);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "security_events",
+    "name": "risk_metadata",
+    "definition": "jsonb;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "security_events",
+    "name": "user_agent",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "security_events",
+    "name": "user_id",
+    "definition": "uuid;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "user_private_identity",
+    "name": "city",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "user_private_identity",
+    "name": "country_code",
+    "definition": "character(2);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "user_private_identity",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "user_private_identity",
+    "name": "date_of_birth_enc",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "user_private_identity",
+    "name": "legal_first_name_enc",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "user_private_identity",
+    "name": "legal_last_name_enc",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "user_private_identity",
+    "name": "phone_e164_enc",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "user_private_identity",
+    "name": "phone_hmac",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "user_private_identity",
+    "name": "phone_verified_at",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "user_private_identity",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "user_private_identity",
+    "name": "user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "users",
+    "name": "auth_version",
+    "definition": "integer;notnull=t;default=1;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "users",
+    "name": "clerk_user_id",
+    "definition": "character varying(255);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "users",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "users",
+    "name": "email",
+    "definition": "character varying(255);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "users",
+    "name": "email_enc",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "users",
+    "name": "email_hmac",
+    "definition": "character varying(64);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "users",
+    "name": "email_verified",
+    "definition": "boolean;notnull=t;default=false;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "users",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "users",
+    "name": "password_hash",
+    "definition": "character varying(255);notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "users",
+    "name": "role",
+    "definition": "character varying(30);notnull=t;default='USER'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "users",
+    "name": "status",
+    "definition": "character varying(30);notnull=t;default='ACTIVE'::character varying;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "users",
+    "name": "two_factor_backup_codes",
+    "definition": "text[];notnull=t;default='{}'::text[];identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "users",
+    "name": "two_factor_enabled",
+    "definition": "boolean;notnull=t;default=false;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "users",
+    "name": "two_factor_secret",
+    "definition": "character varying(255);notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "users",
+    "name": "updated_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "constraint",
+    "table_name": "admin_audit_log",
+    "name": "admin_audit_log_admin_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (admin_user_id) REFERENCES users(id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "admin_audit_log",
+    "name": "admin_audit_log_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "blocks",
+    "name": "blocks_blocked_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (blocked_user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "blocks",
+    "name": "blocks_blocker_user_id_blocked_user_id_pk",
+    "definition": "PRIMARY KEY (blocker_user_id, blocked_user_id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "blocks",
+    "name": "blocks_blocker_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (blocker_user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "categories",
+    "name": "categories_key_unique",
+    "definition": "UNIQUE (key)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "categories",
+    "name": "categories_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "category_follows",
+    "name": "category_follows_category_id_categories_id_fk",
+    "definition": "FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "category_follows",
+    "name": "category_follows_user_id_category_id_pk",
+    "definition": "PRIMARY KEY (user_id, category_id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "category_follows",
+    "name": "category_follows_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "category_translations",
+    "name": "category_translations_category_id_categories_id_fk",
+    "definition": "FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "category_translations",
+    "name": "category_translations_category_id_locale_pk",
+    "definition": "PRIMARY KEY (category_id, locale)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "company_verifications",
+    "name": "company_verifications_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "company_verifications",
+    "name": "company_verifications_tax_id_hmac_unique",
+    "definition": "UNIQUE (tax_id_hmac)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "company_verifications",
+    "name": "company_verifications_user_id_unique",
+    "definition": "UNIQUE (user_id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "company_verifications",
+    "name": "company_verifications_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "contact_messages",
+    "name": "contact_messages_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "endorsements",
+    "name": "endorsements_author_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (author_user_id) REFERENCES users(id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "endorsements",
+    "name": "endorsements_engagement_id_engagements_id_fk",
+    "definition": "FOREIGN KEY (engagement_id) REFERENCES engagements(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "endorsements",
+    "name": "endorsements_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "endorsements",
+    "name": "endorsements_recipient_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (recipient_user_id) REFERENCES users(id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_change_requests",
+    "name": "engagement_change_requests_engagement_id_engagements_id_fk",
+    "definition": "FOREIGN KEY (engagement_id) REFERENCES engagements(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_change_requests",
+    "name": "engagement_change_requests_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_change_requests",
+    "name": "engagement_change_requests_requester_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (requester_user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_change_requests",
+    "name": "engagement_change_requests_reviewer_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (reviewer_user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_completion_marks",
+    "name": "engagement_completion_marks_engagement_id_engagements_id_fk",
+    "definition": "FOREIGN KEY (engagement_id) REFERENCES engagements(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_completion_marks",
+    "name": "engagement_completion_marks_engagement_id_user_id_pk",
+    "definition": "PRIMARY KEY (engagement_id, user_id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_completion_marks",
+    "name": "engagement_completion_marks_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_contract_packages",
+    "name": "engagement_contract_packages_client_signer_user_id_fkey",
+    "definition": "FOREIGN KEY (client_signer_user_id) REFERENCES users(id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_contract_packages",
+    "name": "engagement_contract_packages_engagement_id_fkey",
+    "definition": "FOREIGN KEY (engagement_id) REFERENCES engagements(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_contract_packages",
+    "name": "engagement_contract_packages_freelancer_signer_user_id_fkey",
+    "definition": "FOREIGN KEY (freelancer_signer_user_id) REFERENCES users(id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_contract_packages",
+    "name": "engagement_contract_packages_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_handovers",
+    "name": "engagement_handovers_accepted_by_user_id_fkey",
+    "definition": "FOREIGN KEY (accepted_by_user_id) REFERENCES users(id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_handovers",
+    "name": "engagement_handovers_engagement_id_fkey",
+    "definition": "FOREIGN KEY (engagement_id) REFERENCES engagements(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_handovers",
+    "name": "engagement_handovers_freelancer_user_id_fkey",
+    "definition": "FOREIGN KEY (freelancer_user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_handovers",
+    "name": "engagement_handovers_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_milestones",
+    "name": "engagement_milestones_engagement_id_engagements_id_fk",
+    "definition": "FOREIGN KEY (engagement_id) REFERENCES engagements(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_milestones",
+    "name": "engagement_milestones_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_retainer_periods",
+    "name": "engagement_retainer_periods_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_retainer_periods",
+    "name": "engagement_retainer_periods_retainer_id_engagement_retainers_id",
+    "definition": "FOREIGN KEY (retainer_id) REFERENCES engagement_retainers(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_retainers",
+    "name": "engagement_retainers_client_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (client_user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_retainers",
+    "name": "engagement_retainers_engagement_id_engagements_id_fk",
+    "definition": "FOREIGN KEY (engagement_id) REFERENCES engagements(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_retainers",
+    "name": "engagement_retainers_engagement_id_unique",
+    "definition": "UNIQUE (engagement_id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_retainers",
+    "name": "engagement_retainers_freelancer_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (freelancer_user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_retainers",
+    "name": "engagement_retainers_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_reviews",
+    "name": "engagement_reviews_author_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (author_user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_reviews",
+    "name": "engagement_reviews_engagement_id_engagements_id_fk",
+    "definition": "FOREIGN KEY (engagement_id) REFERENCES engagements(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_reviews",
+    "name": "engagement_reviews_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_reviews",
+    "name": "engagement_reviews_recipient_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (recipient_user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_reviews",
+    "name": "reviews_comm_rating_chk",
+    "definition": "CHECK (((communication_rating >= 1) AND (communication_rating <= 5)))"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_reviews",
+    "name": "reviews_overall_rating_chk",
+    "definition": "CHECK (((overall_rating >= 1) AND (overall_rating <= 5)))"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_reviews",
+    "name": "reviews_quality_rating_chk",
+    "definition": "CHECK (((quality_rating >= 1) AND (quality_rating <= 5)))"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_runbooks",
+    "name": "engagement_runbooks_created_by_id_users_id_fk",
+    "definition": "FOREIGN KEY (created_by_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_runbooks",
+    "name": "engagement_runbooks_engagement_id_engagements_id_fk",
+    "definition": "FOREIGN KEY (engagement_id) REFERENCES engagements(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_runbooks",
+    "name": "engagement_runbooks_engagement_id_unique",
+    "definition": "UNIQUE (engagement_id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagement_runbooks",
+    "name": "engagement_runbooks_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagements",
+    "name": "engagements_accepted_offer_id_offers_id_fk",
+    "definition": "FOREIGN KEY (accepted_offer_id) REFERENCES offers(id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagements",
+    "name": "engagements_freelancer_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (freelancer_user_id) REFERENCES users(id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagements",
+    "name": "engagements_listing_id_listings_id_fk",
+    "definition": "FOREIGN KEY (listing_id) REFERENCES listings(id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagements",
+    "name": "engagements_owner_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (owner_user_id) REFERENCES users(id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "engagements",
+    "name": "engagements_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "export_job_parts",
+    "name": "export_job_parts_job_id_export_jobs_id_fk",
+    "definition": "FOREIGN KEY (job_id) REFERENCES export_jobs(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "export_job_parts",
+    "name": "export_job_parts_job_id_fkey",
+    "definition": "FOREIGN KEY (job_id) REFERENCES export_jobs(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "export_job_parts",
+    "name": "export_job_parts_pkey",
+    "definition": "PRIMARY KEY (job_id, attempt_no, part_no)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "export_jobs",
+    "name": "export_jobs_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "export_jobs",
+    "name": "export_jobs_user_id_fkey",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "export_jobs",
+    "name": "export_jobs_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "idempotency_keys",
+    "name": "idempotency_keys_pkey",
+    "definition": "PRIMARY KEY (key)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "idempotency_keys",
+    "name": "idempotency_keys_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "ip_blocks",
+    "name": "ip_blocks_actor_id_users_id_fk",
+    "definition": "FOREIGN KEY (actor_id) REFERENCES users(id) ON DELETE SET NULL"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "ip_blocks",
+    "name": "ip_blocks_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "legal_acceptances",
+    "name": "legal_acceptances_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "legal_acceptances",
+    "name": "legal_acceptances_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "legal_documents",
+    "name": "legal_documents_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "listing_revisions",
+    "name": "listing_revisions_editor_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (editor_user_id) REFERENCES users(id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "listing_revisions",
+    "name": "listing_revisions_listing_id_listings_id_fk",
+    "definition": "FOREIGN KEY (listing_id) REFERENCES listings(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "listing_revisions",
+    "name": "listing_revisions_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "listing_status_events",
+    "name": "listing_status_events_listing_id_listings_id_fk",
+    "definition": "FOREIGN KEY (listing_id) REFERENCES listings(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "listing_status_events",
+    "name": "listing_status_events_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "listing_templates",
+    "name": "listing_templates_category_id_categories_id_fk",
+    "definition": "FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "listing_templates",
+    "name": "listing_templates_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "listings",
+    "name": "listings_budget_integrity_chk",
+    "definition": "CHECK ((((status)::text = 'DRAFT'::text) OR (((budget_mode)::text = ANY ((ARRAY['EXACT'::character varying, 'FIXED_EXACT'::character varying, 'HOURLY_EXACT'::character varying])::text[])) AND (budget_min IS NOT NULL) AND (budget_max IS NOT NULL) AND (budget_min = budget_max) AND (budget_min > (0)::numeric) AND (budget_currency IS NOT NULL)) OR (((budget_mode)::text = ANY ((ARRAY['RANGE'::character varying, 'FIXED_RANGE'::character varying, 'HOURLY_RANGE'::character varying])::text[])) AND (budget_min IS NOT NULL) AND (budget_max IS NOT NULL) AND (budget_min > (0)::numeric) AND (budget_max >= budget_min) AND (budget_currency IS NOT NULL)) OR (((budget_mode)::text = ANY ((ARRAY['OPEN_BID'::character varying, 'NEGOTIABLE'::character varying, 'REQUEST_GUIDANCE'::character varying])::text[])) AND ((budget_min IS NULL) OR (budget_min > (0)::numeric)) AND ((budget_max IS NULL) OR (budget_max > (0)::numeric)) AND ((budget_min IS NULL) OR (budget_max IS NULL) OR (budget_max >= budget_min)))))"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "listings",
+    "name": "listings_category_id_categories_id_fk",
+    "definition": "FOREIGN KEY (category_id) REFERENCES categories(id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "listings",
+    "name": "listings_owner_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (owner_user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "listings",
+    "name": "listings_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "listings",
+    "name": "listings_slug_unique",
+    "definition": "UNIQUE (slug)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "maintenance_identity",
+    "name": "maintenance_identity_is_singleton_check",
+    "definition": "CHECK ((is_singleton = true))"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "maintenance_identity",
+    "name": "maintenance_identity_pkey",
+    "definition": "PRIMARY KEY (is_singleton)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "notification_fanout_progress",
+    "name": "notification_fanout_progress_event_id_fkey",
+    "definition": "FOREIGN KEY (event_id) REFERENCES outbox_events(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "notification_fanout_progress",
+    "name": "notification_fanout_progress_event_id_outbox_events_id_fk",
+    "definition": "FOREIGN KEY (event_id) REFERENCES outbox_events(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "notification_fanout_progress",
+    "name": "notification_fanout_progress_phase_check",
+    "definition": "CHECK (((phase)::text = ANY ((ARRAY['RADAR'::character varying, 'CATEGORY'::character varying, 'DONE'::character varying])::text[])))"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "notification_fanout_progress",
+    "name": "notification_fanout_progress_pkey",
+    "definition": "PRIMARY KEY (event_id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "notifications",
+    "name": "notifications_delivery_key_unique",
+    "definition": "UNIQUE (delivery_key)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "notifications",
+    "name": "notifications_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "notifications",
+    "name": "notifications_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "offer_counter_proposals",
+    "name": "offer_counter_proposals_offer_id_offers_id_fk",
+    "definition": "FOREIGN KEY (offer_id) REFERENCES offers(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "offer_counter_proposals",
+    "name": "offer_counter_proposals_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "offer_counter_proposals",
+    "name": "offer_counter_proposals_proposer_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (proposer_user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "offer_counter_proposals",
+    "name": "offer_counter_proposals_recipient_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (recipient_user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "offer_revisions",
+    "name": "offer_revisions_offer_id_offers_id_fk",
+    "definition": "FOREIGN KEY (offer_id) REFERENCES offers(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "offer_revisions",
+    "name": "offer_revisions_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "offer_squad_members",
+    "name": "offer_squad_members_offer_id_offers_id_fk",
+    "definition": "FOREIGN KEY (offer_id) REFERENCES offers(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "offer_squad_members",
+    "name": "offer_squad_members_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "offer_squad_members",
+    "name": "offer_squad_members_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "offer_templates",
+    "name": "offer_templates_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "offer_templates",
+    "name": "offer_templates_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "offers",
+    "name": "offers_current_turn_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (current_turn_user_id) REFERENCES users(id) ON DELETE SET NULL"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "offers",
+    "name": "offers_listing_id_listings_id_fk",
+    "definition": "FOREIGN KEY (listing_id) REFERENCES listings(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "offers",
+    "name": "offers_offeror_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (offeror_user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "offers",
+    "name": "offers_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "otp_challenges",
+    "name": "otp_challenges_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "otp_challenges",
+    "name": "otp_challenges_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "outbox_events",
+    "name": "outbox_events_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "profile_links",
+    "name": "profile_links_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "profile_links",
+    "name": "profile_links_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "profiles",
+    "name": "profiles_handle_unique",
+    "definition": "UNIQUE (handle)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "profiles",
+    "name": "profiles_pkey",
+    "definition": "PRIMARY KEY (user_id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "profiles",
+    "name": "profiles_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "rate_limits",
+    "name": "rate_limits_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "reports",
+    "name": "reports_assigned_admin_id_users_id_fk",
+    "definition": "FOREIGN KEY (assigned_admin_id) REFERENCES users(id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "reports",
+    "name": "reports_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "reports",
+    "name": "reports_reporter_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (reporter_user_id) REFERENCES users(id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "resend_contact_pool",
+    "name": "resend_contact_pool_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "resend_contact_pool",
+    "name": "resend_contact_pool_user_id_fkey",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "resend_contact_pool",
+    "name": "resend_contact_pool_user_id_unique",
+    "definition": "UNIQUE (user_id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "resend_contact_pool",
+    "name": "resend_contact_pool_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "saved_listings",
+    "name": "saved_listings_listing_id_listings_id_fk",
+    "definition": "FOREIGN KEY (listing_id) REFERENCES listings(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "saved_listings",
+    "name": "saved_listings_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "saved_listings",
+    "name": "saved_listings_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "search_trends",
+    "name": "search_trends_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "security_events",
+    "name": "security_events_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "security_events",
+    "name": "security_events_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "user_private_identity",
+    "name": "user_private_identity_phone_hmac_unique",
+    "definition": "UNIQUE (phone_hmac)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "user_private_identity",
+    "name": "user_private_identity_pkey",
+    "definition": "PRIMARY KEY (user_id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "user_private_identity",
+    "name": "user_private_identity_user_id_users_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "users",
+    "name": "users_clerk_user_id_unique",
+    "definition": "UNIQUE (clerk_user_id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "users",
+    "name": "users_email_unique",
+    "definition": "UNIQUE (email)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "users",
+    "name": "users_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "index",
+    "table_name": "admin_audit_log",
+    "name": "admin_audit_log_admin_user_id_idx",
+    "definition": "CREATE INDEX admin_audit_log_admin_user_id_idx ON public.admin_audit_log USING btree (admin_user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "admin_audit_log",
+    "name": "admin_audit_log_pkey",
+    "definition": "CREATE UNIQUE INDEX admin_audit_log_pkey ON public.admin_audit_log USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "blocks",
+    "name": "blocks_blocked_user_id_idx",
+    "definition": "CREATE INDEX blocks_blocked_user_id_idx ON public.blocks USING btree (blocked_user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "blocks",
+    "name": "blocks_blocker_user_id_blocked_user_id_pk",
+    "definition": "CREATE UNIQUE INDEX blocks_blocker_user_id_blocked_user_id_pk ON public.blocks USING btree (blocker_user_id, blocked_user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "categories",
+    "name": "categories_key_unique",
+    "definition": "CREATE UNIQUE INDEX categories_key_unique ON public.categories USING btree (key);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "categories",
+    "name": "categories_pkey",
+    "definition": "CREATE UNIQUE INDEX categories_pkey ON public.categories USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "category_follows",
+    "name": "category_follows_category_id_idx",
+    "definition": "CREATE INDEX category_follows_category_id_idx ON public.category_follows USING btree (category_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "category_follows",
+    "name": "category_follows_user_id_category_id_pk",
+    "definition": "CREATE UNIQUE INDEX category_follows_user_id_category_id_pk ON public.category_follows USING btree (user_id, category_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "category_follows",
+    "name": "idx_cat_follows_cat_alerts",
+    "definition": "CREATE INDEX idx_cat_follows_cat_alerts ON public.category_follows USING btree (category_id, email_alerts);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "category_translations",
+    "name": "category_translations_category_id_locale_pk",
+    "definition": "CREATE UNIQUE INDEX category_translations_category_id_locale_pk ON public.category_translations USING btree (category_id, locale);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "company_verifications",
+    "name": "company_verifications_pkey",
+    "definition": "CREATE UNIQUE INDEX company_verifications_pkey ON public.company_verifications USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "company_verifications",
+    "name": "company_verifications_tax_id_hmac_unique",
+    "definition": "CREATE UNIQUE INDEX company_verifications_tax_id_hmac_unique ON public.company_verifications USING btree (tax_id_hmac);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "company_verifications",
+    "name": "company_verifications_user_id_unique",
+    "definition": "CREATE UNIQUE INDEX company_verifications_user_id_unique ON public.company_verifications USING btree (user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "company_verifications",
+    "name": "idx_company_verif_hmac",
+    "definition": "CREATE UNIQUE INDEX idx_company_verif_hmac ON public.company_verifications USING btree (tax_id_hmac);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "company_verifications",
+    "name": "idx_company_verif_user",
+    "definition": "CREATE UNIQUE INDEX idx_company_verif_user ON public.company_verifications USING btree (user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "contact_messages",
+    "name": "contact_messages_created_idx",
+    "definition": "CREATE INDEX contact_messages_created_idx ON public.contact_messages USING btree (created_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "contact_messages",
+    "name": "contact_messages_pkey",
+    "definition": "CREATE UNIQUE INDEX contact_messages_pkey ON public.contact_messages USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "contact_messages",
+    "name": "contact_messages_status_idx",
+    "definition": "CREATE INDEX contact_messages_status_idx ON public.contact_messages USING btree (status);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "endorsements",
+    "name": "endorsements_author_user_id_idx",
+    "definition": "CREATE INDEX endorsements_author_user_id_idx ON public.endorsements USING btree (author_user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "endorsements",
+    "name": "endorsements_engagement_author_idx",
+    "definition": "CREATE UNIQUE INDEX endorsements_engagement_author_idx ON public.endorsements USING btree (engagement_id, author_user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "endorsements",
+    "name": "endorsements_pkey",
+    "definition": "CREATE UNIQUE INDEX endorsements_pkey ON public.endorsements USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "endorsements",
+    "name": "endorsements_recipient_idx",
+    "definition": "CREATE INDEX endorsements_recipient_idx ON public.endorsements USING btree (recipient_user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_change_requests",
+    "name": "engagement_change_requests_pkey",
+    "definition": "CREATE UNIQUE INDEX engagement_change_requests_pkey ON public.engagement_change_requests USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_change_requests",
+    "name": "idx_engagement_change_requests_engagement",
+    "definition": "CREATE INDEX idx_engagement_change_requests_engagement ON public.engagement_change_requests USING btree (engagement_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_change_requests",
+    "name": "idx_engagement_change_requests_pending",
+    "definition": "CREATE UNIQUE INDEX idx_engagement_change_requests_pending ON public.engagement_change_requests USING btree (engagement_id) WHERE ((status)::text = 'PENDING'::text);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_change_requests",
+    "name": "idx_engagement_change_requests_seq",
+    "definition": "CREATE UNIQUE INDEX idx_engagement_change_requests_seq ON public.engagement_change_requests USING btree (engagement_id, sequence_number);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_change_requests",
+    "name": "idx_engagement_change_requests_status",
+    "definition": "CREATE INDEX idx_engagement_change_requests_status ON public.engagement_change_requests USING btree (status);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_completion_marks",
+    "name": "engagement_completion_marks_engagement_id_user_id_pk",
+    "definition": "CREATE UNIQUE INDEX engagement_completion_marks_engagement_id_user_id_pk ON public.engagement_completion_marks USING btree (engagement_id, user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_completion_marks",
+    "name": "engagement_completion_marks_user_id_idx",
+    "definition": "CREATE INDEX engagement_completion_marks_user_id_idx ON public.engagement_completion_marks USING btree (user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_contract_packages",
+    "name": "engagement_contract_packages_pkey",
+    "definition": "CREATE UNIQUE INDEX engagement_contract_packages_pkey ON public.engagement_contract_packages USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_contract_packages",
+    "name": "idx_contract_packages_engagement",
+    "definition": "CREATE UNIQUE INDEX idx_contract_packages_engagement ON public.engagement_contract_packages USING btree (engagement_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_contract_packages",
+    "name": "idx_contract_packages_status",
+    "definition": "CREATE INDEX idx_contract_packages_status ON public.engagement_contract_packages USING btree (status);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_handovers",
+    "name": "engagement_handovers_pkey",
+    "definition": "CREATE UNIQUE INDEX engagement_handovers_pkey ON public.engagement_handovers USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_handovers",
+    "name": "idx_engagement_handovers_engagement",
+    "definition": "CREATE UNIQUE INDEX idx_engagement_handovers_engagement ON public.engagement_handovers USING btree (engagement_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_handovers",
+    "name": "idx_engagement_handovers_inspection",
+    "definition": "CREATE INDEX idx_engagement_handovers_inspection ON public.engagement_handovers USING btree (inspection_expires_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_handovers",
+    "name": "idx_engagement_handovers_status",
+    "definition": "CREATE INDEX idx_engagement_handovers_status ON public.engagement_handovers USING btree (status);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_milestones",
+    "name": "engagement_milestones_pkey",
+    "definition": "CREATE UNIQUE INDEX engagement_milestones_pkey ON public.engagement_milestones USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_milestones",
+    "name": "idx_engagement_milestones_engagement",
+    "definition": "CREATE INDEX idx_engagement_milestones_engagement ON public.engagement_milestones USING btree (engagement_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_milestones",
+    "name": "idx_engagement_milestones_seq",
+    "definition": "CREATE UNIQUE INDEX idx_engagement_milestones_seq ON public.engagement_milestones USING btree (engagement_id, sequence_number);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_milestones",
+    "name": "idx_engagement_milestones_status",
+    "definition": "CREATE INDEX idx_engagement_milestones_status ON public.engagement_milestones USING btree (deliverable_status, payment_status);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_retainer_periods",
+    "name": "engagement_retainer_periods_pkey",
+    "definition": "CREATE UNIQUE INDEX engagement_retainer_periods_pkey ON public.engagement_retainer_periods USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_retainer_periods",
+    "name": "idx_engagement_retainer_periods_retainer",
+    "definition": "CREATE INDEX idx_engagement_retainer_periods_retainer ON public.engagement_retainer_periods USING btree (retainer_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_retainer_periods",
+    "name": "idx_engagement_retainer_periods_status",
+    "definition": "CREATE INDEX idx_engagement_retainer_periods_status ON public.engagement_retainer_periods USING btree (payment_status);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_retainer_periods",
+    "name": "idx_engagement_retainer_periods_unique",
+    "definition": "CREATE UNIQUE INDEX idx_engagement_retainer_periods_unique ON public.engagement_retainer_periods USING btree (retainer_id, period_index);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_retainers",
+    "name": "engagement_retainers_engagement_id_unique",
+    "definition": "CREATE UNIQUE INDEX engagement_retainers_engagement_id_unique ON public.engagement_retainers USING btree (engagement_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_retainers",
+    "name": "engagement_retainers_pkey",
+    "definition": "CREATE UNIQUE INDEX engagement_retainers_pkey ON public.engagement_retainers USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_retainers",
+    "name": "idx_engagement_retainers_engagement",
+    "definition": "CREATE UNIQUE INDEX idx_engagement_retainers_engagement ON public.engagement_retainers USING btree (engagement_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_retainers",
+    "name": "idx_engagement_retainers_status",
+    "definition": "CREATE INDEX idx_engagement_retainers_status ON public.engagement_retainers USING btree (status);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_reviews",
+    "name": "engagement_reviews_pkey",
+    "definition": "CREATE UNIQUE INDEX engagement_reviews_pkey ON public.engagement_reviews USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_reviews",
+    "name": "reviews_author_revealed_idx",
+    "definition": "CREATE INDEX reviews_author_revealed_idx ON public.engagement_reviews USING btree (author_user_id, is_revealed, created_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_reviews",
+    "name": "reviews_engagement_author_unique_idx",
+    "definition": "CREATE UNIQUE INDEX reviews_engagement_author_unique_idx ON public.engagement_reviews USING btree (engagement_id, author_user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_reviews",
+    "name": "reviews_engagement_idx",
+    "definition": "CREATE INDEX reviews_engagement_idx ON public.engagement_reviews USING btree (engagement_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_reviews",
+    "name": "reviews_recipient_revealed_idx",
+    "definition": "CREATE INDEX reviews_recipient_revealed_idx ON public.engagement_reviews USING btree (recipient_user_id, is_revealed, created_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_runbooks",
+    "name": "engagement_runbooks_engagement_id_unique",
+    "definition": "CREATE UNIQUE INDEX engagement_runbooks_engagement_id_unique ON public.engagement_runbooks USING btree (engagement_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_runbooks",
+    "name": "engagement_runbooks_pkey",
+    "definition": "CREATE UNIQUE INDEX engagement_runbooks_pkey ON public.engagement_runbooks USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_runbooks",
+    "name": "idx_engagement_runbooks_engagement",
+    "definition": "CREATE UNIQUE INDEX idx_engagement_runbooks_engagement ON public.engagement_runbooks USING btree (engagement_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagement_runbooks",
+    "name": "idx_engagement_runbooks_status",
+    "definition": "CREATE INDEX idx_engagement_runbooks_status ON public.engagement_runbooks USING btree (status);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagements",
+    "name": "engagements_active_accepted_offer_idx",
+    "definition": "CREATE UNIQUE INDEX engagements_active_accepted_offer_idx ON public.engagements USING btree (accepted_offer_id) WHERE ((status)::text <> 'CANCELLED'::text);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagements",
+    "name": "engagements_active_listing_idx",
+    "definition": "CREATE UNIQUE INDEX engagements_active_listing_idx ON public.engagements USING btree (listing_id) WHERE ((status)::text <> 'CANCELLED'::text);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagements",
+    "name": "engagements_freelancer_status_idx",
+    "definition": "CREATE INDEX engagements_freelancer_status_idx ON public.engagements USING btree (freelancer_user_id, status);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagements",
+    "name": "engagements_freelancer_user_id_idx",
+    "definition": "CREATE INDEX engagements_freelancer_user_id_idx ON public.engagements USING btree (freelancer_user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagements",
+    "name": "engagements_owner_status_idx",
+    "definition": "CREATE INDEX engagements_owner_status_idx ON public.engagements USING btree (owner_user_id, status);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagements",
+    "name": "engagements_owner_user_id_idx",
+    "definition": "CREATE INDEX engagements_owner_user_id_idx ON public.engagements USING btree (owner_user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagements",
+    "name": "engagements_pkey",
+    "definition": "CREATE UNIQUE INDEX engagements_pkey ON public.engagements USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "engagements",
+    "name": "idx_engagements_benchmark",
+    "definition": "CREATE INDEX idx_engagements_benchmark ON public.engagements USING btree (status, matched_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "export_job_parts",
+    "name": "export_job_parts_pkey",
+    "definition": "CREATE UNIQUE INDEX export_job_parts_pkey ON public.export_job_parts USING btree (job_id, attempt_no, part_no);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "export_jobs",
+    "name": "export_jobs_one_active_user_idx",
+    "definition": "CREATE UNIQUE INDEX export_jobs_one_active_user_idx ON public.export_jobs USING btree (user_id) WHERE ((status)::text = ANY ((ARRAY['PENDING'::character varying, 'PROCESSING'::character varying])::text[]));valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "export_jobs",
+    "name": "export_jobs_pkey",
+    "definition": "CREATE UNIQUE INDEX export_jobs_pkey ON public.export_jobs USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "export_jobs",
+    "name": "export_jobs_status_next_attempt_idx",
+    "definition": "CREATE INDEX export_jobs_status_next_attempt_idx ON public.export_jobs USING btree (status, next_attempt_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "export_jobs",
+    "name": "export_jobs_user_status_created_idx",
+    "definition": "CREATE INDEX export_jobs_user_status_created_idx ON public.export_jobs USING btree (user_id, status, created_at DESC);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "idempotency_keys",
+    "name": "idempotency_keys_pkey",
+    "definition": "CREATE UNIQUE INDEX idempotency_keys_pkey ON public.idempotency_keys USING btree (key);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "idempotency_keys",
+    "name": "idempotency_keys_user_action_idx",
+    "definition": "CREATE INDEX idempotency_keys_user_action_idx ON public.idempotency_keys USING btree (user_id, action);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "ip_blocks",
+    "name": "ip_blocks_actor_id_idx",
+    "definition": "CREATE INDEX ip_blocks_actor_id_idx ON public.ip_blocks USING btree (actor_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "ip_blocks",
+    "name": "ip_blocks_ip_idx",
+    "definition": "CREATE INDEX ip_blocks_ip_idx ON public.ip_blocks USING btree (ip);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "ip_blocks",
+    "name": "ip_blocks_pkey",
+    "definition": "CREATE UNIQUE INDEX ip_blocks_pkey ON public.ip_blocks USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "ip_blocks",
+    "name": "ip_blocks_revoked_expires_idx",
+    "definition": "CREATE INDEX ip_blocks_revoked_expires_idx ON public.ip_blocks USING btree (revoked_at, expires_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "legal_acceptances",
+    "name": "legal_acceptances_pkey",
+    "definition": "CREATE UNIQUE INDEX legal_acceptances_pkey ON public.legal_acceptances USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "legal_acceptances",
+    "name": "legal_acceptances_user_id_idx",
+    "definition": "CREATE INDEX legal_acceptances_user_id_idx ON public.legal_acceptances USING btree (user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "legal_documents",
+    "name": "legal_documents_pkey",
+    "definition": "CREATE UNIQUE INDEX legal_documents_pkey ON public.legal_documents USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "listing_revisions",
+    "name": "listing_revisions_editor_user_id_idx",
+    "definition": "CREATE INDEX listing_revisions_editor_user_id_idx ON public.listing_revisions USING btree (editor_user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "listing_revisions",
+    "name": "listing_revisions_pkey",
+    "definition": "CREATE UNIQUE INDEX listing_revisions_pkey ON public.listing_revisions USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "listing_revisions",
+    "name": "listing_revisions_uniq_idx",
+    "definition": "CREATE UNIQUE INDEX listing_revisions_uniq_idx ON public.listing_revisions USING btree (listing_id, revision_no);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "listing_status_events",
+    "name": "listing_status_events_listing_id_idx",
+    "definition": "CREATE INDEX listing_status_events_listing_id_idx ON public.listing_status_events USING btree (listing_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "listing_status_events",
+    "name": "listing_status_events_pkey",
+    "definition": "CREATE UNIQUE INDEX listing_status_events_pkey ON public.listing_status_events USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "listing_templates",
+    "name": "listing_templates_category_id_idx",
+    "definition": "CREATE INDEX listing_templates_category_id_idx ON public.listing_templates USING btree (category_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "listing_templates",
+    "name": "listing_templates_pkey",
+    "definition": "CREATE UNIQUE INDEX listing_templates_pkey ON public.listing_templates USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "listings",
+    "name": "listings_category_feed_idx",
+    "definition": "CREATE INDEX listings_category_feed_idx ON public.listings USING btree (category_id, status, last_activated_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "listings",
+    "name": "listings_feed_idx",
+    "definition": "CREATE INDEX listings_feed_idx ON public.listings USING btree (status, last_activated_at, id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "listings",
+    "name": "listings_owner_status_idx",
+    "definition": "CREATE INDEX listings_owner_status_idx ON public.listings USING btree (owner_user_id, status);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "listings",
+    "name": "listings_pkey",
+    "definition": "CREATE UNIQUE INDEX listings_pkey ON public.listings USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "listings",
+    "name": "listings_search_multi_idx",
+    "definition": "CREATE INDEX listings_search_multi_idx ON public.listings USING btree (status, title);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "listings",
+    "name": "listings_slug_unique",
+    "definition": "CREATE UNIQUE INDEX listings_slug_unique ON public.listings USING btree (slug);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "maintenance_identity",
+    "name": "maintenance_identity_pkey",
+    "definition": "CREATE UNIQUE INDEX maintenance_identity_pkey ON public.maintenance_identity USING btree (is_singleton);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "notification_fanout_progress",
+    "name": "notification_fanout_progress_pkey",
+    "definition": "CREATE UNIQUE INDEX notification_fanout_progress_pkey ON public.notification_fanout_progress USING btree (event_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "notifications",
+    "name": "notifications_delivery_key_unique",
+    "definition": "CREATE UNIQUE INDEX notifications_delivery_key_unique ON public.notifications USING btree (delivery_key);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "notifications",
+    "name": "notifications_delivery_key_unique_idx",
+    "definition": "CREATE UNIQUE INDEX notifications_delivery_key_unique_idx ON public.notifications USING btree (delivery_key) WHERE (delivery_key IS NOT NULL);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "notifications",
+    "name": "notifications_pkey",
+    "definition": "CREATE UNIQUE INDEX notifications_pkey ON public.notifications USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "notifications",
+    "name": "notifications_user_created_idx",
+    "definition": "CREATE INDEX notifications_user_created_idx ON public.notifications USING btree (user_id, created_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "notifications",
+    "name": "notifications_user_id_idx",
+    "definition": "CREATE INDEX notifications_user_id_idx ON public.notifications USING btree (user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "notifications",
+    "name": "notifications_user_unread_idx",
+    "definition": "CREATE INDEX notifications_user_unread_idx ON public.notifications USING btree (user_id, read_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "offer_counter_proposals",
+    "name": "counter_proposals_expires_idx",
+    "definition": "CREATE INDEX counter_proposals_expires_idx ON public.offer_counter_proposals USING btree (expires_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "offer_counter_proposals",
+    "name": "counter_proposals_offer_round_idx",
+    "definition": "CREATE INDEX counter_proposals_offer_round_idx ON public.offer_counter_proposals USING btree (offer_id, round);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "offer_counter_proposals",
+    "name": "counter_proposals_status_idx",
+    "definition": "CREATE INDEX counter_proposals_status_idx ON public.offer_counter_proposals USING btree (status);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "offer_counter_proposals",
+    "name": "offer_counter_proposals_offer_idx",
+    "definition": "CREATE INDEX offer_counter_proposals_offer_idx ON public.offer_counter_proposals USING btree (offer_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "offer_counter_proposals",
+    "name": "offer_counter_proposals_pkey",
+    "definition": "CREATE UNIQUE INDEX offer_counter_proposals_pkey ON public.offer_counter_proposals USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "offer_revisions",
+    "name": "offer_revisions_pkey",
+    "definition": "CREATE UNIQUE INDEX offer_revisions_pkey ON public.offer_revisions USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "offer_revisions",
+    "name": "offer_revisions_uniq_idx",
+    "definition": "CREATE UNIQUE INDEX offer_revisions_uniq_idx ON public.offer_revisions USING btree (offer_id, revision_no);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "offer_squad_members",
+    "name": "offer_squad_members_offer_idx",
+    "definition": "CREATE INDEX offer_squad_members_offer_idx ON public.offer_squad_members USING btree (offer_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "offer_squad_members",
+    "name": "offer_squad_members_pkey",
+    "definition": "CREATE UNIQUE INDEX offer_squad_members_pkey ON public.offer_squad_members USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "offer_templates",
+    "name": "offer_templates_pkey",
+    "definition": "CREATE UNIQUE INDEX offer_templates_pkey ON public.offer_templates USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "offer_templates",
+    "name": "offer_templates_user_idx",
+    "definition": "CREATE INDEX offer_templates_user_idx ON public.offer_templates USING btree (user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "offers",
+    "name": "offers_accepted_unique_idx",
+    "definition": "CREATE UNIQUE INDEX offers_accepted_unique_idx ON public.offers USING btree (listing_id) WHERE ((status)::text = 'ACCEPTED'::text);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "offers",
+    "name": "offers_pending_unique_idx",
+    "definition": "CREATE UNIQUE INDEX offers_pending_unique_idx ON public.offers USING btree (listing_id, offeror_user_id) WHERE ((status)::text = 'PENDING'::text);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "offers",
+    "name": "offers_pkey",
+    "definition": "CREATE UNIQUE INDEX offers_pkey ON public.offers USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "offers",
+    "name": "offers_received_idx",
+    "definition": "CREATE INDEX offers_received_idx ON public.offers USING btree (listing_id, status);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "offers",
+    "name": "offers_sent_idx",
+    "definition": "CREATE INDEX offers_sent_idx ON public.offers USING btree (offeror_user_id, status);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "otp_challenges",
+    "name": "otp_challenges_expires_idx",
+    "definition": "CREATE INDEX otp_challenges_expires_idx ON public.otp_challenges USING btree (expires_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "otp_challenges",
+    "name": "otp_challenges_pkey",
+    "definition": "CREATE UNIQUE INDEX otp_challenges_pkey ON public.otp_challenges USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "otp_challenges",
+    "name": "otp_challenges_user_purpose_idx",
+    "definition": "CREATE INDEX otp_challenges_user_purpose_idx ON public.otp_challenges USING btree (user_id, purpose);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "outbox_events",
+    "name": "idx_outbox_events_status_lease",
+    "definition": "CREATE INDEX idx_outbox_events_status_lease ON public.outbox_events USING btree (status, lease_until, next_attempt_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "outbox_events",
+    "name": "outbox_delivery_key_unique_idx",
+    "definition": "CREATE UNIQUE INDEX outbox_delivery_key_unique_idx ON public.outbox_events USING btree (delivery_key);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "outbox_events",
+    "name": "outbox_events_pkey",
+    "definition": "CREATE UNIQUE INDEX outbox_events_pkey ON public.outbox_events USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "outbox_events",
+    "name": "outbox_status_next_attempt_idx",
+    "definition": "CREATE INDEX outbox_status_next_attempt_idx ON public.outbox_events USING btree (status, next_attempt_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "profile_links",
+    "name": "profile_links_pkey",
+    "definition": "CREATE UNIQUE INDEX profile_links_pkey ON public.profile_links USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "profile_links",
+    "name": "profile_links_user_sort_idx",
+    "definition": "CREATE UNIQUE INDEX profile_links_user_sort_idx ON public.profile_links USING btree (user_id, sort_order);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "profiles",
+    "name": "idx_profiles_availability_status",
+    "definition": "CREATE INDEX idx_profiles_availability_status ON public.profiles USING btree (availability_status);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "profiles",
+    "name": "idx_profiles_company_verified",
+    "definition": "CREATE INDEX idx_profiles_company_verified ON public.profiles USING btree (is_company_verified);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "profiles",
+    "name": "profiles_handle_unique",
+    "definition": "CREATE UNIQUE INDEX profiles_handle_unique ON public.profiles USING btree (handle);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "profiles",
+    "name": "profiles_pkey",
+    "definition": "CREATE UNIQUE INDEX profiles_pkey ON public.profiles USING btree (user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "rate_limits",
+    "name": "rate_limits_expires_idx",
+    "definition": "CREATE INDEX rate_limits_expires_idx ON public.rate_limits USING btree (expires_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "rate_limits",
+    "name": "rate_limits_pkey",
+    "definition": "CREATE UNIQUE INDEX rate_limits_pkey ON public.rate_limits USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "rate_limits",
+    "name": "rate_limits_purpose_subject_window_idx",
+    "definition": "CREATE UNIQUE INDEX rate_limits_purpose_subject_window_idx ON public.rate_limits USING btree (purpose, subject_digest, window_start);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "reports",
+    "name": "reports_assigned_admin_id_idx",
+    "definition": "CREATE INDEX reports_assigned_admin_id_idx ON public.reports USING btree (assigned_admin_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "reports",
+    "name": "reports_pkey",
+    "definition": "CREATE UNIQUE INDEX reports_pkey ON public.reports USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "reports",
+    "name": "reports_reporter_user_id_idx",
+    "definition": "CREATE INDEX reports_reporter_user_id_idx ON public.reports USING btree (reporter_user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "resend_contact_pool",
+    "name": "resend_contact_pool_email_idx",
+    "definition": "CREATE INDEX resend_contact_pool_email_idx ON public.resend_contact_pool USING btree (email);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "resend_contact_pool",
+    "name": "resend_contact_pool_pkey",
+    "definition": "CREATE UNIQUE INDEX resend_contact_pool_pkey ON public.resend_contact_pool USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "resend_contact_pool",
+    "name": "resend_contact_pool_resend_id_idx",
+    "definition": "CREATE UNIQUE INDEX resend_contact_pool_resend_id_idx ON public.resend_contact_pool USING btree (resend_contact_id) WHERE (resend_contact_id IS NOT NULL);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "resend_contact_pool",
+    "name": "resend_contact_pool_status_active_idx",
+    "definition": "CREATE INDEX resend_contact_pool_status_active_idx ON public.resend_contact_pool USING btree (status, last_active_at DESC);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "resend_contact_pool",
+    "name": "resend_contact_pool_user_id_idx",
+    "definition": "CREATE INDEX resend_contact_pool_user_id_idx ON public.resend_contact_pool USING btree (user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "resend_contact_pool",
+    "name": "resend_contact_pool_user_id_unique",
+    "definition": "CREATE UNIQUE INDEX resend_contact_pool_user_id_unique ON public.resend_contact_pool USING btree (user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "saved_listings",
+    "name": "saved_listings_pkey",
+    "definition": "CREATE UNIQUE INDEX saved_listings_pkey ON public.saved_listings USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "saved_listings",
+    "name": "saved_listings_user_created_idx",
+    "definition": "CREATE INDEX saved_listings_user_created_idx ON public.saved_listings USING btree (user_id, created_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "saved_listings",
+    "name": "saved_listings_user_listing_idx",
+    "definition": "CREATE UNIQUE INDEX saved_listings_user_listing_idx ON public.saved_listings USING btree (user_id, listing_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "search_trends",
+    "name": "search_trends_locale_count_idx",
+    "definition": "CREATE INDEX search_trends_locale_count_idx ON public.search_trends USING btree (locale, count, last_searched_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "search_trends",
+    "name": "search_trends_locale_normalized_idx",
+    "definition": "CREATE UNIQUE INDEX search_trends_locale_normalized_idx ON public.search_trends USING btree (locale, normalized);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "search_trends",
+    "name": "search_trends_pkey",
+    "definition": "CREATE UNIQUE INDEX search_trends_pkey ON public.search_trends USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "security_events",
+    "name": "security_events_expires_idx",
+    "definition": "CREATE INDEX security_events_expires_idx ON public.security_events USING btree (expires_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "security_events",
+    "name": "security_events_pkey",
+    "definition": "CREATE UNIQUE INDEX security_events_pkey ON public.security_events USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "security_events",
+    "name": "security_events_user_created_idx",
+    "definition": "CREATE INDEX security_events_user_created_idx ON public.security_events USING btree (user_id, created_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "security_events",
+    "name": "security_events_user_id_idx",
+    "definition": "CREATE INDEX security_events_user_id_idx ON public.security_events USING btree (user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "user_private_identity",
+    "name": "user_private_identity_phone_hmac_unique",
+    "definition": "CREATE UNIQUE INDEX user_private_identity_phone_hmac_unique ON public.user_private_identity USING btree (phone_hmac);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "user_private_identity",
+    "name": "user_private_identity_pkey",
+    "definition": "CREATE UNIQUE INDEX user_private_identity_pkey ON public.user_private_identity USING btree (user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "users",
+    "name": "idx_users_email_hmac",
+    "definition": "CREATE INDEX idx_users_email_hmac ON public.users USING btree (email_hmac);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "users",
+    "name": "users_clerk_user_id_unique",
+    "definition": "CREATE UNIQUE INDEX users_clerk_user_id_unique ON public.users USING btree (clerk_user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "users",
+    "name": "users_clerk_user_id_unique_idx",
+    "definition": "CREATE UNIQUE INDEX users_clerk_user_id_unique_idx ON public.users USING btree (clerk_user_id) WHERE (clerk_user_id IS NOT NULL);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "users",
+    "name": "users_email_unique",
+    "definition": "CREATE UNIQUE INDEX users_email_unique ON public.users USING btree (email);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "users",
+    "name": "users_pkey",
+    "definition": "CREATE UNIQUE INDEX users_pkey ON public.users USING btree (id);valid=t"
+  }
+]

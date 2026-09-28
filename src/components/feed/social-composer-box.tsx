@@ -28,9 +28,7 @@ export function SocialComposerBox({ locale, userDisplayName }: SocialComposerBox
           href={newListingPath}
           className="flex-1 px-4 py-2 rounded-xl bg-[var(--color-surface-hover)]/70 border border-[var(--color-border-subtle)]/50 text-xs sm:text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-blue-500/30 transition-all truncate"
         >
-          {isTr
-            ? "Yeni bir ilan yayınlamak mı istiyorsunuz?"
-            : "Looking to post a new listing?"}
+          {isTr ? "Yeni bir ilan yayınlamak mı istiyorsunuz?" : "Looking to post a new listing?"}
         </Link>
 
         <Link href={newListingPath} className="shrink-0">

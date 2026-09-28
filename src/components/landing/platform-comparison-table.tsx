@@ -294,7 +294,7 @@ export function PlatformComparisonTable({
           </div>
 
           {/* Right Column: Traditional Freelance Sites */}
-          <div className="relative rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/50 backdrop-blur-xl p-6 sm:p-8 opacity-85 hover:opacity-100 transition-opacity flex flex-col justify-between">
+          <div className="relative rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/50 backdrop-blur-xl p-6 sm:p-8  flex flex-col justify-between">
             <div className="absolute -top-3.5 left-8 inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] px-3.5 py-1 text-xs font-medium text-[var(--color-text-tertiary)]">
               <XCircle className="h-3.5 w-3.5 text-rose-400" aria-hidden="true" />
               <span>
@@ -307,7 +307,7 @@ export function PlatformComparisonTable({
                 <h3 className="text-xl sm:text-2xl font-bold text-[var(--color-text-secondary)]">
                   {isTr ? "Geleneksel Freelance Siteleri" : "Traditional Freelance Platforms"}
                 </h3>
-                <p className="text-xs sm:text-sm text-rose-400/80 font-medium mt-1">
+                <p className="text-xs sm:text-sm text-rose-400 font-medium mt-1">
                   {isTr
                     ? "Aracı komisyonları ve sansürlü iletişim kuralları"
                     : "High take-rates and restrictive platform policies"}

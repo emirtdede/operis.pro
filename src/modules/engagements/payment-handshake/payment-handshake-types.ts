@@ -22,10 +22,7 @@ export type SupportedBank =
   | "OTHER";
 
 export type PaymentHandshakeStatus =
-  | "UNPAID"
-  | "PAYMENT_DECLARED"
-  | "PAYMENT_CONFIRMED"
-  | "PAYMENT_DISPUTED";
+  "UNPAID" | "PAYMENT_DECLARED" | "PAYMENT_CONFIRMED" | "PAYMENT_DISPUTED";
 
 export type PaymentDisputeReason =
   | "FUNDS_NOT_RECEIVED"
@@ -110,4 +107,3 @@ export interface PaymentSettlementCertificate {
   legalEvidentiaryClauseEn: string;
   createdAt: string;
 }
-

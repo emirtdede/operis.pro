@@ -136,7 +136,10 @@ export function ListingDetailActions({
         </>
       ) : (
         <>
-          <Share2 className="h-3.5 w-3.5 text-[var(--color-text-secondary)] shrink-0" aria-hidden="true" />
+          <Share2
+            className="h-3.5 w-3.5 text-[var(--color-text-secondary)] shrink-0"
+            aria-hidden="true"
+          />
           <span>{isTr ? "Bağlantıyı Kopyala" : "Share Link"}</span>
         </>
       )}
@@ -275,7 +278,10 @@ export function ListingDetailActions({
               onClick={handleDetailedOfferClick}
               className="w-full gap-1.5 justify-center text-xs h-10 rounded-xl"
             >
-              <SlidersHorizontal className="h-3.5 w-3.5 text-blue-400 shrink-0" aria-hidden="true" />
+              <SlidersHorizontal
+                className="h-3.5 w-3.5 text-blue-400 shrink-0"
+                aria-hidden="true"
+              />
               <span>{isTr ? "Detaylı Teklif" : "Detailed Offer"}</span>
             </Button>
 
@@ -331,51 +337,51 @@ export function ListingDetailActions({
         </>
       )}
 
-        {drawerOpen && (
-          <QuickOfferDrawer
-            isOpen={drawerOpen}
-            onClose={() => setDrawerOpen(false)}
-            listing={drawerListing}
-            locale={locale}
-            onOpenFullModal={(data) => {
-              setDrawerOpen(false);
-              setInitialData(data);
-              setModalOpen(true);
-            }}
-            onSuccess={() => {
-              setDrawerOpen(false);
-              router.refresh();
-            }}
-          />
-        )}
-
-        {modalOpen && (
-          <SubmitOfferModal
-            isOpen={modalOpen}
-            onClose={() => {
-              setModalOpen(false);
-              setInitialData(undefined);
-            }}
-            listingId={listingId}
-            listingTitle={listingTitle}
-            locale={locale}
-            initialData={initialData}
-            onSuccess={() => {
-              setModalOpen(false);
-              setInitialData(undefined);
-              router.refresh();
-            }}
-          />
-        )}
-
-        <ContextualReportModal
-          targetType="listing"
-          targetIdentifier={listingSlug || listingId}
-          targetTitle={listingTitle}
-          isOpen={reportOpen}
-          onClose={() => setReportOpen(false)}
+      {drawerOpen && (
+        <QuickOfferDrawer
+          isOpen={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          listing={drawerListing}
           locale={locale}
+          onOpenFullModal={(data) => {
+            setDrawerOpen(false);
+            setInitialData(data);
+            setModalOpen(true);
+          }}
+          onSuccess={() => {
+            setDrawerOpen(false);
+            router.refresh();
+          }}
         />
+      )}
+
+      {modalOpen && (
+        <SubmitOfferModal
+          isOpen={modalOpen}
+          onClose={() => {
+            setModalOpen(false);
+            setInitialData(undefined);
+          }}
+          listingId={listingId}
+          listingTitle={listingTitle}
+          locale={locale}
+          initialData={initialData}
+          onSuccess={() => {
+            setModalOpen(false);
+            setInitialData(undefined);
+            router.refresh();
+          }}
+        />
+      )}
+
+      <ContextualReportModal
+        targetType="listing"
+        targetIdentifier={listingSlug || listingId}
+        targetTitle={listingTitle}
+        isOpen={reportOpen}
+        onClose={() => setReportOpen(false)}
+        locale={locale}
+      />
 
       <p className="text-[11px] text-[var(--color-text-tertiary)] flex items-center gap-1.5 pt-1">
         <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />

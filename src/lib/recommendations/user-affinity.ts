@@ -1,6 +1,6 @@
 /**
  * Operis Recommendation Engine - User Affinity Service
- * 
+ *
  * Implements:
  * 1. Client-edge interaction logging (clicks, searches, tag interactions)
  * 2. Exponential time decay (half-life: 48 hours for user taste)
@@ -99,13 +99,9 @@ export function recordUserAffinity(event: {
   const current = readStorage();
 
   // Prune events older than 14 days
-  const filteredEvents = current.events.filter(
-    (e) => now - e.timestamp < EVENT_TTL_MS
-  );
+  const filteredEvents = current.events.filter((e) => now - e.timestamp < EVENT_TTL_MS);
 
-  const cleanTags = (event.tags || [])
-    .map((t) => t.trim().toLowerCase())
-    .filter(Boolean);
+  const cleanTags = (event.tags || []).map((t) => t.trim().toLowerCase()).filter(Boolean);
 
   const newEvent: AffinityEvent = {
     type: event.type,
@@ -243,10 +239,10 @@ function computeTagCosineSimilarity(
 
 /**
  * Personalized Category Recommendation Algorithm
- * 
+ *
  * Formula:
  * Score(C) = 0.45 * DirectCategoryAffinity + 0.40 * CosineSimilarity(UserTags, CatTags) + 0.15 * MarketMomentum
- * 
+ *
  * - Unfollowed categories are ranked first.
  * - Followed categories are filtered out to foster discovery.
  * - Zero Mock Data: Falls back gracefully to real platform listing volume and engagement.
@@ -292,10 +288,7 @@ export function rankCategoriesByPersonalizedAffinity({
     const catSlug = item.categorySlug?.toLowerCase();
     if (!catSlug) continue;
 
-    categoryActiveListingCount.set(
-      catSlug,
-      (categoryActiveListingCount.get(catSlug) || 0) + 1
-    );
+    categoryActiveListingCount.set(catSlug, (categoryActiveListingCount.get(catSlug) || 0) + 1);
 
     if (!categoryTagMap.has(catSlug)) {
       categoryTagMap.set(catSlug, new Map());
@@ -329,7 +322,9 @@ export function rankCategoriesByPersonalizedAffinity({
     // Strongest signal: does this category belong to the same sector as one of user's followed categories?
     let sectorScore = 0;
     if (cat.sectorKey && followedSectorKeySet.has(cat.sectorKey)) {
-      const followedInSameSector = followedCats.filter((fc) => fc.sectorKey === cat.sectorKey).length;
+      const followedInSameSector = followedCats.filter(
+        (fc) => fc.sectorKey === cat.sectorKey
+      ).length;
       sectorScore = 40 + Math.min(10, followedInSameSector * 2);
     }
 

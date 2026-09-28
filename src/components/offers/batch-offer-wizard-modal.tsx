@@ -56,9 +56,15 @@ function getBatchSubmitButtonLabel(isSubmitting: boolean, count: number, isTr: b
   return isTr ? `${count} Teklifi Gönder` : `Submit ${count} Proposals`;
 }
 
-function getResultDeliveryNote(isSuccess: boolean, fallbackMsg: string | undefined, isTr: boolean): string {
+function getResultDeliveryNote(
+  isSuccess: boolean,
+  fallbackMsg: string | undefined,
+  isTr: boolean
+): string {
   if (isSuccess) {
-    return isTr ? "Uçtan uca şifreli olarak ilan sahibine iletildi" : "Securely delivered to client";
+    return isTr
+      ? "Uçtan uca şifreli olarak ilan sahibine iletildi"
+      : "Securely delivered to client";
   }
   return fallbackMsg || "";
 }
@@ -692,7 +698,9 @@ export function BatchOfferWizardModal({
                 className="flex items-center gap-2 font-semibold shadow-lg shadow-blue-500/20"
               >
                 <Send className="h-4 w-4" />
-                <span>{getBatchSubmitButtonLabel(isSubmitting, selectedListings.length, isTr)}</span>
+                <span>
+                  {getBatchSubmitButtonLabel(isSubmitting, selectedListings.length, isTr)}
+                </span>
               </Button>
             </div>
           </div>

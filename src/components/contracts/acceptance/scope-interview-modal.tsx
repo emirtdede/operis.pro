@@ -13,6 +13,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 import { AcceptanceEngine } from "@/src/modules/contracts/acceptance-engine";
 import {
   ScopeInterviewAnswers,
@@ -118,8 +119,15 @@ export function ScopeInterviewModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 transition-opacity animate-in fade-in duration-200">
-      <div className="relative flex max-h-[92vh] w-full max-w-3xl flex-col rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] shadow-2xl overflow-hidden">
+    <ModalOverlay
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabel={isTr ? "Akıllı Kapsam & Teslimat Şartnamesi" : "Smart Scope & Acceptance Spec"}
+    >
+      <div
+        className="relative flex max-h-[92vh] w-full max-w-3xl flex-col rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] shadow-2xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] px-6 py-4.5 bg-[var(--color-surface-base)]">
           <div className="flex items-center gap-3">
@@ -159,9 +167,7 @@ export function ScopeInterviewModal({
             <div
               key={idx}
               className={`h-full flex-1 transition-all duration-300 ${
-                idx <= currentStep
-                  ? "bg-blue-600"
-                  : "bg-[var(--color-surface-hover)] opacity-50"
+                idx <= currentStep ? "bg-blue-600" : "bg-[var(--color-surface-hover)] opacity-50"
               }`}
             />
           ))}
@@ -178,7 +184,9 @@ export function ScopeInterviewModal({
             <div className="space-y-5">
               <div>
                 <div className="text-xs font-bold uppercase tracking-wider text-blue-400 font-mono">
-                  {isTr ? `Soru ${currentStep + 1} / ${questions.length}` : `Question ${currentStep + 1} of ${questions.length}`}
+                  {isTr
+                    ? `Soru ${currentStep + 1} / ${questions.length}`
+                    : `Question ${currentStep + 1} of ${questions.length}`}
                 </div>
                 <h4 className="mt-1 text-lg font-bold text-[var(--color-text-primary)]">
                   {isTr ? currentQuestion.titleTr : currentQuestion.titleEn}
@@ -291,11 +299,14 @@ export function ScopeInterviewModal({
                               </p>
                               {showGherkin && (
                                 <div className="mt-2 rounded-xl bg-black/60 p-2.5 font-mono text-[11px] text-blue-300 border border-[var(--color-border-subtle)] leading-relaxed">
-                                  <span className="text-purple-400 font-bold">GIVEN</span> {isTr ? c.gherkinGivenTr : c.gherkinGivenEn}
+                                  <span className="text-purple-400 font-bold">GIVEN</span>{" "}
+                                  {isTr ? c.gherkinGivenTr : c.gherkinGivenEn}
                                   <br />
-                                  <span className="text-amber-400 font-bold">WHEN</span> {isTr ? c.gherkinWhenTr : c.gherkinWhenEn}
+                                  <span className="text-amber-400 font-bold">WHEN</span>{" "}
+                                  {isTr ? c.gherkinWhenTr : c.gherkinWhenEn}
                                   <br />
-                                  <span className="text-emerald-400 font-bold">THEN</span> {isTr ? c.gherkinThenTr : c.gherkinThenEn}
+                                  <span className="text-emerald-400 font-bold">THEN</span>{" "}
+                                  {isTr ? c.gherkinThenTr : c.gherkinThenEn}
                                 </div>
                               )}
                             </div>
@@ -373,6 +384,6 @@ export function ScopeInterviewModal({
           </div>
         </div>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

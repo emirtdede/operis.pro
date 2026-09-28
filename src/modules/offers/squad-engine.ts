@@ -63,7 +63,10 @@ export class SquadRevenueEngine {
     if (members.length < 2) {
       return {
         isValid: false,
-        totalPercentage: members.reduce((sum, m) => sum + (Number(m.revenueSharePercentage) || 0), 0),
+        totalPercentage: members.reduce(
+          (sum, m) => sum + (Number(m.revenueSharePercentage) || 0),
+          0
+        ),
         error: "Çevik ekip teklifi en az 2 uzmandan (1 Lider + 1 Eş Yüklenici) oluşmalıdır.",
         errorTr: "Çevik ekip teklifi en az 2 uzmandan (1 Lider + 1 Eş Yüklenici) oluşmalıdır.",
         errorEn: "A squad proposal must include at least 2 specialists (1 Lead + 1 Co-Contractor).",
@@ -73,7 +76,10 @@ export class SquadRevenueEngine {
     if (members.length > 5) {
       return {
         isValid: false,
-        totalPercentage: members.reduce((sum, m) => sum + (Number(m.revenueSharePercentage) || 0), 0),
+        totalPercentage: members.reduce(
+          (sum, m) => sum + (Number(m.revenueSharePercentage) || 0),
+          0
+        ),
         error: "Çevik ekip koordinasyon güvenliği için en fazla 5 uzmandan oluşabilir.",
         errorTr: "Çevik ekip koordinasyon güvenliği için en fazla 5 uzmandan oluşabilir.",
         errorEn: "Squad cannot exceed 5 specialists to maintain agile coordination integrity.",
@@ -88,8 +94,10 @@ export class SquadRevenueEngine {
         return {
           isValid: false,
           totalPercentage: total,
-          error: "Her ekip üyesinin geçerli bir isim ve unvana sahip olması zorunludur. Ad Soyad ve Rol alanları doldurulmalıdır.",
-          errorTr: "Her ekip üyesinin geçerli bir isim ve unvana sahip olması zorunludur. Ad Soyad ve Rol alanları doldurulmalıdır.",
+          error:
+            "Her ekip üyesinin geçerli bir isim ve unvana sahip olması zorunludur. Ad Soyad ve Rol alanları doldurulmalıdır.",
+          errorTr:
+            "Her ekip üyesinin geçerli bir isim ve unvana sahip olması zorunludur. Ad Soyad ve Rol alanları doldurulmalıdır.",
           errorEn: "Each squad member must have a valid display name.",
         };
       }
@@ -134,9 +142,10 @@ export class SquadRevenueEngine {
     }
 
     if (leadCount !== 1) {
-      const msg = leadCount === 0
-        ? "Çevik ekipte işverene karşı tek muhatap olacak tam 1 adet Lider Yüklenici seçilmelidir."
-        : "Çevik ekipte işverene karşı tek muhatap olacak yalnızca 1 adet Lider Yüklenici bulunabilir.";
+      const msg =
+        leadCount === 0
+          ? "Çevik ekipte işverene karşı tek muhatap olacak tam 1 adet Lider Yüklenici seçilmelidir."
+          : "Çevik ekipte işverene karşı tek muhatap olacak yalnızca 1 adet Lider Yüklenici bulunabilir.";
       return {
         isValid: false,
         totalPercentage: roundedTotal,
@@ -214,7 +223,12 @@ export class SquadRevenueEngine {
     const combined = `${categoryKey || ""} ${title || ""}`.toLowerCase();
 
     // 1. Mobile Development Squad
-    if (combined.includes("mobile") || combined.includes("mobil") || combined.includes("ios") || combined.includes("android")) {
+    if (
+      combined.includes("mobile") ||
+      combined.includes("mobil") ||
+      combined.includes("ios") ||
+      combined.includes("android")
+    ) {
       const squadTitle = "Mobil & Backend Çevik Konsorsiyumu";
       return {
         squadTitle,
@@ -246,7 +260,12 @@ export class SquadRevenueEngine {
     }
 
     // 2. AI & Machine Learning Squad
-    if (combined.includes("ai") || combined.includes("yapay zeka") || combined.includes("llm") || combined.includes("rag")) {
+    if (
+      combined.includes("ai") ||
+      combined.includes("yapay zeka") ||
+      combined.includes("llm") ||
+      combined.includes("rag")
+    ) {
       const squadTitle = "Yapay Zeka & Fullstack Çözüm Ekibi";
       return {
         squadTitle,

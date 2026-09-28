@@ -54,7 +54,8 @@ export async function getAdminSession(
         isAuthenticated: true,
         isAdmin: false,
         session,
-        error: "Two-factor authentication (2FA) verification is required for administrative operations",
+        error:
+          "Two-factor authentication (2FA) verification is required for administrative operations",
       };
     }
 

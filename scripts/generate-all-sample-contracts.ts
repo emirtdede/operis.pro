@@ -10,7 +10,10 @@ import { DpaEngine } from "../src/modules/contracts/dpa-engine";
 import { SafeHarborEngine } from "../src/modules/contracts/safe-harbor-engine";
 import { AiGovernanceEngine } from "../src/modules/contracts/ai-governance-engine";
 import { SoftwareExportEngine } from "../src/modules/finance/software-export-engine";
-import { InflationHedgingEngine, InflationShieldConfig } from "../src/modules/finance/inflation-hedging";
+import {
+  InflationHedgingEngine,
+  InflationShieldConfig,
+} from "../src/modules/finance/inflation-hedging";
 import { LEGAL_DOCUMENTS, LegalDocumentModel } from "../src/lib/legal/legal-documents-data";
 import type {
   ContractParty,
@@ -323,7 +326,9 @@ function wrapInOfficialA4Html(options: {
   <div class="doc-subtitle">${subtitle}</div>
   <div class="badge-pill">${badge}</div>
 
-  ${parties ? `
+  ${
+    parties
+      ? `
   <div class="parties-grid">
     <div class="party-card">
       <div class="party-title">İŞ SAHİBİ (MÜŞTERİ)</div>
@@ -333,7 +338,9 @@ function wrapInOfficialA4Html(options: {
       <div class="party-title">YÜKLENİCİ (GELİŞTİRİCİ)</div>
       <strong>${parties.contractor}</strong>
     </div>
-  </div>` : ""}
+  </div>`
+      : ""
+  }
 
   <div class="content-body">
     ${bodyHtml}
@@ -374,27 +381,32 @@ const sampleAcceptanceCriteria: ContractAcceptanceCriterion[] = [
     id: "crit-auth-01",
     phaseNumber: 1,
     category: "AUTH_SECURITY",
-    humanCriterionTr: "Kullanıcı kimlik doğrulama, MFA ve rol tabanlı yetkilendirme (RBAC) uçtan uca çalışmalıdır.",
+    humanCriterionTr:
+      "Kullanıcı kimlik doğrulama, MFA ve rol tabanlı yetkilendirme (RBAC) uçtan uca çalışmalıdır.",
     humanCriterionEn: "User authentication, MFA, and RBAC must function end-to-end.",
     gherkinGivenTr: "Kullanıcı geçerli e-posta ve şifreyle 2FA kodunu girdiğinde",
     gherkinGivenEn: "Given a user enters valid email, password, and 2FA token",
     gherkinWhenTr: "Giriş butonuna tıkladığında",
     gherkinWhenEn: "When the user clicks the login button",
-    gherkinThenTr: "JWT oturum token'ı oluşturulmalı ve yetkili dashboard ekranına yönlendirilmelidir.",
-    gherkinThenEn: "Then a signed JWT session must be created and user redirected to authorized dashboard.",
+    gherkinThenTr:
+      "JWT oturum token'ı oluşturulmalı ve yetkili dashboard ekranına yönlendirilmelidir.",
+    gherkinThenEn:
+      "Then a signed JWT session must be created and user redirected to authorized dashboard.",
     isMandatory: true,
   },
   {
     id: "crit-export-02",
     phaseNumber: 2,
     category: "OUTPUT_REPORTING",
-    humanCriterionTr: "Finansal raporlama modülü 100.000 satır veriyi 1.5 saniye altında CSV ve PDF formatında dışa aktarmalıdır.",
+    humanCriterionTr:
+      "Finansal raporlama modülü 100.000 satır veriyi 1.5 saniye altında CSV ve PDF formatında dışa aktarmalıdır.",
     humanCriterionEn: "Financial reporting engine must export 100k records to CSV/PDF under 1.5s.",
     gherkinGivenTr: "Sistemde 100.000 satır işlem kaydı bulunduğunda",
     gherkinGivenEn: "Given the database holds 100,000 transaction records",
     gherkinWhenTr: "Kullanıcı 'Dönem Sonu Raporu İndir' butonuna bastığında",
     gherkinWhenEn: "When the user triggers 'Download Period Report'",
-    gherkinThenTr: "Sistem CPU tüketimi %40'ı aşmadan, 1.5 saniye içinde imzalı PDF dosyasını üretmelidir.",
+    gherkinThenTr:
+      "Sistem CPU tüketimi %40'ı aşmadan, 1.5 saniye içinde imzalı PDF dosyasını üretmelidir.",
     gherkinThenEn: "Then a digitally signed PDF must stream within 1.5s without exceeding 40% CPU.",
     isMandatory: true,
   },
@@ -402,14 +414,18 @@ const sampleAcceptanceCriteria: ContractAcceptanceCriterion[] = [
     id: "crit-cicd-03",
     phaseNumber: 3,
     category: "DELIVERY_QUALITY",
-    humanCriterionTr: "Tüm kaynak kodlar %85+ test kapsamı ile GitHub Actions CI/CD hattında yeşil geçmelidir.",
-    humanCriterionEn: "All source code must achieve 85%+ unit test coverage passing green on CI/CD.",
+    humanCriterionTr:
+      "Tüm kaynak kodlar %85+ test kapsamı ile GitHub Actions CI/CD hattında yeşil geçmelidir.",
+    humanCriterionEn:
+      "All source code must achieve 85%+ unit test coverage passing green on CI/CD.",
     gherkinGivenTr: "Ana dala (main) yeni sürüm etiketi (tag) atıldığında",
     gherkinGivenEn: "Given a release tag is pushed to the main branch",
     gherkinWhenTr: "Otomatik linter ve test paketleri koşturulduğunda",
     gherkinWhenEn: "When lint and integration test suites run",
-    gherkinThenTr: "0 kritik güvenlik zafiyeti ve %85 üzeri kapsama ile staging sunucusuna otomatik deploy olmalıdır.",
-    gherkinThenEn: "Then zero critical vulnerabilities must be detected and automated staging deployment succeed.",
+    gherkinThenTr:
+      "0 kritik güvenlik zafiyeti ve %85 üzeri kapsama ile staging sunucusuna otomatik deploy olmalıdır.",
+    gherkinThenEn:
+      "Then zero critical vulnerabilities must be detected and automated staging deployment succeed.",
     isMandatory: true,
   },
 ];
@@ -420,8 +436,10 @@ const sampleMilestones: ContractMilestone[] = [
     percentage: 30,
     titleTr: "Sistem Mimarisi, Veri Modeli ve Kimlik Doğrulama Katmanı",
     titleEn: "System Architecture, Database Modeling & Auth Layer",
-    descriptionTr: "PostgreSQL şema tasarımı, Next.js 16 altyapısı, AES-256 şifreleme ve RBAC yetkilendirme.",
-    descriptionEn: "PostgreSQL schema design, Next.js 16 scaffolding, AES-256 data protection and RBAC auth.",
+    descriptionTr:
+      "PostgreSQL şema tasarımı, Next.js 16 altyapısı, AES-256 şifreleme ve RBAC yetkilendirme.",
+    descriptionEn:
+      "PostgreSQL schema design, Next.js 16 scaffolding, AES-256 data protection and RBAC auth.",
     acceptanceCriteria: sampleAcceptanceCriteria.slice(0, 1),
   },
   {
@@ -429,8 +447,10 @@ const sampleMilestones: ContractMilestone[] = [
     percentage: 40,
     titleTr: "Finansal Analitik Motoru ve Raporlama API'leri",
     titleEn: "Financial Analytics Engine & Reporting APIs",
-    descriptionTr: "Yüksek performanslı veri işleme hattı, webhook bildirimleri ve PDF/CSV dışa aktarım motoru.",
-    descriptionEn: "High-throughput data pipeline, webhook dispatchers and automated PDF/CSV export engine.",
+    descriptionTr:
+      "Yüksek performanslı veri işleme hattı, webhook bildirimleri ve PDF/CSV dışa aktarım motoru.",
+    descriptionEn:
+      "High-throughput data pipeline, webhook dispatchers and automated PDF/CSV export engine.",
     acceptanceCriteria: sampleAcceptanceCriteria.slice(1, 2),
   },
   {
@@ -438,8 +458,10 @@ const sampleMilestones: ContractMilestone[] = [
     percentage: 30,
     titleTr: "Kullanıcı Kabul Testleri (UAT), CI/CD Dağıtımı ve Telif Devri",
     titleEn: "User Acceptance Testing (UAT), CI/CD Deployment & IP Transfer",
-    descriptionTr: "Staging ve canlı ortam dağıtımı, FSEK m. 52 telif devir senedi ve kaynak kod teslimi.",
-    descriptionEn: "Production deployment, FSEK Art. 52 statutory IP transfer deed and full repository handover.",
+    descriptionTr:
+      "Staging ve canlı ortam dağıtımı, FSEK m. 52 telif devir senedi ve kaynak kod teslimi.",
+    descriptionEn:
+      "Production deployment, FSEK Art. 52 statutory IP transfer deed and full repository handover.",
     acceptanceCriteria: sampleAcceptanceCriteria.slice(2, 3),
   },
 ];
@@ -516,7 +538,8 @@ const mainContractTr = ContractGeneratorService.generateContract({
   listingTitle: "Kurumsal B2B Finansal Raporlama ve Analitik Platformu",
   category: "Full-Stack Web Geliştirme",
   matchedAt: "2026-09-01T10:00:00.000Z",
-  scopeSummary: "Next.js 16, PostgreSQL ve TailwindCSS kullanılarak çok kiracılı (multi-tenant), yüksek güvenlikli kurumsal finansal raporlama platformu geliştirilmesi ve anahtar teslim devreye alınması işidir.",
+  scopeSummary:
+    "Next.js 16, PostgreSQL ve TailwindCSS kullanılarak çok kiracılı (multi-tenant), yüksek güvenlikli kurumsal finansal raporlama platformu geliştirilmesi ve anahtar teslim devreye alınması işidir.",
   budgetLabel: "150.000 TL",
   timelineLabel: "45 İş Günü",
   client: sampleClient,
@@ -573,7 +596,8 @@ const squadContract = ContractGeneratorService.generateContract({
   listingTitle: "Yeni Nesil B2B Lojistik ve Tedarik Zinciri Yönetim Portalı",
   category: "Full-Stack Web & Bulut Mimarisi",
   matchedAt: "2026-09-05T14:30:00.000Z",
-  scopeSummary: "Mikroservis mimarisinde, filo takip entegrasyonlu ve yüksek erişilebilirliğe sahip lojistik operasyon portalının çevik ekip konsorsiyumu tarafından geliştirilmesi.",
+  scopeSummary:
+    "Mikroservis mimarisinde, filo takip entegrasyonlu ve yüksek erişilebilirliğe sahip lojistik operasyon portalının çevik ekip konsorsiyumu tarafından geliştirilmesi.",
   budgetLabel: "350.000 TL",
   timelineLabel: "60 İş Günü",
   client: sampleClient,
@@ -640,7 +664,8 @@ const mainContractEn = ContractGeneratorService.generateContract({
   listingTitle: "Cross-Border FinTech Payment Gateway & Microservices Platform",
   category: "Full-Stack FinTech Architecture",
   matchedAt: "2026-09-10T12:00:00.000Z",
-  scopeSummary: "Design, development, and production rollout of PCI-DSS compliant cross-border payment gateway microservices.",
+  scopeSummary:
+    "Design, development, and production rollout of PCI-DSS compliant cross-border payment gateway microservices.",
   budgetLabel: "$18,500 USD",
   timelineLabel: "60 Business Days",
   client: {
@@ -689,7 +714,8 @@ const bilingualContract = ContractGeneratorService.generateContract({
   listingTitle: "Uluslararası E-Ticaret ve Pazar Yeri Altyapısı / Global E-Commerce Core",
   category: "Full-Stack Enterprise",
   matchedAt: "2026-09-12T09:00:00.000Z",
-  scopeSummary: "Çok dilli ve çok para birimli küresel e-ticaret altyapısının geliştirilmesi / Engineering of multi-currency global marketplace backend.",
+  scopeSummary:
+    "Çok dilli ve çok para birimli küresel e-ticaret altyapısının geliştirilmesi / Engineering of multi-currency global marketplace backend.",
   budgetLabel: "€12,000 EUR",
   timelineLabel: "45 İş Günü / Business Days",
   client: sampleClient,
@@ -724,7 +750,10 @@ fs.writeFileSync(
 // 5. Ek 1: Hakediş ve Objektif Muayene-Kabul Kriterleri Protokolü
 // ---------------------------------------------------------------------------
 console.info("5. Ek 1: Kabul Kriterleri Protokolü oluşturuluyor...");
-const annex1Content = AcceptanceEngine.generateContractAnnexMarkdown(sampleAcceptanceCriteria, "tr");
+const annex1Content = AcceptanceEngine.generateContractAnnexMarkdown(
+  sampleAcceptanceCriteria,
+  "tr"
+);
 fs.writeFileSync(
   path.join(OUTPUT_DIR, "05-ek-1-hakedis-ve-kabul-kriterleri-protokolu.md"),
   `# SÖZLEŞME EKİ-1: OBJEKTİF KABUL KRİTERLERİ VE DEFINITION OF DONE PROTOKOLÜ
@@ -742,7 +771,8 @@ fs.writeFileSync(
   path.join(OUTPUT_DIR, "05-ek-1-hakedis-ve-kabul-kriterleri-protokolu.html"),
   wrapInOfficialA4Html({
     title: "SÖZLEŞME EKİ-1: OBJEKTİF KABUL KRİTERLERİ VE DEFINITION OF DONE PROTOKOLÜ",
-    subtitle: "6098 Sayılı TBK m. 470 (Eser Sözleşmesi), m. 474 (Ayıp Muayenesi) & m. 477 (Kabul Rejimi)",
+    subtitle:
+      "6098 Sayılı TBK m. 470 (Eser Sözleşmesi), m. 474 (Ayıp Muayenesi) & m. 477 (Kabul Rejimi)",
     ref: "OPR-ANNEX1-CRITERIA-2026",
     sha256: "b4c8d2e1a90876543210fedcba9876543210abcd1234567890abcdef01234567",
     badge: "✓ OBJEKTİF BDD ŞARTNAMESİ • KEYFİ RET GEÇERSİZDİR",
@@ -761,7 +791,9 @@ fs.writeFileSync(
         </tr>
       </thead>
       <tbody>
-        ${sampleAcceptanceCriteria.map(c => `
+        ${sampleAcceptanceCriteria
+          .map(
+            (c) => `
         <tr>
           <td style="text-align: center; font-weight: 700;">Faz ${c.phaseNumber}</td>
           <td><strong>${c.humanCriterionTr}</strong></td>
@@ -771,7 +803,9 @@ fs.writeFileSync(
             <strong>THEN</strong> ${c.gherkinThenTr}
           </td>
           <td style="text-align: center; color: #166534; font-weight: 700;">Zorunlu</td>
-        </tr>`).join("")}
+        </tr>`
+          )
+          .join("")}
       </tbody>
     </table>`,
   }),
@@ -810,7 +844,10 @@ fs.writeFileSync(
     ref: "OPR-DPA-KVKK-2026",
     sha256: "c1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2",
     badge: "✓ KVKK m. 12 & GDPR m. 28 UYUMLU • VERİ MİNİMİZASYONU",
-    parties: { client: `${sampleClient.displayName} (Veri Sorumlusu)`, contractor: `${sampleContractor.displayName} (Veri İşleyen)` },
+    parties: {
+      client: `${sampleClient.displayName} (Veri Sorumlusu)`,
+      contractor: `${sampleContractor.displayName} (Veri İşleyen)`,
+    },
     bodyHtml: DpaEngine.generateDpaAnnexHtml(sampleDpaConfig, "tr"),
   }),
   "utf8"
@@ -920,7 +957,8 @@ fs.writeFileSync(
   path.join(OUTPUT_DIR, "09-ek-5-yazilim-ihracati-ve-vergi-tesvik-protokolu.html"),
   wrapInOfficialA4Html({
     title: "SÖZLEŞME EKİ-5: YAZILIM İHRACATI VE STATÜTİF VERGİ TEŞVİK ŞARTNAMESİ",
-    subtitle: "193 Sayılı GVK m. 89/13 (%80 İndirim) & 3065 Sayılı KDVK m. 11/1-a (Kod 302) Tevsik Protokolü",
+    subtitle:
+      "193 Sayılı GVK m. 89/13 (%80 İndirim) & 3065 Sayılı KDVK m. 11/1-a (Kod 302) Tevsik Protokolü",
     ref: "OPR-EXPORT-INCENTIVE-2026",
     sha256: "f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6",
     badge: "✓ %80 GELİR VERGİSİ İNDİRİMİ • %0 KDV İSTİSNASI (KOD 302)",
@@ -1163,7 +1201,8 @@ const handoverProtocol = HandoverGeneratorService.generateProtocol({
     adminAccountsTransferred: true,
     apiKeysTransferred: true,
   },
-  documentationNotes: "Tüm API dökümanları, Swagger şemaları, sistem mimarisi ve canlıya alma runbook belgeleri repository içinde /docs klasöründe eksiksiz sağlanmıştır.",
+  documentationNotes:
+    "Tüm API dökümanları, Swagger şemaları, sistem mimarisi ve canlıya alma runbook belgeleri repository içinde /docs klasöründe eksiksiz sağlanmıştır.",
 });
 
 fs.writeFileSync(
@@ -1197,25 +1236,90 @@ const runbookProtocol = RunbookGeneratorService.generateRunbook({
   contractorName: sampleContractor.displayName,
   status: "PUBLISHED",
   version: 1,
-  architectureSummary: "Next.js 16 App Router, PostgreSQL 16 (Drizzle ORM), Redis (Upstash) önbellekleme katmanı, AWS S3 depolama ve Docker tabanlı bağımsız konteyner yapısı.",
+  architectureSummary:
+    "Next.js 16 App Router, PostgreSQL 16 (Drizzle ORM), Redis (Upstash) önbellekleme katmanı, AWS S3 depolama ve Docker tabanlı bağımsız konteyner yapısı.",
   environmentVariables: [
-    { key: "DATABASE_URL", description: "Production PostgreSQL bağlantı URI'si", isRequired: true, sampleValue: "postgresql://user:pass@host:5432/db", secretCategory: "DATABASE" },
-    { key: "UPSTASH_REDIS_REST_URL", description: "Dağıtık rate limit ve cache bağlantısı", isRequired: true, sampleValue: "https://redis.upstash.io", secretCategory: "OTHER" },
-    { key: "DATA_ENCRYPTION_KEY", description: "KVKK AES-256 master şifreleme anahtarı", isRequired: true, sampleValue: "hex64char...", secretCategory: "AUTH" },
+    {
+      key: "DATABASE_URL",
+      description: "Production PostgreSQL bağlantı URI'si",
+      isRequired: true,
+      sampleValue: "postgresql://user:pass@host:5432/db",
+      secretCategory: "DATABASE",
+    },
+    {
+      key: "UPSTASH_REDIS_REST_URL",
+      description: "Dağıtık rate limit ve cache bağlantısı",
+      isRequired: true,
+      sampleValue: "https://redis.upstash.io",
+      secretCategory: "OTHER",
+    },
+    {
+      key: "DATA_ENCRYPTION_KEY",
+      description: "KVKK AES-256 master şifreleme anahtarı",
+      isRequired: true,
+      sampleValue: "hex64char...",
+      secretCategory: "AUTH",
+    },
   ],
   buildAndRunSteps: [
-    { stepNumber: 1, title: "Bağımlılık Kurulumu", command: "npm ci --production=false", description: "Bağımlılıkların temiz kurulumu", environment: "PRODUCTION" },
-    { stepNumber: 2, title: "Veritabanı Migrasyonu", command: "npm run db:migrate", description: "Veritabanı şema migrasyonlarının yürütülmesi", environment: "PRODUCTION" },
-    { stepNumber: 3, title: "Üretim Derlemesi", command: "npm run build", description: "Üretim paketinin derlenmesi", environment: "PRODUCTION" },
-    { stepNumber: 4, title: "Sunucu Başlatma", command: "npm run start", description: "Next.js üretim sunucusunun başlatılması", environment: "PRODUCTION" },
+    {
+      stepNumber: 1,
+      title: "Bağımlılık Kurulumu",
+      command: "npm ci --production=false",
+      description: "Bağımlılıkların temiz kurulumu",
+      environment: "PRODUCTION",
+    },
+    {
+      stepNumber: 2,
+      title: "Veritabanı Migrasyonu",
+      command: "npm run db:migrate",
+      description: "Veritabanı şema migrasyonlarının yürütülmesi",
+      environment: "PRODUCTION",
+    },
+    {
+      stepNumber: 3,
+      title: "Üretim Derlemesi",
+      command: "npm run build",
+      description: "Üretim paketinin derlenmesi",
+      environment: "PRODUCTION",
+    },
+    {
+      stepNumber: 4,
+      title: "Sunucu Başlatma",
+      command: "npm run start",
+      description: "Next.js üretim sunucusunun başlatılması",
+      environment: "PRODUCTION",
+    },
   ],
   thirdPartyServices: [
-    { serviceName: "Upstash Redis", category: "Cache & Rate Limiting", dashboardUrl: "https://console.upstash.com", purpose: "DDoS önleme ve istek hız kısıtlama", credentialsTransferred: true },
-    { serviceName: "AWS S3", category: "Cloud Storage", dashboardUrl: "https://aws.amazon.com/s3", purpose: "PDF ve CSV ihracat dosyalarının şifreli saklanması", credentialsTransferred: true },
+    {
+      serviceName: "Upstash Redis",
+      category: "Cache & Rate Limiting",
+      dashboardUrl: "https://console.upstash.com",
+      purpose: "DDoS önleme ve istek hız kısıtlama",
+      credentialsTransferred: true,
+    },
+    {
+      serviceName: "AWS S3",
+      category: "Cloud Storage",
+      dashboardUrl: "https://aws.amazon.com/s3",
+      purpose: "PDF ve CSV ihracat dosyalarının şifreli saklanması",
+      credentialsTransferred: true,
+    },
   ],
   disasterRecoverySteps: [
-    { priority: "CRITICAL", scenario: "Veritabanı çökmesi veya veri bozulması", procedure: "Veritabanı en son point-in-time snapshot yedeğine dönülür.", verificationCommand: "npm run db:check" },
-    { priority: "HIGH", scenario: "Uygulama sunucusu yanıt vermiyor", procedure: "Container orkestrasyonunda staging cluster aktive edilir.", verificationCommand: "curl -f http://localhost:8000/api/health" },
+    {
+      priority: "CRITICAL",
+      scenario: "Veritabanı çökmesi veya veri bozulması",
+      procedure: "Veritabanı en son point-in-time snapshot yedeğine dönülür.",
+      verificationCommand: "npm run db:check",
+    },
+    {
+      priority: "HIGH",
+      scenario: "Uygulama sunucusu yanıt vermiyor",
+      procedure: "Container orkestrasyonunda staging cluster aktive edilir.",
+      verificationCommand: "curl -f http://localhost:8000/api/health",
+    },
   ],
   backupSchedule: {
     frequency: "Günde 4 Kez (Her 6 saatte bir artımlı, her gece 03:00 tam yedek)",
@@ -1264,7 +1368,8 @@ const addendum = AddendumGeneratorService.generateAddendum({
   listingTitle: "Kurumsal B2B Finansal Raporlama ve Analitik Platformu",
   title: "TCMB Entegrasyonu ve Çoklu Para Birimi Modülü",
   reason: "CLIENT_REQUESTED",
-  description: "İş Sahibi'nin talebi üzerine sisteme TCMB döviz kurlarını gerçek zamanlı çeken ve çoklu para birimi çapraz kur çeviricisi sağlayan ilave bir FinTech modülü eklenmiştir.",
+  description:
+    "İş Sahibi'nin talebi üzerine sisteme TCMB döviz kurlarını gerçek zamanlı çeken ve çoklu para birimi çapraz kur çeviricisi sağlayan ilave bir FinTech modülü eklenmiştir.",
   additionalBudget: 25000,
   currency: "TRY",
   additionalDays: 10,
@@ -1318,10 +1423,34 @@ const mutualRelease = ComprehensiveDeedEngine.generateMutualReleaseDeed({
     taxOrIdNumber: "10000000146",
   },
   settledMilestones: [
-    { sequence: 1, title: "Tasarım ve Mimari Altyapı Onayı", amount: 45000, currency: "TL", paymentReference: "EFT-TR-20260902-881923" },
-    { sequence: 2, title: "Fonksiyonel Demo ve Kullanıcı Kabul Testi", amount: 60000, currency: "TL", paymentReference: "EFT-TR-20260925-992014" },
-    { sequence: 3, title: "Kaynak Kod Teslimi ve FSEK m. 52 Telif Devri", amount: 45000, currency: "TL", paymentReference: "EFT-TR-20261021-110293" },
-    { sequence: 4, title: "Zeyilname-1 Ek Kapsam Hakedişi", amount: 25000, currency: "TL", paymentReference: "EFT-TR-20261021-110294" },
+    {
+      sequence: 1,
+      title: "Tasarım ve Mimari Altyapı Onayı",
+      amount: 45000,
+      currency: "TL",
+      paymentReference: "EFT-TR-20260902-881923",
+    },
+    {
+      sequence: 2,
+      title: "Fonksiyonel Demo ve Kullanıcı Kabul Testi",
+      amount: 60000,
+      currency: "TL",
+      paymentReference: "EFT-TR-20260925-992014",
+    },
+    {
+      sequence: 3,
+      title: "Kaynak Kod Teslimi ve FSEK m. 52 Telif Devri",
+      amount: 45000,
+      currency: "TL",
+      paymentReference: "EFT-TR-20261021-110293",
+    },
+    {
+      sequence: 4,
+      title: "Zeyilname-1 Ek Kapsam Hakedişi",
+      amount: 25000,
+      currency: "TL",
+      paymentReference: "EFT-TR-20261021-110294",
+    },
   ],
   totalSettledAmount: 175000,
   currency: "TL",
@@ -1362,7 +1491,8 @@ const terminationDeed = ComprehensiveDeedEngine.generateTerminationLiquidationDe
     taxOrIdNumber: "10000000146",
   },
   ground: "MUTUAL_IKALE",
-  groundDetailTr: "Tarafların karşılıklı serbest iradeleriyle, şirketin iş modeli değişikliği sebebiyle projenin 2. aşamada ikâle yoluyla sulhen tasfiyesidir.",
+  groundDetailTr:
+    "Tarafların karşılıklı serbest iradeleriyle, şirketin iş modeli değişikliği sebebiyle projenin 2. aşamada ikâle yoluyla sulhen tasfiyesidir.",
   settledMilestones: [
     { sequence: 1, title: "UI/UX Tasarım ve Mimari Altyapı", amount: 40000, currency: "TL" },
   ],
@@ -1392,7 +1522,10 @@ fs.writeFileSync(
     ref: terminationDeed.deedId,
     sha256: terminationDeed.masterSha256,
     badge: "✓ İKÂLE İLE SULHEN TASFİYE • KISMİ FSEK TELİF DEVRİ",
-    parties: { client: "Nova Perakende ve Mağazacılık A.Ş.", contractor: sampleContractor.displayName },
+    parties: {
+      client: "Nova Perakende ve Mağazacılık A.Ş.",
+      contractor: sampleContractor.displayName,
+    },
     bodyHtml: `
     <div class="highlight-box">
       <strong>Fesih Gerekçesi:</strong> ${terminationDeed.groundDescriptionTr}
@@ -1490,7 +1623,8 @@ fs.writeFileSync(
   path.join(OUTPUT_DIR, "19-yazilim-muayene-ve-kabul-tutanagi-saas.html"),
   wrapInOfficialA4Html({
     title: "YAZILIM MUAYENE VE KULLANICI KABUL TESTİ (UAT) TUTANAĞI",
-    subtitle: "6098 Sayılı TBK m. 474 (Ayıp Muayenesi) ve m. 477 (Açık Kabul Onayı) Uyarınca Düzenlenmiştir",
+    subtitle:
+      "6098 Sayılı TBK m. 474 (Ayıp Muayenesi) ve m. 477 (Açık Kabul Onayı) Uyarınca Düzenlenmiştir",
     ref: "OPR-UAT-SIGNOFF-2026",
     sha256: "1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b",
     date: "20 Ekim 2026",
@@ -1579,8 +1713,14 @@ const legalDocsMap: Record<string, { filename: string; prefix: string }> = {
   terms: { filename: "20-platform-kullanim-kosullari", prefix: "20" },
   privacy: { filename: "21-gizlilik-politikasi-ve-kvkk-aydinlatma-metni", prefix: "21" },
   "dispute-resolution": { filename: "22-uyusmazlik-cozumu-ve-arabuluculuk-ilkeleri", prefix: "22" },
-  "intellectual-property": { filename: "23-fikri-mulkiyet-ve-telif-haklari-politikasi", prefix: "23" },
-  "acceptable-use": { filename: "24-kabul-edilebilir-kullanim-ve-siber-guvenlik-politikasi", prefix: "24" },
+  "intellectual-property": {
+    filename: "23-fikri-mulkiyet-ve-telif-haklari-politikasi",
+    prefix: "23",
+  },
+  "acceptable-use": {
+    filename: "24-kabul-edilebilir-kullanim-ve-siber-guvenlik-politikasi",
+    prefix: "24",
+  },
   cookies: { filename: "25-cerez-politikasi", prefix: "25" },
   consent: { filename: "26-acik-riza-ve-iletisim-izinleri-metni", prefix: "26" },
   "matching-disclaimer": { filename: "27-eslesme-ve-sorumsuzluk-beyani", prefix: "27" },
@@ -1681,4 +1821,6 @@ fs.writeFileSync(
   "utf8"
 );
 
-console.info(`\nBAŞARILI! Toplam 82 adet dosya (27 Markdown + 27 Görsel HTML + 27 Resmi PDF + 1 Katalog Rehberi) başarıyla '${OUTPUT_DIR}' klasörüne kaydedildi.`);
+console.info(
+  `\nBAŞARILI! Toplam 82 adet dosya (27 Markdown + 27 Görsel HTML + 27 Resmi PDF + 1 Katalog Rehberi) başarıyla '${OUTPUT_DIR}' klasörüne kaydedildi.`
+);

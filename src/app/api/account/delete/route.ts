@@ -173,16 +173,33 @@ export async function POST(req: Request) {
 
     return response;
   } catch (err: unknown) {
-    let message = isEn ? "Failed to delete account." : "Hesap silinemedi.";
     if (err instanceof Error) {
-      message = err.message;
+      if (err.message.includes("iş birlikleriniz bulunurken")) {
+        return NextResponse.json(
+          {
+            error: isEn
+              ? "You cannot delete your account while you have active, disputed, or pending completion engagements. Please conclude all projects first."
+              : "Aktif, uyuşmazlık incelemesinde veya tamamlanması beklenen iş birlikleriniz bulunurken hesabınızı silemezsiniz. Lütfen önce projelerinizi sonuçlandırın.",
+          },
+          { status: 400 }
+        );
+      }
+      if (err.message.includes("Account is already deleted")) {
+        return NextResponse.json(
+          { error: isEn ? "Account is already deleted." : "Hesap zaten silinmiş." },
+          { status: 400 }
+        );
+      }
     }
 
-    if (isEn && message.includes("iş birlikleriniz bulunurken")) {
-      message =
-        "You cannot delete your account while you have active, disputed, or pending completion engagements. Please conclude all projects first.";
-    }
-
-    return NextResponse.json({ error: message }, { status: 400 });
+    console.error("Account delete error:", err);
+    return NextResponse.json(
+      {
+        error: isEn
+          ? "Failed to delete account. Please try again later."
+          : "Hesap silinemedi. Lütfen daha sonra tekrar deneyiniz.",
+      },
+      { status: 500 }
+    );
   }
 }

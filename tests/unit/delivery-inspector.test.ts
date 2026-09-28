@@ -178,9 +178,7 @@ describe("Proof-of-Work (PoW) Delivery Health & Uptime Inspector Suite", () => {
       });
       vi.stubGlobal("fetch", mockFetch);
 
-      const probe = await DeliveryInspectorService.probeLiveDeployment(
-        "https://demo.operis.dev"
-      );
+      const probe = await DeliveryInspectorService.probeLiveDeployment("https://demo.operis.dev");
 
       expect(probe.checked).toBe(true);
       expect(probe.isAccessible).toBe(true);
@@ -379,4 +377,3 @@ describe("Proof-of-Work (PoW) Delivery Health & Uptime Inspector Suite", () => {
     });
   });
 });
-

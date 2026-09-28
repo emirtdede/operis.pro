@@ -15,6 +15,8 @@ import {
   Check,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
+import { Dialog } from "@/src/components/ui/dialog";
 import { RetainerProposalModal } from "./retainer-proposal-modal";
 import type {
   RetainerDetailsResult,
@@ -62,6 +64,7 @@ export function RetainerPortal({
   const [isActioning, setIsActioning] = useState(false);
   const [actionFeedback, setActionFeedback] = useState<string | null>(null);
   const [copiedContract, setCopiedContract] = useState(false);
+  const [isCancelConfirmOpen, setIsCancelConfirmOpen] = useState(false);
 
   const fetchRetainer = useCallback(async () => {
     setIsLoading(true);
@@ -96,7 +99,9 @@ export function RetainerPortal({
       });
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || "Activation failed");
-      setActionFeedback(isTr ? "Sözleşme başarıyla yürürlüğe girdi!" : "Agreement activated successfully!");
+      setActionFeedback(
+        isTr ? "Sözleşme başarıyla yürürlüğe girdi!" : "Agreement activated successfully!"
+      );
       fetchRetainer();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Error activating agreement";
@@ -106,12 +111,9 @@ export function RetainerPortal({
     }
   };
 
-  const handleCancel = async () => {
-    if (!confirm(isTr ? "Aylık bakım sözleşmesini cari ay sonunda sonlandırmak istediğinize emin misiniz?" : "Are you sure you want to cancel the retainer at the end of the billing period?")) {
-      return;
-    }
-
+  const handleConfirmCancel = async () => {
     setIsActioning(true);
+    setActionFeedback(null);
     try {
       const res = await fetch(`/api/work/${engagementId}/retainer`, {
         method: "POST",
@@ -120,9 +122,15 @@ export function RetainerPortal({
       });
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || "Cancellation failed");
+      setIsCancelConfirmOpen(false);
+      setActionFeedback(
+        isTr
+          ? "Sözleşme fesih talebi iletildi. Cari ay sonunda sonlandırılacaktır."
+          : "Cancellation notice recorded. Service terminates at period end."
+      );
       fetchRetainer();
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Cancellation failed");
+      setActionFeedback(err instanceof Error ? err.message : "Cancellation failed");
     } finally {
       setIsActioning(false);
     }
@@ -245,7 +253,9 @@ export function RetainerPortal({
 
           <div className="flex items-center gap-2 shrink-0">
             {(() => {
-              let activateButtonText = isTr ? "Sözleşmeyi Onayla ve Yürürlüğe Al" : "Confirm & Activate";
+              let activateButtonText = isTr
+                ? "Sözleşmeyi Onayla ve Yürürlüğe Al"
+                : "Confirm & Activate";
               if (isActioning) {
                 activateButtonText = isTr ? "İmzalanıyor..." : "Activating...";
               }
@@ -276,7 +286,8 @@ export function RetainerPortal({
   const isHourly = retainer.planType === "HOURLY_POOL";
   const hoursUsed = activePeriod?.hoursLogged ?? 0;
   const hoursTotal = activePeriod?.availableHours ?? retainer.includedHours;
-  const percentUsed = hoursTotal > 0 ? Math.min(100, Math.round((hoursUsed / hoursTotal) * 100)) : 0;
+  const percentUsed =
+    hoursTotal > 0 ? Math.min(100, Math.round((hoursUsed / hoursTotal) * 100)) : 0;
 
   let retainerStatusBadgeText = isTr ? "FESHEDİLDİ" : "CANCELLED";
   if (retainer.status === "ACTIVE") {
@@ -304,7 +315,9 @@ export function RetainerPortal({
                 <Repeat className="h-4 w-4" />
               </div>
               <h2 className="text-base sm:text-lg font-bold text-[var(--color-text-primary)] flex items-center gap-2">
-                <span>{isTr ? "Aylık Düzenli Bakım & SLA Masası" : "Monthly Retainer & SLA Hub"}</span>
+                <span>
+                  {isTr ? "Aylık Düzenli Bakım & SLA Masası" : "Monthly Retainer & SLA Hub"}
+                </span>
                 <span
                   className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
                     retainer.status === "ACTIVE"
@@ -378,7 +391,11 @@ export function RetainerPortal({
                 </div>
 
                 <div className="flex items-center justify-between text-[11px] text-[var(--color-text-tertiary)] pt-1">
-                  <span>{isTr ? `Kalan: ${activePeriod?.remainingHours ?? 0} saat` : `Remaining: ${activePeriod?.remainingHours ?? 0}h`}</span>
+                  <span>
+                    {isTr
+                      ? `Kalan: ${activePeriod?.remainingHours ?? 0} saat`
+                      : `Remaining: ${activePeriod?.remainingHours ?? 0}h`}
+                  </span>
                   {activePeriod && activePeriod.overageHours > 0 && (
                     <span className="text-rose-400 font-bold">
                       +{activePeriod.overageHours} {isTr ? "saat aşım" : "h overage"}
@@ -414,15 +431,21 @@ export function RetainerPortal({
             <div className="space-y-1 text-xs text-[var(--color-text-secondary)] pt-1">
               <div className="flex items-center justify-between">
                 <span className="text-rose-400 font-medium">P1 (Kritik Kesinti):</span>
-                <span className="font-mono text-[var(--color-text-primary)]">&le; {sla?.p1CriticalResponseHours} saat</span>
+                <span className="font-mono text-[var(--color-text-primary)]">
+                  &le; {sla?.p1CriticalResponseHours} saat
+                </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-amber-400 font-medium">P2 (Major Hata):</span>
-                <span className="font-mono text-[var(--color-text-primary)]">&le; {sla?.p2MajorResponseHours} saat</span>
+                <span className="font-mono text-[var(--color-text-primary)]">
+                  &le; {sla?.p2MajorResponseHours} saat
+                </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-blue-400 font-medium">P3 (Normal Talep):</span>
-                <span className="font-mono text-[var(--color-text-primary)]">&le; {sla?.p3MinorResponseDays} iş günü</span>
+                <span className="font-mono text-[var(--color-text-primary)]">
+                  &le; {sla?.p3MinorResponseDays} iş günü
+                </span>
               </div>
             </div>
           </div>
@@ -439,7 +462,10 @@ export function RetainerPortal({
 
               <div className="flex items-baseline justify-between mt-1">
                 <span className="text-xl font-extrabold font-mono text-emerald-400">
-                  {activePeriod ? activePeriod.totalAmount.toLocaleString("tr-TR") : parseFloat(retainer.monthlyPrice).toLocaleString("tr-TR")} {retainer.currency}
+                  {activePeriod
+                    ? activePeriod.totalAmount.toLocaleString("tr-TR")
+                    : parseFloat(retainer.monthlyPrice).toLocaleString("tr-TR")}{" "}
+                  {retainer.currency}
                 </span>
                 <span className="text-[10px] text-slate-400 uppercase font-mono">
                   {activePeriod ? `Dönem #${activePeriod.periodIndex}` : "Aylık"}
@@ -448,8 +474,18 @@ export function RetainerPortal({
 
               {activePeriod?.taxDetails && (
                 <div className="pt-2 border-t border-[var(--color-border-subtle)] text-[10px] text-[var(--color-text-tertiary)] flex items-center justify-between">
-                  <span>%20 Stopaj: <strong className="text-amber-400">{activePeriod.taxDetails.withholdingAmount.toLocaleString("tr-TR")}</strong></span>
-                  <span>Banka: <strong className="text-emerald-400">{activePeriod.taxDetails.totalCashToFreelancer.toLocaleString("tr-TR")}</strong></span>
+                  <span>
+                    %20 Stopaj:{" "}
+                    <strong className="text-amber-400">
+                      {activePeriod.taxDetails.withholdingAmount.toLocaleString("tr-TR")}
+                    </strong>
+                  </span>
+                  <span>
+                    Banka:{" "}
+                    <strong className="text-emerald-400">
+                      {activePeriod.taxDetails.totalCashToFreelancer.toLocaleString("tr-TR")}
+                    </strong>
+                  </span>
                 </div>
               )}
             </div>
@@ -457,7 +493,7 @@ export function RetainerPortal({
             {retainer.status === "ACTIVE" && (
               <button
                 type="button"
-                onClick={handleCancel}
+                onClick={() => setIsCancelConfirmOpen(true)}
                 disabled={isActioning}
                 className="text-[10px] text-rose-400 hover:underline pt-2 text-left cursor-pointer transition-colors"
               >
@@ -469,15 +505,26 @@ export function RetainerPortal({
       </div>
 
       {/* Contract Viewer Modal */}
-      {contractModalOpen && retainer.contractMarkdown && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in">
-          <div className="bg-[#12151e] border border-indigo-500/30 rounded-3xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl text-slate-200">
+      <ModalOverlay
+        isOpen={contractModalOpen && Boolean(retainer.contractMarkdown)}
+        onClose={() => setContractModalOpen(false)}
+        ariaLabel={
+          isTr ? "Resmi Sürekli Bakım & SLA Sözleşmesi" : "Official Retainer & SLA Contract"
+        }
+      >
+        {retainer.contractMarkdown && (
+          <div
+            className="bg-[#12151e] border border-indigo-500/30 rounded-3xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl text-slate-200"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/80 shrink-0">
               <div className="flex items-center gap-2.5">
                 <FileText className="h-5 w-5 text-indigo-400" />
                 <div>
                   <h3 className="text-sm font-bold text-white">
-                    {isTr ? "Resmi Sürekli Bakım & SLA Sözleşmesi" : "Official Retainer & SLA Contract"}
+                    {isTr
+                      ? "Resmi Sürekli Bakım & SLA Sözleşmesi"
+                      : "Official Retainer & SLA Contract"}
                   </h3>
                   <p className="text-[11px] font-mono text-slate-400">
                     Mühür: {retainer.sha256Seal?.slice(0, 24)}... (HMK m. 193)
@@ -496,7 +543,11 @@ export function RetainerPortal({
                   className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300"
                   title="Kopyala"
                 >
-                  {copiedContract ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
+                  {copiedContract ? (
+                    <Check className="h-4 w-4 text-emerald-400" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
                 </button>
                 <button
                   type="button"
@@ -520,88 +571,132 @@ export function RetainerPortal({
               {retainer.contractMarkdown}
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalOverlay>
 
       {/* Hour Logging Modal */}
-      {logModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in">
-          <div className="bg-[#12151e] border border-indigo-500/30 rounded-3xl w-full max-w-md p-5 sm:p-6 space-y-4 shadow-2xl text-slate-200">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <div className="flex items-center gap-2 font-bold text-sm text-white">
-                <Clock className="h-4 w-4 text-indigo-400" />
-                <span>{isTr ? "Saat & Aktivite Kaydet" : "Log Retainer Hours"}</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setLogModalOpen(false)}
-                className="text-slate-400 hover:text-white p-1 rounded-lg"
-              >
-                <X className="h-4 w-4" />
-              </button>
+      <ModalOverlay
+        isOpen={logModalOpen}
+        onClose={() => setLogModalOpen(false)}
+        ariaLabel={isTr ? "Saat & Aktivite Kaydet" : "Log Retainer Hours"}
+      >
+        <div
+          className="bg-[#12151e] border border-indigo-500/30 rounded-3xl w-full max-w-md p-5 sm:p-6 space-y-4 shadow-2xl text-slate-200"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div className="flex items-center gap-2 font-bold text-sm text-white">
+              <Clock className="h-4 w-4 text-indigo-400" />
+              <span>{isTr ? "Saat & Aktivite Kaydet" : "Log Retainer Hours"}</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setLogModalOpen(false)}
+              className="text-slate-400 hover:text-white p-1 rounded-lg"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+
+          {logFeedback && (
+            <div className="text-xs text-rose-400 p-2 rounded-lg bg-rose-950/20 border border-rose-800">
+              {logFeedback}
+            </div>
+          )}
+
+          <form onSubmit={handleLogSubmit} className="space-y-4">
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-slate-300">
+                {isTr ? "Çalışma Süresi (Saat)" : "Hours Spent"}
+              </label>
+              <input
+                type="number"
+                step="0.5"
+                min="0.5"
+                max="24"
+                value={logHoursVal}
+                onChange={(e) => setLogHoursVal(e.target.value)}
+                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white font-mono focus:outline-none focus:border-indigo-500"
+                required
+              />
             </div>
 
-            {logFeedback && (
-              <div className="text-xs text-rose-400 p-2 rounded-lg bg-rose-950/20 border border-rose-800">
-                {logFeedback}
-              </div>
-            )}
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-slate-300">
+                {isTr ? "Tamamlanan Görev / Hata Giderme Açıklaması" : "Task Description"}
+              </label>
+              <textarea
+                rows={3}
+                value={logTaskDesc}
+                onChange={(e) => setLogTaskDesc(e.target.value)}
+                placeholder={
+                  isTr
+                    ? "Örn: Next.js 15 sürüm güncellemesi ve Redis bağlantı optimizasyonu tamamlandı."
+                    : "Describe work performed..."
+                }
+                className="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
+                required
+              />
+            </div>
 
-            <form onSubmit={handleLogSubmit} className="space-y-4">
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-300">
-                  {isTr ? "Çalışma Süresi (Saat)" : "Hours Spent"}
-                </label>
-                <input
-                  type="number"
-                  step="0.5"
-                  min="0.5"
-                  max="24"
-                  value={logHoursVal}
-                  onChange={(e) => setLogHoursVal(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white font-mono focus:outline-none focus:border-indigo-500"
-                  required
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-300">
-                  {isTr ? "Tamamlanan Görev / Hata Giderme Açıklaması" : "Task Description"}
-                </label>
-                <textarea
-                  rows={3}
-                  value={logTaskDesc}
-                  onChange={(e) => setLogTaskDesc(e.target.value)}
-                  placeholder={isTr ? "Örn: Next.js 15 sürüm güncellemesi ve Redis bağlantı optimizasyonu tamamlandı." : "Describe work performed..."}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
-                  required
-                />
-              </div>
-
-              <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-800">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setLogModalOpen(false)}
-                  disabled={isLogging}
-                >
-                  {isTr ? "Vazgeç" : "Cancel"}
-                </Button>
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="sm"
-                  disabled={isLogging}
-                  className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs"
-                >
-                  {logHoursButtonText}
-                </Button>
-              </div>
-            </form>
-          </div>
+            <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-800">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setLogModalOpen(false)}
+                disabled={isLogging}
+              >
+                {isTr ? "Vazgeç" : "Cancel"}
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                size="sm"
+                disabled={isLogging}
+                className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs"
+              >
+                {logHoursButtonText}
+              </Button>
+            </div>
+          </form>
         </div>
-      )}
+      </ModalOverlay>
+      {/* Retainer Cancellation Confirmation Modal */}
+      <Dialog
+        isOpen={isCancelConfirmOpen}
+        onClose={() => {
+          if (!isActioning) setIsCancelConfirmOpen(false);
+        }}
+        title={isTr ? "Aylık Bakım Sözleşmesini Feshet" : "Cancel Monthly Retainer Agreement"}
+        description={
+          isTr
+            ? "Aylık bakım sözleşmesini cari ay sonunda sonlandırmak istediğinize emin misiniz? Bu işlem 15 günlük resmi fesih ihbar sürecini başlatır ve dönem bitiminde yinelenen faturalandırma durdurulur."
+            : "Are you sure you want to cancel the retainer at the end of the billing period? This initiates a 15-day notice period and stops recurring billing at term end."
+        }
+      >
+        <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-[var(--color-border-subtle)]">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setIsCancelConfirmOpen(false)}
+            disabled={isActioning}
+          >
+            {isTr ? "Vazgeç" : "Keep Retainer"}
+          </Button>
+          <Button
+            type="button"
+            variant="danger"
+            size="sm"
+            onClick={handleConfirmCancel}
+            disabled={isActioning}
+            isLoading={isActioning}
+          >
+            {isTr ? "Evet, Sözleşmeyi Feshet" : "Confirm Cancellation"}
+          </Button>
+        </div>
+      </Dialog>
     </>
   );
 }

@@ -37,6 +37,7 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileAttempt, setTurnstileAttempt] = useState(0);
 
   const defaultRedirect = isTr ? "/tr/ilanlar?view=stream" : "/en/listings?view=stream";
   const targetRedirect = getSafeReturnUrl(returnUrl, defaultRedirect);
@@ -108,6 +109,8 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
         : "Invalid email or password.";
       setError(err instanceof Error ? err.message : defaultErrMsg);
     } finally {
+      setTurnstileToken(null);
+      setTurnstileAttempt((attempt) => attempt + 1);
       setIsLoading(false);
     }
   };
@@ -199,9 +202,7 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
           <div className="flex items-center gap-2 text-xs font-semibold text-blue-400">
             <KeyRound className="h-4 w-4" aria-hidden="true" />
             <span>
-              {isTr
-                ? "İki Adımlı Doğrulama (2FA) Gerekli"
-                : "Two-Factor Authentication Required"}
+              {isTr ? "İki Adımlı Doğrulama (2FA) Gerekli" : "Two-Factor Authentication Required"}
             </span>
           </div>
           <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
@@ -274,9 +275,11 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
 
       {/* Cloudflare Turnstile Bot Defense (Invisible / Interaction-Only) */}
       <TurnstileWidget
+        key={turnstileAttempt}
         appearance="interaction-only"
         onVerify={(token) => setTurnstileToken(token)}
         onExpire={() => setTurnstileToken(null)}
+        onError={() => setTurnstileToken(null)}
       />
 
       {/* Main Submit Button */}
@@ -286,6 +289,7 @@ export function LoginForm({ locale, returnUrl }: LoginFormProps) {
         size="lg"
         className="w-full text-sm font-semibold mt-1 cursor-pointer"
         isLoading={isLoading}
+        disabled={Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) && !turnstileToken}
       >
         {submitButtonText}
       </Button>

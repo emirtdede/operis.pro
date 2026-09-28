@@ -150,4 +150,3 @@ describe("Sector and Category Cascading & Search Logic", () => {
     expect(normalizeTurkish(aiSectorName).includes(normalizeTurkish("otomasyon"))).toBe(true);
   });
 });
-

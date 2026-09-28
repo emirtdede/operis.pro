@@ -44,10 +44,7 @@ export interface MatchHandshakeKitProps {
   pingCooldown: number;
   onOpenPingModal: () => void;
   onOpenNightCallModal: () => void;
-  onCopy: (
-    text: string,
-    field: "email" | "phone" | "wa" | "zoom" | "teams" | "slack"
-  ) => void;
+  onCopy: (text: string, field: "email" | "phone" | "wa" | "zoom" | "teams" | "slack") => void;
 }
 
 export function MatchHandshakeKit({
@@ -156,7 +153,9 @@ export function MatchHandshakeKit({
           target="_blank"
           rel="noopener noreferrer"
           className={`flex items-center gap-2 px-3 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] ${
-            preferredKey === "whatsapp" ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25" : ""
+            preferredKey === "whatsapp"
+              ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25"
+              : ""
           }`}
         >
           {preferredKey === "whatsapp" && renderBadge()}
@@ -170,10 +169,11 @@ export function MatchHandshakeKit({
           type="button"
           onClick={() => {
             onCopy(decodeURIComponent(waText), "wa");
-            alert(isTr ? "WhatsApp mesaj taslağı panoya kopyalandı." : "WhatsApp draft copied to clipboard.");
           }}
           className={`flex items-center gap-2 px-3 py-2.5 rounded-xl bg-emerald-600/80 hover:bg-emerald-600 text-white text-xs font-semibold shadow-sm transition-all ${
-            preferredKey === "whatsapp" ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25" : ""
+            preferredKey === "whatsapp"
+              ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25"
+              : ""
           }`}
         >
           {preferredKey === "whatsapp" && renderBadge()}
@@ -194,7 +194,9 @@ export function MatchHandshakeKit({
           target="_blank"
           rel="noopener noreferrer"
           className={`flex items-center gap-2 px-3 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] ${
-            preferredKey === "meet" ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25" : ""
+            preferredKey === "meet"
+              ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25"
+              : ""
           }`}
         >
           {preferredKey === "meet" && renderBadge()}
@@ -213,7 +215,9 @@ export function MatchHandshakeKit({
           target="_blank"
           rel="noopener noreferrer"
           className={`flex items-center gap-2 px-3 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] ${
-            preferredKey === "zoom" ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25" : ""
+            preferredKey === "zoom"
+              ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25"
+              : ""
           }`}
         >
           {preferredKey === "zoom" && renderBadge()}
@@ -232,7 +236,9 @@ export function MatchHandshakeKit({
           target="_blank"
           rel="noopener noreferrer"
           className={`flex items-center gap-2 px-3 py-2.5 rounded-xl bg-[#5059C9] hover:bg-[#434bb5] text-white text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] ${
-            preferredKey === "teams" ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25" : ""
+            preferredKey === "teams"
+              ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25"
+              : ""
           }`}
         >
           {preferredKey === "teams" && renderBadge()}
@@ -246,10 +252,11 @@ export function MatchHandshakeKit({
           type="button"
           onClick={() => {
             onCopy(decodeURIComponent(teamsMessage), "teams");
-            alert(isTr ? "Teams mesaj taslağı kopyalandı." : "Teams message draft copied.");
           }}
           className={`flex items-center gap-2 px-3 py-2.5 rounded-xl bg-[#5059C9]/80 hover:bg-[#5059C9] text-white text-xs font-semibold shadow-sm transition-all ${
-            preferredKey === "teams" ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25" : ""
+            preferredKey === "teams"
+              ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25"
+              : ""
           }`}
         >
           {preferredKey === "teams" && renderBadge()}
@@ -270,7 +277,9 @@ export function MatchHandshakeKit({
           target="_blank"
           rel="noopener noreferrer"
           className={`flex items-center gap-2 px-3 py-2.5 rounded-xl bg-[#4A154B] hover:bg-[#3d113e] text-white text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] ${
-            preferredKey === "slack" ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25" : ""
+            preferredKey === "slack"
+              ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25"
+              : ""
           }`}
         >
           {preferredKey === "slack" && renderBadge()}
@@ -284,10 +293,11 @@ export function MatchHandshakeKit({
           type="button"
           onClick={() => {
             onCopy(slackInviteText, "slack");
-            alert(isTr ? "Slack davet şablonu kopyalandı." : "Slack invite copied.");
           }}
           className={`flex items-center gap-2 px-3 py-2.5 rounded-xl bg-[#4A154B]/80 hover:bg-[#4A154B] text-white text-xs font-semibold shadow-sm transition-all ${
-            preferredKey === "slack" ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25" : ""
+            preferredKey === "slack"
+              ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25"
+              : ""
           }`}
         >
           {preferredKey === "slack" && renderBadge()}
@@ -306,7 +316,9 @@ export function MatchHandshakeKit({
           key="email"
           href={mailUrl}
           className={`flex items-center gap-2 px-3 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] ${
-            preferredKey === "email" ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25" : ""
+            preferredKey === "email"
+              ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25"
+              : ""
           }`}
         >
           {preferredKey === "email" && renderBadge()}
@@ -342,7 +354,9 @@ export function MatchHandshakeKit({
             }
           }}
           className={`flex items-center gap-2 px-3 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] ${
-            preferredKey === "phone" ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25" : ""
+            preferredKey === "phone"
+              ? "relative ring-2 ring-amber-400 shadow-md shadow-amber-400/25"
+              : ""
           }`}
         >
           {preferredKey === "phone" && renderBadge()}
@@ -411,7 +425,10 @@ export function MatchHandshakeKit({
             </div>
             {counterparty.city && (
               <div className="text-[11px] text-[var(--color-text-secondary)] mt-0.5 flex items-center gap-1">
-                <MapPin className="h-3 w-3 text-[var(--color-text-tertiary)] shrink-0" aria-hidden="true" />
+                <MapPin
+                  className="h-3 w-3 text-[var(--color-text-tertiary)] shrink-0"
+                  aria-hidden="true"
+                />
                 <span>{counterparty.city}</span>
               </div>
             )}
@@ -433,9 +450,7 @@ export function MatchHandshakeKit({
             <span className="font-mono font-bold">{counterpartyTime.timeStr}</span>
             <span className="text-[11px] opacity-75">({counterpartyTime.tz})</span>
             <span className="opacity-40">•</span>
-            <span className="font-medium">
-              {resolveTimezonePillLabel(counterpartyTime, isTr)}
-            </span>
+            <span className="font-medium">{resolveTimezonePillLabel(counterpartyTime, isTr)}</span>
           </div>
         </div>
       </div>
@@ -498,33 +513,42 @@ export function MatchHandshakeKit({
             type="button"
             onClick={() => {
               onCopy(decodeURIComponent(waText), "wa");
-              alert(isTr ? "WhatsApp taslağı kopyalandı." : "WhatsApp draft copied.");
             }}
             className="px-2.5 py-1 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors flex items-center gap-1.5 cursor-pointer text-[11px]"
           >
-            {copiedField === "wa" ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+            {copiedField === "wa" ? (
+              <Check className="h-3 w-3 text-emerald-400" />
+            ) : (
+              <Copy className="h-3 w-3" />
+            )}
             <span>WhatsApp / DM Mesajı</span>
           </button>
           <button
             type="button"
             onClick={() => {
               onCopy(zoomInviteText, "zoom");
-              alert(isTr ? "Zoom davet şablonu kopyalandı." : "Zoom invite copied.");
             }}
             className="px-2.5 py-1 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors flex items-center gap-1.5 cursor-pointer text-[11px]"
           >
-            {copiedField === "zoom" ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+            {copiedField === "zoom" ? (
+              <Check className="h-3 w-3 text-emerald-400" />
+            ) : (
+              <Copy className="h-3 w-3" />
+            )}
             <span>Zoom Davet Şablonu</span>
           </button>
           <button
             type="button"
             onClick={() => {
               onCopy(slackInviteText, "slack");
-              alert(isTr ? "Slack davet şablonu kopyalandı." : "Slack invite copied.");
             }}
             className="px-2.5 py-1 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors flex items-center gap-1.5 cursor-pointer text-[11px]"
           >
-            {copiedField === "slack" ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+            {copiedField === "slack" ? (
+              <Check className="h-3 w-3 text-emerald-400" />
+            ) : (
+              <Copy className="h-3 w-3" />
+            )}
             <span>Slack Davet Metni</span>
           </button>
         </div>

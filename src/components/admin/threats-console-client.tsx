@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import type { AdminThreatItem } from "@/src/modules/admin/service";
 import { blockIpAction, unblockIpAction } from "@/src/modules/admin/actions";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 
 interface ThreatsConsoleClientProps {
   initialThreats: AdminThreatItem[];
@@ -392,9 +393,19 @@ export function ThreatsConsoleClient({ initialThreats }: ThreatsConsoleClientPro
       </div>
 
       {/* Block IP Modal */}
-      {blockModalIp && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in">
-          <div className="bg-[#12141a] border border-red-500/30 rounded-3xl p-4 sm:p-6 w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden shadow-2xl">
+      <ModalOverlay
+        isOpen={Boolean(blockModalIp)}
+        onClose={() => {
+          setBlockModalIp(null);
+          setBlockReason("");
+        }}
+        ariaLabel="IP Adresini Engelle"
+      >
+        {blockModalIp && (
+          <div
+            className="bg-[#12141a] border border-red-500/30 rounded-3xl p-4 sm:p-6 w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center gap-3 text-red-400 pb-3 border-b border-slate-800/80 shrink-0">
               <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 shrink-0">
                 <Ban className="h-6 w-6" />
@@ -442,8 +453,8 @@ export function ThreatsConsoleClient({ initialThreats }: ThreatsConsoleClientPro
               </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalOverlay>
     </div>
   );
 }

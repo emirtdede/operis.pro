@@ -71,9 +71,7 @@ export async function GET(req: Request) {
         return NextResponse.json({
           available: true,
           isCurrent: true,
-          message: isTr
-            ? "Bu sizin mevcut kullanıcı adınız."
-            : "This is your current handle.",
+          message: isTr ? "Bu sizin mevcut kullanıcı adınız." : "This is your current handle.",
         });
       }
       return NextResponse.json({
@@ -87,9 +85,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json({
       available: true,
-      message: isTr
-        ? "Bu kullanıcı adı kullanılabilir!"
-        : "This handle is available!",
+      message: isTr ? "Bu kullanıcı adı kullanılabilir!" : "This handle is available!",
     });
   } catch {
     return NextResponse.json(

@@ -247,11 +247,7 @@ const TAB_PREFIX_MAP: Array<{ key: string; prefixes: string[] }> = [
   },
   {
     key: "categories",
-    prefixes: [
-      "/tr/panel/kategorilerim",
-      "/en/dashboard/categories",
-      "/tr/dashboard/categories",
-    ],
+    prefixes: ["/tr/panel/kategorilerim", "/en/dashboard/categories", "/tr/dashboard/categories"],
   },
   {
     key: "listings",
@@ -307,7 +303,10 @@ export function DashboardInfoPanel({ locale, className = "" }: DashboardInfoPane
     >
       <div className="flex items-center justify-between gap-2 border-b border-[var(--color-border-subtle)] pb-2.5">
         <div className="flex items-center gap-2 text-xs font-semibold text-[var(--color-text-primary)] min-w-0">
-          <Icon className={`h-3.5 w-3.5 shrink-0 ${activeContent.iconColorClass}`} aria-hidden="true" />
+          <Icon
+            className={`h-3.5 w-3.5 shrink-0 ${activeContent.iconColorClass}`}
+            aria-hidden="true"
+          />
           <span className="truncate">{activeContent.title}</span>
         </div>
         <div

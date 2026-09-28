@@ -2,13 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/src/components/ui/button";
-import {
-  Printer,
-  Copy,
-  Check,
-  Download,
-  FileCheck2,
-} from "lucide-react";
+import { Printer, Copy, Check, Download, FileCheck2 } from "lucide-react";
 import type { GeneratedContractResult, ContractLanguage } from "@/src/modules/contracts/types";
 import { getDownloadPdfButtonLabel } from "./contract-draft-helpers";
 

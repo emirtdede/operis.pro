@@ -124,7 +124,11 @@ export class HiringIntentEngine {
     const numMax = typeof budgetMax === "string" ? parseFloat(budgetMax) : Number(budgetMax) || 0;
     const effectiveBudget = Math.max(numMin, numMax);
 
-    if (categoryBenchmark && categoryBenchmark.hasBenchmark && (categoryBenchmark.min || categoryBenchmark.median)) {
+    if (
+      categoryBenchmark &&
+      categoryBenchmark.hasBenchmark &&
+      (categoryBenchmark.min || categoryBenchmark.median)
+    ) {
       const bMin = categoryBenchmark.min || categoryBenchmark.median || 0;
 
       if (effectiveBudget >= bMin) {
@@ -148,7 +152,9 @@ export class HiringIntentEngine {
       // NEVER penalize the employer for the platform's young category data!
       if (effectiveBudget > 0) {
         score = 22;
-        signals.push("Kategoride henüz benchmark oluşmadığı için belirtilen somut bütçe geçerli kabul edildi");
+        signals.push(
+          "Kategoride henüz benchmark oluşmadığı için belirtilen somut bütçe geçerli kabul edildi"
+        );
       } else if (budgetMode === "OPEN_BID" || budgetMode === "NEGOTIABLE") {
         score = 16;
         signals.push("Açık teklif / esnek bütçe modu");
@@ -161,7 +167,8 @@ export class HiringIntentEngine {
     const clamped = Math.min(25, Math.max(0, score));
     const status = this.resolvePillarStatus(clamped, { excellent: 22, good: 16, fair: 10 });
 
-    let explanationTr = "Ayrılan bütçe piyasa tabanının altındadır; kapsam daraltılması gerekebilir.";
+    let explanationTr =
+      "Ayrılan bütçe piyasa tabanının altındadır; kapsam daraltılması gerekebilir.";
     if (clamped >= 22) {
       explanationTr = "Ayrılan bütçe piyasa standartlarına ve projenin gereksinimlerine uygundur.";
     } else if (clamped >= 15) {
@@ -238,11 +245,14 @@ export class HiringIntentEngine {
     const clamped = Math.min(25, Math.max(0, score));
     const status = this.resolvePillarStatus(clamped, { excellent: 20, good: 15, fair: 10 });
 
-    let explanationTr = "İlan çok kısa veya muğlak ifadeler içerir; piyasa yoklama ihtimali bulunmaktadır.";
+    let explanationTr =
+      "İlan çok kısa veya muğlak ifadeler içerir; piyasa yoklama ihtimali bulunmaktadır.";
     if (clamped >= 20) {
-      explanationTr = "İlanın teknik kapsamı, mimari hedefleri ve teslimat beklentileri son derece nettir.";
+      explanationTr =
+        "İlanın teknik kapsamı, mimari hedefleri ve teslimat beklentileri son derece nettir.";
     } else if (clamped >= 14) {
-      explanationTr = "İlan temel gereksinimleri içerir; teklif esnasında teknik detaylar netleştirilebilir.";
+      explanationTr =
+        "İlan temel gereksinimleri içerir; teklif esnasında teknik detaylar netleştirilebilir.";
     }
 
     return {
@@ -346,8 +356,14 @@ export class HiringIntentEngine {
   ): HiringIntentPenalty[] {
     const penalties: HiringIntentPenalty[] = [];
 
-    const numMin = typeof input.budgetMin === "string" ? parseFloat(input.budgetMin) : Number(input.budgetMin) || 0;
-    const numMax = typeof input.budgetMax === "string" ? parseFloat(input.budgetMax) : Number(input.budgetMax) || 0;
+    const numMin =
+      typeof input.budgetMin === "string"
+        ? parseFloat(input.budgetMin)
+        : Number(input.budgetMin) || 0;
+    const numMax =
+      typeof input.budgetMax === "string"
+        ? parseFloat(input.budgetMax)
+        : Number(input.budgetMax) || 0;
     const effectiveBudget = Math.max(numMin, numMax);
 
     // 1. Extreme Lowball / Exploitative Budget Penalty
@@ -363,8 +379,10 @@ export class HiringIntentEngine {
         nameTr: "Aşırı Gerçek Dışı Bütçe Kesintisi",
         nameEn: "Extreme Sub-Market Lowball Penalty",
         pointsDeducted: 15,
-        reasonTr: "Belirtilen bütçe kategori medyanının %15'inden düşüktür; piyasa yoklama veya hayalet ilan göstergesidir.",
-        reasonEn: "Declared budget is under 15% of market median, strongly indicating price discovery.",
+        reasonTr:
+          "Belirtilen bütçe kategori medyanının %15'inden düşüktür; piyasa yoklama veya hayalet ilan göstergesidir.",
+        reasonEn:
+          "Declared budget is under 15% of market median, strongly indicating price discovery.",
       });
     }
 
@@ -427,20 +445,26 @@ export class HiringIntentEngine {
       badgeLabelEn = `Verified New Client (${overallScore}% Trust)`;
       shortBadgeLabelTr = `Yeni İşveren`;
       shortBadgeLabelEn = `New Client`;
-      badgeClass = "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.15)]";
+      badgeClass =
+        "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.15)]";
       dotColor = "bg-emerald-400 animate-pulse";
-      summaryTr = "Platformda ilk ilanını açan VKN onaylı kurumsal işveren. Yüksek işe alım niyeti ve güvenli başlangıç güvencesi taşır.";
-      summaryEn = "Verified corporate client posting their inaugural listing on Operis with high intent and verified credentials.";
+      summaryTr =
+        "Platformda ilk ilanını açan VKN onaylı kurumsal işveren. Yüksek işe alım niyeti ve güvenli başlangıç güvencesi taşır.";
+      summaryEn =
+        "Verified corporate client posting their inaugural listing on Operis with high intent and verified credentials.";
     } else if (overallScore >= 85) {
       level = "PROVEN_HIGH_INTENT";
       badgeLabelTr = `%${overallScore} İşe Alım Niyeti`;
       badgeLabelEn = `${overallScore}% High Hiring Intent`;
       shortBadgeLabelTr = `%${overallScore} Niyet`;
       shortBadgeLabelEn = `${overallScore}% Intent`;
-      badgeClass = "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.15)]";
+      badgeClass =
+        "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.15)]";
       dotColor = "bg-emerald-400 animate-pulse";
-      summaryTr = "İşverenin kurumsal doğrulaması, piyasa bütçesi ve detaylı teknik şartnamesi yüksek işe alım ciddiyeti göstermektedir.";
-      summaryEn = "Proven high hiring probability backed by verified corporate identity, realistic budget, and clear deliverables.";
+      summaryTr =
+        "İşverenin kurumsal doğrulaması, piyasa bütçesi ve detaylı teknik şartnamesi yüksek işe alım ciddiyeti göstermektedir.";
+      summaryEn =
+        "Proven high hiring probability backed by verified corporate identity, realistic budget, and clear deliverables.";
     } else if (overallScore >= 70) {
       level = "ACTIVE_HIRING_LIKELY";
       badgeLabelTr = `%${overallScore} İşe Alım Bekleniyor`;
@@ -449,7 +473,8 @@ export class HiringIntentEngine {
       shortBadgeLabelEn = `${overallScore}% Intent`;
       badgeClass = "bg-sky-500/10 text-sky-400 border-sky-500/30";
       dotColor = "bg-sky-400";
-      summaryTr = "İlan yeterli kapsam ve gerçekçi bütçeye sahiptir; işe alımla sonuçlanma olasılığı yüksektir.";
+      summaryTr =
+        "İlan yeterli kapsam ve gerçekçi bütçeye sahiptir; işe alımla sonuçlanma olasılığı yüksektir.";
       summaryEn = "Solid listing scope and feasible budget indicate a genuine hiring timeline.";
     } else if (overallScore >= 50) {
       level = "MODERATE_INTENT";
@@ -459,8 +484,10 @@ export class HiringIntentEngine {
       shortBadgeLabelEn = `${overallScore}% Intent`;
       badgeClass = "bg-amber-500/10 text-amber-400 border-amber-500/30";
       dotColor = "bg-amber-400";
-      summaryTr = "Bütçe veya teknik şartnamede bazı belirsizlikler bulunmaktadır. Teklif verirken kapsamı teyit etmeniz önerilir.";
-      summaryEn = "Some ambiguity present in budget or specifications; clarify milestones prior to committing extensive proposal effort.";
+      summaryTr =
+        "Bütçe veya teknik şartnamede bazı belirsizlikler bulunmaktadır. Teklif verirken kapsamı teyit etmeniz önerilir.";
+      summaryEn =
+        "Some ambiguity present in budget or specifications; clarify milestones prior to committing extensive proposal effort.";
     } else {
       level = "PRICE_CHECK_RISK";
       badgeLabelTr = `%${overallScore} Piyasa Yoklama Riski`;
@@ -469,22 +496,30 @@ export class HiringIntentEngine {
       shortBadgeLabelEn = `${overallScore}% Risk`;
       badgeClass = "bg-rose-500/10 text-rose-400 border-rose-500/30";
       dotColor = "bg-rose-400";
-      summaryTr = "Aşırı düşük bütçe, yetersiz teknik detay veya sonuçsuz ilan geçmişi sebebiyle 'hayalet ilan' riski taşımaktadır.";
-      summaryEn = "Elevated risk of price-checking or ghost listing due to sub-market budget or vague specifications.";
+      summaryTr =
+        "Aşırı düşük bütçe, yetersiz teknik detay veya sonuçsuz ilan geçmişi sebebiyle 'hayalet ilan' riski taşımaktadır.";
+      summaryEn =
+        "Elevated risk of price-checking or ghost listing due to sub-market budget or vague specifications.";
     }
 
     // Freelancer Advice
     let freelancerGuidanceTr: string;
     let freelancerGuidanceEn: string;
     if (level === "PROVEN_HIGH_INTENT" || level === "VERIFIED_NEW_CLIENT") {
-      freelancerGuidanceTr = "Bu işveren ciddi ve hazırdır. Detaylı teknik teklif ve mimari çözüm hazırlamak için harcanan zamanın karşılık bulma ihtimali çok yüksektir.";
-      freelancerGuidanceEn = "High-priority client with high hiring probability. Investing time in tailored technical proposals is strongly recommended.";
+      freelancerGuidanceTr =
+        "Bu işveren ciddi ve hazırdır. Detaylı teknik teklif ve mimari çözüm hazırlamak için harcanan zamanın karşılık bulma ihtimali çok yüksektir.";
+      freelancerGuidanceEn =
+        "High-priority client with high hiring probability. Investing time in tailored technical proposals is strongly recommended.";
     } else if (level === "ACTIVE_HIRING_LIKELY") {
-      freelancerGuidanceTr = "Standart aktif bir ilandır. Portföyünüze uygunsa güvenle teklif verebilirsiniz.";
-      freelancerGuidanceEn = "Legitimate active listing. Submitting competitive proposals is recommended.";
+      freelancerGuidanceTr =
+        "Standart aktif bir ilandır. Portföyünüze uygunsa güvenle teklif verebilirsiniz.";
+      freelancerGuidanceEn =
+        "Legitimate active listing. Submitting competitive proposals is recommended.";
     } else {
-      freelancerGuidanceTr = "İşverenin niyetini anlamak için uzun mimari dokümanlar hazırlamadan önce kısa ve net bir ön teklifle bütçe/kapsam uyumunu sorgulayın.";
-      freelancerGuidanceEn = "Qualify scope and budget via concise preliminary questions before investing extensive unbilled hours in proposal drafting.";
+      freelancerGuidanceTr =
+        "İşverenin niyetini anlamak için uzun mimari dokümanlar hazırlamadan önce kısa ve net bir ön teklifle bütçe/kapsam uyumunu sorgulayın.";
+      freelancerGuidanceEn =
+        "Qualify scope and budget via concise preliminary questions before investing extensive unbilled hours in proposal drafting.";
     }
 
     // Client Tips to increase score
@@ -492,15 +527,23 @@ export class HiringIntentEngine {
     const clientTipsEn: string[] = [];
 
     if (!isCompanyVerified) {
-      clientTipsTr.push("VKN / TCKN kurumsal doğrulaması yaparak güven skorunuzu anında +20 puan yükseltin.");
+      clientTipsTr.push(
+        "VKN / TCKN kurumsal doğrulaması yaparak güven skorunuzu anında +20 puan yükseltin."
+      );
       clientTipsEn.push("Verify your Corporate Tax ID (VKN) to immediately gain +20 trust points.");
     }
     if (p2.score < 20) {
-      clientTipsTr.push("Bütçenizi kategori piyasa benchmark seviyesine çekerek kıdemli uzmanların teklif vermesini sağlayın.");
-      clientTipsEn.push("Align budget with category market benchmarks to attract senior engineering talent.");
+      clientTipsTr.push(
+        "Bütçenizi kategori piyasa benchmark seviyesine çekerek kıdemli uzmanların teklif vermesini sağlayın."
+      );
+      clientTipsEn.push(
+        "Align budget with category market benchmarks to attract senior engineering talent."
+      );
     }
     if (p3.score < 20) {
-      clientTipsTr.push("Teknik teslimatları ve kabul kriterlerini detaylandırarak ilan netlik puanınızı artırın.");
+      clientTipsTr.push(
+        "Teknik teslimatları ve kabul kriterlerini detaylandırarak ilan netlik puanınızı artırın."
+      );
       clientTipsEn.push("Detail technical deliverables and acceptance criteria to boost clarity.");
     }
 

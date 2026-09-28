@@ -132,10 +132,34 @@ const REASON_CONFIGS: ReasonConfig[] = [
 ];
 
 const TARGET_TYPES = [
-  { value: "listing", labelTr: "İlan", labelEn: "Listing", hintTr: "İlan URL veya Başlığı", hintEn: "Listing URL or Title" },
-  { value: "profile", labelTr: "Kullanıcı / Ajans Profili", labelEn: "User / Agency Profile", hintTr: "Kullanıcı Adı (@kullanici)", hintEn: "Handle (@username)" },
-  { value: "offer", labelTr: "Teklif / Özel Mesaj", labelEn: "Offer / Message", hintTr: "Teklif Kimliği veya İlan", hintEn: "Offer ID or Listing" },
-  { value: "general", labelTr: "Genel Sistem / Güvenlik", labelEn: "System / Platform Security", hintTr: "İlgili Bölüm / URL", hintEn: "Endpoint / Context" },
+  {
+    value: "listing",
+    labelTr: "İlan",
+    labelEn: "Listing",
+    hintTr: "İlan URL veya Başlığı",
+    hintEn: "Listing URL or Title",
+  },
+  {
+    value: "profile",
+    labelTr: "Kullanıcı / Ajans Profili",
+    labelEn: "User / Agency Profile",
+    hintTr: "Kullanıcı Adı (@kullanici)",
+    hintEn: "Handle (@username)",
+  },
+  {
+    value: "offer",
+    labelTr: "Teklif / Özel Mesaj",
+    labelEn: "Offer / Message",
+    hintTr: "Teklif Kimliği veya İlan",
+    hintEn: "Offer ID or Listing",
+  },
+  {
+    value: "general",
+    labelTr: "Genel Sistem / Güvenlik",
+    labelEn: "System / Platform Security",
+    hintTr: "İlgili Bölüm / URL",
+    hintEn: "Endpoint / Context",
+  },
 ];
 
 const URGENCY_LEVELS = [
@@ -174,9 +198,7 @@ function getTargetPlaceholder(targetType: string, isTr: boolean): string {
     return isTr ? "@kullaniciadi veya profil bağlantısı" : "@username or profile link";
   }
   if (targetType === "listing") {
-    return isTr
-      ? "/tr/ilanlar/... veya ilan başlığı"
-      : "/en/listings/... or listing title";
+    return isTr ? "/tr/ilanlar/... veya ilan başlığı" : "/en/listings/... or listing title";
   }
   return isTr ? "İlgili teklif, mesaj veya sayfa URL'si" : "Offer ID, message snippet or URL";
 }
@@ -228,8 +250,7 @@ export function ReportForm({
 
   const selectedReason: ReasonConfig =
     REASON_CONFIGS.find((r) => r.value === reasonCode) ?? FALLBACK_REASON;
-  const currentTargetMeta =
-    TARGET_TYPES.find((t) => t.value === targetType) ?? FALLBACK_TARGET;
+  const currentTargetMeta = TARGET_TYPES.find((t) => t.value === targetType) ?? FALLBACK_TARGET;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -332,7 +353,9 @@ export function ReportForm({
             {isTr ? "Resmi Vaka Kaydı Açıldı" : "Formal Incident Ticket Created"}
           </span>
           <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-text-primary)]">
-            {isTr ? "Bildiriminiz Güvenlik Masasına İletildi" : "Report Dispatched to Security Desk"}
+            {isTr
+              ? "Bildiriminiz Güvenlik Masasına İletildi"
+              : "Report Dispatched to Security Desk"}
           </h2>
           <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
             {isTr
@@ -371,19 +394,25 @@ export function ReportForm({
         {/* Resolution stages preview */}
         <div className="max-w-xl mx-auto grid grid-cols-3 gap-2 pt-2 text-[11px] text-left">
           <div className="p-3 rounded-xl bg-[var(--color-surface-base)]/80 border border-emerald-500/20 space-y-1">
-            <span className="font-bold text-emerald-400 block">1. {isTr ? "Kayıt & Triage" : "Logging & Triage"}</span>
+            <span className="font-bold text-emerald-400 block">
+              1. {isTr ? "Kayıt & Triage" : "Logging & Triage"}
+            </span>
             <span className="text-[10px] text-[var(--color-text-tertiary)]">
               {isTr ? "Deliller indekslendi" : "Evidence indexed"}
             </span>
           </div>
           <div className="p-3 rounded-xl bg-[var(--color-surface-base)]/80 border border-[var(--color-border-subtle)] space-y-1 opacity-75">
-            <span className="font-bold text-[var(--color-text-secondary)] block">2. {isTr ? "Moderatör İncelemesi" : "Audit Review"}</span>
+            <span className="font-bold text-[var(--color-text-secondary)] block">
+              2. {isTr ? "Moderatör İncelemesi" : "Audit Review"}
+            </span>
             <span className="text-[10px] text-[var(--color-text-tertiary)]">
               {selectedReason.slaTr}
             </span>
           </div>
           <div className="p-3 rounded-xl bg-[var(--color-surface-base)]/80 border border-[var(--color-border-subtle)] space-y-1 opacity-75">
-            <span className="font-bold text-[var(--color-text-secondary)] block">3. {isTr ? "Nihai Yaptırım" : "Enforcement"}</span>
+            <span className="font-bold text-[var(--color-text-secondary)] block">
+              3. {isTr ? "Nihai Yaptırım" : "Enforcement"}
+            </span>
             <span className="text-[10px] text-[var(--color-text-tertiary)]">
               {isTr ? "Kalıcı aksiyon" : "Final action"}
             </span>
@@ -442,22 +471,32 @@ export function ReportForm({
               <ul className="text-xs text-[var(--color-text-tertiary)] space-y-1.5 pt-1">
                 <li className="flex items-center gap-2">
                   <Check className="h-3.5 w-3.5 text-blue-400" />
-                  <span>{isTr ? "< 2 Saat Öncelikli Triage Kuyruğu" : "< 2-Hour Expedited Triage"}</span>
+                  <span>
+                    {isTr ? "< 2 Saat Öncelikli Triage Kuyruğu" : "< 2-Hour Expedited Triage"}
+                  </span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="h-3.5 w-3.5 text-blue-400" />
-                  <span>{isTr ? "İki Taraflı Uyuşmazlık Hakemliği" : "Bilateral Dispute Resolution"}</span>
+                  <span>
+                    {isTr ? "İki Taraflı Uyuşmazlık Hakemliği" : "Bilateral Dispute Resolution"}
+                  </span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="h-3.5 w-3.5 text-blue-400" />
-                  <span>{isTr ? "Canlı Bildirim ve Karar Raporu" : "Live Status & Enforcement Ledger"}</span>
+                  <span>
+                    {isTr ? "Canlı Bildirim ve Karar Raporu" : "Live Status & Enforcement Ledger"}
+                  </span>
                 </li>
               </ul>
             </div>
 
             <div className="pt-2">
               <Link href={loginUrl} className="w-full block">
-                <Button variant="primary" size="md" className="w-full gap-2 shadow-lg shadow-blue-500/20 font-semibold text-xs">
+                <Button
+                  variant="primary"
+                  size="md"
+                  className="w-full gap-2 shadow-lg shadow-blue-500/20 font-semibold text-xs"
+                >
                   <LogIn className="h-4 w-4" aria-hidden="true" />
                   <span>{isTr ? "Giriş Yaparak Öncelikli Bildir" : "Log In to File Report"}</span>
                 </Button>
@@ -614,7 +653,9 @@ export function ReportForm({
               >
                 <div
                   className={`p-2 rounded-xl shrink-0 mt-0.5 ${
-                    isSelected ? "bg-blue-500/20 text-blue-400" : "bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)]"
+                    isSelected
+                      ? "bg-blue-500/20 text-blue-400"
+                      : "bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)]"
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -646,7 +687,9 @@ export function ReportForm({
       <div className="p-4 rounded-2xl border border-blue-500/20 bg-blue-500/5 space-y-2">
         <div className="flex items-center gap-2 text-xs font-bold text-blue-400">
           <Info className="h-4 w-4 shrink-0" />
-          <span>{isTr ? "Bu İhlal Türü İçin İstenen Deliller & SLA:" : "Expected Evidence & SLA:"}</span>
+          <span>
+            {isTr ? "Bu İhlal Türü İçin İstenen Deliller & SLA:" : "Expected Evidence & SLA:"}
+          </span>
         </div>
         <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
           {isTr ? selectedReason.evidenceTr : selectedReason.evidenceEn}
@@ -693,17 +736,31 @@ export function ReportForm({
 
       {/* External Evidence URL */}
       <TextInput
-        label={isTr ? "Kanıt / Ekran Görüntüsü Bağlantısı (İsteğe Bağlı)" : "Evidence / Screenshot Link (Optional)"}
+        label={
+          isTr
+            ? "Kanıt / Ekran Görüntüsü Bağlantısı (İsteğe Bağlı)"
+            : "Evidence / Screenshot Link (Optional)"
+        }
         value={evidenceUrl}
         onChange={(e) => setEvidenceUrl(e.target.value)}
-        placeholder={isTr ? "Google Drive, GitHub commit veya bulut depolama bağlantısı..." : "Google Drive, Cloud storage or repo URL..."}
+        placeholder={
+          isTr
+            ? "Google Drive, GitHub commit veya bulut depolama bağlantısı..."
+            : "Google Drive, Cloud storage or repo URL..."
+        }
         startIcon={<ExternalLink className="h-3.5 w-3.5 text-[var(--color-text-tertiary)]" />}
-        hint={isTr ? "Deliller denetmen ekibimizin vakayı anında doğrulamasına yardımcı olur." : "Direct links help moderators verify incident claims faster."}
+        hint={
+          isTr
+            ? "Deliller denetmen ekibimizin vakayı anında doğrulamasına yardımcı olur."
+            : "Direct links help moderators verify incident claims faster."
+        }
       />
 
       {/* Detailed Chronology */}
       <TextArea
-        label={isTr ? "4. Olayın Detaylı Açıklaması ve Kronolojisi" : "4. Detailed Incident Chronology"}
+        label={
+          isTr ? "4. Olayın Detaylı Açıklaması ve Kronolojisi" : "4. Detailed Incident Chronology"
+        }
         value={details}
         onChange={(e) => setDetails(e.target.value)}
         placeholder={
@@ -730,9 +787,14 @@ export function ReportForm({
           onChange={(e) => setConfidentialityChecked(e.target.checked)}
           className="h-4 w-4 mt-0.5 rounded border-[var(--color-border-strong)] text-blue-600 focus:ring-blue-500 cursor-pointer"
         />
-        <label htmlFor="confidentiality-toggle" className="text-xs text-[var(--color-text-secondary)] leading-relaxed cursor-pointer select-none">
+        <label
+          htmlFor="confidentiality-toggle"
+          className="text-xs text-[var(--color-text-secondary)] leading-relaxed cursor-pointer select-none"
+        >
           <strong className="text-[var(--color-text-primary)] block font-semibold">
-            {isTr ? "Tam Gizlilik & Muhbirlik Koruması (Whistleblower Protection)" : "Whistleblower Confidentiality Protection"}
+            {isTr
+              ? "Tam Gizlilik & Muhbirlik Koruması (Whistleblower Protection)"
+              : "Whistleblower Confidentiality Protection"}
           </strong>
           {isTr
             ? "Kimliğim, kullanıcı adım ve şikayet gerekçelerim şikayet edilen tarafa hiçbir koşulda açıklanmasın. İnceleme Operis Denetim Kurulu tarafından bağımsız yürütülsün."
@@ -749,7 +811,9 @@ export function ReportForm({
           className="w-full text-sm font-semibold cursor-pointer shadow-lg shadow-blue-500/20"
           isLoading={isLoading}
         >
-          {isTr ? "Resmi İhlal Bildirimini Güvenlik Masasına İlet" : "Submit Incident Report to Security Desk"}
+          {isTr
+            ? "Resmi İhlal Bildirimini Güvenlik Masasına İlet"
+            : "Submit Incident Report to Security Desk"}
         </Button>
 
         <p className="text-[11px] text-center text-[var(--color-text-tertiary)]">

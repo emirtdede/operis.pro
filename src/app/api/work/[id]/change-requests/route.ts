@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { ChangeRequestService } from "@/src/modules/engagements/change-request-service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const isEnHeader = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
@@ -44,25 +42,34 @@ export async function GET(
       ...summary,
     });
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Internal Server Error";
-    if (message === "ENGAGEMENT_NOT_FOUND" || message === "UNAUTHORIZED_USER") {
-      return NextResponse.json(
-        {
-          error: isEnHeader
-            ? "Unauthorized or engagement not found."
-            : "İş birliği bulunamadı veya yetkiniz yok.",
+    return handleApiError(
+      error,
+      {
+        en: "Failed to load change requests",
+        tr: "Değişiklik talepleri alınamadı",
+      },
+      {
+        isEn: isEnHeader,
+        logPrefix: "[Change Requests GET Error]",
+        status: 500,
+        allowedMessages: {
+          ENGAGEMENT_NOT_FOUND: {
+            en: "Unauthorized or engagement not found.",
+            tr: "İş birliği bulunamadı veya yetkiniz yok.",
+            status: 403,
+          },
+          UNAUTHORIZED_USER: {
+            en: "Unauthorized or engagement not found.",
+            tr: "İş birliği bulunamadı veya yetkiniz yok.",
+            status: 403,
+          },
         },
-        { status: 403 }
-      );
-    }
-    return NextResponse.json({ error: message }, { status: 500 });
+      }
+    );
   }
 }
 
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const isEnHeader = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
@@ -120,37 +127,39 @@ export async function POST(
       changeRequest: record,
     });
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Internal Server Error";
-    if (message === "ACTIVE_CHANGE_REQUEST_EXISTS") {
-      return NextResponse.json(
-        {
-          error: isEnHeader
-            ? "An active change request is already pending. Please resolve it first."
-            : "Bu iş birliği için halihazırda onay bekleyen bir değişiklik talebi bulunmaktadır.",
+    return handleApiError(
+      error,
+      {
+        en: "Failed to create change request",
+        tr: "Değişiklik talebi oluşturulamadı",
+      },
+      {
+        isEn: isEnHeader,
+        logPrefix: "[Change Requests POST Error]",
+        status: 500,
+        allowedMessages: {
+          ACTIVE_CHANGE_REQUEST_EXISTS: {
+            en: "An active change request is already pending. Please resolve it first.",
+            tr: "Bu iş birliği için halihazırda onay bekleyen bir değişiklik talebi bulunmaktadır.",
+            status: 409,
+          },
+          CURRENCY_MISMATCH: {
+            en: "Change request currency must match the engagement budget currency.",
+            tr: "Değişiklik talebi para birimi iş birliğinin bütçe para birimiyle aynı olmalıdır.",
+            status: 400,
+          },
+          ENGAGEMENT_NOT_FOUND: {
+            en: "Unauthorized or engagement not found.",
+            tr: "İş birliği bulunamadı veya yetkiniz yok.",
+            status: 403,
+          },
+          UNAUTHORIZED_USER: {
+            en: "Unauthorized or engagement not found.",
+            tr: "İş birliği bulunamadı veya yetkiniz yok.",
+            status: 403,
+          },
         },
-        { status: 409 }
-      );
-    }
-    if (message === "CURRENCY_MISMATCH") {
-      return NextResponse.json(
-        {
-          error: isEnHeader
-            ? "Change request currency must match the engagement budget currency."
-            : "Değişiklik talebi para birimi iş birliğinin bütçe para birimiyle aynı olmalıdır.",
-        },
-        { status: 400 }
-      );
-    }
-    if (message === "ENGAGEMENT_NOT_FOUND" || message === "UNAUTHORIZED_USER") {
-      return NextResponse.json(
-        {
-          error: isEnHeader
-            ? "Unauthorized or engagement not found."
-            : "İş birliği bulunamadı veya yetkiniz yok.",
-        },
-        { status: 403 }
-      );
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+      }
+    );
   }
 }

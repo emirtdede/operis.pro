@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Search, CheckCircle2, Clock, Archive, Reply, ExternalLink } from "lucide-react";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 
 interface ContactMessageItem {
   id: string;
@@ -33,6 +34,7 @@ export function ContactMessagesClient({
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
+  const [conflictNotice, setConflictNotice] = useState<string | null>(null);
 
   const filtered = messages.filter((m) => {
     if (statusFilter !== "ALL" && m.status !== statusFilter) return false;
@@ -68,10 +70,12 @@ export function ContactMessagesClient({
           setSelectedMessage((prev) => (prev ? { ...prev, status: newStatus } : null));
         }
       } else if (res.status === 409) {
-        alert(
-          "Bu mesajın durumu başka bir yönetici tarafından güncellenmiştir. Güncel verileri görüntülemek için sayfa yenileniyor."
+        setConflictNotice(
+          "Bu mesajın durumu başka bir yönetici tarafından güncellenmiştir. Güncel verileri yüklemek için sayfa yenileniyor..."
         );
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1200);
       }
     } catch {
       // non-blocking
@@ -82,6 +86,17 @@ export function ContactMessagesClient({
 
   return (
     <div className="space-y-6">
+      {conflictNotice && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-center justify-between shadow-lg"
+        >
+          <span>{conflictNotice}</span>
+          <span className="font-mono text-sm animate-pulse">⟳</span>
+        </div>
+      )}
+
       {/* Control bar */}
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-between bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
         <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -209,11 +224,12 @@ export function ContactMessagesClient({
       </div>
 
       {/* Detail Modal */}
-      {selectedMessage && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-150"
-          onClick={() => setSelectedMessage(null)}
-        >
+      <ModalOverlay
+        isOpen={Boolean(selectedMessage)}
+        onClose={() => setSelectedMessage(null)}
+        ariaLabel={selectedMessage ? selectedMessage.subject : "İletişim Talebi"}
+      >
+        {selectedMessage && (
           <div
             className="w-full max-w-xl bg-slate-900 border border-slate-800 rounded-3xl p-4 sm:p-6 shadow-2xl max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden animate-in zoom-in-95 duration-150"
             onClick={(e) => e.stopPropagation()}
@@ -223,7 +239,9 @@ export function ContactMessagesClient({
                 <span className="text-[10px] uppercase tracking-wider text-blue-400 font-mono">
                   İletişim Talebi • {selectedMessage.locale.toUpperCase()}
                 </span>
-                <h3 className="text-base font-bold text-white mt-1 truncate">{selectedMessage.subject}</h3>
+                <h3 className="text-base font-bold text-white mt-1 truncate">
+                  {selectedMessage.subject}
+                </h3>
                 <p className="text-xs text-slate-400 mt-0.5 truncate">
                   {selectedMessage.name} &lt;{selectedMessage.email}&gt;
                 </p>
@@ -275,8 +293,8 @@ export function ContactMessagesClient({
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalOverlay>
     </div>
   );
 }

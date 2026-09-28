@@ -3,6 +3,7 @@
 import type { FormEvent } from "react";
 import { Phone, X, CheckCircle2 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 
 export interface PhoneChangeModalProps {
   isOpen: boolean;
@@ -41,11 +42,10 @@ export function PhoneChangeModal({
   const isTr = locale === "tr";
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 animate-in fade-in duration-200"
-      role="dialog"
-      aria-modal="true"
-      aria-label={isTr ? "Telefon Numarası Güncelleme" : "Update Phone Number"}
+    <ModalOverlay
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabel={isTr ? "Telefon Numarası Güncelleme" : "Update Phone Number"}
     >
       <div className="relative w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-4 sm:p-6 shadow-2xl">
         <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-3 shrink-0">
@@ -165,6 +165,6 @@ export function PhoneChangeModal({
           )}
         </div>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

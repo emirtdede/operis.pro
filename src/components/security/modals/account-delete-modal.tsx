@@ -6,6 +6,7 @@ import { Button } from "../../ui/button";
 import { TextInput } from "../../ui/text-input";
 import { TextArea } from "../../ui/text-area";
 import { SecurityFeedback, getErrorMessage } from "../types";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 
 export interface AccountDeleteModalProps {
   isOpen: boolean;
@@ -100,7 +101,10 @@ export function AccountDeleteModal({
       }, 1200);
     } catch (err: unknown) {
       setDeleteModalError(
-        getErrorMessage(err, isTr ? "Hesap silme işlemi başarısız oldu." : "Account deletion failed.")
+        getErrorMessage(
+          err,
+          isTr ? "Hesap silme işlemi başarısız oldu." : "Account deletion failed."
+        )
       );
     } finally {
       setIsDeletingAccount(false);
@@ -114,11 +118,10 @@ export function AccountDeleteModal({
     deleteConfirmText.trim() === (isTr ? "HESABIMI SİL" : "DELETE");
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 animate-in fade-in duration-200"
-      role="dialog"
-      aria-modal="true"
-      aria-label={isTr ? "Hesap Silme Onayı" : "Account Deletion Confirmation"}
+    <ModalOverlay
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabel={isTr ? "Hesap Silme Onayı" : "Account Deletion Confirmation"}
     >
       <div className="relative w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl border border-red-500/30 bg-[var(--color-surface-base)] p-4 sm:p-6 shadow-2xl">
         <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-3 shrink-0">
@@ -145,7 +148,10 @@ export function AccountDeleteModal({
           </button>
         </div>
 
-        <form onSubmit={handleDeleteAccount} className="flex flex-col flex-1 min-h-0 overflow-hidden">
+        <form
+          onSubmit={handleDeleteAccount}
+          className="flex flex-col flex-1 min-h-0 overflow-hidden"
+        >
           <div className="flex-1 overflow-y-auto min-h-0 py-3 space-y-4 pr-1">
             <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
               {isTr
@@ -234,6 +240,6 @@ export function AccountDeleteModal({
           </div>
         </form>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

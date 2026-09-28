@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Globe,
-  Plus,
-  Trash2,
-  Link as LinkIcon,
-} from "lucide-react";
+import { Globe, Plus, Trash2, Link as LinkIcon } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { ProfileLinkItem } from "./profile-form-reducer";
 import { getLinkTypes } from "./types";

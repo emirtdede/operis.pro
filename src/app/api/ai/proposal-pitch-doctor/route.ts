@@ -155,10 +155,14 @@ export async function POST(req: Request) {
   } catch (err: unknown) {
     const locale = headerLocale || "tr";
     const isEn = locale === "en";
-    let message = isEn ? "Evaluation failed" : "Değerlendirme başarısız oldu";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("Proposal pitch doctor error:", err);
+    return NextResponse.json(
+      {
+        error: isEn
+          ? "Evaluation failed. Please try again later."
+          : "Değerlendirme başarısız oldu. Lütfen daha sonra tekrar deneyiniz.",
+      },
+      { status: 500 }
+    );
   }
 }

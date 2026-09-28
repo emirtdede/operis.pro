@@ -130,8 +130,12 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
               className="inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all cursor-pointer"
             >
               <Download className="h-4 w-4" aria-hidden="true" />
-              <span>{isTr ? "Tüm Varlıkları İndir (.ZIP Paketi)" : "Download All Assets (.ZIP Package)"}</span>
-              <span className="text-[10px] font-mono opacity-80 px-2 py-0.5 rounded-full bg-black/25">42 KB</span>
+              <span>
+                {isTr ? "Tüm Varlıkları İndir (.ZIP Paketi)" : "Download All Assets (.ZIP Package)"}
+              </span>
+              <span className="text-[10px] font-mono opacity-80 px-2 py-0.5 rounded-full bg-black/25">
+                42 KB
+              </span>
             </a>
           </div>
         </div>
@@ -180,9 +184,7 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
                   ) : (
                     <Copy className="h-4 w-4" aria-hidden="true" />
                   )}
-                  <span>
-                    {getCodeCopyButtonLabel(copiedCode === "dark-html", isTr)}
-                  </span>
+                  <span>{getCodeCopyButtonLabel(copiedCode === "dark-html", isTr)}</span>
                 </button>
               </div>
               <p className="text-[11px] text-zinc-500 text-center">
@@ -236,9 +238,7 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
                   ) : (
                     <Copy className="h-4 w-4" aria-hidden="true" />
                   )}
-                  <span>
-                    {getCodeCopyButtonLabel(copiedCode === "light-html", isTr)}
-                  </span>
+                  <span>{getCodeCopyButtonLabel(copiedCode === "light-html", isTr)}</span>
                 </button>
               </div>
               <p className="text-[11px] text-zinc-500 text-center">
@@ -662,7 +662,9 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
               <div className="text-[11px] text-[var(--color-text-tertiary)] font-medium">
                 {isTr ? "Basın & Kurumsal" : "Press & Corporate"}
               </div>
-              <div className="font-mono text-xs text-blue-400 group-hover:underline">contact@vellium.dev</div>
+              <div className="font-mono text-xs text-blue-400 group-hover:underline">
+                contact@vellium.dev
+              </div>
             </div>
             <Mail className="h-4 w-4 text-[var(--color-text-tertiary)] group-hover:text-blue-400 shrink-0" />
           </a>
@@ -675,7 +677,9 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
               <div className="text-[11px] text-[var(--color-text-tertiary)] font-medium">
                 {isTr ? "Hukuk & Marka Telifi" : "Legal & Trademark"}
               </div>
-              <div className="font-mono text-xs text-purple-400 group-hover:underline">legal@vellium.dev</div>
+              <div className="font-mono text-xs text-purple-400 group-hover:underline">
+                legal@vellium.dev
+              </div>
             </div>
             <Mail className="h-4 w-4 text-[var(--color-text-tertiary)] group-hover:text-purple-400 shrink-0" />
           </a>
@@ -688,7 +692,9 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
               <div className="text-[11px] text-[var(--color-text-tertiary)] font-medium">
                 {isTr ? "Genel Üye Desteği" : "General Support"}
               </div>
-              <div className="font-mono text-xs text-emerald-400 group-hover:underline">support@vellium.dev</div>
+              <div className="font-mono text-xs text-emerald-400 group-hover:underline">
+                support@vellium.dev
+              </div>
             </div>
             <Mail className="h-4 w-4 text-[var(--color-text-tertiary)] group-hover:text-emerald-400 shrink-0" />
           </a>
@@ -701,7 +707,9 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
               <div className="text-[11px] text-[var(--color-text-tertiary)] font-medium">
                 {isTr ? "Güvenlik & Zafiyet" : "Security & Bounty"}
               </div>
-              <div className="font-mono text-xs text-rose-400 group-hover:underline">security@vellium.dev</div>
+              <div className="font-mono text-xs text-rose-400 group-hover:underline">
+                security@vellium.dev
+              </div>
             </div>
             <Mail className="h-4 w-4 text-[var(--color-text-tertiary)] group-hover:text-rose-400 shrink-0" />
           </a>
@@ -714,7 +722,9 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
               <div className="text-[11px] text-[var(--color-text-tertiary)] font-medium">
                 {isTr ? "KVKK & Gizlilik Masası" : "Privacy & Data"}
               </div>
-              <div className="font-mono text-xs text-cyan-400 group-hover:underline">privacy@vellium.dev</div>
+              <div className="font-mono text-xs text-cyan-400 group-hover:underline">
+                privacy@vellium.dev
+              </div>
             </div>
             <Mail className="h-4 w-4 text-[var(--color-text-tertiary)] group-hover:text-cyan-400 shrink-0" />
           </a>
@@ -727,7 +737,9 @@ export function BrandKitClient({ locale }: BrandKitClientProps) {
               <div className="text-[11px] text-[var(--color-text-tertiary)] font-medium">
                 {isTr ? "Faturalandırma & Finans" : "Billing & Accounting"}
               </div>
-              <div className="font-mono text-xs text-amber-400 group-hover:underline">billing@vellium.dev</div>
+              <div className="font-mono text-xs text-amber-400 group-hover:underline">
+                billing@vellium.dev
+              </div>
             </div>
             <Mail className="h-4 w-4 text-[var(--color-text-tertiary)] group-hover:text-amber-400 shrink-0" />
           </a>

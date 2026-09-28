@@ -8,13 +8,8 @@
  * - data/benchmark-metrics.json
  */
 
-import { taxonomyIndex, TOOL_COLLISION_PRIORITY } from './taxonomy-index';
-import {
-  TaxonomyCategory,
-  SearchResult,
-  SearchOptions,
-  MatchClass,
-} from './types';
+import { taxonomyIndex, TOOL_COLLISION_PRIORITY } from "./taxonomy-index";
+import { TaxonomyCategory, SearchResult, SearchOptions, MatchClass } from "./types";
 import {
   normalizeSearchQuery,
   toAsciiShadow,
@@ -27,8 +22,8 @@ import {
   stemTurkishWord,
   cleanHiringIntent,
   sanitizeRawQuery,
-} from './normalization';
-import { SEED_CATEGORIES } from '@/db/seeds/categories';
+} from "./normalization";
+import { SEED_CATEGORIES } from "@/db/seeds/categories";
 
 export const MATCH_CLASS_ORDER: Record<MatchClass, number> = {
   exactCategoryName: 1,
@@ -47,13 +42,13 @@ export const MATCH_CLASS_CEILINGS: Record<MatchClass, number> = {
   exactCategoryName: 1.0,
   exactCanonicalTerm: 0.98,
   exactSearchTerm: 0.94,
-  exactSkillTag: 0.90,
+  exactSkillTag: 0.9,
   aliasExact: 0.86,
-  serviceIntentPhrase: 0.80,
+  serviceIntentPhrase: 0.8,
   prefixSearchTerm: 0.76,
   problemLanguage: 0.74,
   fuzzySearchTerm: 0.62,
-  relationPrior: 0.50,
+  relationPrior: 0.5,
 };
 
 function correctCategoryTypos(shadowQuery: string): string {
@@ -73,13 +68,16 @@ function correctCategoryTypos(shadowQuery: string): string {
     }
     return w;
   });
-  return changed ? corrected.join(' ') : shadowQuery;
+  return changed ? corrected.join(" ") : shadowQuery;
 }
 
 interface CandidateAccumulator {
   category: TaxonomyCategory;
   matchClass: MatchClass;
-  matchedTerms: Map<string, { field: string; weight: number; specificity: number; tokenCount: number }>;
+  matchedTerms: Map<
+    string,
+    { field: string; weight: number; specificity: number; tokenCount: number }
+  >;
   matchedQueryTokens: Set<string>;
   longestMatchedPhraseTokens: number;
   highestFieldWeight: number;
@@ -94,16 +92,14 @@ interface CandidateAccumulator {
 /**
  * Searches the Operis taxonomy categories for a given user query using the v5 ranking engine.
  */
-export function searchCategories(
-  rawQuery: string,
-  options: SearchOptions = {}
-): SearchResult[] {
+export function searchCategories(rawQuery: string, options: SearchOptions = {}): SearchResult[] {
   if (!rawQuery) return [];
 
   const sanitized = sanitizeRawQuery(rawQuery);
   if (!sanitized.trim()) return [];
 
-  const bounded = sanitized.length > MAX_QUERY_LENGTH ? sanitized.slice(0, MAX_QUERY_LENGTH) : sanitized;
+  const bounded =
+    sanitized.length > MAX_QUERY_LENGTH ? sanitized.slice(0, MAX_QUERY_LENGTH) : sanitized;
   const normQuery = normalizeSearchQuery(bounded);
   if (!normQuery) return [];
 
@@ -125,7 +121,7 @@ export function searchCategories(
     if (!acc) {
       acc = {
         category: cat,
-        matchClass: 'relationPrior',
+        matchClass: "relationPrior",
         matchedTerms: new Map(),
         matchedQueryTokens: new Set(),
         longestMatchedPhraseTokens: 0,
@@ -187,8 +183,8 @@ export function searchCategories(
     const termShadow = toAsciiShadow(term);
     if (TOOL_COLLISION_PRIORITY[termShadow] === cat.slug) {
       acc.toolPriorityScore = 0.08;
-      if (acc.matchClass === 'exactSkillTag') {
-        acc.matchClass = 'exactSearchTerm';
+      if (acc.matchClass === "exactSkillTag") {
+        acc.matchClass = "exactSearchTerm";
         acc.highestFieldWeight = Math.max(acc.highestFieldWeight, 0.94);
       }
     }
@@ -199,18 +195,20 @@ export function searchCategories(
     taxonomyIndex.typoMap.get(normQuery) ||
     taxonomyIndex.typoMap.get(shadowQuery) ||
     taxonomyIndex.typoMap.get(typoCorrectedCore) ||
-    (coreQuery ? (taxonomyIndex.typoMap.get(coreQuery) || taxonomyIndex.typoMap.get(coreShadow)) : undefined);
+    (coreQuery
+      ? taxonomyIndex.typoMap.get(coreQuery) || taxonomyIndex.typoMap.get(coreShadow)
+      : undefined);
   if (typoSlug) {
     const cat = taxonomyIndex.getCategory(typoSlug);
     if (cat) {
       registerMatch(
         cat,
         normQuery,
-        'typoCorpus',
+        "typoCorpus",
         0.95,
         1.0,
         tokenizeQuery(coreQuery || normQuery),
-        'fuzzySearchTerm',
+        "fuzzySearchTerm",
         true
       );
     }
@@ -225,11 +223,11 @@ export function searchCategories(
       registerMatch(
         exactCat,
         queryVariant,
-        'categoryName',
+        "categoryName",
         1.0,
         1.0,
         tokenizeQuery(queryVariant),
-        'exactCategoryName',
+        "exactCategoryName",
         true
       );
     }
@@ -244,11 +242,11 @@ export function searchCategories(
           registerMatch(
             cat,
             queryVariant,
-            'canonical',
+            "canonical",
             0.98,
             1.0,
             tokenizeQuery(queryVariant),
-            'exactCanonicalTerm',
+            "exactCanonicalTerm",
             true
           );
         }
@@ -262,11 +260,11 @@ export function searchCategories(
       for (const entry of directEntries) {
         const cat = taxonomyIndex.getCategory(entry.categorySlug);
         if (cat) {
-          let mClass: MatchClass = 'exactSearchTerm';
-          if (entry.field === 'canonical') mClass = 'exactCanonicalTerm';
-          else if (entry.field === 'skillTag') mClass = 'exactSkillTag';
-          else if (entry.field === 'alias') mClass = 'aliasExact';
-          else if (entry.field === 'serviceIntent') mClass = 'serviceIntentPhrase';
+          let mClass: MatchClass = "exactSearchTerm";
+          if (entry.field === "canonical") mClass = "exactCanonicalTerm";
+          else if (entry.field === "skillTag") mClass = "exactSkillTag";
+          else if (entry.field === "alias") mClass = "aliasExact";
+          else if (entry.field === "serviceIntent") mClass = "serviceIntentPhrase";
 
           registerMatch(
             cat,
@@ -289,8 +287,7 @@ export function searchCategories(
     if (gEquivs) {
       for (const equiv of gEquivs) {
         const equivEntries =
-          taxonomyIndex.termIndex.get(equiv) ||
-          taxonomyIndex.termIndex.get(toAsciiShadow(equiv));
+          taxonomyIndex.termIndex.get(equiv) || taxonomyIndex.termIndex.get(toAsciiShadow(equiv));
         if (equivEntries) {
           for (const entry of equivEntries) {
             const cat = taxonomyIndex.getCategory(entry.categorySlug);
@@ -298,11 +295,11 @@ export function searchCategories(
               registerMatch(
                 cat,
                 equiv,
-                'globalAlias',
+                "globalAlias",
                 entry.weight * 0.95,
                 entry.specificity,
                 tokenizeQuery(queryVariant),
-                'aliasExact',
+                "aliasExact",
                 true
               );
             }
@@ -323,28 +320,26 @@ export function searchCategories(
   }
 
   // 2. Token & N-Gram Candidate Matching
-  const effectiveQuery = (hasHiringIntent && coreQuery) ? coreQuery : typoCorrectedCore;
+  const effectiveQuery = hasHiringIntent && coreQuery ? coreQuery : typoCorrectedCore;
   const queryTokens = tokenizeQuery(effectiveQuery);
   const ngrams = generateNGrams(queryTokens);
 
   for (const ngram of ngrams) {
     const shadowNGram = toAsciiShadow(ngram);
-    const ngramTokens = ngram.split(' ');
+    const ngramTokens = ngram.split(" ");
     const isWhole = ngram === normQuery || ngram === coreQuery || ngram === typoCorrectedCore;
 
     // Check term index
-    const entries =
-      taxonomyIndex.termIndex.get(ngram) ||
-      taxonomyIndex.termIndex.get(shadowNGram);
+    const entries = taxonomyIndex.termIndex.get(ngram) || taxonomyIndex.termIndex.get(shadowNGram);
     if (entries) {
       for (const entry of entries) {
         const cat = taxonomyIndex.getCategory(entry.categorySlug);
         if (cat) {
-          let mClass: MatchClass = 'exactSearchTerm';
-          if (entry.field === 'canonical') mClass = 'exactCanonicalTerm';
-          else if (entry.field === 'skillTag') mClass = 'exactSkillTag';
-          else if (entry.field === 'alias') mClass = 'aliasExact';
-          else if (entry.field === 'serviceIntent') mClass = 'serviceIntentPhrase';
+          let mClass: MatchClass = "exactSearchTerm";
+          if (entry.field === "canonical") mClass = "exactCanonicalTerm";
+          else if (entry.field === "skillTag") mClass = "exactSkillTag";
+          else if (entry.field === "alias") mClass = "aliasExact";
+          else if (entry.field === "serviceIntent") mClass = "serviceIntentPhrase";
 
           registerMatch(
             cat,
@@ -362,7 +357,7 @@ export function searchCategories(
 
     // Check stemmed ngram if single or double token
     if (ngramTokens.length <= 2) {
-      const stemmedNGram = ngramTokens.map(stemTurkishWord).join(' ');
+      const stemmedNGram = ngramTokens.map(stemTurkishWord).join(" ");
       if (stemmedNGram !== shadowNGram) {
         const stemmedEntries =
           taxonomyIndex.termIndex.get(stemmedNGram) ||
@@ -378,7 +373,7 @@ export function searchCategories(
                 entry.weight * 0.95,
                 entry.specificity,
                 ngramTokens,
-                entry.field === 'canonical' ? 'exactCanonicalTerm' : 'exactSearchTerm',
+                entry.field === "canonical" ? "exactCanonicalTerm" : "exactSearchTerm",
                 isWhole
               );
             }
@@ -389,13 +384,11 @@ export function searchCategories(
 
     // Check global aliases for ngram
     const equivs =
-      taxonomyIndex.globalAliases.get(ngram) ||
-      taxonomyIndex.globalAliases.get(shadowNGram);
+      taxonomyIndex.globalAliases.get(ngram) || taxonomyIndex.globalAliases.get(shadowNGram);
     if (equivs) {
       for (const equiv of equivs) {
         const equivEntries =
-          taxonomyIndex.termIndex.get(equiv) ||
-          taxonomyIndex.termIndex.get(toAsciiShadow(equiv));
+          taxonomyIndex.termIndex.get(equiv) || taxonomyIndex.termIndex.get(toAsciiShadow(equiv));
         if (equivEntries) {
           for (const entry of equivEntries) {
             const cat = taxonomyIndex.getCategory(entry.categorySlug);
@@ -403,11 +396,11 @@ export function searchCategories(
               registerMatch(
                 cat,
                 equiv,
-                'globalAlias',
+                "globalAlias",
                 entry.weight * 0.9,
                 entry.specificity,
                 ngramTokens,
-                'aliasExact',
+                "aliasExact",
                 isWhole
               );
             }
@@ -418,13 +411,12 @@ export function searchCategories(
 
     // Scoped category synonyms
     const synCats =
-      taxonomyIndex.synonymIndex.get(ngram) ||
-      taxonomyIndex.synonymIndex.get(shadowNGram);
+      taxonomyIndex.synonymIndex.get(ngram) || taxonomyIndex.synonymIndex.get(shadowNGram);
     if (synCats) {
       for (const slug of synCats) {
         const cat = taxonomyIndex.getCategory(slug);
         if (cat) {
-          registerMatch(cat, ngram, 'synonym', 0.85, 0.9, ngramTokens, 'aliasExact', isWhole);
+          registerMatch(cat, ngram, "synonym", 0.85, 0.9, ngramTokens, "aliasExact", isWhole);
         }
       }
     }
@@ -435,20 +427,23 @@ export function searchCategories(
     const toolNorm = toAsciiShadow(toolTerm);
     if (
       coreShadow === toolNorm ||
-      coreShadow.startsWith(toolNorm + ' ') ||
-      coreShadow.endsWith(' ' + toolNorm) ||
-      coreShadow.includes(' ' + toolNorm + ' ') ||
+      coreShadow.startsWith(toolNorm + " ") ||
+      coreShadow.endsWith(" " + toolNorm) ||
+      coreShadow.includes(" " + toolNorm + " ") ||
       shadowQuery === toolNorm ||
-      shadowQuery.startsWith(toolNorm + ' ') ||
-      shadowQuery.endsWith(' ' + toolNorm) ||
-      shadowQuery.includes(' ' + toolNorm + ' ')
+      shadowQuery.startsWith(toolNorm + " ") ||
+      shadowQuery.endsWith(" " + toolNorm) ||
+      shadowQuery.includes(" " + toolNorm + " ")
     ) {
       const cat = taxonomyIndex.getCategory(prioritizedSlug);
       if (cat) {
         const acc = getOrCreate(cat);
         acc.toolPriorityScore = 0.08;
-        if (MATCH_CLASS_ORDER['exactSearchTerm'] < MATCH_CLASS_ORDER[acc.matchClass] || acc.matchClass === 'relationPrior') {
-          acc.matchClass = 'exactSearchTerm';
+        if (
+          MATCH_CLASS_ORDER["exactSearchTerm"] < MATCH_CLASS_ORDER[acc.matchClass] ||
+          acc.matchClass === "relationPrior"
+        ) {
+          acc.matchClass = "exactSearchTerm";
           if (acc.highestFieldWeight < 0.94) {
             acc.highestFieldWeight = 0.94;
           }
@@ -465,9 +460,9 @@ export function searchCategories(
     for (const [term, entries] of taxonomyIndex.termIndex.entries()) {
       if (term.length > normQuery.length && term !== normQuery && term !== coreQuery) {
         let isPrefix = false;
-        if (term.startsWith(normQuery + ' ') || term.startsWith(normQuery)) {
+        if (term.startsWith(normQuery + " ") || term.startsWith(normQuery)) {
           isPrefix = true;
-        } else if (coreQuery && (term.startsWith(coreQuery + ' ') || term.startsWith(coreQuery))) {
+        } else if (coreQuery && (term.startsWith(coreQuery + " ") || term.startsWith(coreQuery))) {
           isPrefix = true;
         }
 
@@ -478,11 +473,11 @@ export function searchCategories(
               registerMatch(
                 cat,
                 term,
-                'prefix',
-                entry.weight * 0.80,
+                "prefix",
+                entry.weight * 0.8,
                 entry.specificity,
                 queryTokens,
-                'prefixSearchTerm',
+                "prefixSearchTerm",
                 false
               );
             }
@@ -498,13 +493,22 @@ export function searchCategories(
     for (const token of queryTokens) {
       if (token.length >= 3 && !protectedList.includes(token)) {
         for (const [term, entries] of taxonomyIndex.termIndex.entries()) {
-          if (!term.includes(' ') && Math.abs(term.length - token.length) <= 1) {
+          if (!term.includes(" ") && Math.abs(term.length - token.length) <= 1) {
             const fuzzy = isFuzzyMatch(token, term);
             if (fuzzy.isMatch) {
               for (const entry of entries) {
                 const cat = taxonomyIndex.getCategory(entry.categorySlug);
                 if (cat) {
-                  registerMatch(cat, term, 'fuzzy', 0.60, entry.specificity, [token], 'fuzzySearchTerm', false);
+                  registerMatch(
+                    cat,
+                    term,
+                    "fuzzy",
+                    0.6,
+                    entry.specificity,
+                    [token],
+                    "fuzzySearchTerm",
+                    false
+                  );
                 }
               }
             }
@@ -527,7 +531,11 @@ export function searchCategories(
         const tok = contentTokens[i];
         const stem = stemmedContentTokens[i];
         if (!tok || !stem) continue;
-        if (stmt.rawTokens.has(tok) || stmt.rawTokens.has(toAsciiShadow(tok)) || stmt.stemmedTokens.has(stem)) {
+        if (
+          stmt.rawTokens.has(tok) ||
+          stmt.rawTokens.has(toAsciiShadow(tok)) ||
+          stmt.stemmedTokens.has(stem)
+        ) {
           matchedCount++;
         }
       }
@@ -537,28 +545,35 @@ export function searchCategories(
         if (cat) {
           const acc = getOrCreate(cat);
           const ratio = matchedCount / contentTokens.length;
-          const probScore = ratio * 0.40;
+          const probScore = ratio * 0.4;
           if (probScore > acc.problemOverlapScore) {
             acc.problemOverlapScore = probScore;
           }
           if (ratio >= 0.4) {
-            if (MATCH_CLASS_ORDER['serviceIntentPhrase'] < MATCH_CLASS_ORDER[acc.matchClass] || acc.matchClass === 'relationPrior') {
-              acc.matchClass = 'serviceIntentPhrase';
+            if (
+              MATCH_CLASS_ORDER["serviceIntentPhrase"] < MATCH_CLASS_ORDER[acc.matchClass] ||
+              acc.matchClass === "relationPrior"
+            ) {
+              acc.matchClass = "serviceIntentPhrase";
               if (acc.highestFieldWeight < 0.85) {
                 acc.highestFieldWeight = 0.85;
               }
             }
           }
           if (matchedCount >= 3 && ratio >= 0.5) {
-            if (acc.highestFieldWeight < 0.90) {
-              acc.highestFieldWeight = 0.90;
+            if (acc.highestFieldWeight < 0.9) {
+              acc.highestFieldWeight = 0.9;
             }
           }
           for (let i = 0; i < contentTokens.length; i++) {
             const tok = contentTokens[i];
             const stem = stemmedContentTokens[i];
             if (!tok || !stem) continue;
-            if (stmt.rawTokens.has(tok) || stmt.rawTokens.has(toAsciiShadow(tok)) || stmt.stemmedTokens.has(stem)) {
+            if (
+              stmt.rawTokens.has(tok) ||
+              stmt.rawTokens.has(toAsciiShadow(tok)) ||
+              stmt.stemmedTokens.has(stem)
+            ) {
               acc.matchedQueryTokens.add(tok);
             }
           }
@@ -582,8 +597,11 @@ export function searchCategories(
         const firstPosWord = posWords[0] ?? "";
         const matchesPos =
           posWords.length > 1
-            ? posWords.every((w) => shadowQuery.includes(w) || stemmedShadowTokens.has(stemTurkishWord(w)))
-            : shadowQuery.includes(firstPosWord) || stemmedShadowTokens.has(stemTurkishWord(firstPosWord));
+            ? posWords.every(
+                (w) => shadowQuery.includes(w) || stemmedShadowTokens.has(stemTurkishWord(w))
+              )
+            : shadowQuery.includes(firstPosWord) ||
+              stemmedShadowTokens.has(stemTurkishWord(firstPosWord));
         if (matchesPos) {
           acc.contextBoost += 0.15;
           break;
@@ -591,15 +609,20 @@ export function searchCategories(
       }
 
       // Soft negative context (Only if not whole categoryName or canonical match)
-      const isExactCategoryOrCanon = acc.isWholeQueryMatch && (acc.matchClass === 'exactCategoryName' || acc.matchClass === 'exactCanonicalTerm');
+      const isExactCategoryOrCanon =
+        acc.isWholeQueryMatch &&
+        (acc.matchClass === "exactCategoryName" || acc.matchClass === "exactCanonicalTerm");
       if (!isExactCategoryOrCanon) {
         for (const neg of disRule.softNegativeContext) {
           const negWords = toAsciiShadow(neg.term).split(/\s+/);
           const firstNegWord = negWords[0] ?? "";
           const matchesNeg =
             negWords.length > 1
-              ? negWords.every((w) => shadowQuery.includes(w) || stemmedShadowTokens.has(stemTurkishWord(w)))
-              : shadowQuery.includes(firstNegWord) || stemmedShadowTokens.has(stemTurkishWord(firstNegWord));
+              ? negWords.every(
+                  (w) => shadowQuery.includes(w) || stemmedShadowTokens.has(stemTurkishWord(w))
+                )
+              : shadowQuery.includes(firstNegWord) ||
+                stemmedShadowTokens.has(stemTurkishWord(firstNegWord));
           if (matchesNeg) {
             acc.contextBoost += neg.penalty;
             const towardCat = taxonomyIndex.getCategory(neg.towardCategorySlug);
@@ -612,15 +635,21 @@ export function searchCategories(
       }
 
       // Special semantic disambiguation: general contract review vs software contract
-      if (slug === 'sozlesme-hazirlama-ve-inceleme') {
-        if (shadowQuery.includes('yazilim') && (shadowQuery.includes('sozlesme') || shadowQuery.includes('anlasma'))) {
+      if (slug === "sozlesme-hazirlama-ve-inceleme") {
+        if (
+          shadowQuery.includes("yazilim") &&
+          (shadowQuery.includes("sozlesme") || shadowQuery.includes("anlasma"))
+        ) {
           acc.contextBoost -= 0.15;
-          const swCat = taxonomyIndex.getCategory('freelance-ve-yazilim-hizmet-sozlesmeleri');
+          const swCat = taxonomyIndex.getCategory("freelance-ve-yazilim-hizmet-sozlesmeleri");
           if (swCat) {
             const swAcc = getOrCreate(swCat);
             swAcc.contextBoost += 0.15;
-            if (MATCH_CLASS_ORDER['exactSearchTerm'] < MATCH_CLASS_ORDER[swAcc.matchClass] || swAcc.matchClass === 'relationPrior') {
-              swAcc.matchClass = 'exactSearchTerm';
+            if (
+              MATCH_CLASS_ORDER["exactSearchTerm"] < MATCH_CLASS_ORDER[swAcc.matchClass] ||
+              swAcc.matchClass === "relationPrior"
+            ) {
+              swAcc.matchClass = "exactSearchTerm";
               swAcc.highestFieldWeight = 0.94;
             }
           }
@@ -630,7 +659,7 @@ export function searchCategories(
   }
 
   // Filter by sector if provided in options
-  if (options.sectorKey && options.sectorKey !== 'all') {
+  if (options.sectorKey && options.sectorKey !== "all") {
     for (const [slug] of candidates.entries()) {
       const repoKey = taxonomyIndex.getRepoKey(slug);
       const seedMatch = SEED_CATEGORIES.find((s) => s.key === repoKey);
@@ -651,7 +680,7 @@ export function searchCategories(
       const baseScore = MATCH_CLASS_CEILINGS[acc.matchClass] ?? 0.85;
 
       const specBonus = Math.min(0.18, (acc.highestSpecificity || 1.0) * 0.18);
-      const ctxAdj = Math.max(-0.25, Math.min(0.20, acc.contextBoost));
+      const ctxAdj = Math.max(-0.25, Math.min(0.2, acc.contextBoost));
 
       finalScore = baseScore + specBonus * 0.05 + ctxAdj + acc.toolPriorityScore;
     } else {
@@ -664,15 +693,17 @@ export function searchCategories(
       const coverageBonus = coverageRatio * 0.15;
 
       const phraseRatio =
-        totalContentTokens > 0 ? Math.min(1.0, acc.longestMatchedPhraseTokens / totalContentTokens) : 0;
-      const phraseBonus = phraseRatio * 0.10;
+        totalContentTokens > 0
+          ? Math.min(1.0, acc.longestMatchedPhraseTokens / totalContentTokens)
+          : 0;
+      const phraseBonus = phraseRatio * 0.1;
 
-      const fieldWeight = acc.highestFieldWeight > 0 ? acc.highestFieldWeight : 0.70;
+      const fieldWeight = acc.highestFieldWeight > 0 ? acc.highestFieldWeight : 0.7;
       const baseLexical = fieldWeight * coverageRatio * 0.55;
 
       const specBonus = Math.min(0.15, acc.specificitySum * 0.03);
       const problemBonus = acc.problemOverlapScore;
-      const ctxAdj = Math.max(-0.25, Math.min(0.20, acc.contextBoost));
+      const ctxAdj = Math.max(-0.25, Math.min(0.2, acc.contextBoost));
 
       finalScore =
         baseLexical +
@@ -693,7 +724,8 @@ export function searchCategories(
       const coveredContentCount = Array.from(acc.matchedQueryTokens).filter(
         (t) => !STOP_WORDS.has(t) && !STOP_WORDS.has(toAsciiShadow(t))
       ).length;
-      const coverageRatio = totalContentTokens > 0 ? Math.min(1.0, coveredContentCount / totalContentTokens) : 1.0;
+      const coverageRatio =
+        totalContentTokens > 0 ? Math.min(1.0, coveredContentCount / totalContentTokens) : 1.0;
 
       scoredResults.push({
         id: acc.category.id,
@@ -720,7 +752,7 @@ export function searchCategories(
       const relations = taxonomyIndex.relationGraph.get(top.slug);
       if (relations) {
         for (const rel of relations) {
-          if (rel.strength === 'strong') {
+          if (rel.strength === "strong") {
             const item = scoredResults.find((r) => r.slug === rel.slug);
             if (item && item.slug !== top.slug) {
               item.score = Math.min(top.score - 0.04, Number((item.score + 0.03).toFixed(4)));

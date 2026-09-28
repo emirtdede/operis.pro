@@ -1,38 +1,137 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
-<head>
-  <meta charset="utf-8">
-  <title>OPR-RUNBOOK-ENG2026B-V1 - Operis Runbook</title>
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; max-width: 900px; margin: 40px auto; padding: 0 20px; color: #1e293b; }
-    h1 { color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; break-after: avoid-page; page-break-after: avoid; }
-    h2 { color: #1e293b; margin-top: 32px; border-bottom: 1px solid #cbd5e1; padding-bottom: 8px; break-after: avoid-page; page-break-after: avoid; }
-    h3 { color: #334155; margin-top: 24px; break-after: avoid-page; page-break-after: avoid; }
-    p, li { orphans: 3; widows: 3; }
-    table { width: 100%; border-collapse: collapse; margin: 16px 0; break-inside: avoid; page-break-inside: avoid; }
-    tr { break-inside: avoid; page-break-inside: avoid; }
-    th, td { border: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; }
-    th { background: #f1f5f9; font-weight: 600; }
-    code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
-    pre { background: #0f172a; color: #f8fafc; padding: 16px; border-radius: 8px; overflow-x: auto; break-inside: avoid; page-break-inside: avoid; }
-    pre code { background: none; color: inherit; padding: 0; }
-    .seal-box { background: #f8fafc; border: 2px dashed #0284c7; padding: 16px; border-radius: 8px; margin: 24px 0; break-inside: avoid; page-break-inside: avoid; }
-    @media print {
-      body { margin: 0; padding: 0; }
-      h1, h2, h3 { break-after: avoid-page !important; page-break-after: avoid !important; }
-      table, tr, pre, .seal-box { break-inside: avoid !important; page-break-inside: avoid !important; }
-    }
-  </style>
-</head>
-<body>
-  <div style="font-size: 13px; color: #64748b; margin-bottom: 8px;">OPERIS OFFICIAL PROTOCOL</div>
-  <h1>Proje Devir ve İşletim Kılavuzu</h1>
-  <p><strong>Ref:</strong> <code>OPR-RUNBOOK-ENG2026B-V1</code> | <strong>Tarih:</strong> 21 Eylül 2026 04:58</p>
-  <div class="seal-box">
-    <strong>HMK m. 193 SHA-256 Fingerprint:</strong><br>
-    <code>04c32e995eb31f1c86217d5532267d5689c18617632dfa358b2a26fe7dd8dcc5</code>
-  </div>
-  <pre style="white-space: pre-wrap; font-family: inherit; background: #fff; color: #1e293b; border: 1px solid #e2e8f0;"># 🛡️ OPERİS RESMİ PROJE DEVİR VE İŞLETİM KILAVUZU (PROJECT RUNBOOK)
+  <head>
+    <meta charset="utf-8" />
+    <title>OPR-RUNBOOK-ENG2026B-V1 - Operis Runbook</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+        color: #1e293b;
+      }
+      h1 {
+        color: #0f172a;
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 12px;
+        break-after: avoid-page;
+        page-break-after: avoid;
+      }
+      h2 {
+        color: #1e293b;
+        margin-top: 32px;
+        border-bottom: 1px solid #cbd5e1;
+        padding-bottom: 8px;
+        break-after: avoid-page;
+        page-break-after: avoid;
+      }
+      h3 {
+        color: #334155;
+        margin-top: 24px;
+        break-after: avoid-page;
+        page-break-after: avoid;
+      }
+      p,
+      li {
+        orphans: 3;
+        widows: 3;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      tr {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      th,
+      td {
+        border: 1px solid #cbd5e1;
+        padding: 10px 12px;
+        text-align: left;
+      }
+      th {
+        background: #f1f5f9;
+        font-weight: 600;
+      }
+      code {
+        background: #f1f5f9;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.9em;
+      }
+      pre {
+        background: #0f172a;
+        color: #f8fafc;
+        padding: 16px;
+        border-radius: 8px;
+        overflow-x: auto;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      pre code {
+        background: none;
+        color: inherit;
+        padding: 0;
+      }
+      .seal-box {
+        background: #f8fafc;
+        border: 2px dashed #0284c7;
+        padding: 16px;
+        border-radius: 8px;
+        margin: 24px 0;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      @media print {
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        h1,
+        h2,
+        h3 {
+          break-after: avoid-page !important;
+          page-break-after: avoid !important;
+        }
+        table,
+        tr,
+        pre,
+        .seal-box {
+          break-inside: avoid !important;
+          page-break-inside: avoid !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div style="font-size: 13px; color: #64748b; margin-bottom: 8px">OPERIS OFFICIAL PROTOCOL</div>
+    <h1>Proje Devir ve İşletim Kılavuzu</h1>
+    <p>
+      <strong>Ref:</strong> <code>OPR-RUNBOOK-ENG2026B-V1</code> | <strong>Tarih:</strong> 21 Eylül
+      2026 04:58
+    </p>
+    <div class="seal-box">
+      <strong>HMK m. 193 SHA-256 Fingerprint:</strong><br />
+      <code>04c32e995eb31f1c86217d5532267d5689c18617632dfa358b2a26fe7dd8dcc5</code>
+    </div>
+    <pre
+      style="
+        white-space: pre-wrap;
+        font-family: inherit;
+        background: #fff;
+        color: #1e293b;
+        border: 1px solid #e2e8f0;
+      "
+    >
+# 🛡️ OPERİS RESMİ PROJE DEVİR VE İŞLETİM KILAVUZU (PROJECT RUNBOOK)
 **Referans No:** `OPR-RUNBOOK-ENG2026B-V1` | **Tarih:** 21 Eylül 2026 04:58 | **Versiyon:** v1
 **İlan / Proje:** Kurumsal B2B Finansal Raporlama ve Analitik Platformu
 **İşveren:** Acme Teknoloji ve Girişim A.Ş. | **Yüklenici / Yazılımcı:** Can Demir (Kıdemli Yazılım Mimarı)
@@ -125,5 +224,5 @@ SHA-256: 04c32e995eb31f1c86217d5532267d5689c18617632dfa358b2a26fe7dd8dcc5
 ```
 
 *Operis Güvenli Altyapısı Tarafından Üretilmiştir • operis.pro*</pre>
-</body>
+  </body>
 </html>

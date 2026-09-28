@@ -25,6 +25,7 @@ import pg from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "@/db/schema";
 import { getEnv } from "@/src/config/env";
+import { getDbSslConfig } from "@/src/lib/db";
 
 const { Pool } = pg;
 
@@ -49,11 +50,10 @@ To execute, run:
 
   console.info("Connecting to database:", connStr.replace(/:[^:@]+@/, ":***@"));
 
-  const isSupabase = connStr.includes("supabase.co") || connStr.includes("pooler.supabase.com");
   const pool = new Pool({
     connectionString: connStr,
     max: 2,
-    ssl: isSupabase ? { rejectUnauthorized: false } : undefined,
+    ssl: getDbSslConfig(connStr),
   });
 
   const db = drizzle(pool, { schema });
@@ -83,7 +83,10 @@ To execute, run:
          OR email LIKE '%demo%')
         AND email NOT IN ('emirtdede@gmail.com', 'admin@operis.pro')
     `);
-    console.info(`Found ${userRes.rows.length} test seed users to purge:`, userRes.rows.map(r => r.email));
+    console.info(
+      `Found ${userRes.rows.length} test seed users to purge:`,
+      userRes.rows.map((r) => r.email)
+    );
 
     // Ensure owner emirtdede@gmail.com has ADMIN role for production
     await pool.query(`
@@ -130,7 +133,7 @@ To execute, run:
 
       // 5. Delete communications, follows, verifications, profiles, auth of seed users
       if (userRes.rows.length > 0) {
-        const ids = userRes.rows.map(r => `'${r.id}'`).join(",");
+        const ids = userRes.rows.map((r) => `'${r.id}'`).join(",");
         await client.query(`DELETE FROM notifications WHERE user_id IN (${ids})`);
         await client.query(`DELETE FROM category_follows WHERE user_id IN (${ids})`);
         await client.query(`DELETE FROM company_verifications WHERE user_id IN (${ids})`);
@@ -149,7 +152,9 @@ To execute, run:
       await client.query("DELETE FROM notification_fanout_progress");
 
       await client.query("COMMIT");
-      console.info("All test engagements, offers, mock listings, reports, and seed accounts successfully purged.");
+      console.info(
+        "All test engagements, offers, mock listings, reports, and seed accounts successfully purged."
+      );
     } catch (e) {
       await client.query("ROLLBACK");
       throw e;

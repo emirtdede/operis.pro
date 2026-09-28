@@ -32,7 +32,10 @@ function calculatePercentile(latencies: number[], p: number): number {
   return sorted[Math.max(0, Math.min(index, sorted.length - 1))] ?? 0;
 }
 
-async function runConcurrencyLevel(concurrency: number, iterations = 2): Promise<ConcurrencyResult> {
+async function runConcurrencyLevel(
+  concurrency: number,
+  iterations = 2
+): Promise<ConcurrencyResult> {
   const pool = getDbPool();
   const totalRequests = concurrency * iterations;
   const latencies: number[] = [];
@@ -89,7 +92,9 @@ async function main() {
   console.info("================================================================================");
   console.info("OPERIS DATABASE CONCURRENCY BENCHMARK — READ-ONLY NON-DESTRUCTIVE VERIFICATION");
   console.info("Testing Concurrency Levels: 1, 5, 10, 25, 50");
-  console.info("================================================================================\n");
+  console.info(
+    "================================================================================\n"
+  );
 
   const levels = [1, 5, 10, 25, 50];
   const results: ConcurrencyResult[] = [];
@@ -98,11 +103,15 @@ async function main() {
     process.stdout.write(`Testing Concurrency ${lvl}... `);
     const res = await runConcurrencyLevel(lvl);
     results.push(res);
-    console.info(`Done (Success: ${res.success}/${res.requests}, p50: ${res.p50}ms, Errors: ${res.dbErrors})`);
+    console.info(
+      `Done (Success: ${res.success}/${res.requests}, p50: ${res.p50}ms, Errors: ${res.dbErrors})`
+    );
   }
 
   console.info("\n### FINAL CONCURRENCY BENCHMARK REPORT TABLE:\n");
-  console.info("| Concurrency | Requests | Success | Failure | p50 (ms) | p95 (ms) | p99 (ms) | DB Errors |");
+  console.info(
+    "| Concurrency | Requests | Success | Failure | p50 (ms) | p95 (ms) | p99 (ms) | DB Errors |"
+  );
   console.info("| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |");
   for (const r of results) {
     console.info(

@@ -131,7 +131,9 @@ function getFileUploadPrompt(isDragging: boolean, isTr: boolean): string {
   if (isDragging) {
     return isTr ? "Dosyayı yüklemek için şimdi buraya bırakın" : "Drop your file here to attach";
   }
-  return isTr ? "Dosyayı buraya sürükleyip bırakın veya tıklayın" : "Drag and drop your file here, or click to browse";
+  return isTr
+    ? "Dosyayı buraya sürükleyip bırakın veya tıklayın"
+    : "Drag and drop your file here, or click to browse";
 }
 
 function getFileTypeBadge(isImage: boolean, isPdf: boolean, isZip: boolean, isTr: boolean): string {
@@ -218,6 +220,7 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
   const [ticketRef, setTicketRef] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileAttempt, setTurnstileAttempt] = useState(0);
 
   // Optional File Attachment State (Strict 5MB Limit)
   const [attachedFile, setAttachedFile] = useState<{
@@ -329,7 +332,6 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
     }
   };
 
-
   const handleRemoveFile = (e: React.MouseEvent) => {
     e.stopPropagation();
     setAttachedFile(null);
@@ -432,6 +434,8 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
         : "Failed to dispatch inquiry. Please try again.";
       setError(err instanceof Error ? err.message : fallbackMsg);
     } finally {
+      setTurnstileToken(null);
+      setTurnstileAttempt((attempt) => attempt + 1);
       setIsLoading(false);
     }
   };
@@ -484,11 +488,16 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex-1 flex flex-col justify-between space-y-4 sm:space-y-5">
+    <form
+      onSubmit={handleSubmit}
+      className="flex-1 flex flex-col justify-between space-y-4 sm:space-y-5"
+    >
       {/* 1. Unified Target Desk & SLA Console (Synchronized with selected desk) */}
       <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/50 p-3 sm:p-3.5 flex items-center justify-between gap-3 shadow-sm transition-all">
         <div className="flex items-center gap-3 min-w-0">
-          <div className={`h-10 w-10 rounded-xl border flex items-center justify-center shrink-0 ${currentDept.color}`}>
+          <div
+            className={`h-10 w-10 rounded-xl border flex items-center justify-center shrink-0 ${currentDept.color}`}
+          >
             <CurrentIcon className="h-5 w-5" />
           </div>
           <div className="min-w-0">
@@ -576,11 +585,7 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
           label={isTr ? "Konu Başlığı" : "Subject"}
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
-          placeholder={
-            isTr
-              ? "Örn: Kurumsal API / Destek"
-              : "e.g. API Integration / Support"
-          }
+          placeholder={isTr ? "Örn: Kurumsal API / Destek" : "e.g. API Integration / Support"}
           required
         />
       </div>
@@ -608,7 +613,9 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
             className="font-medium text-[var(--color-text-secondary)] select-none flex items-center gap-1.5 cursor-pointer"
           >
             <Paperclip className="h-3.5 w-3.5 text-blue-400" />
-            <span>{isTr ? "Ek Dosya / Ekran Görüntüsü Referansı" : "Attachment / File Reference"}</span>
+            <span>
+              {isTr ? "Ek Dosya / Ekran Görüntüsü Referansı" : "Attachment / File Reference"}
+            </span>
             <span className="text-[11px] text-[var(--color-text-tertiary)] font-normal">
               ({isTr ? "Opsiyonel" : "Optional"})
             </span>
@@ -637,13 +644,13 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
           (() => {
             const isImage = Boolean(
               attachedFile.type?.startsWith("image/") ||
-                [".png", ".jpg", ".jpeg", ".webp"].some((ext) =>
-                  attachedFile.name.toLowerCase().endsWith(ext)
-                )
+              [".png", ".jpg", ".jpeg", ".webp"].some((ext) =>
+                attachedFile.name.toLowerCase().endsWith(ext)
+              )
             );
             const isPdf = Boolean(
               attachedFile.type === "application/pdf" ||
-                attachedFile.name.toLowerCase().endsWith(".pdf")
+              attachedFile.name.toLowerCase().endsWith(".pdf")
             );
             const isZip = Boolean(
               [".zip", ".rar", ".7z", ".tar", ".gz"].some((ext) =>
@@ -720,7 +727,9 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
                   <div className="absolute inset-0 bg-blue-600/90 backdrop-blur-xs rounded-2xl flex flex-col items-center justify-center text-white gap-2 pointer-events-none animate-in fade-in">
                     <UploadCloud className="h-8 w-8 animate-bounce" />
                     <p className="text-xs sm:text-sm font-bold">
-                      {isTr ? "Yeni dosyayı yüklemek için buraya bırakın" : "Drop to replace with new file"}
+                      {isTr
+                        ? "Yeni dosyayı yüklemek için buraya bırakın"
+                        : "Drop to replace with new file"}
                     </p>
                   </div>
                 )}
@@ -782,9 +791,11 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
 
       {/* Cloudflare Turnstile Bot Defense (Interaction-Only) */}
       <TurnstileWidget
+        key={turnstileAttempt}
         appearance="interaction-only"
         onVerify={(token) => setTurnstileToken(token)}
         onExpire={() => setTurnstileToken(null)}
+        onError={() => setTurnstileToken(null)}
       />
 
       {/* Premium Submit Button with Luxury Gradient, Larger Hitbox & Glow */}
@@ -793,12 +804,11 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
         size="lg"
         className="w-full text-sm sm:text-base font-bold gap-2.5 cursor-pointer text-white bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.008] active:scale-[0.995] transition-all py-4 rounded-2xl border-none mt-1"
         isLoading={isLoading}
+        disabled={Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) && !turnstileToken}
       >
         <Send className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
         <span>
-          {isTr
-            ? `${currentDept.badgeTr} Masasına İlet`
-            : `Dispatch to ${currentDept.badgeEn}`}
+          {isTr ? `${currentDept.badgeTr} Masasına İlet` : `Dispatch to ${currentDept.badgeEn}`}
         </span>
       </Button>
     </form>

@@ -9,7 +9,9 @@ interface AuthValueHeroProps {
 
 function getAuthHeroHeadline(isRegister: boolean, isTr: boolean): string {
   if (isRegister) {
-    return isTr ? "Yazılım Dünyasında Aracısız Yeni Bir Dönem" : "Autonomous Software Collaboration";
+    return isTr
+      ? "Yazılım Dünyasında Aracısız Yeni Bir Dönem"
+      : "Autonomous Software Collaboration";
   }
   return isTr ? "Güvenli ve Aracısız Yazılım Ağı" : "Direct & Secure Tech Network";
 }

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { getSession } from "@/src/modules/auth/session";
 import { OfferService } from "@/src/modules/offers/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -52,12 +54,24 @@ export async function POST(req: Request) {
 
     return NextResponse.json(batchResponse, { status });
   } catch (err: unknown) {
-    let message = isEn
-      ? "Batch proposal operation failed."
-      : "Toplu teklif işlemi başarısız oldu.";
-    if (err instanceof Error) {
-      message = err.message;
+    if (err instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          error:
+            err.issues[0]?.message ||
+            (isEn ? "Invalid batch payload format." : "Geçersiz toplu teklif biçimi."),
+        },
+        { status: 400 }
+      );
     }
-    return NextResponse.json({ error: message }, { status: 400 });
+
+    return handleApiError(
+      err,
+      {
+        en: "Batch proposal operation failed.",
+        tr: "Toplu teklif işlemi başarısız oldu.",
+      },
+      { isEn, logPrefix: "[Offer Batch Submit POST Error]", status: 500 }
+    );
   }
 }

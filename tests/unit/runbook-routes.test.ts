@@ -204,7 +204,9 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5432/mydb
 
   it("GET /api/work/[id]/runbook/export exports markdown, html and json files", async () => {
     // 1. Markdown Export
-    const mdReq = new Request(`http://localhost/api/work/${engagementId}/runbook/export?format=markdown`);
+    const mdReq = new Request(
+      `http://localhost/api/work/${engagementId}/runbook/export?format=markdown`
+    );
     const mdRes = await exportGetHandler(mdReq, {
       params: Promise.resolve({ id: engagementId }),
     });
@@ -215,7 +217,9 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5432/mydb
     expect(mdContent).toContain("Proje Devir Kılavuzu");
 
     // 2. HTML Export
-    const htmlReq = new Request(`http://localhost/api/work/${engagementId}/runbook/export?format=html`);
+    const htmlReq = new Request(
+      `http://localhost/api/work/${engagementId}/runbook/export?format=html`
+    );
     const htmlRes = await exportGetHandler(htmlReq, {
       params: Promise.resolve({ id: engagementId }),
     });
@@ -226,7 +230,9 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5432/mydb
     expect(htmlContent).toContain("<!DOCTYPE html>");
 
     // 3. JSON Export
-    const jsonReq = new Request(`http://localhost/api/work/${engagementId}/runbook/export?format=json`);
+    const jsonReq = new Request(
+      `http://localhost/api/work/${engagementId}/runbook/export?format=json`
+    );
     const jsonRes = await exportGetHandler(jsonReq, {
       params: Promise.resolve({ id: engagementId }),
     });

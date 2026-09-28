@@ -53,7 +53,10 @@ export class NotificationPubSub extends EventEmitter {
     this.emit(this.channelName(userId), notification);
   }
 
-  subscribe(userId: string, listener: (notification: RealtimeNotificationPayload) => void): () => void {
+  subscribe(
+    userId: string,
+    listener: (notification: RealtimeNotificationPayload) => void
+  ): () => void {
     const channel = this.channelName(userId);
     this.on(channel, listener);
     return () => {

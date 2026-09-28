@@ -217,9 +217,7 @@ export function NotificationPopover({
           aria-label={isTr ? "Bildirim Listesi" : "Notifications List"}
         >
           {/* Header */}
-          <div
-            className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]"
-          >
+          <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]">
             <div className="flex items-center gap-2">
               <span className="font-bold text-sm text-[var(--color-text-primary)]">
                 {isTr ? "Bildirimler" : "Notifications"}
@@ -338,9 +336,7 @@ export function NotificationPopover({
           </div>
 
           {/* Sticky Pinned Footer: "Tüm Bildirimleri Göster" */}
-          <div
-            className="border-t border-[var(--color-border-subtle)] p-2 bg-[var(--color-surface-hover)]"
-          >
+          <div className="border-t border-[var(--color-border-subtle)] p-2 bg-[var(--color-surface-hover)]">
             <Link
               href={getLocalizedRoute("dashboardNotifications", locale)}
               onClick={onClose}

@@ -1,3 +1,4 @@
+import { getTurnstileEndpoint } from "./turnstile-endpoint";
 import { getEnv } from "@/src/config/env";
 
 export interface TurnstileVerifyResult {
@@ -7,7 +8,7 @@ export interface TurnstileVerifyResult {
 
 /**
  * Verifies a Cloudflare Turnstile token server-side using the siteverify API.
- * Implements a fail-open architecture so a Cloudflare outage does not lock out legitimate users.
+ * Rejects verification failures; only unconfigured non-production environments may bypass.
  */
 export async function verifyTurnstileToken(
   token?: string | null,
@@ -23,9 +24,10 @@ export async function verifyTurnstileToken(
       }
     })();
 
-  // Gracefully bypass if Turnstile is not configured (e.g. local dev / testing)
   if (!secretKey) {
-    return { success: true };
+    return process.env.NODE_ENV === "production"
+      ? { success: false, error: "Bot verification unavailable. Please try again later." }
+      : { success: true };
   }
 
   if (!token) {
@@ -40,7 +42,7 @@ export async function verifyTurnstileToken(
       formData.append("remoteip", ip);
     }
 
-    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+    const res = await fetch(getTurnstileEndpoint(), {
       method: "POST",
       body: formData,
       headers: {
@@ -49,9 +51,11 @@ export async function verifyTurnstileToken(
       signal: AbortSignal.timeout(3500),
     });
 
+    if (!res.ok) throw new Error("Turnstile upstream request failed");
+
     const data = (await res.json()) as { success: boolean; "error-codes"?: string[] };
 
-    if (!data.success) {
+    if (data.success !== true) {
       return {
         success: false,
         error: data["error-codes"]?.[0] || "Bot verification failed. Please try again.",
@@ -60,8 +64,11 @@ export async function verifyTurnstileToken(
 
     return { success: true };
   } catch (err) {
-    // Fail-open resilience: log error but do not block user during 3rd party API outages
-    console.error("Cloudflare Turnstile verification network error:", err);
-    return { success: true };
+    // Never grant verification when the provider cannot verify the token.
+    console.error(
+      "Turnstile verification unavailable:",
+      err instanceof Error ? err.name : "UnknownError"
+    );
+    return { success: false, error: "Bot verification unavailable. Please try again later." };
   }
 }

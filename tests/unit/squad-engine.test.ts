@@ -69,7 +69,12 @@ describe("SquadRevenueEngine", () => {
 
     it("should reject a squad with fewer than 2 members", () => {
       const members: SquadMemberInput[] = [
-        { displayName: "Solo Dev", roleTitle: "Fullstack", revenueSharePercentage: 100, isLead: true },
+        {
+          displayName: "Solo Dev",
+          roleTitle: "Fullstack",
+          revenueSharePercentage: 100,
+          isLead: true,
+        },
       ];
 
       const result = SquadRevenueEngine.validateSquadDistribution(members);
@@ -164,9 +169,24 @@ describe("SquadRevenueEngine", () => {
   describe("calculatePayouts", () => {
     it("should calculate exact cent-precision payouts for 200,000 TRY (50/35/15)", () => {
       const members: SquadMemberInput[] = [
-        { displayName: "Backend Lead", roleTitle: "Backend Lead", revenueSharePercentage: 50, isLead: true },
-        { displayName: "Frontend Dev", roleTitle: "Frontend", revenueSharePercentage: 35, isLead: false },
-        { displayName: "UI/UX Designer", roleTitle: "Design", revenueSharePercentage: 15, isLead: false },
+        {
+          displayName: "Backend Lead",
+          roleTitle: "Backend Lead",
+          revenueSharePercentage: 50,
+          isLead: true,
+        },
+        {
+          displayName: "Frontend Dev",
+          roleTitle: "Frontend",
+          revenueSharePercentage: 35,
+          isLead: false,
+        },
+        {
+          displayName: "UI/UX Designer",
+          roleTitle: "Design",
+          revenueSharePercentage: 15,
+          isLead: false,
+        },
       ];
 
       const payouts = SquadRevenueEngine.calculatePayouts(200000, "TRY", members);
@@ -198,7 +218,10 @@ describe("SquadRevenueEngine", () => {
 
   describe("suggestDefaultSquad", () => {
     it("should suggest mobile squad for mobile-related categories or titles", () => {
-      const squad = SquadRevenueEngine.suggestDefaultSquad("software-dev", "Flutter & iOS E-ticaret Uygulaması");
+      const squad = SquadRevenueEngine.suggestDefaultSquad(
+        "software-dev",
+        "Flutter & iOS E-ticaret Uygulaması"
+      );
       expect(squad.title).toContain("Mobil");
       expect(squad.members).toHaveLength(3);
       expect(squad.members.some((m) => m.roleTitle.includes("Mobil"))).toBe(true);
@@ -206,14 +229,20 @@ describe("SquadRevenueEngine", () => {
     });
 
     it("should suggest AI squad for AI & data projects", () => {
-      const squad = SquadRevenueEngine.suggestDefaultSquad("ai-ml", "RAG & LLM Entegrasyon Projesi");
+      const squad = SquadRevenueEngine.suggestDefaultSquad(
+        "ai-ml",
+        "RAG & LLM Entegrasyon Projesi"
+      );
       expect(squad.title).toContain("Yapay Zeka");
       expect(squad.members).toHaveLength(3);
       expect(squad.members.reduce((acc, m) => acc + m.revenueSharePercentage, 0)).toBe(100);
     });
 
     it("should default to fullstack squad when generic", () => {
-      const squad = SquadRevenueEngine.suggestDefaultSquad("web-development", "Kurumsal Web Sitesi");
+      const squad = SquadRevenueEngine.suggestDefaultSquad(
+        "web-development",
+        "Kurumsal Web Sitesi"
+      );
       expect(squad.title).toContain("Web");
       expect(squad.members).toHaveLength(3);
       expect(squad.members.reduce((acc, m) => acc + m.revenueSharePercentage, 0)).toBe(100);

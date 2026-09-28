@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getAdminSession } from "@/src/modules/admin/auth-guard";
 import { AdminService } from "@/src/modules/admin/service";
 import { z } from "zod";
+import { handleApiError } from "@/src/lib/api/error-response";
 
 const updateListingStatusSchema = z.object({
   listingId: z.string().min(1),
@@ -28,7 +29,15 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, listing: updatedListing });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to update listing status";
-    return NextResponse.json({ error: message }, { status: 400 });
+    if (err instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: err.issues[0]?.message || "Invalid payload" },
+        { status: 400 }
+      );
+    }
+    return handleApiError(err, "Failed to update listing status", {
+      logPrefix: "[Admin Listing Status POST Error]",
+      status: 500,
+    });
   }
 }

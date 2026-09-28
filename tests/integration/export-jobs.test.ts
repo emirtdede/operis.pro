@@ -4,6 +4,7 @@ import { setDbForTesting, resetDbForTesting } from "@/src/lib/db";
 import * as schema from "@/db/schema";
 import { eq, and, gt } from "drizzle-orm";
 import crypto from "node:crypto";
+import pg from "pg";
 import { claimAndProcessExportJob, enqueueExportJob } from "@/src/modules/privacy/export-jobs";
 import { writeEncryptedExportParts } from "@/src/modules/privacy/export-writer";
 import { POST as exportRoutePost } from "@/src/app/api/account/export/route";
@@ -56,6 +57,27 @@ describe("B26 Export Jobs Architecture & Worker Lease Integration", () => {
     for (const job of existing) {
       await ctx.db.delete(schema.exportJobParts).where(eq(schema.exportJobParts.jobId, job.id));
       await ctx.db.delete(schema.exportJobs).where(eq(schema.exportJobs.id, job.id));
+    }
+  });
+
+  it("completes snapshot and writer work with the production single-slot pool", async () => {
+    const pool = new pg.Pool({ connectionString: ctx.connectionString, max: 1 });
+    try {
+      const { jobId } = await enqueueExportJob(testUserId);
+      expect(
+        await claimAndProcessExportJob(jobId, crypto.randomUUID(), {
+          pool,
+          maxDurationMs: 10000,
+        })
+      ).toBe("COMPLETED");
+      const [job] = await ctx.db
+        .select()
+        .from(schema.exportJobs)
+        .where(eq(schema.exportJobs.id, jobId));
+      expect(job?.status).toBe("READY");
+      expect(pool.waitingCount).toBe(0);
+    } finally {
+      await pool.end();
     }
   });
 
@@ -117,12 +139,9 @@ describe("B26 Export Jobs Architecture & Worker Lease Integration", () => {
       dbError = err;
     }
 
-    expect(dbError).toBeDefined();
-    expect(
-      String(dbError).includes("export_jobs_one_active_user_idx") ||
-        String(dbError).includes("duplicate key") ||
-        String(dbError).includes("unique constraint")
-    ).toBe(true);
+    expect(dbError).toMatchObject({
+      cause: { code: "23505", constraint: "export_jobs_one_active_user_idx" },
+    });
   });
 
   it("worker atomically claims job with UUID lease, processes data, and creates encrypted parts", async () => {

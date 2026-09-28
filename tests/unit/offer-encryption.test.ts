@@ -4,7 +4,8 @@ import { encryptOfferMessage, decryptOfferMessage } from "@/src/modules/offers/c
 describe("Offer Encryption & Decryption Suite (Envelope v2 AES-256-GCM)", () => {
   const testOfferId = "00000000-0000-4000-a000-000000000001";
   const otherOfferId = "00000000-0000-4000-a000-000000000002";
-  const sampleProposal = "Merhaba, projenizi Next.js 16 ve PostgreSQL mimarisinde 2 hafta içinde teslim edebilirim.";
+  const sampleProposal =
+    "Merhaba, projenizi Next.js 16 ve PostgreSQL mimarisinde 2 hafta içinde teslim edebilirim.";
 
   it("encrypts plaintext proposal message to Envelope v2 format", () => {
     const encrypted = encryptOfferMessage(sampleProposal, testOfferId);

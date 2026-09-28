@@ -60,7 +60,9 @@ export function AdvertisingSettingsTab({
       <div className="pt-4 border-t border-[var(--color-border-subtle)] flex items-center justify-between gap-4">
         <div className="space-y-0.5">
           <label className="text-xs font-bold text-[var(--color-text-primary)] block">
-            {isTr ? "Kişiselleştirilmiş İlan ve Uzman Eşleştirmesi" : "Personalized Project Recommendations"}
+            {isTr
+              ? "Kişiselleştirilmiş İlan ve Uzman Eşleştirmesi"
+              : "Personalized Project Recommendations"}
           </label>
           <p className="text-[11px] text-[var(--color-text-tertiary)]">
             {isTr

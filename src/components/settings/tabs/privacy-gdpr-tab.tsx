@@ -106,7 +106,9 @@ export function PrivacyGdprTab({
               <Phone className="h-4 w-4 text-purple-400 shrink-0" />
               <div>
                 <span className="text-xs font-bold text-[var(--color-text-primary)] block">
-                  {isTr ? "Telefon Numarasını Yalnızca Eşleşmede Göster" : "Reveal Phone Only After Match"}
+                  {isTr
+                    ? "Telefon Numarasını Yalnızca Eşleşmede Göster"
+                    : "Reveal Phone Only After Match"}
                 </span>
                 <p className="text-[11px] text-[var(--color-text-tertiary)]">
                   {isTr
@@ -152,7 +154,9 @@ export function PrivacyGdprTab({
       <div className="pt-4 border-t border-[var(--color-border-subtle)] space-y-3">
         <label className="text-xs font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
           <Download className="h-4 w-4 text-blue-400" />
-          <span>{isTr ? "Verilerinizin Kopyasını İndirin (KVKK / GDPR)" : "Download Data Archive"}</span>
+          <span>
+            {isTr ? "Verilerinizin Kopyasını İndirin (KVKK / GDPR)" : "Download Data Archive"}
+          </span>
         </label>
 
         <div className="p-4 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/30 space-y-3">
@@ -189,15 +193,15 @@ export function PrivacyGdprTab({
                         exportStatus === "READY"
                           ? "Hazır"
                           : exportStatus === "FAILED"
-                          ? "Başarısız"
-                          : "Hazırlanıyor..."
+                            ? "Başarısız"
+                            : "Hazırlanıyor..."
                       }`
                     : `Job: #${exportJobId.slice(0, 8)} — Status: ${
                         exportStatus === "READY"
                           ? "Ready"
                           : exportStatus === "FAILED"
-                          ? "Failed"
-                          : "Processing..."
+                            ? "Failed"
+                            : "Processing..."
                       }`}
                 </span>
                 {exportDownloadUrl && exportStatus === "READY" && (

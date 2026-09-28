@@ -63,10 +63,10 @@ export async function CategoryLandingView({
     sp.view === "catalog"
       ? "catalog"
       : sp.view === "stream"
-      ? "stream"
-      : savedViewCookie === "catalog"
-      ? "catalog"
-      : "stream";
+        ? "stream"
+        : savedViewCookie === "catalog"
+          ? "catalog"
+          : "stream";
 
   const basePath = isTr ? `/tr/kategori/${category.slug}` : `/en/category/${category.slug}`;
 
@@ -82,8 +82,11 @@ export async function CategoryLandingView({
         headline: (userProfile as { headline?: string | null })?.headline ?? null,
         avatarUrl: userProfile.avatarUrl ?? null,
         availabilityStatus:
-          (userProfile as { availabilityStatus?: import("@/src/modules/profiles/services/availability.service").AvailabilityStatus })
-            ?.availabilityStatus ?? "AVAILABLE_NOW",
+          (
+            userProfile as {
+              availabilityStatus?: import("@/src/modules/profiles/services/availability.service").AvailabilityStatus;
+            }
+          )?.availabilityStatus ?? "AVAILABLE_NOW",
         isAvailableForHire:
           (userProfile as { isAvailableForHire?: boolean })?.isAvailableForHire ?? true,
         isActivelyHiring:
@@ -102,7 +105,12 @@ export async function CategoryLandingView({
 
   const minBudgetNum = sp.minBudget ? Number(sp.minBudget) : undefined;
   const maxBudgetNum = sp.maxBudget ? Number(sp.maxBudget) : undefined;
-  const tagsList = sp.tags ? sp.tags.split(",").map((t) => t.trim()).filter(Boolean) : undefined;
+  const tagsList = sp.tags
+    ? sp.tags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean)
+    : undefined;
 
   const feedResult: FeedResult = await FeedService.getFeedListings({
     mode,
@@ -133,9 +141,11 @@ export async function CategoryLandingView({
       {
         "@type": "CollectionPage",
         name: isTr ? `${category.name} Freelance İş İlanları` : `${category.name} Freelance Jobs`,
-        description: category.description || (isTr
-          ? `${category.name} alanındaki aktif projeler ve freelance fırsatları.`
-          : `Active projects and freelance opportunities in ${category.name}.`),
+        description:
+          category.description ||
+          (isTr
+            ? `${category.name} alanındaki aktif projeler ve freelance fırsatları.`
+            : `Active projects and freelance opportunities in ${category.name}.`),
         url: canonicalUrl,
         inLanguage: locale,
         mainEntity: {
@@ -183,7 +193,10 @@ export async function CategoryLandingView({
       {/* Semantic Category Header & Breadcrumbs */}
       <header className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)]/80 p-5 sm:p-7 backdrop-blur-sm shadow-sm space-y-4">
         {/* Breadcrumb Navigation */}
-        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs sm:text-sm text-[var(--color-text-secondary)]">
+        <nav
+          aria-label="Breadcrumb"
+          className="flex items-center gap-2 text-xs sm:text-sm text-[var(--color-text-secondary)]"
+        >
           <Link
             href={`/${locale}`}
             className="hover:text-[var(--color-text-primary)] transition-colors"
@@ -233,8 +246,7 @@ export async function CategoryLandingView({
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] text-xs sm:text-sm font-medium text-[var(--color-text-primary)]">
               <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
               <span>
-                {feedResult.items.length}{" "}
-                {isTr ? "aktif proje" : "active projects"}
+                {feedResult.items.length} {isTr ? "aktif proje" : "active projects"}
               </span>
             </div>
             <Link
@@ -250,7 +262,10 @@ export async function CategoryLandingView({
 
       {/* Crawlable Semantic Listing Links for Search Spiders prior to hydration */}
       {feedResult.items.length > 0 && (
-        <nav aria-label={isTr ? `${category.name} İlanları` : `${category.name} Listings`} className="sr-only">
+        <nav
+          aria-label={isTr ? `${category.name} İlanları` : `${category.name} Listings`}
+          className="sr-only"
+        >
           <ul>
             {feedResult.items.map((item) => (
               <li key={item.id}>

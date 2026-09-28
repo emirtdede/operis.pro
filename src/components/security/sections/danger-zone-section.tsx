@@ -12,11 +12,7 @@ export interface DangerZoneSectionProps {
   onFeedback: (feedback: SecurityFeedback) => void;
 }
 
-export function DangerZoneSection({
-  locale,
-  is2FAEnabled,
-  onFeedback,
-}: DangerZoneSectionProps) {
+export function DangerZoneSection({ locale, is2FAEnabled, onFeedback }: DangerZoneSectionProps) {
   const isTr = locale === "tr";
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 

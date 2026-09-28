@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { ReviewService } from "@/src/modules/reviews/service";
 import { ProfileService } from "@/src/modules/profiles/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 
-export async function GET(
-  _req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const isEn = req.headers.get("x-locale") === "en";
+
   try {
     const { id } = await params;
     let targetUserId = id;
@@ -15,7 +15,10 @@ export async function GET(
     if (!isUuid) {
       const profile = await ProfileService.getPublicProfileByHandle(id);
       if (!profile) {
-        return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+        return NextResponse.json(
+          { error: isEn ? "Profile not found" : "Profil bulunamadı" },
+          { status: 404 }
+        );
       }
       targetUserId = profile.userId;
     }
@@ -23,7 +26,13 @@ export async function GET(
     const reviewsSummary = await ReviewService.getReviewsForUser(targetUserId);
     return NextResponse.json({ success: true, reviewsSummary });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to fetch reviews";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to fetch reviews",
+        tr: "Değerlendirmeler alınamadı",
+      },
+      { isEn, logPrefix: "[User Reviews GET Error]", status: 500 }
+    );
   }
 }

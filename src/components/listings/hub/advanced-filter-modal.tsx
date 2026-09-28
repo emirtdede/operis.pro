@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import type { CategoryDto } from "@/src/modules/categories/service";
 import { Button } from "@/src/components/ui/button";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 
 export interface AdvancedFilterState {
   categorySlugs: string[];
@@ -110,11 +111,12 @@ export function AdvancedFilterModal({
   // Initialize filter state from URL or fallback to props
   const [filters, setFilters] = useState<AdvancedFilterState>(() => {
     return {
-      categorySlugs: selectedCategorySlugs.length > 0
-        ? selectedCategorySlugs
-        : currentCategorySlug
-        ? [currentCategorySlug]
-        : [],
+      categorySlugs:
+        selectedCategorySlugs.length > 0
+          ? selectedCategorySlugs
+          : currentCategorySlug
+            ? [currentCategorySlug]
+            : [],
       timeRange: chipLast24h ? "24h" : "all",
       budgetType: chipFixedBudget ? "fixed" : "all",
       minBudget: "",
@@ -141,7 +143,8 @@ export function AdvancedFilterModal({
       const urlMin = sp.get("minBudget") || "";
       const urlMax = sp.get("maxBudget") || "";
       const urlCurr = (sp.get("currency") as AdvancedFilterState["currency"]) || "all";
-      const urlTimeline = (sp.get("timelineScope") as AdvancedFilterState["timelineScope"]) || "all";
+      const urlTimeline =
+        (sp.get("timelineScope") as AdvancedFilterState["timelineScope"]) || "all";
       const urlCompany = sp.get("companyVerified") === "true";
       const urlEncrypted = sp.get("encryptedOnly") === "true";
       const urlTags = sp.get("tags") ? sp.get("tags")!.split(",").filter(Boolean) : [];
@@ -433,14 +436,11 @@ export function AdvancedFilterModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 animate-in fade-in duration-200">
-      {/* Clean backdrop */}
-      <div
-        className="fixed inset-0 bg-black/80 transition-opacity"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-
+    <ModalOverlay
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabel={isTr ? "Gelişmiş İlan Filtreleme" : "Advanced Feed Filters"}
+    >
       {/* Modal Dialog Card */}
       <div className="relative w-full max-w-4xl overflow-hidden rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] shadow-2xl z-10 animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
         {/* Header */}
@@ -491,7 +491,9 @@ export function AdvancedFilterModal({
                 type="button"
                 onClick={handleAddFollowedCategories}
                 className="px-2.5 py-1 rounded-xl text-[11px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25 transition-all shrink-0 cursor-pointer flex items-center gap-1"
-                title={isTr ? "Takip ettiğiniz uzmanlık alanlarını ekleyin" : "Add followed categories"}
+                title={
+                  isTr ? "Takip ettiğiniz uzmanlık alanlarını ekleyin" : "Add followed categories"
+                }
               >
                 <Plus className="h-3 w-3" />
                 <span>{isTr ? "Takip Ettiğim Alanlar" : "My Followed Areas"}</span>
@@ -560,7 +562,11 @@ export function AdvancedFilterModal({
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 text-xs font-bold text-[var(--color-text-primary)]">
                 <Layers className="h-4 w-4 text-blue-400" />
-                <span>{isTr ? "Uzmanlık Kategorileri (Çoklu Seçim)" : "Specialization Categories (Multi-Select)"}</span>
+                <span>
+                  {isTr
+                    ? "Uzmanlık Kategorileri (Çoklu Seçim)"
+                    : "Specialization Categories (Multi-Select)"}
+                </span>
                 {filters.categorySlugs.length > 0 && (
                   <span className="text-[10px] px-2 py-0.2 rounded-full bg-blue-500/20 text-blue-400 font-bold">
                     {filters.categorySlugs.length} {isTr ? "Seçili" : "Selected"}
@@ -722,7 +728,10 @@ export function AdvancedFilterModal({
                 <span>{isTr ? "Bütçe ve Sözleşme Tipi" : "Budget & Contract Type"}</span>
               </label>
 
-              {(filters.budgetType !== "all" || filters.minBudget || filters.maxBudget || filters.currency !== "all") && (
+              {(filters.budgetType !== "all" ||
+                filters.minBudget ||
+                filters.maxBudget ||
+                filters.currency !== "all") && (
                 <button
                   type="button"
                   onClick={() =>
@@ -883,7 +892,12 @@ export function AdvancedFilterModal({
                   { id: "all", labelTr: "Tümü", labelEn: "All", icon: Globe },
                   { id: "24h", labelTr: "Son 24 Saat", labelEn: "Last 24h", icon: Flame },
                   { id: "3d", labelTr: "Son 3 Gün", labelEn: "Last 3 Days", icon: Clock },
-                  { id: "7d", labelTr: "7 Gün (Aktif)", labelEn: "7 Days (Active)", icon: Calendar },
+                  {
+                    id: "7d",
+                    labelTr: "7 Gün (Aktif)",
+                    labelEn: "7 Days (Active)",
+                    icon: Calendar,
+                  },
                 ].map((opt) => {
                   const isSelected = filters.timeRange === opt.id;
                   const IconComp = opt.icon;
@@ -903,7 +917,9 @@ export function AdvancedFilterModal({
                           : "bg-[var(--color-surface-base)] border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-blue-500/30"
                       }`}
                     >
-                      <IconComp className={`h-3 w-3 ${isSelected ? "text-white" : "text-[var(--color-text-tertiary)]"}`} />
+                      <IconComp
+                        className={`h-3 w-3 ${isSelected ? "text-white" : "text-[var(--color-text-tertiary)]"}`}
+                      />
                       <span>{isTr ? opt.labelTr : opt.labelEn}</span>
                     </button>
                   );
@@ -976,7 +992,9 @@ export function AdvancedFilterModal({
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-xs font-bold text-[var(--color-text-primary)]">
-                      {isTr ? "Yalnızca Kurumsal & Onaylı İşverenler" : "Verified Enterprise Employers Only"}
+                      {isTr
+                        ? "Yalnızca Kurumsal & Onaylı İşverenler"
+                        : "Verified Enterprise Employers Only"}
                     </span>
                     <span className="text-[10px] px-2 py-0.2 rounded-full bg-blue-500/20 text-blue-400 font-semibold border border-blue-500/30">
                       {isTr ? "VKN Onaylı" : "Verified"}
@@ -1096,6 +1114,6 @@ export function AdvancedFilterModal({
           </div>
         </div>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

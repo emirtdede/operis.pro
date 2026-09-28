@@ -2,22 +2,23 @@ import { NextResponse } from "next/server";
 import crypto from "node:crypto";
 import { ListingService } from "@/src/modules/listings/service";
 import { NotificationService } from "@/src/modules/notifications/service";
-import { getSession } from "@/src/modules/auth/session";
+import { getAdminSession } from "@/src/modules/admin/auth-guard";
 
 export const dynamic = "force-dynamic";
 
 /**
  * Scheduled background maintenance endpoint.
  * Expires overdue listings and processes pending outbox notifications.
- * Protected by CRON_SECRET authorization header or Admin session across all environments.
+ * Protected by CRON_SECRET authorization header (machine) or 2FA-verified Admin session (human fallback).
  */
-export async function GET(req: Request) {
+async function handleMaintenance(req: Request) {
   const authHeader = req.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET;
 
   try {
     let isAuthorized = false;
 
+    // 1. Machine identity: Verify CRON_SECRET with timing-safe comparison
     if (cronSecret && authHeader) {
       const expectedHeader = `Bearer ${cronSecret}`;
       const providedBuffer = Buffer.from(authHeader);
@@ -31,9 +32,10 @@ export async function GET(req: Request) {
       }
     }
 
+    // 2. Human operator fallback: Strictly enforce active admin session WITH 2FA verification
     if (!isAuthorized) {
-      const session = await getSession();
-      if (session?.role === "ADMIN" || session?.role === "SECURITY_ADMIN") {
+      const adminAuth = await getAdminSession(["ADMIN", "SECURITY_ADMIN"]);
+      if (adminAuth.isAdmin && adminAuth.session?.twoFactorVerified) {
         isAuthorized = true;
       }
     }
@@ -50,12 +52,14 @@ export async function GET(req: Request) {
     const { OfferService } = await import("@/src/modules/offers/service");
     const { PrivacyService } = await import("@/src/modules/privacy/service");
     const { ReviewService } = await import("@/src/modules/reviews/service");
+    const { TrendingService } = await import("@/src/lib/search/trending-service");
     const cleanedOtp = await cleanupExpiredOtpChallenges(24);
     const cleanedRateLimits = await cleanupExpiredRateLimits();
     const cleanedIdempotencyKeys = await OfferService.cleanupExpiredIdempotencyKeys();
     const cleanedExportFiles = await PrivacyService.cleanupExpiredExportFiles();
     const processedExportJobs = await PrivacyService.processPendingExportJobs();
     const autoRevealedReviewsCount = await ReviewService.autoRevealExpiredReviews();
+    const purgedTrends = await TrendingService.purgeExpiredTrends(30, 1000);
 
     return NextResponse.json(
       {
@@ -70,20 +74,20 @@ export async function GET(req: Request) {
         cleanedExportFilesCount: cleanedExportFiles,
         processedExportJobsCount: processedExportJobs,
         autoRevealedReviewsCount,
+        cleanedSearchTrendsCount: purgedTrends.deletedDbRows + purgedTrends.prunedMemoryItems,
       },
       { status: 200 }
     );
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Maintenance job failure";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[Maintenance Cron Error] Job execution failed:", err);
+    return NextResponse.json({ error: "Maintenance job execution failed" }, { status: 500 });
   }
 }
 
+export async function GET(req: Request) {
+  return handleMaintenance(req);
+}
+
 export async function POST(req: Request) {
-  try {
-    return await GET(req);
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Maintenance job failure";
-    return NextResponse.json({ error: message }, { status: 500 });
-  }
+  return handleMaintenance(req);
 }

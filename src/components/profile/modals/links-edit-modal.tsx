@@ -39,22 +39,62 @@ export function LinksEditModal({
     { value: "behance", label: "Behance (Tasarım / UI)", placeholder: "https://behance.net/..." },
     { value: "dribbble", label: "Dribbble (Tasarım)", placeholder: "https://dribbble.com/..." },
     { value: "figma", label: "Figma (Prototip & Topluluk)", placeholder: "https://figma.com/@..." },
-    { value: "artstation", label: "ArtStation (3D & Dijital Sanat)", placeholder: "https://artstation.com/..." },
-    { value: "sketchfab", label: "Sketchfab (İnteraktif 3D Model)", placeholder: "https://sketchfab.com/..." },
+    {
+      value: "artstation",
+      label: "ArtStation (3D & Dijital Sanat)",
+      placeholder: "https://artstation.com/...",
+    },
+    {
+      value: "sketchfab",
+      label: "Sketchfab (İnteraktif 3D Model)",
+      placeholder: "https://sketchfab.com/...",
+    },
     { value: "medium", label: "Medium (Yazı & Makale)", placeholder: "https://medium.com/@..." },
-    { value: "substack", label: "Substack (Bülten & Analiz)", placeholder: "https://...substack.com" },
-    { value: "youtube", label: "YouTube (Video & Showreel)", placeholder: "https://youtube.com/@..." },
+    {
+      value: "substack",
+      label: "Substack (Bülten & Analiz)",
+      placeholder: "https://...substack.com",
+    },
+    {
+      value: "youtube",
+      label: "YouTube (Video & Showreel)",
+      placeholder: "https://youtube.com/@...",
+    },
     { value: "vimeo", label: "Vimeo (Video Prodüksiyon)", placeholder: "https://vimeo.com/..." },
-    { value: "soundcloud", label: "SoundCloud (Ses & Müzik)", placeholder: "https://soundcloud.com/..." },
-    { value: "spotify", label: "Spotify (Müzik & Podcast)", placeholder: "https://open.spotify.com/..." },
+    {
+      value: "soundcloud",
+      label: "SoundCloud (Ses & Müzik)",
+      placeholder: "https://soundcloud.com/...",
+    },
+    {
+      value: "spotify",
+      label: "Spotify (Müzik & Podcast)",
+      placeholder: "https://open.spotify.com/...",
+    },
     { value: "kaggle", label: "Kaggle (Veri Bilimi & AI)", placeholder: "https://kaggle.com/..." },
-    { value: "huggingface", label: "Hugging Face (Yapay Zeka & Model)", placeholder: "https://huggingface.co/..." },
-    { value: "stackoverflow", label: "Stack Overflow", placeholder: "https://stackoverflow.com/users/..." },
+    {
+      value: "huggingface",
+      label: "Hugging Face (Yapay Zeka & Model)",
+      placeholder: "https://huggingface.co/...",
+    },
+    {
+      value: "stackoverflow",
+      label: "Stack Overflow",
+      placeholder: "https://stackoverflow.com/users/...",
+    },
     { value: "codepen", label: "CodePen", placeholder: "https://codepen.io/..." },
     { value: "devto", label: "Dev.to (Teknik Blog)", placeholder: "https://dev.to/..." },
     { value: "twitter", label: "X (Twitter)", placeholder: "https://x.com/..." },
-    { value: "website", label: isTr ? "Kişisel Web Sitesi" : "Personal Website", placeholder: "https://..." },
-    { value: "portfolio", label: isTr ? "Portfolyo / Canlı Demo" : "Portfolio / Live Demo", placeholder: "https://..." },
+    {
+      value: "website",
+      label: isTr ? "Kişisel Web Sitesi" : "Personal Website",
+      placeholder: "https://...",
+    },
+    {
+      value: "portfolio",
+      label: isTr ? "Portfolyo / Canlı Demo" : "Portfolio / Live Demo",
+      placeholder: "https://...",
+    },
     { value: "other", label: isTr ? "Diğer Bağlantı" : "Other Link", placeholder: "https://..." },
   ];
 
@@ -64,7 +104,11 @@ export function LinksEditModal({
       return;
     }
     if (!newUrl.startsWith("http://") && !newUrl.startsWith("https://")) {
-      setError(isTr ? "URL http:// veya https:// ile başlamalıdır." : "URL must start with http:// or https://");
+      setError(
+        isTr
+          ? "URL http:// veya https:// ile başlamalıdır."
+          : "URL must start with http:// or https://"
+      );
       return;
     }
     if (links.length >= 10) {
@@ -224,7 +268,14 @@ export function LinksEditModal({
             {isTr ? "Vazgeç" : "Cancel"}
           </Button>
           <Button type="submit" variant="primary" size="sm" disabled={loading}>
-            {getLoadingButtonLabel(loading, "Bağlantıları Kaydet", "Save Links", "Kaydediliyor...", "Saving...", isTr)}
+            {getLoadingButtonLabel(
+              loading,
+              "Bağlantıları Kaydet",
+              "Save Links",
+              "Kaydediliyor...",
+              "Saving...",
+              isTr
+            )}
           </Button>
         </div>
       </form>

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { ReviewService } from "@/src/modules/reviews/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -18,8 +19,14 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     const status = await ReviewService.getEngagementReviewStatus(id, session.userId);
     return NextResponse.json({ success: true, status });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to load review status";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to load review status",
+        tr: "Değerlendirme durumu yüklenemedi",
+      },
+      { isEn: false, logPrefix: "[Review Status GET Error]", status: 500 }
+    );
   }
 }
 
@@ -90,45 +97,71 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     return NextResponse.json({ success: true, review }, { status: 201 });
   } catch (err: unknown) {
-    const code = err instanceof Error ? err.message : "REVIEW_FAILED";
-    let errorMessage = isEn
-      ? "An error occurred while submitting your review."
-      : "Değerlendirme kaydedilirken bir hata oluştu.";
+    console.error("[Review Submit POST Error]:", err);
+    const rawMessage = err instanceof Error ? err.message : "";
+    const KNOWN_CODES = [
+      "REVIEW_TOO_SHORT",
+      "REVIEW_TOO_LONG",
+      "EMOJIS_FORBIDDEN",
+      "PROFANITY_OR_INAPPROPRIATE_CONTENT",
+      "ENGAGEMENT_NOT_COMPLETED",
+      "REVIEW_WINDOW_EXPIRED",
+      "DUPLICATE_REVIEW",
+      "UNAUTHORIZED_PARTICIPANT",
+    ] as const;
 
-    if (code === "REVIEW_TOO_SHORT") {
-      errorMessage = isEn
-        ? "Review must be at least 20 characters."
-        : "Değerlendirmeniz en az 20 karakter olmalıdır.";
-    } else if (code === "REVIEW_TOO_LONG") {
-      errorMessage = isEn
-        ? "Review cannot exceed 1000 characters."
-        : "Değerlendirmeniz en fazla 1000 karakter olabilir.";
-    } else if (code === "EMOJIS_FORBIDDEN") {
-      errorMessage = isEn
-        ? "Emojis are not permitted in verified reviews."
-        : "Platform kuralları gereği doğrulanmış değerlendirmelerde emoji kullanılamaz.";
-    } else if (code === "PROFANITY_OR_INAPPROPRIATE_CONTENT") {
-      errorMessage = isEn
-        ? "Review contains inappropriate content violating community guidelines."
-        : "Değerlendirmeniz topluluk kurallarımıza aykırı uygunsuz ifadeler içerdiği için kaydedilemedi.";
-    } else if (code === "ENGAGEMENT_NOT_COMPLETED") {
-      errorMessage = isEn
-        ? "Reviews can only be submitted for completed projects."
-        : "Yalnızca karşılıklı tamamlanan projeler için değerlendirme yapılabilir.";
-    } else if (code === "REVIEW_WINDOW_EXPIRED") {
-      errorMessage = isEn
-        ? "The 14-day review window for this project has expired."
-        : "Bu proje için 14 günlük değerlendirme penceresi sona ermiştir.";
-    } else if (code === "DUPLICATE_REVIEW") {
-      errorMessage = isEn
-        ? "You have already submitted a review for this project."
-        : "Bu proje için zaten bir değerlendirme gönderdiniz.";
-    } else if (code === "UNAUTHORIZED_PARTICIPANT") {
-      errorMessage = isEn
-        ? "You are not an authorized participant of this project."
-        : "Bu proje için değerlendirme yapma yetkiniz bulunmamaktadır.";
+    const matchedCode = KNOWN_CODES.find((c) => rawMessage === c);
+
+    if (matchedCode) {
+      let errorMessage = isEn
+        ? "An error occurred while submitting your review."
+        : "Değerlendirme kaydedilirken bir hata oluştu.";
+
+      if (matchedCode === "REVIEW_TOO_SHORT") {
+        errorMessage = isEn
+          ? "Review must be at least 20 characters."
+          : "Değerlendirmeniz en az 20 karakter olmalıdır.";
+      } else if (matchedCode === "REVIEW_TOO_LONG") {
+        errorMessage = isEn
+          ? "Review cannot exceed 1000 characters."
+          : "Değerlendirmeniz en fazla 1000 karakter olabilir.";
+      } else if (matchedCode === "EMOJIS_FORBIDDEN") {
+        errorMessage = isEn
+          ? "Emojis are not permitted in verified reviews."
+          : "Platform kuralları gereği doğrulanmış değerlendirmelerde emoji kullanılamaz.";
+      } else if (matchedCode === "PROFANITY_OR_INAPPROPRIATE_CONTENT") {
+        errorMessage = isEn
+          ? "Review contains inappropriate content violating community guidelines."
+          : "Değerlendirmeniz topluluk kurallarımıza aykırı uygunsuz ifadeler içerdiği için kaydedilemedi.";
+      } else if (matchedCode === "ENGAGEMENT_NOT_COMPLETED") {
+        errorMessage = isEn
+          ? "Reviews can only be submitted for completed projects."
+          : "Yalnızca karşılıklı tamamlanan projeler için değerlendirme yapılabilir.";
+      } else if (matchedCode === "REVIEW_WINDOW_EXPIRED") {
+        errorMessage = isEn
+          ? "The 14-day review window for this project has expired."
+          : "Bu proje için 14 günlük değerlendirme penceresi sona ermiştir.";
+      } else if (matchedCode === "DUPLICATE_REVIEW") {
+        errorMessage = isEn
+          ? "You have already submitted a review for this project."
+          : "Bu proje için zaten bir değerlendirme gönderdiniz.";
+      } else if (matchedCode === "UNAUTHORIZED_PARTICIPANT") {
+        errorMessage = isEn
+          ? "You are not an authorized participant of this project."
+          : "Bu proje için değerlendirme yapma yetkiniz bulunmamaktadır.";
+      }
+
+      return NextResponse.json({ error: errorMessage, code: matchedCode }, { status: 400 });
     }
 
-    return NextResponse.json({ error: errorMessage, code }, { status: 400 });
+    return NextResponse.json(
+      {
+        error: isEn
+          ? "An error occurred while submitting your review."
+          : "Değerlendirme kaydedilirken bir hata oluştu.",
+        code: "REVIEW_FAILED",
+      },
+      { status: 500 }
+    );
   }
 }

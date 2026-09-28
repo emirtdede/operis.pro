@@ -43,7 +43,8 @@ export function PasswordChangeSection({ locale, onFeedback }: PasswordChangeSect
 
       const data = await res.json();
       if (!res.ok) {
-        const errorMsg = data.error || (isTr ? "Şifre değiştirilemedi." : "Failed to change password.");
+        const errorMsg =
+          data.error || (isTr ? "Şifre değiştirilemedi." : "Failed to change password.");
         throw new Error(errorMsg);
       }
 

@@ -92,7 +92,8 @@ export function useListingsHubState({
   // Modal / Drawer state for Quick Offer
   const [quickOfferTarget, setQuickOfferTarget] = useState<QuickOfferTarget | null>(null);
   const [fullModalListing, setFullModalListing] = useState<FullModalListing | null>(null);
-  const [fullModalInitialData, setFullModalInitialData] = useState<SubmitOfferModalProps["initialData"]>(undefined);
+  const [fullModalInitialData, setFullModalInitialData] =
+    useState<SubmitOfferModalProps["initialData"]>(undefined);
 
   // Refs for infinite scroll and request deduplication
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -289,46 +290,49 @@ export function useListingsHubState({
   }, [handleLoadMore, hasMore, isLoadingMore, isTabLoading]);
 
   // Toggle Category Follow
-  const handleToggleCategoryFollow = useCallback(async (categoryId: string) => {
-    let isCurrentlyFollowed = false;
-    setFollowedCategoryIds((prev) => {
-      isCurrentlyFollowed = prev.has(categoryId);
-      const updated = new Set(prev);
-      if (isCurrentlyFollowed) {
-        updated.delete(categoryId);
-      } else {
-        updated.add(categoryId);
-      }
-      return updated;
-    });
-
-    try {
-      await fetch("/api/categories/follow", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          categoryId,
-          action: isCurrentlyFollowed ? "unfollow" : "follow",
-        }),
-      });
-      if (!isCurrentlyFollowed) {
-        setHasFollowed(true);
-      }
-      if (mode === "following") {
-        fetchListings("following", false);
-      }
-    } catch {
+  const handleToggleCategoryFollow = useCallback(
+    async (categoryId: string) => {
+      let isCurrentlyFollowed = false;
       setFollowedCategoryIds((prev) => {
-        const rolledBack = new Set(prev);
+        isCurrentlyFollowed = prev.has(categoryId);
+        const updated = new Set(prev);
         if (isCurrentlyFollowed) {
-          rolledBack.add(categoryId);
+          updated.delete(categoryId);
         } else {
-          rolledBack.delete(categoryId);
+          updated.add(categoryId);
         }
-        return rolledBack;
+        return updated;
       });
-    }
-  }, [mode, fetchListings]);
+
+      try {
+        await fetch("/api/categories/follow", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            categoryId,
+            action: isCurrentlyFollowed ? "unfollow" : "follow",
+          }),
+        });
+        if (!isCurrentlyFollowed) {
+          setHasFollowed(true);
+        }
+        if (mode === "following") {
+          fetchListings("following", false);
+        }
+      } catch {
+        setFollowedCategoryIds((prev) => {
+          const rolledBack = new Set(prev);
+          if (isCurrentlyFollowed) {
+            rolledBack.add(categoryId);
+          } else {
+            rolledBack.delete(categoryId);
+          }
+          return rolledBack;
+        });
+      }
+    },
+    [mode, fetchListings]
+  );
 
   // Quick Offer Handler
   const handleQuickOffer = useCallback((target: QuickOfferTarget) => {

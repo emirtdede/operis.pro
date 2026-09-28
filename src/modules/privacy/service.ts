@@ -169,10 +169,7 @@ export class PrivacyService {
             .from(schema.offers)
             .leftJoin(schema.profiles, eq(schema.offers.offerorUserId, schema.profiles.userId))
             .where(
-              and(
-                inArray(schema.offers.listingId, listingIds),
-                eq(schema.offers.status, "PENDING")
-              )
+              and(inArray(schema.offers.listingId, listingIds), eq(schema.offers.status, "PENDING"))
             );
 
           for (const po of pendingOffers) {

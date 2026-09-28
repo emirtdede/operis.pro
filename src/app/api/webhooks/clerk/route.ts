@@ -92,8 +92,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to process Clerk webhook event";
-    console.error("[ClerkWebhook] Error processing event:", message);
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[ClerkWebhook] Error processing event:", err);
+    return NextResponse.json({ error: "Failed to process Clerk webhook event" }, { status: 500 });
   }
 }

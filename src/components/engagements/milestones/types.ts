@@ -1,6 +1,4 @@
-import {
-  SupportedBank,
-} from "@/src/modules/engagements/milestone-service";
+import { SupportedBank } from "@/src/modules/engagements/milestone-service";
 
 export const SUPPORTED_BANKS: Array<{ id: SupportedBank; nameTr: string; nameEn: string }> = [
   { id: "GARANTI_BBVA", nameTr: "Garanti BBVA", nameEn: "Garanti BBVA" },

@@ -65,6 +65,7 @@ export function RegisterForm({ locale, returnUrl }: RegisterFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileAttempt, setTurnstileAttempt] = useState(0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -161,6 +162,8 @@ export function RegisterForm({ locale, returnUrl }: RegisterFormProps) {
         : "Registration failed. Please check your information.";
       setError(err instanceof Error ? err.message : defaultErrMsg);
     } finally {
+      setTurnstileToken(null);
+      setTurnstileAttempt((attempt) => attempt + 1);
       setIsLoading(false);
     }
   };
@@ -451,9 +454,11 @@ export function RegisterForm({ locale, returnUrl }: RegisterFormProps) {
 
       {/* Cloudflare Turnstile Bot Defense (Invisible / Interaction-Only) */}
       <TurnstileWidget
+        key={turnstileAttempt}
         appearance="interaction-only"
         onVerify={(token) => setTurnstileToken(token)}
         onExpire={() => setTurnstileToken(null)}
+        onError={() => setTurnstileToken(null)}
       />
 
       <Button
@@ -462,6 +467,7 @@ export function RegisterForm({ locale, returnUrl }: RegisterFormProps) {
         size="lg"
         className="w-full mt-3 font-semibold text-sm cursor-pointer"
         isLoading={isLoading}
+        disabled={Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) && !turnstileToken}
       >
         {isTr ? "Hesap Oluştur" : "Create Account"}
       </Button>

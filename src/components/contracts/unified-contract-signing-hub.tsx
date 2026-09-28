@@ -16,6 +16,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Button } from "../ui/button";
+import { Dialog } from "../ui/dialog";
 import { ContractRecommendationCard } from "./contract-recommendation-card";
 import { SignaturePadModal } from "./signature-pad-modal";
 import { ConfettiCanvas } from "../ui/confetti-canvas";
@@ -50,9 +51,7 @@ function getSigningHubTitle(hasSigned: boolean, isTr: boolean): string {
       ? "İmzanız Kaydedildi (Karşı Taraf Bekleniyor)"
       : "Your Signature Recorded (Awaiting Counterparty)";
   }
-  return isTr
-    ? "Tek Sayfada Tüm Sözleşmeleri İmzala"
-    : "Sign All Agreements on a Single Page";
+  return isTr ? "Tek Sayfada Tüm Sözleşmeleri İmzala" : "Sign All Agreements on a Single Page";
 }
 
 function getSigningHubDescription(hasSigned: boolean, isTr: boolean): string {
@@ -88,6 +87,7 @@ export function UnifiedContractSigningHub({
   const [tamperWarning, setTamperWarning] = useState<string | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [liveToastMessage, setLiveToastMessage] = useState<string | null>(null);
+  const [pendingToggleContractId, setPendingToggleContractId] = useState<string | null>(null);
 
   const prevStatusRef = useRef<string | null>(null);
 
@@ -241,12 +241,14 @@ export function UnifiedContractSigningHub({
       packageDetails?.clientSignature || packageDetails?.contractorSignature
     );
     if (hasAnySigned) {
-      const confirmMsg = isTr
-        ? "DİKKAT: Sözleşme kapsamını değiştirmek daha önce atılmış olan imzaları geçersiz kılar ve her iki tarafın yeniden imzalamasını gerektirir.\n\nDevam etmek istiyor musunuz?"
-        : "WARNING: Changing contract selection will invalidate existing signature(s) and require both parties to re-sign.\n\nDo you want to proceed?";
-      if (!window.confirm(confirmMsg)) return;
+      setPendingToggleContractId(contractId);
+      return;
     }
 
+    await executeToggleContract(contractId);
+  };
+
+  const executeToggleContract = async (contractId: string) => {
     const newSelection = selectedContractIds.includes(contractId)
       ? selectedContractIds.filter((id) => id !== contractId)
       : [...selectedContractIds, contractId];
@@ -258,6 +260,7 @@ export function UnifiedContractSigningHub({
 
     setSelectedContractIds(newSelection);
     setIsUpdatingSelection(true);
+    setPendingToggleContractId(null);
 
     try {
       const res = await fetch(`/api/work/${engagementId}/contract/recommendations`, {
@@ -572,9 +575,7 @@ export function UnifiedContractSigningHub({
               ) : (
                 <Copy className="h-4 w-4" />
               )}
-              <span>
-                {getCopyTextLabel(copied, isTr)}
-              </span>
+              <span>{getCopyTextLabel(copied, isTr)}</span>
             </Button>
 
             {onViewFullText && (
@@ -673,6 +674,44 @@ export function UnifiedContractSigningHub({
           }
         }}
       />
+
+      {/* Contract Scope Tamper Protection Confirmation Dialog */}
+      <Dialog
+        isOpen={Boolean(pendingToggleContractId)}
+        onClose={() => setPendingToggleContractId(null)}
+        title={isTr ? "İmza Geçersiz Kılma Uyarısı" : "Signature Invalidation Warning"}
+        description={
+          isTr
+            ? "DİKKAT: Sözleşme kapsamını değiştirmek daha önce atılmış olan dijital imzaları yasal ve kriptografik güvenlik gereği geçersiz kılar ve her iki tarafın yeniden imzalamasını gerektirir. Devam etmek istiyor musunuz?"
+            : "WARNING: Modifying the contract package invalidates existing digital signatures for legal compliance and cryptographic integrity, requiring both parties to re-sign. Do you want to proceed?"
+        }
+      >
+        <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-[var(--color-border-subtle)]">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setPendingToggleContractId(null)}
+            disabled={isUpdatingSelection}
+          >
+            {isTr ? "Vazgeç" : "Cancel"}
+          </Button>
+          <Button
+            type="button"
+            variant="danger"
+            size="sm"
+            onClick={() => {
+              if (pendingToggleContractId) {
+                executeToggleContract(pendingToggleContractId);
+              }
+            }}
+            disabled={isUpdatingSelection}
+            isLoading={isUpdatingSelection}
+          >
+            {isTr ? "Evet, Kapsamı Değiştir" : "Proceed & Reset Signatures"}
+          </Button>
+        </div>
+      </Dialog>
     </div>
   );
 }

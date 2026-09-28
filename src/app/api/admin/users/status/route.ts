@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getAdminSession } from "@/src/modules/admin/auth-guard";
 import { AdminService } from "@/src/modules/admin/service";
 import { z } from "zod";
+import { handleApiError } from "@/src/lib/api/error-response";
 
 const updateUserStatusSchema = z.object({
   targetUserId: z.string().min(1),
@@ -102,7 +103,15 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, user: updatedUser });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to update user status";
-    return NextResponse.json({ error: message }, { status: 400 });
+    if (err instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: err.issues[0]?.message || "Invalid payload" },
+        { status: 400 }
+      );
+    }
+    return handleApiError(err, "Failed to update user status", {
+      logPrefix: "[Admin User Status POST Error]",
+      status: 500,
+    });
   }
 }

@@ -19,6 +19,7 @@ function startLocalProviderStub(): Promise<{
   requests: Array<{ method: string; url: string; body: string }>;
 }> {
   const requests: Array<{ method: string; url: string; body: string }> = [];
+  const usedTurnstileTokens = new Set<string>();
 
   return new Promise((resolve, reject) => {
     const server = http.createServer((req, res) => {
@@ -40,6 +41,23 @@ function startLocalProviderStub(): Promise<{
         if (req.url?.includes("/sms/send/get")) {
           res.writeHead(200, { "Content-Type": "text/plain" });
           res.end(`00 ${Date.now().toString().slice(-6)}`);
+          return;
+        }
+
+        if (req.url === "/turnstile/siteverify") {
+          const params = new URLSearchParams(body);
+          const token = params.get("response") || "";
+          const success =
+            params.get("secret") === "operis-e2e-secret" &&
+            /^operis-e2e-token-[0-9a-f-]{36}$/.test(token) &&
+            !usedTurnstileTokens.has(token);
+          if (success) usedTurnstileTokens.add(token);
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              success,
+            })
+          );
           return;
         }
 
@@ -107,16 +125,24 @@ export async function main(): Promise<number> {
             RESEND_API_KEY: "re_local_test_only",
             SMS_PROVIDER: "netgsm",
             SMS_API_KEY: "sms_local_test_only",
+            TURNSTILE_SECRET_KEY: "operis-e2e-secret",
+            NEXT_PUBLIC_TURNSTILE_SITE_KEY: "operis-e2e-site",
+            TURNSTILE_VERIFY_URL: `http://127.0.0.1:${stub.port}/turnstile/siteverify`,
             RESEND_BASE_URL: `http://127.0.0.1:${stub.port}`,
             NETGSM_BASE_URL: `http://127.0.0.1:${stub.port}`,
             // Explicitly shadow .env provider credentials as Next may load .env itself.
             EMAIL_API_KEY: "",
+            UPSTASH_REDIS_REST_URL: "",
+            UPSTASH_REDIS_REST_TOKEN: "",
             NETGSM_USERCODE: "",
             NETGSM_PASSWORD: "",
             NETGSM_HEADER: "",
           };
         },
-        seed: (signal) => stage(["--import", "tsx", "scripts/seed.ts"], signal),
+        seed: async (signal) => {
+          await stage(["--import", "tsx", "scripts/seed.ts"], signal);
+          await stage(["--import", "tsx", "scripts/seed-e2e.ts"], signal);
+        },
         build: (signal) => stage(["node_modules/next/dist/bin/next", "build", "--webpack"], signal),
         test: (signal) =>
           runNodeStage(

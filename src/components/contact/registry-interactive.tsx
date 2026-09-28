@@ -134,7 +134,9 @@ export function RegistryInteractive({ locale }: RegistryInteractiveProps) {
 
         {/* Bottom Verification Note */}
         <div className="pt-4 border-t border-[var(--color-border-subtle)] flex items-center justify-between text-xs text-[var(--color-text-tertiary)] font-mono">
-          <span>{isTr ? "Sicil Doğrulama: MERSİS & GİB" : "Registry Check: MERSİS & Tax Office"}</span>
+          <span>
+            {isTr ? "Sicil Doğrulama: MERSİS & GİB" : "Registry Check: MERSİS & Tax Office"}
+          </span>
           <span className="text-emerald-400 font-semibold flex items-center gap-1">
             <ShieldCheck className="h-3.5 w-3.5" />
             <span>{isTr ? "2026 Doğrulanmış" : "Verified 2026"}</span>
@@ -188,7 +190,8 @@ export function RegistryInteractive({ locale }: RegistryInteractiveProps) {
           {/* Transit Info */}
           <div className="p-3.5 rounded-2xl bg-emerald-500/5 border border-emerald-500/15 flex items-center justify-between text-xs">
             <span className="text-[var(--color-text-secondary)]">
-              {isTr ? "Toplu Ulaşım:" : "Transit Access:"} <strong>M2 Metro Hattı</strong> Doğrudan Bağlantı
+              {isTr ? "Toplu Ulaşım:" : "Transit Access:"} <strong>M2 Metro Hattı</strong> Doğrudan
+              Bağlantı
             </span>
             <span className="font-semibold text-emerald-400 flex items-center gap-1 text-[11px]">
               <CheckCircle2 className="h-3.5 w-3.5" />

@@ -42,7 +42,10 @@ function getVerifiedDateLabel(formattedDate: string | null, isTr: boolean): stri
   return isTr ? "Resmi Sicil Onaylı" : "Officially Verified";
 }
 
-function getTaxIdValidationSuccessText(type: "VKN" | "TCKN" | null | undefined, isTr: boolean): string {
+function getTaxIdValidationSuccessText(
+  type: "VKN" | "TCKN" | null | undefined,
+  isTr: boolean
+): string {
   if (type === "VKN") {
     return isTr
       ? "Geçerli Tüzel Şirket VKN Formatı (GİB Modül 10/9 Doğrulandı)"
@@ -112,7 +115,9 @@ export function CompanyVerificationCard({
     if (!companyName.trim()) {
       setFeedback({
         type: "error",
-        message: isTr ? "Lütfen resmi şirket unvanını giriniz." : "Please enter legal company title.",
+        message: isTr
+          ? "Lütfen resmi şirket unvanını giriniz."
+          : "Please enter legal company title.",
       });
       return;
     }
@@ -120,7 +125,9 @@ export function CompanyVerificationCard({
     if (!taxOffice.trim()) {
       setFeedback({
         type: "error",
-        message: isTr ? "Lütfen bağlı olduğunuz Vergi Dairesini giriniz." : "Please enter your Tax Office.",
+        message: isTr
+          ? "Lütfen bağlı olduğunuz Vergi Dairesini giriniz."
+          : "Please enter your Tax Office.",
       });
       return;
     }
@@ -206,7 +213,9 @@ export function CompanyVerificationCard({
           </div>
           <div>
             <h3 className="text-sm font-bold text-[var(--color-text-primary)] flex items-center gap-2">
-              <span>{isTr ? "Kurumsal Şirket & Vergi No Doğrulaması" : "Company & Tax ID Verification"}</span>
+              <span>
+                {isTr ? "Kurumsal Şirket & Vergi No Doğrulaması" : "Company & Tax ID Verification"}
+              </span>
             </h3>
             <p className="text-xs text-[var(--color-text-secondary)]">
               {isTr
@@ -328,12 +337,17 @@ export function CompanyVerificationCard({
             {/* Şirket Unvanı */}
             <div className="space-y-1 sm:col-span-2">
               <label className="text-xs font-semibold text-[var(--color-text-secondary)]">
-                {isTr ? "Resmi Şirket Unvanı" : "Legal Company Title"} <span className="text-red-400">*</span>
+                {isTr ? "Resmi Şirket Unvanı" : "Legal Company Title"}{" "}
+                <span className="text-red-400">*</span>
               </label>
               <TextInput
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
-                placeholder={isTr ? "Örn: Acme Yazılım ve Bilişim Hizmetleri A.Ş." : "e.g. Acme Tech Solutions Ltd."}
+                placeholder={
+                  isTr
+                    ? "Örn: Acme Yazılım ve Bilişim Hizmetleri A.Ş."
+                    : "e.g. Acme Tech Solutions Ltd."
+                }
                 required
               />
             </div>
@@ -342,7 +356,8 @@ export function CompanyVerificationCard({
             <div className="space-y-1">
               <label className="text-xs font-semibold text-[var(--color-text-secondary)] flex items-center justify-between">
                 <span>
-                  {isTr ? "Vergi Kimlik No (VKN / TCKN)" : "Tax Identification Number"} <span className="text-red-400">*</span>
+                  {isTr ? "Vergi Kimlik No (VKN / TCKN)" : "Tax Identification Number"}{" "}
+                  <span className="text-red-400">*</span>
                 </span>
                 <span className="text-[10px] text-[var(--color-text-tertiary)] font-normal">
                   {isTr ? "10 veya 11 Hane" : "10 or 11 digits"}
@@ -367,7 +382,10 @@ export function CompanyVerificationCard({
                   ) : (
                     <div className="text-amber-400 flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                      <span>{validationStatus?.error || (isTr ? "Geçersiz kontrol basamağı" : "Invalid checksum")}</span>
+                      <span>
+                        {validationStatus?.error ||
+                          (isTr ? "Geçersiz kontrol basamağı" : "Invalid checksum")}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -377,7 +395,8 @@ export function CompanyVerificationCard({
             {/* Bağlı Vergi Dairesi */}
             <div className="space-y-1">
               <label className="text-xs font-semibold text-[var(--color-text-secondary)]">
-                {isTr ? "Bağlı Bulunulan Vergi Dairesi" : "Tax Office"} <span className="text-red-400">*</span>
+                {isTr ? "Bağlı Bulunulan Vergi Dairesi" : "Tax Office"}{" "}
+                <span className="text-red-400">*</span>
               </label>
               <TextInput
                 value={taxOffice}
@@ -397,9 +416,15 @@ export function CompanyVerificationCard({
                 onChange={(e) => setCompanyType(e.target.value)}
                 className="w-full rounded-xl bg-surface border border-[var(--color-border-subtle)] px-3 py-2 text-xs text-[var(--color-text-primary)] outline-none focus:border-blue-500 cursor-pointer"
               >
-                <option value="LIMITED">{isTr ? "Limited Şirket (Ltd. Şti.)" : "Limited Liability (Ltd.)"}</option>
-                <option value="ANONIM">{isTr ? "Anonim Şirket (A.Ş.)" : "Joint-Stock Company (Corp.)"}</option>
-                <option value="SAHIS">{isTr ? "Şahıs Şirketi (Bireysel İşletme)" : "Sole Proprietorship"}</option>
+                <option value="LIMITED">
+                  {isTr ? "Limited Şirket (Ltd. Şti.)" : "Limited Liability (Ltd.)"}
+                </option>
+                <option value="ANONIM">
+                  {isTr ? "Anonim Şirket (A.Ş.)" : "Joint-Stock Company (Corp.)"}
+                </option>
+                <option value="SAHIS">
+                  {isTr ? "Şahıs Şirketi (Bireysel İşletme)" : "Sole Proprietorship"}
+                </option>
                 <option value="KOOPERATIF">{isTr ? "Kooperatif" : "Cooperative"}</option>
               </select>
             </div>

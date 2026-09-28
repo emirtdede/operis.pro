@@ -24,7 +24,10 @@ interface DisputeArbiterCardProps {
   report?: DisputeArbitrationReport | null;
   isAdmin?: boolean;
   locale?: string;
-  onAutofillDecision?: (decision: "FORCE_COMPLETE" | "FORCE_CANCEL", suggestedNotes: string) => void;
+  onAutofillDecision?: (
+    decision: "FORCE_COMPLETE" | "FORCE_CANCEL",
+    suggestedNotes: string
+  ) => void;
 }
 
 function getRepositoryDeliveryStatus(delivered: boolean, isTr: boolean): string {
@@ -88,7 +91,9 @@ export function DisputeArbiterCard({
     fetch(fetchUrl)
       .then((res) => {
         if (!res.ok) {
-          throw new Error(isTr ? "Tahkim raporu yüklenemedi." : "Failed to load arbitration report.");
+          throw new Error(
+            isTr ? "Tahkim raporu yüklenemedi." : "Failed to load arbitration report."
+          );
         }
         return res.json();
       })
@@ -118,7 +123,11 @@ export function DisputeArbiterCard({
       <div className="rounded-2xl border border-indigo-500/20 bg-indigo-950/20 p-5 space-y-3 animate-pulse">
         <div className="flex items-center gap-2 text-xs font-semibold text-indigo-400">
           <Scale className="h-4 w-4 animate-spin" />
-          <span>{isTr ? "⚖️ Operis AI Tahkim Motoru delilleri analiz ediyor..." : "⚖️ Operis AI Arbiter is analyzing evidence..."}</span>
+          <span>
+            {isTr
+              ? "⚖️ Operis AI Tahkim Motoru delilleri analiz ediyor..."
+              : "⚖️ Operis AI Arbiter is analyzing evidence..."}
+          </span>
         </div>
         <div className="h-4 bg-indigo-900/40 rounded w-3/4"></div>
         <div className="h-3 bg-indigo-900/30 rounded w-1/2"></div>
@@ -131,7 +140,8 @@ export function DisputeArbiterCard({
       <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 text-xs text-slate-400 flex items-center justify-between">
         <span className="flex items-center gap-2">
           <AlertTriangle className="h-4 w-4 text-amber-400" />
-          {fetchError || (isTr ? "Tahkim raporu henüz hazır değil." : "Arbitration report not available.")}
+          {fetchError ||
+            (isTr ? "Tahkim raporu henüz hazır değil." : "Arbitration report not available.")}
         </span>
       </div>
     );
@@ -171,7 +181,9 @@ export function DisputeArbiterCard({
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
             <CheckCircle2 className="h-3.5 w-3.5" />
-            {isTr ? "YÜKLENİCİ LEHİNE TAMAMLAMA (FORCE COMPLETE)" : "FAVOR CONTRACTOR (FORCE COMPLETE)"}
+            {isTr
+              ? "YÜKLENİCİ LEHİNE TAMAMLAMA (FORCE COMPLETE)"
+              : "FAVOR CONTRACTOR (FORCE COMPLETE)"}
           </span>
         );
       case "FORCE_CANCEL":
@@ -205,7 +217,11 @@ export function DisputeArbiterCard({
               <Scale className="h-4 w-4" />
             </div>
             <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-1.5">
-              <span>{isTr ? "⚖️ Operis AI: Tarafsız Tahkim ve Delil Raporu" : "⚖️ Operis AI: Neutral Arbitration & Evidence Report"}</span>
+              <span>
+                {isTr
+                  ? "⚖️ Operis AI: Tarafsız Tahkim ve Delil Raporu"
+                  : "⚖️ Operis AI: Neutral Arbitration & Evidence Report"}
+              </span>
             </h3>
           </div>
           <p className="text-[11px] text-slate-400">
@@ -223,7 +239,11 @@ export function DisputeArbiterCard({
             className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer border border-slate-700"
             title={isTr ? "Raporu Kopyala" : "Copy Report"}
           >
-            {copiedReport ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+            {copiedReport ? (
+              <Check className="h-3.5 w-3.5 text-emerald-400" />
+            ) : (
+              <Copy className="h-3.5 w-3.5" />
+            )}
           </button>
         </div>
       </div>
@@ -233,7 +253,8 @@ export function DisputeArbiterCard({
         <div className="flex items-center justify-between text-xs font-semibold">
           <span className="text-emerald-400 flex items-center gap-1.5">
             <Award className="h-3.5 w-3.5" />
-            {isTr ? "Yazılımcı Hakediş Oranı" : "Contractor Entitlement"}: %{freelancerEntitlementPercent}
+            {isTr ? "Yazılımcı Hakediş Oranı" : "Contractor Entitlement"}: %
+            {freelancerEntitlementPercent}
           </span>
           <span className="text-sky-400 flex items-center gap-1.5">
             <ShieldCheck className="h-3.5 w-3.5" />
@@ -269,9 +290,7 @@ export function DisputeArbiterCard({
             <Zap className="h-3.5 w-3.5 text-indigo-400" />
             <span>{isTr ? "Hakem Karar Özeti & Formülü" : "Arbitration Verdict Summary"}</span>
           </div>
-          <p className="text-slate-300">
-            {isTr ? verdictSummaryTr : verdictSummaryEn}
-          </p>
+          <p className="text-slate-300">{isTr ? verdictSummaryTr : verdictSummaryEn}</p>
           <div className="pt-1.5 border-t border-indigo-500/20 text-[11px] text-indigo-200">
             <strong>{isTr ? "Önerilen Hüküm:" : "Recommended Decree:"}</strong>{" "}
             {isTr ? recommendedActionTr : recommendedActionEn}
@@ -290,7 +309,13 @@ export function DisputeArbiterCard({
           <div className="space-y-1 text-[11px]">
             <div className="flex items-center justify-between">
               <span className="text-slate-400">{isTr ? "Kaynak Kod Deposu:" : "Repository:"}</span>
-              <span className={evidenceSummary.repositoryDelivered ? "text-emerald-400 font-medium" : "text-rose-400 font-medium"}>
+              <span
+                className={
+                  evidenceSummary.repositoryDelivered
+                    ? "text-emerald-400 font-medium"
+                    : "text-rose-400 font-medium"
+                }
+              >
                 {getRepositoryDeliveryStatus(evidenceSummary.repositoryDelivered, isTr)}
               </span>
             </div>
@@ -298,15 +323,31 @@ export function DisputeArbiterCard({
             {evidenceSummary.liveDemoUrl && (
               <div className="flex items-center justify-between">
                 <span className="text-slate-400">{isTr ? "Canlı Demo (HTTP):" : "Live Demo:"}</span>
-                <span className={evidenceSummary.liveDemoStatus === 200 ? "text-emerald-400 font-medium" : "text-rose-400 font-medium"}>
-                  {evidenceSummary.liveDemoStatus === 200 ? `HTTP 200 OK (${evidenceSummary.liveDemoLatencyMs ?? 0}ms)` : `HTTP ${evidenceSummary.liveDemoStatus || "ERR"}`}
+                <span
+                  className={
+                    evidenceSummary.liveDemoStatus === 200
+                      ? "text-emerald-400 font-medium"
+                      : "text-rose-400 font-medium"
+                  }
+                >
+                  {evidenceSummary.liveDemoStatus === 200
+                    ? `HTTP 200 OK (${evidenceSummary.liveDemoLatencyMs ?? 0}ms)`
+                    : `HTTP ${evidenceSummary.liveDemoStatus || "ERR"}`}
                 </span>
               </div>
             )}
 
             <div className="flex items-center justify-between">
-              <span className="text-slate-400">{isTr ? "HMK m. 193 Mührü:" : "HMK Art. 193 Seal:"}</span>
-              <span className={evidenceSummary.powSealVerified ? "text-emerald-400 font-medium" : "text-amber-400 font-medium"}>
+              <span className="text-slate-400">
+                {isTr ? "HMK m. 193 Mührü:" : "HMK Art. 193 Seal:"}
+              </span>
+              <span
+                className={
+                  evidenceSummary.powSealVerified
+                    ? "text-emerald-400 font-medium"
+                    : "text-amber-400 font-medium"
+                }
+              >
                 {getPowSealStatus(evidenceSummary.powSealVerified, isTr)}
               </span>
             </div>
@@ -321,21 +362,35 @@ export function DisputeArbiterCard({
           </div>
           <div className="space-y-1 text-[11px]">
             <div className="flex items-center justify-between">
-              <span className="text-slate-400">{isTr ? "Geçen Muayene Süresi:" : "Inspection Elapsed:"}</span>
+              <span className="text-slate-400">
+                {isTr ? "Geçen Muayene Süresi:" : "Inspection Elapsed:"}
+              </span>
               <span className="text-slate-200 font-mono">
                 {evidenceSummary.inspectionDaysElapsed} {isTr ? "takvim günü" : "days"}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-400">{isTr ? "Talep Edilen Revizyon:" : "Revision Rounds:"}</span>
-              <span className={evidenceSummary.revisionRoundsCount > 2 ? "text-rose-400 font-bold" : "text-slate-200 font-mono"}>
-                {evidenceSummary.revisionRoundsCount} / 2 {isTr ? "(Madde 4.3 sınırı)" : "(Clause 4.3 cap)"}
+              <span className="text-slate-400">
+                {isTr ? "Talep Edilen Revizyon:" : "Revision Rounds:"}
+              </span>
+              <span
+                className={
+                  evidenceSummary.revisionRoundsCount > 2
+                    ? "text-rose-400 font-bold"
+                    : "text-slate-200 font-mono"
+                }
+              >
+                {evidenceSummary.revisionRoundsCount} / 2{" "}
+                {isTr ? "(Madde 4.3 sınırı)" : "(Clause 4.3 cap)"}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-400">{isTr ? "Scope Shield Ek Talepler:" : "Scope Shield CRs:"}</span>
+              <span className="text-slate-400">
+                {isTr ? "Scope Shield Ek Talepler:" : "Scope Shield CRs:"}
+              </span>
               <span className="text-slate-200 font-mono">
-                {evidenceSummary.changeRequestsCount} {isTr ? "talep" : "items"} ({evidenceSummary.approvedAddendumsCount} {isTr ? "onaylı" : "approved"})
+                {evidenceSummary.changeRequestsCount} {isTr ? "talep" : "items"} (
+                {evidenceSummary.approvedAddendumsCount} {isTr ? "onaylı" : "approved"})
               </span>
             </div>
           </div>
@@ -347,7 +402,8 @@ export function DisputeArbiterCard({
         <div className="flex items-center justify-between">
           <span className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
             <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />
-            {isTr ? "Tespit Edilen Sözleşme İhlalleri" : "Identified Contract Breaches"} ({identifiedBreaches.length})
+            {isTr ? "Tespit Edilen Sözleşme İhlalleri" : "Identified Contract Breaches"} (
+            {identifiedBreaches.length})
           </span>
 
           {/* Party Filter Chips */}
@@ -356,7 +412,9 @@ export function DisputeArbiterCard({
               type="button"
               onClick={() => setFilterParty("ALL")}
               className={`px-2 py-0.5 rounded cursor-pointer transition-colors ${
-                filterParty === "ALL" ? "bg-indigo-600 text-white font-semibold" : "text-slate-400 hover:text-white"
+                filterParty === "ALL"
+                  ? "bg-indigo-600 text-white font-semibold"
+                  : "text-slate-400 hover:text-white"
               }`}
             >
               {isTr ? "Tümü" : "All"}
@@ -365,7 +423,9 @@ export function DisputeArbiterCard({
               type="button"
               onClick={() => setFilterParty("CLIENT")}
               className={`px-2 py-0.5 rounded cursor-pointer transition-colors ${
-                filterParty === "CLIENT" ? "bg-indigo-600 text-white font-semibold" : "text-slate-400 hover:text-white"
+                filterParty === "CLIENT"
+                  ? "bg-indigo-600 text-white font-semibold"
+                  : "text-slate-400 hover:text-white"
               }`}
             >
               {isTr ? "İşveren" : "Client"}
@@ -374,7 +434,9 @@ export function DisputeArbiterCard({
               type="button"
               onClick={() => setFilterParty("CONTRACTOR")}
               className={`px-2 py-0.5 rounded cursor-pointer transition-colors ${
-                filterParty === "CONTRACTOR" ? "bg-indigo-600 text-white font-semibold" : "text-slate-400 hover:text-white"
+                filterParty === "CONTRACTOR"
+                  ? "bg-indigo-600 text-white font-semibold"
+                  : "text-slate-400 hover:text-white"
               }`}
             >
               {isTr ? "Yüklenici" : "Contractor"}
@@ -384,7 +446,9 @@ export function DisputeArbiterCard({
 
         {filteredBreaches.length === 0 ? (
           <div className="p-3 rounded-xl bg-slate-900/40 border border-slate-800 text-xs text-slate-400 text-center">
-            {isTr ? "Seçilen filtrede tespit edilmiş sözleşme ihlali bulunmamaktadır." : "No contractual breaches found for selected party."}
+            {isTr
+              ? "Seçilen filtrede tespit edilmiş sözleşme ihlali bulunmamaktadır."
+              : "No contractual breaches found for selected party."}
           </div>
         ) : (
           <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
@@ -411,7 +475,9 @@ export function DisputeArbiterCard({
                       >
                         {getBreachPartyLabel(isClient, isTr)}
                       </span>
-                      <span className="font-mono text-[10px] text-slate-400 font-bold">{item.clause}</span>
+                      <span className="font-mono text-[10px] text-slate-400 font-bold">
+                        {item.clause}
+                      </span>
                     </div>
 
                     <span
@@ -421,7 +487,9 @@ export function DisputeArbiterCard({
                     </span>
                   </div>
 
-                  <div className="font-semibold text-white">{isTr ? item.titleTr : item.titleEn}</div>
+                  <div className="font-semibold text-white">
+                    {isTr ? item.titleTr : item.titleEn}
+                  </div>
                   <p className="text-slate-300 text-[11px] leading-relaxed">
                     {isTr ? item.descriptionTr : item.descriptionEn}
                   </p>
@@ -447,9 +515,15 @@ export function DisputeArbiterCard({
         >
           <span className="flex items-center gap-1.5">
             <FileText className="h-3.5 w-3.5 text-indigo-400" />
-            {isTr ? "Hukuki ve Yasal Dayanaklar (TBK / FSEK / Arabuluculuk)" : "Statutory & Legal Grounds"}
+            {isTr
+              ? "Hukuki ve Yasal Dayanaklar (TBK / FSEK / Arabuluculuk)"
+              : "Statutory & Legal Grounds"}
           </span>
-          {showLegalGrounds ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          {showLegalGrounds ? (
+            <ChevronUp className="h-4 w-4" />
+          ) : (
+            <ChevronDown className="h-4 w-4" />
+          )}
         </button>
 
         {showLegalGrounds && (
@@ -477,7 +551,9 @@ export function DisputeArbiterCard({
           className="px-3 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 font-semibold text-xs transition-colors flex items-center gap-1.5 shadow-sm cursor-pointer"
         >
           <Scale className="h-3.5 w-3.5 text-indigo-400" />
-          <span>{isTr ? "⚖️ HMK 193 Delil Paketini İndir (.zip)" : "⚖️ Download HMK 193 Dossier (.zip)"}</span>
+          <span>
+            {isTr ? "⚖️ HMK 193 Delil Paketini İndir (.zip)" : "⚖️ Download HMK 193 Dossier (.zip)"}
+          </span>
         </a>
       </div>
 
@@ -504,7 +580,9 @@ export function DisputeArbiterCard({
               className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-colors flex items-center gap-1.5 shadow-md shadow-indigo-600/20 cursor-pointer"
             >
               <Zap className="h-3.5 w-3.5" />
-              <span>{isTr ? "Tahkim Kararını Forma Aktar (1-Tıkla)" : "Autofill Decree to Form"}</span>
+              <span>
+                {isTr ? "Tahkim Kararını Forma Aktar (1-Tıkla)" : "Autofill Decree to Form"}
+              </span>
             </button>
           </div>
         </div>

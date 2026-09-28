@@ -24,17 +24,13 @@ export interface CategoryGridCardProps {
   onToggle: (id: string) => void;
 }
 
-export function CategoryGridCard({
-  cat,
-  isFollowed,
-  isTr,
-  onToggle,
-}: CategoryGridCardProps) {
+export function CategoryGridCard({ cat, isFollowed, isTr, onToggle }: CategoryGridCardProps) {
   const Icon = CATEGORY_ICONS[cat.slug] || Code2;
   const listingCount = cat.listingCount || 0;
   const feedUrl = isTr ? `/tr/akis?category=${cat.slug}` : `/en/feed?category=${cat.slug}`;
 
-  let listingBadgeClass = "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)] border-[var(--color-border-subtle)]";
+  let listingBadgeClass =
+    "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)] border-[var(--color-border-subtle)]";
   if (listingCount > 0) {
     listingBadgeClass = "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/30";
   }
@@ -47,7 +43,9 @@ export function CategoryGridCard({
             <Icon className="h-5 w-5" aria-hidden="true" />
           </div>
           <div className="flex flex-col items-end gap-1.5 shrink-0">
-            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${listingBadgeClass}`}>
+            <span
+              className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${listingBadgeClass}`}
+            >
               {listingCount} {isTr ? "ilan" : "listings"}
             </span>
             <span className="font-mono text-[11px] text-[var(--color-text-tertiary)] bg-[var(--color-surface-hover)] px-2 py-0.5 rounded-md">

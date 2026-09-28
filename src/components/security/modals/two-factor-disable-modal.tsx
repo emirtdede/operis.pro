@@ -4,6 +4,7 @@ import type { FormEvent } from "react";
 import { Shield } from "lucide-react";
 import { Button } from "../../ui/button";
 import { TextInput } from "../../ui/text-input";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 
 export interface TwoFactorDisableModalProps {
   isOpen: boolean;
@@ -31,11 +32,10 @@ export function TwoFactorDisableModal({
   const isTr = locale === "tr";
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 animate-in fade-in duration-200"
-      role="dialog"
-      aria-modal="true"
-      aria-label={isTr ? "2FA Kapatma Onayı" : "Disable 2FA Confirmation"}
+    <ModalOverlay
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabel={isTr ? "2FA Kapatma Onayı" : "Disable 2FA Confirmation"}
     >
       <div className="relative w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-4 sm:p-6 shadow-2xl">
         <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-3 shrink-0">
@@ -107,6 +107,6 @@ export function TwoFactorDisableModal({
           </div>
         </form>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

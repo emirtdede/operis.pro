@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { DisputeArbiterService } from "@/src/modules/ai/dispute-arbiter";
+import { handleApiError } from "@/src/lib/api/error-response";
 import { getDb } from "@/src/lib/db";
 import * as schema from "@/db/schema";
 import type { DeliveryHealthReport } from "@/src/modules/engagements/delivery-inspector";
 import { eq, desc, asc } from "drizzle-orm";
 
-export async function GET(
-  _req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
   if (!session?.userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -23,7 +21,9 @@ export async function GET(
   try {
     const isMock =
       process.env.NODE_ENV !== "production" &&
-      (Boolean(process.env.VITEST) || engagementId === "eng-demo-101" || engagementId.startsWith("eng-dispute-"));
+      (Boolean(process.env.VITEST) ||
+        engagementId === "eng-demo-101" ||
+        engagementId.startsWith("eng-dispute-"));
 
     if (isMock) {
       const report = DisputeArbiterService.analyzeDispute({
@@ -90,8 +90,14 @@ export async function GET(
     }
 
     // Must be either owner or freelancer
-    if (engagement.ownerUserId !== session.userId && engagement.freelancerUserId !== session.userId) {
-      return NextResponse.json({ error: "Forbidden. You are not a participant in this engagement." }, { status: 403 });
+    if (
+      engagement.ownerUserId !== session.userId &&
+      engagement.freelancerUserId !== session.userId
+    ) {
+      return NextResponse.json(
+        { error: "Forbidden. You are not a participant in this engagement." },
+        { status: 403 }
+      );
     }
 
     const [handover] = await db
@@ -141,7 +147,8 @@ export async function GET(
         id: m.id,
         title: m.title,
         percentage: Number(m.percentage),
-        deliverableStatus: m.deliverableStatus as "PENDING" | "SUBMITTED" | "ACCEPTED" | "REVISION_REQUESTED",
+        deliverableStatus: m.deliverableStatus as
+          "PENDING" | "SUBMITTED" | "ACCEPTED" | "REVISION_REQUESTED",
         paymentStatus: m.paymentStatus as "PENDING" | "MARKED_PAID" | "CONFIRMED_PAID",
         deliverableUrl: m.deliverableUrl,
       })),
@@ -150,7 +157,13 @@ export async function GET(
 
     return NextResponse.json({ success: true, report });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed to analyze dispute";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      error,
+      {
+        en: "Failed to analyze dispute",
+        tr: "İhtilaf raporu analiz edilemedi",
+      },
+      { logPrefix: "[Dispute Report Error]", status: 500 }
+    );
   }
 }

@@ -420,7 +420,8 @@ export function ProfileSettingsForm({ initialProfile, locale }: ProfileSettingsF
 
       const dataLinks = await resLinks.json();
       if (!resLinks.ok) {
-        const linksError = dataLinks.error || (isTr ? "Bağlantılar güncellenemedi." : "Failed to update links.");
+        const linksError =
+          dataLinks.error || (isTr ? "Bağlantılar güncellenemedi." : "Failed to update links.");
         const partialSuccess = isTr
           ? " (Ancak profil bilgileriniz kaydedildi)"
           : " (However, profile details were saved)";
@@ -458,7 +459,9 @@ export function ProfileSettingsForm({ initialProfile, locale }: ProfileSettingsF
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       {state.feedback && (
-        <div className={`flex items-center gap-3 rounded-2xl border p-4 text-xs ${feedbackClasses}`}>
+        <div
+          className={`flex items-center gap-3 rounded-2xl border p-4 text-xs ${feedbackClasses}`}
+        >
           {state.feedback.type === "success" ? (
             <CheckCircle2 className="h-5 w-5 shrink-0" aria-hidden="true" />
           ) : (
@@ -476,11 +479,15 @@ export function ProfileSettingsForm({ initialProfile, locale }: ProfileSettingsF
         avatarUrl={state.avatarUrl}
         avatarPreviewError={state.avatarPreviewError}
         locale={locale}
-        onDisplayNameChange={(val) => dispatch({ type: "SET_FIELD", field: "displayName", value: val })}
+        onDisplayNameChange={(val) =>
+          dispatch({ type: "SET_FIELD", field: "displayName", value: val })
+        }
         onHandleChange={(val) => dispatch({ type: "SET_FIELD", field: "handle", value: val })}
         onAboutChange={(val) => dispatch({ type: "SET_FIELD", field: "about", value: val })}
         onAvatarUrlChange={(val) => dispatch({ type: "SET_FIELD", field: "avatarUrl", value: val })}
-        onAvatarPreviewError={(val) => dispatch({ type: "SET_FIELD", field: "avatarPreviewError", value: val })}
+        onAvatarPreviewError={(val) =>
+          dispatch({ type: "SET_FIELD", field: "avatarPreviewError", value: val })
+        }
       />
 
       {/* Section 2: Account and Security Verifications */}
@@ -512,7 +519,9 @@ export function ProfileSettingsForm({ initialProfile, locale }: ProfileSettingsF
             handleResendPhone();
           }
         }}
-        onClosePhoneModal={() => dispatch({ type: "SET_FIELD", field: "showPhoneModal", value: false })}
+        onClosePhoneModal={() =>
+          dispatch({ type: "SET_FIELD", field: "showPhoneModal", value: false })
+        }
         onOpenPhoneChangeModal={() => {
           dispatch({ type: "SET_FIELD", field: "showPhoneChangeModal", value: true });
           dispatch({ type: "SET_FIELD", field: "phoneChangeStep", value: 1 });
@@ -533,10 +542,16 @@ export function ProfileSettingsForm({ initialProfile, locale }: ProfileSettingsF
         preferredContactChannel={state.preferredContactChannel}
         timeZone={state.timeZone}
         locale={locale}
-        onShowLocationChange={(val) => dispatch({ type: "SET_FIELD", field: "showLocation", value: val })}
-        onRevealPhoneChange={(val) => dispatch({ type: "SET_FIELD", field: "revealPhoneAfterMatch", value: val })}
+        onShowLocationChange={(val) =>
+          dispatch({ type: "SET_FIELD", field: "showLocation", value: val })
+        }
+        onRevealPhoneChange={(val) =>
+          dispatch({ type: "SET_FIELD", field: "revealPhoneAfterMatch", value: val })
+        }
         onMarketingConsentChange={handleMarketingConsentChange}
-        onPreferredContactChannelChange={(val) => dispatch({ type: "SET_FIELD", field: "preferredContactChannel", value: val })}
+        onPreferredContactChannelChange={(val) =>
+          dispatch({ type: "SET_FIELD", field: "preferredContactChannel", value: val })
+        }
         onTimeZoneChange={(val) => dispatch({ type: "SET_FIELD", field: "timeZone", value: val })}
       />
 
@@ -547,9 +562,15 @@ export function ProfileSettingsForm({ initialProfile, locale }: ProfileSettingsF
         newLinkLabel={state.newLinkLabel}
         newLinkUrl={state.newLinkUrl}
         locale={locale}
-        onNewLinkTypeChange={(val) => dispatch({ type: "SET_FIELD", field: "newLinkType", value: val })}
-        onNewLinkLabelChange={(val) => dispatch({ type: "SET_FIELD", field: "newLinkLabel", value: val })}
-        onNewLinkUrlChange={(val) => dispatch({ type: "SET_FIELD", field: "newLinkUrl", value: val })}
+        onNewLinkTypeChange={(val) =>
+          dispatch({ type: "SET_FIELD", field: "newLinkType", value: val })
+        }
+        onNewLinkLabelChange={(val) =>
+          dispatch({ type: "SET_FIELD", field: "newLinkLabel", value: val })
+        }
+        onNewLinkUrlChange={(val) =>
+          dispatch({ type: "SET_FIELD", field: "newLinkUrl", value: val })
+        }
         onAddLink={handleAddLink}
         onRemoveLink={handleRemoveLink}
       />
@@ -579,8 +600,12 @@ export function ProfileSettingsForm({ initialProfile, locale }: ProfileSettingsF
         phoneChangeSuccess={state.phoneChangeSuccess}
         onClose={() => dispatch({ type: "SET_FIELD", field: "showPhoneChangeModal", value: false })}
         onNewPhoneChange={(val) => dispatch({ type: "SET_FIELD", field: "newPhone", value: val })}
-        onPhoneChangeOtpChange={(val) => dispatch({ type: "SET_FIELD", field: "phoneChangeOtp", value: val })}
-        onStepChange={(step) => dispatch({ type: "SET_FIELD", field: "phoneChangeStep", value: step })}
+        onPhoneChangeOtpChange={(val) =>
+          dispatch({ type: "SET_FIELD", field: "phoneChangeOtp", value: val })
+        }
+        onStepChange={(step) =>
+          dispatch({ type: "SET_FIELD", field: "phoneChangeStep", value: step })
+        }
         onRequestPhoneChange={handleRequestPhoneChange}
         onVerifyPhoneChange={handleVerifyPhoneChange}
       />

@@ -126,8 +126,12 @@ describe("EU AI Act & FSEK m. 52 AI Governance & IP Warranty Engine Suite", () =
       expect(md).toContain("MADDE 1: ŞEFFAFLIK VE YASAL BEYAN YÜKÜMLÜLÜĞÜ (EU AI ACT m. 50 UYUMU)");
       expect(md).toContain("MADDE 2: FSEK m. 52 UYARINCA İNSANİ HUSUSİYET (HUMAN-IN-THE-LOOP)");
       expect(md).toContain("MADDE 3: AÇIK KAYNAK VE COPYLEFT (GPL/AGPL) LİSANS BULAŞMA YASAĞI");
-      expect(md).toContain("MADDE 4: MÜŞTERİ VERİ GİZLİLİĞİ VE SIFIR SAKLAMA (ZERO-DATA-RETENTION)");
-      expect(md).toContain("MADDE 5: HALÜSİNASYON, GÜVENLİK AÇIKLARI VE AYIP SORUMLULUĞU (TBK m. 474)");
+      expect(md).toContain(
+        "MADDE 4: MÜŞTERİ VERİ GİZLİLİĞİ VE SIFIR SAKLAMA (ZERO-DATA-RETENTION)"
+      );
+      expect(md).toContain(
+        "MADDE 5: HALÜSİNASYON, GÜVENLİK AÇIKLARI VE AYIP SORUMLULUĞU (TBK m. 474)"
+      );
       expect(md).toContain("MADDE 6: TEST VE STATİK ANALİZ DENETİMİ");
       expect(md).toContain("MADDE 7: FİKRİ MÜLKİYET İHLALİ TAZMİNATI");
       expect(md).toContain("MADDE 8: MÜNHASIR DELİL SÖZLEŞMESİ (HMK m. 193)");
@@ -148,7 +152,9 @@ describe("EU AI Act & FSEK m. 52 AI Governance & IP Warranty Engine Suite", () =
       expect(md).toContain("SECTION 2: HUMAN-IN-THE-LOOP & VALIDITY OF COPYRIGHT ASSIGNMENT");
       expect(md).toContain("SECTION 3: LICENSE HYGIENE & ANTI-COPYLEFT (GPL/AGPL) WARRANTY");
       expect(md).toContain("SECTION 4: CLIENT DATA CONFIDENTIALITY & ZERO DATA RETENTION");
-      expect(md).toContain("SECTION 5: AI HALLUCINATIONS, SECURITY DEFECTS & WARRANTY (TBK ART. 474)");
+      expect(md).toContain(
+        "SECTION 5: AI HALLUCINATIONS, SECURITY DEFECTS & WARRANTY (TBK ART. 474)"
+      );
       expect(md).toContain("SECTION 6: RIGOROUS TESTING & CODE AUDIT PROTOCOL");
       expect(md).toContain("SECTION 7: INTELLECTUAL PROPERTY INDEMNIFICATION");
       expect(md).toContain("SECTION 8: EXCLUSIVE EVIDENCE CONTRACT (HMK ART. 193)");
@@ -198,7 +204,9 @@ describe("EU AI Act & FSEK m. 52 AI Governance & IP Warranty Engine Suite", () =
       expect(contract.markdown).toContain("EK-4: 5846 SAYILI FSEK m. 52 VE AB YAPAY ZEKA YASASI");
       expect(contract.markdown).toContain("5.4. **Yapay Zeka ve Fikri Mülkiyet Protokolü:**");
       expect(contract.markdown).toContain("6.3. **Yapay Zeka Modelleri ve Sıfır Saklama");
-      expect(contract.htmlContent).toContain("EK-4: YAPAY ZEKA TELİF DEVRİ VE LİSANS TEMİZLİĞİ ŞARTNAMESİ");
+      expect(contract.htmlContent).toContain(
+        "EK-4: YAPAY ZEKA TELİF DEVRİ VE LİSANS TEMİZLİĞİ ŞARTNAMESİ"
+      );
       expect(contract.sha256Fingerprint).toBeDefined();
       expect(contract.sha256Fingerprint.length).toBe(64);
     });
@@ -234,7 +242,9 @@ describe("EU AI Act & FSEK m. 52 AI Governance & IP Warranty Engine Suite", () =
       expect(aiGovExhibit?.title).toContain("EK-4: FSEK m. 52");
       expect(aiGovExhibit?.legalGroundTr).toContain("5846 s. FSEK m. 52");
       expect(aiGovExhibit?.sha256).toBeDefined();
-      expect(dossier.manifest.checksumsSha256Content).toContain("EK_4_YAPAY_ZEKA_VE_TELIF_PROTOKOLU.md");
+      expect(dossier.manifest.checksumsSha256Content).toContain(
+        "EK_4_YAPAY_ZEKA_VE_TELIF_PROTOKOLU.md"
+      );
       expect(dossier.zipBuffer.length).toBeGreaterThan(0);
     });
   });

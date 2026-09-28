@@ -2,9 +2,7 @@ import { eq, asc, desc, and } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
 import { NotificationService } from "@/src/modules/notifications/service";
 import { EngagementService } from "./service";
-import {
-  AddendumGeneratorService,
-} from "@/src/modules/contracts/addendum-generator";
+import { AddendumGeneratorService } from "@/src/modules/contracts/addendum-generator";
 import { ContractGeneratorService } from "@/src/modules/contracts/generator";
 import {
   ContractParty,
@@ -84,7 +82,9 @@ export class ChangeRequestService {
    */
   private static async getParties(
     viewerUserId: string,
-    engagementDetails: NonNullable<Awaited<ReturnType<typeof EngagementService.getEngagementDetails>>>
+    engagementDetails: NonNullable<
+      Awaited<ReturnType<typeof EngagementService.getEngagementDetails>>
+    >
   ): Promise<{
     client: ContractParty;
     contractor: ContractParty;
@@ -168,7 +168,10 @@ export class ChangeRequestService {
    * Creates a formal Change Request (Scope Shield trigger) for an active engagement.
    */
   static async createChangeRequest(input: CreateChangeRequestInput): Promise<ChangeRequestRecord> {
-    const details = await EngagementService.getEngagementDetails(input.requesterUserId, input.engagementId);
+    const details = await EngagementService.getEngagementDetails(
+      input.requesterUserId,
+      input.engagementId
+    );
     if (!details) {
       throw new Error("ENGAGEMENT_NOT_FOUND");
     }
@@ -230,9 +233,8 @@ export class ChangeRequestService {
         throw new Error("ACTIVE_CHANGE_REQUEST_EXISTS");
       }
 
-      const nextSeq = existingList.length > 0
-        ? Math.max(...existingList.map((cr) => cr.sequenceNumber)) + 1
-        : 1;
+      const nextSeq =
+        existingList.length > 0 ? Math.max(...existingList.map((cr) => cr.sequenceNumber)) + 1 : 1;
 
       savedRecord = {
         id: newRecordId,
@@ -429,7 +431,9 @@ export class ChangeRequestService {
   ): Promise<ChangeRequestRecord> {
     const isMock =
       Boolean(process.env.VITEST) ||
-      !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(input.changeRequestId);
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        input.changeRequestId
+      );
 
     let record: ChangeRequestRecord | null = null;
 
@@ -473,7 +477,8 @@ export class ChangeRequestService {
     const now = new Date();
 
     if (input.action === "REJECT") {
-      const trimmedReason = (input.rejectionReason || "").trim() || "Muhatap tarafından talep onaylanmadı.";
+      const trimmedReason =
+        (input.rejectionReason || "").trim() || "Muhatap tarafından talep onaylanmadı.";
 
       if (!isMock) {
         const db = getDb();

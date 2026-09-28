@@ -126,13 +126,9 @@ export async function GET(request: NextRequest) {
 
     // Redirect to login or home with verified notice if requested in browser
     if (isHtml) {
-      let redirectPath = userIsEn
-        ? "/en/login?verified=email"
-        : "/tr/giris?verified=email";
+      let redirectPath = userIsEn ? "/en/login?verified=email" : "/tr/giris?verified=email";
       if (freshToken) {
-        redirectPath = userIsEn
-          ? "/en/dashboard/listings"
-          : "/tr/panel/ilanlarim";
+        redirectPath = userIsEn ? "/en/dashboard/listings" : "/tr/panel/ilanlarim";
       }
       const redirectUrl = new URL(redirectPath, request.url);
       const res = NextResponse.redirect(redirectUrl);
@@ -166,13 +162,20 @@ export async function GET(request: NextRequest) {
     return res;
   } catch (err: unknown) {
     const userIsEn = searchParams.get("locale") === "en";
-    const message = err instanceof Error ? err.message : "Doğrulama işlemi tamamlanamadı.";
+    console.error("[Verify Email] Verification error:", err);
     if (isHtml) {
       const redirectPath = userIsEn
         ? "/en/login?error=verification_failed"
         : "/tr/giris?error=verification_failed";
       return NextResponse.redirect(new URL(redirectPath, request.url));
     }
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: userIsEn
+          ? "Email verification could not be completed."
+          : "Doğrulama işlemi tamamlanamadı.",
+      },
+      { status: 500 }
+    );
   }
 }

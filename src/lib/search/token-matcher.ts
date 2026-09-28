@@ -82,8 +82,7 @@ export function scoreSearchMatch(
         field.norm.includes(token) ||
         field.shadow.includes(tokenShadow) ||
         (tokenNoSpace.length >= 3 &&
-          (normNoSpace.includes(tokenNoSpace) ||
-            shadowNoSpace.includes(tokenShadowNoSpace)));
+          (normNoSpace.includes(tokenNoSpace) || shadowNoSpace.includes(tokenShadowNoSpace)));
 
       if (fieldHasExactToken) {
         tokenMatched = true;

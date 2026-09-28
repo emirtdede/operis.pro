@@ -39,23 +39,29 @@ export class AddendumGeneratorService {
     const addendumRef = `OPR-ADDENDUM-${engagementShort}-${seqPadded}`;
     const generatedAtDate = new Date();
 
-    const generatedDateFormatted = generatedAtDate.toLocaleDateString(
-      isTr ? "tr-TR" : "en-US",
-      { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" }
-    );
+    const generatedDateFormatted = generatedAtDate.toLocaleDateString(isTr ? "tr-TR" : "en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
     const clientName = input.client.displayName || (isTr ? "İş Sahibi" : "Client");
     const clientEmail = input.client.email || "—";
-    const clientPhone = input.client.phone || (isTr ? "Gizli / Eşleşme Onaylı" : "Private / Match Approved");
+    const clientPhone =
+      input.client.phone || (isTr ? "Gizli / Eşleşme Onaylı" : "Private / Match Approved");
 
     const contractorName = input.contractor.displayName || (isTr ? "Yüklenici" : "Contractor");
     const contractorEmail = input.contractor.email || "—";
-    const contractorPhone = input.contractor.phone || (isTr ? "Gizli / Eşleşme Onaylı" : "Private / Match Approved");
+    const contractorPhone =
+      input.contractor.phone || (isTr ? "Gizli / Eşleşme Onaylı" : "Private / Match Approved");
 
-    const reasonLabel =
-      CHANGE_REASON_LABELS[input.reason]?.[isTr ? "tr" : "en"] || input.reason;
+    const reasonLabel = CHANGE_REASON_LABELS[input.reason]?.[isTr ? "tr" : "en"] || input.reason;
 
-    let formattedBudget = isTr ? "İlave bedel talep edilmemiştir (₺0,00)" : "No additional fee requested (0.00)";
+    let formattedBudget = isTr
+      ? "İlave bedel talep edilmemiştir (₺0,00)"
+      : "No additional fee requested (0.00)";
     if (input.additionalBudget > 0) {
       formattedBudget = `+${input.additionalBudget.toLocaleString(isTr ? "tr-TR" : "en-US", { minimumFractionDigits: 2 })} ${input.currency}`;
     }

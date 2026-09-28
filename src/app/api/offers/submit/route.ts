@@ -90,7 +90,11 @@ export async function POST(req: Request) {
           ? "You must verify your email address before submitting an offer."
           : "Teklif verebilmek için önce e-posta adresinizi doğrulamanız gerekmektedir.";
       } else {
-        message = raw;
+        console.error("[Offer Submit Error]:", err);
+        return NextResponse.json(
+          { error: isEn ? "Failed to submit offer." : "Teklif iletilemedi." },
+          { status: 500 }
+        );
       }
     }
 

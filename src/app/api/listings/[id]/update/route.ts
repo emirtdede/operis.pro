@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getSession } from "@/src/modules/auth/session";
 import { ListingService } from "@/src/modules/listings/service";
 import { updateListingInputSchema } from "@/src/modules/listings/wizard/schema";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -43,15 +44,34 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err: unknown) {
-    let message = isEn
-      ? "Failed to update listing"
-      : "İlan güncellenemedi";
     if (err instanceof z.ZodError) {
       const fallbackMsg = isEn ? "Form validation error" : "Form doğrulama hatası";
-      message = err.issues[0]?.message || fallbackMsg;
-    } else if (err instanceof Error) {
-      message = err.message;
+      return NextResponse.json({ error: err.issues[0]?.message || fallbackMsg }, { status: 400 });
     }
-    return NextResponse.json({ error: message }, { status: 400 });
+
+    return handleApiError(
+      err,
+      {
+        en: "Failed to update listing",
+        tr: "İlan güncellenemedi",
+      },
+      {
+        isEn,
+        logPrefix: "[Listing Update POST Error]",
+        status: 500,
+        allowedMessages: {
+          "Listing not found": {
+            en: "Listing not found or you are not authorized to edit this listing.",
+            tr: "İlan bulunamadı veya bu ilanı düzenleme yetkiniz yok.",
+            status: 403,
+          },
+          "not authorized": {
+            en: "Listing not found or you are not authorized to edit this listing.",
+            tr: "İlan bulunamadı veya bu ilanı düzenleme yetkiniz yok.",
+            status: 403,
+          },
+        },
+      }
+    );
   }
 }

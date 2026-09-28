@@ -37,7 +37,13 @@ export function DashboardTabs({
   // Reactive badge count updates from child components
   useEffect(() => {
     function handleBadgeUpdate(
-      e: Event & { detail?: { key: keyof NonNullable<DashboardTabsProps["counts"]>; delta?: number; value?: number } }
+      e: Event & {
+        detail?: {
+          key: keyof NonNullable<DashboardTabsProps["counts"]>;
+          delta?: number;
+          value?: number;
+        };
+      }
     ) {
       if (!e.detail) return;
       const { key, delta, value } = e.detail;
@@ -48,9 +54,15 @@ export function DashboardTabs({
       });
     }
 
-    window.addEventListener("operis:badge-update" as unknown as keyof WindowEventMap, handleBadgeUpdate as EventListener);
+    window.addEventListener(
+      "operis:badge-update" as unknown as keyof WindowEventMap,
+      handleBadgeUpdate as EventListener
+    );
     return () => {
-      window.removeEventListener("operis:badge-update" as unknown as keyof WindowEventMap, handleBadgeUpdate as EventListener);
+      window.removeEventListener(
+        "operis:badge-update" as unknown as keyof WindowEventMap,
+        handleBadgeUpdate as EventListener
+      );
     };
   }, []);
 

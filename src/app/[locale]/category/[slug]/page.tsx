@@ -82,11 +82,5 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const sp = await searchParams;
   setRequestLocale(locale);
 
-  return (
-    <CategoryLandingView
-      locale={locale as "tr" | "en"}
-      slug={slug}
-      searchParams={sp}
-    />
-  );
+  return <CategoryLandingView locale={locale as "tr" | "en"} slug={slug} searchParams={sp} />;
 }

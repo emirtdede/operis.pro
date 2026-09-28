@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdminSession } from "@/src/modules/admin/auth-guard";
 import { AdminService } from "@/src/modules/admin/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 
 export async function GET(req: Request) {
   try {
@@ -18,10 +19,9 @@ export async function GET(req: Request) {
     const data = await AdminService.getDisputedEngagements({ page, limit, status, search });
     return NextResponse.json(data);
   } catch (error: unknown) {
-    console.error("[API_ADMIN_DISPUTES_ERROR]", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Internal Server Error" },
-      { status: 500 }
-    );
+    return handleApiError(error, "Internal Server Error", {
+      logPrefix: "[API_ADMIN_DISPUTES_ERROR]",
+      status: 500,
+    });
   }
 }

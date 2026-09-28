@@ -27,6 +27,7 @@ describe("Cloudflare Turnstile Verification Suite", () => {
   it("handles successful siteverify response from Cloudflare API", async () => {
     process.env.TURNSTILE_SECRET_KEY = "0x4AAAAAAtest-secret";
     vi.spyOn(global, "fetch").mockResolvedValueOnce({
+      ok: true,
       json: async () => ({ success: true }),
     } as Response);
 
@@ -37,6 +38,7 @@ describe("Cloudflare Turnstile Verification Suite", () => {
   it("handles failed siteverify response from Cloudflare API", async () => {
     process.env.TURNSTILE_SECRET_KEY = "0x4AAAAAAtest-secret";
     vi.spyOn(global, "fetch").mockResolvedValueOnce({
+      ok: true,
       json: async () => ({ success: false, "error-codes": ["invalid-input-response"] }),
     } as Response);
 
@@ -45,23 +47,23 @@ describe("Cloudflare Turnstile Verification Suite", () => {
     expect(result.error).toBe("invalid-input-response");
   });
 
-  it("implements fail-open resilience when Cloudflare network fetch throws an error or times out", async () => {
+  it("rejects verification when Cloudflare is unreachable", async () => {
     process.env.TURNSTILE_SECRET_KEY = "0x4AAAAAAtest-secret";
     vi.spyOn(global, "fetch").mockRejectedValueOnce(new Error("Cloudflare 502 Bad Gateway"));
 
     const result = await verifyTurnstileToken("token", "127.0.0.1");
-    // Fail-open: do not lock out legitimate users during 3rd party outage
-    expect(result.success).toBe(true);
+    // Provider failure must not authorize the request.
+    expect(result.success).toBe(false);
   });
 
-  it("handles AbortSignal timeout gracefully with fail-open", async () => {
+  it("rejects verification on timeout", async () => {
     process.env.TURNSTILE_SECRET_KEY = "0x4AAAAAAtest-secret";
     const timeoutErr = new Error("The operation was aborted due to timeout");
     timeoutErr.name = "TimeoutError";
     vi.spyOn(global, "fetch").mockRejectedValueOnce(timeoutErr);
 
     const result = await verifyTurnstileToken("token", "127.0.0.1");
-    expect(result.success).toBe(true);
+    expect(result.success).toBe(false);
   });
 });
 

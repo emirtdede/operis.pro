@@ -33,7 +33,10 @@ export function formatListingBudget(
   return isTr ? "Teklif Usulü" : "Open Bid";
 }
 
-export function getReviewsRoleFilterLabel(r: "ALL" | "EMPLOYER" | "FREELANCER", isTr: boolean): string {
+export function getReviewsRoleFilterLabel(
+  r: "ALL" | "EMPLOYER" | "FREELANCER",
+  isTr: boolean
+): string {
   if (r === "ALL") return isTr ? "Tümü" : "All";
   if (r === "EMPLOYER") return isTr ? "İşveren Olarak Aldığı" : "As Employer";
   return isTr ? "Uzman Olarak Aldığı" : "As Specialist";

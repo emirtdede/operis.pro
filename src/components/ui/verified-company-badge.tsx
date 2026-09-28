@@ -78,9 +78,7 @@ export function VerifiedCompanyBadge({
           size === "lg" && "w-4.5 h-4.5"
         )}
       />
-      <span>
-        {getVerifiedBadgeLabel(size, isEn)}
-      </span>
+      <span>{getVerifiedBadgeLabel(size, isEn)}</span>
       <ShieldCheck
         className={clsx(
           "text-emerald-500 dark:text-emerald-400 shrink-0",

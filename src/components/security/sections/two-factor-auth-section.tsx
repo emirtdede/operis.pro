@@ -7,11 +7,7 @@ import { Badge } from "../../ui/badge";
 import { TwoFactorSetupModal } from "../modals/two-factor-setup-modal";
 import { TwoFactorBackupCodesModal } from "../modals/two-factor-backup-codes-modal";
 import { TwoFactorDisableModal } from "../modals/two-factor-disable-modal";
-import {
-  SecurityFeedback,
-  get2FABadgeLabel,
-  get2FAButtonLabel,
-} from "../types";
+import { SecurityFeedback, get2FABadgeLabel, get2FAButtonLabel } from "../types";
 
 export interface TwoFactorAuthSectionProps {
   locale: string;

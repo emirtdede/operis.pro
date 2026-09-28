@@ -329,13 +329,10 @@ export const createCounterOfferSchema = z
       ),
     expectedRound: z.number().int().optional(),
   })
-  .refine(
-    (data) => parseFloat(data.budgetMin) <= parseFloat(data.budgetMax),
-    {
-      message: "Minimum bütçe maksimum bütçeden büyük olamaz",
-      path: ["budgetMax"],
-    }
-  );
+  .refine((data) => parseFloat(data.budgetMin) <= parseFloat(data.budgetMax), {
+    message: "Minimum bütçe maksimum bütçeden büyük olamaz",
+    path: ["budgetMax"],
+  });
 
 export type CreateCounterOfferInput = z.infer<typeof createCounterOfferSchema>;
 

@@ -284,11 +284,26 @@ export function LegalDocumentViewer({
   // Nav keys
   const legalDocsNav = [
     { key: "terms", tr: "Kullanım Koşulları", en: "Terms of Service", icon: Scale },
-    { key: "matching-disclaimer", tr: "Sorumluluk Reddi", en: "Liability Disclaimer", icon: AlertTriangle },
+    {
+      key: "matching-disclaimer",
+      tr: "Sorumluluk Reddi",
+      en: "Liability Disclaimer",
+      icon: AlertTriangle,
+    },
     { key: "privacy", tr: "Gizlilik ve KVKK", en: "Privacy Notice", icon: Lock },
-    { key: "acceptable-use", tr: "Kabul Edilebilir Kullanım", en: "Acceptable Use", icon: ShieldCheck },
+    {
+      key: "acceptable-use",
+      tr: "Kabul Edilebilir Kullanım",
+      en: "Acceptable Use",
+      icon: ShieldCheck,
+    },
     { key: "cookies", tr: "Çerez Politikası", en: "Cookie Policy", icon: Cookie },
-    { key: "intellectual-property", tr: "Fikri Mülkiyet & Telif", en: "Intellectual Property", icon: BookOpen },
+    {
+      key: "intellectual-property",
+      tr: "Fikri Mülkiyet & Telif",
+      en: "Intellectual Property",
+      icon: BookOpen,
+    },
     { key: "consent", tr: "Açık Rıza Metni", en: "Explicit Consent", icon: FileText },
     { key: "dispute-resolution", tr: "Uyuşmazlık Çözümü", en: "Dispute Resolution", icon: Scale },
     { key: "contact", tr: "Kurumsal Künye", en: "Corporate Legal", icon: Info },
@@ -318,7 +333,10 @@ export function LegalDocumentViewer({
     <div className="w-full space-y-8">
       {/* Top Document Header Card */}
       <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-xl p-6 sm:p-8 space-y-6 shadow-xl relative z-20 print:border-none print:shadow-none print:p-0">
-        <div className="pointer-events-none absolute inset-0 rounded-3xl overflow-hidden print:hidden" aria-hidden="true">
+        <div
+          className="pointer-events-none absolute inset-0 rounded-3xl overflow-hidden print:hidden"
+          aria-hidden="true"
+        >
           <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-blue-500/10 blur-3xl" />
         </div>
 
@@ -354,7 +372,9 @@ export function LegalDocumentViewer({
               {copied ? (
                 <>
                   <Check className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
-                  <span className="text-emerald-400 font-bold">{isTr ? "Kopyalandı" : "Copied!"}</span>
+                  <span className="text-emerald-400 font-bold">
+                    {isTr ? "Kopyalandı" : "Copied!"}
+                  </span>
                 </>
               ) : (
                 <>
@@ -395,22 +415,24 @@ export function LegalDocumentViewer({
                 </span>
                 <ChevronDown
                   className={`h-3 w-3 transition-transform duration-200 ${
-                    navDropdownOpen ? "rotate-180 text-blue-400" : "text-[var(--color-text-tertiary)]"
+                    navDropdownOpen
+                      ? "rotate-180 text-blue-400"
+                      : "text-[var(--color-text-tertiary)]"
                   }`}
                   aria-hidden="true"
                 />
               </button>
 
               {navDropdownOpen && (
-                <div
-                  className="absolute right-0 top-full mt-2 w-72 sm:w-80 rounded-2xl border border-[var(--color-border-strong)] shadow-2xl shadow-black/80 ring-1 ring-black/10 dark:ring-white/15 z-50 p-2 space-y-1 animate-in fade-in zoom-in-95 bg-[var(--bg-elevated)]"
-                >
+                <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 rounded-2xl border border-[var(--color-border-strong)] shadow-2xl shadow-black/80 ring-1 ring-black/10 dark:ring-white/15 z-50 p-2 space-y-1 animate-in fade-in zoom-in-95 bg-[var(--bg-elevated)]">
                   <div className="px-3 py-2 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/50 rounded-xl">
                     <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-tertiary)]">
                       {isTr ? "Tüm Yasal Metinler ve Politikalar" : "All Legal Framework Documents"}
                     </div>
                     <div className="text-xs text-[var(--color-text-secondary)] mt-0.5 font-medium">
-                      {isTr ? "İlgili belgeyi seçerek hızlı geçiş yapın:" : "Select a document to view:"}
+                      {isTr
+                        ? "İlgili belgeyi seçerek hızlı geçiş yapın:"
+                        : "Select a document to view:"}
                     </div>
                   </div>
 
@@ -577,8 +599,15 @@ export function LegalDocumentViewer({
                             className="rounded-2xl border border-blue-500/20 bg-blue-500/5 dark:bg-blue-500/10 p-4 sm:p-5 my-3 space-y-1.5"
                           >
                             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400">
-                              <AlertTriangle className="h-4 w-4 shrink-0 text-blue-400" aria-hidden="true" />
-                              <span>{isTr ? "Önemli Hukuki Hüküm & Sorumluluk Sınırı" : "Key Statutory Term"}</span>
+                              <AlertTriangle
+                                className="h-4 w-4 shrink-0 text-blue-400"
+                                aria-hidden="true"
+                              />
+                              <span>
+                                {isTr
+                                  ? "Önemli Hukuki Hüküm & Sorumluluk Sınırı"
+                                  : "Key Statutory Term"}
+                              </span>
                             </div>
                             <p className="text-xs sm:text-sm text-[var(--color-text-primary)] leading-relaxed font-medium">
                               {renderFormattedText(block.text)}
@@ -608,10 +637,7 @@ export function LegalDocumentViewer({
                     if (block.type === "list") {
                       if (block.isOrdered) {
                         return (
-                          <ol
-                            key={bIdx}
-                            className="space-y-2.5 pl-1 my-2 list-none"
-                          >
+                          <ol key={bIdx} className="space-y-2.5 pl-1 my-2 list-none">
                             {block.items.map((item, lIdx) => (
                               <li
                                 key={lIdx}
@@ -620,9 +646,7 @@ export function LegalDocumentViewer({
                                 <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] font-mono text-[11px] font-bold text-blue-400 mt-0.5">
                                   {lIdx + 1}
                                 </span>
-                                <span className="flex-1">
-                                  {renderFormattedText(item)}
-                                </span>
+                                <span className="flex-1">{renderFormattedText(item)}</span>
                               </li>
                             ))}
                           </ol>
@@ -630,19 +654,14 @@ export function LegalDocumentViewer({
                       }
 
                       return (
-                        <ul
-                          key={bIdx}
-                          className="space-y-2 pl-1 my-2 list-none"
-                        >
+                        <ul key={bIdx} className="space-y-2 pl-1 my-2 list-none">
                           {block.items.map((item, lIdx) => (
                             <li
                               key={lIdx}
                               className="flex items-start gap-2.5 text-xs sm:text-sm leading-relaxed"
                             >
                               <span className="h-1.5 w-1.5 rounded-full bg-blue-500 shrink-0 mt-2" />
-                              <span className="flex-1">
-                                {renderFormattedText(item)}
-                              </span>
+                              <span className="flex-1">{renderFormattedText(item)}</span>
                             </li>
                           ))}
                         </ul>
@@ -670,7 +689,9 @@ export function LegalDocumentViewer({
             <ShieldCheck className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" aria-hidden="true" />
             <div className="space-y-1">
               <span className="font-bold text-[var(--color-text-primary)] block">
-                {isTr ? "HMK m. 193 Uyarınca Bağlayıcı Delil Sözleşmesi" : "Binding Evidentiary Contract (HMK m. 193)"}
+                {isTr
+                  ? "HMK m. 193 Uyarınca Bağlayıcı Delil Sözleşmesi"
+                  : "Binding Evidentiary Contract (HMK m. 193)"}
               </span>
               <p>
                 {isTr

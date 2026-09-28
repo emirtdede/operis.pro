@@ -1,9 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { MilestoneSynthesizer } from "@/src/modules/engagements/milestone-synthesizer";
-import {
-  MilestoneService,
-  inMemoryMilestones,
-} from "@/src/modules/engagements/milestone-service";
+import { MilestoneService, inMemoryMilestones } from "@/src/modules/engagements/milestone-service";
 import { DisputeArbiterService } from "@/src/modules/ai/dispute-arbiter";
 import { IpAssignmentDeedEngine } from "@/src/modules/engagements/ip-assignment/ip-assignment-engine";
 
@@ -109,10 +106,7 @@ describe("MilestoneService Core Business Logic", () => {
   });
 
   it("auto-synthesizes initial milestones when none exist", async () => {
-    const plan = await MilestoneService.getMilestones(
-      engagementId,
-      ownerUserId
-    );
+    const plan = await MilestoneService.getMilestones(engagementId, ownerUserId);
 
     expect(plan.engagementId).toBe(engagementId);
     expect(plan.milestones.length).toBeGreaterThan(0);
@@ -190,10 +184,7 @@ describe("MilestoneService Core Business Logic", () => {
 
   it("handles complete deliverable submission, acceptance, payment marking, reverting, and invoice confirmation", async () => {
     // 1. Initialize
-    const plan = await MilestoneService.getMilestones(
-      engagementId,
-      freelancerUserId
-    );
+    const plan = await MilestoneService.getMilestones(engagementId, freelancerUserId);
 
     const firstMilestoneId = plan.milestones[0]!.id;
 
@@ -212,7 +203,9 @@ describe("MilestoneService Core Business Logic", () => {
 
     expect(deliverableRes.success).toBe(true);
     expect(deliverableRes.milestone.deliverableStatus).toBe("SUBMITTED");
-    expect(deliverableRes.milestone.deliverableUrl).toBe("https://github.com/operis-demo/phase-1-repo");
+    expect(deliverableRes.milestone.deliverableUrl).toBe(
+      "https://github.com/operis-demo/phase-1-repo"
+    );
     expect(deliverableRes.milestone.sha256Seal).toBeDefined();
     expect(deliverableRes.milestone.sha256Seal?.length).toBe(64);
 
@@ -275,19 +268,13 @@ describe("MilestoneService Core Business Logic", () => {
     expect(confirmRes.milestone.invoiceNumber).toBe("GIB2026-00000412");
 
     // Verify updated plan metrics reflect progress
-    const updatedPlan = await MilestoneService.getMilestones(
-      engagementId,
-      ownerUserId
-    );
+    const updatedPlan = await MilestoneService.getMilestones(engagementId, ownerUserId);
     expect(updatedPlan.paymentProgressPercent).toBeGreaterThan(0);
   });
 
   it("enforces strict privacy: outsider user cannot view private deliverable link", async () => {
     // 1. Setup plan
-    const plan = await MilestoneService.getMilestones(
-      engagementId,
-      ownerUserId
-    );
+    const plan = await MilestoneService.getMilestones(engagementId, ownerUserId);
 
     const mId = plan.milestones[0]!.id;
 
@@ -304,18 +291,15 @@ describe("MilestoneService Core Business Logic", () => {
     );
 
     // 3. Authenticated participant sees deliverableUrl
-    const participantView = await MilestoneService.getMilestones(
-      engagementId,
-      ownerUserId
-    );
+    const participantView = await MilestoneService.getMilestones(engagementId, ownerUserId);
     expect(participantView.milestones[0]!.deliverableUrl).toBe(
       "https://secret-internal-git.corp/vault/code"
     );
 
     // 4. Outsider is strictly rejected with authorization error (HMK m. 193 & KVKK privacy)
-    await expect(
-      MilestoneService.getMilestones(engagementId, outsiderUserId)
-    ).rejects.toThrow(/Yetkisiz erişim/);
+    await expect(MilestoneService.getMilestones(engagementId, outsiderUserId)).rejects.toThrow(
+      /Yetkisiz erişim/
+    );
   });
 
   it("executes full Bilateral Handshake Protocol with bank details, channel, dispute, and dual-seal certificate", async () => {
@@ -400,7 +384,9 @@ describe("MilestoneService Core Business Logic", () => {
     expect(confirmRes.milestone.settlementCertificate).toBeDefined();
     expect(confirmRes.milestone.settlementCertificate?.payer.senderBank).toBe("IS_BANKASI");
     expect(confirmRes.milestone.settlementCertificate?.payee.invoiceNumber).toBe("SMM2026-00099");
-    expect(confirmRes.milestone.settlementCertificate?.legalEvidentiaryClauseTr).toContain("Hukuk Muhakemeleri Kanunu m. 193");
+    expect(confirmRes.milestone.settlementCertificate?.legalEvidentiaryClauseTr).toContain(
+      "Hukuk Muhakemeleri Kanunu m. 193"
+    );
 
     // 7. Test persistence: Reload milestone plan from store
     const reloadedPlan = await MilestoneService.getMilestones(engagementId, ownerUserId);
@@ -434,7 +420,8 @@ describe("MilestoneService Core Business Logic", () => {
       mId,
       {
         status: "SUBMITTED",
-        deliverableUrl: "https://github.com/operis-client/payment-core/commit/8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b",
+        deliverableUrl:
+          "https://github.com/operis-client/payment-core/commit/8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b",
         deliverableUrlType: "CODE_REPO",
         gitCommitHash: "8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b",
         deliverableNote: "Core engine deliverable ready.",

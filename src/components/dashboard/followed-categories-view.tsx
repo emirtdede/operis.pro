@@ -29,10 +29,7 @@ export interface FollowedCategoriesViewProps {
   locale: string;
 }
 
-export function FollowedCategoriesView({
-  categories,
-  locale,
-}: FollowedCategoriesViewProps) {
+export function FollowedCategoriesView({ categories, locale }: FollowedCategoriesViewProps) {
   const isTr = locale === "tr";
   const [items, setItems] = useState<CategoryDto[]>(categories);
   const [searchQuery, setSearchQuery] = useState("");
@@ -212,9 +209,7 @@ export function FollowedCategoriesView({
             onChange={(e) => setSearchQuery(e.target.value)}
             disabled={items.length === 0}
             placeholder={
-              isTr
-                ? "Takip ettiğiniz kategorilerde ara..."
-                : "Search followed categories..."
+              isTr ? "Takip ettiğiniz kategorilerde ara..." : "Search followed categories..."
             }
             className="w-full pl-10 pr-9 py-2 rounded-xl text-xs sm:text-sm bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all truncate disabled:opacity-50 disabled:cursor-not-allowed"
           />
@@ -242,8 +237,8 @@ export function FollowedCategoriesView({
               items.length === 0
                 ? "border-[var(--color-border-subtle)] text-[var(--color-text-tertiary)] opacity-50 cursor-not-allowed"
                 : allVisibleFollowedSelected
-                ? "border-blue-500/40 bg-blue-500/15 text-blue-400 font-semibold cursor-pointer"
-                : "border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-blue-500/30 cursor-pointer"
+                  ? "border-blue-500/40 bg-blue-500/15 text-blue-400 font-semibold cursor-pointer"
+                  : "border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-blue-500/30 cursor-pointer"
             }`}
             title={isTr ? "Tümünü seç veya seçimi kaldır" : "Select or deselect all"}
           >
@@ -258,8 +253,8 @@ export function FollowedCategoriesView({
                   ? "Seçimi Kaldır"
                   : "Deselect All"
                 : isTr
-                ? "Tümünü Seç"
-                : "Select All"}
+                  ? "Tümünü Seç"
+                  : "Select All"}
             </span>
             <span className="text-[10px] opacity-75 font-mono">({filteredFollowed.length})</span>
           </Button>
@@ -272,7 +267,11 @@ export function FollowedCategoriesView({
               onClick={handleBulkUnfollowSelected}
               isLoading={isBulkLoading}
               className="gap-1.5 text-xs bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 hover:text-rose-300 border border-rose-500/30 rounded-xl px-3 py-2 cursor-pointer h-auto transition-all shadow-sm"
-              title={isTr ? "Sadece işaretlediğiniz kategorileri takipten çıkar" : "Unfollow only selected"}
+              title={
+                isTr
+                  ? "Sadece işaretlediğiniz kategorileri takipten çıkar"
+                  : "Unfollow only selected"
+              }
             >
               <Trash2 className="h-3.5 w-3.5" />
               <span>
@@ -294,7 +293,11 @@ export function FollowedCategoriesView({
                 ? "text-[var(--color-text-tertiary)] opacity-50 cursor-not-allowed"
                 : "text-[var(--color-text-tertiary)] hover:text-rose-400 hover:bg-rose-500/10 hover:border-rose-500/30 cursor-pointer"
             }`}
-            title={isTr ? "Takip ettiğiniz tüm kategorileri tek tıkla takipten çıkar" : "Unfollow all categories"}
+            title={
+              isTr
+                ? "Takip ettiğiniz tüm kategorileri tek tıkla takipten çıkar"
+                : "Unfollow all categories"
+            }
           >
             <Trash2 className="h-3.5 w-3.5" />
             <span>{isTr ? "Tümünü Takibi Bırak" : "Unfollow All"}</span>
@@ -321,7 +324,9 @@ export function FollowedCategoriesView({
                 className="gap-2 shadow-lg shadow-blue-500/15 font-semibold cursor-pointer"
               >
                 <FolderTree className="h-4 w-4" aria-hidden="true" />
-                <span>{isTr ? "Kategorileri İncele & Takip Et" : "Explore & Follow Categories"}</span>
+                <span>
+                  {isTr ? "Kategorileri İncele & Takip Et" : "Explore & Follow Categories"}
+                </span>
               </Button>
             </Link>
           }
@@ -381,8 +386,8 @@ export function FollowedCategoriesView({
                               ? "Seçimi kaldır"
                               : "Deselect"
                             : isTr
-                            ? "Seç"
-                            : "Select"
+                              ? "Seç"
+                              : "Select"
                         }
                       >
                         <Check className="h-3.5 w-3.5 stroke-[2.5]" />
@@ -438,7 +443,9 @@ export function FollowedCategoriesView({
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Link
-                    href={isTr ? `/tr/ilanlar?category=${cat.key}` : `/en/listings?category=${cat.key}`}
+                    href={
+                      isTr ? `/tr/ilanlar?category=${cat.key}` : `/en/listings?category=${cat.key}`
+                    }
                     className="text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center gap-1 hover:underline cursor-pointer"
                   >
                     <span>{isTr ? "İlanları Gör" : "View Listings"}</span>

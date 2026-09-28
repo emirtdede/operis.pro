@@ -90,9 +90,7 @@ export function BrandLogo({ className = "", size = "md", showText = true }: Bran
   }
 
   return (
-    <div
-      className={`relative inline-flex items-center select-none ${sizeClass} ${className}`}
-    >
+    <div className={`relative inline-flex items-center select-none ${sizeClass} ${className}`}>
       {/* Light Theme Logo (#09090B on transparent background) */}
       <img
         src="/operis-logo-acik.svg"

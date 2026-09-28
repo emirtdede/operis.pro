@@ -106,7 +106,12 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ logs }, { status: 200 });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to load audit logs";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("Account audit logs error:", err);
+    return NextResponse.json(
+      {
+        error: isEn ? "Failed to load audit logs" : "Denetim günlükleri yüklenemedi",
+      },
+      { status: 500 }
+    );
   }
 }

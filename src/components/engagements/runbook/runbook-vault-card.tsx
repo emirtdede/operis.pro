@@ -124,7 +124,8 @@ export function RunbookVaultCard({
             )}
 
             <Badge className="bg-blue-500/15 text-blue-400 border border-blue-500/30 font-mono px-2.5 py-1">
-              {isTr ? `Doluluk: %${completenessScore}` : `Completeness: %${completenessScore}`} ({completenessGrade})
+              {isTr ? `Doluluk: %${completenessScore}` : `Completeness: %${completenessScore}`} (
+              {completenessGrade})
             </Badge>
 
             <a
@@ -210,7 +211,8 @@ export function RunbookVaultCard({
           >
             <KeyRound className="h-3.5 w-3.5" />
             <span>
-              {isTr ? "Çevre Değişkenleri (.env)" : "Environment Variables"} ({runbook.environmentVariables.length})
+              {isTr ? "Çevre Değişkenleri (.env)" : "Environment Variables"} (
+              {runbook.environmentVariables.length})
             </span>
           </button>
 
@@ -224,7 +226,8 @@ export function RunbookVaultCard({
           >
             <Terminal className="h-3.5 w-3.5" />
             <span>
-              {isTr ? "Başlatma & Derleme (Runbook)" : "Build & Run Steps"} ({runbook.buildAndRunSteps.length})
+              {isTr ? "Başlatma & Derleme (Runbook)" : "Build & Run Steps"} (
+              {runbook.buildAndRunSteps.length})
             </span>
           </button>
 
@@ -238,7 +241,8 @@ export function RunbookVaultCard({
           >
             <Server className="h-3.5 w-3.5" />
             <span>
-              {isTr ? "3. Taraf Servisler" : "3rd Party Services"} ({runbook.thirdPartyServices.length})
+              {isTr ? "3. Taraf Servisler" : "3rd Party Services"} (
+              {runbook.thirdPartyServices.length})
             </span>
           </button>
 
@@ -252,7 +256,8 @@ export function RunbookVaultCard({
           >
             <AlertTriangle className="h-3.5 w-3.5" />
             <span>
-              {isTr ? "Yedekleme & Acil Kurtarma" : "Disaster Recovery"} ({runbook.disasterRecoverySteps.length})
+              {isTr ? "Yedekleme & Acil Kurtarma" : "Disaster Recovery"} (
+              {runbook.disasterRecoverySteps.length})
             </span>
           </button>
         </div>
@@ -263,10 +268,15 @@ export function RunbookVaultCard({
             <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-subtle)]/50 p-5 space-y-3">
               <h4 className="font-semibold text-xs text-[var(--color-text-primary)] flex items-center gap-2">
                 <FileCode2 className="h-4 w-4 text-indigo-400" />
-                <span>{isTr ? "Proje Altyapı ve Sistem Topolojisi" : "Project Topology & System Blueprint"}</span>
+                <span>
+                  {isTr
+                    ? "Proje Altyapı ve Sistem Topolojisi"
+                    : "Project Topology & System Blueprint"}
+                </span>
               </h4>
               <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed whitespace-pre-wrap">
-                {runbook.architectureSummary || (isTr ? "Mimari özet girilmedi." : "No architecture summary provided.")}
+                {runbook.architectureSummary ||
+                  (isTr ? "Mimari özet girilmedi." : "No architecture summary provided.")}
               </p>
             </div>
 
@@ -275,7 +285,11 @@ export function RunbookVaultCard({
                 <div className="space-y-0.5">
                   <div className="font-bold text-emerald-400 flex items-center gap-1.5">
                     <ShieldCheck className="h-4 w-4" />
-                    <span>{isTr ? "HMK m. 193 Kriptografik Dijital Mühür" : "HMK Art. 193 Digital Proof Seal"}</span>
+                    <span>
+                      {isTr
+                        ? "HMK m. 193 Kriptografik Dijital Mühür"
+                        : "HMK Art. 193 Digital Proof Seal"}
+                    </span>
                   </div>
                   <p className="text-[11px] text-[var(--color-text-secondary)]">
                     {isTr
@@ -287,8 +301,14 @@ export function RunbookVaultCard({
                   onClick={() => handleCopy(runbook.sha256Seal ?? "", "seal")}
                   className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 font-mono text-[11px] text-emerald-300 transition-colors"
                 >
-                  <span>{runbook.sha256Seal.slice(0, 16)}...{runbook.sha256Seal.slice(-8)}</span>
-                  {copiedKey === "seal" ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                  <span>
+                    {runbook.sha256Seal.slice(0, 16)}...{runbook.sha256Seal.slice(-8)}
+                  </span>
+                  {copiedKey === "seal" ? (
+                    <Check className="h-3 w-3" />
+                  ) : (
+                    <Copy className="h-3 w-3" />
+                  )}
                 </button>
               </div>
             )}
@@ -306,63 +326,84 @@ export function RunbookVaultCard({
               </span>
               <span className="text-[11px] font-mono text-amber-400/90 flex items-center gap-1.5">
                 <AlertTriangle className="h-3 w-3 shrink-0" />
-                <span>{isTr ? "Canlı şifreler gizlenmiştir / örnek formattır" : "Plaintext secrets excluded"}</span>
+                <span>
+                  {isTr
+                    ? "Canlı şifreler gizlenmiştir / örnek formattır"
+                    : "Plaintext secrets excluded"}
+                </span>
               </span>
             </div>
 
             {runbook.environmentVariables.length === 0 ? (
               <div className="rounded-2xl border border-dashed border-[var(--color-border-subtle)] p-6 text-center text-xs text-[var(--color-text-secondary)]">
-                {isTr ? "Tanımlı çevre değişkeni bulunmuyor. 'Kılavuzu Düzenle' butonundan ekleyebilirsiniz." : "No environment variables registered."}
+                {isTr
+                  ? "Tanımlı çevre değişkeni bulunmuyor. 'Kılavuzu Düzenle' butonundan ekleyebilirsiniz."
+                  : "No environment variables registered."}
               </div>
             ) : (
               <div className="rounded-2xl border border-[var(--color-border-subtle)] overflow-hidden">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-subtle)]/70 text-[var(--color-text-secondary)]">
-                      <th className="p-3 font-semibold">{isTr ? "Anahtar (.env)" : "Key (.env)"}</th>
-                      <th className="p-3 font-semibold">{isTr ? "Açıklama" : "Description"}</th>
-                      <th className="p-3 font-semibold">{isTr ? "Kategori" : "Category"}</th>
-                      <th className="p-3 font-semibold">{isTr ? "Zorunlu" : "Required"}</th>
-                      <th className="p-3 font-semibold">{isTr ? "Örnek Format" : "Sample Format"}</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[var(--color-border-subtle)]">
-                    {runbook.environmentVariables.map((env, idx) => (
-                      <tr key={idx} className="hover:bg-white/[0.02] transition-colors">
-                        <td className="p-3 font-mono font-medium text-cyan-300">
-                          <button
-                            onClick={() => handleCopy(env.key, `env-${idx}`)}
-                            className="flex items-center gap-1.5 hover:underline"
-                            title={isTr ? "Kopyala" : "Copy"}
-                          >
-                            <span>{env.key}</span>
-                            {copiedKey === `env-${idx}` ? (
-                              <Check className="h-3 w-3 text-emerald-400 shrink-0" />
-                            ) : (
-                              <Copy className="h-3 w-3 opacity-40 hover:opacity-100 shrink-0" />
-                            )}
-                          </button>
-                        </td>
-                        <td className="p-3 text-[var(--color-text-secondary)] max-w-xs">{env.description}</td>
-                        <td className="p-3">
-                          <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-white/10 font-mono">
-                            {env.secretCategory}
-                          </Badge>
-                        </td>
-                        <td className="p-3">
-                          {env.isRequired ? (
-                            <span className="text-emerald-400 font-medium">{isTr ? "Evet" : "Yes"}</span>
-                          ) : (
-                            <span className="text-[var(--color-text-tertiary)]">{isTr ? "Opsiyonel" : "Optional"}</span>
-                          )}
-                        </td>
-                        <td className="p-3 font-mono text-[11px] text-[var(--color-text-tertiary)] truncate max-w-[200px]">
-                          {env.sampleValue || "—"}
-                        </td>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-subtle)]/70 text-[var(--color-text-secondary)]">
+                        <th className="p-3 font-semibold">
+                          {isTr ? "Anahtar (.env)" : "Key (.env)"}
+                        </th>
+                        <th className="p-3 font-semibold">{isTr ? "Açıklama" : "Description"}</th>
+                        <th className="p-3 font-semibold">{isTr ? "Kategori" : "Category"}</th>
+                        <th className="p-3 font-semibold">{isTr ? "Zorunlu" : "Required"}</th>
+                        <th className="p-3 font-semibold">
+                          {isTr ? "Örnek Format" : "Sample Format"}
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-[var(--color-border-subtle)]">
+                      {runbook.environmentVariables.map((env, idx) => (
+                        <tr key={idx} className="hover:bg-white/[0.02] transition-colors">
+                          <td className="p-3 font-mono font-medium text-cyan-300">
+                            <button
+                              onClick={() => handleCopy(env.key, `env-${idx}`)}
+                              className="flex items-center gap-1.5 hover:underline"
+                              title={isTr ? "Kopyala" : "Copy"}
+                            >
+                              <span>{env.key}</span>
+                              {copiedKey === `env-${idx}` ? (
+                                <Check className="h-3 w-3 text-emerald-400 shrink-0" />
+                              ) : (
+                                <Copy className="h-3 w-3 opacity-40 hover:opacity-100 shrink-0" />
+                              )}
+                            </button>
+                          </td>
+                          <td className="p-3 text-[var(--color-text-secondary)] max-w-xs">
+                            {env.description}
+                          </td>
+                          <td className="p-3">
+                            <Badge
+                              variant="outline"
+                              className="text-[10px] px-2 py-0.5 border-white/10 font-mono"
+                            >
+                              {env.secretCategory}
+                            </Badge>
+                          </td>
+                          <td className="p-3">
+                            {env.isRequired ? (
+                              <span className="text-emerald-400 font-medium">
+                                {isTr ? "Evet" : "Yes"}
+                              </span>
+                            ) : (
+                              <span className="text-[var(--color-text-tertiary)]">
+                                {isTr ? "Opsiyonel" : "Optional"}
+                              </span>
+                            )}
+                          </td>
+                          <td className="p-3 font-mono text-[11px] text-[var(--color-text-tertiary)] truncate max-w-[200px]">
+                            {env.sampleValue || "—"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             )}
           </div>
@@ -482,21 +523,31 @@ export function RunbookVaultCard({
             <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-4 space-y-2 text-xs">
               <div className="flex items-center gap-2 font-bold text-indigo-400">
                 <Database className="h-4 w-4" />
-                <span>{isTr ? "Otomatik Yedekleme Çizelgesi & Geri Yükleme" : "Backup Schedule & Restore"}</span>
+                <span>
+                  {isTr
+                    ? "Otomatik Yedekleme Çizelgesi & Geri Yükleme"
+                    : "Backup Schedule & Restore"}
+                </span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-[11px] text-[var(--color-text-secondary)]">
                 <div>
-                  <span className="font-semibold text-[var(--color-text-primary)]">{isTr ? "Sıklık:" : "Frequency:"}</span>{" "}
+                  <span className="font-semibold text-[var(--color-text-primary)]">
+                    {isTr ? "Sıklık:" : "Frequency:"}
+                  </span>{" "}
                   {runbook.backupSchedule.frequency || (isTr ? "Günlük" : "Daily")}
                 </div>
                 <div>
-                  <span className="font-semibold text-[var(--color-text-primary)]">{isTr ? "Depolama:" : "Location:"}</span>{" "}
+                  <span className="font-semibold text-[var(--color-text-primary)]">
+                    {isTr ? "Depolama:" : "Location:"}
+                  </span>{" "}
                   {runbook.backupSchedule.storageLocation || "—"}
                 </div>
               </div>
               {runbook.backupSchedule.restoreProcedure && (
                 <div className="pt-1 text-[11px] text-[var(--color-text-secondary)] border-t border-indigo-500/15">
-                  <span className="font-semibold text-indigo-300">{isTr ? "Geri Yükleme Adımı:" : "Restore:"}</span>{" "}
+                  <span className="font-semibold text-indigo-300">
+                    {isTr ? "Geri Yükleme Adımı:" : "Restore:"}
+                  </span>{" "}
                   {runbook.backupSchedule.restoreProcedure}
                 </div>
               )}
@@ -506,12 +557,16 @@ export function RunbookVaultCard({
             <div className="space-y-3">
               <h4 className="font-semibold text-xs text-[var(--color-text-primary)] flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4 text-amber-400" />
-                <span>{isTr ? "Kritik Acil Durum & Çöküş Senaryoları" : "Emergency Crash Scenarios"}</span>
+                <span>
+                  {isTr ? "Kritik Acil Durum & Çöküş Senaryoları" : "Emergency Crash Scenarios"}
+                </span>
               </h4>
 
               {runbook.disasterRecoverySteps.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-[var(--color-border-subtle)] p-6 text-center text-xs text-[var(--color-text-secondary)]">
-                  {isTr ? "Tanımlı acil durum kurtarma adımı yok." : "No disaster recovery steps defined."}
+                  {isTr
+                    ? "Tanımlı acil durum kurtarma adımı yok."
+                    : "No disaster recovery steps defined."}
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -546,7 +601,11 @@ export function RunbookVaultCard({
                             onClick={() => handleCopy(dr.verificationCommand ?? "", `dr-${idx}`)}
                             className="p-1 text-white/70 hover:text-white"
                           >
-                            {copiedKey === `dr-${idx}` ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                            {copiedKey === `dr-${idx}` ? (
+                              <Check className="h-3 w-3" />
+                            ) : (
+                              <Copy className="h-3 w-3" />
+                            )}
                           </button>
                         </div>
                       )}
@@ -561,10 +620,13 @@ export function RunbookVaultCard({
               <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 text-xs space-y-1.5">
                 <div className="font-semibold text-[var(--color-text-primary)] flex items-center gap-1.5">
                   <Phone className="h-3.5 w-3.5 text-blue-400 shrink-0" aria-hidden="true" />
-                  <span>{isTr ? "Acil Durumda Aranacak / Ulaşılacak Kişi" : "Emergency Contact"}</span>
+                  <span>
+                    {isTr ? "Acil Durumda Aranacak / Ulaşılacak Kişi" : "Emergency Contact"}
+                  </span>
                 </div>
                 <p className="text-[var(--color-text-secondary)]">
-                  {runbook.emergencyContact.name} • {runbook.emergencyContact.email || runbook.emergencyContact.phone}
+                  {runbook.emergencyContact.name} •{" "}
+                  {runbook.emergencyContact.email || runbook.emergencyContact.phone}
                 </p>
               </div>
             )}

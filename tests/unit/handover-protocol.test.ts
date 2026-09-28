@@ -70,7 +70,9 @@ describe("Proof of Delivery & Handover Protocol (TBK m. 474 & 477, FSEK m. 52, H
     it("generates deterministic SHA-256 cryptographic seal with 64 hex characters", () => {
       const seal1 = HandoverGeneratorService.calculateSha256("test-canonical-content");
       const seal2 = HandoverGeneratorService.calculateSha256("test-canonical-content");
-      const differentSeal = HandoverGeneratorService.calculateSha256("test-canonical-content-modified");
+      const differentSeal = HandoverGeneratorService.calculateSha256(
+        "test-canonical-content-modified"
+      );
 
       expect(seal1).toBeDefined();
       expect(seal1).toHaveLength(64);
@@ -113,10 +115,14 @@ describe("Proof of Delivery & Handover Protocol (TBK m. 474 & 477, FSEK m. 52, H
       const result = HandoverGeneratorService.generateProtocol(enInput);
 
       expect(result.locale).toBe("en");
-      expect(result.markdown).toContain("OFFICIAL SOFTWARE HANDOVER & STATUTORY ACCEPTANCE PROTOCOL");
+      expect(result.markdown).toContain(
+        "OFFICIAL SOFTWARE HANDOVER & STATUTORY ACCEPTANCE PROTOCOL"
+      );
       expect(result.markdown).toContain("TURKISH CODE OF OBLIGATIONS (TBK ART. 474 & 477)");
       expect(result.markdown).toContain("ARTICLE 3 — STATUTORY INSPECTION REGIME (TBK ART. 474)");
-      expect(result.markdown).toContain("ARTICLE 4 — DISCHARGE OF LIABILITY VIA ACCEPTANCE (TBK ART. 477)");
+      expect(result.markdown).toContain(
+        "ARTICLE 4 — DISCHARGE OF LIABILITY VIA ACCEPTANCE (TBK ART. 477)"
+      );
       expect(result.markdown).toContain("TBK Art. 477/2 - Tacit Acceptance");
       expect(result.htmlContent).toContain("@page { size: A4; margin: 20mm 15mm; }");
     });
@@ -277,7 +283,8 @@ describe("Proof of Delivery & Handover Protocol (TBK m. 474 & 477, FSEK m. 52, H
       });
 
       // 2. Simulate time decay: Set inspectionExpiresAt in the past (e.g. 2 days ago)
-      const currentHandover = (await HandoverService.getHandover("u-techcorp-1", "eng-demo-101"))?.handover;
+      const currentHandover = (await HandoverService.getHandover("u-techcorp-1", "eng-demo-101"))
+        ?.handover;
       expect(currentHandover).toBeDefined();
 
       if (currentHandover) {
@@ -308,7 +315,8 @@ describe("Proof of Delivery & Handover Protocol (TBK m. 474 & 477, FSEK m. 52, H
       });
 
       // 2. Backdate inspection expiration
-      const currentHandover = (await HandoverService.getHandover("u-techcorp-1", "eng-demo-101"))?.handover;
+      const currentHandover = (await HandoverService.getHandover("u-techcorp-1", "eng-demo-101"))
+        ?.handover;
       if (currentHandover) {
         currentHandover.inspectionExpiresAt = new Date(Date.now() - 1000);
       }
@@ -434,7 +442,9 @@ describe("Proof of Delivery & Handover Protocol (TBK m. 474 & 477, FSEK m. 52, H
       );
 
       // 1. Export as markdown
-      const mdReq = new Request("https://operis.pro/api/work/eng-demo-101/handover/export?format=markdown&lang=tr");
+      const mdReq = new Request(
+        "https://operis.pro/api/work/eng-demo-101/handover/export?format=markdown&lang=tr"
+      );
       const mdRes = await ExportGET(mdReq, { params: Promise.resolve({ id: "eng-demo-101" }) });
       expect(mdRes.status).toBe(200);
       expect(mdRes.headers.get("Content-Type")).toContain("text/markdown");
@@ -442,7 +452,9 @@ describe("Proof of Delivery & Handover Protocol (TBK m. 474 & 477, FSEK m. 52, H
       expect(mdContent).toContain("RESMİ YAZILIM ESERİ TESLİM-TESELLÜM VE KABUL TUTANAĞI");
 
       // 2. Export as printable HTML
-      const htmlReq = new Request("https://operis.pro/api/work/eng-demo-101/handover/export?format=html&lang=tr");
+      const htmlReq = new Request(
+        "https://operis.pro/api/work/eng-demo-101/handover/export?format=html&lang=tr"
+      );
       const htmlRes = await ExportGET(htmlReq, { params: Promise.resolve({ id: "eng-demo-101" }) });
       expect(htmlRes.status).toBe(200);
       expect(htmlRes.headers.get("Content-Type")).toContain("text/html");
@@ -452,4 +464,3 @@ describe("Proof of Delivery & Handover Protocol (TBK m. 474 & 477, FSEK m. 52, H
     });
   });
 });
-

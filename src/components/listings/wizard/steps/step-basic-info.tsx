@@ -30,9 +30,7 @@ export interface StepBasicInfoProps {
 function getCategorySectorKey(cat?: CategoryItem): string {
   if (!cat) return "";
   if (cat.sectorKey) return cat.sectorKey;
-  const match = SEED_CATEGORIES.find(
-    (sc) => sc.key === cat.key || sc.key === cat.slug
-  );
+  const match = SEED_CATEGORIES.find((sc) => sc.key === cat.key || sc.key === cat.slug);
   return match?.sectorKey || "";
 }
 
@@ -55,10 +53,7 @@ export function StepBasicInfo({
 
   // Initialize selectedSectorKey from current category or first sector
   const initialSectorKey = useMemo(() => {
-    return (
-      getCategorySectorKey(selectedCategory) ||
-      (SEED_SECTORS[0]?.key ?? "sector-software-it")
-    );
+    return getCategorySectorKey(selectedCategory) || (SEED_SECTORS[0]?.key ?? "sector-software-it");
   }, [selectedCategory]);
 
   const [selectedSectorKey, setSelectedSectorKey] = useState<string>(initialSectorKey);
@@ -140,7 +135,6 @@ export function StepBasicInfo({
 
   return (
     <div className="space-y-6">
-
       {/* 2-Tier Cascading & Searchable Selection: Sector then Category */}
       <div className="space-y-2 relative z-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
@@ -197,9 +191,7 @@ export function StepBasicInfo({
                 {sectorOptions.find((s) => s.value === selectedSectorKey)?.label || ""}
               </span>
               <span className="text-[var(--color-text-tertiary)]">›</span>
-              <span className="font-bold text-blue-400">
-                {selectedCategory.name}
-              </span>
+              <span className="font-bold text-blue-400">{selectedCategory.name}</span>
             </div>
             <span className="text-[11px] font-mono text-[var(--color-text-tertiary)]">
               /{selectedCategory.slug}
@@ -244,7 +236,9 @@ export function StepBasicInfo({
             <div className="flex items-center gap-2.5 text-emerald-400">
               <ShieldCheck className="h-5 w-5 shrink-0 text-emerald-400" />
               <div>
-                <span className="font-semibold text-emerald-300">{detectedArchetype.profile.labelTr}</span>{" "}
+                <span className="font-semibold text-emerald-300">
+                  {detectedArchetype.profile.labelTr}
+                </span>{" "}
                 {isTr ? "tespit edildi." : "detected."}
                 <span className="text-[var(--color-text-tertiary)] block sm:inline sm:ml-1">
                   {isTr

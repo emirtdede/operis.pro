@@ -56,9 +56,9 @@ describe("WP-19 to WP-22: Smart Retainer Remediation Suite", () => {
       expect(periods1[0]?.periodIndex).toBe(1);
 
       // 3. Second activation attempt must fail
-      await expect(
-        RetainerService.activateRetainer(engagementId, clientId)
-      ).rejects.toThrow("Yalnızca teklif aşamasındaki sözleşmeler onaylanabilir.");
+      await expect(RetainerService.activateRetainer(engagementId, clientId)).rejects.toThrow(
+        "Yalnızca teklif aşamasındaki sözleşmeler onaylanabilir."
+      );
 
       // Ensure periods list did not duplicate
       const periodsAfter = inMemoryRetainerPeriods.get(act1.retainer.id) || [];
@@ -77,9 +77,9 @@ describe("WP-19 to WP-22: Smart Retainer Remediation Suite", () => {
       await RetainerService.activateRetainer(engagementId, clientId);
       await RetainerService.cancelRetainer(engagementId, clientId);
 
-      await expect(
-        RetainerService.activateRetainer(engagementId, clientId)
-      ).rejects.toThrow("Yalnızca teklif aşamasındaki sözleşmeler onaylanabilir.");
+      await expect(RetainerService.activateRetainer(engagementId, clientId)).rejects.toThrow(
+        "Yalnızca teklif aşamasındaki sözleşmeler onaylanabilir."
+      );
     });
   });
 
@@ -176,7 +176,16 @@ describe("WP-19 to WP-22: Smart Retainer Remediation Suite", () => {
       const period = log2.period;
       expect(parseFloat(period.hoursLogged)).toBe(6.5);
 
-      const logs = (period as unknown as { workLogsJson: Array<{ hours: number; taskDescription: string; date: string; userId: string }> }).workLogsJson;
+      const logs = (
+        period as unknown as {
+          workLogsJson: Array<{
+            hours: number;
+            taskDescription: string;
+            date: string;
+            userId: string;
+          }>;
+        }
+      ).workLogsJson;
       expect(logs).toHaveLength(2);
 
       const log0 = logs[0]!;
@@ -239,7 +248,9 @@ describe("WP-19 to WP-22: Smart Retainer Remediation Suite", () => {
           hours: 2,
           taskDescription: "İhbar süresi dolduktan sonraki geçersiz kayıt",
         })
-      ).rejects.toThrow("Bakım sözleşmesi feshedilmiştir; ihbar süresi veya dönem sonu dolduktan sonra saat kaydedilemez.");
+      ).rejects.toThrow(
+        "Bakım sözleşmesi feshedilmiştir; ihbar süresi veya dönem sonu dolduktan sonra saat kaydedilemez."
+      );
     });
   });
 });

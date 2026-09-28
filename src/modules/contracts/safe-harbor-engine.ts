@@ -70,15 +70,27 @@ export class SafeHarborEngine {
     switch (config.scheduleAutonomy) {
       case "FIXED_BUSINESS_HOURS":
         schedulePoints = 25;
-        primaryRisksTr.push("Sabit mesai saatleri (09:00-18:00) Yargıtay nezdinde en güçlü bağımlılık (hizmet akdi) karinesidir.");
-        primaryRisksEn.push("Mandatory fixed working hours is the strongest indicator of employee subordination.");
-        remedialMitigationsTr.push("Sözleşmede mesai saatleri kaldırılmalı, yalnızca sprint/teslimat teslim tarihleri belirlenmelidir.");
-        remedialMitigationsEn.push("Remove daily schedule constraints; enforce deliverable deadlines only.");
+        primaryRisksTr.push(
+          "Sabit mesai saatleri (09:00-18:00) Yargıtay nezdinde en güçlü bağımlılık (hizmet akdi) karinesidir."
+        );
+        primaryRisksEn.push(
+          "Mandatory fixed working hours is the strongest indicator of employee subordination."
+        );
+        remedialMitigationsTr.push(
+          "Sözleşmede mesai saatleri kaldırılmalı, yalnızca sprint/teslimat teslim tarihleri belirlenmelidir."
+        );
+        remedialMitigationsEn.push(
+          "Remove daily schedule constraints; enforce deliverable deadlines only."
+        );
         break;
       case "CORE_HOURS_OVERLAP":
         schedulePoints = 10;
-        remedialMitigationsTr.push("Ortak iletişim pencereleri 2-3 saat ile sınırlandırılmalı, yoklama/devam zorunluluğu konulmamalıdır.");
-        remedialMitigationsEn.push("Limit overlapping standups to 2-3 hours max without mandatory continuous presence.");
+        remedialMitigationsTr.push(
+          "Ortak iletişim pencereleri 2-3 saat ile sınırlandırılmalı, yoklama/devam zorunluluğu konulmamalıdır."
+        );
+        remedialMitigationsEn.push(
+          "Limit overlapping standups to 2-3 hours max without mandatory continuous presence."
+        );
         break;
       case "FLEXIBLE_RESULT_ORIENTED":
       default:
@@ -107,15 +119,27 @@ export class SafeHarborEngine {
     switch (config.equipmentOwnership) {
       case "EMPLOYER_MANDATORY_HARDWARE":
         equipmentPoints = 15;
-        primaryRisksTr.push("Müşterinin bilgisayar ve donanım zorunlu kılması işveren araç tahsisi olarak yorumlanabilir.");
-        primaryRisksEn.push("Mandatory client-owned hardware strongly suggests traditional employee provisioning.");
-        remedialMitigationsTr.push("BYOD (kendi bilgisayarını kullanma) esasına geçilmeli, kurumsal ortamlar yalnızca VPN/VDI ile sınırlandırılmalıdır.");
-        remedialMitigationsEn.push("Transition to Bring-Your-Own-Device (BYOD) model with access-only cloud sandboxes.");
+        primaryRisksTr.push(
+          "Müşterinin bilgisayar ve donanım zorunlu kılması işveren araç tahsisi olarak yorumlanabilir."
+        );
+        primaryRisksEn.push(
+          "Mandatory client-owned hardware strongly suggests traditional employee provisioning."
+        );
+        remedialMitigationsTr.push(
+          "BYOD (kendi bilgisayarını kullanma) esasına geçilmeli, kurumsal ortamlar yalnızca VPN/VDI ile sınırlandırılmalıdır."
+        );
+        remedialMitigationsEn.push(
+          "Transition to Bring-Your-Own-Device (BYOD) model with access-only cloud sandboxes."
+        );
         break;
       case "MIXED_TOOLS":
         equipmentPoints = 7;
-        remedialMitigationsTr.push("Şirket lisansları yalnızca proje erişimiyle sınırlandırılmalı, yazılımcının ana donanımına müdahale edilmemelidir.");
-        remedialMitigationsEn.push("Restrict enterprise licenses strictly to project scope without controlling developer hardware.");
+        remedialMitigationsTr.push(
+          "Şirket lisansları yalnızca proje erişimiyle sınırlandırılmalı, yazılımcının ana donanımına müdahale edilmemelidir."
+        );
+        remedialMitigationsEn.push(
+          "Restrict enterprise licenses strictly to project scope without controlling developer hardware."
+        );
         break;
       case "CONTRACTOR_OWN_TOOLS":
       default:
@@ -144,15 +168,27 @@ export class SafeHarborEngine {
     switch (config.managementHierarchy) {
       case "DIRECT_SUPERVISOR_SUBORDINATION":
         hierarchyPoints = 20;
-        primaryRisksTr.push("Yöneticinin doğrudan görev ataması ve performans değerlendirmesi hiyerarşik emir-talimat bağı kurar.");
-        primaryRisksEn.push("Direct supervisor management and employee-style appraisals create legal subordination.");
-        remedialMitigationsTr.push("İdari amir ilişkisi kaldırılmalı; değerlendirmeler yalnızca BDD/DoD kabul kriterleri üzerinden yapılmalıdır.");
-        remedialMitigationsEn.push("Replace managerial supervision with objective BDD/DoD deliverable sign-offs.");
+        primaryRisksTr.push(
+          "Yöneticinin doğrudan görev ataması ve performans değerlendirmesi hiyerarşik emir-talimat bağı kurar."
+        );
+        primaryRisksEn.push(
+          "Direct supervisor management and employee-style appraisals create legal subordination."
+        );
+        remedialMitigationsTr.push(
+          "İdari amir ilişkisi kaldırılmalı; değerlendirmeler yalnızca BDD/DoD kabul kriterleri üzerinden yapılmalıdır."
+        );
+        remedialMitigationsEn.push(
+          "Replace managerial supervision with objective BDD/DoD deliverable sign-offs."
+        );
         break;
       case "COLLABORATIVE_AGILE":
         hierarchyPoints = 8;
-        remedialMitigationsTr.push("Agile toplantıları iş takibi değil koordinasyon amaçlı tutulmalı, disiplin/sicil yaptırımı uygulanmamalıdır.");
-        remedialMitigationsEn.push("Keep agile rituals collaborative rather than supervisory; avoid disciplinary protocols.");
+        remedialMitigationsTr.push(
+          "Agile toplantıları iş takibi değil koordinasyon amaçlı tutulmalı, disiplin/sicil yaptırımı uygulanmamalıdır."
+        );
+        remedialMitigationsEn.push(
+          "Keep agile rituals collaborative rather than supervisory; avoid disciplinary protocols."
+        );
         break;
       case "AUTONOMOUS_DELIVERABLE":
       default:
@@ -181,15 +217,27 @@ export class SafeHarborEngine {
     switch (config.exclusivityStatus) {
       case "STRICT_EXCLUSIVITY_FULL_TIME":
         exclusivityPoints = 20;
-        primaryRisksTr.push("Yazılımcıya başka müşteri yasağı getirilmesi ekonomik bağımlılık ve tam zamanlı istihdam göstergesidir.");
-        primaryRisksEn.push("Strict full-time exclusivity prevents independent trade and establishes economic dependence.");
-        remedialMitigationsTr.push("Münhasırlık kaldırılmalı, yalnızca doğrudan proje bazlı gizlilik ve dar kapsamlı rekabet yasağı konmalıdır.");
-        remedialMitigationsEn.push("Drop blanket exclusivity; use narrow project confidentiality and conflict clauses instead.");
+        primaryRisksTr.push(
+          "Yazılımcıya başka müşteri yasağı getirilmesi ekonomik bağımlılık ve tam zamanlı istihdam göstergesidir."
+        );
+        primaryRisksEn.push(
+          "Strict full-time exclusivity prevents independent trade and establishes economic dependence."
+        );
+        remedialMitigationsTr.push(
+          "Münhasırlık kaldırılmalı, yalnızca doğrudan proje bazlı gizlilik ve dar kapsamlı rekabet yasağı konmalıdır."
+        );
+        remedialMitigationsEn.push(
+          "Drop blanket exclusivity; use narrow project confidentiality and conflict clauses instead."
+        );
         break;
       case "NON_COMPETE_ONLY":
         exclusivityPoints = 5;
-        remedialMitigationsTr.push("Rekabet yasağının yalnızca birebir aynı ürün/müşteri odağında tutulduğu teyit edilmelidir.");
-        remedialMitigationsEn.push("Ensure non-compete is strictly limited to direct competitive products, not general tech work.");
+        remedialMitigationsTr.push(
+          "Rekabet yasağının yalnızca birebir aynı ürün/müşteri odağında tutulduğu teyit edilmelidir."
+        );
+        remedialMitigationsEn.push(
+          "Ensure non-compete is strictly limited to direct competitive products, not general tech work."
+        );
         break;
       case "OPEN_MARKET_MULTIPLE_CLIENTS":
       default:
@@ -218,15 +266,27 @@ export class SafeHarborEngine {
     switch (config.invoicingEntityStatus) {
       case "INDIVIDUAL_NO_TAX_ID":
         invoicingPoints = 10;
-        primaryRisksTr.push("Vergi mükellefiyeti olmaması SGK müfettişlerinin bordrosuz kaçak işçi şüphesini tetikler.");
-        primaryRisksEn.push("Lack of registered tax registration raises immediate tax audit and unregistered labor flags.");
-        remedialMitigationsTr.push("GVK Mükerrer 20/B istisna belgesi alınmalı veya Gider Pusulası / Stopaj tevkifatı sözleşmeye bağlanmalıdır.");
-        remedialMitigationsEn.push("Obtain GVK 20/B tax exemption or document legal withholding tax receipts.");
+        primaryRisksTr.push(
+          "Vergi mükellefiyeti olmaması SGK müfettişlerinin bordrosuz kaçak işçi şüphesini tetikler."
+        );
+        primaryRisksEn.push(
+          "Lack of registered tax registration raises immediate tax audit and unregistered labor flags."
+        );
+        remedialMitigationsTr.push(
+          "GVK Mükerrer 20/B istisna belgesi alınmalı veya Gider Pusulası / Stopaj tevkifatı sözleşmeye bağlanmalıdır."
+        );
+        remedialMitigationsEn.push(
+          "Obtain GVK 20/B tax exemption or document legal withholding tax receipts."
+        );
         break;
       case "FREELANCE_TAX_EXEMPT_OR_GVK20B":
         invoicingPoints = 4;
-        remedialMitigationsTr.push("Banka dekontları üzerinde istisna kodu ve sözleşme referansı mutlaka belirtilmelidir.");
-        remedialMitigationsEn.push("Ensure bank transfers cite the statutory tax exemption code and contract reference.");
+        remedialMitigationsTr.push(
+          "Banka dekontları üzerinde istisna kodu ve sözleşme referansı mutlaka belirtilmelidir."
+        );
+        remedialMitigationsEn.push(
+          "Ensure bank transfers cite the statutory tax exemption code and contract reference."
+        );
         break;
       case "REGISTERED_COMPANY_INVOICE":
       default:
@@ -255,15 +315,27 @@ export class SafeHarborEngine {
     switch (config.corporateIntegration) {
       case "INTERNAL_EMAIL_AND_TITLE":
         integrationPoints = 10;
-        primaryRisksTr.push("Kurumsal e-posta adresi (@sirket.com) ve iç unvan tahsisi işçi gibi gösterilme riskini artırır.");
-        primaryRisksEn.push("Corporate domain email (@company.com) and organizational title create external appearance of employment.");
-        remedialMitigationsTr.push("Yazılımcıya şirket içi unvan verilmemeli, e-posta yerine harici danışman misafir hesabı atanmalıdır.");
-        remedialMitigationsEn.push("Use external contractor/consultant labels instead of internal corporate titles.");
+        primaryRisksTr.push(
+          "Kurumsal e-posta adresi (@sirket.com) ve iç unvan tahsisi işçi gibi gösterilme riskini artırır."
+        );
+        primaryRisksEn.push(
+          "Corporate domain email (@company.com) and organizational title create external appearance of employment."
+        );
+        remedialMitigationsTr.push(
+          "Yazılımcıya şirket içi unvan verilmemeli, e-posta yerine harici danışman misafir hesabı atanmalıdır."
+        );
+        remedialMitigationsEn.push(
+          "Use external contractor/consultant labels instead of internal corporate titles."
+        );
         break;
       case "GUEST_ACCESS_SLACK_ONLY":
         integrationPoints = 3;
-        remedialMitigationsTr.push("İletişim kanallarında '[Harici Danışman / Yüklenici]' ibaresi profil unvanında korunmalıdır.");
-        remedialMitigationsEn.push("Maintain clear '[External Contractor]' badges across communication channels.");
+        remedialMitigationsTr.push(
+          "İletişim kanallarında '[Harici Danışman / Yüklenici]' ibaresi profil unvanında korunmalıdır."
+        );
+        remedialMitigationsEn.push(
+          "Maintain clear '[External Contractor]' badges across communication channels."
+        );
         break;
       case "EXTERNAL_CONSULTANT_IDENTITY":
       default:
@@ -366,7 +438,8 @@ export class SafeHarborEngine {
         MODERATE_WARNING: "ORTA RİSK / TEDBİR PROTOKOLÜ",
         CRITICAL_HAZARD: "YÜKSEK RİSK BEYANI",
       };
-      const riskLabelTr = SAFE_HARBOR_MARKDOWN_LABELS_TR[evalResult.riskLevel] ?? "YÜKSEK RİSK BEYANI";
+      const riskLabelTr =
+        SAFE_HARBOR_MARKDOWN_LABELS_TR[evalResult.riskLevel] ?? "YÜKSEK RİSK BEYANI";
 
       return `### EK-3: 4857 SAYILI İŞ KANUNU m. 8 UYUMLU BAĞIMSIZ YÜKLENİCİ GÜVENLİ LİMAN (SAFE HARBOR) ŞARTNAMESİ
 *(INDEPENDENT CONTRACTOR STATUTORY COMPLIANCE & SAFE HARBOR ADDENDUM)*

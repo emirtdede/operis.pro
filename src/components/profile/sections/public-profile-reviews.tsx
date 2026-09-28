@@ -1,13 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Star,
-  ShieldCheck,
-  Quote,
-  Sparkles,
-  HeartHandshake,
-} from "lucide-react";
+import { Star, ShieldCheck, Quote, Sparkles, HeartHandshake } from "lucide-react";
 import { AvatarInitials } from "@/src/components/ui/avatar-initials";
 import { EmptyState } from "@/src/components/ui/empty-state";
 import type { PublicProfileDto } from "@/src/modules/profiles/service";
@@ -21,7 +15,9 @@ export interface PublicProfileReviewsProps {
 export function PublicProfileReviews({ profile, locale }: PublicProfileReviewsProps) {
   const isTr = locale === "tr";
   const [reviewsSubTab, setReviewsSubTab] = useState<"received" | "given">("received");
-  const [reviewsRoleFilter, setReviewsRoleFilter] = useState<"ALL" | "EMPLOYER" | "FREELANCER">("ALL");
+  const [reviewsRoleFilter, setReviewsRoleFilter] = useState<"ALL" | "EMPLOYER" | "FREELANCER">(
+    "ALL"
+  );
 
   const endorsements = profile.endorsements || [];
   const reviewsSummary = profile.reviewsSummary;
@@ -41,22 +37,23 @@ export function PublicProfileReviews({ profile, locale }: PublicProfileReviewsPr
                 <div className="flex items-center text-amber-400">
                   {[1, 2, 3, 4, 5].map((s) => {
                     const isFilled = s <= Math.round(reviewsSummary.rawAverageRating);
-                    const starClass = isFilled ? "fill-amber-400 text-amber-400" : "text-[var(--color-border-subtle)]";
-                    return (
-                      <Star
-                        key={s}
-                        className={`h-4 w-4 ${starClass}`}
-                      />
-                    );
+                    const starClass = isFilled
+                      ? "fill-amber-400 text-amber-400"
+                      : "text-[var(--color-border-subtle)]";
+                    return <Star key={s} className={`h-4 w-4 ${starClass}`} />;
                   })}
                 </div>
               </div>
               <span className="text-xs text-[var(--color-text-secondary)]">
-                {reviewsSummary.receivedReviewsCount} {isTr ? "doğrulanmış iş birliği puanı" : "verified ratings"}
+                {reviewsSummary.receivedReviewsCount}{" "}
+                {isTr ? "doğrulanmış iş birliği puanı" : "verified ratings"}
               </span>
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-semibold w-fit mt-1">
                 <ShieldCheck className="h-3.5 w-3.5" />
-                <span>{isTr ? "Doğrulanmış İtibar Puanı:" : "Verified Reputation Score:"} {reviewsSummary.bayesianScore.toFixed(1)}</span>
+                <span>
+                  {isTr ? "Doğrulanmış İtibar Puanı:" : "Verified Reputation Score:"}{" "}
+                  {reviewsSummary.bayesianScore.toFixed(1)}
+                </span>
               </div>
             </div>
 
@@ -67,20 +64,34 @@ export function PublicProfileReviews({ profile, locale }: PublicProfileReviewsPr
               </span>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[var(--color-text-secondary)]">{isTr ? "İletişim & Şeffaflık" : "Communication"}</span>
-                  <span className="font-mono font-bold text-[var(--color-text-primary)]">{reviewsSummary.communicationAvg.toFixed(1)} / 5.0</span>
+                  <span className="text-[var(--color-text-secondary)]">
+                    {isTr ? "İletişim & Şeffaflık" : "Communication"}
+                  </span>
+                  <span className="font-mono font-bold text-[var(--color-text-primary)]">
+                    {reviewsSummary.communicationAvg.toFixed(1)} / 5.0
+                  </span>
                 </div>
                 <div className="h-1.5 rounded-full bg-[var(--color-surface-hover)] overflow-hidden">
-                  <div className="h-full bg-blue-500 rounded-full" style={{ width: `${(reviewsSummary.communicationAvg / 5) * 100}%` }} />
+                  <div
+                    className="h-full bg-blue-500 rounded-full"
+                    style={{ width: `${(reviewsSummary.communicationAvg / 5) * 100}%` }}
+                  />
                 </div>
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[var(--color-text-secondary)]">{isTr ? "İş Kalitesi & Kapsam Uyumu" : "Work Quality"}</span>
-                  <span className="font-mono font-bold text-[var(--color-text-primary)]">{reviewsSummary.qualityAvg.toFixed(1)} / 5.0</span>
+                  <span className="text-[var(--color-text-secondary)]">
+                    {isTr ? "İş Kalitesi & Kapsam Uyumu" : "Work Quality"}
+                  </span>
+                  <span className="font-mono font-bold text-[var(--color-text-primary)]">
+                    {reviewsSummary.qualityAvg.toFixed(1)} / 5.0
+                  </span>
                 </div>
                 <div className="h-1.5 rounded-full bg-[var(--color-surface-hover)] overflow-hidden">
-                  <div className="h-full bg-purple-500 rounded-full" style={{ width: `${(reviewsSummary.qualityAvg / 5) * 100}%` }} />
+                  <div
+                    className="h-full bg-purple-500 rounded-full"
+                    style={{ width: `${(reviewsSummary.qualityAvg / 5) * 100}%` }}
+                  />
                 </div>
               </div>
             </div>
@@ -98,11 +109,18 @@ export function PublicProfileReviews({ profile, locale }: PublicProfileReviewsPr
                 }
                 return (
                   <div key={stars} className="flex items-center gap-2 text-[11px]">
-                    <span className="w-4 font-mono font-medium text-[var(--color-text-tertiary)]">{stars}★</span>
+                    <span className="w-4 font-mono font-medium text-[var(--color-text-tertiary)]">
+                      {stars}★
+                    </span>
                     <div className="flex-1 h-1.5 rounded-full bg-[var(--color-surface-hover)] overflow-hidden">
-                      <div className="h-full bg-amber-400 rounded-full" style={{ width: `${pct}%` }} />
+                      <div
+                        className="h-full bg-amber-400 rounded-full"
+                        style={{ width: `${pct}%` }}
+                      />
                     </div>
-                    <span className="w-5 text-right font-mono text-[var(--color-text-tertiary)]">{count}</span>
+                    <span className="w-5 text-right font-mono text-[var(--color-text-tertiary)]">
+                      {count}
+                    </span>
                   </div>
                 );
               })}
@@ -154,13 +172,10 @@ export function PublicProfileReviews({ profile, locale }: PublicProfileReviewsPr
                         <div className="flex items-center text-amber-400">
                           {[1, 2, 3, 4, 5].map((s) => {
                             const isFilled = s <= item.overallRating;
-                            const starClass = isFilled ? "fill-amber-400 text-amber-400" : "text-[var(--color-border-subtle)]";
-                            return (
-                              <Star
-                                key={s}
-                                className={`h-3.5 w-3.5 ${starClass}`}
-                              />
-                            );
+                            const starClass = isFilled
+                              ? "fill-amber-400 text-amber-400"
+                              : "text-[var(--color-border-subtle)]";
+                            return <Star key={s} className={`h-3.5 w-3.5 ${starClass}`} />;
                           })}
                         </div>
                         <span className="font-mono text-xs font-bold text-[var(--color-text-primary)]">
@@ -183,7 +198,10 @@ export function PublicProfileReviews({ profile, locale }: PublicProfileReviewsPr
                     {item.tags && item.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1 pt-1">
                         {item.tags.map((t) => (
-                          <span key={t} className="text-[10px] px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20 font-medium">
+                          <span
+                            key={t}
+                            className="text-[10px] px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20 font-medium"
+                          >
                             {t}
                           </span>
                         ))}
@@ -195,7 +213,10 @@ export function PublicProfileReviews({ profile, locale }: PublicProfileReviewsPr
                         <Sparkles className="h-3 w-3 text-amber-400" />
                         <span>{isTr ? "Onaylanan:" : "Endorsed:"}</span>
                         {item.endorsedSkills.map((s) => (
-                          <span key={s} className="px-1.5 py-0.2 rounded bg-surface border border-[var(--color-border-subtle)] font-medium text-[var(--color-text-secondary)]">
+                          <span
+                            key={s}
+                            className="px-1.5 py-0.2 rounded bg-surface border border-[var(--color-border-subtle)] font-medium text-[var(--color-text-secondary)]"
+                          >
                             {s}
                           </span>
                         ))}
@@ -243,13 +264,17 @@ export function PublicProfileReviews({ profile, locale }: PublicProfileReviewsPr
                   </span>
                 </div>
                 <div className="relative pl-4 text-xs text-[var(--color-text-primary)] leading-relaxed italic border-l-2 border-amber-500/40 py-0.5">
-                  <Quote className="h-3 w-3 text-amber-400/50 absolute -left-1.5 -top-1" />
-                  "{item.content}"
+                  <Quote className="h-3 w-3 text-amber-400/50 absolute -left-1.5 -top-1" />"
+                  {item.content}"
                 </div>
               </div>
               <div className="border-t border-[var(--color-border-subtle)] pt-3 flex items-center justify-between text-xs">
-                <span className="font-medium text-[var(--color-text-primary)]">{item.authorDisplayName}</span>
-                <span className="text-[10px] text-[var(--color-text-tertiary)]">{item.projectTitle}</span>
+                <span className="font-medium text-[var(--color-text-primary)]">
+                  {item.authorDisplayName}
+                </span>
+                <span className="text-[10px] text-[var(--color-text-tertiary)]">
+                  {item.projectTitle}
+                </span>
               </div>
             </div>
           ))}
@@ -314,9 +339,7 @@ export function PublicProfileReviews({ profile, locale }: PublicProfileReviewsPr
 
       {/* VIEW A: ALDIĞI DEĞERLENDİRMELER */}
       {reviewsSubTab === "received" && (
-        <div className="space-y-4">
-          {renderReceivedReviewsContent()}
-        </div>
+        <div className="space-y-4">{renderReceivedReviewsContent()}</div>
       )}
 
       {/* VIEW B: YAPTIĞI DEĞERLENDİRMELER */}
@@ -334,7 +357,10 @@ export function PublicProfileReviews({ profile, locale }: PublicProfileReviewsPr
               {reviewsSummary && reviewsSummary.givenReviewsCount > 0 && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-blue-500/15 text-blue-300 border border-blue-500/25 text-xs font-bold font-mono w-fit">
                   <Star className="h-3.5 w-3.5 fill-blue-400 text-blue-400" />
-                  <span>{isTr ? "Ortalama Verdiği:" : "Avg Given:"} {reviewsSummary.generosityIndex.toFixed(1)} / 5.0</span>
+                  <span>
+                    {isTr ? "Ortalama Verdiği:" : "Avg Given:"}{" "}
+                    {reviewsSummary.generosityIndex.toFixed(1)} / 5.0
+                  </span>
                 </span>
               )}
             </div>
@@ -364,7 +390,9 @@ export function PublicProfileReviews({ profile, locale }: PublicProfileReviewsPr
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-1 text-blue-400 font-bold text-xs font-mono">
                           <Star className="h-3.5 w-3.5 fill-blue-400" />
-                          <span>{item.overallRating}.0 {isTr ? "Verildi" : "Awarded"}</span>
+                          <span>
+                            {item.overallRating}.0 {isTr ? "Verildi" : "Awarded"}
+                          </span>
                         </div>
                         <span className="text-[10px] text-[var(--color-text-tertiary)]">
                           {formattedDate}
@@ -372,14 +400,17 @@ export function PublicProfileReviews({ profile, locale }: PublicProfileReviewsPr
                       </div>
 
                       <div className="relative pl-4 text-xs text-[var(--color-text-primary)] leading-relaxed italic border-l-2 border-blue-500/40 py-0.5">
-                        <Quote className="h-3 w-3 text-blue-400/50 absolute -left-1.5 -top-1" />
-                        "{item.comment}"
+                        <Quote className="h-3 w-3 text-blue-400/50 absolute -left-1.5 -top-1" />"
+                        {item.comment}"
                       </div>
 
                       {item.tags && item.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1 pt-1">
                           {item.tags.map((t) => (
-                            <span key={t} className="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-300 border border-blue-500/20 font-medium">
+                            <span
+                              key={t}
+                              className="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-300 border border-blue-500/20 font-medium"
+                            >
                               {t}
                             </span>
                           ))}
@@ -410,7 +441,11 @@ export function PublicProfileReviews({ profile, locale }: PublicProfileReviewsPr
             </div>
           ) : (
             <EmptyState
-              title={isTr ? "Henüz başka bir kullanıcı için yapılmış değerlendirme yok" : "No reviews given yet"}
+              title={
+                isTr
+                  ? "Henüz başka bir kullanıcı için yapılmış değerlendirme yok"
+                  : "No reviews given yet"
+              }
               description={
                 isTr
                   ? "Bu kullanıcı henüz tamamlanan bir projede iş ortağı için puan veya yorum kaydetmemiştir."

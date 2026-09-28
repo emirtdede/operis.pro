@@ -99,10 +99,10 @@ export default async function BrowseListingsPage({
     sp.view === "catalog"
       ? "catalog"
       : sp.view === "stream"
-      ? "stream"
-      : savedViewCookie === "catalog"
-      ? "catalog"
-      : "stream";
+        ? "stream"
+        : savedViewCookie === "catalog"
+          ? "catalog"
+          : "stream";
   const listingsPath = isTr ? "/tr/ilanlar" : "/en/listings";
 
   const selectedCategorySlugs = selectedCategory
@@ -124,8 +124,11 @@ export default async function BrowseListingsPage({
         headline: (userProfile as { headline?: string | null })?.headline ?? null,
         avatarUrl: userProfile.avatarUrl ?? null,
         availabilityStatus:
-          (userProfile as { availabilityStatus?: import("@/src/modules/profiles/services/availability.service").AvailabilityStatus })
-            ?.availabilityStatus ?? "AVAILABLE_NOW",
+          (
+            userProfile as {
+              availabilityStatus?: import("@/src/modules/profiles/services/availability.service").AvailabilityStatus;
+            }
+          )?.availabilityStatus ?? "AVAILABLE_NOW",
         isAvailableForHire:
           (userProfile as { isAvailableForHire?: boolean })?.isAvailableForHire ?? true,
         isActivelyHiring:
@@ -144,7 +147,12 @@ export default async function BrowseListingsPage({
 
   const minBudgetNum = sp.minBudget ? Number(sp.minBudget) : undefined;
   const maxBudgetNum = sp.maxBudget ? Number(sp.maxBudget) : undefined;
-  const tagsList = sp.tags ? sp.tags.split(",").map((t) => t.trim()).filter(Boolean) : undefined;
+  const tagsList = sp.tags
+    ? sp.tags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean)
+    : undefined;
 
   const feedResult: FeedResult = await FeedService.getFeedListings({
     mode,
@@ -234,7 +242,8 @@ export default async function BrowseListingsPage({
             {feedResult.items.map((item) => (
               <li key={item.id}>
                 <a href={isTr ? `/tr/ilanlar/${item.slug}` : `/en/listings/${item.slug}`}>
-                  <span>{item.title}</span> — <span>{item.categoryName}</span> — <span>{item.summary}</span>
+                  <span>{item.title}</span> — <span>{item.categoryName}</span> —{" "}
+                  <span>{item.summary}</span>
                 </a>
               </li>
             ))}

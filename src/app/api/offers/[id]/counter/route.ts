@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { OfferService } from "@/src/modules/offers/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -38,17 +39,22 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
     return NextResponse.json({ success: true, ...timeline }, { status: 200 });
   } catch (err: unknown) {
-    let message = isEn ? "Failed to load negotiation timeline" : "Pazarlık geçmişi yüklenemedi";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    let status = 500;
-    if (message.includes("Unauthorized")) {
-      status = 403;
-    } else if (message.includes("not found")) {
-      status = 404;
-    }
-    return NextResponse.json({ error: message }, { status });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to load negotiation timeline",
+        tr: "Pazarlık geçmişi yüklenemedi",
+      },
+      {
+        isEn,
+        logPrefix: "[Offer Counter GET Error]",
+        status: 500,
+        allowedMessages: {
+          Unauthorized: { en: "Unauthorized", tr: "Yetkisiz erişim", status: 403 },
+          "not found": { en: "Offer not found", tr: "Teklif bulunamadı", status: 404 },
+        },
+      }
+    );
   }
 }
 
@@ -93,11 +99,25 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     return NextResponse.json({ success: true, counterProposal }, { status: 201 });
   } catch (err: unknown) {
-    let message = isEn ? "Failed to submit counter-offer" : "Karşı teklif iletilemedi";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    const status = message.includes("Unauthorized") ? 403 : 400;
-    return NextResponse.json({ error: message }, { status });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to submit counter-offer",
+        tr: "Karşı teklif iletilemedi",
+      },
+      {
+        isEn,
+        logPrefix: "[Offer Counter POST Error]",
+        status: 500,
+        allowedMessages: {
+          Unauthorized: { en: "Unauthorized", tr: "Yetkisiz erişim", status: 403 },
+          CONCURRENCY_CONFLICT: {
+            en: "Offer was updated by another party",
+            tr: "Teklif başka bir işlemle güncellendi",
+            status: 409,
+          },
+        },
+      }
+    );
   }
 }

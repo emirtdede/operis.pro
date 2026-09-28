@@ -2,7 +2,18 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { History, ArrowRightLeft, Search, X, ListFilter, ChevronDown, ArrowUpDown, Inbox, Eye, Users } from "lucide-react";
+import {
+  History,
+  ArrowRightLeft,
+  Search,
+  X,
+  ListFilter,
+  ChevronDown,
+  ArrowUpDown,
+  Inbox,
+  Eye,
+  Users,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { OfferRevisionsModal } from "../offers/offer-revisions-modal";
@@ -97,7 +108,9 @@ export function ReceivedOffersDashboard({ initialOffers, locale }: ReceivedOffer
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<ReceivedOfferSortOption>("newest");
   const [selectedOfferForRevisions, setSelectedOfferForRevisions] = useState<string | null>(null);
-  const [selectedOfferForNegotiation, setSelectedOfferForNegotiation] = useState<string | null>(null);
+  const [selectedOfferForNegotiation, setSelectedOfferForNegotiation] = useState<string | null>(
+    null
+  );
 
   // Accept Modal State
   const [acceptingOffer, setAcceptingOffer] = useState<ReceivedOfferItem | null>(null);
@@ -275,7 +288,12 @@ export function ReceivedOffersDashboard({ initialOffers, locale }: ReceivedOffer
               : `No proposals match "${searchQuery.trim()}". Try searching with different keywords or reset your filters.`
           }
           action={
-            <Button variant="secondary" size="sm" onClick={() => setSearchQuery("")} className="cursor-pointer">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setSearchQuery("")}
+              className="cursor-pointer"
+            >
               {isTr ? "Aramayı Temizle" : "Clear Search"}
             </Button>
           }
@@ -317,7 +335,12 @@ export function ReceivedOffersDashboard({ initialOffers, locale }: ReceivedOffer
             : "No incoming proposals match this filter criteria."
         }
         action={
-          <Button variant="secondary" size="sm" onClick={() => setFilter("all")} className="cursor-pointer">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => setFilter("all")}
+            className="cursor-pointer"
+          >
             {isTr ? "Tüm Teklifleri Göster" : "Show All Offers"}
           </Button>
         }
@@ -355,37 +378,66 @@ export function ReceivedOffersDashboard({ initialOffers, locale }: ReceivedOffer
         <div className="flex flex-wrap items-center gap-2.5 shrink-0">
           {/* Single Status Filter Dropdown Button */}
           <div className="relative inline-flex items-center">
-            <ListFilter className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ListFilter
+              className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
               aria-label={isTr ? "Durum Filtresi" : "Status Filter"}
               className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
             >
-              {(["all", "pending", "accepted", "rejected", "cancelled", "withdrawn"] as const).map((f) => (
-                <option key={f} value={f} className="bg-[#141517] text-[var(--color-text-primary)]">
-                  {getReceivedFilterLabel(f, isTr)} ({filterCounts[f]})
-                </option>
-              ))}
+              {(["all", "pending", "accepted", "rejected", "cancelled", "withdrawn"] as const).map(
+                (f) => (
+                  <option
+                    key={f}
+                    value={f}
+                    className="bg-[#141517] text-[var(--color-text-primary)]"
+                  >
+                    {getReceivedFilterLabel(f, isTr)} ({filterCounts[f]})
+                  </option>
+                )
+              )}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ChevronDown
+              className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
           </div>
 
           {/* Single Sort Dropdown Button */}
           <div className="relative inline-flex items-center">
-            <ArrowUpDown className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ArrowUpDown
+              className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as ReceivedOfferSortOption)}
               aria-label={isTr ? "Sıralama ölçütü" : "Sort by"}
               className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
             >
-              <option value="newest" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yeni" : "Newest"}</option>
-              <option value="budget_desc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yüksek Bütçe" : "Highest Budget"}</option>
-              <option value="budget_asc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Düşük Bütçe" : "Lowest Budget"}</option>
-              <option value="duration_asc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Kısa Süre" : "Shortest Timeline"}</option>
+              <option value="newest" className="bg-[#141517] text-[var(--color-text-primary)]">
+                {isTr ? "En Yeni" : "Newest"}
+              </option>
+              <option value="budget_desc" className="bg-[#141517] text-[var(--color-text-primary)]">
+                {isTr ? "En Yüksek Bütçe" : "Highest Budget"}
+              </option>
+              <option value="budget_asc" className="bg-[#141517] text-[var(--color-text-primary)]">
+                {isTr ? "En Düşük Bütçe" : "Lowest Budget"}
+              </option>
+              <option
+                value="duration_asc"
+                className="bg-[#141517] text-[var(--color-text-primary)]"
+              >
+                {isTr ? "En Kısa Süre" : "Shortest Timeline"}
+              </option>
             </select>
-            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ChevronDown
+              className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
           </div>
         </div>
       </div>
@@ -514,7 +566,10 @@ export function ReceivedOffersDashboard({ initialOffers, locale }: ReceivedOffer
                   <div className="space-y-3 rounded-xl border border-indigo-500/25 bg-indigo-950/20 p-4">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <span className="text-xs font-semibold text-indigo-300 flex items-center gap-1.5">
-                        <Users className="h-3.5 w-3.5 text-indigo-400 shrink-0" aria-hidden="true" />
+                        <Users
+                          className="h-3.5 w-3.5 text-indigo-400 shrink-0"
+                          aria-hidden="true"
+                        />
                         <span>
                           {isTr
                             ? "Çevik Konsorsiyum Ekip Yapısı & Hakediş Dağılımı"
@@ -585,7 +640,11 @@ export function ReceivedOffersDashboard({ initialOffers, locale }: ReceivedOffer
                       size="sm"
                       onClick={() => setSelectedOfferForNegotiation(offer.id)}
                       title={isTr ? "Karşı Teklif & Pazarlık" : "Counter-Offer & Negotiation"}
-                      className={offer.isCountered ? "border-blue-500/50 text-blue-400 hover:bg-blue-500/10" : ""}
+                      className={
+                        offer.isCountered
+                          ? "border-blue-500/50 text-blue-400 hover:bg-blue-500/10"
+                          : ""
+                      }
                     >
                       <ArrowRightLeft className="h-3.5 w-3.5 mr-1" />
                       {getNegotiationButtonLabel(offer.isCountered, offer.counterRound, isTr)}

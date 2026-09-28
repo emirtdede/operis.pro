@@ -11,17 +11,14 @@
  */
 
 export type HiringIntentLevel =
-  | "PROVEN_HIGH_INTENT"       // 85-100: Established verified client with proven track record
-  | "VERIFIED_NEW_CLIENT"     // 80-100 (Cold Start): Brand new client with verified VKN and market budget
-  | "ACTIVE_HIRING_LIKELY"    // 70-84: Solid real job with good clarity and budget
-  | "MODERATE_INTENT"         // 50-69: Missing details or vague budget, proceed with clarity
-  | "PRICE_CHECK_RISK";       // 0-49: Suspicious ghost job, severe lowball or serial abandoner
+  | "PROVEN_HIGH_INTENT" // 85-100: Established verified client with proven track record
+  | "VERIFIED_NEW_CLIENT" // 80-100 (Cold Start): Brand new client with verified VKN and market budget
+  | "ACTIVE_HIRING_LIKELY" // 70-84: Solid real job with good clarity and budget
+  | "MODERATE_INTENT" // 50-69: Missing details or vague budget, proceed with clarity
+  | "PRICE_CHECK_RISK"; // 0-49: Suspicious ghost job, severe lowball or serial abandoner
 
 export type PillarType =
-  | "CORPORATE_VERIFICATION"
-  | "BUDGET_BENCHMARK"
-  | "SCOPE_CLARITY"
-  | "HISTORICAL_RELIABILITY";
+  "CORPORATE_VERIFICATION" | "BUDGET_BENCHMARK" | "SCOPE_CLARITY" | "HISTORICAL_RELIABILITY";
 
 export type PillarStatus = "EXCELLENT" | "GOOD" | "FAIR" | "WARNING";
 

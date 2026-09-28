@@ -340,7 +340,9 @@ export class EngagementLifecycleService {
                     message: isEn
                       ? `Another proposal was selected for "${listingTitle}", and your proposal has been concluded.`
                       : `"${listingTitle}" ilanında başka bir teklif kabul edildiğinden teklifiniz sonuçlandırıldı.`,
-                    actionUrl: isEn ? "/en/dashboard/offers/sent" : "/tr/panel/teklifler/gonderilen",
+                    actionUrl: isEn
+                      ? "/en/dashboard/offers/sent"
+                      : "/tr/panel/teklifler/gonderilen",
                   }
                 );
               })

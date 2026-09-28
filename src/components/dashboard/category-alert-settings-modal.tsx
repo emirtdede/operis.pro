@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { X, Bell, BellOff, DollarSign, Check, Loader2, Zap } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 import { CategoryDto } from "@/src/modules/categories/service";
 
 export interface CategoryAlertSettingsModalProps {
@@ -67,13 +68,11 @@ export function CategoryAlertSettingsModal({
   };
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="alert-settings-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-fade-in"
-    >
-      <div className="relative w-full max-w-md bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] rounded-2xl shadow-2xl p-6 sm:p-7 space-y-6">
+    <ModalOverlay isOpen={isOpen} onClose={onClose} ariaLabelledBy="alert-settings-title">
+      <div
+        className="relative w-full max-w-md bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] rounded-2xl shadow-2xl p-6 sm:p-7 space-y-6"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-start justify-between border-b border-[var(--color-border-subtle)] pb-4">
           <div className="space-y-1">
@@ -81,7 +80,10 @@ export function CategoryAlertSettingsModal({
               <Bell className="h-3 w-3" aria-hidden="true" />
               <span>{category.name}</span>
             </div>
-            <h2 id="alert-settings-title" className="text-lg font-bold text-[var(--color-text-primary)]">
+            <h2
+              id="alert-settings-title"
+              className="text-lg font-bold text-[var(--color-text-primary)]"
+            >
               {isTr ? "Canlı İlan Alarmı Ayarları" : "Job Alert Preferences"}
             </h2>
           </div>
@@ -155,7 +157,9 @@ export function CategoryAlertSettingsModal({
                   }`}
                 >
                   <span>{isTr ? preset.labelTr : preset.labelEn}</span>
-                  {isSelected && <Check className="h-3.5 w-3.5 text-blue-400 shrink-0" aria-hidden="true" />}
+                  {isSelected && (
+                    <Check className="h-3.5 w-3.5 text-blue-400 shrink-0" aria-hidden="true" />
+                  )}
                 </button>
               );
             })}
@@ -174,13 +178,7 @@ export function CategoryAlertSettingsModal({
 
         {/* Action Buttons */}
         <div className="flex items-center justify-end gap-3 pt-2 border-t border-[var(--color-border-subtle)]">
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            disabled={saving}
-          >
+          <Button type="button" variant="ghost" size="sm" onClick={onClose} disabled={saving}>
             {isTr ? "İptal" : "Cancel"}
           </Button>
           <Button
@@ -202,6 +200,6 @@ export function CategoryAlertSettingsModal({
           </Button>
         </div>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

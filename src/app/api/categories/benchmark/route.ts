@@ -42,7 +42,12 @@ export async function GET(req: Request) {
       ...benchmark,
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to load market benchmark";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("Category benchmark error:", err);
+    return NextResponse.json(
+      {
+        error: isEn ? "Failed to load market benchmark" : "Piyasa karşılaştırma verisi yüklenemedi",
+      },
+      { status: 500 }
+    );
   }
 }

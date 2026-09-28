@@ -20,7 +20,9 @@ export function PlatformManifestoSection({ isTr = true }: PlatformManifestoSecti
     },
     {
       icon: Percent,
-      title: isTr ? "%0 Komisyon: Emekten Kesinti Yapılamaz" : "Zero Commission: Labor is Not Taxed",
+      title: isTr
+        ? "%0 Komisyon: Emekten Kesinti Yapılamaz"
+        : "Zero Commission: Labor is Not Taxed",
       desc: isTr
         ? "Yazılım mühendislerinin emeğinden veya işverenin yatırım bütçesinden komisyon almayı etik bulmuyoruz. Anlaşılan bütçenin %100'ü doğrudan projeyi üreten uzmanın cebinde kalır."
         : "Taking a percentage cut from an engineer's livelihood is contrary to our core philosophy. 100% of the agreed project value remains with the person doing the work.",
@@ -29,7 +31,9 @@ export function PlatformManifestoSection({ isTr = true }: PlatformManifestoSecti
     },
     {
       icon: ShieldCheck,
-      title: isTr ? "Emanetsiz Özgürlük: Paranız Rehin Tutulmaz" : "No Fund Custody: Zero Arbitrary Holds",
+      title: isTr
+        ? "Emanetsiz Özgürlük: Paranız Rehin Tutulmaz"
+        : "No Fund Custody: Zero Arbitrary Holds",
       desc: isTr
         ? "Operis paranızı günlerce emanette (escrow) bloke eden bir finans kurumu değildir. İşveren ve geliştirici ödeme yöntemini (Banka havalesi, fatura, kripto) ve takvimini aracı olmadan kendi belirler."
         : "Operis does not hold your payments hostage for weeks. Both parties negotiate and settle directly using their preferred payment methods, invoices, and milestones.",
@@ -38,7 +42,9 @@ export function PlatformManifestoSection({ isTr = true }: PlatformManifestoSecti
     },
     {
       icon: Lock,
-      title: isTr ? "Kriptografik Gizlilik: Fiyat Kırma Savaşı Yok" : "Encrypted Privacy: No Race to the Bottom",
+      title: isTr
+        ? "Kriptografik Gizlilik: Fiyat Kırma Savaşı Yok"
+        : "Encrypted Privacy: No Race to the Bottom",
       desc: isTr
         ? "Herkese açık teklif modellerinde rakipler birbirinin fiyatını görerek kaliteyi öldüren bir fiyat savaşına girer. Operis'te teklifler AES-256 ile mühürlenir; yalnızca ilan sahibi tarafından incelenebilir."
         : "Public bidding creates an adversarial race-to-the-bottom that destroys engineering quality. AES-256-GCM encryption shields every proposal exclusively for the client's eyes.",
@@ -47,7 +53,9 @@ export function PlatformManifestoSection({ isTr = true }: PlatformManifestoSecti
     },
     {
       icon: Clock,
-      title: isTr ? "Sıfır Hayalet İlan: 168 Saatlik Canlılık" : "Zero Ghost Jobs: 168-Hour Maximum Lifetime",
+      title: isTr
+        ? "Sıfır Hayalet İlan: 168 Saatlik Canlılık"
+        : "Zero Ghost Jobs: 168-Hour Maximum Lifetime",
       desc: isTr
         ? "Aylarca veya yıllarca unutulmuş, işvereni kaybolmuş ölü ilan kalabalığı sistemimizde barınamaz. 7 gün içinde güncellenmeyen her ilan otomatik olarak pasife alınır."
         : "Dead, stale listings are systematically pruned. Every project card automatically expires after 168 hours unless actively renewed by the listing creator.",
@@ -62,7 +70,9 @@ export function PlatformManifestoSection({ isTr = true }: PlatformManifestoSecti
       <div className="text-center space-y-4 max-w-3xl mx-auto mb-10">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20">
           <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>{isTr ? "ŞEFFAFLIK VE BAĞIMSIZLIK PROTOKOLÜ" : "TRANSPARENCY & ETHICAL COMMITMENT"}</span>
+          <span>
+            {isTr ? "ŞEFFAFLIK VE BAĞIMSIZLIK PROTOKOLÜ" : "TRANSPARENCY & ETHICAL COMMITMENT"}
+          </span>
         </div>
 
         <h2 className="text-2xl sm:text-4xl font-extrabold text-[var(--color-text-primary)] tracking-tight">
@@ -95,13 +105,8 @@ export function PlatformManifestoSection({ isTr = true }: PlatformManifestoSecti
         {manifestoPillars.map((item, idx) => {
           const Icon = item.icon;
           return (
-            <div
-              key={idx}
-              className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] flex"
-            >
-              <SpotlightCard
-                className="w-full p-6 sm:p-7 flex flex-col justify-between rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-xl transition-all duration-300 hover:border-blue-500/40 hover:-translate-y-1"
-              >
+            <div key={idx} className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] flex">
+              <SpotlightCard className="w-full p-6 sm:p-7 flex flex-col justify-between rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-xl transition-all duration-300 hover:border-blue-500/40 hover:-translate-y-1">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className={`p-2.5 rounded-2xl border ${item.accent}`}>
@@ -123,9 +128,14 @@ export function PlatformManifestoSection({ isTr = true }: PlatformManifestoSecti
                 </div>
 
                 <div className="pt-4 mt-4 border-t border-[var(--color-border-subtle)]/60 flex items-center gap-2 text-[11px] text-[var(--color-text-tertiary)]">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" aria-hidden="true" />
+                  <CheckCircle2
+                    className="h-3.5 w-3.5 text-emerald-400 shrink-0"
+                    aria-hidden="true"
+                  />
                   <span>
-                    {isTr ? "Platform mimarisinde aktif olarak denetlenmektedir" : "Actively enforced in core platform architecture"}
+                    {isTr
+                      ? "Platform mimarisinde aktif olarak denetlenmektedir"
+                      : "Actively enforced in core platform architecture"}
                   </span>
                 </div>
               </SpotlightCard>

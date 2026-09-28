@@ -3,10 +3,7 @@ import { and, eq, ne } from "drizzle-orm";
 import { getDb } from "@/src/lib/db";
 import * as schema from "@/db/schema";
 import { ContractRecommendationEngine } from "./recommendation-engine";
-import {
-  ContractGeneratorService,
-  validateAndSanitizeRasterSignature,
-} from "./generator";
+import { ContractGeneratorService, validateAndSanitizeRasterSignature } from "./generator";
 import {
   uploadEphemeralSignature,
   deleteEphemeralSignatures,
@@ -76,7 +73,10 @@ export class ContractSigningService {
     recommendations: ReturnType<typeof ContractRecommendationEngine.evaluateRecommendations>;
   }> {
     // 1. Fetch engagement details
-    const engagementData = await EngagementService.getEngagementDetails(currentUserId, engagementId);
+    const engagementData = await EngagementService.getEngagementDetails(
+      currentUserId,
+      engagementId
+    );
     if (!engagementData || !engagementData.engagement) {
       throw new Error("Engagement not found or unauthorized access.");
     }
@@ -85,9 +85,11 @@ export class ContractSigningService {
 
     // 2. Evaluate Smart Contract Recommendations
     const rawBudgetMin = acceptedOffer?.budgetMin ?? listing?.budgetMin;
-    const recBudgetMin = rawBudgetMin !== null && rawBudgetMin !== undefined ? Number(rawBudgetMin) : undefined;
+    const recBudgetMin =
+      rawBudgetMin !== null && rawBudgetMin !== undefined ? Number(rawBudgetMin) : undefined;
     const rawBudgetMax = acceptedOffer?.budgetMax ?? listing?.budgetMax;
-    const recBudgetMax = rawBudgetMax !== null && rawBudgetMax !== undefined ? Number(rawBudgetMax) : undefined;
+    const recBudgetMax =
+      rawBudgetMax !== null && rawBudgetMax !== undefined ? Number(rawBudgetMax) : undefined;
     const recCurrency = acceptedOffer?.budgetCurrency || listing?.budgetCurrency || "TRY";
 
     const recInput = {
@@ -290,18 +292,28 @@ export class ContractSigningService {
         throw err;
       }
       if (process.env.NODE_ENV === "test") {
-        const existing = (inMemoryPackages.get(engagementId) || pkg.packageDetails) as unknown as RawPackageRecord;
+        const existing = (inMemoryPackages.get(engagementId) ||
+          pkg.packageDetails) as unknown as RawPackageRecord;
         if (existing.version !== currentVersion) {
-          throw new Error("CONCURRENCY_CONFLICT: Sözleşme paketi başka bir işlem tarafından güncellendi.", { cause: err });
+          throw new Error(
+            "CONCURRENCY_CONFLICT: Sözleşme paketi başka bir işlem tarafından güncellendi.",
+            { cause: err }
+          );
         }
         if (existing.status === "FULLY_SIGNED") {
-          throw new Error("Cannot modify contract selection after full bilateral signature execution.", { cause: err });
+          throw new Error(
+            "Cannot modify contract selection after full bilateral signature execution.",
+            { cause: err }
+          );
         }
         Object.assign(existing, updatePayload);
         inMemoryPackages.set(engagementId, existing);
         updatedRow = existing;
       } else {
-        throw new Error(`Sözleşme kapsamı güncellenemedi: ${(err as Error)?.message || "DB_ERROR"}`, { cause: err });
+        throw new Error(
+          `Sözleşme kapsamı güncellenemedi: ${(err as Error)?.message || "DB_ERROR"}`,
+          { cause: err }
+        );
       }
     }
 
@@ -326,7 +338,9 @@ export class ContractSigningService {
         type: "CONTRACT_SELECTION_UPDATED",
         engagementId,
         packageId: updatedRow.id,
-        status: (updatedRow.status as "PENDING_SIGNATURES" | "PARTIALLY_SIGNED" | "FULLY_SIGNED") || "PENDING_SIGNATURES",
+        status:
+          (updatedRow.status as "PENDING_SIGNATURES" | "PARTIALLY_SIGNED" | "FULLY_SIGNED") ||
+          "PENDING_SIGNATURES",
         version: nextVersion,
         selectedContracts: validatedContracts,
         timestamp: new Date().toISOString(),
@@ -360,7 +374,10 @@ export class ContractSigningService {
     const cleanSignatureDataUrl = rasterValidation.sanitizedDataUrl;
 
     // 1. Fetch engagement details
-    const engagementData = await EngagementService.getEngagementDetails(input.userId, input.engagementId);
+    const engagementData = await EngagementService.getEngagementDetails(
+      input.userId,
+      input.engagementId
+    );
     if (!engagementData || !engagementData.engagement) {
       throw new Error("Engagement not found or unauthorized signer.");
     }
@@ -524,18 +541,27 @@ export class ContractSigningService {
         throw err;
       }
       if (process.env.NODE_ENV === "test") {
-        const existing = (inMemoryPackages.get(input.engagementId) || packageDetails) as unknown as RawPackageRecord;
+        const existing = (inMemoryPackages.get(input.engagementId) ||
+          packageDetails) as unknown as RawPackageRecord;
         if (existing.version !== currentVersion) {
-          throw new Error("CONCURRENCY_CONFLICT: Sözleşme paketi başka bir işlem tarafından güncellendi.", { cause: err });
+          throw new Error(
+            "CONCURRENCY_CONFLICT: Sözleşme paketi başka bir işlem tarafından güncellendi.",
+            { cause: err }
+          );
         }
         if (existing.status === "FULLY_SIGNED") {
-          throw new Error("Sözleşme paketi zaten tam olarak imzalanmış. Yeniden imzalanamaz.", { cause: err });
+          throw new Error("Sözleşme paketi zaten tam olarak imzalanmış. Yeniden imzalanamaz.", {
+            cause: err,
+          });
         }
         Object.assign(existing, updatePayload);
         inMemoryPackages.set(input.engagementId, existing);
         updatedPkg = existing;
       } else {
-        throw new Error(`İmza veritabanına kaydedilemedi: ${(err as Error)?.message || "DB_ERROR"}`, { cause: err });
+        throw new Error(
+          `İmza veritabanına kaydedilemedi: ${(err as Error)?.message || "DB_ERROR"}`,
+          { cause: err }
+        );
       }
     }
 
@@ -554,7 +580,8 @@ export class ContractSigningService {
       const contractorName = updatedPkg.freelancerSignerName || "Yüklenici";
 
       const rawBudgetAmt = acceptedOffer?.budgetMin ?? listing?.budgetMin;
-      const budgetAmt = rawBudgetAmt !== null && rawBudgetAmt !== undefined ? Number(rawBudgetAmt) : null;
+      const budgetAmt =
+        rawBudgetAmt !== null && rawBudgetAmt !== undefined ? Number(rawBudgetAmt) : null;
       const budgetCurr = acceptedOffer?.budgetCurrency || listing?.budgetCurrency || "TRY";
       const budgetLabel = budgetAmt ? `${budgetAmt.toLocaleString("tr-TR")} ${budgetCurr}` : null;
 
@@ -565,7 +592,8 @@ export class ContractSigningService {
 
       let contractorEmail = counterpartyContact?.email || "—";
       if (!isClient) {
-        contractorEmail = input.userId === DEFAULT_USER.id ? DEFAULT_USER.email : "contractor@operis.local";
+        contractorEmail =
+          input.userId === DEFAULT_USER.id ? DEFAULT_USER.email : "contractor@operis.local";
       }
 
       const compiledResult = ContractGeneratorService.generateContract({
@@ -573,7 +601,8 @@ export class ContractSigningService {
         listingTitle: listing?.title || engagement.listingTitleSnapshot,
         category: engagement.listingCategorySnapshot,
         matchedAt: engagement.matchedAt || now,
-        scopeSummary: acceptedOffer?.message || listing?.summary || listing?.scope || "Teknik Kapsam",
+        scopeSummary:
+          acceptedOffer?.message || listing?.summary || listing?.scope || "Teknik Kapsam",
         budgetLabel,
         client: {
           displayName: clientName,
@@ -588,13 +617,17 @@ export class ContractSigningService {
         selectedContracts,
         clientSignature: {
           signerName: clientName,
-          signedAt: updatedPkg.clientSignedAt ? new Date(updatedPkg.clientSignedAt).toISOString() : now.toISOString(),
+          signedAt: updatedPkg.clientSignedAt
+            ? new Date(updatedPkg.clientSignedAt).toISOString()
+            : now.toISOString(),
           ipHash: updatedPkg.clientIpHash || "",
           signatureDataUrl: updatedPkg.clientSignatureDataUrl || undefined,
         },
         contractorSignature: {
           signerName: contractorName,
-          signedAt: updatedPkg.freelancerSignedAt ? new Date(updatedPkg.freelancerSignedAt).toISOString() : now.toISOString(),
+          signedAt: updatedPkg.freelancerSignedAt
+            ? new Date(updatedPkg.freelancerSignedAt).toISOString()
+            : now.toISOString(),
           ipHash: updatedPkg.freelancerIpHash || "",
           signatureDataUrl: updatedPkg.freelancerSignatureDataUrl || undefined,
         },
@@ -682,7 +715,9 @@ export class ContractSigningService {
       // Dispatch in-app notifications to both parties
       const clientUserId = engagement.ownerUserId;
       const freelancerUserId = engagement.freelancerUserId;
-      const recipientUserIds = Array.from(new Set([clientUserId, freelancerUserId].filter(Boolean) as string[]));
+      const recipientUserIds = Array.from(
+        new Set([clientUserId, freelancerUserId].filter(Boolean) as string[])
+      );
 
       for (const uid of recipientUserIds) {
         NotificationService.createNotification(
@@ -826,7 +861,9 @@ export class ContractSigningService {
       compiledHtml: row.compiledHtml || null,
       sha256Seal: row.sha256Seal || null,
       signedAt: row.signedAt ? new Date(row.signedAt).toISOString() : null,
-      ephemeralCleanedAt: row.ephemeralCleanedAt ? new Date(row.ephemeralCleanedAt).toISOString() : null,
+      ephemeralCleanedAt: row.ephemeralCleanedAt
+        ? new Date(row.ephemeralCleanedAt).toISOString()
+        : null,
       createdAt: row.createdAt ? new Date(row.createdAt).toISOString() : new Date().toISOString(),
       updatedAt: row.updatedAt ? new Date(row.updatedAt).toISOString() : new Date().toISOString(),
     };

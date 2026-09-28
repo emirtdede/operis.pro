@@ -2,11 +2,7 @@
 
 import { useState } from "react";
 import { CheckCircle2, AlertCircle } from "lucide-react";
-import {
-  SecuritySettingsViewProps,
-  SecurityFeedback,
-  getFeedbackAlertClasses,
-} from "./types";
+import { SecuritySettingsViewProps, SecurityFeedback, getFeedbackAlertClasses } from "./types";
 import { PasswordChangeSection } from "./sections/password-change-section";
 import { TwoFactorAuthSection } from "./sections/two-factor-auth-section";
 import { ActiveSessionsSection } from "./sections/active-sessions-section";
@@ -52,11 +48,7 @@ export function SecuritySettingsView({ locale, twoFactorEnabled }: SecuritySetti
       <DataExportSection locale={locale} onFeedback={setFeedback} />
 
       {/* Section 5: Danger Zone - Account Deletion */}
-      <DangerZoneSection
-        locale={locale}
-        is2FAEnabled={twoFactorEnabled}
-        onFeedback={setFeedback}
-      />
+      <DangerZoneSection locale={locale} is2FAEnabled={twoFactorEnabled} onFeedback={setFeedback} />
     </div>
   );
 }

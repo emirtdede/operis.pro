@@ -77,7 +77,11 @@ describe("Search and Filtering Algorithms (Turkish-Aware Token Matcher)", () => 
     const dummyItems: DummyItem[] = [
       { id: "1", title: "Python Backend API", tags: ["fastapi", "docker"] },
       { id: "2", title: "React Native Mobil Uygulama", tags: ["mobile", "react"] },
-      { id: "3", title: "Full Stack React & Node.js Platform", tags: ["react", "node", "typescript"] },
+      {
+        id: "3",
+        title: "Full Stack React & Node.js Platform",
+        tags: ["react", "node", "typescript"],
+      },
     ];
 
     it("filters and sorts items so highest relevance comes first", () => {
@@ -120,12 +124,7 @@ describe("Search and Filtering Algorithms (Turkish-Aware Token Matcher)", () => 
 
     it("handles reverse range selection (bottom to top)", () => {
       const initialSelection = new Set(["item-4"]);
-      const nextSelection = computeRangeSelection(
-        items,
-        "item-4",
-        "item-1",
-        initialSelection
-      );
+      const nextSelection = computeRangeSelection(items, "item-4", "item-1", initialSelection);
 
       expect(nextSelection.has("item-1")).toBe(true);
       expect(nextSelection.has("item-2")).toBe(true);

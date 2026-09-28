@@ -176,7 +176,9 @@ export function InflationCalculatorCard({
           <div>
             <div className="flex items-center gap-2">
               <h3 className="font-bold text-sm sm:text-base text-[var(--color-text-primary)]">
-                {isTr ? "TBK 138 & 32 Sayılı Karar Enflasyon Kalkanı" : "Statutory Inflation Hedging Shield"}
+                {isTr
+                  ? "TBK 138 & 32 Sayılı Karar Enflasyon Kalkanı"
+                  : "Statutory Inflation Hedging Shield"}
               </h3>
               <span className="rounded-full bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
                 {isTr ? "Resmi TÜİK Endeksli" : "TurkStat Indexed"}
@@ -302,7 +304,9 @@ export function InflationCalculatorCard({
                     placeholder="20"
                     className="font-mono text-xs pr-6"
                   />
-                  <span className="absolute right-2 top-2 text-xs text-[var(--color-text-tertiary)]">%</span>
+                  <span className="absolute right-2 top-2 text-xs text-[var(--color-text-tertiary)]">
+                    %
+                  </span>
                 </div>
               ) : (
                 <div className="py-2 px-3 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] text-xs text-[var(--color-text-tertiary)] italic">
@@ -332,10 +336,14 @@ export function InflationCalculatorCard({
                     <Scale className="h-3.5 w-3.5 text-amber-400 shrink-0" aria-hidden="true" />
                     {isTr ? "Karma Endeks (Tavsiye)" : "Hybrid (Recommended)"}
                   </span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 font-mono">%50-%50</span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 font-mono">
+                    %50-%50
+                  </span>
                 </div>
                 <p className="text-[10px] opacity-80 mt-1">
-                  {isTr ? "TÜFE (Geçim) + Yİ-ÜFE (Sunucu/Altyapı) dengesi." : "Balanced mix of CPI and PPI."}
+                  {isTr
+                    ? "TÜFE (Geçim) + Yİ-ÜFE (Sunucu/Altyapı) dengesi."
+                    : "Balanced mix of CPI and PPI."}
                 </p>
               </button>
 
@@ -349,11 +357,16 @@ export function InflationCalculatorCard({
                 }`}
               >
                 <div className="font-bold text-xs flex items-center gap-1.5">
-                  <ShoppingCart className="h-3.5 w-3.5 text-amber-400 shrink-0" aria-hidden="true" />
+                  <ShoppingCart
+                    className="h-3.5 w-3.5 text-amber-400 shrink-0"
+                    aria-hidden="true"
+                  />
                   {isTr ? "TÜİK TÜFE (Tüketici)" : "TurkStat CPI"}
                 </div>
                 <p className="text-[10px] opacity-80 mt-1">
-                  {isTr ? "Yazılımcının bireysel yaşam ve emek maliyeti." : "Consumer living and labor expenses."}
+                  {isTr
+                    ? "Yazılımcının bireysel yaşam ve emek maliyeti."
+                    : "Consumer living and labor expenses."}
                 </p>
               </button>
 
@@ -371,7 +384,9 @@ export function InflationCalculatorCard({
                   {isTr ? "TÜİK Yİ-ÜFE (Üretici)" : "TurkStat PPI"}
                 </div>
                 <p className="text-[10px] opacity-80 mt-1">
-                  {isTr ? "Donanım, enerji ve kurumsal girdi maliyetleri." : "Hardware, energy and operational inputs."}
+                  {isTr
+                    ? "Donanım, enerji ve kurumsal girdi maliyetleri."
+                    : "Hardware, energy and operational inputs."}
                 </p>
               </button>
             </div>
@@ -383,7 +398,9 @@ export function InflationCalculatorCard({
               <Info className="h-4 w-4 text-blue-400 shrink-0" />
               <div>
                 <span className="font-semibold text-[var(--color-text-primary)]">
-                  {isTr ? "TBK m. 117 Temerrüt Kuralı (Kusurlu Gecikme)" : "TBK Art. 117 Moratorium Default Rule"}
+                  {isTr
+                    ? "TBK m. 117 Temerrüt Kuralı (Kusurlu Gecikme)"
+                    : "TBK Art. 117 Moratorium Default Rule"}
                 </span>
                 <p className="text-[10px] text-[var(--color-text-secondary)]">
                   {isTr
@@ -401,7 +418,9 @@ export function InflationCalculatorCard({
                   : "bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
               }`}
             >
-              {isContractorDelayed && <Snowflake className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />}
+              {isContractorDelayed && (
+                <Snowflake className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+              )}
               <span>{getFreezeToggleButtonLabel(isContractorDelayed, isTr)}</span>
             </button>
           </div>
@@ -417,7 +436,9 @@ export function InflationCalculatorCard({
                 {result.capApplied && (
                   <span className="rounded bg-amber-500/20 border border-amber-500/40 px-2 py-0.5 text-[10px] font-bold text-amber-300 flex items-center gap-1">
                     <Shield className="h-3 w-3" aria-hidden="true" />
-                    <span>{isTr ? `Tavan (%${numericCap}) Uygulandı` : `Capped at %${numericCap}`}</span>
+                    <span>
+                      {isTr ? `Tavan (%${numericCap}) Uygulandı` : `Capped at %${numericCap}`}
+                    </span>
                   </span>
                 )}
                 {result.floorApplied && (
@@ -439,7 +460,8 @@ export function InflationCalculatorCard({
                   {isTr ? "Başlangıç Hakediş Bedeli" : "Baseline Contract Fee"}
                 </span>
                 <div className="font-mono text-sm font-bold text-[var(--color-text-secondary)]">
-                  {result.baseAmount.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} {currency}
+                  {result.baseAmount.toLocaleString("tr-TR", { minimumFractionDigits: 2 })}{" "}
+                  {currency}
                 </div>
               </div>
 
@@ -448,7 +470,11 @@ export function InflationCalculatorCard({
                   {isTr ? "Enflasyon / Endeks Farkı" : "Inflation Escalation Delta"}
                 </span>
                 <div className="font-mono text-sm font-bold text-amber-400">
-                  +{result.inflationDeltaAmount.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} {currency}
+                  +
+                  {result.inflationDeltaAmount.toLocaleString("tr-TR", {
+                    minimumFractionDigits: 2,
+                  })}{" "}
+                  {currency}
                 </div>
               </div>
 
@@ -457,7 +483,8 @@ export function InflationCalculatorCard({
                   {isTr ? "Güncellenmiş Yeni Brüt Bedel" : "Adjusted New Gross Fee"}
                 </span>
                 <div className="font-mono text-base font-extrabold text-emerald-400">
-                  {result.adjustedGrossAmount.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} {currency}
+                  {result.adjustedGrossAmount.toLocaleString("tr-TR", { minimumFractionDigits: 2 })}{" "}
+                  {currency}
                 </div>
               </div>
             </div>
@@ -469,7 +496,11 @@ export function InflationCalculatorCard({
                   {isTr ? "Stopaj Tevkifatı (%20)" : "Withholding Tax (20%)"}
                 </span>
                 <span className="font-mono font-bold text-rose-400 text-[11px]">
-                  -{result.taxBreakdown.withholdingAmount.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} ₺
+                  -
+                  {result.taxBreakdown.withholdingAmount.toLocaleString("tr-TR", {
+                    minimumFractionDigits: 2,
+                  })}{" "}
+                  ₺
                 </span>
               </div>
 
@@ -478,7 +509,10 @@ export function InflationCalculatorCard({
                   {isTr ? "Net Ele Geçen (Brüt-Stopaj)" : "Net Freelancer Take-Home"}
                 </span>
                 <span className="font-mono font-bold text-emerald-400 text-[11px]">
-                  {result.taxBreakdown.netTakeHome.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} ₺
+                  {result.taxBreakdown.netTakeHome.toLocaleString("tr-TR", {
+                    minimumFractionDigits: 2,
+                  })}{" "}
+                  ₺
                 </span>
               </div>
 
@@ -487,7 +521,11 @@ export function InflationCalculatorCard({
                   {isTr ? "KDV (%20) Emanet" : "VAT (20%)"}
                 </span>
                 <span className="font-mono font-bold text-blue-400 text-[11px]">
-                  +{result.taxBreakdown.vatTotalAmount.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} ₺
+                  +
+                  {result.taxBreakdown.vatTotalAmount.toLocaleString("tr-TR", {
+                    minimumFractionDigits: 2,
+                  })}{" "}
+                  ₺
                 </span>
               </div>
 
@@ -496,7 +534,10 @@ export function InflationCalculatorCard({
                   {isTr ? "Banka Havalesi (Net+KDV)" : "Bank Transfer Amount"}
                 </span>
                 <span className="font-mono font-bold text-[var(--color-text-primary)] text-[11px]">
-                  {result.taxBreakdown.totalCashToFreelancer.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} ₺
+                  {result.taxBreakdown.totalCashToFreelancer.toLocaleString("tr-TR", {
+                    minimumFractionDigits: 2,
+                  })}{" "}
+                  ₺
                 </span>
               </div>
             </div>
@@ -525,7 +566,10 @@ export function InflationCalculatorCard({
               </thead>
               <tbody className="divide-y divide-[var(--color-border-subtle)] font-mono">
                 {scenarios.map((sc) => (
-                  <tr key={sc.scenarioLabel} className="hover:bg-[var(--color-surface-hover)] transition-colors">
+                  <tr
+                    key={sc.scenarioLabel}
+                    className="hover:bg-[var(--color-surface-hover)] transition-colors"
+                  >
                     <td className="py-2.5 px-3 font-sans font-semibold text-[var(--color-text-primary)]">
                       {sc.scenarioLabel}
                     </td>
@@ -533,7 +577,8 @@ export function InflationCalculatorCard({
                       +{sc.projectedRatePercent}%
                     </td>
                     <td className="py-2.5 px-3 font-bold text-emerald-400">
-                      {sc.adjustedGrossAmount.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} ₺
+                      {sc.adjustedGrossAmount.toLocaleString("tr-TR", { minimumFractionDigits: 2 })}{" "}
+                      ₺
                     </td>
                     <td className="py-2.5 px-3 text-amber-400">
                       +{sc.deltaAmount.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} ₺
@@ -556,7 +601,11 @@ export function InflationCalculatorCard({
       <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[var(--color-border-subtle)] text-xs">
         <div className="flex items-center gap-2 text-[10px] text-[var(--color-text-tertiary)]">
           <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />
-          <span>{isTr ? "TBK 138 & 32 Sayılı Karar Koruması Aktif" : "TBK 138 & Decree 32 Protection Active"}</span>
+          <span>
+            {isTr
+              ? "TBK 138 & 32 Sayılı Karar Koruması Aktif"
+              : "TBK 138 & Decree 32 Protection Active"}
+          </span>
         </div>
 
         <div className="flex items-center gap-2">

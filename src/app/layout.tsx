@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import type { Metadata } from "next";
 import "@/src/styles/tokens.css";
 import { LivingBackground } from "@/src/components/ui/living-background";
@@ -6,7 +7,8 @@ import { ThemeScript } from "@/src/components/layout/theme-provider";
 
 export const metadata: Metadata = {
   title: "Operis — Komisyonsuz Freelance Yazılım Platformu",
-  description: "Aracısız ve %0 komisyonlu serbest çalışma ağı. Yazılım ve teknoloji profesyonelleriyle doğrudan iletişim kurun, güvenle iş birliği yapın.",
+  description:
+    "Aracısız ve %0 komisyonlu serbest çalışma ağı. Yazılım ve teknoloji profesyonelleriyle doğrudan iletişim kurun, güvenle iş birliği yapın.",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -16,14 +18,13 @@ export const metadata: Metadata = {
       { url: "/favicon.svg", type: "image/svg+xml" },
     ],
     shortcut: "/favicon.ico",
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
   manifest: "/manifest.webmanifest",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  await connection();
   return (
     <html
       lang="tr"

@@ -9,10 +9,7 @@ import {
 import { AccessTransferChecklist, HandoverParty } from "@/src/modules/contracts/types";
 import { DEFAULT_USER } from "@/src/modules/auth/demo-user";
 import { EngagementService } from "./service";
-import {
-  DeliveryInspectorService,
-  type DeliveryHealthReport,
-} from "./delivery-inspector";
+import { DeliveryInspectorService, type DeliveryHealthReport } from "./delivery-inspector";
 
 export interface SubmitHandoverInput {
   engagementId: string;
@@ -124,7 +121,9 @@ export class HandoverService {
    */
   private static async getHandoverParties(
     viewerUserId: string,
-    engagementDetails: NonNullable<Awaited<ReturnType<typeof EngagementService.getEngagementDetails>>>
+    engagementDetails: NonNullable<
+      Awaited<ReturnType<typeof EngagementService.getEngagementDetails>>
+    >
   ): Promise<{
     client: HandoverParty;
     contractor: HandoverParty;
@@ -259,7 +258,8 @@ export class HandoverService {
         protocol: null,
         isOwner,
         isFreelancer,
-        canSubmit: isFreelancer && engagement.status !== "COMPLETED" && engagement.status !== "CANCELLED",
+        canSubmit:
+          isFreelancer && engagement.status !== "COMPLETED" && engagement.status !== "CANCELLED",
         canAccept: false,
         canRequestRevision: false,
         inspectionRemainingMs: 0,
@@ -344,17 +344,13 @@ export class HandoverService {
       isFreelancer &&
       (engagement.id === "eng-demo-101" ||
         handover.status === "REVISION_REQUESTED" ||
-        (engagement.status !== "COMPLETED" && engagement.status !== "CANCELLED" && handover.status === "SUBMITTED"));
+        (engagement.status !== "COMPLETED" &&
+          engagement.status !== "CANCELLED" &&
+          handover.status === "SUBMITTED"));
 
-    const canAccept =
-      isOwner &&
-      handover.status === "SUBMITTED" &&
-      !isInspectionExpired;
+    const canAccept = isOwner && handover.status === "SUBMITTED" && !isInspectionExpired;
 
-    const canRequestRevision =
-      isOwner &&
-      handover.status === "SUBMITTED" &&
-      !isInspectionExpired;
+    const canRequestRevision = isOwner && handover.status === "SUBMITTED" && !isInspectionExpired;
 
     return {
       handover,
@@ -377,15 +373,26 @@ export class HandoverService {
     freelancerUserId: string,
     input: SubmitHandoverInput
   ): Promise<HandoverRecord> {
-    const { engagementId, repositoryUrl, commitHash, liveUrl, documentationNotes, accessChecklist } = input;
+    const {
+      engagementId,
+      repositoryUrl,
+      commitHash,
+      liveUrl,
+      documentationNotes,
+      accessChecklist,
+    } = input;
 
     // Validation
     if (!repositoryUrl || !/^https?:\/\/.+/i.test(repositoryUrl.trim())) {
-      throw new Error("VALIDATION_ERROR: Geçerli bir Git repo URL'si (http:// veya https://) girilmelidir.");
+      throw new Error(
+        "VALIDATION_ERROR: Geçerli bir Git repo URL'si (http:// veya https://) girilmelidir."
+      );
     }
 
     if (!documentationNotes || documentationNotes.trim().length < 10) {
-      throw new Error("VALIDATION_ERROR: En az 10 karakter uzunluğunda teknik devir ve kurulum notu girilmelidir.");
+      throw new Error(
+        "VALIDATION_ERROR: En az 10 karakter uzunluğunda teknik devir ve kurulum notu girilmelidir."
+      );
     }
 
     const details = await EngagementService.getEngagementDetails(freelancerUserId, engagementId);
@@ -398,8 +405,13 @@ export class HandoverService {
       throw new Error("UNAUTHORIZED: Yalnızca projeyi üstlenen uzman teslimat yapabilir.");
     }
 
-    if (engagement.id !== "eng-demo-101" && (engagement.status === "COMPLETED" || engagement.status === "CANCELLED")) {
-      throw new Error("INVALID_STATE: Tamamlanmış veya iptal edilmiş çalışma alanında teslimat yapılamaz.");
+    if (
+      engagement.id !== "eng-demo-101" &&
+      (engagement.status === "COMPLETED" || engagement.status === "CANCELLED")
+    ) {
+      throw new Error(
+        "INVALID_STATE: Tamamlanmış veya iptal edilmiş çalışma alanında teslimat yapılamaz."
+      );
     }
 
     // 1. Execute automated Proof-of-Work (PoW) Delivery Health Inspection
@@ -410,7 +422,11 @@ export class HandoverService {
     });
 
     // If liveUrl was provided and is actively blocked by SSRF firewall, reject immediately
-    if (liveUrl && deliveryHealth.liveDeployment.checked && !deliveryHealth.liveDeployment.isAccessible) {
+    if (
+      liveUrl &&
+      deliveryHealth.liveDeployment.checked &&
+      !deliveryHealth.liveDeployment.isAccessible
+    ) {
       if (
         deliveryHealth.liveDeployment.error?.includes("SSRF Koruması") ||
         deliveryHealth.liveDeployment.error?.includes("engellendi")
@@ -535,7 +551,9 @@ export class HandoverService {
 
     const { engagement } = details;
     if (engagement.ownerUserId !== ownerUserId) {
-      throw new Error("UNAUTHORIZED: Yalnızca işveren teslimatı kabul edip tutanağı imzalayabilir.");
+      throw new Error(
+        "UNAUTHORIZED: Yalnızca işveren teslimatı kabul edip tutanağı imzalayabilir."
+      );
     }
 
     const isMock =
@@ -560,7 +578,10 @@ export class HandoverService {
       throw new Error("NOT_FOUND: Onaylanacak bir teslimat kaydı bulunamadı.");
     }
 
-    if (existingHandover.status === "ACCEPTED_EXPRESS" || existingHandover.status === "ACCEPTED_TACIT") {
+    if (
+      existingHandover.status === "ACCEPTED_EXPRESS" ||
+      existingHandover.status === "ACCEPTED_TACIT"
+    ) {
       return existingHandover;
     }
 
@@ -650,7 +671,9 @@ export class HandoverService {
     const { engagementId, revisionNotes } = input;
 
     if (!revisionNotes || revisionNotes.trim().length < 10) {
-      throw new Error("VALIDATION_ERROR: En az 10 karakter uzunluğunda revizyon / ayıp gerekçesi belirtilmelidir.");
+      throw new Error(
+        "VALIDATION_ERROR: En az 10 karakter uzunluğunda revizyon / ayıp gerekçesi belirtilmelidir."
+      );
     }
 
     const details = await EngagementService.getEngagementDetails(ownerUserId, engagementId);
@@ -699,7 +722,10 @@ export class HandoverService {
       const failed = Object.entries(input.criterionEvaluations).filter(([_, v]) => !v.passed);
       if (failed.length > 0) {
         const criteriaSection = failed
-          .map(([id, val]) => `- [Kusur / Reddedilen Şart: ${id}]: ${val.failureReason || "Kriter sağlanamadı."}`)
+          .map(
+            ([id, val]) =>
+              `- [Kusur / Reddedilen Şart: ${id}]: ${val.failureReason || "Kriter sağlanamadı."}`
+          )
           .join("\n");
         if (!compiledRevisionNotes.includes("Kusur / Reddedilen Şart")) {
           compiledRevisionNotes = `${compiledRevisionNotes}\n\n[OBJEKTİF KABUL KRİTERLERİ KUSUR LİSTESİ (TBK m. 474)]:\n${criteriaSection}`;

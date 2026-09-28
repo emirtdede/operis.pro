@@ -17,6 +17,7 @@ export function ForgotPasswordForm({ locale }: ForgotPasswordFormProps) {
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileAttempt, setTurnstileAttempt] = useState(0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +48,8 @@ export function ForgotPasswordForm({ locale }: ForgotPasswordFormProps) {
         : "Could not send reset instructions.";
       setError(err instanceof Error ? err.message : fallbackMsg);
     } finally {
+      setTurnstileToken(null);
+      setTurnstileAttempt((attempt) => attempt + 1);
       setIsLoading(false);
     }
   };
@@ -91,8 +94,10 @@ export function ForgotPasswordForm({ locale }: ForgotPasswordFormProps) {
 
       {/* Cloudflare Turnstile Bot Defense */}
       <TurnstileWidget
+        key={turnstileAttempt}
         onVerify={(token) => setTurnstileToken(token)}
         onExpire={() => setTurnstileToken(null)}
+        onError={() => setTurnstileToken(null)}
       />
 
       <Button
@@ -101,6 +106,7 @@ export function ForgotPasswordForm({ locale }: ForgotPasswordFormProps) {
         size="lg"
         className="w-full text-sm font-semibold mt-2"
         isLoading={isLoading}
+        disabled={Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) && !turnstileToken}
       >
         {isTr ? "Sıfırlama Bağlantısı Gönder" : "Send Reset Link"}
       </Button>

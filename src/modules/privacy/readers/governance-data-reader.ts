@@ -361,10 +361,7 @@ export async function* readLegalAcceptancesData(
       })
       .from(schema.legalAcceptances)
       .where(whereClause)
-      .orderBy(
-        desc(schema.legalAcceptances.acceptedAt),
-        desc(schema.legalAcceptances.documentKey)
-      )
+      .orderBy(desc(schema.legalAcceptances.acceptedAt), desc(schema.legalAcceptances.documentKey))
       .limit(PAGE_SIZE);
 
     if (legalPage.length === 0) return;

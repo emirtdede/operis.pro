@@ -22,10 +22,7 @@ import { VerifiedCompanyBadge } from "@/src/components/ui/verified-company-badge
 import { ListingDetailActions } from "@/src/components/listings/listing-detail-actions";
 import { HiringIntentBadge } from "@/src/components/listings/hiring-intent-badge";
 import { HiringIntentService } from "@/src/modules/listings/hiring-intent/hiring-intent-service";
-import {
-  getLocalizedListingPath,
-  getLocalizedProfilePath,
-} from "@/src/lib/i18n/routes";
+import { getLocalizedListingPath, getLocalizedProfilePath } from "@/src/lib/i18n/routes";
 import { JsonLd } from "@/src/components/seo/json-ld";
 import { formatBudgetRange } from "@/src/lib/format/budget";
 import { getBaseUrl, constructCanonicalUrl } from "@/src/lib/config/url";
@@ -205,7 +202,12 @@ export default async function ListingDetailPage({
   if (listing.budgetMode === "NEGOTIABLE" && !listing.budgetMin && !listing.budgetMax) {
     budgetLabel = isTr ? "Görüşülebilir" : "Negotiable";
   } else {
-    budgetLabel = formatBudgetRange(listing.budgetMin, listing.budgetMax, listing.budgetCurrency, isTr);
+    budgetLabel = formatBudgetRange(
+      listing.budgetMin,
+      listing.budgetMax,
+      listing.budgetCurrency,
+      isTr
+    );
   }
 
   // Format timeline
@@ -385,7 +387,10 @@ export default async function ListingDetailPage({
         {/* Left Sticky Sidebar (Col 4 on lg) - PANELS MOVED TO LEFT */}
         <aside className="lg:col-span-4 space-y-5 lg:sticky lg:top-20 order-2 lg:order-1">
           {/* Card 1: Key Metrics & Action Card */}
-          <div id="listing-action-card" className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 p-5 sm:p-6 backdrop-blur-xl shadow-xl space-y-5">
+          <div
+            id="listing-action-card"
+            className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 p-5 sm:p-6 backdrop-blur-xl shadow-xl space-y-5"
+          >
             <div className="space-y-3 border-b border-[var(--color-border-subtle)] pb-4">
               <div className="space-y-1">
                 <span className="text-[11px] text-[var(--color-text-tertiary)] uppercase font-semibold tracking-wider block">
@@ -507,12 +512,16 @@ export default async function ListingDetailPage({
                 <div className="space-y-1">
                   <div className="flex justify-between text-[11px] text-[var(--color-text-secondary)]">
                     <span>{isTr ? "Kurumsal & VKN Doğrulama" : "Corporate Tax Verification"}</span>
-                    <span className="font-mono font-bold">{hiringIntent.pillars.CORPORATE_VERIFICATION.score}/30</span>
+                    <span className="font-mono font-bold">
+                      {hiringIntent.pillars.CORPORATE_VERIFICATION.score}/30
+                    </span>
                   </div>
                   <div className="h-1.5 w-full rounded-full bg-[var(--color-surface-hover)] overflow-hidden">
                     <div
                       className="h-full bg-emerald-500 rounded-full"
-                      style={{ width: `${(hiringIntent.pillars.CORPORATE_VERIFICATION.score / 30) * 100}%` }}
+                      style={{
+                        width: `${(hiringIntent.pillars.CORPORATE_VERIFICATION.score / 30) * 100}%`,
+                      }}
                     />
                   </div>
                 </div>
@@ -520,12 +529,16 @@ export default async function ListingDetailPage({
                 <div className="space-y-1">
                   <div className="flex justify-between text-[11px] text-[var(--color-text-secondary)]">
                     <span>{isTr ? "Piyasa Benchmark Uyumu" : "Market Benchmark Alignment"}</span>
-                    <span className="font-mono font-bold">{hiringIntent.pillars.BUDGET_BENCHMARK.score}/25</span>
+                    <span className="font-mono font-bold">
+                      {hiringIntent.pillars.BUDGET_BENCHMARK.score}/25
+                    </span>
                   </div>
                   <div className="h-1.5 w-full rounded-full bg-[var(--color-surface-hover)] overflow-hidden">
                     <div
                       className="h-full bg-sky-500 rounded-full"
-                      style={{ width: `${(hiringIntent.pillars.BUDGET_BENCHMARK.score / 25) * 100}%` }}
+                      style={{
+                        width: `${(hiringIntent.pillars.BUDGET_BENCHMARK.score / 25) * 100}%`,
+                      }}
                     />
                   </div>
                 </div>
@@ -533,7 +546,9 @@ export default async function ListingDetailPage({
                 <div className="space-y-1">
                   <div className="flex justify-between text-[11px] text-[var(--color-text-secondary)]">
                     <span>{isTr ? "Teknik Kapsam & Şartname" : "Scope & Specification"}</span>
-                    <span className="font-mono font-bold">{hiringIntent.pillars.SCOPE_CLARITY.score}/25</span>
+                    <span className="font-mono font-bold">
+                      {hiringIntent.pillars.SCOPE_CLARITY.score}/25
+                    </span>
                   </div>
                   <div className="h-1.5 w-full rounded-full bg-[var(--color-surface-hover)] overflow-hidden">
                     <div
@@ -546,12 +561,16 @@ export default async function ListingDetailPage({
                 <div className="space-y-1">
                   <div className="flex justify-between text-[11px] text-[var(--color-text-secondary)]">
                     <span>{isTr ? "İşe Alım Güvenilirliği" : "Hiring Reliability"}</span>
-                    <span className="font-mono font-bold">{hiringIntent.pillars.HISTORICAL_RELIABILITY.score}/20</span>
+                    <span className="font-mono font-bold">
+                      {hiringIntent.pillars.HISTORICAL_RELIABILITY.score}/20
+                    </span>
                   </div>
                   <div className="h-1.5 w-full rounded-full bg-[var(--color-surface-hover)] overflow-hidden">
                     <div
                       className="h-full bg-cyan-500 rounded-full"
-                      style={{ width: `${(hiringIntent.pillars.HISTORICAL_RELIABILITY.score / 20) * 100}%` }}
+                      style={{
+                        width: `${(hiringIntent.pillars.HISTORICAL_RELIABILITY.score / 20) * 100}%`,
+                      }}
                     />
                   </div>
                 </div>
@@ -564,7 +583,9 @@ export default async function ListingDetailPage({
                   <strong className="text-blue-400 block mb-0.5">
                     {isTr ? "Uzman Tavsiyesi:" : "Specialist Tip:"}
                   </strong>
-                  <span>{isTr ? hiringIntent.freelancerGuidanceTr : hiringIntent.freelancerGuidanceEn}</span>
+                  <span>
+                    {isTr ? hiringIntent.freelancerGuidanceTr : hiringIntent.freelancerGuidanceEn}
+                  </span>
                 </div>
               </div>
             </div>
@@ -673,7 +694,9 @@ export default async function ListingDetailPage({
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-[var(--color-text-secondary)]">
                 <div className="p-3.5 rounded-2xl bg-[var(--color-surface-hover)]/40 border border-[var(--color-border-subtle)]/70 space-y-1.5">
                   <div className="flex items-center gap-2 font-bold text-[var(--color-text-primary)]">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/15 text-blue-400 text-[10px] font-bold">1</span>
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/15 text-blue-400 text-[10px] font-bold">
+                      1
+                    </span>
                     <span>{isTr ? "Birebir Gizlilik" : "Confidentiality"}</span>
                   </div>
                   <p className="leading-relaxed">
@@ -685,7 +708,9 @@ export default async function ListingDetailPage({
 
                 <div className="p-3.5 rounded-2xl bg-[var(--color-surface-hover)]/40 border border-[var(--color-border-subtle)]/70 space-y-1.5">
                   <div className="flex items-center gap-2 font-bold text-[var(--color-text-primary)]">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-cyan-500/15 text-cyan-400 text-[10px] font-bold">2</span>
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-cyan-500/15 text-cyan-400 text-[10px] font-bold">
+                      2
+                    </span>
                     <span>{isTr ? "Net Zaman & Bütçe" : "Milestones"}</span>
                   </div>
                   <p className="leading-relaxed">
@@ -697,7 +722,9 @@ export default async function ListingDetailPage({
 
                 <div className="p-3.5 rounded-2xl bg-[var(--color-surface-hover)]/40 border border-[var(--color-border-subtle)]/70 space-y-1.5">
                   <div className="flex items-center gap-2 font-bold text-[var(--color-text-primary)]">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold">3</span>
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold">
+                      3
+                    </span>
                     <span>{isTr ? "%0 Komisyon" : "0% Fee"}</span>
                   </div>
                   <p className="leading-relaxed">
@@ -763,7 +790,9 @@ export default async function ListingDetailPage({
                   {item.summary}
                 </p>
                 <div className="flex items-center justify-between text-[11px] pt-1 border-t border-[var(--color-border-subtle)]/60 text-[var(--color-text-tertiary)]">
-                  <span className="truncate max-w-[140px]">{item.categoryName || categoryDisplayName}</span>
+                  <span className="truncate max-w-[140px]">
+                    {item.categoryName || categoryDisplayName}
+                  </span>
                   <span className="font-mono text-emerald-400 font-semibold">
                     {formatBudgetRange(item.budgetMin, item.budgetMax, item.budgetCurrency, isTr)}
                   </span>

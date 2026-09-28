@@ -220,9 +220,7 @@ export function ContractProtocolBanners({
           <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-2.5 space-y-0.5">
             <div className="flex items-center justify-between font-bold text-blue-400 text-xs">
               <span>{isTr ? "2. Aşama" : "Phase 2"}</span>
-              <span className="px-1 py-0.5 rounded bg-blue-500/20 font-mono text-[10px]">
-                %40
-              </span>
+              <span className="px-1 py-0.5 rounded bg-blue-500/20 font-mono text-[10px]">%40</span>
             </div>
             <div className="font-semibold text-[var(--color-text-primary)] text-[11px]">
               {isTr ? "Fonksiyonel Demo & Test" : "Functional Demo & Test"}

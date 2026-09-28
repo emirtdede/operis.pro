@@ -43,7 +43,11 @@ export async function POST(req: Request) {
 
     if (!file || !(file instanceof File)) {
       return NextResponse.json(
-        { error: isEn ? "Please select a valid image file." : "Lütfen geçerli bir görsel dosyası seçin." },
+        {
+          error: isEn
+            ? "Please select a valid image file."
+            : "Lütfen geçerli bir görsel dosyası seçin.",
+        },
         { status: 400 }
       );
     }
@@ -52,9 +56,7 @@ export async function POST(req: Request) {
     if (file.size > 5 * 1024 * 1024) {
       return NextResponse.json(
         {
-          error: isEn
-            ? "File size exceeds the 5MB limit."
-            : "Dosya boyutu 5 MB sınırını aşıyor.",
+          error: isEn ? "File size exceeds the 5MB limit." : "Dosya boyutu 5 MB sınırını aşıyor.",
         },
         { status: 400 }
       );
@@ -108,13 +110,14 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (err: unknown) {
-    console.error("Avatar upload API error:", err);
-    let message = isEn
-      ? "Failed to process and upload profile image."
-      : "Profil fotoğrafı işlenirken ve yüklenirken hata oluştu.";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[Avatar Upload Error] Unexpected internal error:", err);
+    return NextResponse.json(
+      {
+        error: isEn
+          ? "Failed to process and upload profile image."
+          : "Profil fotoğrafı işlenirken ve yüklenirken bir hata oluştu.",
+      },
+      { status: 500 }
+    );
   }
 }

@@ -15,9 +15,7 @@ describe("TBK 138 & 32 Sayılı Karar Inflation & FX Hedging Engine", () => {
 
       expect(tufe202401).toBe(TUIK_INDEX_DATABASE["2024-01"]!.tufe);
       expect(yiUfe202401).toBe(TUIK_INDEX_DATABASE["2024-01"]!.yiUfe);
-      expect(hybrid202401).toBe(
-        Math.round(((tufe202401 + yiUfe202401) / 2) * 100) / 100
-      );
+      expect(hybrid202401).toBe(Math.round(((tufe202401 + yiUfe202401) / 2) * 100) / 100);
     });
 
     it("smoothly extrapolates future index values beyond 2026 without crashing", () => {

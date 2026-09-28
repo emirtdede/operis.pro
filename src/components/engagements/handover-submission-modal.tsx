@@ -14,6 +14,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { Button } from "../ui/button";
+import { ModalOverlay } from "../ui/modal-overlay";
 import { AccessTransferChecklist } from "@/src/modules/contracts/types";
 import type { DeliveryHealthReport } from "@/src/modules/engagements/delivery-inspector";
 
@@ -157,7 +158,9 @@ export function HandoverSubmissionModal({
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || (isTr ? "Teslimat gönderilemedi." : "Failed to submit handover."));
+        throw new Error(
+          data.error || (isTr ? "Teslimat gönderilemedi." : "Failed to submit handover.")
+        );
       }
 
       onSuccess();
@@ -171,8 +174,19 @@ export function HandoverSubmissionModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl max-h-[90vh] flex flex-col rounded-3xl border border-cyan-500/30 bg-[var(--color-surface-base)] shadow-2xl overflow-hidden">
+    <ModalOverlay
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabel={
+        isTr
+          ? "Resmi İş Teslimatını Başlat (TBK m. 474)"
+          : "Submit Official Handover (TBK Art. 474)"
+      }
+    >
+      <div
+        className="relative w-full max-w-2xl max-h-[90vh] flex flex-col rounded-3xl border border-cyan-500/30 bg-[var(--color-surface-base)] shadow-2xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-[var(--color-border-subtle)] bg-cyan-950/20 shrink-0">
           <div className="flex items-center gap-3">
@@ -181,7 +195,9 @@ export function HandoverSubmissionModal({
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-[var(--color-text-primary)]">
-                {isTr ? "Resmi İş Teslimatını Başlat (TBK m. 474)" : "Submit Official Handover (TBK Art. 474)"}
+                {isTr
+                  ? "Resmi İş Teslimatını Başlat (TBK m. 474)"
+                  : "Submit Official Handover (TBK Art. 474)"}
               </h2>
               <p className="text-xs text-[var(--color-text-secondary)] truncate max-w-md">
                 {listingTitle}
@@ -198,21 +214,33 @@ export function HandoverSubmissionModal({
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-y-auto p-6 space-y-5">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col flex-1 overflow-y-auto p-6 space-y-5"
+        >
           {/* Statutory Legal Notice Box */}
           <div className="rounded-2xl border border-cyan-500/30 bg-cyan-500/5 p-4 flex gap-3 text-xs text-[var(--color-text-secondary)] leading-relaxed">
             <ShieldAlert className="h-5 w-5 text-cyan-400 shrink-0 mt-0.5" />
             <div>
               <span className="font-bold text-cyan-300 block mb-1">
-                {isTr ? "Yasal Zırh & 7 İş Günü Muayene Süresi:" : "Statutory 7-Business-Day Inspection Notice:"}
+                {isTr
+                  ? "Yasal Zırh & 7 İş Günü Muayene Süresi:"
+                  : "Statutory 7-Business-Day Inspection Notice:"}
               </span>
               {isTr ? (
                 <>
-                  Teslimatı gönderdiğiniz an sistem üzerinde SHA-256 dijital teslimat mührü oluşturulur ve Türk Borçlar Kanunu (TBK m. 474) uyarınca İşveren için <strong>7 iş günü yasal muayene ve ayıp bildirim süresi</strong> başlar. Süre bitiminde itiraz edilmediği takdirde eser kanunen zımnen kabul edilmiş sayılır (TBK m. 477).
+                  Teslimatı gönderdiğiniz an sistem üzerinde SHA-256 dijital teslimat mührü
+                  oluşturulur ve Türk Borçlar Kanunu (TBK m. 474) uyarınca İşveren için{" "}
+                  <strong>7 iş günü yasal muayene ve ayıp bildirim süresi</strong> başlar. Süre
+                  bitiminde itiraz edilmediği takdirde eser kanunen zımnen kabul edilmiş sayılır
+                  (TBK m. 477).
                 </>
               ) : (
                 <>
-                  Upon submission, a SHA-256 digital proof seal is generated and a <strong>7-business-day statutory inspection window</strong> (TBK Art. 474) begins for the client. If no dispute is lodged within this period, the work is legally deemed accepted by statute (TBK Art. 477).
+                  Upon submission, a SHA-256 digital proof seal is generated and a{" "}
+                  <strong>7-business-day statutory inspection window</strong> (TBK Art. 474) begins
+                  for the client. If no dispute is lodged within this period, the work is legally
+                  deemed accepted by statute (TBK Art. 477).
                 </>
               )}
             </div>
@@ -229,7 +257,9 @@ export function HandoverSubmissionModal({
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
               <GitBranch className="h-3.5 w-3.5 text-cyan-400" />
-              <span>{isTr ? "Kaynak Kod Deposu (Git Repository URL) *" : "Git Repository URL *"}</span>
+              <span>
+                {isTr ? "Kaynak Kod Deposu (Git Repository URL) *" : "Git Repository URL *"}
+              </span>
             </label>
             <input
               type="url"
@@ -278,7 +308,9 @@ export function HandoverSubmissionModal({
               <div className="flex items-center gap-2">
                 <Activity className="h-4 w-4 text-cyan-400" />
                 <span className="text-xs font-bold text-[var(--color-text-primary)]">
-                  {isTr ? "Proof-of-Work (PoW) Canlılık Denetçisi" : "Proof-of-Work (PoW) Health Inspector"}
+                  {isTr
+                    ? "Proof-of-Work (PoW) Canlılık Denetçisi"
+                    : "Proof-of-Work (PoW) Health Inspector"}
                 </span>
               </div>
               <button
@@ -298,7 +330,8 @@ export function HandoverSubmissionModal({
                 {healthReport.liveDeployment.checked ? (
                   <div className="flex items-center justify-between p-2.5 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)]">
                     <div className="flex items-center gap-2">
-                      {healthReport.liveDeployment.isAccessible && healthReport.liveDeployment.httpStatus === 200 ? (
+                      {healthReport.liveDeployment.isAccessible &&
+                      healthReport.liveDeployment.httpStatus === 200 ? (
                         <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
                       ) : (
                         <AlertCircle className="h-4 w-4 text-rose-400 shrink-0" />
@@ -316,7 +349,8 @@ export function HandoverSubmissionModal({
                       {healthReport.liveDeployment.httpStatus && (
                         <span
                           className={`px-2 py-0.5 rounded-md font-mono text-[11px] font-bold ${
-                            healthReport.liveDeployment.httpStatus >= 200 && healthReport.liveDeployment.httpStatus < 300
+                            healthReport.liveDeployment.httpStatus >= 200 &&
+                            healthReport.liveDeployment.httpStatus < 300
                               ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
                               : "bg-rose-500/10 text-rose-400 border border-rose-500/30"
                           }`}
@@ -338,7 +372,9 @@ export function HandoverSubmissionModal({
                   </div>
                 ) : (
                   <div className="text-[11px] text-[var(--color-text-tertiary)] italic">
-                    {isTr ? "Canlı link belirtilmedi (Depo bazlı teslimat yapılacak)." : "No live URL provided (Source repo handover)."}
+                    {isTr
+                      ? "Canlı link belirtilmedi (Depo bazlı teslimat yapılacak)."
+                      : "No live URL provided (Source repo handover)."}
                   </div>
                 )}
 
@@ -380,7 +416,10 @@ export function HandoverSubmissionModal({
                   <span className="text-emerald-400 font-medium">
                     {isTr ? healthReport.badgeTextTr : healthReport.badgeTextEn}
                   </span>
-                  <span className="font-mono text-[10px] text-[var(--color-text-tertiary)]" title="Proof-of-Work SHA-256">
+                  <span
+                    className="font-mono text-[10px] text-[var(--color-text-tertiary)]"
+                    title="Proof-of-Work SHA-256"
+                  >
                     PoW: {healthReport.powSeal.slice(0, 16)}...
                   </span>
                 </div>
@@ -398,7 +437,11 @@ export function HandoverSubmissionModal({
           <div className="space-y-2.5">
             <label className="text-xs font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
               <Key className="h-3.5 w-3.5 text-cyan-400" />
-              <span>{isTr ? "Erişim ve Hesap Devir Kontrol Listesi" : "Credentials & Access Handover Checklist"}</span>
+              <span>
+                {isTr
+                  ? "Erişim ve Hesap Devir Kontrol Listesi"
+                  : "Credentials & Access Handover Checklist"}
+              </span>
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {[
@@ -437,9 +480,7 @@ export function HandoverSubmissionModal({
                     onChange={() => handleCheckboxChange(item.key)}
                     className="mt-0.5 h-4 w-4 rounded border-gray-600 text-cyan-500 focus:ring-cyan-400 cursor-pointer"
                   />
-                  <span className="text-xs font-medium">
-                    {isTr ? item.labelTr : item.labelEn}
-                  </span>
+                  <span className="text-xs font-medium">{isTr ? item.labelTr : item.labelEn}</span>
                 </label>
               ))}
             </div>
@@ -449,7 +490,9 @@ export function HandoverSubmissionModal({
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
               <FileText className="h-3.5 w-3.5 text-cyan-400" />
-              <span>{isTr ? "Teknik Devir & Kurulum Notları (README) *" : "Handover & Setup Notes *"}</span>
+              <span>
+                {isTr ? "Teknik Devir & Kurulum Notları (README) *" : "Handover & Setup Notes *"}
+              </span>
             </label>
             <textarea
               required
@@ -467,7 +510,13 @@ export function HandoverSubmissionModal({
 
           {/* Footer Actions */}
           <div className="flex items-center justify-end gap-3 pt-4 border-t border-[var(--color-border-subtle)] shrink-0">
-            <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={isSubmitting}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onClose}
+              disabled={isSubmitting}
+            >
               {isTr ? "Vazgeç" : "Cancel"}
             </Button>
             <Button
@@ -483,6 +532,6 @@ export function HandoverSubmissionModal({
           </div>
         </form>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

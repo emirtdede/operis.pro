@@ -11,12 +11,7 @@ import { NotificationService } from "@/src/modules/notifications/service";
 import { DEFAULT_USER } from "@/src/modules/auth/demo-user";
 import { inMemoryReceivedOffers, inMemorySentOffers } from "@/src/modules/offers/service";
 import { evaluateListingVisibility } from "../visibility";
-import {
-  generateSlug,
-  inMemoryListings,
-  SEVEN_DAYS_MS,
-  validateBudgetConsistency,
-} from "./types";
+import { generateSlug, inMemoryListings, SEVEN_DAYS_MS, validateBudgetConsistency } from "./types";
 import { ListingLifecycleService } from "./listing-lifecycle.service";
 
 export class ListingCrudService {
@@ -54,7 +49,8 @@ export class ListingCrudService {
     ) => Promise<string[]>
   ): Promise<{ id: string; slug: string }> {
     const radarNotifier = dispatchRadarFn || ListingLifecycleService.dispatchRadarNotifications;
-    const categoryNotifier = dispatchCategoryFn || ListingLifecycleService.dispatchCategoryFollowNotifications;
+    const categoryNotifier =
+      dispatchCategoryFn || ListingLifecycleService.dispatchCategoryFollowNotifications;
 
     const input = listingWizardSchema.parse(rawInput);
     const now = new Date();
@@ -315,13 +311,7 @@ export class ListingCrudService {
             radarNotifiedUsers
           );
         } else {
-          await categoryNotifier(
-            inMemId,
-            input.categoryId,
-            input.title,
-            slug,
-            userId
-          );
+          await categoryNotifier(inMemId, input.categoryId, input.title, slug, userId);
         }
       } catch {
         // Non-blocking

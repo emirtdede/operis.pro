@@ -47,11 +47,17 @@ export type ProfileFormAction =
   | { type: "ADD_LINK"; link: ProfileLinkItem }
   | { type: "REMOVE_LINK"; index: number }
   | { type: "SET_FEEDBACK"; feedback: { type: "success" | "error"; message: string } | null }
-  | { type: "SET_VERIFICATION_FEEDBACK"; feedback: { type: "success" | "error"; message: string } | null }
+  | {
+      type: "SET_VERIFICATION_FEEDBACK";
+      feedback: { type: "success" | "error"; message: string } | null;
+    }
   | { type: "RESET_PHONE_CHANGE_MODAL" }
   | { type: "DECREMENT_COOLDOWN" };
 
-export function profileFormReducer(state: ProfileFormState, action: ProfileFormAction): ProfileFormState {
+export function profileFormReducer(
+  state: ProfileFormState,
+  action: ProfileFormAction
+): ProfileFormState {
   switch (action.type) {
     case "SET_FIELD":
       return { ...state, [action.field]: action.value };

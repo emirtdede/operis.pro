@@ -42,9 +42,7 @@
       "id": 1,
       "slug": "web-gelistirme",
       "name": "Web Geliştirme",
-      "canonicalTerms": [
-        "Web Geliştirme"
-      ],
+      "canonicalTerms": ["Web Geliştirme"],
       "searchTerms": [
         "Web Geliştirme",
         "web geliştirme",
@@ -140,10 +138,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/web-gelistirme",
@@ -158,9 +153,7 @@
       "id": 2,
       "slug": "frontend-ve-arayuz-muhendisligi",
       "name": "Frontend ve Arayüz Mühendisliği",
-      "canonicalTerms": [
-        "Frontend ve Arayüz Mühendisliği"
-      ],
+      "canonicalTerms": ["Frontend ve Arayüz Mühendisliği"],
       "searchTerms": [
         "Frontend ve Arayüz Mühendisliği",
         "frontend ve arayüz mühendisliği",
@@ -260,10 +253,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/frontend-ve-arayuz-muhendisligi",
@@ -278,9 +268,7 @@
       "id": 3,
       "slug": "backend-ve-api-muhendisligi",
       "name": "Backend ve API Mühendisliği",
-      "canonicalTerms": [
-        "Backend ve API Mühendisliği"
-      ],
+      "canonicalTerms": ["Backend ve API Mühendisliği"],
       "searchTerms": [
         "Backend ve API Mühendisliği",
         "backend ve api mühendisliği",
@@ -386,10 +374,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/backend-ve-api-muhendisligi",
@@ -404,9 +389,7 @@
       "id": 4,
       "slug": "mobil-uygulama-gelistirme",
       "name": "Mobil Uygulama Geliştirme",
-      "canonicalTerms": [
-        "Mobil Uygulama Geliştirme"
-      ],
+      "canonicalTerms": ["Mobil Uygulama Geliştirme"],
       "searchTerms": [
         "Mobil Uygulama Geliştirme",
         "mobil uygulama geliştirme",
@@ -494,10 +477,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/mobil-uygulama-gelistirme",
@@ -512,9 +492,7 @@
       "id": 5,
       "slug": "masaustu-yazilim-gelistirme",
       "name": "Masaüstü Yazılım Geliştirme",
-      "canonicalTerms": [
-        "Masaüstü Yazılım Geliştirme"
-      ],
+      "canonicalTerms": ["Masaüstü Yazılım Geliştirme"],
       "searchTerms": [
         "Masaüstü Yazılım Geliştirme",
         "masaüstü yazılım geliştirme",
@@ -582,10 +560,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/masaustu-yazilim-gelistirme",
@@ -600,9 +575,7 @@
       "id": 6,
       "slug": "devops-ve-bulut-bilisim",
       "name": "DevOps ve Bulut Bilişim",
-      "canonicalTerms": [
-        "DevOps ve Bulut Bilişim"
-      ],
+      "canonicalTerms": ["DevOps ve Bulut Bilişim"],
       "searchTerms": [
         "DevOps ve Bulut Bilişim",
         "devops ve bulut bilişim",
@@ -679,10 +652,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/devops-ve-bulut-bilisim",
@@ -697,9 +667,7 @@
       "id": 7,
       "slug": "veritabani-muhendisligi",
       "name": "Veritabanı Mühendisliği",
-      "canonicalTerms": [
-        "Veritabanı Mühendisliği"
-      ],
+      "canonicalTerms": ["Veritabanı Mühendisliği"],
       "searchTerms": [
         "Veritabanı Mühendisliği",
         "veritabanı mühendisliği",
@@ -793,10 +761,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/veritabani-muhendisligi",
@@ -811,9 +776,7 @@
       "id": 8,
       "slug": "siber-guvenlik",
       "name": "Siber Güvenlik",
-      "canonicalTerms": [
-        "Siber Güvenlik"
-      ],
+      "canonicalTerms": ["Siber Güvenlik"],
       "searchTerms": [
         "Siber Güvenlik",
         "siber güvenlik",
@@ -894,10 +857,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/siber-guvenlik",
@@ -912,9 +872,7 @@
       "id": 9,
       "slug": "yazilim-testi-ve-kalite-guvencesi",
       "name": "Yazılım Testi ve Kalite Güvencesi",
-      "canonicalTerms": [
-        "Yazılım Testi ve Kalite Güvencesi"
-      ],
+      "canonicalTerms": ["Yazılım Testi ve Kalite Güvencesi"],
       "searchTerms": [
         "Yazılım Testi ve Kalite Güvencesi",
         "yazılım testi ve kalite güvencesi",
@@ -994,10 +952,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/yazilim-testi-ve-kalite-guvencesi",
@@ -1012,9 +967,7 @@
       "id": 10,
       "slug": "blokzincir-muhendisligi",
       "name": "Blokzincir Mühendisliği",
-      "canonicalTerms": [
-        "Blokzincir Mühendisliği"
-      ],
+      "canonicalTerms": ["Blokzincir Mühendisliği"],
       "searchTerms": [
         "Blokzincir Mühendisliği",
         "blokzincir mühendisliği",
@@ -1082,10 +1035,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/blokzincir-muhendisligi",
@@ -1100,9 +1050,7 @@
       "id": 11,
       "slug": "gomulu-sistemler-ve-iot",
       "name": "Gömülü Sistemler ve IoT",
-      "canonicalTerms": [
-        "Gömülü Sistemler ve IoT"
-      ],
+      "canonicalTerms": ["Gömülü Sistemler ve IoT"],
       "searchTerms": [
         "Gömülü Sistemler ve IoT",
         "gömülü sistemler ve iot",
@@ -1169,10 +1117,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/gomulu-sistemler-ve-iot",
@@ -1187,9 +1132,7 @@
       "id": 12,
       "slug": "bt-sistem-ve-ag-yonetimi",
       "name": "BT, Sistem ve Ağ Yönetimi",
-      "canonicalTerms": [
-        "BT, Sistem ve Ağ Yönetimi"
-      ],
+      "canonicalTerms": ["BT, Sistem ve Ağ Yönetimi"],
       "searchTerms": [
         "BT, Sistem ve Ağ Yönetimi",
         "bt, sistem ve ağ yönetimi",
@@ -1303,10 +1246,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/bt-sistem-ve-ag-yonetimi",
@@ -1321,9 +1261,7 @@
       "id": 13,
       "slug": "bilgisayar-donanimi-ve-teknik-destek",
       "name": "Bilgisayar Donanımı ve Teknik Destek",
-      "canonicalTerms": [
-        "Bilgisayar Donanımı ve Teknik Destek"
-      ],
+      "canonicalTerms": ["Bilgisayar Donanımı ve Teknik Destek"],
       "searchTerms": [
         "Bilgisayar Donanımı ve Teknik Destek",
         "bilgisayar donanımı ve teknik destek",
@@ -1412,10 +1350,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/bilgisayar-donanimi-ve-teknik-destek",
@@ -1430,9 +1365,7 @@
       "id": 14,
       "slug": "diger-teknoloji-hizmetleri",
       "name": "Diğer Teknoloji Hizmetleri",
-      "canonicalTerms": [
-        "Diğer Teknoloji Hizmetleri"
-      ],
+      "canonicalTerms": ["Diğer Teknoloji Hizmetleri"],
       "searchTerms": [
         "Diğer Teknoloji Hizmetleri",
         "diğer teknoloji hizmetleri",
@@ -1496,10 +1429,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/diger-teknoloji-hizmetleri",
@@ -1514,9 +1444,7 @@
       "id": 15,
       "slug": "no-code-ve-low-code-gelistirme",
       "name": "No-Code & Low-Code Geliştirme",
-      "canonicalTerms": [
-        "No-Code & Low-Code Geliştirme"
-      ],
+      "canonicalTerms": ["No-Code & Low-Code Geliştirme"],
       "searchTerms": [
         "No-Code & Low-Code Geliştirme",
         "no-code & low-code geliştirme",
@@ -1598,10 +1526,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/no-code-ve-low-code-gelistirme",
@@ -1616,9 +1541,7 @@
       "id": 16,
       "slug": "yapay-zeka-ve-makine-ogrenimi",
       "name": "Yapay Zeka ve Makine Öğrenimi",
-      "canonicalTerms": [
-        "Yapay Zeka ve Makine Öğrenimi"
-      ],
+      "canonicalTerms": ["Yapay Zeka ve Makine Öğrenimi"],
       "searchTerms": [
         "Yapay Zeka ve Makine Öğrenimi",
         "yapay zeka ve makine öğrenimi",
@@ -1703,10 +1626,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/yapay-zeka-ve-makine-ogrenimi",
@@ -1721,9 +1641,7 @@
       "id": 17,
       "slug": "veri-muhendisligi-ve-analitik",
       "name": "Veri Mühendisliği ve Analitik",
-      "canonicalTerms": [
-        "Veri Mühendisliği ve Analitik"
-      ],
+      "canonicalTerms": ["Veri Mühendisliği ve Analitik"],
       "searchTerms": [
         "Veri Mühendisliği ve Analitik",
         "veri mühendisliği ve analitik",
@@ -1801,10 +1719,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/veri-muhendisligi-ve-analitik",
@@ -1819,9 +1734,7 @@
       "id": 18,
       "slug": "otomasyon-ve-entegrasyonlar",
       "name": "Otomasyon ve Entegrasyonlar",
-      "canonicalTerms": [
-        "Otomasyon ve Entegrasyonlar"
-      ],
+      "canonicalTerms": ["Otomasyon ve Entegrasyonlar"],
       "searchTerms": [
         "Otomasyon ve Entegrasyonlar",
         "otomasyon ve entegrasyonlar",
@@ -1913,10 +1826,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/otomasyon-ve-entegrasyonlar",
@@ -1931,9 +1841,7 @@
       "id": 19,
       "slug": "yapay-zeka-ajanlari-ve-is-akislari",
       "name": "Yapay Zeka Ajanları ve İş Akışları",
-      "canonicalTerms": [
-        "Yapay Zeka Ajanları ve İş Akışları"
-      ],
+      "canonicalTerms": ["Yapay Zeka Ajanları ve İş Akışları"],
       "searchTerms": [
         "Yapay Zeka Ajanları ve İş Akışları",
         "yapay zeka ajanları ve i̇ş akışları",
@@ -2004,10 +1912,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/yapay-zeka-ajanlari-ve-is-akislari",
@@ -2022,9 +1927,7 @@
       "id": 20,
       "slug": "prompt-muhendisligi-ve-ai-danismanligi",
       "name": "Prompt Mühendisliği ve AI Danışmanlığı",
-      "canonicalTerms": [
-        "Prompt Mühendisliği ve AI Danışmanlığı"
-      ],
+      "canonicalTerms": ["Prompt Mühendisliği ve AI Danışmanlığı"],
       "searchTerms": [
         "Prompt Mühendisliği ve AI Danışmanlığı",
         "prompt mühendisliği ve ai danışmanlığı",
@@ -2092,10 +1995,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/prompt-muhendisligi-ve-ai-danismanligi",
@@ -2110,9 +2010,7 @@
       "id": 21,
       "slug": "is-zekasi-ve-dashboard-tasarimi",
       "name": "İş Zekası ve Dashboard Tasarımı",
-      "canonicalTerms": [
-        "İş Zekası ve Dashboard Tasarımı"
-      ],
+      "canonicalTerms": ["İş Zekası ve Dashboard Tasarımı"],
       "searchTerms": [
         "İş Zekası ve Dashboard Tasarımı",
         "i̇ş zekası ve dashboard tasarımı",
@@ -2186,10 +2084,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/is-zekasi-ve-dashboard-tasarimi",
@@ -2204,9 +2099,7 @@
       "id": 22,
       "slug": "ui-ux-tasarim",
       "name": "UI/UX Tasarım",
-      "canonicalTerms": [
-        "UI/UX Tasarım"
-      ],
+      "canonicalTerms": ["UI/UX Tasarım"],
       "searchTerms": [
         "UI/UX Tasarım",
         "ui/ux tasarım",
@@ -2284,10 +2177,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/ui-ux-tasarim",
@@ -2302,9 +2192,7 @@
       "id": 23,
       "slug": "logo-ve-kurumsal-kimlik",
       "name": "Logo ve Kurumsal Kimlik",
-      "canonicalTerms": [
-        "Logo ve Kurumsal Kimlik"
-      ],
+      "canonicalTerms": ["Logo ve Kurumsal Kimlik"],
       "searchTerms": [
         "Logo ve Kurumsal Kimlik",
         "logo ve kurumsal kimlik",
@@ -2369,10 +2257,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/logo-ve-kurumsal-kimlik",
@@ -2387,9 +2272,7 @@
       "id": 24,
       "slug": "tasarim-sistemleri-design-systems",
       "name": "Tasarım Sistemleri (Design Systems)",
-      "canonicalTerms": [
-        "Tasarım Sistemleri (Design Systems)"
-      ],
+      "canonicalTerms": ["Tasarım Sistemleri (Design Systems)"],
       "searchTerms": [
         "Tasarım Sistemleri (Design Systems)",
         "tasarım sistemleri (design systems)",
@@ -2461,10 +2344,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/tasarim-sistemleri-design-systems",
@@ -2479,9 +2359,7 @@
       "id": 25,
       "slug": "sosyal-medya-ve-reklam-gorselleri",
       "name": "Sosyal Medya ve Reklam Görselleri",
-      "canonicalTerms": [
-        "Sosyal Medya ve Reklam Görselleri"
-      ],
+      "canonicalTerms": ["Sosyal Medya ve Reklam Görselleri"],
       "searchTerms": [
         "Sosyal Medya ve Reklam Görselleri",
         "sosyal medya ve reklam görselleri",
@@ -2565,10 +2443,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/sosyal-medya-ve-reklam-gorselleri",
@@ -2583,9 +2458,7 @@
       "id": 26,
       "slug": "illustrasyon-ve-vektorel-cizim",
       "name": "İllüstrasyon ve Vektörel Çizim",
-      "canonicalTerms": [
-        "İllüstrasyon ve Vektörel Çizim"
-      ],
+      "canonicalTerms": ["İllüstrasyon ve Vektörel Çizim"],
       "searchTerms": [
         "İllüstrasyon ve Vektörel Çizim",
         "i̇llüstrasyon ve vektörel çizim",
@@ -2673,10 +2546,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/illustrasyon-ve-vektorel-cizim",
@@ -2691,9 +2561,7 @@
       "id": 27,
       "slug": "ambalaj-etiket-ve-baski-tasarimi",
       "name": "Ambalaj, Etiket ve Baskı Tasarımı",
-      "canonicalTerms": [
-        "Ambalaj, Etiket ve Baskı Tasarımı"
-      ],
+      "canonicalTerms": ["Ambalaj, Etiket ve Baskı Tasarımı"],
       "searchTerms": [
         "Ambalaj, Etiket ve Baskı Tasarımı",
         "ambalaj, etiket ve baskı tasarımı",
@@ -2759,10 +2627,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/ambalaj-etiket-ve-baski-tasarimi",
@@ -2777,9 +2642,7 @@
       "id": 28,
       "slug": "yatirimci-sunumu-ve-pitch-deck",
       "name": "Yatırımcı Sunumu ve Pitch Deck",
-      "canonicalTerms": [
-        "Yatırımcı Sunumu ve Pitch Deck"
-      ],
+      "canonicalTerms": ["Yatırımcı Sunumu ve Pitch Deck"],
       "searchTerms": [
         "Yatırımcı Sunumu ve Pitch Deck",
         "yatırımcı sunumu ve pitch deck",
@@ -2843,10 +2706,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/yatirimci-sunumu-ve-pitch-deck",
@@ -2861,9 +2721,7 @@
       "id": 29,
       "slug": "arama-motoru-optimizasyonu-seo",
       "name": "Arama Motoru Optimizasyonu (SEO)",
-      "canonicalTerms": [
-        "Arama Motoru Optimizasyonu (SEO)"
-      ],
+      "canonicalTerms": ["Arama Motoru Optimizasyonu (SEO)"],
       "searchTerms": [
         "Arama Motoru Optimizasyonu (SEO)",
         "arama motoru optimizasyonu (seo)",
@@ -2928,10 +2786,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/arama-motoru-optimizasyonu-seo",
@@ -2946,9 +2801,7 @@
       "id": 30,
       "slug": "google-reklamlari-sem-ve-ppc",
       "name": "Google Reklamları (SEM & PPC)",
-      "canonicalTerms": [
-        "Google Reklamları (SEM & PPC)"
-      ],
+      "canonicalTerms": ["Google Reklamları (SEM & PPC)"],
       "searchTerms": [
         "Google Reklamları (SEM & PPC)",
         "google reklamları (sem & ppc)",
@@ -3010,10 +2863,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/google-reklamlari-sem-ve-ppc",
@@ -3028,9 +2878,7 @@
       "id": 31,
       "slug": "sosyal-medya-reklamciligi",
       "name": "Sosyal Medya Reklamcılığı",
-      "canonicalTerms": [
-        "Sosyal Medya Reklamcılığı"
-      ],
+      "canonicalTerms": ["Sosyal Medya Reklamcılığı"],
       "searchTerms": [
         "Sosyal Medya Reklamcılığı",
         "sosyal medya reklamcılığı",
@@ -3101,10 +2949,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/sosyal-medya-reklamciligi",
@@ -3119,9 +2964,7 @@
       "id": 32,
       "slug": "sosyal-medya-yonetimi-ve-stratejisi",
       "name": "Sosyal Medya Yönetimi ve Stratejisi",
-      "canonicalTerms": [
-        "Sosyal Medya Yönetimi ve Stratejisi"
-      ],
+      "canonicalTerms": ["Sosyal Medya Yönetimi ve Stratejisi"],
       "searchTerms": [
         "Sosyal Medya Yönetimi ve Stratejisi",
         "sosyal medya yönetimi ve stratejisi",
@@ -3183,10 +3026,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/sosyal-medya-yonetimi-ve-stratejisi",
@@ -3201,9 +3041,7 @@
       "id": 33,
       "slug": "e-posta-pazarlamasi-ve-crm-akislari",
       "name": "E-Posta Pazarlaması ve CRM Akışları",
-      "canonicalTerms": [
-        "E-Posta Pazarlaması ve CRM Akışları"
-      ],
+      "canonicalTerms": ["E-Posta Pazarlaması ve CRM Akışları"],
       "searchTerms": [
         "E-Posta Pazarlaması ve CRM Akışları",
         "e-posta pazarlaması ve crm akışları",
@@ -3286,10 +3124,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/e-posta-pazarlamasi-ve-crm-akislari",
@@ -3304,9 +3139,7 @@
       "id": 34,
       "slug": "e-ticaret-yonetimi-ve-buyume",
       "name": "E-Ticaret Yönetimi ve Büyüme",
-      "canonicalTerms": [
-        "E-Ticaret Yönetimi ve Büyüme"
-      ],
+      "canonicalTerms": ["E-Ticaret Yönetimi ve Büyüme"],
       "searchTerms": [
         "E-Ticaret Yönetimi ve Büyüme",
         "e-ticaret yönetimi ve büyüme",
@@ -3386,10 +3219,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/e-ticaret-yonetimi-ve-buyume",
@@ -3404,9 +3234,7 @@
       "id": 35,
       "slug": "kisa-format-video-reels-tiktok-shorts",
       "name": "Kısa Format Video (Reels, TikTok, Shorts)",
-      "canonicalTerms": [
-        "Kısa Format Video (Reels, TikTok, Shorts)"
-      ],
+      "canonicalTerms": ["Kısa Format Video (Reels, TikTok, Shorts)"],
       "searchTerms": [
         "Kısa Format Video (Reels, TikTok, Shorts)",
         "kısa format video (reels, tiktok, shorts)",
@@ -3502,10 +3330,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/kisa-format-video-reels-tiktok-shorts",
@@ -3520,9 +3345,7 @@
       "id": 36,
       "slug": "youtube-ve-uzun-format-video-kurgusu",
       "name": "YouTube ve Uzun Format Video Kurgusu",
-      "canonicalTerms": [
-        "YouTube ve Uzun Format Video Kurgusu"
-      ],
+      "canonicalTerms": ["YouTube ve Uzun Format Video Kurgusu"],
       "searchTerms": [
         "YouTube ve Uzun Format Video Kurgusu",
         "youtube ve uzun format video kurgusu",
@@ -3544,11 +3367,7 @@
         "Storytelling",
         "Video Editing"
       ],
-      "aliases": [
-        "long form editor",
-        "youtube editor",
-        "video editor"
-      ],
+      "aliases": ["long form editor", "youtube editor", "video editor"],
       "serviceIntents": [
         "YouTube ve podcast videolarımı profesyonel uzun format kurguya dönüştürecek editör arıyorum.",
         "Ham kaydı gereksiz bölümlerden temizleyip akıcı bir YouTube videosuna çevirmek istiyorum.",
@@ -3582,10 +3401,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/youtube-ve-uzun-format-video-kurgusu",
@@ -3600,9 +3416,7 @@
       "id": 37,
       "slug": "hareketli-grafik-motion-graphics",
       "name": "Hareketli Grafik (Motion Graphics)",
-      "canonicalTerms": [
-        "Hareketli Grafik (Motion Graphics)"
-      ],
+      "canonicalTerms": ["Hareketli Grafik (Motion Graphics)"],
       "searchTerms": [
         "Hareketli Grafik (Motion Graphics)",
         "hareketli grafik (motion graphics)",
@@ -3657,10 +3471,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/hareketli-grafik-motion-graphics",
@@ -3675,9 +3486,7 @@
       "id": 38,
       "slug": "seslendirme-ve-dublaj",
       "name": "Seslendirme ve Dublaj",
-      "canonicalTerms": [
-        "Seslendirme ve Dublaj"
-      ],
+      "canonicalTerms": ["Seslendirme ve Dublaj"],
       "searchTerms": [
         "Seslendirme ve Dublaj",
         "seslendirme ve dublaj",
@@ -3737,10 +3546,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/seslendirme-ve-dublaj",
@@ -3755,9 +3561,7 @@
       "id": 39,
       "slug": "podcast-duzenleme-ve-ses-muhendisligi",
       "name": "Podcast Düzenleme ve Ses Mühendisliği",
-      "canonicalTerms": [
-        "Podcast Düzenleme ve Ses Mühendisliği"
-      ],
+      "canonicalTerms": ["Podcast Düzenleme ve Ses Mühendisliği"],
       "searchTerms": [
         "Podcast Düzenleme ve Ses Mühendisliği",
         "podcast düzenleme ve ses mühendisliği",
@@ -3834,10 +3638,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/podcast-duzenleme-ve-ses-muhendisligi",
@@ -3852,9 +3653,7 @@
       "id": 40,
       "slug": "teknik-yazarlik-ve-dokumantasyon",
       "name": "Teknik Yazarlık ve Dokümantasyon",
-      "canonicalTerms": [
-        "Teknik Yazarlık ve Dokümantasyon"
-      ],
+      "canonicalTerms": ["Teknik Yazarlık ve Dokümantasyon"],
       "searchTerms": [
         "Teknik Yazarlık ve Dokümantasyon",
         "teknik yazarlık ve dokümantasyon",
@@ -3923,10 +3722,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/teknik-yazarlik-ve-dokumantasyon",
@@ -3941,9 +3737,7 @@
       "id": 41,
       "slug": "reklam-ve-satis-metni-yazarligi",
       "name": "Reklam ve Satış Metni Yazarlığı",
-      "canonicalTerms": [
-        "Reklam ve Satış Metni Yazarlığı"
-      ],
+      "canonicalTerms": ["Reklam ve Satış Metni Yazarlığı"],
       "searchTerms": [
         "Reklam ve Satış Metni Yazarlığı",
         "reklam ve satış metni yazarlığı",
@@ -3967,12 +3761,7 @@
         "Brand Voice",
         "Sales Writing"
       ],
-      "aliases": [
-        "copywriter",
-        "sales copywriter",
-        "conversion copywriter",
-        "ad copywriter"
-      ],
+      "aliases": ["copywriter", "sales copywriter", "conversion copywriter", "ad copywriter"],
       "serviceIntents": [
         "Landing page’im için ziyaretçiyi aksiyona yönlendiren güçlü satış metinlerine ihtiyacım var.",
         "Ürün sayfasındaki metinleri daha ikna edici ve anlaşılır hale getirecek bir copywriter arıyorum.",
@@ -4006,10 +3795,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/reklam-ve-satis-metni-yazarligi",
@@ -4024,9 +3810,7 @@
       "id": 42,
       "slug": "seo-uyumlu-blog-ve-makale-yazarligi",
       "name": "SEO Uyumlu Blog ve Makale Yazarlığı",
-      "canonicalTerms": [
-        "SEO Uyumlu Blog ve Makale Yazarlığı"
-      ],
+      "canonicalTerms": ["SEO Uyumlu Blog ve Makale Yazarlığı"],
       "searchTerms": [
         "SEO Uyumlu Blog ve Makale Yazarlığı",
         "seo uyumlu blog ve makale yazarlığı",
@@ -4104,10 +3888,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/seo-uyumlu-blog-ve-makale-yazarligi",
@@ -4122,9 +3903,7 @@
       "id": 43,
       "slug": "profesyonel-ceviri-ve-yerellestirme",
       "name": "Profesyonel Çeviri ve Yerelleştirme",
-      "canonicalTerms": [
-        "Profesyonel Çeviri ve Yerelleştirme"
-      ],
+      "canonicalTerms": ["Profesyonel Çeviri ve Yerelleştirme"],
       "searchTerms": [
         "Profesyonel Çeviri ve Yerelleştirme",
         "profesyonel çeviri ve yerelleştirme",
@@ -4195,10 +3974,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/profesyonel-ceviri-ve-yerellestirme",
@@ -4213,9 +3989,7 @@
       "id": 44,
       "slug": "editoryal-duzeltme-ve-redaksiyon",
       "name": "Editoryal Düzeltme ve Redaksiyon",
-      "canonicalTerms": [
-        "Editoryal Düzeltme ve Redaksiyon"
-      ],
+      "canonicalTerms": ["Editoryal Düzeltme ve Redaksiyon"],
       "searchTerms": [
         "Editoryal Düzeltme ve Redaksiyon",
         "editoryal düzeltme ve redaksiyon",
@@ -4238,13 +4012,7 @@
         "Fact Checking",
         "Editorial Review"
       ],
-      "aliases": [
-        "proofreader",
-        "copy editor",
-        "editor",
-        "proofreading editor",
-        "language editor"
-      ],
+      "aliases": ["proofreader", "copy editor", "editor", "proofreading editor", "language editor"],
       "serviceIntents": [
         "Hazırladığım metni yayımlamadan önce anlatım, imla ve tutarlılık açısından profesyonel düzelttirmek istiyorum.",
         "Uzun rapordaki yazım ve noktalama hatalarını temizleyip dili akıcı hale getirmek istiyorum.",
@@ -4278,10 +4046,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/editoryal-duzeltme-ve-redaksiyon",
@@ -4296,9 +4061,7 @@
       "id": 45,
       "slug": "teknik-danismanlik",
       "name": "Teknik Danışmanlık",
-      "canonicalTerms": [
-        "Teknik Danışmanlık"
-      ],
+      "canonicalTerms": ["Teknik Danışmanlık"],
       "searchTerms": [
         "Teknik Danışmanlık",
         "teknik danışmanlık",
@@ -4378,10 +4141,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/teknik-danismanlik",
@@ -4396,9 +4156,7 @@
       "id": 46,
       "slug": "finansal-modelleme-ve-fizibilite",
       "name": "Finansal Modelleme ve Fizibilite",
-      "canonicalTerms": [
-        "Finansal Modelleme ve Fizibilite"
-      ],
+      "canonicalTerms": ["Finansal Modelleme ve Fizibilite"],
       "searchTerms": [
         "Finansal Modelleme ve Fizibilite",
         "finansal modelleme ve fizibilite",
@@ -4480,10 +4238,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/finansal-modelleme-ve-fizibilite",
@@ -4498,9 +4253,7 @@
       "id": 47,
       "slug": "muhasebe-ve-on-muhasebe-yonetimi",
       "name": "Muhasebe ve Ön Muhasebe Yönetimi",
-      "canonicalTerms": [
-        "Muhasebe ve Ön Muhasebe Yönetimi"
-      ],
+      "canonicalTerms": ["Muhasebe ve Ön Muhasebe Yönetimi"],
       "searchTerms": [
         "Muhasebe ve Ön Muhasebe Yönetimi",
         "muhasebe ve ön muhasebe yönetimi",
@@ -4564,10 +4317,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/muhasebe-ve-on-muhasebe-yonetimi",
@@ -4582,9 +4332,7 @@
       "id": 48,
       "slug": "vergi-planlamasi-ve-mali-musavirlik",
       "name": "Vergi Planlaması ve Mali Müşavirlik",
-      "canonicalTerms": [
-        "Vergi Planlaması ve Mali Müşavirlik"
-      ],
+      "canonicalTerms": ["Vergi Planlaması ve Mali Müşavirlik"],
       "searchTerms": [
         "Vergi Planlaması ve Mali Müşavirlik",
         "vergi planlaması ve mali müşavirlik",
@@ -4655,10 +4403,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/vergi-planlamasi-ve-mali-musavirlik",
@@ -4673,9 +4418,7 @@
       "id": 49,
       "slug": "girisim-stratejisi-ve-is-plani",
       "name": "Girişim Stratejisi ve İş Planı",
-      "canonicalTerms": [
-        "Girişim Stratejisi ve İş Planı"
-      ],
+      "canonicalTerms": ["Girişim Stratejisi ve İş Planı"],
       "searchTerms": [
         "Girişim Stratejisi ve İş Planı",
         "girişim stratejisi ve i̇ş planı",
@@ -4759,10 +4502,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/girisim-stratejisi-ve-is-plani",
@@ -4777,9 +4517,7 @@
       "id": 50,
       "slug": "proje-yonetimi-ve-cevik-danismanlik",
       "name": "Proje Yönetimi ve Çevik Danışmanlık",
-      "canonicalTerms": [
-        "Proje Yönetimi ve Çevik Danışmanlık"
-      ],
+      "canonicalTerms": ["Proje Yönetimi ve Çevik Danışmanlık"],
       "searchTerms": [
         "Proje Yönetimi ve Çevik Danışmanlık",
         "proje yönetimi ve çevik danışmanlık",
@@ -4845,10 +4583,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/proje-yonetimi-ve-cevik-danismanlik",
@@ -4863,9 +4598,7 @@
       "id": 51,
       "slug": "sozlesme-hazirlama-ve-inceleme",
       "name": "Sözleşme Hazırlama ve İnceleme",
-      "canonicalTerms": [
-        "Sözleşme Hazırlama ve İnceleme"
-      ],
+      "canonicalTerms": ["Sözleşme Hazırlama ve İnceleme"],
       "searchTerms": [
         "Sözleşme Hazırlama ve İnceleme",
         "sözleşme hazırlama ve i̇nceleme",
@@ -4940,10 +4673,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/sozlesme-hazirlama-ve-inceleme",
@@ -4958,9 +4688,7 @@
       "id": 52,
       "slug": "kvkk-gdpr-ve-veri-gizliligi-uyumu",
       "name": "KVKK, GDPR ve Veri Gizliliği Uyumu",
-      "canonicalTerms": [
-        "KVKK, GDPR ve Veri Gizliliği Uyumu"
-      ],
+      "canonicalTerms": ["KVKK, GDPR ve Veri Gizliliği Uyumu"],
       "searchTerms": [
         "KVKK, GDPR ve Veri Gizliliği Uyumu",
         "kvkk, gdpr ve veri gizliliği uyumu",
@@ -5038,10 +4766,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/kvkk-gdpr-ve-veri-gizliligi-uyumu",
@@ -5056,9 +4781,7 @@
       "id": 53,
       "slug": "marka-tescili-ve-fikri-mulkiyet",
       "name": "Marka Tescili ve Fikri Mülkiyet",
-      "canonicalTerms": [
-        "Marka Tescili ve Fikri Mülkiyet"
-      ],
+      "canonicalTerms": ["Marka Tescili ve Fikri Mülkiyet"],
       "searchTerms": [
         "Marka Tescili ve Fikri Mülkiyet",
         "marka tescili ve fikri mülkiyet",
@@ -5110,10 +4833,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/marka-tescili-ve-fikri-mulkiyet",
@@ -5128,9 +4848,7 @@
       "id": 54,
       "slug": "e-ticaret-ve-tuketici-hukuku",
       "name": "E-Ticaret ve Tüketici Hukuku",
-      "canonicalTerms": [
-        "E-Ticaret ve Tüketici Hukuku"
-      ],
+      "canonicalTerms": ["E-Ticaret ve Tüketici Hukuku"],
       "searchTerms": [
         "E-Ticaret ve Tüketici Hukuku",
         "e-ticaret ve tüketici hukuku",
@@ -5194,10 +4912,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/e-ticaret-ve-tuketici-hukuku",
@@ -5212,9 +4927,7 @@
       "id": 55,
       "slug": "oyun-gelistirme",
       "name": "Oyun Geliştirme",
-      "canonicalTerms": [
-        "Oyun Geliştirme"
-      ],
+      "canonicalTerms": ["Oyun Geliştirme"],
       "searchTerms": [
         "Oyun Geliştirme",
         "oyun geliştirme",
@@ -5321,10 +5034,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/oyun-gelistirme",
@@ -5339,9 +5049,7 @@
       "id": 56,
       "slug": "mimari-proje-plan-ve-bim",
       "name": "Mimari Proje, Plan ve BIM",
-      "canonicalTerms": [
-        "Mimari Proje, Plan ve BIM"
-      ],
+      "canonicalTerms": ["Mimari Proje, Plan ve BIM"],
       "searchTerms": [
         "Mimari Proje, Plan ve BIM",
         "mimari proje, plan ve bim",
@@ -5399,10 +5107,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/mimari-proje-plan-ve-bim",
@@ -5417,9 +5122,7 @@
       "id": 57,
       "slug": "ic-mimari-ve-3d-fotogercekci-render",
       "name": "İç Mimari ve 3D Fotogerçekçi Render",
-      "canonicalTerms": [
-        "İç Mimari ve 3D Fotogerçekçi Render"
-      ],
+      "canonicalTerms": ["İç Mimari ve 3D Fotogerçekçi Render"],
       "searchTerms": [
         "İç Mimari ve 3D Fotogerçekçi Render",
         "i̇ç mimari ve 3d fotogerçekçi render",
@@ -5480,10 +5183,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/ic-mimari-ve-3d-fotogercekci-render",
@@ -5498,9 +5198,7 @@
       "id": 58,
       "slug": "3d-urun-modelleme-ve-cad",
       "name": "3D Ürün Modelleme ve CAD",
-      "canonicalTerms": [
-        "3D Ürün Modelleme ve CAD"
-      ],
+      "canonicalTerms": ["3D Ürün Modelleme ve CAD"],
       "searchTerms": [
         "3D Ürün Modelleme ve CAD",
         "3d ürün modelleme ve cad",
@@ -5566,10 +5264,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/3d-urun-modelleme-ve-cad",
@@ -5584,9 +5279,7 @@
       "id": 59,
       "slug": "yonetici-asistanligi-ve-takvim-yonetimi",
       "name": "Yönetici Asistanlığı ve Takvim Yönetimi",
-      "canonicalTerms": [
-        "Yönetici Asistanlığı ve Takvim Yönetimi"
-      ],
+      "canonicalTerms": ["Yönetici Asistanlığı ve Takvim Yönetimi"],
       "searchTerms": [
         "Yönetici Asistanlığı ve Takvim Yönetimi",
         "yönetici asistanlığı ve takvim yönetimi",
@@ -5645,10 +5338,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/yonetici-asistanligi-ve-takvim-yonetimi",
@@ -5663,9 +5353,7 @@
       "id": 60,
       "slug": "musteri-hizmetleri-ve-canli-destek",
       "name": "Müşteri Hizmetleri ve Canlı Destek",
-      "canonicalTerms": [
-        "Müşteri Hizmetleri ve Canlı Destek"
-      ],
+      "canonicalTerms": ["Müşteri Hizmetleri ve Canlı Destek"],
       "searchTerms": [
         "Müşteri Hizmetleri ve Canlı Destek",
         "müşteri hizmetleri ve canlı destek",
@@ -5731,10 +5419,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/musteri-hizmetleri-ve-canli-destek",
@@ -5749,9 +5434,7 @@
       "id": 61,
       "slug": "veri-girisi-ve-kapsamli-web-arastirmasi",
       "name": "Veri Girişi ve Kapsamlı Web Araştırması",
-      "canonicalTerms": [
-        "Veri Girişi ve Kapsamlı Web Araştırması"
-      ],
+      "canonicalTerms": ["Veri Girişi ve Kapsamlı Web Araştırması"],
       "searchTerms": [
         "Veri Girişi ve Kapsamlı Web Araştırması",
         "veri girişi ve kapsamlı web araştırması",
@@ -5809,10 +5492,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/veri-girisi-ve-kapsamli-web-arastirmasi",
@@ -5827,9 +5507,7 @@
       "id": 62,
       "slug": "full-stack-web-gelistirme",
       "name": "Full Stack Web Geliştirme",
-      "canonicalTerms": [
-        "Full Stack Web Geliştirme"
-      ],
+      "canonicalTerms": ["Full Stack Web Geliştirme"],
       "searchTerms": [
         "Full Stack Web Geliştirme",
         "full stack web geliştirme",
@@ -5920,10 +5598,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/full-stack-web-gelistirme",
@@ -5938,9 +5613,7 @@
       "id": 63,
       "slug": "e-ticaret-sitesi-gelistirme",
       "name": "E-Ticaret Sitesi Geliştirme",
-      "canonicalTerms": [
-        "E-Ticaret Sitesi Geliştirme"
-      ],
+      "canonicalTerms": ["E-Ticaret Sitesi Geliştirme"],
       "searchTerms": [
         "E-Ticaret Sitesi Geliştirme",
         "e-ticaret sitesi geliştirme",
@@ -6042,10 +5715,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/e-ticaret-sitesi-gelistirme",
@@ -6060,9 +5730,7 @@
       "id": 64,
       "slug": "cms-ve-no-code-gelistirme",
       "name": "CMS ve No-Code Geliştirme",
-      "canonicalTerms": [
-        "CMS ve No-Code Geliştirme"
-      ],
+      "canonicalTerms": ["CMS ve No-Code Geliştirme"],
       "searchTerms": [
         "CMS ve No-Code Geliştirme",
         "cms ve no-code geliştirme",
@@ -6135,10 +5803,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/cms-ve-no-code-gelistirme",
@@ -6153,9 +5818,7 @@
       "id": 65,
       "slug": "mikroservis-ve-api-mimarisi",
       "name": "Mikroservis ve API Mimarisi",
-      "canonicalTerms": [
-        "Mikroservis ve API Mimarisi"
-      ],
+      "canonicalTerms": ["Mikroservis ve API Mimarisi"],
       "searchTerms": [
         "Mikroservis ve API Mimarisi",
         "mikroservis ve api mimarisi",
@@ -6242,10 +5905,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/mikroservis-ve-api-mimarisi",
@@ -6260,9 +5920,7 @@
       "id": 66,
       "slug": "penetrasyon-testi-ve-guvenlik-denetimi",
       "name": "Penetrasyon Testi ve Güvenlik Denetimi",
-      "canonicalTerms": [
-        "Penetrasyon Testi ve Güvenlik Denetimi"
-      ],
+      "canonicalTerms": ["Penetrasyon Testi ve Güvenlik Denetimi"],
       "searchTerms": [
         "Penetrasyon Testi ve Güvenlik Denetimi",
         "penetrasyon testi ve güvenlik denetimi",
@@ -6328,10 +5986,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/penetrasyon-testi-ve-guvenlik-denetimi",
@@ -6346,9 +6001,7 @@
       "id": 67,
       "slug": "bulut-mimarisi-ve-altyapi-yonetimi",
       "name": "Bulut Mimarisi ve Altyapı Yönetimi",
-      "canonicalTerms": [
-        "Bulut Mimarisi ve Altyapı Yönetimi"
-      ],
+      "canonicalTerms": ["Bulut Mimarisi ve Altyapı Yönetimi"],
       "searchTerms": [
         "Bulut Mimarisi ve Altyapı Yönetimi",
         "bulut mimarisi ve altyapı yönetimi",
@@ -6416,10 +6069,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/bulut-mimarisi-ve-altyapi-yonetimi",
@@ -6434,9 +6084,7 @@
       "id": 68,
       "slug": "llm-ve-gpt-uygulama-gelistirme",
       "name": "LLM ve GPT Uygulama Geliştirme",
-      "canonicalTerms": [
-        "LLM ve GPT Uygulama Geliştirme"
-      ],
+      "canonicalTerms": ["LLM ve GPT Uygulama Geliştirme"],
       "searchTerms": [
         "LLM ve GPT Uygulama Geliştirme",
         "llm ve gpt uygulama geliştirme",
@@ -6524,10 +6172,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/llm-ve-gpt-uygulama-gelistirme",
@@ -6542,9 +6187,7 @@
       "id": 69,
       "slug": "bilgisayarli-goru-ve-goruntu-isleme",
       "name": "Bilgisayarlı Görü ve Görüntü İşleme",
-      "canonicalTerms": [
-        "Bilgisayarlı Görü ve Görüntü İşleme"
-      ],
+      "canonicalTerms": ["Bilgisayarlı Görü ve Görüntü İşleme"],
       "searchTerms": [
         "Bilgisayarlı Görü ve Görüntü İşleme",
         "bilgisayarlı görü ve görüntü i̇şleme",
@@ -6629,10 +6272,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/bilgisayarli-goru-ve-goruntu-isleme",
@@ -6647,9 +6287,7 @@
       "id": 70,
       "slug": "dogal-dil-isleme-ve-ses-teknolojileri",
       "name": "Doğal Dil İşleme ve Ses Teknolojileri",
-      "canonicalTerms": [
-        "Doğal Dil İşleme ve Ses Teknolojileri"
-      ],
+      "canonicalTerms": ["Doğal Dil İşleme ve Ses Teknolojileri"],
       "searchTerms": [
         "Doğal Dil İşleme ve Ses Teknolojileri",
         "doğal dil i̇şleme ve ses teknolojileri",
@@ -6717,10 +6355,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/dogal-dil-isleme-ve-ses-teknolojileri",
@@ -6735,9 +6370,7 @@
       "id": 71,
       "slug": "web-kazima-ve-veri-madenciligi",
       "name": "Web Kazıma ve Veri Madenciliği",
-      "canonicalTerms": [
-        "Web Kazıma ve Veri Madenciliği"
-      ],
+      "canonicalTerms": ["Web Kazıma ve Veri Madenciliği"],
       "searchTerms": [
         "Web Kazıma ve Veri Madenciliği",
         "web kazıma ve veri madenciliği",
@@ -6805,10 +6438,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/web-kazima-ve-veri-madenciligi",
@@ -6823,9 +6453,7 @@
       "id": 72,
       "slug": "web-sitesi-ui-ux-tasarimi",
       "name": "Web Sitesi UI/UX Tasarımı",
-      "canonicalTerms": [
-        "Web Sitesi UI/UX Tasarımı"
-      ],
+      "canonicalTerms": ["Web Sitesi UI/UX Tasarımı"],
       "searchTerms": [
         "Web Sitesi UI/UX Tasarımı",
         "web sitesi ui/ux tasarımı",
@@ -6894,10 +6522,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/web-sitesi-ui-ux-tasarimi",
@@ -6912,9 +6537,7 @@
       "id": 73,
       "slug": "mobil-uygulama-ui-ux-tasarimi",
       "name": "Mobil Uygulama UI/UX Tasarımı",
-      "canonicalTerms": [
-        "Mobil Uygulama UI/UX Tasarımı"
-      ],
+      "canonicalTerms": ["Mobil Uygulama UI/UX Tasarımı"],
       "searchTerms": [
         "Mobil Uygulama UI/UX Tasarımı",
         "mobil uygulama ui/ux tasarımı",
@@ -6988,10 +6611,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/mobil-uygulama-ui-ux-tasarimi",
@@ -7006,9 +6626,7 @@
       "id": 74,
       "slug": "ikon-ve-tipografi-tasarimi",
       "name": "İkon ve Tipografi Tasarımı",
-      "canonicalTerms": [
-        "İkon ve Tipografi Tasarımı"
-      ],
+      "canonicalTerms": ["İkon ve Tipografi Tasarımı"],
       "searchTerms": [
         "İkon ve Tipografi Tasarımı",
         "i̇kon ve tipografi tasarımı",
@@ -7073,10 +6691,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/ikon-ve-tipografi-tasarimi",
@@ -7091,9 +6706,7 @@
       "id": 75,
       "slug": "karakter-tasarimi-ve-konsept-sanat",
       "name": "Karakter Tasarımı ve Konsept Sanat",
-      "canonicalTerms": [
-        "Karakter Tasarımı ve Konsept Sanat"
-      ],
+      "canonicalTerms": ["Karakter Tasarımı ve Konsept Sanat"],
       "searchTerms": [
         "Karakter Tasarımı ve Konsept Sanat",
         "karakter tasarımı ve konsept sanat",
@@ -7162,10 +6775,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/karakter-tasarimi-ve-konsept-sanat",
@@ -7180,9 +6790,7 @@
       "id": 76,
       "slug": "fotograf-duzenleme-ve-retouching",
       "name": "Fotoğraf Düzenleme ve Retouching",
-      "canonicalTerms": [
-        "Fotoğraf Düzenleme ve Retouching"
-      ],
+      "canonicalTerms": ["Fotoğraf Düzenleme ve Retouching"],
       "searchTerms": [
         "Fotoğraf Düzenleme ve Retouching",
         "fotoğraf düzenleme ve retouching",
@@ -7241,10 +6849,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/fotograf-duzenleme-ve-retouching",
@@ -7259,9 +6864,7 @@
       "id": 77,
       "slug": "teknik-seo-ve-site-hizi-optimizasyonu",
       "name": "Teknik SEO ve Site Hızı Optimizasyonu",
-      "canonicalTerms": [
-        "Teknik SEO ve Site Hızı Optimizasyonu"
-      ],
+      "canonicalTerms": ["Teknik SEO ve Site Hızı Optimizasyonu"],
       "searchTerms": [
         "Teknik SEO ve Site Hızı Optimizasyonu",
         "teknik seo ve site hızı optimizasyonu",
@@ -7327,10 +6930,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/teknik-seo-ve-site-hizi-optimizasyonu",
@@ -7345,9 +6945,7 @@
       "id": 78,
       "slug": "tiktok-ve-dikey-video-reklamciligi",
       "name": "TikTok ve Dikey Video Reklamcılığı",
-      "canonicalTerms": [
-        "TikTok ve Dikey Video Reklamcılığı"
-      ],
+      "canonicalTerms": ["TikTok ve Dikey Video Reklamcılığı"],
       "searchTerms": [
         "TikTok ve Dikey Video Reklamcılığı",
         "tiktok ve dikey video reklamcılığı",
@@ -7429,10 +7027,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/tiktok-ve-dikey-video-reklamciligi",
@@ -7447,9 +7042,7 @@
       "id": 79,
       "slug": "b2b-buyume-ve-linkedin-lead-generation",
       "name": "B2B Büyüme ve LinkedIn Lead Generation",
-      "canonicalTerms": [
-        "B2B Büyüme ve LinkedIn Lead Generation"
-      ],
+      "canonicalTerms": ["B2B Büyüme ve LinkedIn Lead Generation"],
       "searchTerms": [
         "B2B Büyüme ve LinkedIn Lead Generation",
         "b2b büyüme ve linkedin lead generation",
@@ -7508,10 +7101,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/b2b-buyume-ve-linkedin-lead-generation",
@@ -7526,9 +7116,7 @@
       "id": 80,
       "slug": "icerik-pazarlamasi-ve-donusum-hunisi",
       "name": "İçerik Pazarlaması ve Dönüşüm Hunisi",
-      "canonicalTerms": [
-        "İçerik Pazarlaması ve Dönüşüm Hunisi"
-      ],
+      "canonicalTerms": ["İçerik Pazarlaması ve Dönüşüm Hunisi"],
       "searchTerms": [
         "İçerik Pazarlaması ve Dönüşüm Hunisi",
         "i̇çerik pazarlaması ve dönüşüm hunisi",
@@ -7603,10 +7191,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/icerik-pazarlamasi-ve-donusum-hunisi",
@@ -7621,9 +7206,7 @@
       "id": 81,
       "slug": "video-renk-duzenleme-color-grading",
       "name": "Video Renk Düzenleme (Color Grading)",
-      "canonicalTerms": [
-        "Video Renk Düzenleme (Color Grading)"
-      ],
+      "canonicalTerms": ["Video Renk Düzenleme (Color Grading)"],
       "searchTerms": [
         "Video Renk Düzenleme (Color Grading)",
         "video renk düzenleme (color grading)",
@@ -7645,12 +7228,7 @@
         "Color Correction",
         "Color Management"
       ],
-      "aliases": [
-        "colorist",
-        "video colorist",
-        "color grading artist",
-        "davinci colorist"
-      ],
+      "aliases": ["colorist", "video colorist", "color grading artist", "davinci colorist"],
       "serviceIntents": [
         "Videolarımın farklı çekimlerini aynı sinematik renk dünyasında profesyonel olarak eşleştirmek istiyorum.",
         "DaVinci Resolve ile çekimleri doğal ve tutarlı bir görünüme getirecek colorist arıyorum.",
@@ -7684,10 +7262,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/video-renk-duzenleme-color-grading",
@@ -7702,9 +7277,7 @@
       "id": 82,
       "slug": "3d-urun-animasyonu-ve-tanitim",
       "name": "3D Ürün Animasyonu ve Tanıtım",
-      "canonicalTerms": [
-        "3D Ürün Animasyonu ve Tanıtım"
-      ],
+      "canonicalTerms": ["3D Ürün Animasyonu ve Tanıtım"],
       "searchTerms": [
         "3D Ürün Animasyonu ve Tanıtım",
         "3d ürün animasyonu ve tanıtım",
@@ -7780,10 +7353,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/3d-urun-animasyonu-ve-tanitim",
@@ -7798,9 +7368,7 @@
       "id": 83,
       "slug": "altyazi-transkripsiyon-ve-dinamik-metinler",
       "name": "Altyazı, Transkripsiyon ve Dinamik Metinler",
-      "canonicalTerms": [
-        "Altyazı, Transkripsiyon ve Dinamik Metinler"
-      ],
+      "canonicalTerms": ["Altyazı, Transkripsiyon ve Dinamik Metinler"],
       "searchTerms": [
         "Altyazı, Transkripsiyon ve Dinamik Metinler",
         "altyazı, transkripsiyon ve dinamik metinler",
@@ -7878,10 +7446,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/altyazi-transkripsiyon-ve-dinamik-metinler",
@@ -7896,9 +7461,7 @@
       "id": 84,
       "slug": "ses-tasarimi-ve-efektleri-sfx",
       "name": "Ses Tasarımı ve Efektleri (SFX)",
-      "canonicalTerms": [
-        "Ses Tasarımı ve Efektleri (SFX)"
-      ],
+      "canonicalTerms": ["Ses Tasarımı ve Efektleri (SFX)"],
       "searchTerms": [
         "Ses Tasarımı ve Efektleri (SFX)",
         "ses tasarımı ve efektleri (sfx)",
@@ -7964,10 +7527,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/ses-tasarimi-ve-efektleri-sfx",
@@ -7982,9 +7542,7 @@
       "id": 85,
       "slug": "muzik-produksiyonu-ve-beatmaking",
       "name": "Müzik Prodüksiyonu ve Beatmaking",
-      "canonicalTerms": [
-        "Müzik Prodüksiyonu ve Beatmaking"
-      ],
+      "canonicalTerms": ["Müzik Prodüksiyonu ve Beatmaking"],
       "searchTerms": [
         "Müzik Prodüksiyonu ve Beatmaking",
         "müzik prodüksiyonu ve beatmaking",
@@ -8011,13 +7569,7 @@
         "Music Production",
         "Arrangement"
       ],
-      "aliases": [
-        "music producer",
-        "beatmaker",
-        "producer",
-        "beat producer",
-        "mixing engineer"
-      ],
+      "aliases": ["music producer", "beatmaker", "producer", "beat producer", "mixing engineer"],
       "serviceIntents": [
         "Şarkımın altyapısını üretip düzenleme, mix ve mastering sürecini profesyonel yaptırmak istiyorum.",
         "Elimde vokal demo var; uygun beat ve düzenleme hazırlayacak prodüktör arıyorum.",
@@ -8051,10 +7603,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/muzik-produksiyonu-ve-beatmaking",
@@ -8069,9 +7618,7 @@
       "id": 86,
       "slug": "yazilim-ve-arayuz-yerellestirmesi-i18n",
       "name": "Yazılım ve Arayüz Yerelleştirmesi (I18n)",
-      "canonicalTerms": [
-        "Yazılım ve Arayüz Yerelleştirmesi (I18n)"
-      ],
+      "canonicalTerms": ["Yazılım ve Arayüz Yerelleştirmesi (I18n)"],
       "searchTerms": [
         "Yazılım ve Arayüz Yerelleştirmesi (I18n)",
         "yazılım ve arayüz yerelleştirmesi (i18n)",
@@ -8155,10 +7702,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/yazilim-ve-arayuz-yerellestirmesi-i18n",
@@ -8173,9 +7717,7 @@
       "id": 87,
       "slug": "hukuki-tibbi-ve-akademik-ceviri",
       "name": "Hukuki, Tıbbi ve Akademik Çeviri",
-      "canonicalTerms": [
-        "Hukuki, Tıbbi ve Akademik Çeviri"
-      ],
+      "canonicalTerms": ["Hukuki, Tıbbi ve Akademik Çeviri"],
       "searchTerms": [
         "Hukuki, Tıbbi ve Akademik Çeviri",
         "hukuki, tıbbi ve akademik çeviri",
@@ -8237,10 +7779,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/hukuki-tibbi-ve-akademik-ceviri",
@@ -8255,9 +7794,7 @@
       "id": 88,
       "slug": "whitepaper-ve-e-kitap-yazimi",
       "name": "Whitepaper ve E-Kitap Yazımı",
-      "canonicalTerms": [
-        "Whitepaper ve E-Kitap Yazımı"
-      ],
+      "canonicalTerms": ["Whitepaper ve E-Kitap Yazımı"],
       "searchTerms": [
         "Whitepaper ve E-Kitap Yazımı",
         "whitepaper ve e-kitap yazımı",
@@ -8325,10 +7862,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/whitepaper-ve-e-kitap-yazimi",
@@ -8343,9 +7877,7 @@
       "id": 89,
       "slug": "hayalet-yazarlik-ve-liderlik-makaleleri",
       "name": "Hayalet Yazarlık ve Liderlik Makaleleri",
-      "canonicalTerms": [
-        "Hayalet Yazarlık ve Liderlik Makaleleri"
-      ],
+      "canonicalTerms": ["Hayalet Yazarlık ve Liderlik Makaleleri"],
       "searchTerms": [
         "Hayalet Yazarlık ve Liderlik Makaleleri",
         "hayalet yazarlık ve liderlik makaleleri",
@@ -8407,10 +7939,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/hayalet-yazarlik-ve-liderlik-makaleleri",
@@ -8425,9 +7954,7 @@
       "id": 90,
       "slug": "pazar-ve-rakip-arastirmasi",
       "name": "Pazar ve Rakip Araştırması",
-      "canonicalTerms": [
-        "Pazar ve Rakip Araştırması"
-      ],
+      "canonicalTerms": ["Pazar ve Rakip Araştırması"],
       "searchTerms": [
         "Pazar ve Rakip Araştırması",
         "pazar ve rakip araştırması",
@@ -8508,10 +8035,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/pazar-ve-rakip-arastirmasi",
@@ -8526,9 +8050,7 @@
       "id": 91,
       "slug": "girisim-degerleme-ve-yatirimci-metrikleri",
       "name": "Girişim Değerleme ve Yatırımcı Metrikleri",
-      "canonicalTerms": [
-        "Girişim Değerleme ve Yatırımcı Metrikleri"
-      ],
+      "canonicalTerms": ["Girişim Değerleme ve Yatırımcı Metrikleri"],
       "searchTerms": [
         "Girişim Değerleme ve Yatırımcı Metrikleri",
         "girişim değerleme ve yatırımcı metrikleri",
@@ -8597,10 +8119,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/girisim-degerleme-ve-yatirimci-metrikleri",
@@ -8615,9 +8134,7 @@
       "id": 92,
       "slug": "surec-ve-operasyon-optimizasyonu",
       "name": "Süreç ve Operasyon Optimizasyonu",
-      "canonicalTerms": [
-        "Süreç ve Operasyon Optimizasyonu"
-      ],
+      "canonicalTerms": ["Süreç ve Operasyon Optimizasyonu"],
       "searchTerms": [
         "Süreç ve Operasyon Optimizasyonu",
         "süreç ve operasyon optimizasyonu",
@@ -8706,10 +8223,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/surec-ve-operasyon-optimizasyonu",
@@ -8724,9 +8238,7 @@
       "id": 93,
       "slug": "insan-kaynaklari-ve-yetenek-avciligi",
       "name": "İnsan Kaynakları ve Yetenek Avcılığı",
-      "canonicalTerms": [
-        "İnsan Kaynakları ve Yetenek Avcılığı"
-      ],
+      "canonicalTerms": ["İnsan Kaynakları ve Yetenek Avcılığı"],
       "searchTerms": [
         "İnsan Kaynakları ve Yetenek Avcılığı",
         "i̇nsan kaynakları ve yetenek avcılığı",
@@ -8771,10 +8283,7 @@
       ],
       "relatedCategories": [],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/insan-kaynaklari-ve-yetenek-avciligi",
@@ -8789,9 +8298,7 @@
       "id": 94,
       "slug": "online-egitim-ozel-ders-ve-mentorluk",
       "name": "Online Eğitim, Özel Ders ve Mentorluk",
-      "canonicalTerms": [
-        "Online Eğitim, Özel Ders ve Mentorluk"
-      ],
+      "canonicalTerms": ["Online Eğitim, Özel Ders ve Mentorluk"],
       "searchTerms": [
         "Online Eğitim, Özel Ders ve Mentorluk",
         "online eğitim, özel ders ve mentorluk",
@@ -8837,10 +8344,7 @@
       ],
       "relatedCategories": [],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/online-egitim-ozel-ders-ve-mentorluk",
@@ -8855,9 +8359,7 @@
       "id": 95,
       "slug": "freelance-ve-yazilim-hizmet-sozlesmeleri",
       "name": "Freelance ve Yazılım Hizmet Sözleşmeleri",
-      "canonicalTerms": [
-        "Freelance ve Yazılım Hizmet Sözleşmeleri"
-      ],
+      "canonicalTerms": ["Freelance ve Yazılım Hizmet Sözleşmeleri"],
       "searchTerms": [
         "Freelance ve Yazılım Hizmet Sözleşmeleri",
         "freelance ve yazılım hizmet sözleşmeleri",
@@ -8920,10 +8422,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/freelance-ve-yazilim-hizmet-sozlesmeleri",
@@ -8938,9 +8437,7 @@
       "id": 96,
       "slug": "gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma",
       "name": "Gizlilik Sözleşmesi (NDA) ve Ticari Sır Koruma",
-      "canonicalTerms": [
-        "Gizlilik Sözleşmesi (NDA) ve Ticari Sır Koruma"
-      ],
+      "canonicalTerms": ["Gizlilik Sözleşmesi (NDA) ve Ticari Sır Koruma"],
       "searchTerms": [
         "Gizlilik Sözleşmesi (NDA) ve Ticari Sır Koruma",
         "gizlilik sözleşmesi (nda) ve ticari sır koruma",
@@ -9000,10 +8497,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/gizlilik-sozlesmesi-nda-ve-ticari-sir-koruma",
@@ -9018,9 +8512,7 @@
       "id": 97,
       "slug": "saas-ve-uygulama-yasal-metinleri",
       "name": "SaaS ve Uygulama Yasal Metinleri",
-      "canonicalTerms": [
-        "SaaS ve Uygulama Yasal Metinleri"
-      ],
+      "canonicalTerms": ["SaaS ve Uygulama Yasal Metinleri"],
       "searchTerms": [
         "SaaS ve Uygulama Yasal Metinleri",
         "saas ve uygulama yasal metinleri",
@@ -9105,10 +8597,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/saas-ve-uygulama-yasal-metinleri",
@@ -9123,9 +8612,7 @@
       "id": 98,
       "slug": "unity-ile-oyun-gelistirme",
       "name": "Unity ile Oyun Geliştirme",
-      "canonicalTerms": [
-        "Unity ile Oyun Geliştirme"
-      ],
+      "canonicalTerms": ["Unity ile Oyun Geliştirme"],
       "searchTerms": [
         "Unity ile Oyun Geliştirme",
         "unity ile oyun geliştirme",
@@ -9199,10 +8686,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/unity-ile-oyun-gelistirme",
@@ -9217,9 +8701,7 @@
       "id": 99,
       "slug": "unreal-engine-ve-c-oyun-gelistirme",
       "name": "Unreal Engine & C++ Oyun Geliştirme",
-      "canonicalTerms": [
-        "Unreal Engine & C++ Oyun Geliştirme"
-      ],
+      "canonicalTerms": ["Unreal Engine & C++ Oyun Geliştirme"],
       "searchTerms": [
         "Unreal Engine & C++ Oyun Geliştirme",
         "unreal engine & c++ oyun geliştirme",
@@ -9291,10 +8773,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/unreal-engine-ve-c-oyun-gelistirme",
@@ -9309,9 +8788,7 @@
       "id": 100,
       "slug": "mobil-oyun-gelistirme-hypercasual-casual",
       "name": "Mobil Oyun Geliştirme (Hypercasual / Casual)",
-      "canonicalTerms": [
-        "Mobil Oyun Geliştirme (Hypercasual / Casual)"
-      ],
+      "canonicalTerms": ["Mobil Oyun Geliştirme (Hypercasual / Casual)"],
       "searchTerms": [
         "Mobil Oyun Geliştirme (Hypercasual / Casual)",
         "mobil oyun geliştirme (hypercasual / casual)",
@@ -9385,10 +8862,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/mobil-oyun-gelistirme-hypercasual-casual",
@@ -9403,9 +8877,7 @@
       "id": 101,
       "slug": "2d-oyun-sanati-ve-piksel-cizim",
       "name": "2D Oyun Sanatı ve Piksel Çizim",
-      "canonicalTerms": [
-        "2D Oyun Sanatı ve Piksel Çizim"
-      ],
+      "canonicalTerms": ["2D Oyun Sanatı ve Piksel Çizim"],
       "searchTerms": [
         "2D Oyun Sanatı ve Piksel Çizim",
         "2d oyun sanatı ve piksel çizim",
@@ -9429,11 +8901,7 @@
         "2D Animation",
         "Game Art"
       ],
-      "aliases": [
-        "pixel artist",
-        "2d game artist",
-        "sprite artist"
-      ],
+      "aliases": ["pixel artist", "2d game artist", "sprite artist"],
       "serviceIntents": [
         "Oyunum için karakter, sprite, tileset ve animasyonları pixel art tarzında hazırlatmak istiyorum.",
         "32x32 veya 64x64 boyutta okunaklı karakter sprite’ları çizecek pixel artist arıyorum.",
@@ -9473,10 +8941,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/2d-oyun-sanati-ve-piksel-cizim",
@@ -9491,9 +8956,7 @@
       "id": 102,
       "slug": "3d-oyun-varliklari-ve-karakter-modelleme",
       "name": "3D Oyun Varlıkları ve Karakter Modelleme",
-      "canonicalTerms": [
-        "3D Oyun Varlıkları ve Karakter Modelleme"
-      ],
+      "canonicalTerms": ["3D Oyun Varlıkları ve Karakter Modelleme"],
       "searchTerms": [
         "3D Oyun Varlıkları ve Karakter Modelleme",
         "3d oyun varlıkları ve karakter modelleme",
@@ -9585,10 +9048,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/3d-oyun-varliklari-ve-karakter-modelleme",
@@ -9603,9 +9063,7 @@
       "id": 103,
       "slug": "oyun-mekanigi-ve-seviye-level-tasarimi",
       "name": "Oyun Mekaniği ve Seviye (Level) Tasarımı",
-      "canonicalTerms": [
-        "Oyun Mekaniği ve Seviye (Level) Tasarımı"
-      ],
+      "canonicalTerms": ["Oyun Mekaniği ve Seviye (Level) Tasarımı"],
       "searchTerms": [
         "Oyun Mekaniği ve Seviye (Level) Tasarımı",
         "oyun mekaniği ve seviye (level) tasarımı",
@@ -9630,12 +9088,7 @@
         "Unity Editor",
         "Unreal Editor"
       ],
-      "aliases": [
-        "level designer",
-        "game designer",
-        "gameplay designer",
-        "game systems designer"
-      ],
+      "aliases": ["level designer", "game designer", "gameplay designer", "game systems designer"],
       "serviceIntents": [
         "Oyunun bölümlerini, zorluk eğrisini ve temel oynanış döngüsünü profesyonel tasarlatmak istiyorum.",
         "Mevcut bölüm çok kolay ve sıkıcı; akışını ve karşılaşmaları yeniden düzenlemek istiyorum.",
@@ -9693,10 +9146,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/oyun-mekanigi-ve-seviye-level-tasarimi",
@@ -9711,9 +9161,7 @@
       "id": 104,
       "slug": "oyun-sesleri-ve-muzik-produksiyonu",
       "name": "Oyun Sesleri ve Müzik Prodüksiyonu",
-      "canonicalTerms": [
-        "Oyun Sesleri ve Müzik Prodüksiyonu"
-      ],
+      "canonicalTerms": ["Oyun Sesleri ve Müzik Prodüksiyonu"],
       "searchTerms": [
         "Oyun Sesleri ve Müzik Prodüksiyonu",
         "oyun sesleri ve müzik prodüksiyonu",
@@ -9778,10 +9226,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/oyun-sesleri-ve-muzik-produksiyonu",
@@ -9796,9 +9241,7 @@
       "id": 105,
       "slug": "dis-cephe-ve-peyzaj-3d-gorsellestirme",
       "name": "Dış Cephe ve Peyzaj 3D Görselleştirme",
-      "canonicalTerms": [
-        "Dış Cephe ve Peyzaj 3D Görselleştirme"
-      ],
+      "canonicalTerms": ["Dış Cephe ve Peyzaj 3D Görselleştirme"],
       "searchTerms": [
         "Dış Cephe ve Peyzaj 3D Görselleştirme",
         "dış cephe ve peyzaj 3d görselleştirme",
@@ -9858,10 +9301,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/dis-cephe-ve-peyzaj-3d-gorsellestirme",
@@ -9876,9 +9316,7 @@
       "id": 106,
       "slug": "3d-baski-modelleme-ve-stl-hazirligi",
       "name": "3D Baskı Modelleme ve STL Hazırlığı",
-      "canonicalTerms": [
-        "3D Baskı Modelleme ve STL Hazırlığı"
-      ],
+      "canonicalTerms": ["3D Baskı Modelleme ve STL Hazırlığı"],
       "searchTerms": [
         "3D Baskı Modelleme ve STL Hazırlığı",
         "3d baskı modelleme ve stl hazırlığı",
@@ -9944,10 +9382,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/3d-baski-modelleme-ve-stl-hazirligi",
@@ -9962,9 +9397,7 @@
       "id": 107,
       "slug": "mekansal-bilisim-vr-ve-ar-gelistirme",
       "name": "Mekânsal Bilişim, VR & AR Geliştirme",
-      "canonicalTerms": [
-        "Mekânsal Bilişim, VR & AR Geliştirme"
-      ],
+      "canonicalTerms": ["Mekânsal Bilişim, VR & AR Geliştirme"],
       "searchTerms": [
         "Mekânsal Bilişim, VR & AR Geliştirme",
         "mekânsal bilişim, vr & ar geliştirme",
@@ -10033,10 +9466,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/mekansal-bilisim-vr-ve-ar-gelistirme",
@@ -10051,9 +9481,7 @@
       "id": 108,
       "slug": "e-ticaret-magaza-ve-siparis-operasyon-destegi",
       "name": "E-Ticaret Mağaza ve Sipariş Operasyon Desteği",
-      "canonicalTerms": [
-        "E-Ticaret Mağaza ve Sipariş Operasyon Desteği"
-      ],
+      "canonicalTerms": ["E-Ticaret Mağaza ve Sipariş Operasyon Desteği"],
       "searchTerms": [
         "E-Ticaret Mağaza ve Sipariş Operasyon Desteği",
         "e-ticaret mağaza ve sipariş operasyon desteği",
@@ -10127,10 +9555,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/e-ticaret-magaza-ve-siparis-operasyon-destegi",
@@ -10145,9 +9570,7 @@
       "id": 109,
       "slug": "potansiyel-musteri-ve-veri-zenginlestirme",
       "name": "Potansiyel Müşteri ve Veri Zenginleştirme",
-      "canonicalTerms": [
-        "Potansiyel Müşteri ve Veri Zenginleştirme"
-      ],
+      "canonicalTerms": ["Potansiyel Müşteri ve Veri Zenginleştirme"],
       "searchTerms": [
         "Potansiyel Müşteri ve Veri Zenginleştirme",
         "potansiyel müşteri ve veri zenginleştirme",
@@ -10212,10 +9635,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/potansiyel-musteri-ve-veri-zenginlestirme",
@@ -10230,9 +9650,7 @@
       "id": 110,
       "slug": "ses-ve-video-desifre-destegi",
       "name": "Ses ve Video Deşifre Desteği",
-      "canonicalTerms": [
-        "Ses ve Video Deşifre Desteği"
-      ],
+      "canonicalTerms": ["Ses ve Video Deşifre Desteği"],
       "searchTerms": [
         "Ses ve Video Deşifre Desteği",
         "ses ve video deşifre desteği",
@@ -10317,10 +9735,7 @@
         }
       ],
       "negativeTerms": [],
-      "locale": [
-        "tr-TR",
-        "en"
-      ],
+      "locale": ["tr-TR", "en"],
       "searchBoost": 1.0,
       "status": "active",
       "weightedTermsRef": "data/term-weights.json#/categoriesBySlug/ses-ve-video-desifre-destegi",

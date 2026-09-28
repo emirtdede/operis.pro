@@ -10,13 +10,7 @@ import {
 } from "lucide-react";
 
 export type SettingsCategory =
-  | "profile"
-  | "work"
-  | "account"
-  | "corporate"
-  | "security"
-  | "notifications"
-  | "privacy";
+  "profile" | "work" | "account" | "corporate" | "security" | "notifications" | "privacy";
 
 export interface ProfileLinkItem {
   id?: string;
@@ -127,51 +121,162 @@ export function getSettingsCategories(isTr: boolean): SettingsCategoryItem[] {
     {
       id: "profile",
       label: isTr ? "Profil & Kimlik" : "Profile & Identity",
-      desc: isTr ? "Kullanıcı adı, isim, ünvan, bio ve bağlantılar" : "Handle, name, headline, bio, and social links",
+      desc: isTr
+        ? "Kullanıcı adı, isim, ünvan, bio ve bağlantılar"
+        : "Handle, name, headline, bio, and social links",
       icon: User,
-      keywords: ["handle", "kullanıcı adı", "isim", "ad", "soyad", "name", "bio", "biyografi", "avatar", "fotoğraf", "resim", "link", "github", "linkedin", "website"],
+      keywords: [
+        "handle",
+        "kullanıcı adı",
+        "isim",
+        "ad",
+        "soyad",
+        "name",
+        "bio",
+        "biyografi",
+        "avatar",
+        "fotoğraf",
+        "resim",
+        "link",
+        "github",
+        "linkedin",
+        "website",
+      ],
     },
     {
       id: "work",
       label: isTr ? "Müsaitlik & Çalışma" : "Availability & Work",
-      desc: isTr ? "Müsaitlik durumu, haftalık saat, iş türü tercihleri" : "Availability status, weekly hours, contract type",
+      desc: isTr
+        ? "Müsaitlik durumu, haftalık saat, iş türü tercihleri"
+        : "Availability status, weekly hours, contract type",
       icon: Briefcase,
-      keywords: ["müsaitlik", "availability", "çalışma", "saat", "hours", "retainer", "freelance", "fulltime", "kontrat", "bütçe", "ücret"],
+      keywords: [
+        "müsaitlik",
+        "availability",
+        "çalışma",
+        "saat",
+        "hours",
+        "retainer",
+        "freelance",
+        "fulltime",
+        "kontrat",
+        "bütçe",
+        "ücret",
+      ],
     },
     {
       id: "account",
       label: isTr ? "Hesap & Bölgesel" : "Account & Region",
-      desc: isTr ? "E-posta, bağlı Google hesabı, dil, tema ve saat dilimi" : "Email, connected Google account, language, theme",
+      desc: isTr
+        ? "E-posta, bağlı Google hesabı, dil, tema ve saat dilimi"
+        : "Email, connected Google account, language, theme",
       icon: Sliders,
-      keywords: ["email", "e-posta", "google", "oauth", "dil", "language", "tema", "theme", "karanlık", "dark", "saat dilimi", "timezone", "iletişim", "whatsapp"],
+      keywords: [
+        "email",
+        "e-posta",
+        "google",
+        "oauth",
+        "dil",
+        "language",
+        "tema",
+        "theme",
+        "karanlık",
+        "dark",
+        "saat dilimi",
+        "timezone",
+        "iletişim",
+        "whatsapp",
+      ],
     },
     {
       id: "corporate",
       label: isTr ? "Kurumsal & Fatura" : "Corporate & Billing",
-      desc: isTr ? "GİB vergi doğrulaması, fatura adresi ve IBAN" : "Tax verification, invoice details, and IBAN payout",
+      desc: isTr
+        ? "GİB vergi doğrulaması, fatura adresi ve IBAN"
+        : "Tax verification, invoice details, and IBAN payout",
       icon: Building2,
-      keywords: ["vergi", "tax", "vkn", "tckn", "fatura", "invoice", "şirket", "company", "iban", "banka", "bank", "hakediş", "kurumsal"],
+      keywords: [
+        "vergi",
+        "tax",
+        "vkn",
+        "tckn",
+        "fatura",
+        "invoice",
+        "şirket",
+        "company",
+        "iban",
+        "banka",
+        "bank",
+        "hakediş",
+        "kurumsal",
+      ],
     },
     {
       id: "security",
       label: isTr ? "Giriş & Güvenlik" : "Sign-in & Security",
-      desc: isTr ? "Şifre, 2FA doğrulaması ve aktif oturum cihazları" : "Password, 2FA auth, and active session devices",
+      desc: isTr
+        ? "Şifre, 2FA doğrulaması ve aktif oturum cihazları"
+        : "Password, 2FA auth, and active session devices",
       icon: Lock,
-      keywords: ["şifre", "password", "2fa", "totp", "güvenlik", "security", "oturum", "sessions", "cihaz", "device", "ip"],
+      keywords: [
+        "şifre",
+        "password",
+        "2fa",
+        "totp",
+        "güvenlik",
+        "security",
+        "oturum",
+        "sessions",
+        "cihaz",
+        "device",
+        "ip",
+      ],
     },
     {
       id: "notifications",
       label: isTr ? "Bildirim Matrisi" : "Notifications Matrix",
-      desc: isTr ? "İlan, teklif, mesaj ve bülten bildirim sıklığı" : "Listings, offers, chats, and newsletter alerts",
+      desc: isTr
+        ? "İlan, teklif, mesaj ve bülten bildirim sıklığı"
+        : "Listings, offers, chats, and newsletter alerts",
       icon: Bell,
-      keywords: ["bildirim", "notification", "ilan", "radar", "teklif", "offer", "mesaj", "bülten", "newsletter", "push", "ses"],
+      keywords: [
+        "bildirim",
+        "notification",
+        "ilan",
+        "radar",
+        "teklif",
+        "offer",
+        "mesaj",
+        "bülten",
+        "newsletter",
+        "push",
+        "ses",
+      ],
     },
     {
       id: "privacy",
       label: isTr ? "Gizlilik & KVKK" : "Privacy & KVKK",
-      desc: isTr ? "Telefon/konum gizliliği, veri indirme, tehlike bölgesi" : "Phone/location privacy, data export, danger zone",
+      desc: isTr
+        ? "Telefon/konum gizliliği, veri indirme, tehlike bölgesi"
+        : "Phone/location privacy, data export, danger zone",
       icon: Shield,
-      keywords: ["gizlilik", "privacy", "telefon", "phone", "konum", "location", "kvkk", "gdpr", "export", "veri indir", "engellenen", "block", "sil", "delete", "dondur"],
+      keywords: [
+        "gizlilik",
+        "privacy",
+        "telefon",
+        "phone",
+        "konum",
+        "location",
+        "kvkk",
+        "gdpr",
+        "export",
+        "veri indir",
+        "engellenen",
+        "block",
+        "sil",
+        "delete",
+        "dondur",
+      ],
     },
   ];
 }

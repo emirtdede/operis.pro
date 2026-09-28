@@ -24,14 +24,11 @@ export function MatchSummaryCard({
   isTr,
   onOpenContractModal,
 }: MatchSummaryCardProps) {
-  const matchedDateStr = new Date(matchedAt).toLocaleDateString(
-    isTr ? "tr-TR" : "en-US",
-    {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }
-  );
+  const matchedDateStr = new Date(matchedAt).toLocaleDateString(isTr ? "tr-TR" : "en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
   return (
     <div className="space-y-8">

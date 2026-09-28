@@ -4,20 +4,8 @@
  */
 
 export const SEED_TRENDING_SEARCHES: Record<string, string[]> = {
-  tr: [
-    "Next.js",
-    "React",
-    "TypeScript",
-    "Tailwind CSS",
-    "Yapay Zeka",
-  ],
-  en: [
-    "Next.js",
-    "React",
-    "TypeScript",
-    "Tailwind CSS",
-    "AI / LLM",
-  ],
+  tr: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Yapay Zeka"],
+  en: ["Next.js", "React", "TypeScript", "Tailwind CSS", "AI / LLM"],
 };
 
 export function getSeedTrending(locale: string = "tr"): string[] {

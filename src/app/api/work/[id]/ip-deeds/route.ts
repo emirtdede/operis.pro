@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { MilestoneService } from "@/src/modules/engagements/milestone-service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import { evaluateSecurityAccessAsync, getClientIp } from "@/src/lib/security/rate-limit";
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -37,7 +38,13 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
       count: deeds.length,
     });
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Failed to retrieve engagement IP deeds";
-    return NextResponse.json({ error: msg }, { status: 400 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to retrieve engagement IP deeds",
+        tr: "Fikri mülkiyet devir senetleri alınamadı",
+      },
+      { isEn, logPrefix: "[IP Deeds Error]", status: 500 }
+    );
   }
 }

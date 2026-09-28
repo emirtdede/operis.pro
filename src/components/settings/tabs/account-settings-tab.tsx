@@ -73,12 +73,18 @@ export function AccountSettingsTab({
             </p>
           </div>
           {emailVerified ? (
-            <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px] gap-1">
+            <Badge
+              variant="outline"
+              className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px] gap-1"
+            >
               <CheckCircle2 className="h-3 w-3" />
               <span>{isTr ? "Doğrulandı" : "Verified"}</span>
             </Badge>
           ) : (
-            <Badge variant="outline" className="bg-amber-500/10 text-amber-400 border-amber-500/20 text-[10px] gap-1">
+            <Badge
+              variant="outline"
+              className="bg-amber-500/10 text-amber-400 border-amber-500/20 text-[10px] gap-1"
+            >
               <AlertCircle className="h-3 w-3" />
               <span>{isTr ? "Doğrulanmamış" : "Unverified"}</span>
             </Badge>
@@ -122,7 +128,10 @@ export function AccountSettingsTab({
               </span>
             </div>
           </div>
-          <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px]">
+          <Badge
+            variant="outline"
+            className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px]"
+          >
             {isTr ? "Aktif & Bağlı" : "Connected"}
           </Badge>
         </div>

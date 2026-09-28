@@ -1,9 +1,5 @@
 import { DossierZipBuilder } from "../dossier-zip-builder";
-import type {
-  DossierPartyInfo,
-  EvidenceFileItem,
-  LegalDossierManifest,
-} from "../dossier-types";
+import type { DossierPartyInfo, EvidenceFileItem, LegalDossierManifest } from "../dossier-types";
 
 export class DossierExportService {
   /**

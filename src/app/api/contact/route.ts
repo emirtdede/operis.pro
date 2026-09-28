@@ -88,7 +88,14 @@ export async function POST(req: Request) {
     }
 
     isEn = body?.locale === "en" || isEnHeader;
-    const { name, email, subject, message: rawText, attachmentName, attachmentSize } = createContactSchema(isEn).parse(body);
+    const {
+      name,
+      email,
+      subject,
+      message: rawText,
+      attachmentName,
+      attachmentSize,
+    } = createContactSchema(isEn).parse(body);
 
     let attachmentNote = "";
     if (attachmentName) {

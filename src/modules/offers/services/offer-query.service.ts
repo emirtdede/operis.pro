@@ -395,7 +395,10 @@ export class OfferQueryService {
       }
     }
 
-    const template = OfferQueryService.saveOfferTemplate(userId, { ...validatedInput, id: templateId });
+    const template = OfferQueryService.saveOfferTemplate(userId, {
+      ...validatedInput,
+      id: templateId,
+    });
     return template;
   }
 

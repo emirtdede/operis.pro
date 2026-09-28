@@ -189,13 +189,21 @@ export async function POST(req: Request) {
     return response;
   } catch (err: unknown) {
     const isEn = req.headers.get("x-locale") === "en";
-    let message = isEn
-      ? "Failed to change password."
-      : "Şifre değiştirme işlemi başarısız oldu.";
     if (err instanceof z.ZodError) {
       const fallbackFormat = isEn ? "Invalid password format." : "Geçersiz şifre formatı.";
-      message = err.issues[0]?.message || fallbackFormat;
+      return NextResponse.json(
+        { error: err.issues[0]?.message || fallbackFormat },
+        { status: 400 }
+      );
     }
-    return NextResponse.json({ error: message }, { status: 400 });
+    console.error("Change password unhandled error:", err);
+    return NextResponse.json(
+      {
+        error: isEn
+          ? "Failed to change password. Please try again later."
+          : "Şifre değiştirme işlemi başarısız oldu. Lütfen daha sonra tekrar deneyiniz.",
+      },
+      { status: 500 }
+    );
   }
 }

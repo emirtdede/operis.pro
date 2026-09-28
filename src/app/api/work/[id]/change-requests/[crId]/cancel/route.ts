@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { ChangeRequestService } from "@/src/modules/engagements/change-request-service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -45,27 +46,34 @@ export async function POST(
       changeRequest: cancelled,
     });
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Internal Server Error";
-    if (message === "CHANGE_REQUEST_NOT_PENDING") {
-      return NextResponse.json(
-        {
-          error: isEnHeader
-            ? "Change request is no longer pending."
-            : "Değişiklik talebi artık beklemede değil.",
+    return handleApiError(
+      error,
+      {
+        en: "Failed to cancel change request",
+        tr: "Değişiklik talebi iptal edilemedi",
+      },
+      {
+        isEn: isEnHeader,
+        logPrefix: "[Change Request Cancel Error]",
+        status: 500,
+        allowedMessages: {
+          CHANGE_REQUEST_NOT_PENDING: {
+            en: "Change request is no longer pending.",
+            tr: "Değişiklik talebi artık beklemede değil.",
+            status: 409,
+          },
+          UNAUTHORIZED_USER: {
+            en: "Unauthorized or request not found.",
+            tr: "Yetkisiz işlem veya talep bulunamadı.",
+            status: 403,
+          },
+          CHANGE_REQUEST_NOT_FOUND: {
+            en: "Unauthorized or request not found.",
+            tr: "Yetkisiz işlem veya talep bulunamadı.",
+            status: 403,
+          },
         },
-        { status: 409 }
-      );
-    }
-    if (message === "UNAUTHORIZED_USER" || message === "CHANGE_REQUEST_NOT_FOUND") {
-      return NextResponse.json(
-        {
-          error: isEnHeader
-            ? "Unauthorized or request not found."
-            : "Yetkisiz işlem veya talep bulunamadı.",
-        },
-        { status: 403 }
-      );
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+      }
+    );
   }
 }

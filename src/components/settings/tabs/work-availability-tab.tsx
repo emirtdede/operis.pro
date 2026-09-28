@@ -48,8 +48,12 @@ export function WorkAvailabilityTab({
     initialAvailabilityStatus || "AVAILABLE_NOW"
   );
   const [hoursPerWeek, setHoursPerWeek] = useState<number>(initialAvailabilityHoursPerWeek || 40);
-  const [availableFromDate, setAvailableFromDate] = useState<string>(initialAvailableFromDate || "");
-  const [availabilityNotice, setAvailabilityNotice] = useState<string>(initialAvailabilityNotice || "");
+  const [availableFromDate, setAvailableFromDate] = useState<string>(
+    initialAvailableFromDate || ""
+  );
+  const [availabilityNotice, setAvailabilityNotice] = useState<string>(
+    initialAvailabilityNotice || ""
+  );
   const [isAvailableForHire, setIsAvailableForHire] = useState<boolean>(initialIsAvailableForHire);
   const [isActivelyHiring, setIsActivelyHiring] = useState<boolean>(initialIsActivelyHiring);
   const [roles, setRoles] = useState<string[]>(initialRoles || ["freelancer"]);
@@ -120,7 +124,9 @@ export function WorkAvailabilityTab({
       <div>
         <h2 className="text-lg font-bold text-[var(--color-text-primary)] flex items-center gap-2">
           <Briefcase className="h-5 w-5 text-blue-500" />
-          <span>{isTr ? "Müsaitlik ve Çalışma Tercihleri" : "Availability & Work Preferences"}</span>
+          <span>
+            {isTr ? "Müsaitlik ve Çalışma Tercihleri" : "Availability & Work Preferences"}
+          </span>
         </h2>
         <p className="text-xs text-[var(--color-text-secondary)] mt-1">
           {isTr
@@ -140,49 +146,65 @@ export function WorkAvailabilityTab({
               id: "AVAILABLE_NOW" as const,
               dot: "bg-emerald-500",
               title: isTr ? "Hemen Müsait" : "Available Now",
-              desc: isTr ? "Yeni tekliflere ve acil projelere hemen başlayabilirim." : "Ready to take on new projects immediately.",
+              desc: isTr
+                ? "Yeni tekliflere ve acil projelere hemen başlayabilirim."
+                : "Ready to take on new projects immediately.",
             },
             {
               id: "FULL_TIME" as const,
               dot: "bg-blue-500",
               title: isTr ? "Tam Zamanlı Açık" : "Open to Full-Time",
-              desc: isTr ? "Uzun vadeli tam zamanlı sözleşmeli pozisyonlara açığım." : "Open to full-time contracts or positions.",
+              desc: isTr
+                ? "Uzun vadeli tam zamanlı sözleşmeli pozisyonlara açığım."
+                : "Open to full-time contracts or positions.",
             },
             {
               id: "PARTIALLY_AVAILABLE" as const,
               dot: "bg-amber-500",
               title: isTr ? "Yarı Zamanlı" : "Part-Time",
-              desc: isTr ? "Haftalık 10-20 saat esnek çalışma ve seçili projeler." : "Open for part-time, retainer or advising.",
+              desc: isTr
+                ? "Haftalık 10-20 saat esnek çalışma ve seçili projeler."
+                : "Open for part-time, retainer or advising.",
             },
             {
               id: "PROJECT_BASED" as const,
               dot: "bg-purple-500",
               title: isTr ? "Proje Bazlı / Serbest" : "Project-Based / Freelance",
-              desc: isTr ? "Belirli süreli sprintler ve anahtar teslim projeler." : "Available for scoped sprints and milestone deliverables.",
+              desc: isTr
+                ? "Belirli süreli sprintler ve anahtar teslim projeler."
+                : "Available for scoped sprints and milestone deliverables.",
             },
             {
               id: "ADVISORY" as const,
               dot: "bg-indigo-500",
               title: isTr ? "Danışmanlık & Mentorluk" : "Advisory & Mentorship",
-              desc: isTr ? "Mimari inceleme, kod denetimi ve teknik rehberlik." : "Architecture review, code audit, and advisory.",
+              desc: isTr
+                ? "Mimari inceleme, kod denetimi ve teknik rehberlik."
+                : "Architecture review, code audit, and advisory.",
             },
             {
               id: "VOLUNTEER" as const,
               dot: "bg-teal-500",
               title: isTr ? "Gönüllü & Sosyal Fayda" : "Volunteer & Pro Bono",
-              desc: isTr ? "Açık kaynak, sivil toplum ve sosyal fayda projeleri." : "Open source, non-profit, and social impact work.",
+              desc: isTr
+                ? "Açık kaynak, sivil toplum ve sosyal fayda projeleri."
+                : "Open source, non-profit, and social impact work.",
             },
             {
               id: "INTERNSHIP" as const,
               dot: "bg-sky-500",
               title: isTr ? "Staj & Çıraklık" : "Internship & Apprenticeship",
-              desc: isTr ? "Junior geliştirici ve stajyer iş birlikleri." : "Junior tracks, learning partnerships, and internships.",
+              desc: isTr
+                ? "Junior geliştirici ve stajyer iş birlikleri."
+                : "Junior tracks, learning partnerships, and internships.",
             },
             {
               id: "BUSY" as const,
               dot: "bg-red-500",
               title: isTr ? "Meşgul / Kapalı" : "Busy / Not Taking Work",
-              desc: isTr ? "Şu an tam kapasitedeyim, yeni teklif alamıyorum." : "Fully booked with existing commitments.",
+              desc: isTr
+                ? "Şu an tam kapasitedeyim, yeni teklif alamıyorum."
+                : "Fully booked with existing commitments.",
             },
           ].map((item) => {
             const isSelected = availabilityStatus === item.id;
@@ -199,7 +221,9 @@ export function WorkAvailabilityTab({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className={`h-2.5 w-2.5 rounded-full ${item.dot}`} />
-                    <span className="text-xs font-bold text-[var(--color-text-primary)]">{item.title}</span>
+                    <span className="text-xs font-bold text-[var(--color-text-primary)]">
+                      {item.title}
+                    </span>
                   </div>
                   {isSelected && <Check className="h-4 w-4 text-blue-400" />}
                 </div>
@@ -429,7 +453,11 @@ export function WorkAvailabilityTab({
           </p>
         </div>
         <Link href={isTr ? "/tr/ilanlar" : "/en/listings"}>
-          <Button variant="outline" size="sm" className="gap-2 shrink-0 border-blue-500/30 text-blue-400 hover:bg-blue-500/10 cursor-pointer">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2 shrink-0 border-blue-500/30 text-blue-400 hover:bg-blue-500/10 cursor-pointer"
+          >
             <ExternalLink className="h-3.5 w-3.5" />
             <span>{isTr ? "Akışa Git & Özelleştir" : "Open Feed & Customize"}</span>
           </Button>

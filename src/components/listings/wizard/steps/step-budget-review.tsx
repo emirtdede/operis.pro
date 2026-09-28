@@ -1,24 +1,12 @@
 import type { Dispatch, SetStateAction } from "react";
-import {
-  Coins,
-  TrendingUp,
-  Loader2,
-  Calculator,
-  Clock,
-  Sparkles,
-  Eye,
-} from "lucide-react";
+import { Coins, TrendingUp, Loader2, Calculator, Clock, Sparkles, Eye } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { TextInput } from "@/src/components/ui/text-input";
 import { Select } from "@/src/components/ui/select";
 import { Checkbox } from "@/src/components/ui/checkbox";
 import type { MarketBenchmarkResult } from "@/src/modules/categories/benchmark-service";
 import type { calculateFreelanceTax } from "@/src/modules/finance/tax-calculator";
-import {
-  getBudgetMinPlaceholder,
-  getTaxToggleLabel,
-  getTimelineDescription,
-} from "../types";
+import { getBudgetMinPlaceholder, getTaxToggleLabel, getTimelineDescription } from "../types";
 
 export interface StepBudgetReviewProps {
   isTr: boolean;
@@ -99,7 +87,6 @@ export function StepBudgetReview({
 
   return (
     <div className="space-y-6">
-
       {/* Budget & Timeline Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Budget Box */}
@@ -114,7 +101,11 @@ export function StepBudgetReview({
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1.5 font-bold text-[11px] text-cyan-300">
                 <TrendingUp className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
-                <span>{isTr ? "Piyasa Referans Rehberi (Son 30 Gün)" : "Market Rate Benchmark (Last 30 Days)"}</span>
+                <span>
+                  {isTr
+                    ? "Piyasa Referans Rehberi (Son 30 Gün)"
+                    : "Market Rate Benchmark (Last 30 Days)"}
+                </span>
               </div>
               {isBenchmarkLoading && (
                 <Loader2 className="h-3 w-3 text-cyan-400 animate-spin shrink-0" />
@@ -135,8 +126,10 @@ export function StepBudgetReview({
                 <div className="space-y-0.5 text-[var(--color-text-tertiary)]">
                   <p>
                     {isTr
-                      ? (benchmark?.messageTr || "Bu kategoride son 30 günde henüz yeterli eşleşme verisi oluşmadı.")
-                      : (benchmark?.messageEn || "Insufficient matched project data in this category for the last 30 days.")}
+                      ? benchmark?.messageTr ||
+                        "Bu kategoride son 30 günde henüz yeterli eşleşme verisi oluşmadı."
+                      : benchmark?.messageEn ||
+                        "Insufficient matched project data in this category for the last 30 days."}
                   </p>
                   <p className="text-[10px] opacity-75">
                     {isTr
@@ -214,7 +207,9 @@ export function StepBudgetReview({
               >
                 <span className="flex items-center gap-1.5 font-semibold">
                   <Calculator className="h-3.5 w-3.5 text-cyan-400" />
-                  {isTr ? "Kurumsal Şirket Maliyet & Stopaj Rehberi" : "Corporate Cost & Tax Estimator"}
+                  {isTr
+                    ? "Kurumsal Şirket Maliyet & Stopaj Rehberi"
+                    : "Corporate Cost & Tax Estimator"}
                 </span>
                 <span className="text-[10px] text-cyan-400 font-mono">
                   {getTaxToggleLabel(showEmployerTaxBreakdown, isTr)}
@@ -229,7 +224,10 @@ export function StepBudgetReview({
                         {isTr ? "Freelancer Net Hakediş:" : "Freelancer Net:"}
                       </span>
                       <span className="font-mono font-bold text-emerald-400">
-                        {employerTaxPreview.netTakeHome.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} {budgetCurrency}
+                        {employerTaxPreview.netTakeHome.toLocaleString("tr-TR", {
+                          minimumFractionDigits: 2,
+                        })}{" "}
+                        {budgetCurrency}
                       </span>
                     </div>
                     <div className="p-2 rounded-lg bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)]">
@@ -237,7 +235,10 @@ export function StepBudgetReview({
                         {isTr ? "Muhtasar Stopaj (%20):" : "Withholding (20%):"}
                       </span>
                       <span className="font-mono font-bold text-amber-400">
-                        {employerTaxPreview.withholdingAmount.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} {budgetCurrency}
+                        {employerTaxPreview.withholdingAmount.toLocaleString("tr-TR", {
+                          minimumFractionDigits: 2,
+                        })}{" "}
+                        {budgetCurrency}
                       </span>
                     </div>
                     <div className="p-2 rounded-lg bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)]">
@@ -245,7 +246,10 @@ export function StepBudgetReview({
                         {isTr ? "KDV (%20 İndirilebilir):" : "Deductible VAT (20%):"}
                       </span>
                       <span className="font-mono font-bold text-blue-400">
-                        {employerTaxPreview.vatTotalAmount.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} {budgetCurrency}
+                        {employerTaxPreview.vatTotalAmount.toLocaleString("tr-TR", {
+                          minimumFractionDigits: 2,
+                        })}{" "}
+                        {budgetCurrency}
                       </span>
                     </div>
                     <div className="p-2 rounded-lg bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)]">
@@ -253,7 +257,10 @@ export function StepBudgetReview({
                         {isTr ? "Şirket Toplam Nakit Çıkışı:" : "Total Cash Outflow:"}
                       </span>
                       <span className="font-mono font-bold text-cyan-300">
-                        {employerTaxPreview.totalCostToClient.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} {budgetCurrency}
+                        {employerTaxPreview.totalCostToClient.toLocaleString("tr-TR", {
+                          minimumFractionDigits: 2,
+                        })}{" "}
+                        {budgetCurrency}
                       </span>
                     </div>
                   </div>
@@ -343,9 +350,7 @@ export function StepBudgetReview({
         <div className="flex items-center justify-between">
           <div className="font-bold text-blue-400 flex items-center gap-1.5">
             <Sparkles className="h-4 w-4" />
-            <span>
-              {isTr ? "İlan Özeti & Canlı Görünüm" : "Listing Summary & Live Preview"}
-            </span>
+            <span>{isTr ? "İlan Özeti & Canlı Görünüm" : "Listing Summary & Live Preview"}</span>
           </div>
           <Button
             type="button"

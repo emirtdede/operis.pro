@@ -48,4 +48,35 @@ describe("Content Moderation Engine & Guardrail", () => {
       expect(errorMsg).toContain("topluluk kurallarımıza aykırı");
     }
   });
+
+  it("does not false-positive on legitimate Turkish words like 'sık', 'sıkça', 'sıkıntı', 'sıkı'", () => {
+    const validTexts = [
+      "Sıkça sorulan sorulara göz atabilirsiniz.",
+      "Hiçbir sıkıntı yaşamadan projeyi tamamlayabiliriz.",
+      "Bu aralar çok sık teslimat yapıyoruz.",
+      "Sıkı bir çalışma takvimi ile bitireceğiz.",
+      "Trafik sıkışık olduğu için gecikme olmasın diye erken başladık.",
+      "Küfürsüz ve saygılı bir çalışma ortamı rica ediyoruz.",
+    ];
+
+    for (const text of validTexts) {
+      const result = validateContentAppropriateness(text);
+      expect(result.isValid).toBe(true);
+      expect(result.flaggedTerms).toHaveLength(0);
+    }
+  });
+
+  it("accurately detects real profanity with dotted 'i' or vulgar roots", () => {
+    const vulgarTexts = [
+      "Bunu böyle yaparsan seni sikeyim",
+      "sikiş ortamı kurmuşsunuz",
+      "tam bir sik kafalı",
+    ];
+
+    for (const text of vulgarTexts) {
+      const result = validateContentAppropriateness(text);
+      expect(result.isValid).toBe(false);
+      expect(result.flaggedTerms.length).toBeGreaterThan(0);
+    }
+  });
 });

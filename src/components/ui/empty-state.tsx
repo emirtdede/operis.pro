@@ -50,7 +50,9 @@ export function EmptyState({
       <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] mt-2 max-w-md mx-auto leading-relaxed">
         {description}
       </p>
-      {action && <div className="mt-6 flex flex-wrap items-center justify-center gap-3">{action}</div>}
+      {action && (
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">{action}</div>
+      )}
     </div>
   );
 }

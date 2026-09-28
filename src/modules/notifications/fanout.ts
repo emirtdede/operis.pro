@@ -223,13 +223,16 @@ export async function processFanoutEvent(
           // Fetch category key/name if not in payload
           let catKey = "Teknoloji";
           if (categoryId) {
-            const isCatUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-              categoryId
-            );
+            const isCatUuid =
+              /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(categoryId);
             const catRows = await tx
               .select({ key: schema.categories.key })
               .from(schema.categories)
-              .where(isCatUuid ? eq(schema.categories.id, categoryId) : eq(schema.categories.key, categoryId))
+              .where(
+                isCatUuid
+                  ? eq(schema.categories.id, categoryId)
+                  : eq(schema.categories.key, categoryId)
+              )
               .limit(1);
             if (catRows[0]?.key) {
               catKey = catRows[0].key;
@@ -262,7 +265,10 @@ export async function processFanoutEvent(
                 WEEKS: { tr: "Hafta", en: "Weeks" },
                 MONTHS: { tr: "Ay", en: "Months" },
               };
-              const u = unitMap[payload.timelineUnit] || { tr: payload.timelineUnit, en: payload.timelineUnit };
+              const u = unitMap[payload.timelineUnit] || {
+                tr: payload.timelineUnit,
+                en: payload.timelineUnit,
+              };
               return `${payload.timelineValue} ${isEn ? u.en : u.tr}`;
             }
             return isEn ? "Flexible" : "Esnek";

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { MilestoneService } from "@/src/modules/engagements/milestone-service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -49,7 +50,9 @@ export async function POST(
       return NextResponse.json({
         success: true,
         milestone: result.milestone,
-        message: isEn ? "Milestone deliverable accepted successfully." : "Aşama teslimatı başarıyla onaylandı.",
+        message: isEn
+          ? "Milestone deliverable accepted successfully."
+          : "Aşama teslimatı başarıyla onaylandı.",
       });
     }
 
@@ -73,8 +76,22 @@ export async function POST(
       message: isEn ? "Milestone progress updated." : "Aşama ilerleme durumu güncellendi.",
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to update milestone deliverable";
-    const status = message.includes("Yetkisiz") || message.includes("Güvenlik ihlali") ? 403 : message.includes("bulunamadı") ? 404 : 400;
-    return NextResponse.json({ error: message }, { status });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to update milestone deliverable",
+        tr: "Aşama teslimatı güncellenemedi",
+      },
+      {
+        isEn,
+        logPrefix: "[Milestone Deliverable Error]",
+        status: 500,
+        allowedMessages: {
+          Yetkisiz: { en: "Unauthorized", tr: "Yetkisiz erişim", status: 403 },
+          "Güvenlik ihlali": { en: "Security violation", tr: "Güvenlik ihlali", status: 403 },
+          bulunamadı: { en: "Milestone not found", tr: "Aşama bulunamadı", status: 404 },
+        },
+      }
+    );
   }
 }

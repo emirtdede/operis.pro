@@ -82,10 +82,7 @@ export function ListingsDiscoverySidebar({
                 key={cat.id}
                 className="flex items-center justify-between gap-2 p-1.5 px-2 rounded-xl hover:bg-surface/60 transition-colors"
               >
-                <Link
-                  href={`${basePath}?category=${cat.slug}`}
-                  className="min-w-0 flex-1 group"
-                >
+                <Link href={`${basePath}?category=${cat.slug}`} className="min-w-0 flex-1 group">
                   <div className="text-xs font-medium text-[var(--color-text-primary)] group-hover:text-blue-600 dark:group-hover:text-sky-300 transition-colors truncate">
                     {cat.name}
                   </div>

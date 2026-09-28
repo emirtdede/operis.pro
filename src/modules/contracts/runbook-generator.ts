@@ -100,7 +100,9 @@ export class RunbookGeneratorService {
         );
       }
     } else {
-      lines.push(`| — | ${isTr ? "Tanımlı çevre değişkeni yok." : "No environment variables."} | — | — | — |`);
+      lines.push(
+        `| — | ${isTr ? "Tanımlı çevre değişkeni yok." : "No environment variables."} | — | — | — |`
+      );
     }
 
     lines.push(
@@ -144,7 +146,9 @@ export class RunbookGeneratorService {
         );
       }
     } else {
-      lines.push(`| — | — | ${isTr ? "Bağlı üçüncü taraf servis yok." : "No third-party services."} | — | — |`);
+      lines.push(
+        `| — | — | ${isTr ? "Bağlı üçüncü taraf servis yok." : "No third-party services."} | — | — |`
+      );
     }
 
     lines.push(
@@ -167,7 +171,9 @@ export class RunbookGeneratorService {
         lines.push(
           `#### [${dr.priority}] ${dr.scenario}`,
           `**${isTr ? "Müdahale Adımı" : "Resolution Step"}:** ${dr.procedure}`,
-          dr.verificationCommand ? `**${isTr ? "Doğrulama Komutu" : "Verification"}:** \`${dr.verificationCommand}\`` : "",
+          dr.verificationCommand
+            ? `**${isTr ? "Doğrulama Komutu" : "Verification"}:** \`${dr.verificationCommand}\``
+            : "",
           ""
         );
       }
@@ -179,7 +185,9 @@ export class RunbookGeneratorService {
         `- **${isTr ? "İsim" : "Name"}:** ${input.emergencyContact.name || "—"}`,
         `- **${isTr ? "E-Posta" : "Email"}:** ${input.emergencyContact.email || "—"}`,
         `- **${isTr ? "Telefon" : "Phone"}:** ${input.emergencyContact.phone || "—"}`,
-        input.emergencyContact.notes ? `- **${isTr ? "Notlar" : "Notes"}:** ${input.emergencyContact.notes}` : "",
+        input.emergencyContact.notes
+          ? `- **${isTr ? "Notlar" : "Notes"}:** ${input.emergencyContact.notes}`
+          : "",
         ""
       );
     }

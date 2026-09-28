@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MoreHorizontal, ShieldBan, Flag, AlertTriangle, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { ContextualReportModal } from "../moderation/contextual-report-modal";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 
 interface ProfileActionsMenuProps {
   targetUserId: string;
@@ -149,60 +150,58 @@ export function ProfileActionsMenu({
       )}
 
       {/* Confirmation Modal for Block */}
-      {isBlockModalOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-150"
-        >
-          <div className="relative w-full max-w-sm rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-6 shadow-2xl space-y-5">
-            <button
+      <ModalOverlay
+        isOpen={isBlockModalOpen}
+        onClose={() => setIsBlockModalOpen(false)}
+        ariaLabel={blockModalTitle}
+      >
+        <div className="relative w-full max-w-sm rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-6 shadow-2xl space-y-5">
+          <button
+            type="button"
+            onClick={() => setIsBlockModalOpen(false)}
+            className="absolute top-4 right-4 p-1.5 rounded-lg text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]"
+          >
+            <X className="h-4 w-4" />
+          </button>
+
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center shrink-0">
+              <AlertTriangle className="h-5 w-5" />
+            </div>
+            <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
+              {blockModalTitle}
+            </h3>
+          </div>
+
+          <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+            {blockModalDesc}
+          </p>
+
+          <div className="flex items-center justify-end gap-2.5 pt-1">
+            <Button
               type="button"
+              variant="outline"
+              size="sm"
               onClick={() => setIsBlockModalOpen(false)}
-              className="absolute top-4 right-4 p-1.5 rounded-lg text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]"
+              disabled={isLoading}
             >
-              <X className="h-4 w-4" />
-            </button>
-
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center shrink-0">
-                <AlertTriangle className="h-5 w-5" />
-              </div>
-              <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
-                {blockModalTitle}
-              </h3>
-            </div>
-
-            <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
-              {blockModalDesc}
-            </p>
-
-            <div className="flex items-center justify-end gap-2.5 pt-1">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setIsBlockModalOpen(false)}
-                disabled={isLoading}
-              >
-                {isTr ? "Vazgeç" : "Cancel"}
-              </Button>
-              <Button
-                type="button"
-                variant="primary"
-                size="sm"
-                onClick={handleBlockToggle}
-                disabled={isLoading}
-                className={
-                  isBlocked ? "bg-blue-600 hover:bg-blue-700" : "bg-red-600 hover:bg-red-700"
-                }
-              >
-                {blockButtonText}
-              </Button>
-            </div>
+              {isTr ? "Vazgeç" : "Cancel"}
+            </Button>
+            <Button
+              type="button"
+              variant="primary"
+              size="sm"
+              onClick={handleBlockToggle}
+              disabled={isLoading}
+              className={
+                isBlocked ? "bg-blue-600 hover:bg-blue-700" : "bg-red-600 hover:bg-red-700"
+              }
+            >
+              {blockButtonText}
+            </Button>
           </div>
         </div>
-      )}
+      </ModalOverlay>
 
       {/* Contextual Report Modal */}
       <ContextualReportModal

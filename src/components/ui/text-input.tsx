@@ -27,7 +27,10 @@ function renderCornerContent(cornerAction?: React.ReactNode, badge?: React.React
 }
 
 export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
-  ({ className, label, badge, cornerAction, hint, error, id, startIcon, endIcon, ...props }, ref) => {
+  (
+    { className, label, badge, cornerAction, hint, error, id, startIcon, endIcon, ...props },
+    ref
+  ) => {
     const generatedId = useId();
     const inputId = id || generatedId;
     const hintId = `${inputId}-hint`;
@@ -59,7 +62,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
             aria-describedby={clsx(error && errorId, hint && hintId) || undefined}
             className={twMerge(
               clsx(
-                "w-full h-12 text-sm rounded-xl font-normal transition-all duration-200",
+                "w-full h-12 text-base sm:text-sm rounded-xl font-normal transition-all duration-200",
                 "bg-[var(--bg-surface)]",
                 "text-[var(--text-primary)]",
                 "border border-[var(--border-subtle)] hover:border-[var(--border-strong)]",

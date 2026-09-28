@@ -2,15 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Briefcase,
-  CheckCircle2,
-  Star,
-  Check,
-  AlertCircle,
-  Sparkles,
-  Wrench,
-} from "lucide-react";
+import { Briefcase, CheckCircle2, Star, Check, AlertCircle, Sparkles, Wrench } from "lucide-react";
 import type { PublicProfileDto } from "@/src/modules/profiles/service";
 import { resolveUserPersonaMode } from "@/src/modules/profiles/utils/persona";
 import {
@@ -29,15 +21,13 @@ import { PublicProfileViewProps } from "./sections/types";
 
 export * from "./sections/types";
 
-export function PublicProfileView({
-  initialProfile,
-  locale,
-  isSelf,
-}: PublicProfileViewProps) {
+export function PublicProfileView({ initialProfile, locale, isSelf }: PublicProfileViewProps) {
   const isTr = locale === "tr";
   const router = useRouter();
   const [profile, setProfile] = useState<PublicProfileDto>(initialProfile);
-  const [activeTab, setActiveTab] = useState<"listings" | "projects" | "endorsements" | "reviews">("listings");
+  const [activeTab, setActiveTab] = useState<"listings" | "projects" | "endorsements" | "reviews">(
+    "listings"
+  );
 
   // Notification / Toast Feedback
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
@@ -75,7 +65,10 @@ export function PublicProfileView({
       ...fields,
     }));
 
-    showToast(isTr ? "Profiliniz başarıyla güncellendi." : "Profile updated successfully.", "success");
+    showToast(
+      isTr ? "Profiliniz başarıyla güncellendi." : "Profile updated successfully.",
+      "success"
+    );
 
     // If handle changed, update browser URL gracefully
     if (fields.handle && typeof fields.handle === "string" && fields.handle !== profile.handle) {
@@ -94,7 +87,8 @@ export function PublicProfileView({
     });
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
-      const errMsg = data.error || (isTr ? "Bağlantılar kaydedilemedi." : "Failed to update links.");
+      const errMsg =
+        data.error || (isTr ? "Bağlantılar kaydedilemedi." : "Failed to update links.");
       showToast(errMsg, "error");
       throw new Error(errMsg);
     }
@@ -104,7 +98,10 @@ export function PublicProfileView({
       links: newLinks.map((l, i) => ({ id: `link-${i}`, ...l })),
     }));
 
-    showToast(isTr ? "Dış bağlantılarınız güncellendi." : "External links updated successfully.", "success");
+    showToast(
+      isTr ? "Dış bağlantılarınız güncellendi." : "External links updated successfully.",
+      "success"
+    );
   };
 
   const activeListings = profile.activeListings || [];
@@ -128,7 +125,9 @@ export function PublicProfileView({
       isCompanyVerified: profile.isCompanyVerified,
       activeListingsCount: activeListings.length,
     });
-  const [hybridPerspective, setHybridPerspective] = useState<"ALL" | "EMPLOYER" | "FREELANCER">("ALL");
+  const [hybridPerspective, setHybridPerspective] = useState<"ALL" | "EMPLOYER" | "FREELANCER">(
+    "ALL"
+  );
 
   return (
     <div className="space-y-6">
@@ -137,7 +136,7 @@ export function PublicProfileView({
         <div
           role="status"
           aria-live="polite"
-          className={`fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-2xl border shadow-xl text-xs font-semibold backdrop-blur-xl animate-in slide-in-from-bottom-3 duration-200 ${
+          className={`fixed bottom-6 right-4 sm:right-6 left-4 sm:left-auto max-w-[calc(100vw-2rem)] sm:max-w-md z-50 flex items-center gap-2.5 px-4 py-3 rounded-2xl border shadow-xl text-xs font-semibold backdrop-blur-xl animate-in slide-in-from-bottom-3 duration-200 ${
             toast.type === "success"
               ? "bg-emerald-950/85 border-emerald-500/30 text-emerald-300 shadow-emerald-950/40"
               : "bg-rose-950/85 border-rose-500/30 text-rose-300 shadow-rose-950/40"
@@ -321,9 +320,7 @@ export function PublicProfileView({
           )}
 
           {/* Tab 3: Bilateral Reviews & Ratings */}
-          {isReviewsActive && (
-            <PublicProfileReviews profile={profile} locale={locale} />
-          )}
+          {isReviewsActive && <PublicProfileReviews profile={profile} locale={locale} />}
         </main>
       </div>
 

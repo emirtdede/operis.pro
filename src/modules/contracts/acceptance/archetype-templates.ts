@@ -1,16 +1,14 @@
-import type {
-  ScopeArchetype,
-  ArchetypeProfile,
-  ScopeInterviewQuestion,
-} from "../acceptance-types";
+import type { ScopeArchetype, ArchetypeProfile, ScopeInterviewQuestion } from "../acceptance-types";
 
 export const ARCHETYPE_PROFILES: Record<ScopeArchetype, ArchetypeProfile> = {
   SAAS_B2B_DASHBOARD: {
     archetype: "SAAS_B2B_DASHBOARD",
     labelTr: "B2B SaaS & Yönetim Paneli",
     labelEn: "B2B SaaS & Admin Dashboard",
-    descriptionTr: "Yönetici panelleri, CRM, ERP, analitik ekranları ve rol bazlı kurumsal sistemler.",
-    descriptionEn: "Enterprise admin portals, CRM, ERP, analytics dashboards, and role-based access.",
+    descriptionTr:
+      "Yönetici panelleri, CRM, ERP, analitik ekranları ve rol bazlı kurumsal sistemler.",
+    descriptionEn:
+      "Enterprise admin portals, CRM, ERP, analytics dashboards, and role-based access.",
     iconName: "LayoutDashboard",
     keywords: [
       "panel",
@@ -32,7 +30,8 @@ export const ARCHETYPE_PROFILES: Record<ScopeArchetype, ArchetypeProfile> = {
     labelTr: "E-Ticaret & Pazaryeri",
     labelEn: "E-Commerce & Marketplace",
     descriptionTr: "Ürün kataloğu, sepet, ödeme adımları, kargo entegrasyonu ve satıcı panelleri.",
-    descriptionEn: "Product catalog, shopping cart, checkout, cargo integrations, and vendor portals.",
+    descriptionEn:
+      "Product catalog, shopping cart, checkout, cargo integrations, and vendor portals.",
     iconName: "ShoppingCart",
     keywords: [
       "e-ticaret",
@@ -54,7 +53,8 @@ export const ARCHETYPE_PROFILES: Record<ScopeArchetype, ArchetypeProfile> = {
     labelTr: "Mobil Hizmet & Canlı Kurye/Takip",
     labelEn: "Mobile On-Demand & Mobility",
     descriptionTr: "Kurye, araç çağırma, canlı harita takibi, anlık sipariş ve mobil uygulamalar.",
-    descriptionEn: "Courier, taxi/ride-hailing, live GPS tracking, instant dispatch, and mobile apps.",
+    descriptionEn:
+      "Courier, taxi/ride-hailing, live GPS tracking, instant dispatch, and mobile apps.",
     iconName: "MapPin",
     keywords: [
       "kurye",
@@ -74,8 +74,10 @@ export const ARCHETYPE_PROFILES: Record<ScopeArchetype, ArchetypeProfile> = {
     archetype: "FINTECH_PAYMENTS",
     labelTr: "Fintech & Dijital Cüzdan",
     labelEn: "Fintech & Digital Wallet",
-    descriptionTr: "Ödeme altyapısı, sanal POS, bakiye, para transferi ve çift girişli muhasebe defteri.",
-    descriptionEn: "Payment gateways, virtual POS, balances, money transfers, and ledger accounting.",
+    descriptionTr:
+      "Ödeme altyapısı, sanal POS, bakiye, para transferi ve çift girişli muhasebe defteri.",
+    descriptionEn:
+      "Payment gateways, virtual POS, balances, money transfers, and ledger accounting.",
     iconName: "Wallet",
     keywords: [
       "fintech",
@@ -95,7 +97,8 @@ export const ARCHETYPE_PROFILES: Record<ScopeArchetype, ArchetypeProfile> = {
     archetype: "CONTENT_PORTFOLIO_LANDING",
     labelTr: "Kurumsal Web & Tanıtım / Landing",
     labelEn: "Corporate Web & Landing Page",
-    descriptionTr: "Dönüşüm odaklı landing sayfaları, kurumsal vitrin siteleri, SEO ve blog altyapıları.",
+    descriptionTr:
+      "Dönüşüm odaklı landing sayfaları, kurumsal vitrin siteleri, SEO ve blog altyapıları.",
     descriptionEn: "Conversion-optimized landing pages, corporate websites, SEO, and CMS blog.",
     iconName: "Globe",
     keywords: [
@@ -116,8 +119,10 @@ export const ARCHETYPE_PROFILES: Record<ScopeArchetype, ArchetypeProfile> = {
     archetype: "AI_AGENT_AUTOMATION",
     labelTr: "Yapay Zeka & Otomasyon Botu",
     labelEn: "AI Agent & Workflow Automation",
-    descriptionTr: "Veri kazıma (scraping), botlar, LLM/OpenAI entegrasyonu ve otomatik iş akışları.",
-    descriptionEn: "Web scrapers, bots, LLM workflows, automated data processing pipelines, and webhooks.",
+    descriptionTr:
+      "Veri kazıma (scraping), botlar, LLM/OpenAI entegrasyonu ve otomatik iş akışları.",
+    descriptionEn:
+      "Web scrapers, bots, LLM workflows, automated data processing pipelines, and webhooks.",
     iconName: "Cpu",
     keywords: [
       "bot",
@@ -137,8 +142,10 @@ export const ARCHETYPE_PROFILES: Record<ScopeArchetype, ArchetypeProfile> = {
     archetype: "API_BACKEND_INTEGRATION",
     labelTr: "Backend API & Veritabanı Mimarisi",
     labelEn: "Backend API & Cloud Architecture",
-    descriptionTr: "RESTful/GraphQL API uç noktaları, veritabanı şemaları, mikroservisler ve Docker altyapısı.",
-    descriptionEn: "REST/GraphQL endpoints, DB migrations, microservices, and Docker/cloud infrastructure.",
+    descriptionTr:
+      "RESTful/GraphQL API uç noktaları, veritabanı şemaları, mikroservisler ve Docker altyapısı.",
+    descriptionEn:
+      "REST/GraphQL endpoints, DB migrations, microservices, and Docker/cloud infrastructure.",
     iconName: "Server",
     keywords: [
       "api",
@@ -158,7 +165,8 @@ export const ARCHETYPE_PROFILES: Record<ScopeArchetype, ArchetypeProfile> = {
     archetype: "CUSTOM_GENERAL",
     labelTr: "Özel Yazılım & Teknoloji Projesi",
     labelEn: "Custom Software Engineering",
-    descriptionTr: "Genel amaçlı yazılım geliştirme, entegrasyon ve teknik modernizasyon çalışmaları.",
+    descriptionTr:
+      "Genel amaçlı yazılım geliştirme, entegrasyon ve teknik modernizasyon çalışmaları.",
     descriptionEn: "General purpose software engineering, system integration, and modernization.",
     iconName: "Code",
     keywords: ["yazilim", "proje", "gelistirme", "kod", "sistem", "uygulama"],

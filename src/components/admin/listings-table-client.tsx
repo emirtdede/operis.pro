@@ -15,6 +15,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { AdminListingItem } from "@/src/modules/admin/service";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 
 interface ListingsTableClientProps {
   initialListings: AdminListingItem[];
@@ -269,9 +270,7 @@ export function ListingsTableClient({
                     {item.budgetFormatted}
                   </td>
 
-                  <td className="py-3 px-4">
-                    {renderListingStatusBadge(item.status)}
-                  </td>
+                  <td className="py-3 px-4">{renderListingStatusBadge(item.status)}</td>
 
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-1.5 text-[11px] font-mono text-slate-400">
@@ -364,9 +363,16 @@ export function ListingsTableClient({
       </div>
 
       {/* Moderation Modal */}
-      {modifyingListing && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-          <div className="w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-[#12141a] p-4 sm:p-6 shadow-2xl">
+      <ModalOverlay
+        isOpen={Boolean(modifyingListing)}
+        onClose={() => setModifyingListing(null)}
+        ariaLabel="İlan Moderasyon Aksiyonu"
+      >
+        {modifyingListing && (
+          <div
+            className="w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-[#12141a] p-4 sm:p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-slate-800 pb-3 shrink-0">
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0" />
@@ -382,8 +388,8 @@ export function ListingsTableClient({
 
             <div className="flex-1 overflow-y-auto min-h-0 py-3 space-y-3 pr-1">
               <p className="text-xs text-slate-300">
-                <span className="font-semibold text-white">'{modifyingListing.title}'</span> başlıklı
-                ilanı{" "}
+                <span className="font-semibold text-white">'{modifyingListing.title}'</span>{" "}
+                başlıklı ilanı{" "}
                 {modifyingListing.status === "ACTIVE" ? "yayından kaldırmak" : "tekrar aktif etmek"}{" "}
                 üzeresiniz.
               </p>
@@ -420,8 +426,8 @@ export function ListingsTableClient({
               </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalOverlay>
     </div>
   );
 }

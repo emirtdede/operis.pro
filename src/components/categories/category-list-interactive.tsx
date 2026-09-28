@@ -50,9 +50,23 @@ export function CategoryListInteractive({
 
   const POPULAR_SEARCH_CHIPS = useMemo(() => {
     if (isTr) {
-      return ["Web Geliştirme", "UI/UX Tasarım", "SEO", "Yapay Zeka", "Mobil Uygulama", "Logo & Marka"];
+      return [
+        "Web Geliştirme",
+        "UI/UX Tasarım",
+        "SEO",
+        "Yapay Zeka",
+        "Mobil Uygulama",
+        "Logo & Marka",
+      ];
     }
-    return ["Web Development", "UI/UX Design", "SEO", "Artificial Intelligence", "Mobile App", "Logo & Branding"];
+    return [
+      "Web Development",
+      "UI/UX Design",
+      "SEO",
+      "Artificial Intelligence",
+      "Mobile App",
+      "Logo & Branding",
+    ];
   }, [isTr]);
 
   const globalCrossSectorMatches = useMemo(() => {

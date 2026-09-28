@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { HandoverService } from "@/src/modules/engagements/handover-service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const isEnHeader = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
@@ -43,7 +41,11 @@ export async function GET(
     const handoverData = await HandoverService.getHandover(session.userId, id, lang);
     if (!handoverData) {
       return NextResponse.json(
-        { error: isEnHeader ? "Engagement not found or unauthorized." : "İş birliği bulunamadı veya erişim yetkiniz yok." },
+        {
+          error: isEnHeader
+            ? "Engagement not found or unauthorized."
+            : "İş birliği bulunamadı veya erişim yetkiniz yok.",
+        },
         { status: 404 }
       );
     }
@@ -53,15 +55,18 @@ export async function GET(
       ...handoverData,
     });
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Internal Server Error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      error,
+      {
+        en: "Failed to load handover details",
+        tr: "Devir teslim detayları alınamadı",
+      },
+      { isEn: isEnHeader, logPrefix: "[Handover GET Error]", status: 500 }
+    );
   }
 }
 
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const isEnHeader = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
@@ -100,17 +105,15 @@ export async function POST(
     }
 
     if (action === "SUBMIT") {
-      const {
-        repositoryUrl,
-        commitHash,
-        liveUrl,
-        documentationNotes,
-        accessChecklist,
-      } = body;
+      const { repositoryUrl, commitHash, liveUrl, documentationNotes, accessChecklist } = body;
 
       if (!repositoryUrl) {
         return NextResponse.json(
-          { error: isEnHeader ? "Repository URL is required." : "Kaynak kod deposu URL'si zorunludur." },
+          {
+            error: isEnHeader
+              ? "Repository URL is required."
+              : "Kaynak kod deposu URL'si zorunludur.",
+          },
           { status: 400 }
         );
       }
@@ -181,16 +184,28 @@ export async function POST(
 
     return NextResponse.json({ error: "Unhandled action" }, { status: 400 });
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Internal error";
-    if (message.includes("UNAUTHORIZED")) {
-      return NextResponse.json({ error: message }, { status: 403 });
-    }
-    if (message.includes("NOT_FOUND")) {
-      return NextResponse.json({ error: message }, { status: 404 });
-    }
-    if (message.includes("VALIDATION_ERROR") || message.includes("INSPECTION_PERIOD_EXPIRED") || message.includes("INVALID_STATE")) {
-      return NextResponse.json({ error: message }, { status: 400 });
-    }
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      error,
+      {
+        en: "Handover action failed",
+        tr: "Devir teslim işlemi gerçekleştirilemedi",
+      },
+      {
+        isEn: isEnHeader,
+        logPrefix: "[Handover POST Error]",
+        status: 500,
+        allowedMessages: {
+          UNAUTHORIZED: { en: "Unauthorized", tr: "Yetkisiz erişim", status: 403 },
+          NOT_FOUND: { en: "Handover not found", tr: "Kayıt bulunamadı", status: 404 },
+          VALIDATION_ERROR: { en: "Validation error", tr: "Doğrulama hatası", status: 400 },
+          INSPECTION_PERIOD_EXPIRED: {
+            en: "Inspection period expired",
+            tr: "İnceleme süresi doldu",
+            status: 400,
+          },
+          INVALID_STATE: { en: "Invalid handover state", tr: "Geçersiz devir durumu", status: 400 },
+        },
+      }
+    );
   }
 }

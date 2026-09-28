@@ -43,11 +43,15 @@ export const profiles = pgTable(
       .notNull(),
     isAvailableForHire: boolean("is_available_for_hire").default(true).notNull(),
     isActivelyHiring: boolean("is_actively_hiring").default(false).notNull(),
-    availabilityStatus: varchar("availability_status", { length: 30 }).default("AVAILABLE_NOW").notNull(),
+    availabilityStatus: varchar("availability_status", { length: 30 })
+      .default("AVAILABLE_NOW")
+      .notNull(),
     availabilityHoursPerWeek: integer("availability_hours_per_week").default(40).notNull(),
     availableFromDate: date("available_from_date"),
     availabilityNotice: varchar("availability_notice", { length: 140 }),
-    availabilityUpdatedAt: timestamp("availability_updated_at", { withTimezone: true }).defaultNow().notNull(),
+    availabilityUpdatedAt: timestamp("availability_updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
     isCompanyVerified: boolean("is_company_verified").default(false).notNull(),
     companyName: varchar("company_name", { length: 150 }),
     companyType: varchar("company_type", { length: 30 }),

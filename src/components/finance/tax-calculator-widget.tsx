@@ -80,7 +80,15 @@ export function TaxCalculatorWidget({
       vatWithholding,
       isSoftwareExport,
     });
-  }, [numericAmount, direction, clientType, documentType, currency, vatWithholding, isSoftwareExport]);
+  }, [
+    numericAmount,
+    direction,
+    clientType,
+    documentType,
+    currency,
+    vatWithholding,
+    isSoftwareExport,
+  ]);
 
   const CURRENCY_SYMBOLS: Record<string, string> = {
     TRY: "₺",
@@ -149,7 +157,9 @@ export function TaxCalculatorWidget({
           </div>
           <div>
             <h3 className="text-xs sm:text-sm font-bold text-[var(--color-text-primary)] flex items-center gap-2">
-              <span>{isTr ? "Stopaj & SMM Vergi Hesaplayıcı" : "Tax & Withholding Calculator"}</span>
+              <span>
+                {isTr ? "Stopaj & SMM Vergi Hesaplayıcı" : "Tax & Withholding Calculator"}
+              </span>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 hidden sm:inline-block">
                 GVK m. 94 & KDV
               </span>
@@ -251,7 +261,7 @@ export function TaxCalculatorWidget({
           <label className="text-[11px] font-semibold text-[var(--color-text-secondary)] block">
             {isTr ? "Fatura / Belge Türünüz" : "Invoicing Method"}
           </label>
-          <div className="grid grid-cols-3 gap-1">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5 sm:gap-1">
             <button
               type="button"
               onClick={() => setDocumentType("SMM")}
@@ -294,7 +304,9 @@ export function TaxCalculatorWidget({
         <div className="flex items-center justify-between px-3 py-1.5 rounded-xl bg-[var(--color-surface-base)]/60 border border-[var(--color-border-subtle)] text-[11px]">
           <span className="flex items-center gap-1.5 text-[var(--color-text-secondary)]">
             <ShieldCheck className="h-3.5 w-3.5 text-cyan-400" />
-            <span>{isTr ? "Kısmi KDV Tevkifatı (Belirlenmiş Alıcılar):" : "Partial VAT Withholding:"}</span>
+            <span>
+              {isTr ? "Kısmi KDV Tevkifatı (Belirlenmiş Alıcılar):" : "Partial VAT Withholding:"}
+            </span>
           </span>
           <div className="flex items-center gap-1">
             <button
@@ -430,9 +442,7 @@ export function TaxCalculatorWidget({
           <div className="text-base sm:text-lg font-mono font-bold text-amber-400">
             {fmt(taxResult.withholdingAmount)} {currencySymbol}
           </div>
-          <div className="text-[10px] text-amber-300/80">
-            {withholdingHelpText}
-          </div>
+          <div className="text-[10px] text-amber-300/80">{withholdingHelpText}</div>
         </div>
 
         {/* VAT (KDV) */}

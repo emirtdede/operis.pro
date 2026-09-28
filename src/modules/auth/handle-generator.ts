@@ -13,13 +13,20 @@ export function cleanForHandle(str: string): string {
   if (!str) return "";
 
   const trMap: Record<string, string> = {
-    ç: "c", Ç: "c",
-    ğ: "g", Ğ: "g",
-    ı: "i", I: "i",
-    İ: "i", i: "i",
-    ö: "o", Ö: "o",
-    ş: "s", Ş: "s",
-    ü: "u", Ü: "u",
+    ç: "c",
+    Ç: "c",
+    ğ: "g",
+    Ğ: "g",
+    ı: "i",
+    I: "i",
+    İ: "i",
+    i: "i",
+    ö: "o",
+    Ö: "o",
+    ş: "s",
+    Ş: "s",
+    ü: "u",
+    Ü: "u",
   };
 
   let sanitized = str;
@@ -106,13 +113,11 @@ export async function generateUniqueSequentialHandle(
   const existingRows: Array<{ handle: string }> = Array.isArray(queryResult)
     ? (queryResult as Array<{ handle: string }>)
     : Array.isArray((queryResult as { rows?: Array<{ handle: string }> })?.rows)
-    ? (queryResult as { rows: Array<{ handle: string }> }).rows
-    : [];
+      ? (queryResult as { rows: Array<{ handle: string }> }).rows
+      : [];
 
   const existingSet = new Set(
-    existingRows
-      .filter((r) => r && typeof r.handle === "string")
-      .map((r) => r.handle.toLowerCase())
+    existingRows.filter((r) => r && typeof r.handle === "string").map((r) => r.handle.toLowerCase())
   );
 
   // 1. If base is not taken and not reserved, use it directly (e.g. "emirdede")

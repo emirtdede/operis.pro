@@ -23,6 +23,8 @@ import {
 import { useTheme } from "./theme-provider";
 import { Locale } from "@/src/lib/i18n/config";
 import { searchCategories } from "@/src/lib/search/engine";
+import { lockScroll, unlockScroll } from "@/src/lib/dom/scroll-lock";
+import { useFocusTrap } from "@/src/lib/dom/focus-trap";
 
 interface SearchListingResult {
   id: string;
@@ -79,13 +81,12 @@ export function CommandPalette({
     setMounted(true);
   }, []);
 
-  // Lock background scroll when modal is open
+  // Lock background scroll when modal is open using reference-counted lock
   useEffect(() => {
     if (!isOpen) return;
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    lockScroll();
     return () => {
-      document.body.style.overflow = originalOverflow;
+      unlockScroll();
     };
   }, [isOpen]);
 
@@ -132,24 +133,13 @@ export function CommandPalette({
     return () => clearTimeout(timer);
   }, [query, locale]);
 
-  // Handle outside click & escape
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        if (onDismiss) {
-          onDismiss();
-        } else {
-          onClose();
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose, onDismiss]);
+  // Focus trap, initial focus, Tab navigation, Escape key, and return focus
+  useFocusTrap(containerRef, {
+    isActive: isOpen && mounted,
+    onEscape: onDismiss || onClose,
+    returnFocus: true,
+    initialFocusRef: inputRef,
+  });
 
   // Navigation actions
   const navActions: PaletteAction[] = [
@@ -279,7 +269,11 @@ export function CommandPalette({
     icon: <Folder className="h-4 w-4 text-emerald-400" />,
     category: "categories",
     onSelect: () => {
-      router.push(isTr ? `/tr/kategoriler?q=${encodeURIComponent(cat.name)}` : `/en/categories?q=${encodeURIComponent(cat.name)}`);
+      router.push(
+        isTr
+          ? `/tr/kategoriler?q=${encodeURIComponent(cat.name)}`
+          : `/en/categories?q=${encodeURIComponent(cat.name)}`
+      );
       onClose();
     },
   }));
@@ -320,7 +314,10 @@ export function CommandPalette({
               const stored = localStorage.getItem("operis_recent_searches");
               const prev: string[] = stored ? JSON.parse(stored) : [];
               const filtered = prev.filter((item) => item.toLowerCase() !== clean.toLowerCase());
-              localStorage.setItem("operis_recent_searches", JSON.stringify([clean, ...filtered].slice(0, 5)));
+              localStorage.setItem(
+                "operis_recent_searches",
+                JSON.stringify([clean, ...filtered].slice(0, 5))
+              );
             } catch {
               // Gracefully ignore localStorage quota or private browsing errors
             }
@@ -456,15 +453,26 @@ export function CommandPalette({
             </span>
           ) : (
             <div className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] font-mono text-[10px] text-[var(--color-text-tertiary)] shadow-xs">
-                ESC
-              </kbd>
+              <button
+                type="button"
+                onClick={onDismiss || onClose}
+                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer text-[10px] font-mono shadow-xs"
+                title={isTr ? "Paleti Kapat" : "Close palette"}
+                aria-label={isTr ? "Paleti Kapat" : "Close palette"}
+              >
+                <kbd className="font-mono">ESC</kbd>
+              </button>
             </div>
           )}
         </div>
 
         {/* Results Body */}
-        <div className="flex-1 overflow-y-auto p-2 space-y-3 divide-y divide-[var(--color-border-subtle)]/40">
+        <div
+          tabIndex={0}
+          role="region"
+          aria-label={isTr ? "Arama sonuçları" : "Search results"}
+          className="flex-1 overflow-y-auto p-2 space-y-3 divide-y divide-[var(--color-border-subtle)]/40"
+        >
           {/* Universal Search section (Always available when query is typed) */}
           {universalSearchActions.length > 0 && (
             <div className="space-y-1">

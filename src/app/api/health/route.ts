@@ -62,6 +62,7 @@ export async function GET() {
       }
     );
   } catch (err: unknown) {
+    console.error("[Health Check Failure]:", err);
     const latencyMs = Date.now() - startTime;
     return NextResponse.json(
       {
@@ -69,7 +70,7 @@ export async function GET() {
         service: "operis",
         checks,
         latencyMs,
-        message: err instanceof Error ? err.message : "Health check failed",
+        message: "Health check failed",
         timestamp: new Date().toISOString(),
       },
       {

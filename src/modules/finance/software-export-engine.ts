@@ -22,10 +22,7 @@ export class SoftwareExportEngine {
   /**
    * Returns a standard baseline configuration for cross-border software export.
    */
-  static getDefaultConfig(
-    _currency = "USD",
-    clientCountry = "US"
-  ): SoftwareExportConfig {
+  static getDefaultConfig(_currency = "USD", clientCountry = "US"): SoftwareExportConfig {
     return {
       enabled: true,
       clientCountryCode: clientCountry.toUpperCase(),
@@ -66,11 +63,15 @@ export class SoftwareExportEngine {
   ): SoftwareExportEvaluation {
     const country = config.clientCountry || config.clientCountryCode || clientCountry || "US";
     const countryUpper = country.toUpperCase();
-    const isForeignCountry = countryUpper !== "TR" && countryUpper !== "TURKEY" && countryUpper !== "TÜRKİYE";
+    const isForeignCountry =
+      countryUpper !== "TR" && countryUpper !== "TURKEY" && countryUpper !== "TÜRKİYE";
 
-    const isForeignEntity = config.isForeignEntity ?? config.clientHasNoPermanentEstablishmentInTr ?? true;
-    const isServiceUtilizedAbroad = config.isServiceUtilizedAbroad ?? config.exclusiveForeignUtilizationAffirmed ?? true;
-    const repatriationDeclared = config.repatriationDeclared ?? config.foreignCurrencyRemittanceWarranted ?? true;
+    const isForeignEntity =
+      config.isForeignEntity ?? config.clientHasNoPermanentEstablishmentInTr ?? true;
+    const isServiceUtilizedAbroad =
+      config.isServiceUtilizedAbroad ?? config.exclusiveForeignUtilizationAffirmed ?? true;
+    const repatriationDeclared =
+      config.repatriationDeclared ?? config.foreignCurrencyRemittanceWarranted ?? true;
 
     const checklist: SoftwareExportChecklistItem[] = [
       {
@@ -81,8 +82,10 @@ export class SoftwareExportEngine {
         requiredForVatExemption: true,
         requiredForIncomeTaxIncentive: true,
         legalReference: "KDVK m. 12/2 & GVK m. 89/13",
-        guidanceTr: "Müşterinin kanuni ve iş merkezinin Türkiye dışında olması, Türkiye'de daimi temsilci/şubesi bulunmaması gerekir.",
-        guidanceEn: "The client must be a bona fide foreign entity without permanent establishments in Turkey.",
+        guidanceTr:
+          "Müşterinin kanuni ve iş merkezinin Türkiye dışında olması, Türkiye'de daimi temsilci/şubesi bulunmaması gerekir.",
+        guidanceEn:
+          "The client must be a bona fide foreign entity without permanent establishments in Turkey.",
       },
       {
         id: "qualifying_activity",
@@ -92,8 +95,10 @@ export class SoftwareExportEngine {
         requiredForVatExemption: true,
         requiredForIncomeTaxIncentive: true,
         legalReference: "GVK m. 89/13 & KVK m. 10/1-ğ",
-        guidanceTr: "Yazılım, mimari, veri analizi, ürün testi veya arayüz tasarımı GVK 89/13 kapsamında münhasır teşvik alanıdır.",
-        guidanceEn: "Software development, system design, QA, and data analysis qualify for 100% tax incentives.",
+        guidanceTr:
+          "Yazılım, mimari, veri analizi, ürün testi veya arayüz tasarımı GVK 89/13 kapsamında münhasır teşvik alanıdır.",
+        guidanceEn:
+          "Software development, system design, QA, and data analysis qualify for 100% tax incentives.",
       },
       {
         id: "exclusive_foreign_use",
@@ -103,8 +108,10 @@ export class SoftwareExportEngine {
         requiredForVatExemption: true,
         requiredForIncomeTaxIncentive: true,
         legalReference: "3065 s. KDVK m. 11/1-a & m. 12/2 (Kod 302)",
-        guidanceTr: "Yazılımın Türkiye pazarındaki kullanıcılara değil, yurt dışı operasyonlara hizmet etmesi zorunludur.",
-        guidanceEn: "The software must be deployed and consumed strictly outside the Turkish domestic market.",
+        guidanceTr:
+          "Yazılımın Türkiye pazarındaki kullanıcılara değil, yurt dışı operasyonlara hizmet etmesi zorunludur.",
+        guidanceEn:
+          "The software must be deployed and consumed strictly outside the Turkish domestic market.",
       },
       {
         id: "fx_repatriation",
@@ -114,8 +121,10 @@ export class SoftwareExportEngine {
         requiredForVatExemption: false,
         requiredForIncomeTaxIncentive: true,
         legalReference: "7491 s. Kanun m. 8 & 2026 Cumhurbaşkanı Kararı (11257 s.)",
-        guidanceTr: "Yurt dışı hasılatının tamamı yıllık beyanname verilme süresine kadar Türkiye'deki banka hesabına transfer edilmelidir.",
-        guidanceEn: "100% of foreign currency earnings must be repatriated to Turkish banks prior to annual tax filing.",
+        guidanceTr:
+          "Yurt dışı hasılatının tamamı yıllık beyanname verilme süresine kadar Türkiye'deki banka hesabına transfer edilmelidir.",
+        guidanceEn:
+          "100% of foreign currency earnings must be repatriated to Turkish banks prior to annual tax filing.",
       },
     ];
 
@@ -123,20 +132,36 @@ export class SoftwareExportEngine {
     const warningsEn: string[] = [];
 
     if (!isForeignCountry) {
-      warningsTr.push("Müşteri ülkesi Türkiye olarak seçilmiştir. Hizmet ihracatı istisnası uygulanamaz.");
-      warningsEn.push("Client country is set to Turkey; cross-border export exemption does not apply.");
+      warningsTr.push(
+        "Müşteri ülkesi Türkiye olarak seçilmiştir. Hizmet ihracatı istisnası uygulanamaz."
+      );
+      warningsEn.push(
+        "Client country is set to Turkey; cross-border export exemption does not apply."
+      );
     }
     if (!isForeignEntity) {
-      warningsTr.push("Müşterinin Türkiye'de işyeri veya şubesi bulunması halinde hizmet ihracatı KDV istisnası uygulanamaz.");
-      warningsEn.push("Client having permanent presence in Turkey jeopardizes VAT export exemption.");
+      warningsTr.push(
+        "Müşterinin Türkiye'de işyeri veya şubesi bulunması halinde hizmet ihracatı KDV istisnası uygulanamaz."
+      );
+      warningsEn.push(
+        "Client having permanent presence in Turkey jeopardizes VAT export exemption."
+      );
     }
     if (!isServiceUtilizedAbroad) {
-      warningsTr.push("Hizmetten münhasıran Türkiye dışında faydalanıldığı sözleşmede teyit edilmelidir (Aksi halde %20 KDV cezası riski).");
-      warningsEn.push("Exclusive foreign consumption must be certified to prevent retroactive VAT assessment.");
+      warningsTr.push(
+        "Hizmetten münhasıran Türkiye dışında faydalanıldığı sözleşmede teyit edilmelidir (Aksi halde %20 KDV cezası riski)."
+      );
+      warningsEn.push(
+        "Exclusive foreign consumption must be certified to prevent retroactive VAT assessment."
+      );
     }
     if (!repatriationDeclared) {
-      warningsTr.push("Döviz bedeli Türkiye'deki banka hesabına getirilmezse GVK 89/13 %100 kazanç indirimi hakkı kaybedilir.");
-      warningsEn.push("Failure to repatriate foreign exchange revokes statutory GVK 89/13 100% deduction.");
+      warningsTr.push(
+        "Döviz bedeli Türkiye'deki banka hesabına getirilmezse GVK 89/13 %100 kazanç indirimi hakkı kaybedilir."
+      );
+      warningsEn.push(
+        "Failure to repatriate foreign exchange revokes statutory GVK 89/13 100% deduction."
+      );
     }
 
     let status: ExportEligibilityStatus;
@@ -151,7 +176,7 @@ export class SoftwareExportEngine {
     const isEligibleForVatZero = isForeignCountry && isForeignEntity && isServiceUtilizedAbroad;
     const isEligibleForFullTaxDeduction = isEligibleForVatZero && repatriationDeclared;
 
-    const normalTaxBurden = roundCurrency(amount * 0.40);
+    const normalTaxBurden = roundCurrency(amount * 0.4);
     const exportTaxBurden = isEligibleForFullTaxDeduction ? 0 : normalTaxBurden;
     const taxSavingsEstimate = roundCurrency(normalTaxBurden - exportTaxBurden);
 
@@ -191,7 +216,7 @@ export class SoftwareExportEngine {
       status,
       isEligibleForFullTaxDeduction,
       isEligibleForVatZero,
-      taxDeductionRate: isEligibleForFullTaxDeduction ? (config.gvkIncentivePercentage || 100) : 0,
+      taxDeductionRate: isEligibleForFullTaxDeduction ? config.gvkIncentivePercentage || 100 : 0,
       vatRate: isEligibleForVatZero ? 0 : 20,
       withholdingRate: isEligibleForVatZero ? 0 : 20,
       gibInvoiceExemptionCode: isEligibleForVatZero ? "302" : null,
@@ -209,8 +234,10 @@ export class SoftwareExportEngine {
       bankRemittanceDeclarationEn: bankDeclaration.en,
       checklist,
       missingRequirements: warningsTr,
-      statutoryBasisTr: "193 s. GVK m. 89/13, 3065 s. KDVK m. 11/1-a, 7491 s. Kanun & 2026/11257 s. CK",
-      statutoryBasisEn: "Income Tax Law (GVK) Art. 89/13, VAT Law (KDVK) Art. 11/1-a, Law No. 7491 & Decree 11257",
+      statutoryBasisTr:
+        "193 s. GVK m. 89/13, 3065 s. KDVK m. 11/1-a, 7491 s. Kanun & 2026/11257 s. CK",
+      statutoryBasisEn:
+        "Income Tax Law (GVK) Art. 89/13, VAT Law (KDVK) Art. 11/1-a, Law No. 7491 & Decree 11257",
       auditProtectionPointsTr: [
         "Sözleşmede 'Hizmetten münhasıran Türkiye dışında faydalanılmıştır' klozunun açıkça yer alması",
         "GİB e-Fatura / e-SMM üzerinde '302 - Hizmet İhracatı' istisna kodunun ve yasal şerhin bulunması",
@@ -234,7 +261,10 @@ export class SoftwareExportEngine {
    * Generates official GİB-compliant statutory invoice description text.
    */
   static generateInvoiceNote(paramsOrConfig: unknown, locale: string): string;
-  static generateInvoiceNote(paramsOrConfig?: unknown, locale?: string): string | { tr: string; en: string };
+  static generateInvoiceNote(
+    paramsOrConfig?: unknown,
+    locale?: string
+  ): string | { tr: string; en: string };
   static generateInvoiceNote(
     paramsOrConfig?: unknown,
     locale?: string
@@ -289,7 +319,11 @@ export class SoftwareExportEngine {
       if (typeof p.budgetLabel === "string") amt = p.budgetLabel;
       if (p.amount !== undefined) amt = `${p.amount} ${(p.currency as string) || "USD"}`;
       if (typeof p.bankName === "string") {
-        rawBank = p.bankName.replace(/^T\.C\.\s*/i, "").replace(/\s*\/.*$/, "").trim() || "ZİRAAT BANKASI";
+        rawBank =
+          p.bankName
+            .replace(/^T\.C\.\s*/i, "")
+            .replace(/\s*\/.*$/, "")
+            .trim() || "ZİRAAT BANKASI";
       }
       const c = (p.clientCountry || p.clientCountryName) as string | undefined;
       if (typeof c === "string") country = c;
@@ -370,7 +404,8 @@ Date: ${new Date().toLocaleDateString("en-US")}`;
       OTHER_LEGAL_FX_REMITTANCE: "Other Lawful Foreign Currency Remittance",
     };
 
-    const channelTr = channelDisplayTr[config.remittanceChannel || "SWIFT_WIRE"] || "SWIFT Transferi";
+    const channelTr =
+      channelDisplayTr[config.remittanceChannel || "SWIFT_WIRE"] || "SWIFT Transferi";
     const channelEn = channelDisplayEn[config.remittanceChannel || "SWIFT_WIRE"] || "SWIFT Wire";
 
     if (isTr) {
@@ -451,10 +486,7 @@ Digital records, SHA-256 Merkle root hashes, and bank remittance records generat
   /**
    * Generates clean HTML presentation of EK-5 for official print and executive preview.
    */
-  static generateExportAnnexHtml(
-    config: SoftwareExportConfig,
-    locale: "tr" | "en" = "tr"
-  ): string {
+  static generateExportAnnexHtml(config: SoftwareExportConfig, locale: "tr" | "en" = "tr"): string {
     const isTr = locale === "tr";
     const country = config.clientCountry || config.clientCountryCode || "US";
 

@@ -15,6 +15,7 @@ import {
   Shield,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 import { MilestoneDto } from "@/src/modules/engagements/milestone-service";
 import { MilestoneDeliverableUrlType } from "@/src/modules/engagements/milestone-synthesizer";
 import type { IpAssignmentDeed } from "@/src/modules/engagements/ip-assignment/ip-assignment-types";
@@ -72,9 +73,20 @@ export function MilestoneEvidenceViewer({
   return (
     <>
       {/* Deliverable Submission Modal */}
-      {deliverableModalOpen && selectedMilestone && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-200">
-          <div className="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4 text-white">
+      <ModalOverlay
+        isOpen={deliverableModalOpen && Boolean(selectedMilestone)}
+        onClose={onCloseDeliverableModal}
+        ariaLabel={
+          selectedMilestone
+            ? `${selectedMilestone.sequenceNumber}. ${selectedMilestone.title}`
+            : "Deliverable Submission"
+        }
+      >
+        {selectedMilestone && (
+          <div
+            className="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4 text-white"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 className="text-sm font-bold flex items-center gap-2">
                 <Send className="h-4 w-4 text-blue-400" />
@@ -227,13 +239,24 @@ export function MilestoneEvidenceViewer({
               </Button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalOverlay>
 
       {/* FSEK IP Assignment Deed Modal */}
-      {ipDeedModalOpen && selectedIpDeed && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 animate-in fade-in duration-200">
-          <div className="relative w-full max-w-3xl bg-slate-900 border border-cyan-500/30 rounded-3xl p-6 shadow-2xl space-y-4 text-white max-h-[92vh] overflow-y-auto">
+      <ModalOverlay
+        isOpen={ipDeedModalOpen && Boolean(selectedIpDeed)}
+        onClose={onCloseIpDeedModal}
+        ariaLabel={
+          isTr
+            ? "FSEK m. 48-52 Fikri Mülkiyet Devir Tescil Belgesi"
+            : "Formal Certificate of IP Assignment"
+        }
+      >
+        {selectedIpDeed && (
+          <div
+            className="relative w-full max-w-3xl bg-slate-900 border border-cyan-500/30 rounded-3xl p-6 shadow-2xl space-y-4 text-white max-h-[92vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center gap-2.5">
@@ -573,8 +596,8 @@ export function MilestoneEvidenceViewer({
               </Button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalOverlay>
     </>
   );
 }

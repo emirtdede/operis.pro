@@ -116,7 +116,7 @@ export const ipBlocks = pgTable(
     expiresAt: timestamp("expires_at", { withTimezone: true }),
     revokedAt: timestamp("revoked_at", { withTimezone: true }),
     reason: varchar("reason", { length: 255 }),
-    actorId: uuid("actor_id").references(() => users.id),
+    actorId: uuid("actor_id").references(() => users.id, { onDelete: "set null" }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [

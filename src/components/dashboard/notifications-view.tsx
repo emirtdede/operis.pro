@@ -46,7 +46,9 @@ export function NotificationsView({ initialNotifications, locale }: Notification
     if (filter === "unread" && n.readAt) return false;
     if (query) {
       const title = getNotificationTitle(n, isTr).toLowerCase();
-      const rawMessage = String(n.payloadJson?.message || n.payloadJson?.messageText || "").toLowerCase();
+      const rawMessage = String(
+        n.payloadJson?.message || n.payloadJson?.messageText || ""
+      ).toLowerCase();
       const type = n.type.toLowerCase();
       if (!title.includes(query) && !rawMessage.includes(query) && !type.includes(query)) {
         return false;
@@ -233,7 +235,9 @@ export function NotificationsView({ initialNotifications, locale }: Notification
           <EmptyState
             variant="card"
             icon={<Search className="h-7 w-7 text-blue-400" />}
-            title={isTr ? "Aramanızla Eşleşen Bildirim Bulunamadı" : "No Matching Notifications Found"}
+            title={
+              isTr ? "Aramanızla Eşleşen Bildirim Bulunamadı" : "No Matching Notifications Found"
+            }
             description={
               isTr
                 ? `"${searchQuery}" aramasıyla eşleşen herhangi bir bildirim bulunamadı.`
@@ -268,7 +272,11 @@ export function NotificationsView({ initialNotifications, locale }: Notification
                 </Button>
               ) : (
                 <Link href={isTr ? "/tr/ilanlar" : "/en/listings"}>
-                  <Button variant="shimmer" size="md" className="gap-2 shadow-lg shadow-blue-500/15">
+                  <Button
+                    variant="shimmer"
+                    size="md"
+                    className="gap-2 shadow-lg shadow-blue-500/15"
+                  >
                     <Compass className="h-4 w-4" />
                     <span>{isTr ? "İlanları Keşfet" : "Explore Listings"}</span>
                   </Button>

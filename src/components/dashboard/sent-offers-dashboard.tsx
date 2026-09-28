@@ -2,7 +2,20 @@
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
-import { AlertTriangle, X, History, Search, CheckSquare, Undo2, ArrowRightLeft, ListFilter, ChevronDown, ArrowUpDown, Send, Compass } from "lucide-react";
+import {
+  AlertTriangle,
+  X,
+  History,
+  Search,
+  CheckSquare,
+  Undo2,
+  ArrowRightLeft,
+  ListFilter,
+  ChevronDown,
+  ArrowUpDown,
+  Send,
+  Compass,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { EmptyState } from "../ui/empty-state";
@@ -87,7 +100,11 @@ function getEmptyStateDescription(hasSearchQuery: boolean, isTr: boolean): strin
     : "You have not submitted proposals or none match this filter.";
 }
 
-function getNegotiationButtonLabel(isCountered: boolean, counterRound: number | undefined, isTr: boolean): string {
+function getNegotiationButtonLabel(
+  isCountered: boolean,
+  counterRound: number | undefined,
+  isTr: boolean
+): string {
   if (isCountered) {
     const round = counterRound || 1;
     return isTr ? `Pazarlık (${round}. Tur)` : `Negotiation (R${round})`;
@@ -117,7 +134,9 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
   const [withdrawingOffer, setWithdrawingOffer] = useState<SentOfferItem | null>(null);
   const [withdrawError, setWithdrawError] = useState<string | null>(null);
   const [selectedOfferForRevisions, setSelectedOfferForRevisions] = useState<string | null>(null);
-  const [selectedOfferForNegotiation, setSelectedOfferForNegotiation] = useState<string | null>(null);
+  const [selectedOfferForNegotiation, setSelectedOfferForNegotiation] = useState<string | null>(
+    null
+  );
   const [editingOffer, setEditingOffer] = useState<SentOfferItem | null>(null);
 
   // Bulk withdraw state
@@ -322,9 +341,7 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
         return next;
       });
     } catch (err: unknown) {
-      setWithdrawError(
-        getErrorMessage(err, isTr ? "İşlem başarısız oldu." : "Operation failed.")
-      );
+      setWithdrawError(getErrorMessage(err, isTr ? "İşlem başarısız oldu." : "Operation failed."));
     } finally {
       setLoadingId(null);
     }
@@ -402,37 +419,63 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
         <div className="flex flex-wrap items-center gap-2.5 shrink-0">
           {/* Single Status Filter Dropdown Button */}
           <div className="relative inline-flex items-center">
-            <ListFilter className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ListFilter
+              className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
               aria-label={isTr ? "Durum Filtresi" : "Status Filter"}
               className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
             >
-              {(["all", "pending", "accepted", "rejected", "cancelled", "withdrawn"] as const).map((f) => (
-                <option key={f} value={f} className="bg-[#141517] text-[var(--color-text-primary)]">
-                  {getFilterLabel(f, isTr)} ({filterCounts[f]})
-                </option>
-              ))}
+              {(["all", "pending", "accepted", "rejected", "cancelled", "withdrawn"] as const).map(
+                (f) => (
+                  <option
+                    key={f}
+                    value={f}
+                    className="bg-[#141517] text-[var(--color-text-primary)]"
+                  >
+                    {getFilterLabel(f, isTr)} ({filterCounts[f]})
+                  </option>
+                )
+              )}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ChevronDown
+              className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
           </div>
 
           {/* Single Sort Dropdown Button */}
           <div className="relative inline-flex items-center">
-            <ArrowUpDown className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ArrowUpDown
+              className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SentOfferSortOption)}
               aria-label={isTr ? "Sıralama ölçütü" : "Sort by"}
               className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
             >
-              <option value="newest" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yeni" : "Newest"}</option>
-              <option value="budget_desc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yüksek Bütçe" : "Highest Budget"}</option>
-              <option value="budget_asc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Düşük Bütçe" : "Lowest Budget"}</option>
-              <option value="title_asc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "Başlık (A-Z)" : "Title (A-Z)"}</option>
+              <option value="newest" className="bg-[#141517] text-[var(--color-text-primary)]">
+                {isTr ? "En Yeni" : "Newest"}
+              </option>
+              <option value="budget_desc" className="bg-[#141517] text-[var(--color-text-primary)]">
+                {isTr ? "En Yüksek Bütçe" : "Highest Budget"}
+              </option>
+              <option value="budget_asc" className="bg-[#141517] text-[var(--color-text-primary)]">
+                {isTr ? "En Düşük Bütçe" : "Lowest Budget"}
+              </option>
+              <option value="title_asc" className="bg-[#141517] text-[var(--color-text-primary)]">
+                {isTr ? "Başlık (A-Z)" : "Title (A-Z)"}
+              </option>
             </select>
-            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ChevronDown
+              className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
           </div>
         </div>
       </div>
@@ -566,7 +609,9 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
                       <input
                         type="checkbox"
                         checked={isSelected}
-                        onChange={(e) => handleOfferSelect(offer.id, e as unknown as React.MouseEvent)}
+                        onChange={(e) =>
+                          handleOfferSelect(offer.id, e as unknown as React.MouseEvent)
+                        }
                         onClick={(e) => handleOfferSelect(offer.id, e)}
                         className="h-4 w-4 rounded border-[var(--color-border-subtle)] text-indigo-600 focus:ring-indigo-500 cursor-pointer"
                         aria-label={isTr ? "Teklifi seç" : "Select offer"}
@@ -645,7 +690,11 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
                       }`}
                     >
                       <ArrowRightLeft className="h-3.5 w-3.5 mr-1" />
-                      {getNegotiationButtonLabel(Boolean(offer.isCountered), offer.counterRound, isTr)}
+                      {getNegotiationButtonLabel(
+                        Boolean(offer.isCountered),
+                        offer.counterRound,
+                        isTr
+                      )}
                     </Button>
 
                     <Button
@@ -862,10 +911,14 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
             budgetMin: editingOffer.budgetMin || undefined,
             budgetMax: editingOffer.budgetMax || undefined,
             timelineValue: editingOffer.estimatedDurationValue?.toString(),
-            timelineUnit: (editingOffer.estimatedDurationUnit as "DAYS" | "WEEKS" | "MONTHS") || undefined,
+            timelineUnit:
+              (editingOffer.estimatedDurationUnit as "DAYS" | "WEEKS" | "MONTHS") || undefined,
             isSquadOffer: editingOffer.isSquadOffer ?? undefined,
             squadTitle: editingOffer.squadTitle ?? undefined,
-            squadMembers: (editingOffer.squadMembers as NonNullable<SubmitOfferModalProps["initialData"]>["squadMembers"]) || undefined,
+            squadMembers:
+              (editingOffer.squadMembers as NonNullable<
+                SubmitOfferModalProps["initialData"]
+              >["squadMembers"]) || undefined,
           }}
           onSuccess={(updated) => {
             if (updated) {
@@ -878,8 +931,10 @@ export function SentOffersDashboard({ initialOffers, locale }: SentOffersDashboa
                         budgetCurrency: updated.budgetCurrency ?? o.budgetCurrency,
                         budgetMin: updated.budgetMin ?? o.budgetMin,
                         budgetMax: updated.budgetMax ?? o.budgetMax,
-                        estimatedDurationValue: updated.estimatedDurationValue ?? o.estimatedDurationValue,
-                        estimatedDurationUnit: updated.estimatedDurationUnit ?? o.estimatedDurationUnit,
+                        estimatedDurationValue:
+                          updated.estimatedDurationValue ?? o.estimatedDurationValue,
+                        estimatedDurationUnit:
+                          updated.estimatedDurationUnit ?? o.estimatedDurationUnit,
                         updatedAt: new Date(),
                       }
                     : o

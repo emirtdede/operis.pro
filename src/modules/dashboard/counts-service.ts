@@ -76,12 +76,7 @@ export class DashboardCountsService {
         .select({ count: sql<number>`count(*)::int` })
         .from(schema.offers)
         .innerJoin(schema.listings, eq(schema.offers.listingId, schema.listings.id))
-        .where(
-          and(
-            eq(schema.listings.ownerUserId, userId),
-            ne(schema.listings.status, "DELETED")
-          )
-        ),
+        .where(and(eq(schema.listings.ownerUserId, userId), ne(schema.listings.status, "DELETED"))),
 
       // 6. Unread notifications count
       NotificationService.getUnreadCount(userId),
@@ -94,11 +89,10 @@ export class DashboardCountsService {
       listings:
         listingsRes.status === "fulfilled" && listingsRes.value[0]
           ? Number(listingsRes.value[0].count)
-          : inMemoryListings.filter((l) => l.ownerUserId === userId && l.status !== "DELETED").length,
+          : inMemoryListings.filter((l) => l.ownerUserId === userId && l.status !== "DELETED")
+              .length,
       savedListings:
-        savedRes.status === "fulfilled" && savedRes.value[0]
-          ? Number(savedRes.value[0].count)
-          : 0,
+        savedRes.status === "fulfilled" && savedRes.value[0] ? Number(savedRes.value[0].count) : 0,
       activeEngagements:
         engagementsRes.status === "fulfilled" && engagementsRes.value[0]
           ? Number(engagementsRes.value[0].count)
@@ -113,8 +107,7 @@ export class DashboardCountsService {
           : inMemoryReceivedOffers.filter((o) => o.listing.ownerUserId === userId).length,
       notifications:
         unreadNotifications.status === "fulfilled" ? Number(unreadNotifications.value) : 0,
-      categories:
-        followedCategories.status === "fulfilled" ? Number(followedCategories.value) : 0,
+      categories: followedCategories.status === "fulfilled" ? Number(followedCategories.value) : 0,
     };
 
     return counts;
@@ -122,7 +115,8 @@ export class DashboardCountsService {
 
   private static getFallbackCounts(userId: string): DashboardTabCounts {
     return {
-      listings: inMemoryListings.filter((l) => l.ownerUserId === userId && l.status !== "DELETED").length,
+      listings: inMemoryListings.filter((l) => l.ownerUserId === userId && l.status !== "DELETED")
+        .length,
       savedListings: 0,
       activeEngagements: 0,
       sentOffers: inMemorySentOffers.filter((o) => o.offer.offerorUserId === userId).length,

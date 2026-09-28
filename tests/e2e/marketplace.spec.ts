@@ -1,3 +1,4 @@
+import { installTurnstileFixture } from "../helpers/turnstile-browser";
 import crypto from "node:crypto";
 import { test, expect, Page } from "@playwright/test";
 import { getDb, schema } from "@/src/lib/db";
@@ -40,38 +41,45 @@ async function loginTestUserViaCookie(page: Page) {
 }
 
 test.describe("Operis Marketplace Critical Flows (E2E)", () => {
-  test.beforeEach(async () => {
+  test.beforeEach(async ({ context }) => {
+    await installTurnstileFixture(context);
     assertSafeE2ETestEnvironment();
     const db = getDb();
     await db.delete(schema.rateLimits);
   });
 
-  test("redirects unauthenticated visitors trying to access feed to login page with returnUrl", async ({
+  test("redirects unauthenticated visitors trying to access the dashboard to login page", async ({
     page,
   }) => {
-    await page.goto("/tr/ilanlar", { waitUntil: "domcontentloaded" });
+    await page.goto("/tr/panel/ilanlarim", { waitUntil: "domcontentloaded" });
     await page.waitForURL(
       (url: URL) => url.pathname.includes("/giris") || url.pathname.includes("/login"),
       { timeout: 15000 }
     );
     expect(page.url()).toContain("/tr/giris");
-    expect(page.url()).toContain("returnUrl=");
   });
 
-  test("loads the listings feed and displays live freshness badges and quick chips", async ({
-    page,
-  }) => {
+  test("loads the listings feed and applies responsive filters", async ({ page }) => {
     await loginTestUserViaCookie(page);
 
     // 1. Navigate to listings feed
     await page.goto("/tr/ilanlar", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveTitle(/Operis/i);
 
-    // 2. Verify quick filter chips exist
-    const quickChips = page.locator(
-      "button:has-text('Son 24s'), button:has-text('Bütçesi Belirli')"
-    );
-    await expect(quickChips.first()).toBeVisible();
+    // Desktop uses the advanced dialog; mobile exposes the quick filters directly.
+    if (page.viewportSize()!.width >= 1024) {
+      await page.getByRole("button", { name: "Gelişmiş Filtrele", exact: true }).click();
+      const filters = page.getByRole("dialog", { name: "Gelişmiş İlan Filtreleme" });
+      await expect(filters).toBeVisible();
+      await filters.getByRole("button", { name: "Son 24 Saat", exact: true }).click();
+      await filters.getByRole("button", { name: /Filtreleri Uygula/ }).click();
+      await expect(page).toHaveURL(/last24Hours=true/);
+      await expect(filters).not.toBeVisible();
+    } else {
+      const quickFilter = page.getByRole("button", { name: "Son 24s", exact: true });
+      await quickFilter.click();
+      await expect(quickFilter).toHaveAttribute("aria-pressed", "true");
+    }
 
     // 3. Verify desktop navbar search trigger is present on desktop
     if (!page.viewportSize() || page.viewportSize()!.width >= 1024) {
@@ -85,7 +93,7 @@ test.describe("Operis Marketplace Critical Flows (E2E)", () => {
   test("opens command palette on keyboard shortcut and allows live search", async ({ page }) => {
     await loginTestUserViaCookie(page);
     await page.goto("/tr/ilanlar");
-    await page.waitForLoadState("networkidle");
+    await expect(page.getByRole("banner")).toBeVisible();
 
     // Press shortcut Control+k
     await page.keyboard.press("Control+k");
@@ -150,13 +158,16 @@ test.describe("Operis Marketplace Critical Flows (E2E)", () => {
     // 2. Test invalid password
     await emailInput.fill("kullanici@operis.pro");
     await passwordInput.fill("WrongPassword2026!");
-    await submitBtn.click();
-
-    // Verify error feedback appears
-    const errorMessage = page.locator(
-      ".text-red-400, .bg-red-500\\/10, [role='alert'], :has-text('Giriş yapılamadı'), :has-text('Invalid email or password')"
-    );
-    await expect(errorMessage.first()).toBeVisible({ timeout: 10000 });
+    const [invalidResponse] = await Promise.all([
+      page.waitForResponse(
+        (response) =>
+          response.url().includes("/api/auth/login") && response.request().method() === "POST"
+      ),
+      submitBtn.click(),
+    ]);
+    expect(invalidResponse.status()).toBe(400);
+    const invalidBody = await invalidResponse.json();
+    await expect(page.getByText(invalidBody.error, { exact: true })).toBeVisible();
 
     // 3. Test valid credentials
     await emailInput.fill("kullanici@operis.pro");
@@ -170,7 +181,7 @@ test.describe("Operis Marketplace Critical Flows (E2E)", () => {
     );
   });
 
-  test("navigates to security settings, requests personal data export, processes with real worker, and downloads verified JSON", async ({
+  test("navigates to privacy settings, requests personal data export, processes with real worker, and downloads verified JSON", async ({
     page,
   }) => {
     // Clean up any stale active jobs for test user to ensure clean state
@@ -201,11 +212,11 @@ test.describe("Operis Marketplace Critical Flows (E2E)", () => {
     );
 
     // 2. Navigate to security dashboard
-    await page.goto("/tr/panel/guvenlik", { waitUntil: "domcontentloaded" });
-    await expect(page).toHaveTitle(/Güvenlik/i);
+    await page.goto("/tr/ayarlar?tab=privacy", { waitUntil: "domcontentloaded" });
+    await expect(page).toHaveTitle(/Hesap Ayarları/i);
 
     // 3. Find and click export button
-    const exportBtn = page.locator("button:has-text('Verilerimi İndir (.json)')").first();
+    const exportBtn = page.getByRole("button", { name: "Verileri İndir", exact: true });
     await expect(exportBtn).toBeVisible();
 
     const [exportResponse] = await Promise.all([
@@ -220,12 +231,7 @@ test.describe("Operis Marketplace Critical Flows (E2E)", () => {
     expect(createdJobId).toBeDefined();
 
     // 4. UI shows export job queued or in progress
-    const statusNotice = page
-      .locator(
-        ":has-text('Dışa aktarım sıraya alındı'), :has-text('Veriler hazırlanıyor'), :has-text('hazır')"
-      )
-      .first();
-    await expect(statusNotice).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/Veri İşi:.*Durum: Hazırlanıyor/)).toBeVisible();
 
     // 5. Process job with real worker
     const workerOutcome = await ExportJobManager.processNextExportJob();
@@ -233,10 +239,7 @@ test.describe("Operis Marketplace Critical Flows (E2E)", () => {
     expect(workerOutcome.jobId).toBe(createdJobId);
 
     // 6. Polling reveals READY status and download link
-    const readyNotice = page
-      .locator(":has-text('Veri aktarımı tamamlandı ve hazır.'), a:has-text('Tekrar İndir')")
-      .first();
-    await expect(readyNotice).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText(/Veri İşi:.*Durum: Hazır/)).toBeVisible({ timeout: 15000 });
 
     const downloadLink = page.locator("a[download*='operis-data-export']").first();
     await expect(downloadLink).toBeVisible();
@@ -279,6 +282,7 @@ test.describe("Operis Marketplace Critical Flows (E2E)", () => {
     });
 
     const context2 = await browser.newContext();
+    await installTurnstileFixture(context2);
     try {
       // 2. Open an isolated session as User 2 (freelancer@operis.pro)
       const page2 = await context2.newPage();

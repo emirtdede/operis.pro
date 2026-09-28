@@ -8,11 +8,7 @@
 export type SigningPartyRole = "CLIENT" | "CONTRACTOR";
 
 export type PackageSigningStatus =
-  | "DRAFT"
-  | "PENDING_SIGNATURES"
-  | "PARTIALLY_SIGNED"
-  | "FULLY_SIGNED"
-  | "CANCELLED";
+  "DRAFT" | "PENDING_SIGNATURES" | "PARTIALLY_SIGNED" | "FULLY_SIGNED" | "CANCELLED";
 
 export interface PartySignatureData {
   signerUserId: string;

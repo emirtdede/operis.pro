@@ -99,10 +99,10 @@ export function SecuritySettingsTab({
     passedCriteria <= 1
       ? "bg-red-500"
       : passedCriteria === 2
-      ? "bg-amber-500"
-      : passedCriteria === 3
-      ? "bg-blue-500"
-      : "bg-emerald-500";
+        ? "bg-amber-500"
+        : passedCriteria === 3
+          ? "bg-blue-500"
+          : "bg-emerald-500";
 
   const handleLogoutOtherSessions = async () => {
     setLoggingOutOthers(true);
@@ -125,9 +125,7 @@ export function SecuritySettingsTab({
       fetchAuditLogs();
     } catch {
       setLoggedOutMessage(
-        isTr
-          ? "Oturumlar sonlandırılırken bir hata oluştu."
-          : "Failed to terminate other sessions."
+        isTr ? "Oturumlar sonlandırılırken bir hata oluştu." : "Failed to terminate other sessions."
       );
     } finally {
       setLoggingOutOthers(false);
@@ -157,7 +155,10 @@ export function SecuritySettingsTab({
       />
 
       {/* 2. Şifre Değiştirme Formu */}
-      <form onSubmit={onPasswordSubmit} className="pt-4 border-t border-[var(--color-border-subtle)] space-y-4">
+      <form
+        onSubmit={onPasswordSubmit}
+        className="pt-4 border-t border-[var(--color-border-subtle)] space-y-4"
+      >
         <label className="text-xs font-bold text-[var(--color-text-primary)] block">
           {isTr ? "Şifre Değiştir" : "Change Password"}
         </label>
@@ -175,7 +176,9 @@ export function SecuritySettingsTab({
                 className="text-[10px] text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] flex items-center gap-1 cursor-pointer"
               >
                 {showCurrentPass ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
-                <span>{showCurrentPass ? (isTr ? "Gizle" : "Hide") : (isTr ? "Göster" : "Show")}</span>
+                <span>
+                  {showCurrentPass ? (isTr ? "Gizle" : "Hide") : isTr ? "Göster" : "Show"}
+                </span>
               </button>
             </div>
             <TextInput
@@ -200,7 +203,7 @@ export function SecuritySettingsTab({
                   className="text-[10px] text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] flex items-center gap-1 cursor-pointer"
                 >
                   {showNewPass ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
-                  <span>{showNewPass ? (isTr ? "Gizle" : "Hide") : (isTr ? "Göster" : "Show")}</span>
+                  <span>{showNewPass ? (isTr ? "Gizle" : "Hide") : isTr ? "Göster" : "Show"}</span>
                 </button>
               </div>
               <TextInput
@@ -236,16 +239,24 @@ export function SecuritySettingsTab({
                 />
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 text-[10px]">
-                <span className={hasMinLen ? "text-emerald-400" : "text-[var(--color-text-tertiary)]"}>
+                <span
+                  className={hasMinLen ? "text-emerald-400" : "text-[var(--color-text-tertiary)]"}
+                >
                   {hasMinLen ? "✓" : "○"} {isTr ? "En az 12 karakter" : "Min 12 chars"}
                 </span>
-                <span className={hasUpper ? "text-emerald-400" : "text-[var(--color-text-tertiary)]"}>
+                <span
+                  className={hasUpper ? "text-emerald-400" : "text-[var(--color-text-tertiary)]"}
+                >
                   {hasUpper ? "✓" : "○"} {isTr ? "Büyük harf" : "Uppercase"}
                 </span>
-                <span className={hasNumber ? "text-emerald-400" : "text-[var(--color-text-tertiary)]"}>
+                <span
+                  className={hasNumber ? "text-emerald-400" : "text-[var(--color-text-tertiary)]"}
+                >
                   {hasNumber ? "✓" : "○"} {isTr ? "Rakam" : "Number"}
                 </span>
-                <span className={hasSpecial ? "text-emerald-400" : "text-[var(--color-text-tertiary)]"}>
+                <span
+                  className={hasSpecial ? "text-emerald-400" : "text-[var(--color-text-tertiary)]"}
+                >
                   {hasSpecial ? "✓" : "○"} {isTr ? "Özel karakter" : "Special char"}
                 </span>
               </div>
@@ -320,7 +331,10 @@ export function SecuritySettingsTab({
               </p>
             </div>
           </div>
-          <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px]">
+          <Badge
+            variant="outline"
+            className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px]"
+          >
             {isTr ? "Canlı" : "Active"}
           </Badge>
         </div>
@@ -332,7 +346,9 @@ export function SecuritySettingsTab({
           <div>
             <label className="text-xs font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
               <History className="h-4 w-4 text-blue-400" />
-              <span>{isTr ? "Hesap İşlem ve Güvenlik Günlüğü" : "Account Security & Audit Log"}</span>
+              <span>
+                {isTr ? "Hesap İşlem ve Güvenlik Günlüğü" : "Account Security & Audit Log"}
+              </span>
             </label>
             <p className="text-[11px] text-[var(--color-text-tertiary)] mt-0.5">
               {isTr

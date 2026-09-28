@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { SESSION_COOKIE_NAME } from "@/src/modules/auth/session";
+import { handleApiError } from "@/src/lib/api/error-response";
 
 export async function POST() {
   try {
@@ -26,7 +27,13 @@ export async function POST() {
 
     return response;
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Logout failed";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      err,
+      {
+        en: "Logout failed",
+        tr: "Çıkış işlemi başarısız oldu",
+      },
+      { logPrefix: "[Auth Logout POST Error]", status: 500 }
+    );
   }
 }

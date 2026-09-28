@@ -1,16 +1,17 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
-import { MilestoneService, CustomMilestoneInputItem } from "@/src/modules/engagements/milestone-service";
+import {
+  MilestoneService,
+  CustomMilestoneInputItem,
+} from "@/src/modules/engagements/milestone-service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const isEn = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
@@ -41,16 +42,27 @@ export async function GET(
 
     return NextResponse.json({ success: true, ...plan });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to fetch milestones";
-    const status = message.includes("Yetkisiz") || message.includes("Güvenlik ihlali") ? 403 : message.includes("bulunamadı") ? 404 : 500;
-    return NextResponse.json({ error: message }, { status });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to fetch milestones",
+        tr: "Aşama planı alınamadı",
+      },
+      {
+        isEn,
+        logPrefix: "[Milestones GET Error]",
+        status: 500,
+        allowedMessages: {
+          Yetkisiz: { en: "Unauthorized", tr: "Yetkisiz erişim", status: 403 },
+          "Güvenlik ihlali": { en: "Security violation", tr: "Güvenlik ihlali", status: 403 },
+          bulunamadı: { en: "Milestone plan not found", tr: "Aşama planı bulunamadı", status: 404 },
+        },
+      }
+    );
   }
 }
 
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const isEn = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
@@ -82,7 +94,11 @@ export async function POST(
     const items: CustomMilestoneInputItem[] = body.milestones;
     if (!Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
-        { error: isEn ? "Milestones array is required." : "Geçerli bir kilometre taşı listesi gereklidir." },
+        {
+          error: isEn
+            ? "Milestones array is required."
+            : "Geçerli bir kilometre taşı listesi gereklidir.",
+        },
         { status: 400 }
       );
     }
@@ -100,8 +116,37 @@ export async function POST(
       message: isEn ? result.messageEn : result.messageTr,
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to update milestone plan";
-    const status = message.includes("Yetkisiz") || message.includes("Güvenlik ihlali") ? 403 : message.includes("bulunamadı") ? 404 : 400;
-    return NextResponse.json({ error: message }, { status });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to update milestone plan",
+        tr: "Aşama planı güncellenemedi",
+      },
+      {
+        isEn,
+        logPrefix: "[Milestones POST Error]",
+        status: 500,
+        allowedMessages: {
+          Yetkisiz: { en: "Unauthorized", tr: "Yetkisiz erişim", status: 403 },
+          "Güvenlik ihlali": { en: "Security violation", tr: "Güvenlik ihlali", status: 403 },
+          bulunamadı: { en: "Milestone plan not found", tr: "Aşama planı bulunamadı", status: 404 },
+          "Toplam hakediş yüzdesi": {
+            en: "Total milestone percentage must equal 100%.",
+            tr: "Toplam hakediş yüzdesi tam olarak %100 olmalıdır.",
+            status: 400,
+          },
+          "En az 1 adet": {
+            en: "At least 1 milestone must be defined.",
+            tr: "En az 1 adet kilometre taşı tanımlanmalıdır.",
+            status: 400,
+          },
+          "Ödemesi yapılmış": {
+            en: "Cannot reorganize milestone plan when payments are already marked or confirmed.",
+            tr: "Ödemesi yapılmış veya teyit edilmiş hakedişler varken hakediş planı yeniden düzenlenemez.",
+            status: 400,
+          },
+        },
+      }
+    );
   }
 }

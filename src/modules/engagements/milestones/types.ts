@@ -131,10 +131,7 @@ export interface CustomMilestoneInputItem {
 export const inMemoryMilestones = new Map<string, MilestoneDto[]>();
 
 export function calculateSha256Seal(data: Record<string, unknown>): string {
-  return crypto
-    .createHash("sha256")
-    .update(JSON.stringify(data), "utf8")
-    .digest("hex");
+  return crypto.createHash("sha256").update(JSON.stringify(data), "utf8").digest("hex");
 }
 
 export function computeMilestoneMetrics(

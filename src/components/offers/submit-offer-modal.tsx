@@ -76,9 +76,7 @@ function getPitchDoctorToggleLabel(show: boolean, isTr: boolean): string {
   if (show) {
     return isTr ? "Asistanı Gizle" : "Hide Assistant";
   }
-  return isTr
-    ? "Operis AI: Teklifi Değerlendir & Güçlendir"
-    : "Operis AI: Review & Enhance Pitch";
+  return isTr ? "Operis AI: Teklifi Değerlendir & Güçlendir" : "Operis AI: Review & Enhance Pitch";
 }
 
 function getTaxCalculatorToggleLabel(show: boolean, isTr: boolean): string {
@@ -471,8 +469,8 @@ export function SubmitOfferModal({
                       ? `${formatCurrency(parseFloat(budgetMin) || 0, budgetCurrency, (locale as Locale) || "tr")} (${isTr ? "Sabit Tutar" : "Fixed"})`
                       : `${formatCurrency(parseFloat(budgetMin) || 0, budgetCurrency, (locale as Locale) || "tr")} – ${formatCurrency(parseFloat(budgetMax) || 0, budgetCurrency, (locale as Locale) || "tr")} aralığında`
                     : budgetMin
-                    ? `${isTr ? "En az" : "At least"} ${formatCurrency(parseFloat(budgetMin) || 0, budgetCurrency, (locale as Locale) || "tr")}`
-                    : `${isTr ? "En çok" : "At most"} ${formatCurrency(parseFloat(budgetMax) || 0, budgetCurrency, (locale as Locale) || "tr")}`}
+                      ? `${isTr ? "En az" : "At least"} ${formatCurrency(parseFloat(budgetMin) || 0, budgetCurrency, (locale as Locale) || "tr")}`
+                      : `${isTr ? "En çok" : "At most"} ${formatCurrency(parseFloat(budgetMax) || 0, budgetCurrency, (locale as Locale) || "tr")}`}
                 </span>
               </div>
             )}

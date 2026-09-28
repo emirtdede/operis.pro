@@ -43,8 +43,8 @@ export class MilestoneAuthHelper {
     requiredRole: MilestoneRequiredRole
   ): Promise<MilestoneAccessResult> {
     const isMock =
-      engagementId.startsWith("eng-test-") ||
-      engagementId.startsWith("eng-demo-");
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-"));
 
     if (isMock) {
       const isOwner =
@@ -59,8 +59,7 @@ export class MilestoneAuthHelper {
         userId.includes("contractor") ||
         userId.includes("specialist");
 
-      const isOutsider =
-        userId.includes("outsider") || (!isOwner && !isFreelancer);
+      const isOutsider = userId.includes("outsider") || (!isOwner && !isFreelancer);
 
       if (requiredRole === "CLIENT" && (!isOwner || isOutsider)) {
         throw new Error(
@@ -209,9 +208,7 @@ export class MilestoneAuthHelper {
           .limit(1);
 
         if (elsewhere) {
-          throw new Error(
-            "Güvenlik ihlali: Hakediş belirtilen işe ait değil (BOLA/IDOR ihlali)."
-          );
+          throw new Error("Güvenlik ihlali: Hakediş belirtilen işe ait değil (BOLA/IDOR ihlali).");
         }
         throw new Error("Kilometre taşı bulunamadı (Milestone not found).");
       }

@@ -636,6 +636,55 @@ describe("Sürüm 18 Audit: B25-ENTRY, B25-EXIT, B25-RUNNER, B26-CLEANUP, B26-ME
   // 5. B26-MEM TESTS: 11 MiB OVERSIZED RECORD & TRUE 50 x ~8.8 MiB CAPACITY
   // =========================================================================
   describe("B26-MEM: Payload Pre-Check & 50 x ~8.8 MiB Capacity & Integrity", () => {
+    it("50 large listing scopes release each payload group and preserve the encrypted stream", async () => {
+      const ids = new Set<string>();
+      const scope = "L".repeat(8800 * 1024);
+      for (let index = 0; index < 50; index++) {
+        const id = crypto.randomUUID();
+        ids.add(id);
+        await ctx.db.insert(schema.listings).values({
+          id,
+          ownerUserId: testUserId,
+          categoryId: testCategoryId,
+          title: `Large scope ${index}`,
+          slug: `large-scope-${id}`,
+          summary: "Bounded memory regression",
+          scope,
+          budgetMode: "OPEN_BID",
+          timelineMode: "FLEXIBLE",
+          status: "ACTIVE",
+        });
+      }
+      const { jobId } = await enqueueExportJob(testUserId);
+      const measured = await runExportCapacityWorker(ctx.connectionString, jobId);
+      expect(measured.result).toBe("COMPLETED");
+      console.info("[50-listing isolated worker RSS]", measured);
+      expect(measured.peak / 1024 / 1024).toBeLessThan(400);
+      expect(measured.delta / 1024 / 1024).toBeLessThan(250);
+      const [job] = await ctx.db
+        .select()
+        .from(schema.exportJobs)
+        .where(eq(schema.exportJobs.id, jobId));
+      expect(job?.status).toBe("READY");
+      let bytes = 0;
+      let carry = "";
+      const remaining = new Set(ids);
+      for await (const chunk of readAndVerifyExportPartsStream(
+        jobId,
+        job!.attemptCount,
+        job!.checksumSha256!
+      )) {
+        bytes += chunk.length;
+        const text = carry + chunk.toString("utf8");
+        for (const id of remaining) if (text.includes(id)) remaining.delete(id);
+        carry = text.slice(-100);
+      }
+      expect(bytes).toBe(Number(job!.fileSizeBytes));
+      expect(bytes).toBeGreaterThan(400 * 1024 * 1024);
+      expect(remaining.size).toBe(0);
+      for (const id of ids) await ctx.db.delete(schema.listings).where(eq(schema.listings.id, id));
+    }, 180000);
+
     it("B26-MEM: 11 MiB oversized listing scope is rejected by pre-check with EXPORT_RECORD_TOO_LARGE, never READY", async () => {
       const listingId = crypto.randomUUID();
       // Insert oversized 11 MiB scope directly into DB (bypassing form validation)

@@ -53,7 +53,8 @@ export interface ContractAcceptanceCriterion {
   id: string;
   slotKey?: string;
   phaseNumber: number; // 1, 2, 3
-  category: "AUTH_SECURITY" | "DATA_INTEGRATION" | "CORE_LOGIC" | "OUTPUT_REPORTING" | "DELIVERY_QUALITY";
+  category:
+    "AUTH_SECURITY" | "DATA_INTEGRATION" | "CORE_LOGIC" | "OUTPUT_REPORTING" | "DELIVERY_QUALITY";
   // Layer 1: Son Kullanıcı Sade Dili (Human-friendly plain Turkish)
   humanCriterionTr: string;
   humanCriterionEn: string;

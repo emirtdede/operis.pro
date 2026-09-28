@@ -5,11 +5,7 @@ import { locales, Locale } from "@/src/lib/i18n/config";
 
 import { getAlternateLocalePath } from "@/src/lib/i18n/routes";
 
-function resolveActiveLocale(
-  currentLocale?: Locale,
-  paramLocale?: unknown,
-  pathname = ""
-): Locale {
+function resolveActiveLocale(currentLocale?: Locale, paramLocale?: unknown, pathname = ""): Locale {
   if (currentLocale) {
     return currentLocale;
   }

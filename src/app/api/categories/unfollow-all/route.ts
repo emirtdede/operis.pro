@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { CategoryService } from "@/src/modules/categories/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -41,12 +42,13 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (err: unknown) {
-    let message = isEn
-      ? "Failed to unfollow all categories."
-      : "Kategori takipleri kaldırılamadı.";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to unfollow all categories.",
+        tr: "Kategori takipleri kaldırılamadı.",
+      },
+      { isEn, logPrefix: "[Category Unfollow All POST Error]", status: 500 }
+    );
   }
 }

@@ -13,10 +13,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import type { PublicProfileDto } from "@/src/modules/profiles/service";
-import {
-  type PersonaMode,
-  resolveUserPersonaMode,
-} from "@/src/modules/profiles/utils/persona";
+import { type PersonaMode, resolveUserPersonaMode } from "@/src/modules/profiles/utils/persona";
 import { getPlatformConfig } from "../platform-icons";
 import { VerifiedCompanyBadge } from "@/src/components/ui/verified-company-badge";
 
@@ -265,7 +262,11 @@ export function PublicProfileSidebar({
                   className="hover:text-purple-400 transition-colors cursor-pointer inline-flex items-center gap-1.5 font-medium"
                 >
                   <Sparkles className="h-3 w-3 text-purple-400" />
-                  <span>{isTr ? "+ GitHub, LinkedIn veya portfolyo bağlantısı ekleyin..." : "+ Add links..."}</span>
+                  <span>
+                    {isTr
+                      ? "+ GitHub, LinkedIn veya portfolyo bağlantısı ekleyin..."
+                      : "+ Add links..."}
+                  </span>
                 </button>
               ) : (
                 <span>{isTr ? "Dış bağlantı bulunmuyor." : "No external links."}</span>
@@ -336,7 +337,9 @@ export function PublicProfileSidebar({
               >
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4" />
-                  <span>{isTr ? "Kurumsal Rozet Al (GİB VKN/TCKN)" : "Verify Company (Tax ID)"}</span>
+                  <span>
+                    {isTr ? "Kurumsal Rozet Al (GİB VKN/TCKN)" : "Verify Company (Tax ID)"}
+                  </span>
                 </div>
                 <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </Link>

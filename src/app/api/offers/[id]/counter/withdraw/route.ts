@@ -42,11 +42,33 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     return NextResponse.json({ success: true, ...result }, { status: 200 });
   } catch (err: unknown) {
-    let message = isEn ? "Failed to withdraw counter-offer" : "Karşı teklif geri çekilemedi";
     if (err instanceof Error) {
-      message = err.message;
+      const raw = err.message;
+      let status = 400;
+      let message: string;
+
+      if (raw.includes("not found") || raw.includes("bulunamadı")) {
+        message = isEn ? "Counter-offer not found." : "Karşı teklif bulunamadı.";
+      } else if (raw.includes("not pending")) {
+        message = isEn ? "Counter-offer is not pending." : "Karşı teklif bekleme durumunda değil.";
+      } else if (raw.includes("Unauthorized") || raw.includes("Yalnızca") || raw.includes("Only")) {
+        status = 403;
+        message = isEn
+          ? "Unauthorized to withdraw this counter-offer."
+          : "Bu karşı teklifi geri çekme yetkiniz bulunmamaktadır.";
+      } else {
+        console.error("[Counter Withdraw Error]:", err);
+        return NextResponse.json(
+          { error: isEn ? "Failed to withdraw counter-offer" : "Karşı teklif geri çekilemedi" },
+          { status: 500 }
+        );
+      }
+      return NextResponse.json({ error: message }, { status });
     }
-    const status = message.includes("Unauthorized") || message.includes("Yalnızca") ? 403 : 400;
-    return NextResponse.json({ error: message }, { status });
+    console.error("[Counter Withdraw Error]:", err);
+    return NextResponse.json(
+      { error: isEn ? "Failed to withdraw counter-offer" : "Karşı teklif geri çekilemedi" },
+      { status: 500 }
+    );
   }
 }

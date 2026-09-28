@@ -3,6 +3,7 @@ import { getSession } from "@/src/modules/auth/session";
 import { EngagementService } from "@/src/modules/engagements/service";
 import { OfferService } from "@/src/modules/offers/service";
 import { ContractGeneratorService } from "@/src/modules/contracts/generator";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -393,7 +394,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
         status: 200,
         headers: {
           "Content-Type": "text/html; charset=utf-8",
-          "Content-Security-Policy": "default-src 'none'; img-src data:; style-src 'unsafe-inline'; sandbox",
+          "Content-Security-Policy":
+            "default-src 'none'; img-src data:; style-src 'unsafe-inline'; sandbox",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "DENY",
         },
@@ -434,12 +436,13 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
       contract,
     });
   } catch (err: unknown) {
-    let message = isEnHeader
-      ? "Failed to generate contract draft."
-      : "Sözleşme taslağı oluşturulamadı.";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to generate contract draft.",
+        tr: "Sözleşme taslağı oluşturulamadı.",
+      },
+      { isEn: isEnHeader, logPrefix: "[Contract Draft Error]", status: 500 }
+    );
   }
 }

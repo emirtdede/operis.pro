@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { AuthService } from "@/src/modules/auth/service";
 import { SESSION_COOKIE_NAME, SESSION_MAX_AGE_SECONDS } from "@/src/modules/auth/session";
 import { evaluateSecurityAccessAsync, getClientIp } from "@/src/lib/security/rate-limit";
@@ -108,21 +109,76 @@ export async function POST(req: Request) {
     return response;
   } catch (err: unknown) {
     const isEn = (req.headers.get("x-locale") || "tr") === "en";
-    let message = isEn ? "Registration failed" : "Kayıt işlemi başarısız oldu";
-    if (err instanceof Error) {
-      message = err.message;
+
+    if (err instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          error: isEn
+            ? "Invalid registration data. Please check required fields."
+            : "Geçersiz kayıt bilgileri. Lütfen zorunlu alanları kontrol ediniz.",
+          details: err.issues.map((i) => ({ path: i.path.join("."), message: i.message })),
+        },
+        { status: 400 }
+      );
     }
 
-    if (!isEn) {
-      if (message.includes("email address already exists")) {
-        message = "Bu e-posta adresiyle kayıtlı bir hesap zaten mevcut.";
-      } else if (message.includes("handle is already taken")) {
-        message = "Bu kullanıcı adı zaten alınmış. Lütfen başka bir kullanıcı adı seçiniz.";
-      } else if (message.includes("phone number already exists")) {
-        message = "Bu telefon numarasıyla kayıtlı bir hesap zaten mevcut.";
+    if (err instanceof Error) {
+      const msg = err.message;
+      if (msg.includes("email address already exists")) {
+        return NextResponse.json(
+          {
+            error: isEn
+              ? "An account with this email address already exists."
+              : "Bu e-posta adresiyle kayıtlı bir hesap zaten mevcut.",
+          },
+          { status: 400 }
+        );
+      }
+      if (msg.includes("handle is already taken")) {
+        return NextResponse.json(
+          {
+            error: isEn
+              ? "This handle is already taken. Please choose another one."
+              : "Bu kullanıcı adı zaten alınmış. Lütfen başka bir kullanıcı adı seçiniz.",
+          },
+          { status: 400 }
+        );
+      }
+      if (msg.includes("phone number already exists")) {
+        return NextResponse.json(
+          {
+            error: isEn
+              ? "An account with this mobile phone number already exists."
+              : "Bu telefon numarasıyla kayıtlı bir hesap zaten mevcut.",
+          },
+          { status: 400 }
+        );
+      }
+      if (
+        msg.includes("Password does not meet") ||
+        msg.includes("Must accept") ||
+        msg.includes("Terms") ||
+        msg.includes("Privacy")
+      ) {
+        return NextResponse.json(
+          {
+            error: isEn
+              ? "Registration validation failed. Please check your details."
+              : "Kayıt doğrulaması başarısız oldu. Lütfen bilgilerinizi kontrol ediniz.",
+          },
+          { status: 400 }
+        );
       }
     }
 
-    return NextResponse.json({ error: message }, { status: 400 });
+    console.error("Auth register unhandled server error:", err);
+    return NextResponse.json(
+      {
+        error: isEn
+          ? "An unexpected error occurred during registration. Please try again later."
+          : "Kayıt işlemi sırasında beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.",
+      },
+      { status: 500 }
+    );
   }
 }

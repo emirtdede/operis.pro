@@ -33,6 +33,26 @@ function registerGracefulShutdown(p: pg.Pool) {
   }
 }
 
+export function getDbSslConfig(connString: string) {
+  const isSupabase =
+    connString.includes("supabase.co") || connString.includes("pooler.supabase.com");
+  if (!isSupabase) return undefined;
+
+  const caCert = process.env.SUPABASE_SSL_CA_CERT || process.env.DATABASE_SSL_CA;
+  const explicitReject = process.env.DATABASE_SSL_REJECT_UNAUTHORIZED;
+  const shouldRejectUnauthorized =
+    explicitReject !== undefined
+      ? explicitReject === "true"
+      : process.env.NODE_ENV === "production"
+        ? true
+        : Boolean(caCert);
+
+  return {
+    rejectUnauthorized: shouldRejectUnauthorized,
+    ca: caCert || undefined,
+  };
+}
+
 export function getDbPool(): pg.Pool {
   if (!globalForDb.operisDbPool) {
     const env = getEnv();
@@ -46,26 +66,13 @@ export function getDbPool(): pg.Pool {
       );
     }
 
-    const isSupabase =
-      connString.includes("supabase.co") || connString.includes("pooler.supabase.com");
-
-    const caCert = process.env.SUPABASE_SSL_CA_CERT || process.env.DATABASE_SSL_CA;
-    const explicitReject = process.env.DATABASE_SSL_REJECT_UNAUTHORIZED;
-    const shouldRejectUnauthorized =
-      explicitReject !== undefined ? explicitReject === "true" : Boolean(caCert);
-
     globalForDb.operisDbPool = new Pool({
       connectionString: connString,
       // Section 7 & 18: Serverless target pool max = 1 to prevent connection exhaustion during lambda fan-out
       max: process.env.NODE_ENV === "production" ? 1 : 10,
       idleTimeoutMillis: 5000,
       connectionTimeoutMillis: 5000,
-      ssl: isSupabase
-        ? {
-            rejectUnauthorized: shouldRejectUnauthorized,
-            ca: caCert || undefined,
-          }
-        : undefined,
+      ssl: getDbSslConfig(connString),
     });
 
     // WP-10: Register error listener immediately to prevent unhandled EventEmitter exceptions on idle clients from crashing Node process

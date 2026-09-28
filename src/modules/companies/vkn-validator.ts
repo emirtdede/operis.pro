@@ -77,9 +77,9 @@ export function validateTCKN(tckn: string): boolean {
   const d8 = digits[8] ?? 0;
   const oddSum = d0 + d2 + d4 + d6 + d8;
   const evenSum = d1 + d3 + d5 + d7;
-  const check10 = ((oddSum * 7) - evenSum) % 10;
+  const check10 = (oddSum * 7 - evenSum) % 10;
   // Handle potential negative modulus in JS: (val % 10 + 10) % 10
-  const normalizedCheck10 = (check10 % 10 + 10) % 10;
+  const normalizedCheck10 = ((check10 % 10) + 10) % 10;
 
   if (normalizedCheck10 !== digits[9]) return false;
 
@@ -89,7 +89,7 @@ export function validateTCKN(tckn: string): boolean {
     sum10 += digits[i] ?? 0;
   }
 
-  return (sum10 % 10) === digits[10];
+  return sum10 % 10 === digits[10];
 }
 
 /**
@@ -167,16 +167,23 @@ export function normalizeCompanyTitle(title: string): string {
   let cleaned = title.trim().replace(/\s+/g, " ");
 
   // Standardize common legal entity suffixes case-insensitively
-  cleaned = cleaned.replace(/(?:^|\s)(a\.s\.|a\.ş\.|aş|as|anonim\s+şirketi|anonim\s+sirketi)(?:\s|$)/gi, (match) =>
-    match.replace(/a\.s\.|a\.ş\.|aş|as|anonim\s+şirketi|anonim\s+sirketi/i, "A.Ş.")
+  cleaned = cleaned.replace(
+    /(?:^|\s)(a\.s\.|a\.ş\.|aş|as|anonim\s+şirketi|anonim\s+sirketi)(?:\s|$)/gi,
+    (match) => match.replace(/a\.s\.|a\.ş\.|aş|as|anonim\s+şirketi|anonim\s+sirketi/i, "A.Ş.")
   );
 
-  cleaned = cleaned.replace(/(?:^|\s)(ltd\.\s*şti\.|ltd\.\s*sti\.|ltd|limited\s+şirketi|limited\s+sirketi)(?:\s|$)/gi, (match) =>
-    match.replace(/ltd\.\s*şti\.|ltd\.\s*sti\.|ltd|limited\s+şirketi|limited\s+sirketi/i, "Ltd. Şti.")
+  cleaned = cleaned.replace(
+    /(?:^|\s)(ltd\.\s*şti\.|ltd\.\s*sti\.|ltd|limited\s+şirketi|limited\s+sirketi)(?:\s|$)/gi,
+    (match) =>
+      match.replace(
+        /ltd\.\s*şti\.|ltd\.\s*sti\.|ltd|limited\s+şirketi|limited\s+sirketi/i,
+        "Ltd. Şti."
+      )
   );
 
-  cleaned = cleaned.replace(/(?:^|\s)(tic\.\s*ltd\.\s*şti\.|tic\.\s*ltd\.\s*sti\.)(?:\s|$)/gi, (match) =>
-    match.replace(/tic\.\s*ltd\.\s*şti\.|tic\.\s*ltd\.\s*sti\./i, "Tic. Ltd. Şti.")
+  cleaned = cleaned.replace(
+    /(?:^|\s)(tic\.\s*ltd\.\s*şti\.|tic\.\s*ltd\.\s*sti\.)(?:\s|$)/gi,
+    (match) => match.replace(/tic\.\s*ltd\.\s*şti\.|tic\.\s*ltd\.\s*sti\./i, "Tic. Ltd. Şti.")
   );
 
   return cleaned.trim();

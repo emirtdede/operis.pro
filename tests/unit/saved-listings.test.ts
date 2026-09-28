@@ -66,8 +66,8 @@ describe("SavedListingService Unit Tests", () => {
     expect(set.size).toBe(MAX_SAVED_LISTINGS_LIMIT);
 
     // 201st attempt should throw MAX_SAVED_LIMIT_REACHED
-    await expect(
-      SavedListingService.toggleSave(userId, "limit-job-overflow")
-    ).rejects.toThrow(/MAX_SAVED_LIMIT_REACHED/);
+    await expect(SavedListingService.toggleSave(userId, "limit-job-overflow")).rejects.toThrow(
+      /MAX_SAVED_LIMIT_REACHED/
+    );
   });
 });

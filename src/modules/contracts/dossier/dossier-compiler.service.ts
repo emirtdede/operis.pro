@@ -122,10 +122,11 @@ export class DossierCompilerService {
 
     // 1. Fetch engagement data (with testing/mock fallback)
     const isMock =
-      Boolean(process.env.VITEST) ||
-      engagementId.startsWith("eng-test-") ||
-      engagementId.startsWith("eng-mock-") ||
-      engagementId === "eng-demo-101";
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (Boolean(process.env.VITEST) ||
+        engagementId.startsWith("eng-test-") ||
+        engagementId.startsWith("eng-mock-") ||
+        engagementId === "eng-demo-101");
 
     let clientParty: DossierPartyInfo;
     let contractorParty: DossierPartyInfo;
@@ -315,7 +316,9 @@ export class DossierCompilerService {
         .select()
         .from(schema.engagementChangeRequests)
         .where(eq(schema.engagementChangeRequests.engagementId, engagementId))
-        .orderBy(asc(schema.engagementChangeRequests.sequenceNumber))) as unknown as DossierChangeRequest[];
+        .orderBy(
+          asc(schema.engagementChangeRequests.sequenceNumber)
+        )) as unknown as DossierChangeRequest[];
 
       milestones = (await db
         .select()
@@ -326,7 +329,9 @@ export class DossierCompilerService {
       completionMarks = (await db
         .select()
         .from(schema.engagementCompletionMarks)
-        .where(eq(schema.engagementCompletionMarks.engagementId, engagementId))) as unknown as DossierCompletionMark[];
+        .where(
+          eq(schema.engagementCompletionMarks.engagementId, engagementId)
+        )) as unknown as DossierCompletionMark[];
 
       const hasDisputeMark = completionMarks.some((m) => m.status === "DISPUTES_COMPLETION");
       if (row.status === "CANCELLED") {

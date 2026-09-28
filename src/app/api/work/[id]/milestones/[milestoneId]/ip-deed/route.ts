@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { MilestoneService } from "@/src/modules/engagements/milestone-service";
 import { IpAssignmentDeedEngine } from "@/src/modules/engagements/ip-assignment/ip-assignment-engine";
+import { handleApiError } from "@/src/lib/api/error-response";
 import { evaluateSecurityAccessAsync, getClientIp } from "@/src/lib/security/rate-limit";
 
 export async function GET(
@@ -61,7 +62,13 @@ export async function GET(
       verification,
     });
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Failed to retrieve IP deed";
-    return NextResponse.json({ error: msg }, { status: 400 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to retrieve IP deed",
+        tr: "Fikri mülkiyet devir senedi alınamadı",
+      },
+      { isEn, logPrefix: "[Milestone IP Deed Error]", status: 500 }
+    );
   }
 }

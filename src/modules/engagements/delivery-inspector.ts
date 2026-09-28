@@ -513,11 +513,13 @@ export class DeliveryInspectorService {
     const inspectedAt = new Date().toISOString();
 
     const [liveDeployment, gitRepository] = await Promise.all([
-      input.liveUrl ? this.probeLiveDeployment(input.liveUrl) : Promise.resolve<LiveDeploymentProbeResult>({
-        checked: false,
-        url: "",
-        isAccessible: true,
-      }),
+      input.liveUrl
+        ? this.probeLiveDeployment(input.liveUrl)
+        : Promise.resolve<LiveDeploymentProbeResult>({
+            checked: false,
+            url: "",
+            isAccessible: true,
+          }),
       this.probeGitRepository(input.repositoryUrl, input.commitHash),
     ]);
 
@@ -528,7 +530,10 @@ export class DeliveryInspectorService {
     let summaryStatus: DeliveryHealthReport["summaryStatus"] = "HEALTHY";
 
     if (liveDeployment.checked) {
-      if (!liveDeployment.isAccessible || (liveDeployment.httpStatus && liveDeployment.httpStatus >= 400)) {
+      if (
+        !liveDeployment.isAccessible ||
+        (liveDeployment.httpStatus && liveDeployment.httpStatus >= 400)
+      ) {
         isHealthy = false;
         summaryStatus = "UNHEALTHY";
       } else if (liveDeployment.httpStatus && liveDeployment.httpStatus >= 300) {
@@ -545,8 +550,14 @@ export class DeliveryInspectorService {
     let badgeTextTr: string;
     let badgeTextEn: string;
 
-    if (liveDeployment.checked && liveDeployment.isAccessible && liveDeployment.httpStatus === 200) {
-      const latencyStr = liveDeployment.responseTimeMs ? ` • ${liveDeployment.responseTimeMs}ms` : "";
+    if (
+      liveDeployment.checked &&
+      liveDeployment.isAccessible &&
+      liveDeployment.httpStatus === 200
+    ) {
+      const latencyStr = liveDeployment.responseTimeMs
+        ? ` • ${liveDeployment.responseTimeMs}ms`
+        : "";
       badgeTextTr = `✅ Canlı Sistem Sağlık Kontrolünden Geçti (HTTP 200 OK • SSL Doğrulandı${latencyStr})`;
       badgeTextEn = `✅ Live System Health Inspection Passed (HTTP 200 OK • SSL Verified${latencyStr})`;
     } else if (liveDeployment.checked && !liveDeployment.isAccessible) {

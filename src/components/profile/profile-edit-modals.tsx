@@ -1,6 +1,6 @@
 /**
  * Profile Edit Modals Facade
- * 
+ *
  * Re-exports all profile editing modals from the modular structure in `./modals/`.
  * Preserves 100% backwards compatibility for existing imports.
  */

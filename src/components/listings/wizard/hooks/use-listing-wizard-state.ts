@@ -27,11 +27,7 @@ export interface UseListingWizardStateProps {
   userId?: string;
 }
 
-export function useListingWizardState({
-  categories,
-  locale,
-  userId,
-}: UseListingWizardStateProps) {
+export function useListingWizardState({ categories, locale, userId }: UseListingWizardStateProps) {
   const isTr = locale === "tr";
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -95,7 +91,9 @@ export function useListingWizardState({
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [isPrdArchitectOpen, setIsPrdArchitectOpen] = useState(false);
   const [isScopeInterviewOpen, setIsScopeInterviewOpen] = useState(false);
-  const [acceptedScopePackage, setAcceptedScopePackage] = useState<SynthesizedScopePackage | null>(null);
+  const [acceptedScopePackage, setAcceptedScopePackage] = useState<SynthesizedScopePackage | null>(
+    null
+  );
 
   // Review Declarations
   const [ackDirectRelationship, setAckDirectRelationship] = useState(false);
@@ -219,7 +217,13 @@ export function useListingWizardState({
     return () => {
       isMounted = false;
     };
-  }, [selectedCategory?.id, selectedCategory?.slug, selectedCategory?.key, budgetCurrency, selectedCategory]);
+  }, [
+    selectedCategory?.id,
+    selectedCategory?.slug,
+    selectedCategory?.key,
+    budgetCurrency,
+    selectedCategory,
+  ]);
 
   // Pre-fill form from existing listing when cloneFrom query param is present
   useEffect(() => {

@@ -119,11 +119,26 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   const mobileNavItems = [
     { href: "/admin", label: "Genel Bakış", iconName: "LayoutDashboard", badge: null },
-    { href: "/admin/users", label: "Kullanıcı Yönetimi", iconName: "Users", badge: `${metrics.totalUsers.toLocaleString()}` },
-    { href: "/admin/listings", label: "İlan Yönetimi", iconName: "Layers", badge: `${metrics.activeListings}` },
+    {
+      href: "/admin/users",
+      label: "Kullanıcı Yönetimi",
+      iconName: "Users",
+      badge: `${metrics.totalUsers.toLocaleString()}`,
+    },
+    {
+      href: "/admin/listings",
+      label: "İlan Yönetimi",
+      iconName: "Layers",
+      badge: `${metrics.activeListings}`,
+    },
     { href: "/admin/offers", label: "Teklif & Yanıtlar", iconName: "Send", badge: null },
     { href: "/admin/logs", label: "Çok Kategorili Loglar", iconName: "ScrollText", badge: null },
-    { href: "/admin/monitoring", label: "Sistem & Performans", iconName: "Activity", badge: "99.9%" },
+    {
+      href: "/admin/monitoring",
+      label: "Sistem & Performans",
+      iconName: "Activity",
+      badge: "99.9%",
+    },
     { href: "/admin/messages", label: "İletişim & Destek", iconName: "Mail", badge: null },
   ];
 

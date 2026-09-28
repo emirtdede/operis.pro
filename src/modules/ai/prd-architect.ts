@@ -1,6 +1,6 @@
 /**
  * Operis AI Project Scope & PRD Architect Engine
- * 
+ *
  * Provides automated, high-fidelity Product Requirement Document (PRD) synthesis for employers:
  * 1. Domain Archetype Identification
  * 2. Agile User Stories (INVEST Model)
@@ -35,7 +35,8 @@ export interface AcceptanceCriterionItem {
 
 export interface RequiredIntegrationItem {
   name: string;
-  category: "PAYMENT" | "MAPS_LOCATION" | "SMS_AUTH" | "MEDIA_STORAGE" | "NOTIFICATION" | "DATABASE_CACHE";
+  category:
+    "PAYMENT" | "MAPS_LOCATION" | "SMS_AUTH" | "MEDIA_STORAGE" | "NOTIFICATION" | "DATABASE_CACHE";
   serviceExample: string;
   rationale: string;
 }
@@ -702,7 +703,9 @@ export class PrdArchitectService {
       {
         phase: 1,
         percentage: 30,
-        title: isTr ? "Sistem Mimarisi, Veri Tabanı & Kimlik Altyapısı" : "System Architecture, Database & Auth",
+        title: isTr
+          ? "Sistem Mimarisi, Veri Tabanı & Kimlik Altyapısı"
+          : "System Architecture, Database & Auth",
         durationWeeks: phase1Weeks,
         deliverables: isTr
           ? [
@@ -719,7 +722,9 @@ export class PrdArchitectService {
       {
         phase: 2,
         percentage: 40,
-        title: isTr ? "Çekirdek İş Akışı, Arayüzler & Dış Servis Entegrasyonları" : "Core Business Logic, UI & Integrations",
+        title: isTr
+          ? "Çekirdek İş Akışı, Arayüzler & Dış Servis Entegrasyonları"
+          : "Core Business Logic, UI & Integrations",
         durationWeeks: phase2Weeks,
         deliverables: isTr
           ? [
@@ -736,7 +741,9 @@ export class PrdArchitectService {
       {
         phase: 3,
         percentage: 30,
-        title: isTr ? "Güvenlik Denetimi, Testler, Canlıya Alma & Devir" : "Security Hardening, Testing, Deployment & Handover",
+        title: isTr
+          ? "Güvenlik Denetimi, Testler, Canlıya Alma & Devir"
+          : "Security Hardening, Testing, Deployment & Handover",
         durationWeeks: phase3Weeks,
         deliverables: isTr
           ? [
@@ -776,12 +783,20 @@ export class PrdArchitectService {
     const lines: string[] = [];
 
     // 1. Title & Executive Summary
-    lines.push(isTr ? "# ÜRÜN GEREKSİNİMLERİ DOKÜMANI (PRD)" : "# PRODUCT REQUIREMENTS DOCUMENT (PRD)");
+    lines.push(
+      isTr ? "# ÜRÜN GEREKSİNİMLERİ DOKÜMANI (PRD)" : "# PRODUCT REQUIREMENTS DOCUMENT (PRD)"
+    );
     lines.push(isTr ? `**Proje Başlığı:** ${input.title}` : `**Project Title:** ${input.title}`);
-    lines.push(isTr ? `**Tespit Edilen Alan:** ${analysis.domainLabel}` : `**Domain Archetype:** ${analysis.domainLabelEn}`);
+    lines.push(
+      isTr
+        ? `**Tespit Edilen Alan:** ${analysis.domainLabel}`
+        : `**Domain Archetype:** ${analysis.domainLabelEn}`
+    );
     lines.push("");
 
-    lines.push(isTr ? "## 1. Proje Özeti ve Kapsam Çerçevesi" : "## 1. Executive Summary & Problem Context");
+    lines.push(
+      isTr ? "## 1. Proje Özeti ve Kapsam Çerçevesi" : "## 1. Executive Summary & Problem Context"
+    );
     lines.push(input.summary.trim());
     lines.push("");
 
@@ -794,7 +809,9 @@ export class PrdArchitectService {
     }
 
     // 2. Agile User Stories
-    lines.push(isTr ? "## 2. Kullanıcı Hikayeleri (User Stories)" : "## 2. Agile User Stories (INVEST Model)");
+    lines.push(
+      isTr ? "## 2. Kullanıcı Hikayeleri (User Stories)" : "## 2. Agile User Stories (INVEST Model)"
+    );
     for (const us of userStories) {
       lines.push(
         isTr
@@ -805,21 +822,31 @@ export class PrdArchitectService {
     lines.push("");
 
     // 3. Acceptance Criteria
-    lines.push(isTr ? "## 3. Kabul Kriterleri (Acceptance Criteria)" : "## 3. Testable Acceptance Criteria");
+    lines.push(
+      isTr ? "## 3. Kabul Kriterleri (Acceptance Criteria)" : "## 3. Testable Acceptance Criteria"
+    );
     for (const ac of acceptanceCriteria) {
       lines.push(`- **[ ] ${ac.category}:** ${ac.description}`);
     }
     lines.push("");
 
     // 4. External Integrations
-    lines.push(isTr ? "## 4. Gerekli Dış Servisler ve Altyapı Entegrasyonları" : "## 4. Required External Integrations & Cloud Infrastructure");
+    lines.push(
+      isTr
+        ? "## 4. Gerekli Dış Servisler ve Altyapı Entegrasyonları"
+        : "## 4. Required External Integrations & Cloud Infrastructure"
+    );
     for (const it of integrations) {
       lines.push(`- **${it.name} (${it.serviceExample}):** ${it.rationale}`);
     }
     lines.push("");
 
     // 5. 3-Phase Roadmap & Delivery Milestones
-    lines.push(isTr ? "## 5. Tavsiye Edilen 3 Aşamalı Teslimat Çizelgesi" : "## 5. Recommended 3-Phase Delivery Roadmap");
+    lines.push(
+      isTr
+        ? "## 5. Tavsiye Edilen 3 Aşamalı Teslimat Çizelgesi"
+        : "## 5. Recommended 3-Phase Delivery Roadmap"
+    );
     for (const ph of marketEstimate.phases) {
       lines.push(
         isTr

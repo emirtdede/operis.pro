@@ -45,8 +45,10 @@ const ACCESS_LEVEL_OPTIONS: Array<{
     value: "NO_ACCESS_SYNTHETIC",
     titleTr: "Canlı Veri Erişimi Yok (Yalnızca Simüle / Test Verisi)",
     titleEn: "No Live Data Access (Synthetic / Mock Only)",
-    descTr: "Geliştirici yalnızca yerel test ve simülasyon verileriyle çalışır; üretim veri tabanına veya gerçek kullanıcı kayıtlarına erişmez.",
-    descEn: "Contractor works exclusively with local mock data, no direct access to production or real user databases.",
+    descTr:
+      "Geliştirici yalnızca yerel test ve simülasyon verileriyle çalışır; üretim veri tabanına veya gerçek kullanıcı kayıtlarına erişmez.",
+    descEn:
+      "Contractor works exclusively with local mock data, no direct access to production or real user databases.",
     badgeTr: "0 Risk Puanı",
     badgeEn: "0 Risk Multiplier",
   },
@@ -54,8 +56,10 @@ const ACCESS_LEVEL_OPTIONS: Array<{
     value: "READ_ONLY_STAGING",
     titleTr: "Staging / Test Ortamında Salt-Okunur Erişim",
     titleEn: "Read-Only Staging / Test Environment",
-    descTr: "Geliştirici test sunucusunda maskeli veya seçili kayıtlara yalnızca okuma yetkisiyle erişir.",
-    descEn: "Contractor accesses staging environment with read-only permissions over masked or test records.",
+    descTr:
+      "Geliştirici test sunucusunda maskeli veya seçili kayıtlara yalnızca okuma yetkisiyle erişir.",
+    descEn:
+      "Contractor accesses staging environment with read-only permissions over masked or test records.",
     badgeTr: "0.6x Risk Çarpanı",
     badgeEn: "0.6x Multiplier",
   },
@@ -63,8 +67,10 @@ const ACCESS_LEVEL_OPTIONS: Array<{
     value: "FULL_PRODUCTION_ACCESS",
     titleTr: "Canlı Ortam & Tam Veri Tabanı Erişimi (Üretim Ortamı)",
     titleEn: "Live Production & Full Database Access",
-    descTr: "Canlı sunucuya, kullanıcı kayıtlarına, sistem günlüklerine ve veri tabanı sorgularına doğrudan okuma/yazma erişimi.",
-    descEn: "Direct read/write access to production cloud, user records, query engines, and live logs.",
+    descTr:
+      "Canlı sunucuya, kullanıcı kayıtlarına, sistem günlüklerine ve veri tabanı sorgularına doğrudan okuma/yazma erişimi.",
+    descEn:
+      "Direct read/write access to production cloud, user records, query engines, and live logs.",
     badgeTr: "1.0x Risk Çarpanı",
     badgeEn: "1.0x Multiplier",
   },
@@ -202,7 +208,9 @@ function getSubProcessorPermissionLabel(allowed: boolean, isTr: boolean): string
   if (allowed) {
     return isTr ? "⚠️ Alt-Yüklenici İzni Verildi" : "⚠️ Sub-processors Allowed";
   }
-  return isTr ? "🛡️ Alt-İşleyen Kesinlikle Yasak (Önerilen)" : "🛡️ Sub-processors Prohibited (Recommended)";
+  return isTr
+    ? "🛡️ Alt-İşleyen Kesinlikle Yasak (Önerilen)"
+    : "🛡️ Sub-processors Prohibited (Recommended)";
 }
 
 export function DpaWizardModal({
@@ -355,9 +363,7 @@ export function DpaWizardModal({
         <div className="space-y-3">
           <label className="flex items-center gap-2 text-sm font-semibold text-[var(--color-text-primary)]">
             <Server className="h-4 w-4 text-blue-400" />
-            <span>
-              {isTr ? "1. Geliştirici Erişim Seviyesi" : "1. Developer Access Level"}
-            </span>
+            <span>{isTr ? "1. Geliştirici Erişim Seviyesi" : "1. Developer Access Level"}</span>
           </label>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {ACCESS_LEVEL_OPTIONS.map((opt) => {
@@ -400,12 +406,13 @@ export function DpaWizardModal({
             <label className="flex items-center gap-2 text-sm font-semibold text-[var(--color-text-primary)]">
               <Lock className="h-4 w-4 text-blue-400" />
               <span>
-                {isTr ? "2. İşlenecek Kişisel Veri Türleri" : "2. Personal Data Categories Processed"}
+                {isTr
+                  ? "2. İşlenecek Kişisel Veri Türleri"
+                  : "2. Personal Data Categories Processed"}
               </span>
             </label>
             <span className="text-xs text-[var(--color-text-secondary)]">
-              {dataCategories.length}{" "}
-              {isTr ? "kategori seçildi" : "categories selected"}
+              {dataCategories.length} {isTr ? "kategori seçildi" : "categories selected"}
             </span>
           </div>
 
@@ -554,9 +561,7 @@ export function DpaWizardModal({
                     : "bg-emerald-500/10 border-emerald-500/40 text-emerald-300"
                 }`}
               >
-                <span>
-                  {getSubProcessorPermissionLabel(subProcessorAllowed, isTr)}
-                </span>
+                <span>{getSubProcessorPermissionLabel(subProcessorAllowed, isTr)}</span>
                 <input
                   type="checkbox"
                   checked={subProcessorAllowed}

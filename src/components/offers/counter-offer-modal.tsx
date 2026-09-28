@@ -16,6 +16,7 @@ import {
   Calculator,
 } from "lucide-react";
 import { Button } from "../ui/button";
+import { ModalOverlay } from "../ui/modal-overlay";
 import { validateContentAppropriateness } from "@/src/lib/security/content-moderator";
 import { TaxCalculatorWidget } from "../finance/tax-calculator-widget";
 
@@ -58,7 +59,8 @@ const PRESET_REASON_CHIPS = [
     label: "Bütçe Uyumu",
     labelEn: "Budget Alignment",
     text: "Proje bütçe aralığı ve kaynak optimizasyonu doğrultusunda revize teklifimi sunuyorum.",
-    textEn: "I am submitting my revised proposal in line with the project budget range and resource optimization.",
+    textEn:
+      "I am submitting my revised proposal in line with the project budget range and resource optimization.",
   },
   {
     id: "speed",
@@ -66,7 +68,8 @@ const PRESET_REASON_CHIPS = [
     label: "Hızlı Teslimat",
     labelEn: "Fast Delivery",
     text: "Daha yoğun sprint ve hızlandırılmış teslimat takvimi gözetilerek süre ve bütçe dengelendi.",
-    textEn: "Timeline and budget have been balanced for a more intensive sprint and accelerated delivery.",
+    textEn:
+      "Timeline and budget have been balanced for a more intensive sprint and accelerated delivery.",
   },
   {
     id: "scope",
@@ -74,7 +77,8 @@ const PRESET_REASON_CHIPS = [
     label: "Kapsam Dengesi",
     labelEn: "Scope Balance",
     text: "İlan teknik gereksinimlerini eksiksiz karşılayacak teslimat adımları doğrultusunda güncellendi.",
-    textEn: "Updated in accordance with delivery milestones that will completely satisfy the project requirements.",
+    textEn:
+      "Updated in accordance with delivery milestones that will completely satisfy the project requirements.",
   },
 ];
 
@@ -153,7 +157,9 @@ export function CounterOfferModal({
     const numMax = parseFloat(budgetMax);
 
     if (isNaN(numMin) || numMin <= 0 || isNaN(numMax) || numMax <= 0) {
-      setError(isTr ? "Lütfen geçerli bir bütçe aralığı giriniz." : "Please enter a valid budget range.");
+      setError(
+        isTr ? "Lütfen geçerli bir bütçe aralığı giriniz." : "Please enter a valid budget range."
+      );
       return;
     }
 
@@ -201,7 +207,9 @@ export function CounterOfferModal({
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || (isTr ? "Karşı teklif gönderilemedi." : "Failed to send counter-offer."));
+        throw new Error(
+          data.error || (isTr ? "Karşı teklif gönderilemedi." : "Failed to send counter-offer.")
+        );
       }
 
       if (onSuccess) onSuccess();
@@ -225,13 +233,15 @@ export function CounterOfferModal({
   }
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-200"
-      role="dialog"
-      aria-modal="true"
-      aria-label={isTr ? "Karşı Teklif & Pazarlık" : "Counter-Offer & Negotiation"}
+    <ModalOverlay
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabel={isTr ? "Karşı Teklif & Pazarlık" : "Counter-Offer & Negotiation"}
     >
-      <div className="bg-[#121620] border border-slate-700/80 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
+      <div
+        className="bg-[#121620] border border-slate-700/80 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/60">
           <div className="flex items-center gap-3">
@@ -262,7 +272,10 @@ export function CounterOfferModal({
         </div>
 
         {/* Scrollable Form Body */}
-        <form onSubmit={handleSubmit} className="p-4 sm:p-6 overflow-y-auto space-y-5 flex-1 text-sm">
+        <form
+          onSubmit={handleSubmit}
+          className="p-4 sm:p-6 overflow-y-auto space-y-5 flex-1 text-sm"
+        >
           {/* Rule Notification / 48h TTL Banner */}
           <div className="rounded-xl p-3.5 bg-blue-950/30 border border-blue-800/40 text-blue-200 text-xs flex items-start gap-2.5">
             <Clock className="h-4 w-4 text-blue-400 shrink-0 mt-0.5" />
@@ -340,9 +353,7 @@ export function CounterOfferModal({
                 className="inline-flex items-center gap-1 text-[11px] font-semibold text-cyan-400 hover:text-cyan-300 transition-colors cursor-pointer"
               >
                 <Calculator className="h-3.5 w-3.5" />
-                <span>
-                  {taxCalculatorToggleLabel}
-                </span>
+                <span>{taxCalculatorToggleLabel}</span>
               </button>
             </div>
 
@@ -436,7 +447,9 @@ export function CounterOfferModal({
             <div className="flex items-center justify-between">
               <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
                 <Sparkles className="h-3.5 w-3.5 text-blue-400" />
-                {isTr ? "Hızlı Gerekçe Şablonları (Tek Tıkla Ekle)" : "Quick Reason Presets (One-Click Insert)"}
+                {isTr
+                  ? "Hızlı Gerekçe Şablonları (Tek Tıkla Ekle)"
+                  : "Quick Reason Presets (One-Click Insert)"}
               </label>
               <span className="text-[10px] text-slate-500">
                 {isTr ? "Dokun ve ekle" : "Click to apply"}
@@ -535,6 +548,6 @@ export function CounterOfferModal({
           </div>
         </form>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

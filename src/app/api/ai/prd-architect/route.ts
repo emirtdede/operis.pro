@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
-import {
-  PrdArchitectService,
-  type PrdArchitectInput,
-} from "@/src/modules/ai/prd-architect";
+import { PrdArchitectService, type PrdArchitectInput } from "@/src/modules/ai/prd-architect";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -12,11 +9,14 @@ import {
 
 export async function POST(req: Request) {
   const headerLocale = req.headers.get("x-locale");
+  let locale: "tr" | "en" = headerLocale === "en" ? "en" : "tr";
 
   try {
-    const session = await getSession();
+    const session = await getSession(req);
     const body = await req.json().catch(() => ({}));
-    const locale = (headerLocale || body?.locale || "tr") as "tr" | "en";
+    if (body?.locale === "en" || body?.locale === "tr") {
+      locale = body.locale;
+    }
     const isEn = locale === "en";
 
     if (!session?.userId) {
@@ -41,8 +41,11 @@ export async function POST(req: Request) {
 
     const title = typeof body?.title === "string" ? body.title.trim() : "";
     const summary = typeof body?.summary === "string" ? body.summary.trim() : "";
-    const categorySlug = typeof body?.categorySlug === "string" ? body.categorySlug.trim() : undefined;
-    const tags = Array.isArray(body?.tags) ? body.tags.filter((t: unknown) => typeof t === "string") : undefined;
+    const categorySlug =
+      typeof body?.categorySlug === "string" ? body.categorySlug.trim() : undefined;
+    const tags = Array.isArray(body?.tags)
+      ? body.tags.filter((t: unknown) => typeof t === "string")
+      : undefined;
 
     if (!title && !summary) {
       return NextResponse.json(
@@ -70,9 +73,14 @@ export async function POST(req: Request) {
       result,
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Internal Server Error";
+    console.error("[PRD Architect API] Internal Error:", err);
     return NextResponse.json(
-      { error: message },
+      {
+        error:
+          locale === "en"
+            ? "An error occurred while generating the project PRD."
+            : "Proje PRD belgesi oluşturulurken bir hata meydana geldi.",
+      },
       { status: 500 }
     );
   }

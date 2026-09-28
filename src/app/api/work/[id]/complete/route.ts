@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { EngagementService } from "@/src/modules/engagements/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -43,12 +44,13 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     return NextResponse.json({ success: true, ...result }, { status: 200 });
   } catch (err: unknown) {
-    let message = isEn
-      ? "Failed to update project completion status."
-      : "İş birliği tamamlama durumu güncellenemedi.";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to update project completion status.",
+        tr: "İş birliği tamamlama durumu güncellenemedi.",
+      },
+      { isEn, logPrefix: "[Work Complete Error]", status: 500 }
+    );
   }
 }

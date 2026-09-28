@@ -1,16 +1,17 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
-import { parseEnvExampleText, SecretLeakageDetector } from "@/src/modules/engagements/runbook-synthesizer";
+import {
+  parseEnvExampleText,
+  SecretLeakageDetector,
+} from "@/src/modules/engagements/runbook-synthesizer";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
 
-export async function POST(
-  req: Request,
-  _context: { params: Promise<{ id: string }> }
-) {
+export async function POST(req: Request, _context: { params: Promise<{ id: string }> }) {
   const isEn = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
@@ -61,7 +62,13 @@ export async function POST(
       count: parsedVars.length,
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to parse environment variables";
-    return NextResponse.json({ error: message }, { status: 400 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to parse environment variables",
+        tr: "Ortam değişkenleri ayrıştırılamadı",
+      },
+      { isEn, logPrefix: "[Runbook Parse-Env Error]", status: 400 }
+    );
   }
 }

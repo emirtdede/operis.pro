@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { ContractSigningService } from "@/src/modules/contracts/contract-signing-service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
 
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const isEnHeader = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
@@ -51,7 +49,11 @@ export async function POST(
 
     if (!signerName || typeof signerName !== "string" || signerName.trim().length < 2) {
       return NextResponse.json(
-        { error: isEnHeader ? "Valid signer full name is required." : "Geçerli bir imzalayan isim/unvanı gereklidir." },
+        {
+          error: isEnHeader
+            ? "Valid signer full name is required."
+            : "Geçerli bir imzalayan isim/unvanı gereklidir.",
+        },
         { status: 400 }
       );
     }
@@ -77,7 +79,8 @@ export async function POST(
     const result = await ContractSigningService.submitSignature({
       engagementId: id,
       userId: session.userId,
-      role: role === "CLIENT" ? "CLIENT" : role === "CONTRACTOR" ? "CONTRACTOR" : ("CLIENT" as const),
+      role:
+        role === "CLIENT" ? "CLIENT" : role === "CONTRACTOR" ? "CONTRACTOR" : ("CLIENT" as const),
       signerName: signerName.trim(),
       signatureType: signatureType === "UPLOADED" ? "UPLOADED" : "DRAWN",
       signatureDataUrl,
@@ -89,23 +92,64 @@ export async function POST(
 
     return NextResponse.json(result);
   } catch (err: unknown) {
-    let message = isEnHeader
-      ? "Failed to submit signature."
-      : "İmza sisteme kaydedilemedi.";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-
-    const status =
-      message.includes("CONCURRENCY_CONFLICT") ||
-      message.includes("değiştirilemez") ||
-      message.includes("zaten")
-        ? 409
-        : message.includes("Yetkisiz") ||
-          message.includes("Güvenlik ihlali") ||
-          message.includes("değiştirilemez")
-        ? 403
-        : 400;
-    return NextResponse.json({ error: message }, { status });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to submit signature.",
+        tr: "İmza sisteme kaydedilemedi.",
+      },
+      {
+        isEn: isEnHeader,
+        logPrefix: "[Contract Sign Error]",
+        status: 500,
+        allowedMessages: {
+          CONCURRENCY_CONFLICT: {
+            en: "Contract has already been signed or is concurrently locked.",
+            tr: "Sözleşme zaten imzalanmış veya işlem kilitlidir.",
+            status: 409,
+          },
+          değiştirilemez: {
+            en: "Contract has already been finalized and cannot be modified.",
+            tr: "Sözleşme kesinleşmiş olup üzerinde değişiklik yapılamaz.",
+            status: 409,
+          },
+          zaten: {
+            en: "Contract has already been signed.",
+            tr: "Sözleşme zaten imzalanmış.",
+            status: 409,
+          },
+          already: {
+            en: "Contract has already been signed.",
+            tr: "Sözleşme zaten imzalanmış.",
+            status: 409,
+          },
+          Yetkisiz: {
+            en: "Unauthorized to sign this contract.",
+            tr: "Bu sözleşmeyi imzalama yetkiniz bulunmamaktadır.",
+            status: 403,
+          },
+          Unauthorized: {
+            en: "Unauthorized to sign this contract.",
+            tr: "Bu sözleşmeyi imzalama yetkiniz bulunmamaktadır.",
+            status: 403,
+          },
+          "Güvenlik ihlali": {
+            en: "Security violation detected during signing.",
+            tr: "İmzalama sırasında güvenlik ihlali tespit edildi.",
+            status: 403,
+          },
+          INVALID_SIGNATURE: {
+            en: "Invalid signature payload or biometric timestamp.",
+            tr: "Geçersiz imza verisi veya biyometrik doğrulama.",
+            status: 400,
+          },
+          geçersiz: {
+            en: "Invalid signature payload.",
+            tr: "Geçersiz imza verisi.",
+            status: 400,
+          },
+        },
+      }
+    );
   }
 }

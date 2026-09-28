@@ -32,8 +32,8 @@ export class MilestoneStatusService {
     await MilestoneAuthHelper.assertAccess(engagementId, null, currentUserId, "PARTICIPANT");
 
     const isMock =
-      engagementId.startsWith("eng-test-") ||
-      engagementId.startsWith("eng-demo-");
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-"));
 
     if (isMock) {
       let list = inMemoryMilestones.get(engagementId);
@@ -116,8 +116,7 @@ export class MilestoneStatusService {
         const dispEntry = [...auditTrail].reverse().find((a) => a.action === "PAYMENT_DISPUTED");
         const senderBank = (declEntry?.metadata?.senderBank as string) || null;
         const transferChannel =
-          (declEntry?.metadata?.transferChannel as string) ||
-          (m.paymentReference ? "FAST" : null);
+          (declEntry?.metadata?.transferChannel as string) || (m.paymentReference ? "FAST" : null);
         const transferDate = (declEntry?.metadata?.transferDate as string) || null;
         const transferTime = (declEntry?.metadata?.transferTime as string) || null;
         const disputeReason = (dispEntry?.metadata?.disputeReason as string) || null;
@@ -354,8 +353,8 @@ export class MilestoneStatusService {
     }
 
     const isMock =
-      engagementId.startsWith("eng-test-") ||
-      engagementId.startsWith("eng-demo-");
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-"));
 
     if (isMock) {
       const existingList = inMemoryMilestones.get(engagementId) || [];
@@ -473,10 +472,7 @@ export class MilestoneStatusService {
         .delete(schema.engagementMilestones)
         .where(eq(schema.engagementMilestones.engagementId, engagementId));
 
-      return tx
-        .insert(schema.engagementMilestones)
-        .values(toInsert)
-        .returning();
+      return tx.insert(schema.engagementMilestones).values(toInsert).returning();
     });
 
     const resultMapped: MilestoneDto[] = insertedRows.map((m) => ({
@@ -525,8 +521,8 @@ export class MilestoneStatusService {
     await MilestoneAuthHelper.assertAccess(engagementId, milestoneId, userId, "CONTRACTOR");
 
     const isMock =
-      engagementId.startsWith("eng-test-") ||
-      engagementId.startsWith("eng-demo-");
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-"));
 
     if (isMock) {
       const list = inMemoryMilestones.get(engagementId) || [];
@@ -540,7 +536,8 @@ export class MilestoneStatusService {
       if (input.deliverableUrl !== undefined) m.deliverableUrl = input.deliverableUrl;
       if (input.deliverableUrlType !== undefined) m.deliverableUrlType = input.deliverableUrlType;
       const extractedCommit =
-        input.gitCommitHash || IpAssignmentDeedEngine.extractCommitHashFromUrl(input.deliverableUrl);
+        input.gitCommitHash ||
+        IpAssignmentDeedEngine.extractCommitHashFromUrl(input.deliverableUrl);
       if (extractedCommit) m.gitCommitHash = extractedCommit;
       if (input.status === "SUBMITTED") m.submittedAt = new Date().toISOString();
 
@@ -622,8 +619,8 @@ export class MilestoneStatusService {
     await MilestoneAuthHelper.assertAccess(engagementId, milestoneId, userId, "CLIENT");
 
     const isMock =
-      engagementId.startsWith("eng-test-") ||
-      engagementId.startsWith("eng-demo-");
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-"));
 
     if (isMock) {
       const list = inMemoryMilestones.get(engagementId) || [];

@@ -291,6 +291,15 @@ async function runMaintenanceCycle(): Promise<void> {
       };
     }
 
+    try {
+      const { TrendingService } = await import("../src/lib/search/trending-service");
+      results.cleanedTrends = await TrendingService.purgeExpiredTrends(30, 1000);
+    } catch (err) {
+      results.cleanedTrends = {
+        error: err instanceof Error ? err.message : "Error purging expired trends",
+      };
+    }
+
     const hasErrors = Object.values(results).some(
       (val) => typeof val === "object" && val !== null && "error" in val
     );

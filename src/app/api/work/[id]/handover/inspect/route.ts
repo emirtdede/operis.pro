@@ -2,16 +2,14 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { EngagementService } from "@/src/modules/engagements/service";
 import { DeliveryInspectorService } from "@/src/modules/engagements/delivery-inspector";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
 
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const isEnHeader = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
@@ -86,7 +84,13 @@ export async function POST(
       report,
     });
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Internal Error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      error,
+      {
+        en: "Failed to inspect delivery",
+        tr: "Devir teslim denetimi gerçekleştirilemedi",
+      },
+      { isEn: isEnHeader, logPrefix: "[Handover Inspect Error]", status: 500 }
+    );
   }
 }

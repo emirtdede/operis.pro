@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAdminSession } from "@/src/modules/admin/auth-guard";
 import { AdminService } from "@/src/modules/admin/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 
 const resolveDisputeSchema = z.object({
   decision: z.enum(["FORCE_COMPLETE", "FORCE_CANCEL"]),
@@ -32,7 +33,15 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     return NextResponse.json({ success: true, result });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to arbitrate engagement dispute";
-    return NextResponse.json({ error: message }, { status: 400 });
+    if (err instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: err.issues[0]?.message || "Invalid payload" },
+        { status: 400 }
+      );
+    }
+    return handleApiError(err, "Failed to arbitrate engagement dispute", {
+      logPrefix: "[Admin Resolve Dispute POST Error]",
+      status: 500,
+    });
   }
 }

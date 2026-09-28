@@ -7,9 +7,10 @@ import { ClerkSessionSync } from "./clerk-session-sync";
 export interface OperisClerkProviderProps {
   children: React.ReactNode;
   locale?: string;
+  nonce?: string;
 }
 
-export function OperisClerkProvider({ children, locale = "tr" }: OperisClerkProviderProps) {
+export function OperisClerkProvider({ children, locale = "tr", nonce }: OperisClerkProviderProps) {
   const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
   if (!publishableKey) {
@@ -20,6 +21,7 @@ export function OperisClerkProvider({ children, locale = "tr" }: OperisClerkProv
 
   return (
     <ClerkProvider
+      nonce={nonce}
       publishableKey={publishableKey}
       signInUrl={isTr ? "/tr/giris" : "/en/login"}
       signUpUrl={isTr ? "/tr/kayit" : "/en/register"}

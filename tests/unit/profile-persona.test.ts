@@ -1,5 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { resolveUserPersonaMode, getPersonaBadgeConfig } from "@/src/modules/profiles/utils/persona";
+import {
+  resolveUserPersonaMode,
+  getPersonaBadgeConfig,
+} from "@/src/modules/profiles/utils/persona";
 import { ProfileService } from "@/src/modules/profiles/service";
 import { DEFAULT_USER } from "@/src/modules/auth/demo-user";
 

@@ -228,100 +228,98 @@ export class SavedListingService {
    * Retrieves saved listings for the user with joined metadata and status calculations.
    * Wrapped in React.cache() for request-scoped deduplication across layouts and server components.
    */
-  static getSavedListings = cache(async (
-    userId: string,
-    options: GetSavedListingsOptions = {}
-  ): Promise<SavedListingItem[]> => {
-    if (!userId) return [];
+  static getSavedListings = cache(
+    async (userId: string, options: GetSavedListingsOptions = {}): Promise<SavedListingItem[]> => {
+      if (!userId) return [];
 
-    const { statusFilter = "all", limit = 100, offset = 0 } = options;
+      const { statusFilter = "all", limit = 100, offset = 0 } = options;
 
-    try {
-      const db = getDb();
-      const now = new Date();
+      try {
+        const db = getDb();
+        const now = new Date();
 
-      const rows = await db
-        .select({
-          savedId: schema.savedListings.id,
-          savedAt: schema.savedListings.createdAt,
-          notes: schema.savedListings.notes,
-          listingId: schema.listings.id,
-          title: schema.listings.title,
-          slug: schema.listings.slug,
-          summary: schema.listings.summary,
-          status: schema.listings.status,
-          budgetMode: schema.listings.budgetMode,
-          budgetMin: schema.listings.budgetMin,
-          budgetMax: schema.listings.budgetMax,
-          budgetCurrency: schema.listings.budgetCurrency,
-          categoryId: schema.listings.categoryId,
-          categoryKey: schema.categories.key,
-          tags: schema.listings.tags,
-          activeUntil: schema.listings.activeUntil,
-          createdAt: schema.listings.createdAt,
-          ownerHandle: schema.profiles.handle,
-          ownerDisplayName: schema.profiles.displayName,
-          ownerAvatarUrl: schema.profiles.avatarUrl,
-        })
-        .from(schema.savedListings)
-        .innerJoin(schema.listings, eq(schema.savedListings.listingId, schema.listings.id))
-        .leftJoin(schema.categories, eq(schema.listings.categoryId, schema.categories.id))
-        .innerJoin(schema.profiles, eq(schema.listings.ownerUserId, schema.profiles.userId))
-        .where(eq(schema.savedListings.userId, userId))
-        .orderBy(desc(schema.savedListings.createdAt))
-        .limit(limit)
-        .offset(offset);
+        const rows = await db
+          .select({
+            savedId: schema.savedListings.id,
+            savedAt: schema.savedListings.createdAt,
+            notes: schema.savedListings.notes,
+            listingId: schema.listings.id,
+            title: schema.listings.title,
+            slug: schema.listings.slug,
+            summary: schema.listings.summary,
+            status: schema.listings.status,
+            budgetMode: schema.listings.budgetMode,
+            budgetMin: schema.listings.budgetMin,
+            budgetMax: schema.listings.budgetMax,
+            budgetCurrency: schema.listings.budgetCurrency,
+            categoryId: schema.listings.categoryId,
+            categoryKey: schema.categories.key,
+            tags: schema.listings.tags,
+            activeUntil: schema.listings.activeUntil,
+            createdAt: schema.listings.createdAt,
+            ownerHandle: schema.profiles.handle,
+            ownerDisplayName: schema.profiles.displayName,
+            ownerAvatarUrl: schema.profiles.avatarUrl,
+          })
+          .from(schema.savedListings)
+          .innerJoin(schema.listings, eq(schema.savedListings.listingId, schema.listings.id))
+          .leftJoin(schema.categories, eq(schema.listings.categoryId, schema.categories.id))
+          .innerJoin(schema.profiles, eq(schema.listings.ownerUserId, schema.profiles.userId))
+          .where(eq(schema.savedListings.userId, userId))
+          .orderBy(desc(schema.savedListings.createdAt))
+          .limit(limit)
+          .offset(offset);
 
-      const items: SavedListingItem[] = rows.map((r) => {
-        const isExpired = Boolean(r.activeUntil && new Date(r.activeUntil) <= now);
-        const isClosed = r.status !== "ACTIVE" || isExpired;
+        const items: SavedListingItem[] = rows.map((r) => {
+          const isExpired = Boolean(r.activeUntil && new Date(r.activeUntil) <= now);
+          const isClosed = r.status !== "ACTIVE" || isExpired;
 
-        return {
-          id: r.savedId,
-          listingId: r.listingId,
-          title: r.title,
-          slug: r.slug,
-          summary: r.summary,
-          status: r.status,
-          isClosed,
-          budgetMode: r.budgetMode,
-          budgetMin: r.budgetMin,
-          budgetMax: r.budgetMax,
-          budgetCurrency: r.budgetCurrency || "TRY",
-          categoryId: r.categoryId,
-          categoryKey: r.categoryKey || "other",
-          categoryTitle: r.categoryKey ? r.categoryKey.charAt(0).toUpperCase() + r.categoryKey.slice(1) : "Genel",
-          tags: (r.tags as string[]) || [],
-          ownerHandle: r.ownerHandle || "kullanici",
-          ownerDisplayName: r.ownerDisplayName || "Operis Kullanıcısı",
-          ownerAvatarUrl: r.ownerAvatarUrl || null,
-          notes: r.notes,
-          savedAt: r.savedAt,
-          activeUntil: r.activeUntil,
-          createdAt: r.createdAt,
-        };
-      });
+          return {
+            id: r.savedId,
+            listingId: r.listingId,
+            title: r.title,
+            slug: r.slug,
+            summary: r.summary,
+            status: r.status,
+            isClosed,
+            budgetMode: r.budgetMode,
+            budgetMin: r.budgetMin,
+            budgetMax: r.budgetMax,
+            budgetCurrency: r.budgetCurrency || "TRY",
+            categoryId: r.categoryId,
+            categoryKey: r.categoryKey || "other",
+            categoryTitle: r.categoryKey
+              ? r.categoryKey.charAt(0).toUpperCase() + r.categoryKey.slice(1)
+              : "Genel",
+            tags: (r.tags as string[]) || [],
+            ownerHandle: r.ownerHandle || "kullanici",
+            ownerDisplayName: r.ownerDisplayName || "Operis Kullanıcısı",
+            ownerAvatarUrl: r.ownerAvatarUrl || null,
+            notes: r.notes,
+            savedAt: r.savedAt,
+            activeUntil: r.activeUntil,
+            createdAt: r.createdAt,
+          };
+        });
 
-      if (statusFilter === "active") {
-        return items.filter((i) => !i.isClosed);
+        if (statusFilter === "active") {
+          return items.filter((i) => !i.isClosed);
+        }
+        if (statusFilter === "closed") {
+          return items.filter((i) => i.isClosed);
+        }
+
+        return items;
+      } catch {
+        return [];
       }
-      if (statusFilter === "closed") {
-        return items.filter((i) => i.isClosed);
-      }
-
-      return items;
-    } catch {
-      return [];
     }
-  });
+  );
 
   /**
    * Retrieves a Set of listing IDs that the user has saved, optimized for $O(1)$ client lookup.
    */
-  static async getSavedListingIds(
-    userId: string,
-    listingIds?: string[]
-  ): Promise<Set<string>> {
+  static async getSavedListingIds(userId: string, listingIds?: string[]): Promise<Set<string>> {
     if (!userId) return new Set();
 
     try {

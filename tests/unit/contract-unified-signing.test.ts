@@ -34,7 +34,9 @@ describe("Unified Contract Signing & Recommendation Engine", () => {
       expect(recommendedIds).toContain("CORE_SERVICE");
       expect(recommendedIds).toContain("FSEK_IP_TRANSFER");
       expect(recs.recommendedContracts.length).toBeGreaterThanOrEqual(2);
-      expect(recs.recommendedContracts.find((c) => c.id === "CORE_SERVICE")?.isBaseAgreement).toBe(true);
+      expect(recs.recommendedContracts.find((c) => c.id === "CORE_SERVICE")?.isBaseAgreement).toBe(
+        true
+      );
     });
 
     it("should recommend INFLATION_SHIELD for high-value contracts (>50,000 TRY)", () => {
@@ -155,7 +157,9 @@ describe("Unified Contract Signing & Recommendation Engine", () => {
       expect(recommendedIds).toContain("CYBER_SECURITY_CLEAN_CODE");
       expect(recommendedIds).toContain("FOSS_LICENSE_COMPLIANCE");
 
-      const cleanCodeItem = recs.recommendedContracts.find((c) => c.id === "CYBER_SECURITY_CLEAN_CODE");
+      const cleanCodeItem = recs.recommendedContracts.find(
+        (c) => c.id === "CYBER_SECURITY_CLEAN_CODE"
+      );
       expect(cleanCodeItem?.statutoryBasisTr).toContain("TCK m. 243-245");
 
       const fossItem = recs.recommendedContracts.find((c) => c.id === "FOSS_LICENSE_COMPLIANCE");
@@ -183,7 +187,9 @@ describe("Unified Contract Signing & Recommendation Engine", () => {
       const solicitItem = recs.recommendedContracts.find((c) => c.id === "NON_SOLICITATION");
       expect(solicitItem?.statutoryBasisTr).toContain("TTK m. 54-55");
 
-      const releaseItem = recs.recommendedContracts.find((c) => c.id === "MUTUAL_RELEASE_DISCHARGE");
+      const releaseItem = recs.recommendedContracts.find(
+        (c) => c.id === "MUTUAL_RELEASE_DISCHARGE"
+      );
       expect(releaseItem?.statutoryBasisTr).toContain("TBK m. 132");
     });
   });
@@ -191,7 +197,12 @@ describe("Unified Contract Signing & Recommendation Engine", () => {
   describe("2. Ephemeral Storage Management (Cloudflare R2 10 GB Free Tier)", () => {
     it("should upload ephemeral signature and return key with engagement ID prefix", async () => {
       const mockBuffer = Buffer.from("mock-signature-binary-data");
-      const result = await uploadEphemeralSignature("eng-test-1", "CLIENT", mockBuffer, "image/webp");
+      const result = await uploadEphemeralSignature(
+        "eng-test-1",
+        "CLIENT",
+        mockBuffer,
+        "image/webp"
+      );
 
       expect(result.key).toContain("ephemeral-signatures/eng-test-1/client-");
       expect(result.sha256).toBeDefined();
@@ -202,7 +213,12 @@ describe("Unified Contract Signing & Recommendation Engine", () => {
       const mockBuffer = Buffer.from("mock-signature-to-delete");
       const initialCount = getMockEphemeralSignatureCount();
 
-      const upload = await uploadEphemeralSignature("eng-test-2", "CONTRACTOR", mockBuffer, "image/webp");
+      const upload = await uploadEphemeralSignature(
+        "eng-test-2",
+        "CONTRACTOR",
+        mockBuffer,
+        "image/webp"
+      );
       expect(getMockEphemeralSignatureCount()).toBe(initialCount + 1);
 
       const deleted = await deleteEphemeralSignature(upload.key);
@@ -228,7 +244,8 @@ describe("Unified Contract Signing & Recommendation Engine", () => {
           role: "CLIENT",
           signerName: "Test Client",
           signatureType: "DRAWN",
-          signatureDataUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+          signatureDataUrl:
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
           legalAcknowledged: false, // NOT accepted
         })
       ).rejects.toThrow(/sorumsuzluğunu ve dava muafiyetini onaylamadan/i);
@@ -253,7 +270,9 @@ describe("Unified Contract Signing & Recommendation Engine", () => {
       expect(result.markdown).toContain("TBK m. 115");
 
       // Article 9 verification
-      expect(result.markdown).toContain("MADDE 9: OPERİS PLATFORMUNUN HUKUKİ STATÜSÜ VE DAVA MUAFİYETİ");
+      expect(result.markdown).toContain(
+        "MADDE 9: OPERİS PLATFORMUNUN HUKUKİ STATÜSÜ VE DAVA MUAFİYETİ"
+      );
       expect(result.markdown).toContain("Sözleşmenin Tamamen Opsiyonel ve İki Taraflı Niteliği");
       expect(result.markdown).toContain("Platformun Taraf Olmaması");
       expect(result.markdown).toContain("Dava ve İhtilaf Muafiyeti");
@@ -315,7 +334,9 @@ describe("Unified Contract Signing & Recommendation Engine", () => {
 
       // CORE_SERVICE is included, but DPA annex shouldn't be included because not in selectedContracts
       expect(fullResult.markdown).toContain("MADDE 1: TARAFLAR");
-      expect(fullResult.markdown).not.toContain("EK-2 BİLİŞİM VE YAZILIM HİZMETLERİ VERİ İŞLEME PROTOKOLÜ");
+      expect(fullResult.markdown).not.toContain(
+        "EK-2 BİLİŞİM VE YAZILIM HİZMETLERİ VERİ İŞLEME PROTOKOLÜ"
+      );
     });
   });
 
@@ -376,7 +397,10 @@ describe("Unified Contract Signing & Recommendation Engine", () => {
       });
       expect(clientSignResult.status).toBe("PARTIALLY_SIGNED");
 
-      const pkgAfterSign = await ContractSigningService.getOrInitPackage(engId, "user-tamper-client");
+      const pkgAfterSign = await ContractSigningService.getOrInitPackage(
+        engId,
+        "user-tamper-client"
+      );
       expect(pkgAfterSign.packageDetails.clientSignature).not.toBeNull();
 
       // 2. Freelancer or client secretly changes contract scope (e.g. adds an aggressive penalty clause or removes IP transfer)
@@ -555,7 +579,10 @@ describe("Unified Contract Signing & Recommendation Engine", () => {
 
       expect(res.status).toBe("PARTIALLY_SIGNED");
       const currentPkg = await ContractSigningService.getOrInitPackage(engId, "user-client-real");
-      expect(currentPkg.packageDetails.selectedContracts).toEqual(["CORE_SERVICE", "BILATERAL_NDA"]);
+      expect(currentPkg.packageDetails.selectedContracts).toEqual([
+        "CORE_SERVICE",
+        "BILATERAL_NDA",
+      ]);
     });
 
     it("strictly blocks any modification or signature on a FULLY_SIGNED package", async () => {
@@ -591,7 +618,9 @@ describe("Unified Contract Signing & Recommendation Engine", () => {
           "CORE_SERVICE",
           "INFLATION_SHIELD",
         ])
-      ).rejects.toThrow(/Cannot modify contract selection after full bilateral signature execution/);
+      ).rejects.toThrow(
+        /Cannot modify contract selection after full bilateral signature execution/
+      );
 
       // 4. Attempt to sign again
       await expect(
@@ -617,10 +646,11 @@ describe("Unified Contract Signing & Recommendation Engine", () => {
       const init = await ContractSigningService.getOrInitPackage(engId, "user-client-real");
       expect(init.packageDetails.version).toBe(1);
 
-      const updated = await ContractSigningService.updateSelectedContracts(engId, "user-client-real", [
-        "CORE_SERVICE",
-        "FSEK_IP_TRANSFER",
-      ]);
+      const updated = await ContractSigningService.updateSelectedContracts(
+        engId,
+        "user-client-real",
+        ["CORE_SERVICE", "FSEK_IP_TRANSFER"]
+      );
       expect(updated.version).toBe(2);
 
       // Client signs (version 2 -> 3)
@@ -686,4 +716,3 @@ describe("Unified Contract Signing & Recommendation Engine", () => {
     });
   });
 });
-

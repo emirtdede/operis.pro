@@ -184,7 +184,10 @@ export function ContextualReportModal({
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="flex-1 min-h-0 flex flex-col justify-between overflow-hidden pt-2">
+          <form
+            onSubmit={handleSubmit}
+            className="flex-1 min-h-0 flex flex-col justify-between overflow-hidden pt-2"
+          >
             <div className="overflow-y-auto space-y-3.5 pr-1 py-1 overscroll-contain">
               {error && (
                 <div className="p-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-xs text-red-400 flex items-center gap-2">

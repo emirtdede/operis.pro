@@ -120,9 +120,7 @@ export function HowItWorksSection({ locale }: HowItWorksSectionProps) {
       stepNumber: "03",
       stage: isTr ? "FAZ 3 • KIYASLAMA & EŞLEŞME" : "PHASE 3 • EVALUATION & MATCH",
       icon: Terminal,
-      title: isTr
-        ? "İnceleme, Kıyaslama & Teklif Kabulü"
-        : "Cockpit Review & Milestone Match",
+      title: isTr ? "İnceleme, Kıyaslama & Teklif Kabulü" : "Cockpit Review & Milestone Match",
       shortDesc: isTr
         ? "İlan sahibi yönetim panelinde gelen şifreli teklifleri yan yana kıyaslar ve en doğru adayı tek tıkla onaylar."
         : "The project owner compares proposals side-by-side on their private dashboard and accepts the best fit.",
@@ -225,9 +223,7 @@ export function HowItWorksSection({ locale }: HowItWorksSectionProps) {
         <div className="text-center max-w-3xl mx-auto space-y-4">
           <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-blue-400">
             <Zap className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>
-              {isTr ? "UÇTAN UCA SÜREÇ REHBERİ" : "END-TO-END WORKFLOW BLUEPRINT"}
-            </span>
+            <span>{isTr ? "UÇTAN UCA SÜREÇ REHBERİ" : "END-TO-END WORKFLOW BLUEPRINT"}</span>
           </div>
 
           <h2
@@ -236,8 +232,7 @@ export function HowItWorksSection({ locale }: HowItWorksSectionProps) {
           >
             {isTr ? (
               <>
-                Bir Süreç Baştan Sona{" "}
-                <span className="text-gradient-accent">Nasıl İşler?</span>
+                Bir Süreç Baştan Sona <span className="text-gradient-accent">Nasıl İşler?</span>
               </>
             ) : (
               <>
@@ -432,9 +427,7 @@ export function HowItWorksSection({ locale }: HowItWorksSectionProps) {
                 <button
                   type="button"
                   onClick={() =>
-                    setActiveStepIndex((prev) =>
-                      prev === 0 ? workflowSteps.length - 1 : prev - 1
-                    )
+                    setActiveStepIndex((prev) => (prev === 0 ? workflowSteps.length - 1 : prev - 1))
                   }
                   className="text-xs font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] px-3 py-1.5 rounded-lg border border-[var(--color-border-subtle)] transition-colors"
                 >
@@ -448,9 +441,7 @@ export function HowItWorksSection({ locale }: HowItWorksSectionProps) {
                 <button
                   type="button"
                   onClick={() =>
-                    setActiveStepIndex((prev) =>
-                      prev === workflowSteps.length - 1 ? 0 : prev + 1
-                    )
+                    setActiveStepIndex((prev) => (prev === workflowSteps.length - 1 ? 0 : prev + 1))
                   }
                   className="text-xs font-semibold text-blue-400 hover:text-blue-300 px-3 py-1.5 rounded-lg border border-blue-500/30 bg-blue-500/10 transition-colors"
                 >

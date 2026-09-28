@@ -10,8 +10,8 @@ Group=operis
 WorkingDirectory=/var/www/operis
 Environment=NODE_ENV=production
 Environment=WORKER_HEARTBEAT_FILE=/run/operis/operis-worker-heartbeat.json
-ExecStartPre=/bin/mkdir -p /run/operis
-ExecStartPre=/bin/chown operis:operis /run/operis
+RuntimeDirectory=operis
+RuntimeDirectoryMode=0755
 ExecStart=/usr/bin/pnpm run worker
 Restart=always
 RestartSec=5s

@@ -2,12 +2,7 @@
 
 import { useState, useEffect, useMemo, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  CheckCircle2,
-  AlertCircle,
-  Search,
-  X,
-} from "lucide-react";
+import { CheckCircle2, AlertCircle, Search, X } from "lucide-react";
 import {
   SettingsCategory,
   SettingsViewProps,
@@ -61,9 +56,7 @@ export function SettingsView({
   const [revealPhoneAfterMatch, setRevealPhoneAfterMatch] = useState(
     initialProfile.revealPhoneAfterMatch ?? false
   );
-  const [allowSearchIndex, setAllowSearchIndex] = useState(
-    initialProfile.allowSearchIndex ?? true
-  );
+  const [allowSearchIndex, setAllowSearchIndex] = useState(initialProfile.allowSearchIndex ?? true);
 
   // Marketing consent state
   const [marketingConsent, setMarketingConsent] = useState(false);
@@ -91,7 +84,10 @@ export function SettingsView({
     message: string;
   } | null>(null);
 
-  const handleSecurityFeedback = (fb: { type: "success" | "warning" | "error"; message: string }) => {
+  const handleSecurityFeedback = (fb: {
+    type: "success" | "warning" | "error";
+    message: string;
+  }) => {
     setFeedback({ type: fb.type === "warning" ? "error" : fb.type, message: fb.message });
   };
 
@@ -128,7 +124,8 @@ export function SettingsView({
         }
         if (status === "READY") {
           const downloadUrl =
-            job.downloadUrl || `/api/account/export?jobId=${encodeURIComponent(exportJobId)}&download=1`;
+            job.downloadUrl ||
+            `/api/account/export?jobId=${encodeURIComponent(exportJobId)}&download=1`;
           setExportDownloadUrl(downloadUrl);
           showFeedback(
             "success",
@@ -257,7 +254,10 @@ export function SettingsView({
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
-      showFeedback("success", isTr ? "Şifreniz başarıyla değiştirildi." : "Password updated successfully.");
+      showFeedback(
+        "success",
+        isTr ? "Şifreniz başarıyla değiştirildi." : "Password updated successfully."
+      );
     } catch (err: unknown) {
       showFeedback("error", err instanceof Error ? err.message : "Password error");
     } finally {
@@ -384,9 +384,7 @@ export function SettingsView({
                     <div className="text-xs font-bold leading-tight flex items-center justify-between">
                       <span>{cat.label}</span>
                     </div>
-                    <div className={`text-[11px] truncate mt-0.5 ${descClasses}`}>
-                      {cat.desc}
-                    </div>
+                    <div className={`text-[11px] truncate mt-0.5 ${descClasses}`}>{cat.desc}</div>
                   </div>
                 </button>
               );
@@ -512,8 +510,10 @@ export function SettingsView({
               locale={locale}
               saving={saving}
               onSaveNotifications={async (fields) => {
-                if (fields.notifyListings !== undefined) setNotifyListings(Boolean(fields.notifyListings));
-                if (fields.notifyOffers !== undefined) setNotifyOffers(Boolean(fields.notifyOffers));
+                if (fields.notifyListings !== undefined)
+                  setNotifyListings(Boolean(fields.notifyListings));
+                if (fields.notifyOffers !== undefined)
+                  setNotifyOffers(Boolean(fields.notifyOffers));
                 if (fields.emailDigest !== undefined) setEmailDigest(String(fields.emailDigest));
                 await handleSaveProfileField(fields);
               }}

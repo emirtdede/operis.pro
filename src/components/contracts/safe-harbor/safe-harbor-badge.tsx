@@ -1,7 +1,10 @@
 "use client";
 
 import { ShieldCheck, ShieldAlert, AlertTriangle } from "lucide-react";
-import type { SafeHarborRiskLevel, SafeHarborConfig } from "@/src/modules/contracts/safe-harbor-types";
+import type {
+  SafeHarborRiskLevel,
+  SafeHarborConfig,
+} from "@/src/modules/contracts/safe-harbor-types";
 import { SafeHarborEngine } from "@/src/modules/contracts/safe-harbor-engine";
 
 export interface SafeHarborBadgeProps {
@@ -33,7 +36,8 @@ export function SafeHarborBadge({
   const badgeConfig = {
     SAFE_HARBOR: {
       label: isTr ? "Güvenli Liman (İş K. 8 Uyumlu)" : "Safe Harbor (Labor Law Art. 8 Compliant)",
-      badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/15",
+      badgeClass:
+        "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/15",
       icon: ShieldCheck,
     },
     MODERATE_WARNING: {

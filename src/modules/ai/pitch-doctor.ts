@@ -176,54 +176,76 @@ const KNOWN_TECH_TAXONOMY = [
 ];
 
 // Milestone and phase keywords
-const MILESTONE_REGEX_TR = /(?:aşama|faz|adım|sprint|teslimat|milestone|etap)\s*([0-9]|i|ii|iii|bir|iki|üç|1|2|3)?/i;
+const MILESTONE_REGEX_TR =
+  /(?:aşama|faz|adım|sprint|teslimat|milestone|etap)\s*([0-9]|i|ii|iii|bir|iki|üç|1|2|3)?/i;
 const NUMBERED_LIST_REGEX = /(?:^|\n)\s*(?:[1-9]\.|\*|-|•)\s+[^\n]{10,}/g;
 
 // Client-oriented vs ego-oriented pronouns
-const CLIENT_WORDS_TR = ["siz", "sizin", "sizlere", "şirketiniz", "projeniz", "sisteminiz", "uygulamanız", "hedefiniz", "ihtiyacınız"];
+const CLIENT_WORDS_TR = [
+  "siz",
+  "sizin",
+  "sizlere",
+  "şirketiniz",
+  "projeniz",
+  "sisteminiz",
+  "uygulamanız",
+  "hedefiniz",
+  "ihtiyacınız",
+];
 const EGO_WORDS_TR = ["ben", "benim", "bana", "kendim", "tecrübem", "cv", "portfolyom"];
 
-const CLIENT_WORDS_EN = ["you", "your", "yours", "project", "system", "product", "platform", "business", "goal", "needs"];
+const CLIENT_WORDS_EN = [
+  "you",
+  "your",
+  "yours",
+  "project",
+  "system",
+  "product",
+  "platform",
+  "business",
+  "goal",
+  "needs",
+];
 const EGO_WORDS_EN = ["i", "me", "my", "myself", "mine", "resume", "cv"];
 
 const CANONICAL_TECH_MAP: Record<string, string> = {
-  "nodejs": "node.js",
-  "nextjs": "next.js",
-  "vuejs": "vue.js",
-  "postgres": "postgresql",
-  "golang": "go",
-  "dotnet": ".net",
-  "tailwindcss": "tailwind",
-  "restful": "rest",
+  nodejs: "node.js",
+  nextjs: "next.js",
+  vuejs: "vue.js",
+  postgres: "postgresql",
+  golang: "go",
+  dotnet: ".net",
+  tailwindcss: "tailwind",
+  restful: "rest",
 };
 
 export function formatTechName(tech: string): string {
   const map: Record<string, string> = {
     "next.js": "Next.js",
-    "nextjs": "Next.js",
-    "react": "React",
+    nextjs: "Next.js",
+    react: "React",
     "node.js": "Node.js",
-    "nodejs": "Node.js",
-    "postgresql": "PostgreSQL",
-    "postgres": "PostgreSQL",
-    "typescript": "TypeScript",
-    "javascript": "JavaScript",
-    "docker": "Docker",
-    "redis": "Redis",
-    "graphql": "GraphQL",
-    "vue": "Vue.js",
+    nodejs: "Node.js",
+    postgresql: "PostgreSQL",
+    postgres: "PostgreSQL",
+    typescript: "TypeScript",
+    javascript: "JavaScript",
+    docker: "Docker",
+    redis: "Redis",
+    graphql: "GraphQL",
+    vue: "Vue.js",
     "vue.js": "Vue.js",
-    "angular": "Angular",
-    "svelte": "Svelte",
-    "tailwind": "Tailwind CSS",
-    "python": "Python",
-    "django": "Django",
-    "fastapi": "FastAPI",
-    "aws": "AWS",
-    "gcp": "GCP",
-    "azure": "Azure",
+    angular: "Angular",
+    svelte: "Svelte",
+    tailwind: "Tailwind CSS",
+    python: "Python",
+    django: "Django",
+    fastapi: "FastAPI",
+    aws: "AWS",
+    gcp: "GCP",
+    azure: "Azure",
     "ci/cd": "CI/CD",
-    "rest": "REST API",
+    rest: "REST API",
   };
   return map[tech.toLowerCase()] || tech.charAt(0).toUpperCase() + tech.slice(1);
 }
@@ -289,8 +311,38 @@ export function evaluateProposalPitch(
 
   // Check architectural keywords in proposal
   const archKeywords = isTr
-    ? ["mimari", "şema", "veritabanı", "önbellek", "katman", "güvenlik", "indeks", "api", "entegrasyon", "modüler", "test", "temiz kod", "docker", "pipeline"]
-    : ["architecture", "schema", "database", "cache", "layer", "security", "index", "api", "integration", "modular", "test", "clean code", "docker", "pipeline"];
+    ? [
+        "mimari",
+        "şema",
+        "veritabanı",
+        "önbellek",
+        "katman",
+        "güvenlik",
+        "indeks",
+        "api",
+        "entegrasyon",
+        "modüler",
+        "test",
+        "temiz kod",
+        "docker",
+        "pipeline",
+      ]
+    : [
+        "architecture",
+        "schema",
+        "database",
+        "cache",
+        "layer",
+        "security",
+        "index",
+        "api",
+        "integration",
+        "modular",
+        "test",
+        "clean code",
+        "docker",
+        "pipeline",
+      ];
 
   const hasArchitectureMention = archKeywords.some((kw) => message.toLowerCase().includes(kw));
 
@@ -308,7 +360,9 @@ export function evaluateProposalPitch(
   // 2. Delivery Milestones & Work Breakdown Analysis (Weight: 25%)
   // -------------------------------------------------------------
   const matchesNumbered = message.match(NUMBERED_LIST_REGEX) || [];
-  const hasMilestoneKeyword = isTr ? MILESTONE_REGEX_TR.test(message) : /(?:phase|milestone|sprint|stage|step)\s*([0-9]|1|2|3)?/i.test(message);
+  const hasMilestoneKeyword = isTr
+    ? MILESTONE_REGEX_TR.test(message)
+    : /(?:phase|milestone|sprint|stage|step)\s*([0-9]|1|2|3)?/i.test(message);
 
   let milestoneScore = 20;
   if (matchesNumbered.length >= 3 || (matchesNumbered.length >= 2 && hasMilestoneKeyword)) {
@@ -324,7 +378,9 @@ export function evaluateProposalPitch(
   // -------------------------------------------------------------
   // 3. Timeline & Velocity Commitment (Weight: 20%)
   // -------------------------------------------------------------
-  const hasFormTimeline = Boolean(draft.proposedTimelineValue && Number(draft.proposedTimelineValue) > 0);
+  const hasFormTimeline = Boolean(
+    draft.proposedTimelineValue && Number(draft.proposedTimelineValue) > 0
+  );
   const timelinePatterns = isTr
     ? /(?:gün|hafta|ay|saat|iş günü|teslim|başlayabilirim|tamamlarım)/i
     : /(?:day|days|week|weeks|month|months|hour|hours|delivery|start immediately|complete)/i;
@@ -405,10 +461,10 @@ export function evaluateProposalPitch(
   // -------------------------------------------------------------
   const overallScore = Math.round(
     archScore * 0.25 +
-    milestoneScore * 0.25 +
-    timelineScore * 0.20 +
-    clientFocusScore * 0.15 +
-    professionalismScore * 0.15
+      milestoneScore * 0.25 +
+      timelineScore * 0.2 +
+      clientFocusScore * 0.15 +
+      professionalismScore * 0.15
   );
 
   // Status mapping
@@ -505,7 +561,7 @@ export function evaluateProposalPitch(
       id: "timeline",
       label: isTr ? "Zaman ve Hız Taahhüdü" : "Timeline & Velocity Commitment",
       score: timelineScore,
-      weight: 0.20,
+      weight: 0.2,
       status: getStatus(timelineScore),
       feedback: getTimelineFeedback(),
     },
@@ -534,7 +590,9 @@ export function evaluateProposalPitch(
   const actionableTips: string[] = [];
 
   if (archScore >= 80) {
-    strengths.push(isTr ? "İlanın teknik beklentileriyle yüksek uyum" : "High technical stack alignment");
+    strengths.push(
+      isTr ? "İlanın teknik beklentileriyle yüksek uyum" : "High technical stack alignment"
+    );
   } else if (missingTech.length > 0) {
     gaps.push(
       isTr
@@ -544,17 +602,39 @@ export function evaluateProposalPitch(
   }
 
   if (milestoneScore >= 80) {
-    strengths.push(isTr ? "Aşamalandırılmış ve şeffaf teslimat yol haritası" : "Structured delivery milestones");
+    strengths.push(
+      isTr ? "Aşamalandırılmış ve şeffaf teslimat yol haritası" : "Structured delivery milestones"
+    );
   } else {
-    gaps.push(isTr ? "Ara teslimat adımları ve test fazı belirtilmemiş." : "No delivery milestones or QA phase outlined.");
-    actionableTips.push(isTr ? "Projeyi Faz 1 (Mimari), Faz 2 (Geliştirme), Faz 3 (Test & Canlı) olarak 3 adıma bölün." : "Divide work into Phase 1 (Architecture), Phase 2 (Development), Phase 3 (Testing & Launch).");
+    gaps.push(
+      isTr
+        ? "Ara teslimat adımları ve test fazı belirtilmemiş."
+        : "No delivery milestones or QA phase outlined."
+    );
+    actionableTips.push(
+      isTr
+        ? "Projeyi Faz 1 (Mimari), Faz 2 (Geliştirme), Faz 3 (Test & Canlı) olarak 3 adıma bölün."
+        : "Divide work into Phase 1 (Architecture), Phase 2 (Development), Phase 3 (Testing & Launch)."
+    );
   }
 
   if (timelineScore >= 80) {
-    strengths.push(isTr ? "Net zaman tahmini ve başlama taahhüdü" : "Explicit delivery timeline & availability commitment");
+    strengths.push(
+      isTr
+        ? "Net zaman tahmini ve başlama taahhüdü"
+        : "Explicit delivery timeline & availability commitment"
+    );
   } else {
-    gaps.push(isTr ? "Tahmini bitiş süresi veya haftalık efor belirtilmemiş." : "Missing estimated turnaround duration or weekly availability.");
-    actionableTips.push(isTr ? "Örn: 'Hemen başlayarak projeyi ~2 hafta içinde teslim edebilirim' cümlesini ekleyin." : "Add a clear commitment like 'I can start immediately and deliver within ~2 weeks'.");
+    gaps.push(
+      isTr
+        ? "Tahmini bitiş süresi veya haftalık efor belirtilmemiş."
+        : "Missing estimated turnaround duration or weekly availability."
+    );
+    actionableTips.push(
+      isTr
+        ? "Örn: 'Hemen başlayarak projeyi ~2 hafta içinde teslim edebilirim' cümlesini ekleyin."
+        : "Add a clear commitment like 'I can start immediately and deliver within ~2 weeks'."
+    );
   }
 
   if (triggeredCliches.length > 0) {

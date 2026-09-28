@@ -2,16 +2,14 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { OfferService } from "@/src/modules/offers/service";
 import { SquadRevenueEngine } from "@/src/modules/offers/squad-engine";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const ip = getClientIp(req);
   const locale = req.headers.get("x-locale") || "tr";
   const isEn = locale === "en";
@@ -59,9 +57,10 @@ export async function GET(
     }
     const currency = offer.budgetCurrency || "TRY";
 
-    const payouts = squadMembers.length > 0 && budgetVal > 0
-      ? SquadRevenueEngine.calculatePayouts(budgetVal, currency, squadMembers)
-      : [];
+    const payouts =
+      squadMembers.length > 0 && budgetVal > 0
+        ? SquadRevenueEngine.calculatePayouts(budgetVal, currency, squadMembers)
+        : [];
 
     return NextResponse.json({
       success: true,
@@ -72,7 +71,13 @@ export async function GET(
       payouts,
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to fetch squad details";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to fetch squad details",
+        tr: "Ekip ayrıntıları alınamadı",
+      },
+      { isEn, logPrefix: "[Offer Squad GET Error]", status: 500 }
+    );
   }
 }

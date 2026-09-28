@@ -86,7 +86,9 @@ export interface EphemeralSignatureUploadResult {
 /**
  * Generates a short-lived (60s) presigned PUT URL for uploading an avatar directly to Cloudflare R2.
  */
-export async function createAvatarPresignedUploadUrl(userId: string): Promise<PresignedAvatarUpload> {
+export async function createAvatarPresignedUploadUrl(
+  userId: string
+): Promise<PresignedAvatarUpload> {
   const { client, bucketName, publicUrlBase } = getR2Client();
 
   const randomSuffix = crypto.randomBytes(6).toString("hex");
@@ -200,7 +202,13 @@ export async function uploadEphemeralSignature(
     };
   }
 
-  // Fallback for tests/local environment without R2 credentials
+  // Fallback for tests/local development environment without R2 credentials
+  if (process.env.NODE_ENV === "production" && !process.env.VITEST) {
+    throw new Error(
+      "Cloudflare R2 storage credentials are required in production for secure ephemeral signature storage."
+    );
+  }
+
   inMemoryEphemeralStore.set(key, { buffer, mimeType });
   return {
     key,

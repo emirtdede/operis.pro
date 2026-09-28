@@ -1,5 +1,6 @@
 import pg from "pg";
 import { getEnv } from "@/src/config/env";
+import { getDbSslConfig } from "./index";
 
 /**
  * Dedicated cancellation and connection lifecycle manager.
@@ -163,25 +164,24 @@ export async function cancelBackendPid(
     clientConfig = getEnv().DATABASE_URL;
   }
 
-  const isSupabase =
+  const sslConfig =
     typeof clientConfig === "string"
-      ? clientConfig.includes("supabase.co") || clientConfig.includes("pooler.supabase.com")
-      : Boolean(
-          clientConfig.host?.includes("supabase.co") ||
-          clientConfig.host?.includes("pooler.supabase.com")
-        );
+      ? getDbSslConfig(clientConfig)
+      : clientConfig.host
+        ? getDbSslConfig(clientConfig.host)
+        : clientConfig.ssl;
 
   const controlClient =
     typeof clientConfig === "string"
       ? new pg.Client({
           connectionString: clientConfig,
           connectionTimeoutMillis: timeoutMs,
-          ssl: isSupabase ? { rejectUnauthorized: false } : undefined,
+          ssl: sslConfig,
         })
       : new pg.Client({
           ...clientConfig,
           connectionTimeoutMillis: timeoutMs,
-          ssl: isSupabase ? { rejectUnauthorized: false } : clientConfig.ssl,
+          ssl: sslConfig,
         });
 
   activeControlClients++;

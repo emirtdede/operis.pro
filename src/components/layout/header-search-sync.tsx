@@ -22,8 +22,7 @@ export function HeaderSearchSync({ onQueryChange }: HeaderSearchSyncProps) {
   const urlQuery = searchParams?.get("q") ?? "";
 
   useEffect(() => {
-    const isListingsPage =
-      pathname?.includes("/ilanlar") || pathname?.includes("/listings");
+    const isListingsPage = pathname?.includes("/ilanlar") || pathname?.includes("/listings");
 
     if (isListingsPage) {
       // Only sync if the URL search parameter itself changed

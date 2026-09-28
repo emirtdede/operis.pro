@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  FileText, 
-  Lock, 
-  Handshake, 
-  ShieldCheck, 
-  Zap, 
-  ArrowRight, 
-  CheckCircle2, 
-  ExternalLink
+import {
+  FileText,
+  Lock,
+  Handshake,
+  ShieldCheck,
+  Zap,
+  ArrowRight,
+  CheckCircle2,
+  ExternalLink,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/src/components/ui/button";
@@ -40,22 +40,24 @@ export function ProtocolFlowVisualizer({ isTr, locale: _locale }: ProtocolFlowVi
         ? [
             "10 sektör ve 110 uzmanlık alanına anında radar dağıtımı",
             "Maksimum 7 gün canlılık — aylar öncesinin ölü ilanları yok",
-            "Kredi kartı veya ön ödeme gerekmez; 2 dakikada yayında"
+            "Kredi kartı veya ön ödeme gerekmez; 2 dakikada yayında",
           ]
         : [
             "Instant broadcast across 10 sectors & 110 categories",
             "Strict 7-day TTL — no stale, forgotten ghost listings",
-            "No credit card or upfront deposit required; live in 2 mins"
+            "No credit card or upfront deposit required; live in 2 mins",
           ],
       codeSnippet: isTr
         ? `// OPERİS PROTOKOLÜ: İLAN CANLILIK KURALI\nconst listing = {\n  ttl: 168 * 3600, // 7 gün canlılık\n  autoPrune: true,\n  ghostListingAllowed: false\n};`
-        : `// OPERIS PROTOCOL: FRESHNESS RULE\nconst listing = {\n  ttl: 168 * 3600, // 7-day TTL\n  autoPrune: true,\n  ghostListingAllowed: false\n};`
+        : `// OPERIS PROTOCOL: FRESHNESS RULE\nconst listing = {\n  ttl: 168 * 3600, // 7-day TTL\n  autoPrune: true,\n  ghostListingAllowed: false\n};`,
     },
     {
       id: "step-2",
       number: "02",
       title: isTr ? "AES-256 Şifreli Kör Teklif Mimarisi" : "AES-256 Encrypted Blind Proposals",
-      subtitle: isTr ? "Fiyat Kırma Karşıtı Kriptografik Kasa" : "Anti-Underbidding Cryptographic Vault",
+      subtitle: isTr
+        ? "Fiyat Kırma Karşıtı Kriptografik Kasa"
+        : "Anti-Underbidding Cryptographic Vault",
       icon: Lock,
       color: "from-indigo-500 to-violet-500",
       accentHex: "#818cf8",
@@ -68,16 +70,16 @@ export function ProtocolFlowVisualizer({ isTr, locale: _locale }: ProtocolFlowVi
         ? [
             "Uçtan uca şifreli şeffaf teklif sandığı",
             "Açık artırma ve fiyat kırma manipülasyonlarına kesin son",
-            "Yalnızca ilan sahibi tarafından çözülebilen teklif verisi"
+            "Yalnızca ilan sahibi tarafından çözülebilen teklif verisi",
           ]
         : [
             "End-to-end encrypted proposal vault",
             "Defeats race-to-the-bottom underbidding wars",
-            "Decrypted strictly by the project owner only"
+            "Decrypted strictly by the project owner only",
           ],
       codeSnippet: isTr
         ? `// OPERİS PROTOKOLÜ: KÖR TEKLİF MÜHRÜ\nconst proposal = await encryptAES256({\n  price: confidential,\n  terms: sealedCoverLetter,\n  visibleToCompetitors: false\n});`
-        : `// OPERIS PROTOCOL: BLIND BID SEAL\nconst proposal = await encryptAES256({\n  price: confidential,\n  terms: sealedCoverLetter,\n  visibleToCompetitors: false\n});`
+        : `// OPERIS PROTOCOL: BLIND BID SEAL\nconst proposal = await encryptAES256({\n  price: confidential,\n  terms: sealedCoverLetter,\n  visibleToCompetitors: false\n});`,
     },
     {
       id: "step-3",
@@ -96,17 +98,17 @@ export function ProtocolFlowVisualizer({ isTr, locale: _locale }: ProtocolFlowVi
         ? [
             "Ne işverenden ne uzmandan 1 TL bile komisyon kesilmez",
             "Sansürsüz doğrudan telefon, e-posta ve WhatsApp paylaşımı",
-            "Kendi araçlarınızla (Slack, Notion, GitHub) özgür çalışma"
+            "Kendi araçlarınızla (Slack, Notion, GitHub) özgür çalışma",
           ]
         : [
             "0% commission deducted from both parties",
             "Uncensored direct communication channels unlocked",
-            "Work with your own preferred tools (Slack, Notion, GitHub)"
+            "Work with your own preferred tools (Slack, Notion, GitHub)",
           ],
       codeSnippet: isTr
         ? `// OPERİS PROTOKOLÜ: %0 KESİNTİ PROTOKOLÜ\nconst settlement = {\n  platformCommission: 0.00,\n  talentEarningsRatio: 1.00,\n  escrowLock: false\n};`
-        : `// OPERIS PROTOCOL: 0% COMMISSION RULE\nconst settlement = {\n  platformCommission: 0.00,\n  talentEarningsRatio: 1.00,\n  escrowLock: false\n};`
-    }
+        : `// OPERIS PROTOCOL: 0% COMMISSION RULE\nconst settlement = {\n  platformCommission: 0.00,\n  talentEarningsRatio: 1.00,\n  escrowLock: false\n};`,
+    },
   ];
 
   const currentStep = steps[activeNode] ?? steps[0]!;
@@ -114,7 +116,7 @@ export function ProtocolFlowVisualizer({ isTr, locale: _locale }: ProtocolFlowVi
   return (
     <section className="relative w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden snap-start scroll-mt-16">
       {/* Ambient Glows */}
-      <div 
+      <div
         className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full blur-[140px] opacity-20 transition-all duration-700"
         style={{ background: currentStep.accentHex }}
         aria-hidden="true"
@@ -148,33 +150,42 @@ export function ProtocolFlowVisualizer({ isTr, locale: _locale }: ProtocolFlowVi
         <div className="relative hidden md:block w-full">
           {/* SVG Connection Cables with Animated Flowing Signals */}
           <div className="relative w-full max-w-4xl mx-auto h-24 flex items-center justify-between px-12">
-            <svg 
-              className="absolute inset-0 w-full h-full pointer-events-none" 
-              viewBox="0 0 800 96" 
-              fill="none" 
+            <svg
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              viewBox="0 0 800 96"
+              fill="none"
               xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
             >
               {/* Static Track 1 */}
-              <line 
-                x1="120" y1="48" x2="400" y2="48" 
-                stroke="var(--color-border-subtle)" 
-                strokeWidth="2" 
+              <line
+                x1="120"
+                y1="48"
+                x2="400"
+                y2="48"
+                stroke="var(--color-border-subtle)"
+                strokeWidth="2"
                 strokeDasharray="4 4"
               />
               {/* Static Track 2 */}
-              <line 
-                x1="400" y1="48" x2="680" y2="48" 
-                stroke="var(--color-border-subtle)" 
-                strokeWidth="2" 
+              <line
+                x1="400"
+                y1="48"
+                x2="680"
+                y2="48"
+                stroke="var(--color-border-subtle)"
+                strokeWidth="2"
                 strokeDasharray="4 4"
               />
 
               {/* Dynamic Animated Pulse Line (Active Track) */}
-              <line 
-                x1="120" y1="48" x2="680" y2="48" 
-                stroke="url(#pipelineGrad)" 
-                strokeWidth="2.5" 
+              <line
+                x1="120"
+                y1="48"
+                x2="680"
+                y2="48"
+                stroke="url(#pipelineGrad)"
+                strokeWidth="2.5"
                 className="animate-pulse"
                 strokeDasharray="8 8"
               />
@@ -200,18 +211,20 @@ export function ProtocolFlowVisualizer({ isTr, locale: _locale }: ProtocolFlowVi
                   className={`group relative z-10 flex flex-col items-center gap-2 cursor-pointer transition-all duration-300 focus:outline-none`}
                   aria-label={st.title}
                 >
-                  <div 
+                  <div
                     className={`relative flex h-14 w-14 items-center justify-center rounded-2xl border transition-all duration-300 ${
-                      isActive 
-                        ? "border-blue-400 bg-blue-500/20 shadow-lg shadow-blue-500/30 scale-110" 
+                      isActive
+                        ? "border-blue-400 bg-blue-500/20 shadow-lg shadow-blue-500/30 scale-110"
                         : "border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:border-[var(--color-border-strong)] hover:scale-105"
                     }`}
                   >
-                    <Icon className={`h-6 w-6 transition-colors ${isActive ? "text-white" : "text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]"}`} />
-                    <span 
+                    <Icon
+                      className={`h-6 w-6 transition-colors ${isActive ? "text-white" : "text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]"}`}
+                    />
+                    <span
                       className={`absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${
-                        isActive 
-                          ? "bg-blue-500 text-white shadow-md shadow-blue-500/50" 
+                        isActive
+                          ? "bg-blue-600 text-white shadow-md shadow-blue-500/50"
                           : "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)] border border-[var(--color-border-subtle)]"
                       }`}
                     >
@@ -219,7 +232,9 @@ export function ProtocolFlowVisualizer({ isTr, locale: _locale }: ProtocolFlowVi
                     </span>
                   </div>
 
-                  <span className={`text-xs font-bold transition-colors ${isActive ? "text-[var(--color-text-primary)]" : "text-[var(--color-text-tertiary)] group-hover:text-[var(--color-text-secondary)]"}`}>
+                  <span
+                    className={`text-xs font-bold transition-colors ${isActive ? "text-[var(--color-text-primary)]" : "text-[var(--color-text-tertiary)] group-hover:text-[var(--color-text-secondary)]"}`}
+                  >
                     {st.title.split("&")[0]}
                   </span>
                 </button>
@@ -236,8 +251,8 @@ export function ProtocolFlowVisualizer({ isTr, locale: _locale }: ProtocolFlowVi
               type="button"
               onClick={() => setActiveNode(idx)}
               className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all ${
-                activeNode === idx 
-                  ? "bg-blue-600 text-white shadow-md" 
+                activeNode === idx
+                  ? "bg-blue-600 text-white shadow-md"
                   : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
               }`}
             >
@@ -254,7 +269,10 @@ export function ProtocolFlowVisualizer({ isTr, locale: _locale }: ProtocolFlowVi
             {/* Left Column: Deep Protocol Explanation */}
             <div className="lg:col-span-7 space-y-6">
               <div className="space-y-3">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold" style={{ background: currentStep.glowBg, color: currentStep.accentHex }}>
+                <div
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold"
+                  style={{ background: currentStep.glowBg, color: "var(--color-text-primary)" }}
+                >
                   <ShieldCheck className="h-3.5 w-3.5" />
                   <span>{currentStep.badge}</span>
                   <span className="text-[var(--color-border-strong)]">•</span>
@@ -273,8 +291,14 @@ export function ProtocolFlowVisualizer({ isTr, locale: _locale }: ProtocolFlowVi
               {/* Value Deliverables list */}
               <ul className="space-y-3 pt-2">
                 {currentStep.features.map((feat, fIdx) => (
-                  <li key={fIdx} className="flex items-start gap-3 text-sm text-[var(--color-text-primary)]">
-                    <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" style={{ color: currentStep.accentHex }} />
+                  <li
+                    key={fIdx}
+                    className="flex items-start gap-3 text-sm text-[var(--color-text-primary)]"
+                  >
+                    <CheckCircle2
+                      className="h-4 w-4 shrink-0 mt-0.5"
+                      style={{ color: currentStep.accentHex }}
+                    />
                     <span>{feat}</span>
                   </li>
                 ))}
@@ -290,7 +314,11 @@ export function ProtocolFlowVisualizer({ isTr, locale: _locale }: ProtocolFlowVi
                 </Link>
 
                 <Link href={isTr ? "/tr/yardim#nasil-calisir" : "/en/help#how-it-works"}>
-                  <Button variant="ghost" size="md" className="gap-2 text-[var(--color-text-secondary)]">
+                  <Button
+                    variant="ghost"
+                    size="md"
+                    className="gap-2 text-[var(--color-text-secondary)]"
+                  >
                     <span>{isTr ? "Detaylı Dokümantasyon" : "Technical Specs"}</span>
                     <ExternalLink className="h-3.5 w-3.5" />
                   </Button>
@@ -308,7 +336,9 @@ export function ProtocolFlowVisualizer({ isTr, locale: _locale }: ProtocolFlowVi
                     <span className="h-2.5 w-2.5 rounded-full bg-amber-500/80" />
                     <span className="h-2.5 w-2.5 rounded-full bg-emerald-500/80" />
                   </div>
-                  <span className="text-[10px] uppercase tracking-wider text-slate-400">operis-core.ts</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-400">
+                    operis-core.ts
+                  </span>
                 </div>
 
                 {/* Preformatted Code Visualizer */}
@@ -322,7 +352,7 @@ export function ProtocolFlowVisualizer({ isTr, locale: _locale }: ProtocolFlowVi
                     <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
                     <span>{isTr ? "Protokol Aktif" : "Protocol Active"}</span>
                   </div>
-                  <span className="text-slate-500">v1.2.0 • Zero Escrow</span>
+                  <span className="text-slate-400">v1.2.0 • Zero Escrow</span>
                 </div>
               </div>
             </div>

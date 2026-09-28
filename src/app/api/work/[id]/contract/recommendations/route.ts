@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { ContractSigningService } from "@/src/modules/contracts/contract-signing-service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const isEnHeader = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
@@ -48,20 +46,18 @@ export async function GET(
       recommendations: result.recommendations,
     });
   } catch (err: unknown) {
-    let message = isEnHeader
-      ? "Failed to load contract recommendations."
-      : "Sözleşme önerileri yüklenemedi.";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to load contract recommendations.",
+        tr: "Sözleşme önerileri yüklenemedi.",
+      },
+      { isEn: isEnHeader, logPrefix: "[Contract Recommendations GET Error]", status: 500 }
+    );
   }
 }
 
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const isEnHeader = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
@@ -89,7 +85,9 @@ export async function POST(
 
     const { id } = await params;
     const body = await req.json();
-    const selectedContracts = Array.isArray(body.selectedContracts) ? body.selectedContracts : ["CORE_SERVICE"];
+    const selectedContracts = Array.isArray(body.selectedContracts)
+      ? body.selectedContracts
+      : ["CORE_SERVICE"];
 
     const updatedPackage = await ContractSigningService.updateSelectedContracts(
       id,
@@ -109,12 +107,13 @@ export async function POST(
         : undefined,
     });
   } catch (err: unknown) {
-    let message = isEnHeader
-      ? "Failed to update contract selection."
-      : "Sözleşme seçimi güncellenemedi.";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to update contract selection.",
+        tr: "Sözleşme seçimi güncellenemedi.",
+      },
+      { isEn: isEnHeader, logPrefix: "[Contract Recommendations POST Error]", status: 500 }
+    );
   }
 }

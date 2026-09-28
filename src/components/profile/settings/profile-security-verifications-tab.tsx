@@ -1,15 +1,7 @@
 "use client";
 
 import type { FormEvent } from "react";
-import {
-  CheckCircle2,
-  AlertCircle,
-  Shield,
-  Mail,
-  Phone,
-  Key,
-  RefreshCw,
-} from "lucide-react";
+import { CheckCircle2, AlertCircle, Shield, Mail, Phone, Key, RefreshCw } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { CompanyVerificationCard } from "../company-verification-card";
 
@@ -65,7 +57,9 @@ export function ProfileSecurityVerificationsTab({
 }: ProfileSecurityVerificationsTabProps) {
   const isTr = locale === "tr";
 
-  let emailVerificationButtonLabel = isTr ? "Doğrulama E-postası Gönder" : "Send Verification Email";
+  let emailVerificationButtonLabel = isTr
+    ? "Doğrulama E-postası Gönder"
+    : "Send Verification Email";
   if (cooldownSeconds > 0) {
     emailVerificationButtonLabel = `${isTr ? "Tekrar gönder" : "Resend in"} (${cooldownSeconds}s)`;
   }
@@ -88,9 +82,7 @@ export function ProfileSecurityVerificationsTab({
     <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-6 sm:p-7 space-y-5">
       <h2 className="text-base font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
         <Shield className="h-4 w-4 text-emerald-400" aria-hidden="true" />
-        <span>
-          {isTr ? "Hesap ve Güvenlik Doğrulamaları" : "Account & Security Verifications"}
-        </span>
+        <span>{isTr ? "Hesap ve Güvenlik Doğrulamaları" : "Account & Security Verifications"}</span>
       </h2>
 
       {verificationFeedback && (
@@ -132,9 +124,7 @@ export function ProfileSecurityVerificationsTab({
               </span>
             )}
           </div>
-          <p className="text-xs text-[var(--color-text-secondary)] truncate">
-            {email || "—"}
-          </p>
+          <p className="text-xs text-[var(--color-text-secondary)] truncate">{email || "—"}</p>
           {!emailVerified && (
             <div className="pt-1">
               <Button
@@ -210,10 +200,7 @@ export function ProfileSecurityVerificationsTab({
       </div>
 
       {/* Kurumsal Şirket & Vergi No Doğrulaması Kartı */}
-      <CompanyVerificationCard
-        initialData={companyVerificationData}
-        locale={locale}
-      />
+      <CompanyVerificationCard initialData={companyVerificationData} locale={locale} />
 
       {/* Inline OTP Input Modal/Card */}
       {showPhoneModal && !phoneVerified && (

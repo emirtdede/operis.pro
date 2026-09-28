@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, X, FileText, ChevronLeft, ChevronRight } from "lucide-react";
 import { AdminOfferItem } from "@/src/modules/admin/service";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 
 interface OffersTableClientProps {
   initialOffers: AdminOfferItem[];
@@ -235,13 +236,22 @@ export function OffersTableClient({
       </div>
 
       {/* Offer Detail Inspection Modal */}
-      {selectedOffer && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-          <div className="w-full max-w-xl max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-[#12141a] p-4 sm:p-6 shadow-2xl">
+      <ModalOverlay
+        isOpen={Boolean(selectedOffer)}
+        onClose={() => setSelectedOffer(null)}
+        ariaLabel="Teklif & Eşleşme Denetim İzi"
+      >
+        {selectedOffer && (
+          <div
+            className="w-full max-w-xl max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-[#12141a] p-4 sm:p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-slate-800 pb-3 shrink-0">
               <div className="flex items-center gap-2">
                 <FileText className="h-5 w-5 text-purple-400 shrink-0" />
-                <h3 className="text-sm font-bold text-white truncate">Teklif & Eşleşme Denetim İzi</h3>
+                <h3 className="text-sm font-bold text-white truncate">
+                  Teklif & Eşleşme Denetim İzi
+                </h3>
               </div>
               <button
                 onClick={() => setSelectedOffer(null)}
@@ -324,8 +334,8 @@ export function OffersTableClient({
               </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalOverlay>
     </div>
   );
 }

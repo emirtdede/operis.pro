@@ -208,14 +208,10 @@ export function SearchableSelect({
 
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setHighlightedIndex((prev) =>
-        prev < filteredOptions.length - 1 ? prev + 1 : 0
-      );
+      setHighlightedIndex((prev) => (prev < filteredOptions.length - 1 ? prev + 1 : 0));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setHighlightedIndex((prev) =>
-        prev > 0 ? prev - 1 : filteredOptions.length - 1
-      );
+      setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : filteredOptions.length - 1));
     } else if (e.key === "Enter") {
       e.preventDefault();
       const current = filteredOptions[highlightedIndex];
@@ -258,7 +254,10 @@ export function SearchableSelect({
   };
 
   return (
-    <div ref={containerRef} className={`w-full flex flex-col gap-1.5 relative ${isOpen ? "z-30" : "z-10"} ${className}`}>
+    <div
+      ref={containerRef}
+      className={`w-full flex flex-col gap-1.5 relative ${isOpen ? "z-30" : "z-10"} ${className}`}
+    >
       {/* Label & Optional Badge */}
       {label && (
         <div className="min-h-[22px] flex items-center justify-between gap-2">
@@ -311,7 +310,8 @@ export function SearchableSelect({
           placeholder={
             disabled
               ? disabledMessage || (isTr ? "Seçim devre dışı" : "Disabled")
-              : placeholder || (isTr ? "Yazarak arayın veya seçin..." : "Type to search or select...")
+              : placeholder ||
+                (isTr ? "Yazarak arayın veya seçin..." : "Type to search or select...")
           }
           className="w-full h-11 bg-transparent text-xs sm:text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] border-0 border-none outline-none focus:outline-none ring-0 focus:ring-0 shadow-none py-2"
           autoComplete="off"
@@ -379,11 +379,7 @@ export function SearchableSelect({
                   )}`}
                 >
                   <div className="flex items-start gap-2.5 min-w-0 flex-1">
-                    {opt.icon && (
-                      <div className="mt-0.5 text-blue-400 shrink-0">
-                        {opt.icon}
-                      </div>
-                    )}
+                    {opt.icon && <div className="mt-0.5 text-blue-400 shrink-0">{opt.icon}</div>}
                     <div className="min-w-0">
                       <div className="text-xs sm:text-sm font-medium text-[var(--color-text-primary)] truncate">
                         {opt.label}

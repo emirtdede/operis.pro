@@ -87,16 +87,18 @@ export async function POST(req: Request) {
   } catch (err: unknown) {
     const locale = headerLocale || "tr";
     const isEn = locale === "en";
-    let message = isEn ? "Failed to save links" : "Bağlantılar kaydedilemedi";
     if (err instanceof z.ZodError) {
       const fallbackFormat = isEn ? "Invalid link format." : "Geçersiz bağlantı formatı.";
-      message = err.issues[0]?.message || fallbackFormat;
-    } else if (err instanceof Error) {
-      message = err.message;
+      const message = err.issues[0]?.message || fallbackFormat;
+      return NextResponse.json({ error: message }, { status: 400 });
     }
-    return NextResponse.json({ error: message }, { status: 400 });
+
+    console.error("[Profile Links Error]:", err);
+    return NextResponse.json(
+      { error: isEn ? "Failed to save links" : "Bağlantılar kaydedilemedi" },
+      { status: 500 }
+    );
   }
 }
 
 export const PUT = POST;
-

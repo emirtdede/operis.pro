@@ -39,7 +39,9 @@ export const offers = pgTable(
     rejectionCode: varchar("rejection_code", { length: 50 }),
     rejectionNote: text("rejection_note"),
     isCountered: boolean("is_countered").default(false).notNull(),
-    currentTurnUserId: uuid("current_turn_user_id").references(() => users.id),
+    currentTurnUserId: uuid("current_turn_user_id").references(() => users.id, {
+      onDelete: "set null",
+    }),
     counterRound: integer("counter_round").default(0).notNull(),
     activeCounterProposalId: uuid("active_counter_proposal_id"),
     isSquadOffer: boolean("is_squad_offer").default(false).notNull(),
@@ -108,15 +110,16 @@ export const offerSquadMembers = pgTable(
     userId: uuid("user_id").references(() => users.id),
     displayName: varchar("display_name", { length: 80 }).notNull(),
     roleTitle: varchar("role_title", { length: 60 }).notNull(),
-    revenueSharePercentage: numeric("revenue_share_percentage", { precision: 5, scale: 2 }).notNull(),
+    revenueSharePercentage: numeric("revenue_share_percentage", {
+      precision: 5,
+      scale: 2,
+    }).notNull(),
     scopeSummary: text("scope_summary"),
     handleOrEmail: varchar("handle_or_email", { length: 100 }),
     isLead: boolean("is_lead").default(false).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
-  (table) => [
-    index("offer_squad_members_offer_idx").on(table.offerId),
-  ]
+  (table) => [index("offer_squad_members_offer_idx").on(table.offerId)]
 );
 
 // 13. Offer Revisions

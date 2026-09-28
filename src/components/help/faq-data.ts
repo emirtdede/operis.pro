@@ -66,7 +66,8 @@ export const FAQ_ITEMS: FAQItem[] = [
     category: "listings",
     targetAudience: "client",
     tags: ["ilan düzenleme", "ilan iptali", "ilan kapatma", "güncelleme", "yayından kaldırma"],
-    questionTr: "İlanımda değişiklik yapabilir miyim veya süresinden önce yayından kaldırabilir miyim?",
+    questionTr:
+      "İlanımda değişiklik yapabilir miyim veya süresinden önce yayından kaldırabilir miyim?",
     questionEn: "Can I edit my listing or withdraw it before the 168 hours expire?",
     answerTr:
       "Evet. İlan yönetim panelinizden ilanınızın metnini, bütçesini veya aradığınız teknoloji yığınını dilediğiniz an güncelleyebilirsiniz. Uygun mühendisi bulduğunuzda veya ilanınız ertelendiğinde tek tıkla 'İlanı Kapat' diyerek radardan kaldırabilirsiniz.",
@@ -79,9 +80,17 @@ export const FAQ_ITEMS: FAQItem[] = [
     id: "zero-commission-model",
     category: "commission",
     targetAudience: "general",
-    tags: ["%0 komisyon", "komisyonsuz", "kesinti", "gizli ücret", "ücretsiz model", "doğrudan kazanç"],
+    tags: [
+      "%0 komisyon",
+      "komisyonsuz",
+      "kesinti",
+      "gizli ücret",
+      "ücretsiz model",
+      "doğrudan kazanç",
+    ],
     questionTr: "%0 komisyon modeli gerçekte nasıl çalışıyor? Gizli bir kesinti veya aidat var mı?",
-    questionEn: "How does the 0% commission model really work? Are there hidden cuts or subscription fees?",
+    questionEn:
+      "How does the 0% commission model really work? Are there hidden cuts or subscription fees?",
     answerTr:
       "Operis'te kesinlikle hiçbir komisyon (%0), teklif jetonu, para çekme kesintisi veya gizli üyelik aidatı yoktur. İlan sahibi ile mühendis anlaştıkları bütçenin %100'ünü doğrudan birbirlerine aktarır. Operis, bağımsız mühendislerin hak ettiği emeği aracı komisyonlarına kaptırmadığı açık ve doğrudan bir ekosistemdir.",
     answerEn:
@@ -105,7 +114,8 @@ export const FAQ_ITEMS: FAQItem[] = [
     targetAudience: "general",
     tags: ["güvenli ödeme", "hakediş", "milestone", "avans", "banka transferi", "3 kademe"],
     questionTr: "Ödemeler nasıl güvenceye alınır? Hangi ödeme takvimi tavsiye edilir?",
-    questionEn: "How are payments safeguarded without platform escrow? What payment schedule is recommended?",
+    questionEn:
+      "How are payments safeguarded without platform escrow? What payment schedule is recommended?",
     answerTr:
       "Güvenli ve şeffaf çalışma için '3 Kademeli Hakediş (Milestone) Modeli'ni tavsiye ediyoruz: 1. Aşama: İşe başlama ve mimari onayında %30 Avans. 2. Aşama: Çalışır prototip/alfa aşaması demosu sonrası %40 Ara Ödeme. 3. Aşama: Kod incelemesi, canlıya alma ve nihai kabul sonrası kalan %30 Son Ödeme. Bu yöntem her iki tarafı da eşit derecede korur.",
     answerEn:
@@ -116,8 +126,10 @@ export const FAQ_ITEMS: FAQItem[] = [
     category: "commission",
     targetAudience: "freelancer",
     tags: ["avans", "avanssız iş", "hakediş güvencesi", "ödeme takvimi", "garanti"],
-    questionTr: "İşveren avans ödemek istemezse veya iş bitiminde tüm parayı teklif ederse ne yapmalıyım?",
-    questionEn: "What if the client refuses to pay an upfront advance and offers 100% on completion?",
+    questionTr:
+      "İşveren avans ödemek istemezse veya iş bitiminde tüm parayı teklif ederse ne yapmalıyım?",
+    questionEn:
+      "What if the client refuses to pay an upfront advance and offers 100% on completion?",
     answerTr:
       "Asla avans almadan (en az %30) ve sözleşme imzalamadan kod yazmaya başlamayın. 'İş bitince hepsini ödeyeceğim' modeli bağımsız yazılımcıların mağduriyet yaşadığı en yaygın senaryodur. Müşteriye Operis'in tavsiye ettiği 3 Kademeli Hakediş Standardı'nı gösterin: Proje aşamalara bölündüğünde hem müşteri çıktıyı görmeden tüm parayı riske atmaz hem de siz emeğinizin karşılığını adım adım alırsınız.",
     answerEn:
@@ -128,8 +140,10 @@ export const FAQ_ITEMS: FAQItem[] = [
     category: "commission",
     targetAudience: "general",
     tags: ["döviz", "yurt dışı", "SWIFT", "Wise", "kripto", "USD", "EUR"],
-    questionTr: "Yabancı para birimiyle (USD/EUR) veya yurt dışı hesaplarla (Wise/SWIFT) çalışabilir miyiz?",
-    questionEn: "Can we transact in foreign currencies (USD/EUR) or use cross-border rails (Wise/SWIFT)?",
+    questionTr:
+      "Yabancı para birimiyle (USD/EUR) veya yurt dışı hesaplarla (Wise/SWIFT) çalışabilir miyiz?",
+    questionEn:
+      "Can we transact in foreign currencies (USD/EUR) or use cross-border rails (Wise/SWIFT)?",
     answerTr:
       "Evet. Operis tarafların ödeme yöntemine veya para birimine müdahale etmez. Türk Lirası, Dolar veya Euro cinsinden faturalandırma yapabilir; FAST, havale, Wise veya SWIFT gibi dilediğiniz yasal bankacılık kanalını sözleşmenizde belirleyerek kullanabilirsiniz.",
     answerEn:
@@ -142,8 +156,10 @@ export const FAQ_ITEMS: FAQItem[] = [
     category: "offers",
     targetAudience: "freelancer",
     tags: ["şifreli teklif", "AES-256", "kör teklif", "fiyat kırma", "gizlilik", "undercutting"],
-    questionTr: "Teklifler neden şifrelidir (AES-256 kör teklif)? Rakiplerim teklifimi görebilir mi?",
-    questionEn: "Why are proposals encrypted (AES-256 blind bids)? Can competitors see my proposal or rate?",
+    questionTr:
+      "Teklifler neden şifrelidir (AES-256 kör teklif)? Rakiplerim teklifimi görebilir mi?",
+    questionEn:
+      "Why are proposals encrypted (AES-256 blind bids)? Can competitors see my proposal or rate?",
     answerTr:
       "Hayır, teklifiniz rakiplerinize, arama motorlarına ve üçüncü şahıslara tamamen kapalıdır. Teklifinizin metni, bütçesi ve teslim süresi veritabanında AES-256-GCM ile şifrelenir ve yalnızca ilan sahibi tarafından çözülür. Bu sayede açık teklifli platformlarda yaşanan teklif kopyalama ve fiyat kırma savaşı (race to the bottom) tamamen önlenir; her mühendis emeğinin gerçek değerini sunar.",
     answerEn:
@@ -191,7 +207,13 @@ export const FAQ_ITEMS: FAQItem[] = [
     id: "how-to-choose-best-developer",
     category: "matching",
     targetAudience: "client",
-    tags: ["mühendis seçimi", "en iyi yazılımcı", "teklif değerlendirme", "portfolyo inceleme", "github"],
+    tags: [
+      "mühendis seçimi",
+      "en iyi yazılımcı",
+      "teklif değerlendirme",
+      "portfolyo inceleme",
+      "github",
+    ],
     questionTr: "Gelen teklifler arasından en doğru mühendisi nasıl seçebilirim?",
     questionEn: "How do I choose the best developer from the submitted proposals?",
     answerTr:
@@ -216,8 +238,10 @@ export const FAQ_ITEMS: FAQItem[] = [
     category: "matching",
     targetAudience: "general",
     tags: ["platform dışı iletişim", "WhatsApp serbest mi", "telefon yasağı", "iletişim özgürlüğü"],
-    questionTr: "Platform dışı iletişim kurmak yasak mı? (WhatsApp, Slack, Telefon ile görüşebilir miyiz?)",
-    questionEn: "Is off-platform communication prohibited? Can we communicate via WhatsApp, Slack, or Phone?",
+    questionTr:
+      "Platform dışı iletişim kurmak yasak mı? (WhatsApp, Slack, Telefon ile görüşebilir miyiz?)",
+    questionEn:
+      "Is off-platform communication prohibited? Can we communicate via WhatsApp, Slack, or Phone?",
     answerTr:
       "Hayır, diğer platformların aksine Operis'te iletişim ambargosu veya platform dışı iletişim yasağı KESİNLİKLE YOKTUR. Tam aksine doğrudan iletişim teşvik edilir. Dilediğiniz araçla (telefon görüşmesi, WhatsApp, Slack, Zoom, Google Meet veya yüz yüze) görüşebilir ve projenizi en verimli şekilde yürütebilirsiniz.",
     answerEn:
@@ -253,9 +277,20 @@ export const FAQ_ITEMS: FAQItem[] = [
     id: "tax-invoicing-smm",
     category: "legal",
     targetAudience: "freelancer",
-    tags: ["vergi", "fatura", "e-SMM", "stopaj", "KDV", "arızi kazanç", "genç girişimci", "2026 mevzuat"],
-    questionTr: "Freelance çalışırken fatura kesmek zorunda mıyım? (e-SMM, e-Arşiv, Genç Girişimci istisnası)",
-    questionEn: "Am I legally required to issue invoices? (e-SMM, e-Archive, Youth Entrepreneur exemption)",
+    tags: [
+      "vergi",
+      "fatura",
+      "e-SMM",
+      "stopaj",
+      "KDV",
+      "arızi kazanç",
+      "genç girişimci",
+      "2026 mevzuat",
+    ],
+    questionTr:
+      "Freelance çalışırken fatura kesmek zorunda mıyım? (e-SMM, e-Arşiv, Genç Girişimci istisnası)",
+    questionEn:
+      "Am I legally required to issue invoices? (e-SMM, e-Archive, Youth Entrepreneur exemption)",
     answerTr:
       "Türkiye 2026 vergi mevzuatı gereğince: Süreklilik arz eden bağımsız yazılım/tasarım hizmeti sunan mühendisler serbest meslek mükellefiyeti açarak e-Serbest Meslek Makbuzu (e-SMM) veya şahıs/limited şirketi üzerinden e-Arşiv Fatura düzenlemelidir. 18-29 yaş arası ilk kez iş kuran mühendisler 3 yıl boyunca 'Genç Girişimci Kazanç İstisnası'ndan yararlanabilir. Tek seferlik küçük işlerde yıllık yasal sınır altındaki kazançlar arızi kazanç kapsamında değerlendirilebilir. Ayrıntılar için mali müşavirinize danışmanız tavsiye edilir.",
     answerEn:
@@ -266,7 +301,8 @@ export const FAQ_ITEMS: FAQItem[] = [
     category: "legal",
     targetAudience: "client",
     tags: ["telif hakkı", "fikri mülkiyet", "FSEK", "kaynak kod", "mali haklar", "hak devri"],
-    questionTr: "Yazılım ve tasarımın telif hakları (fikri mülkiyet) kime aittir? (FSEK m. 52 devri)",
+    questionTr:
+      "Yazılım ve tasarımın telif hakları (fikri mülkiyet) kime aittir? (FSEK m. 52 devri)",
     questionEn: "Who owns the intellectual property and source code? (FSEK Article 52 transfer)",
     answerTr:
       "5846 sayılı Fikir ve Sanat Eserleri Kanunu (FSEK) uyarınca bir yazılımın veya tasarımın manevi hakları her zaman onu üreten mühendise aittir ve devredilemez. Ancak mali haklar (işleme, çoğaltma, yayma, umuma iletim) yazılı sözleşmeyle müşteriye devredilebilir. Operis'in tavsiye ettiği standart sözleşmede: 'Proje bedeli eksiksiz ödendiği anda yazılımın tüm mali hakları ve kaynak kod mülkiyeti müşteriye geçer' hükmü uygulanır.",
@@ -339,7 +375,13 @@ export const FAQ_ITEMS: FAQItem[] = [
     id: "client-asking-for-deposit-scam",
     category: "safety",
     targetAudience: "freelancer",
-    tags: ["para isteme", "teminat dolandırıcılığı", "sigorta ücreti", "kırmızı bayrak", "sahte iş"],
+    tags: [
+      "para isteme",
+      "teminat dolandırıcılığı",
+      "sigorta ücreti",
+      "kırmızı bayrak",
+      "sahte iş",
+    ],
     questionTr: "İşveren işe başlamak için benden para/teminat talep ederse ne yapmalıyım?",
     questionEn: "What if a prospective client asks me for an upfront deposit or verification fee?",
     answerTr:
@@ -353,7 +395,8 @@ export const FAQ_ITEMS: FAQItem[] = [
     targetAudience: "freelancer",
     tags: ["revizyon", "kapsam kayması", "scope creep", "ek istekler", "anlaşmazlık"],
     questionTr: "İşveren teslimatı beğenmezse veya sınırsız revizyon talep ederse ne olur?",
-    questionEn: "What happens if a client demands endless revisions or complains about deliverables?",
+    questionEn:
+      "What happens if a client demands endless revisions or complains about deliverables?",
     answerTr:
       "Kapsam kayması (scope creep) sorununu önlemenin yolu baştan yazılı sınırlar çizmektir. Sözleşmenize 'İşbu fiyata en fazla 2 tur makul revizyon dahildir; iş tanımı dışındaki yeni özellik ve tasarım değişiklikleri saatlik ek ücrete tabidir' maddesini ekleyin. Teslimatları önceden üzerinde anlaşılan 'Kabul Kriterleri' (Acceptance Criteria) listesine göre test edip teslim tutanağı ile onaylatın.",
     answerEn:
@@ -364,7 +407,8 @@ export const FAQ_ITEMS: FAQItem[] = [
     category: "safety",
     targetAudience: "general",
     tags: ["şikayet", "kötüye kullanım", "ihbar", "kara liste", "engelleme", "moderatör"],
-    questionTr: "Kötü niyetli veya kural ihlali yapan bir kullanıcıyla karşılaşırsam ne yapmalıyım?",
+    questionTr:
+      "Kötü niyetli veya kural ihlali yapan bir kullanıcıyla karşılaşırsam ne yapmalıyım?",
     questionEn: "What should I do if I encounter a malicious actor or bad-faith counterparty?",
     answerTr:
       "Operis platformunda dürüstlük ve saygı kırmızı çizgimizdir. Şüpheli davranış sergileyen, tacizde bulunan veya dolandırıcılık girişiminde bulunan hesapları 'Kötüye Kullanım Bildir' butonundan ekran görüntüleriyle birlikte iletebilirsiniz. Moderasyon ekibimiz ihlali doğruladığı takdirde ilgili kullanıcının hesabı, IP'si ve telefon numarası kalıcı olarak kara listeye alınır ve platformdan men edilir.",

@@ -180,11 +180,7 @@ export function generateTotpCode(
   const b1 = digest[offset + 1] ?? 0;
   const b2 = digest[offset + 2] ?? 0;
   const b3 = digest[offset + 3] ?? 0;
-  const binary =
-    ((b0 & 0x7f) << 24) |
-    ((b1 & 0xff) << 16) |
-    ((b2 & 0xff) << 8) |
-    (b3 & 0xff);
+  const binary = ((b0 & 0x7f) << 24) | ((b1 & 0xff) << 16) | ((b2 & 0xff) << 8) | (b3 & 0xff);
 
   const otp = binary % Math.pow(10, digits);
   return otp.toString().padStart(digits, "0");

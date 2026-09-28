@@ -117,17 +117,31 @@ describe("Category Market Rate Benchmark Engine", () => {
 
   describe("Formatting and Localization", () => {
     it("formats Turkish message with ₺ and tr-TR numbers", () => {
-      const res = CategoryBenchmarkService.calculateIqrBenchmark([20000, 30000, 45000, 50000], "TRY", 30);
+      const res = CategoryBenchmarkService.calculateIqrBenchmark(
+        [20000, 30000, 45000, 50000],
+        "TRY",
+        30
+      );
       expect(res.formattedRangeTr).toContain("₺");
-      expect(res.messageTr).toContain("Bu kategoride son 30 günde eşleşen projelerin ortalama bütçe aralığı:");
+      expect(res.messageTr).toContain(
+        "Bu kategoride son 30 günde eşleşen projelerin ortalama bütçe aralığı:"
+      );
     });
 
     it("formats English message with proper currency symbol", () => {
-      const resUsd = CategoryBenchmarkService.calculateIqrBenchmark([1000, 1500, 2000, 2500], "USD", 30);
+      const resUsd = CategoryBenchmarkService.calculateIqrBenchmark(
+        [1000, 1500, 2000, 2500],
+        "USD",
+        30
+      );
       expect(resUsd.formattedRangeEn).toContain("$");
       expect(resUsd.messageEn).toContain("Typical market budget benchmark");
 
-      const resEur = CategoryBenchmarkService.calculateIqrBenchmark([1000, 1500, 2000, 2500], "EUR", 30);
+      const resEur = CategoryBenchmarkService.calculateIqrBenchmark(
+        [1000, 1500, 2000, 2500],
+        "EUR",
+        30
+      );
       expect(resEur.formattedRangeEn).toContain("€");
     });
   });

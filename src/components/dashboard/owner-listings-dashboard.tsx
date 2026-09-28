@@ -2,10 +2,25 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Eye, MousePointerClick, History, Copy, Rocket, PlusCircle, Search, X, ListFilter, ChevronDown, ArrowUpDown, Clock, Briefcase } from "lucide-react";
+import {
+  Eye,
+  MousePointerClick,
+  History,
+  Copy,
+  Rocket,
+  PlusCircle,
+  Search,
+  X,
+  ListFilter,
+  ChevronDown,
+  ArrowUpDown,
+  Clock,
+  Briefcase,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { EmptyState } from "../ui/empty-state";
+import { Dialog } from "../ui/dialog";
 import { ListingRevisionsModal } from "../listings/listing-revisions-modal";
 import { getLocalizedWorkspacePath, getLocalizedListingPath } from "@/src/lib/i18n/routes";
 import { Locale } from "@/src/lib/i18n/config";
@@ -40,11 +55,7 @@ const LISTING_STATUS_BADGE_VARIANTS: Record<string, "primary" | "secondary" | "o
 };
 
 export type OwnerSortOption =
-  | "newest"
-  | "expiring_soon"
-  | "most_viewed"
-  | "budget_desc"
-  | "budget_asc";
+  "newest" | "expiring_soon" | "most_viewed" | "budget_desc" | "budget_asc";
 
 function getOwnerTabLabel(
   tabKey: "all" | "active" | "inactive" | "matched",
@@ -72,6 +83,7 @@ export function OwnerListingsDashboard({
   const [sortBy, setSortBy] = useState<OwnerSortOption>("newest");
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [selectedListingForRevisions, setSelectedListingForRevisions] = useState<string | null>(
     null
   );
@@ -80,7 +92,8 @@ export function OwnerListingsDashboard({
     let list = listings.filter((l) => {
       if (tab === "all") return true;
       if (tab === "active") return l.status === "ACTIVE";
-      if (tab === "inactive") return l.status === "INACTIVE_EXPIRED" || l.status === "INACTIVE_OWNER";
+      if (tab === "inactive")
+        return l.status === "INACTIVE_EXPIRED" || l.status === "INACTIVE_OWNER";
       if (tab === "matched") return l.status === "MATCHED" || l.status === "COMPLETED";
       return true;
     });
@@ -188,17 +201,9 @@ export function OwnerListingsDashboard({
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (
-      !confirm(
-        isTr
-          ? "Bu ilanı silmek istediğinize emin misiniz?"
-          : "Are you sure you want to delete this listing?"
-      )
-    ) {
-      return;
-    }
-
+  const handleConfirmDelete = async () => {
+    if (!deleteTargetId) return;
+    const id = deleteTargetId;
     setLoadingId(id);
     setActionError(null);
     try {
@@ -210,6 +215,7 @@ export function OwnerListingsDashboard({
       if (!res.ok) throw new Error(data.error || "Deletion failed");
 
       setListings((prev) => prev.filter((l) => l.id !== id));
+      setDeleteTargetId(null);
     } catch (err: unknown) {
       setActionError(err instanceof Error ? err.message : "Error deleting listing");
     } finally {
@@ -230,7 +236,12 @@ export function OwnerListingsDashboard({
               : `No listings match "${searchQuery.trim()}". Try searching with different keywords or reset your filters.`
           }
           action={
-            <Button variant="secondary" size="sm" onClick={() => setSearchQuery("")} className="cursor-pointer">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setSearchQuery("")}
+              className="cursor-pointer"
+            >
               {isTr ? "Aramayı Temizle" : "Clear Search"}
             </Button>
           }
@@ -249,7 +260,12 @@ export function OwnerListingsDashboard({
               : "You have no expired or paused listings. Check active listings to see your live projects."
           }
           action={
-            <Button variant="secondary" size="sm" onClick={() => setTab("active")} className="cursor-pointer">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setTab("active")}
+              className="cursor-pointer"
+            >
               {isTr ? "Aktif İlanları Gör" : "View Active Listings"}
             </Button>
           }
@@ -327,9 +343,7 @@ export function OwnerListingsDashboard({
     inactive: listings.filter(
       (l) => l.status === "INACTIVE_EXPIRED" || l.status === "INACTIVE_OWNER"
     ).length,
-    matched: listings.filter(
-      (l) => l.status === "MATCHED" || l.status === "COMPLETED"
-    ).length,
+    matched: listings.filter((l) => l.status === "MATCHED" || l.status === "COMPLETED").length,
   };
 
   return (
@@ -375,7 +389,10 @@ export function OwnerListingsDashboard({
         <div className="flex flex-wrap items-center gap-2.5 shrink-0">
           {/* Single Status Filter Dropdown Button */}
           <div className="relative inline-flex items-center">
-            <ListFilter className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ListFilter
+              className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
             <select
               value={tab}
               onChange={(e) => setTab(e.target.value as "all" | "active" | "inactive" | "matched")}
@@ -388,25 +405,47 @@ export function OwnerListingsDashboard({
                 </option>
               ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ChevronDown
+              className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
           </div>
 
           {/* Single Sort Dropdown Button */}
           <div className="relative inline-flex items-center">
-            <ArrowUpDown className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ArrowUpDown
+              className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as OwnerSortOption)}
               aria-label={isTr ? "Sıralama ölçütü" : "Sort by"}
               className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
             >
-              <option value="newest" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yeni" : "Newest"}</option>
-              <option value="expiring_soon" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "Süresi Biten" : "Expiring Soon"}</option>
-              <option value="most_viewed" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Çok Görüntülenen" : "Most Viewed"}</option>
-              <option value="budget_desc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yüksek Bütçe" : "Highest Budget"}</option>
-              <option value="budget_asc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Düşük Bütçe" : "Lowest Budget"}</option>
+              <option value="newest" className="bg-[#141517] text-[var(--color-text-primary)]">
+                {isTr ? "En Yeni" : "Newest"}
+              </option>
+              <option
+                value="expiring_soon"
+                className="bg-[#141517] text-[var(--color-text-primary)]"
+              >
+                {isTr ? "Süresi Biten" : "Expiring Soon"}
+              </option>
+              <option value="most_viewed" className="bg-[#141517] text-[var(--color-text-primary)]">
+                {isTr ? "En Çok Görüntülenen" : "Most Viewed"}
+              </option>
+              <option value="budget_desc" className="bg-[#141517] text-[var(--color-text-primary)]">
+                {isTr ? "En Yüksek Bütçe" : "Highest Budget"}
+              </option>
+              <option value="budget_asc" className="bg-[#141517] text-[var(--color-text-primary)]">
+                {isTr ? "En Düşük Bütçe" : "Lowest Budget"}
+              </option>
             </select>
-            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ChevronDown
+              className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
           </div>
         </div>
       </div>
@@ -608,7 +647,7 @@ export function OwnerListingsDashboard({
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleDelete(listing.id)}
+                      onClick={() => setDeleteTargetId(listing.id)}
                       disabled={loadingId === listing.id}
                       className="text-[var(--color-danger)] hover:bg-[var(--color-danger)]/10"
                     >
@@ -630,6 +669,42 @@ export function OwnerListingsDashboard({
           locale={locale}
         />
       )}
+
+      {/* Delete Listing Confirmation Dialog */}
+      <Dialog
+        isOpen={Boolean(deleteTargetId)}
+        onClose={() => {
+          if (!loadingId) setDeleteTargetId(null);
+        }}
+        title={isTr ? "İlanı Sil" : "Delete Listing"}
+        description={
+          isTr
+            ? "Bu ilanı kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz ve ilana ait tüm başvurular kapatılır."
+            : "Are you sure you want to permanently delete this listing? This action cannot be undone and will close all associated applications."
+        }
+      >
+        <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-[var(--color-border-subtle)]">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setDeleteTargetId(null)}
+            disabled={Boolean(loadingId)}
+          >
+            {isTr ? "Vazgeç" : "Cancel"}
+          </Button>
+          <Button
+            type="button"
+            variant="danger"
+            size="sm"
+            onClick={handleConfirmDelete}
+            disabled={Boolean(loadingId)}
+            isLoading={Boolean(loadingId)}
+          >
+            {isTr ? "Evet, İlanı Sil" : "Delete Permanently"}
+          </Button>
+        </div>
+      </Dialog>
     </div>
   );
 }

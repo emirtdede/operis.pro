@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { ChangeRequestService } from "@/src/modules/engagements/change-request-service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -61,37 +62,39 @@ export async function POST(
       changeRequest: updated,
     });
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Internal Server Error";
-    if (message === "CHANGE_REQUEST_NOT_PENDING") {
-      return NextResponse.json(
-        {
-          error: isEnHeader
-            ? "Change request is no longer pending."
-            : "Değişiklik talebi artık beklemede değil.",
+    return handleApiError(
+      error,
+      {
+        en: "Failed to respond to change request",
+        tr: "Değişiklik talebi yanıtlanamadı",
+      },
+      {
+        isEn: isEnHeader,
+        logPrefix: "[Change Request Respond Error]",
+        status: 500,
+        allowedMessages: {
+          CHANGE_REQUEST_NOT_PENDING: {
+            en: "Change request is no longer pending.",
+            tr: "Değişiklik talebi artık beklemede değil.",
+            status: 409,
+          },
+          CANNOT_APPROVE_OWN_REQUEST: {
+            en: "You cannot approve your own change request. Only the counterparty can review.",
+            tr: "Kendi oluşturduğunuz değişiklik talebini onaylayamazsınız; onay muhataba aittir.",
+            status: 403,
+          },
+          UNAUTHORIZED_REVIEWER: {
+            en: "Unauthorized or request not found.",
+            tr: "Yetkisiz işlem veya talep bulunamadı.",
+            status: 403,
+          },
+          CHANGE_REQUEST_NOT_FOUND: {
+            en: "Unauthorized or request not found.",
+            tr: "Yetkisiz işlem veya talep bulunamadı.",
+            status: 403,
+          },
         },
-        { status: 409 }
-      );
-    }
-    if (message === "CANNOT_APPROVE_OWN_REQUEST") {
-      return NextResponse.json(
-        {
-          error: isEnHeader
-            ? "You cannot approve your own change request. Only the counterparty can review."
-            : "Kendi oluşturduğunuz değişiklik talebini onaylayamazsınız; onay muhataba aittir.",
-        },
-        { status: 403 }
-      );
-    }
-    if (message === "UNAUTHORIZED_REVIEWER" || message === "CHANGE_REQUEST_NOT_FOUND") {
-      return NextResponse.json(
-        {
-          error: isEnHeader
-            ? "Unauthorized or request not found."
-            : "Yetkisiz işlem veya talep bulunamadı.",
-        },
-        { status: 403 }
-      );
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+      }
+    );
   }
 }

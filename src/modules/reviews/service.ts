@@ -119,9 +119,13 @@ export class ReviewService {
     );
 
     // ================= VITEST / ZERO-CONFIG IN-MEMORY FALLBACK =================
-    if ((!isEngUuid || !isAuthorUuid) && (process.env.NODE_ENV !== "production" || process.env.VITEST)) {
+    if (
+      (!isEngUuid || !isAuthorUuid) &&
+      (process.env.NODE_ENV !== "production" || process.env.VITEST)
+    ) {
       // In-memory branch
-      const isDemoEng = input.engagementId === "eng-demo-101" || input.engagementId.startsWith("eng-");
+      const isDemoEng =
+        input.engagementId === "eng-demo-101" || input.engagementId.startsWith("eng-");
       if (!isDemoEng && !isEngUuid) {
         throw new Error("ENGAGEMENT_NOT_FOUND");
       }
@@ -257,7 +261,9 @@ export class ReviewService {
         .where(eq(schema.engagements.id, input.engagementId));
 
       if (typeof (engLockQuery as { for?: unknown }).for === "function") {
-        engLockQuery = (engLockQuery as { for: (mode: string) => typeof engLockQuery }).for("update");
+        engLockQuery = (engLockQuery as { for: (mode: string) => typeof engLockQuery }).for(
+          "update"
+        );
       }
       await engLockQuery.limit(1);
 
@@ -404,12 +410,8 @@ export class ReviewService {
       (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
       (userId === DEFAULT_USER.id || userId === "u-techcorp-1")
     ) {
-      const received = inMemoryReviews.filter(
-        (r) => r.recipientUserId === userId && r.isRevealed
-      );
-      const given = inMemoryReviews.filter(
-        (r) => r.authorUserId === userId && r.isRevealed
-      );
+      const received = inMemoryReviews.filter((r) => r.recipientUserId === userId && r.isRevealed);
+      const given = inMemoryReviews.filter((r) => r.authorUserId === userId && r.isRevealed);
 
       const overallRatings = received.map((r) => r.overallRating);
       const commRatings = received.map((r) => r.communicationRating);
@@ -673,9 +675,7 @@ export class ReviewService {
    * Checks if user has any completed engagements within the active 14-day window
    * for which they have NOT yet submitted their review.
    */
-  static async checkPendingMandatoryReviews(
-    userId: string
-  ): Promise<PendingMandatoryReviewDto[]> {
+  static async checkPendingMandatoryReviews(userId: string): Promise<PendingMandatoryReviewDto[]> {
     if (process.env.VITEST) {
       return [];
     }
@@ -692,10 +692,7 @@ export class ReviewService {
           ownerProfile: schema.profiles,
         })
         .from(schema.engagements)
-        .leftJoin(
-          schema.profiles,
-          eq(schema.engagements.ownerUserId, schema.profiles.userId)
-        )
+        .leftJoin(schema.profiles, eq(schema.engagements.ownerUserId, schema.profiles.userId))
         .where(
           and(
             eq(schema.engagements.status, "COMPLETED"),
@@ -770,7 +767,9 @@ export class ReviewService {
         if (!cUserId) continue;
         const counterpartyProfile = profileByUserId.get(cUserId);
 
-        const expiresAt = new Date(completedAt.getTime() + REVIEW_WINDOW_DAYS * 24 * 60 * 60 * 1000);
+        const expiresAt = new Date(
+          completedAt.getTime() + REVIEW_WINDOW_DAYS * 24 * 60 * 60 * 1000
+        );
         const daysRemaining = Math.max(
           0,
           Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))

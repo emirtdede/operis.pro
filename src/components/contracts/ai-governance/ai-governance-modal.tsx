@@ -183,12 +183,11 @@ export function AiGovernanceModal({
                   {isTr ? "💡 Hukuki ve Teknik Önlemler:" : "💡 Recommended Precautions:"}
                 </span>
                 <ul className="list-disc list-inside space-y-0.5 text-[11px] opacity-90">
-                  {(isTr
-                    ? evaluation.remedialMitigationsTr
-                    : evaluation.remedialMitigationsEn
-                  ).map((m, idx) => (
-                    <li key={idx}>{m}</li>
-                  ))}
+                  {(isTr ? evaluation.remedialMitigationsTr : evaluation.remedialMitigationsEn).map(
+                    (m, idx) => (
+                      <li key={idx}>{m}</li>
+                    )
+                  )}
                 </ul>
               </div>
             )}
@@ -199,7 +198,9 @@ export function AiGovernanceModal({
         <div className="space-y-2">
           <label className="text-xs font-semibold text-[var(--color-text-primary)] flex items-center gap-1.5">
             <Layers className="h-3.5 w-3.5 text-blue-400" />
-            <span>{isTr ? "1. Projedeki Yapay Zeka Kullanım Düzeyi" : "1. AI Usage Intensity"}</span>
+            <span>
+              {isTr ? "1. Projedeki Yapay Zeka Kullanım Düzeyi" : "1. AI Usage Intensity"}
+            </span>
             <span className="text-[10px] text-blue-400/80 font-normal">
               ({isTr ? "Ağırlık: 35p" : "Weight: 35pts"})
             </span>
@@ -256,7 +257,11 @@ export function AiGovernanceModal({
         <div className="space-y-2">
           <label className="text-xs font-semibold text-[var(--color-text-primary)] flex items-center gap-1.5">
             <Cpu className="h-3.5 w-3.5 text-blue-400" />
-            <span>{isTr ? "2. Kullanılan Yapay Zeka Araçları (EU AI Act m. 50 Beyanı)" : "2. Declared AI Tools (EU AI Act Disclosure)"}</span>
+            <span>
+              {isTr
+                ? "2. Kullanılan Yapay Zeka Araçları (EU AI Act m. 50 Beyanı)"
+                : "2. Declared AI Tools (EU AI Act Disclosure)"}
+            </span>
           </label>
           <div className="flex flex-wrap gap-2">
             {[
@@ -293,7 +298,11 @@ export function AiGovernanceModal({
         <div className="space-y-2">
           <label className="text-xs font-semibold text-[var(--color-text-primary)] flex items-center gap-1.5">
             <Lock className="h-3.5 w-3.5 text-blue-400" />
-            <span>{isTr ? "3. Müşteri Veri Gizliliği ve Sıfır Saklama (Zero Data Retention)" : "3. Data Privacy & Zero Retention"}</span>
+            <span>
+              {isTr
+                ? "3. Müşteri Veri Gizliliği ve Sıfır Saklama (Zero Data Retention)"
+                : "3. Data Privacy & Zero Retention"}
+            </span>
             <span className="text-[10px] text-blue-400/80 font-normal">
               ({isTr ? "Ağırlık: 25p" : "Weight: 25pts"})
             </span>
@@ -350,7 +359,11 @@ export function AiGovernanceModal({
         <div className="space-y-2">
           <label className="text-xs font-semibold text-[var(--color-text-primary)] flex items-center gap-1.5">
             <FileCheck2 className="h-3.5 w-3.5 text-blue-400" />
-            <span>{isTr ? "4. Yasal Taahhütler ve Hukuki Güvenceler (FSEK / TBK)" : "4. Legal Warranties & Safeguards"}</span>
+            <span>
+              {isTr
+                ? "4. Yasal Taahhütler ve Hukuki Güvenceler (FSEK / TBK)"
+                : "4. Legal Warranties & Safeguards"}
+            </span>
           </label>
           <div className="space-y-2">
             {[
@@ -360,8 +373,10 @@ export function AiGovernanceModal({
                 onChange: setHumanInTheLoopAffirmed,
                 labelTr: "FSEK m. 52 İnsani Hususiyet (Human-in-the-Loop) Taahhüdü",
                 labelEn: "FSEK Art. 52 Human-in-the-Loop Authorship Warranty",
-                descTr: "Yüklenici sistem mimarisini ve kodları insan aklıyla denetlediğini, FSEK m. 1/B 'hususiyet' unsurunun tam olduğunu teyit eder. (Eksikse +20p ceza)",
-                descEn: "Affirms human engineering oversight ensuring valid copyright assignment under IP law.",
+                descTr:
+                  "Yüklenici sistem mimarisini ve kodları insan aklıyla denetlediğini, FSEK m. 1/B 'hususiyet' unsurunun tam olduğunu teyit eder. (Eksikse +20p ceza)",
+                descEn:
+                  "Affirms human engineering oversight ensuring valid copyright assignment under IP law.",
               },
               {
                 id: "copyleft",
@@ -369,8 +384,10 @@ export function AiGovernanceModal({
                 onChange: setCopyleftFreeWarranted,
                 labelTr: "Açık Kaynak ve Copyleft (GPL/AGPL) Lisans Temizliği Garantisi",
                 labelEn: "Viral Copyleft (GPL/AGPL) License Cleanliness Warranty",
-                descTr: "AI çıktılarının müşterinin ticarî kapalı kaynak yazılımına GPL/AGPL virüsü bulaştırmadığı kesin garanti edilir. (Eksikse +15p ceza)",
-                descEn: "Warrants that AI-suggested snippets carry no viral copyleft open-source obligations.",
+                descTr:
+                  "AI çıktılarının müşterinin ticarî kapalı kaynak yazılımına GPL/AGPL virüsü bulaştırmadığı kesin garanti edilir. (Eksikse +15p ceza)",
+                descEn:
+                  "Warrants that AI-suggested snippets carry no viral copyleft open-source obligations.",
               },
               {
                 id: "zeroRetention",
@@ -378,8 +395,10 @@ export function AiGovernanceModal({
                 onChange: setZeroDataRetentionWarranted,
                 labelTr: "Müşteri Kodlarının AI Eğitimine Aktarılmadığı Taahhüdü",
                 labelEn: "Zero Data Retention / Non-Training Guarantee",
-                descTr: "Müşterinin ticari sırları, şemaları ve kodları genel yapay zeka eğitim havuzlarına girilmeyecektir.",
-                descEn: "Client proprietary code and database schemas will never be fed into public model training.",
+                descTr:
+                  "Müşterinin ticari sırları, şemaları ve kodları genel yapay zeka eğitim havuzlarına girilmeyecektir.",
+                descEn:
+                  "Client proprietary code and database schemas will never be fed into public model training.",
               },
               {
                 id: "defectLiability",
@@ -387,8 +406,10 @@ export function AiGovernanceModal({
                 onChange: setStrictDefectLiabilityAccepted,
                 labelTr: "TBK m. 474 Halüsinasyon & Güvenlik Açığı Sorumluluğu",
                 labelEn: "TBK Art. 474 AI Hallucination & Defect Liability",
-                descTr: "Yapay zeka halüsinasyonları ve güvenlik açıkları doğrudan yüklenicinin ayıbı sayılır ve bila-ücret giderilir. (Eksikse +10p ceza)",
-                descEn: "AI hallucinations and security bugs constitute contractor defects under statutory warranty.",
+                descTr:
+                  "Yapay zeka halüsinasyonları ve güvenlik açıkları doğrudan yüklenicinin ayıbı sayılır ve bila-ücret giderilir. (Eksikse +10p ceza)",
+                descEn:
+                  "AI hallucinations and security bugs constitute contractor defects under statutory warranty.",
               },
               {
                 id: "codeReview",
@@ -396,7 +417,8 @@ export function AiGovernanceModal({
                 onChange: setCodeReviewToolUsed,
                 labelTr: "Otomatik Güvenlik ve Lisans Taraması (SonarQube / Snyk / Trivy)",
                 labelEn: "Automated Security & License Audit Tooling",
-                descTr: "Kod tabanında otomatik statik analiz ve lisans tarama araçları kullanılmaktadır. (-5p indirim)",
+                descTr:
+                  "Kod tabanında otomatik statik analiz ve lisans tarama araçları kullanılmaktadır. (-5p indirim)",
                 descEn: "Static application security and license scanning tools deployed.",
               },
             ].map((item) => (

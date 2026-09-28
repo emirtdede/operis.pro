@@ -46,7 +46,11 @@ export function getDeterministicUuid(key: string): string {
   return `${hash.slice(0, 8)}-${hash.slice(8, 12)}-4${hash.slice(13, 16)}-a${hash.slice(17, 20)}-${hash.slice(20, 32)}`;
 }
 
-function getFallbackCategories(locale: Locale, userId?: string, countMap?: Map<string, number>): CategoryDto[] {
+function getFallbackCategories(
+  locale: Locale,
+  userId?: string,
+  countMap?: Map<string, number>
+): CategoryDto[] {
   const lang = locale === "tr" ? "tr" : "en";
   const userFollows = userId ? inMemoryFollows.get(userId) : undefined;
 
@@ -70,7 +74,11 @@ function getFallbackCategories(locale: Locale, userId?: string, countMap?: Map<s
   });
 }
 
-function getFallbackSectors(locale: Locale, userId?: string, countMap?: Map<string, number>): SectorDto[] {
+function getFallbackSectors(
+  locale: Locale,
+  userId?: string,
+  countMap?: Map<string, number>
+): SectorDto[] {
   const lang = locale === "tr" ? "tr" : "en";
   const allCategories = getFallbackCategories(locale, userId, countMap);
   const userFollows = userId ? inMemoryFollows.get(userId) : undefined;
@@ -151,9 +159,7 @@ export class CategoryService {
    */
   static async getCategoryBySlug(slug: string, locale: Locale = "tr"): Promise<CategoryDto | null> {
     const lang = locale === "tr" ? "tr" : "en";
-    const found = SEED_CATEGORIES.find(
-      (c) => c.key.toLowerCase() === slug.toLowerCase()
-    );
+    const found = SEED_CATEGORIES.find((c) => c.key.toLowerCase() === slug.toLowerCase());
     if (!found) return null;
     const trans = found.translations[lang] || found.translations.tr;
     const catId = getDeterministicUuid(found.key);
@@ -184,7 +190,10 @@ export class CategoryService {
         const trans = sec.translations[lang] || sec.translations.tr;
         const secId = getDeterministicUuid(sec.key);
         const subCategories = categories.filter((cat) => cat.sectorKey === sec.key);
-        const sectorListingCount = subCategories.reduce((acc, cat) => acc + (cat.listingCount || 0), 0);
+        const sectorListingCount = subCategories.reduce(
+          (acc, cat) => acc + (cat.listingCount || 0),
+          0
+        );
 
         return {
           id: secId,
@@ -396,13 +405,17 @@ export class CategoryService {
     categoryId: string,
     preferences: { emailAlerts?: boolean; minBudget?: number | null }
   ): Promise<{ success: boolean; emailAlerts: boolean; minBudget: number | null }> {
-    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(categoryId);
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      categoryId
+    );
     try {
       const db = getDb();
       const categoryRows = await db
         .select({ id: schema.categories.id })
         .from(schema.categories)
-        .where(isUuid ? eq(schema.categories.id, categoryId) : eq(schema.categories.key, categoryId))
+        .where(
+          isUuid ? eq(schema.categories.id, categoryId) : eq(schema.categories.key, categoryId)
+        )
         .limit(1);
 
       const targetCategory = categoryRows[0];
@@ -456,8 +469,14 @@ export class CategoryService {
         const existingRow = existing[0];
         return {
           success: true,
-          emailAlerts: preferences.emailAlerts !== undefined ? preferences.emailAlerts : (existingRow?.emailAlerts ?? true),
-          minBudget: preferences.minBudget !== undefined ? preferences.minBudget : (existingRow?.minBudget ?? null),
+          emailAlerts:
+            preferences.emailAlerts !== undefined
+              ? preferences.emailAlerts
+              : (existingRow?.emailAlerts ?? true),
+          minBudget:
+            preferences.minBudget !== undefined
+              ? preferences.minBudget
+              : (existingRow?.minBudget ?? null),
         };
       }
     } catch (err) {
@@ -472,7 +491,8 @@ export class CategoryService {
       const catUuid = isUuid ? categoryId : getDeterministicUuid(categoryId);
       const curr = userPrefs.get(catUuid) || { emailAlerts: true, minBudget: null };
       const updated: InMemoAlertPrefs = {
-        emailAlerts: preferences.emailAlerts !== undefined ? preferences.emailAlerts : curr.emailAlerts,
+        emailAlerts:
+          preferences.emailAlerts !== undefined ? preferences.emailAlerts : curr.emailAlerts,
         minBudget: preferences.minBudget !== undefined ? preferences.minBudget : curr.minBudget,
       };
       userPrefs.set(catUuid, updated);

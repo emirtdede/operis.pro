@@ -9,7 +9,8 @@ import {
   normalizeCompanyTitle,
 } from "@/src/modules/companies/vkn-validator";
 
-export type CompanyVerificationStatus = "VERIFIED" | "PENDING_REVIEW" | "FORMAT_VERIFIED" | "REJECTED";
+export type CompanyVerificationStatus =
+  "VERIFIED" | "PENDING_REVIEW" | "FORMAT_VERIFIED" | "REJECTED";
 export type CompanyVerificationTier = "FORMAT_ONLY" | "CORPORATE_AUTHORIZED";
 
 export interface VerifyCompanyInput {
@@ -127,13 +128,13 @@ export class CompanyVerificationService {
         messageTr: isCompanyVerified
           ? "Kurumsal şirket doğrulaması onaylandı."
           : status === "PENDING_REVIEW"
-          ? "Kurumsal yetki belgeleriniz incelemeye alındı."
-          : "Vergi numarası biçimi doğrulandı. Kurumsal rozet için yetki belgesi yükleyiniz.",
+            ? "Kurumsal yetki belgeleriniz incelemeye alındı."
+            : "Vergi numarası biçimi doğrulandı. Kurumsal rozet için yetki belgesi yükleyiniz.",
         messageEn: isCompanyVerified
           ? "Corporate company verification approved."
           : status === "PENDING_REVIEW"
-          ? "Corporate authority proof submitted for review."
-          : "Tax ID format verified. Please submit authority proof for corporate badge.",
+            ? "Corporate authority proof submitted for review."
+            : "Tax ID format verified. Please submit authority proof for corporate badge.",
       };
     }
 
@@ -226,13 +227,13 @@ export class CompanyVerificationService {
       messageTr: isCompanyVerified
         ? "Kurumsal şirket doğrulaması başarıyla tamamlandı."
         : status === "PENDING_REVIEW"
-        ? "Kurumsal yetki belgeleriniz alındı. İnceleme sonrası rozetiniz aktif edilecektir."
-        : "Vergi Kimlik Numarası biçimi doğrulandı. Rozet için kurumsal yetki belgesi yükleyiniz.",
+          ? "Kurumsal yetki belgeleriniz alındı. İnceleme sonrası rozetiniz aktif edilecektir."
+          : "Vergi Kimlik Numarası biçimi doğrulandı. Rozet için kurumsal yetki belgesi yükleyiniz.",
       messageEn: isCompanyVerified
         ? "Corporate company verification approved."
         : status === "PENDING_REVIEW"
-        ? "Corporate authority proof submitted. Your badge will be activated upon review."
-        : "Tax ID format verified. Please submit corporate authority proof for verified badge.",
+          ? "Corporate authority proof submitted. Your badge will be activated upon review."
+          : "Tax ID format verified. Please submit corporate authority proof for verified badge.",
     };
   }
 
@@ -261,7 +262,9 @@ export class CompanyVerificationService {
       .limit(1);
 
     if (!admin || !["ADMIN", "SECURITY_ADMIN"].includes(admin.role)) {
-      throw new Error("Yetkisiz işlem: Yalnızca platform yöneticileri şirket doğrulamasını onaylayabilir.");
+      throw new Error(
+        "Yetkisiz işlem: Yalnızca platform yöneticileri şirket doğrulamasını onaylayabilir."
+      );
     }
 
     await db
@@ -292,7 +295,12 @@ export class CompanyVerificationService {
     adminUserId: string,
     targetUserId: string,
     reason?: string
-  ): Promise<{ success: boolean; targetUserId: string; status: CompanyVerificationStatus; reason?: string }> {
+  ): Promise<{
+    success: boolean;
+    targetUserId: string;
+    status: CompanyVerificationStatus;
+    reason?: string;
+  }> {
     const now = new Date();
 
     if (process.env.VITEST) {
@@ -311,7 +319,9 @@ export class CompanyVerificationService {
       .limit(1);
 
     if (!admin || !["ADMIN", "SECURITY_ADMIN"].includes(admin.role)) {
-      throw new Error("Yetkisiz işlem: Yalnızca platform yöneticileri şirket doğrulamasını reddedebilir.");
+      throw new Error(
+        "Yetkisiz işlem: Yalnızca platform yöneticileri şirket doğrulamasını reddedebilir."
+      );
     }
 
     await db

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   calculateFreelanceTax,
   generateContractTaxMarkdownTable,
@@ -34,7 +35,8 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json().catch(() => ({}));
-    const rawAmount = typeof body?.amount === "number" ? body.amount : parseFloat(String(body?.amount || 0));
+    const rawAmount =
+      typeof body?.amount === "number" ? body.amount : parseFloat(String(body?.amount || 0));
 
     if (isNaN(rawAmount) || rawAmount < 0) {
       return NextResponse.json(
@@ -93,7 +95,13 @@ export async function POST(req: Request) {
       htmlTable,
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Calculation failed";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      error,
+      {
+        en: "Tax calculation failed",
+        tr: "Vergi hesaplama işlemi başarısız oldu",
+      },
+      { isEn: isEnHeader, logPrefix: "[Tax Calculate POST Error]", status: 500 }
+    );
   }
 }

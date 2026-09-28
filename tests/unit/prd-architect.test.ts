@@ -1,8 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import {
-  PrdArchitectService,
-  type PrdArchitectInput,
-} from "@/src/modules/ai/prd-architect";
+import { PrdArchitectService, type PrdArchitectInput } from "@/src/modules/ai/prd-architect";
 import { POST } from "@/src/app/api/ai/prd-architect/route";
 
 vi.mock("@/src/modules/auth/session", () => ({
@@ -181,7 +178,8 @@ describe("Operis AI Project Scope & PRD Architect Engine", () => {
     it("should synthesize a complete GitHub-flavored Markdown PRD with all standard sections", () => {
       const input: PrdArchitectInput = {
         title: "Bana Uber Gibi Taksi Çağırma Uygulaması Lazım",
-        summary: "Müşteri ve şoför mobil uygulaması, harita üzerinden canlı takip ve kredi kartı ile otomatik ödeme.",
+        summary:
+          "Müşteri ve şoför mobil uygulaması, harita üzerinden canlı takip ve kredi kartı ile otomatik ödeme.",
         locale: "tr",
       };
 

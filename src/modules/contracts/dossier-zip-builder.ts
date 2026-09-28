@@ -46,7 +46,11 @@ export class DossierZipBuilder {
    * Adds a file or document to the archive.
    * Path should be forward-slash delimited (e.g. "folder/subfolder/file.md").
    */
-  addFile(name: string, content: string | Buffer, date: Date = new Date("2026-09-19T12:00:00Z")): this {
+  addFile(
+    name: string,
+    content: string | Buffer,
+    date: Date = new Date("2026-09-19T12:00:00Z")
+  ): this {
     // Normalize path to forward slashes and strip leading slashes
     const normalizedName = name.replace(/\\/g, "/").replace(/^\/+/, "");
     const nameBuf = Buffer.from(normalizedName, "utf8");

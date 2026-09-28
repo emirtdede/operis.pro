@@ -24,7 +24,7 @@ const routes = [
   { path: "/tr/marka", label: "TR: Marka Varlıkları" },
   { path: "/tr/sikayet-bildir", label: "TR: İhlal & Şikayet Bildirimi" },
   { path: "/tr/yetkisiz", label: "TR: Yetkisiz Erişim" },
-  
+
   // Turkish Legal Pages
   { path: "/tr/yasal", label: "TR: Yasal Merkez" },
   { path: "/tr/yasal/kullanim-kosullari", label: "TR: Kullanım Koşulları" },
@@ -108,10 +108,11 @@ async function checkRoute(route) {
       const text = await res.text();
       const durationMs = Date.now() - start;
       const status = res.status;
-      
-      const hasError = text.includes("Unhandled Runtime Error") || 
-                       text.includes("Internal Server Error") ||
-                       text.includes("Error: Minified React error");
+
+      const hasError =
+        text.includes("Unhandled Runtime Error") ||
+        text.includes("Internal Server Error") ||
+        text.includes("Error: Minified React error");
 
       return {
         path: route.path,
@@ -124,7 +125,7 @@ async function checkRoute(route) {
       };
     } catch (err) {
       if (attempt === 1) {
-        await new Promise(r => setTimeout(r, 1000));
+        await new Promise((r) => setTimeout(r, 1000));
         continue;
       }
       return {
@@ -150,21 +151,29 @@ async function main() {
     results.push(res);
     const pathStr = route.path.padEnd(42);
     if (res.ok) {
-      console.log(`[PASS] ${pathStr} Status: ${res.status} (${res.durationMs}ms, ${res.bodyLength} B)`);
+      console.log(
+        `[PASS] ${pathStr} Status: ${res.status} (${res.durationMs}ms, ${res.bodyLength} B)`
+      );
     } else {
-      console.log(`[FAIL] ${pathStr} Status: ${res.status} ${res.errorMsg || (res.hasError ? "Runtime Error In Body" : "Failed")}`);
+      console.log(
+        `[FAIL] ${pathStr} Status: ${res.status} ${res.errorMsg || (res.hasError ? "Runtime Error In Body" : "Failed")}`
+      );
     }
   }
 
   console.log("--------------------------------------------------------------------------------");
-  const passed = results.filter(r => r.ok).length;
-  const failed = results.filter(r => !r.ok).length;
-  console.log(`Audit Complete: ${passed} PASSED, ${failed} FAILED out of ${results.length} tested routes.`);
-  
+  const passed = results.filter((r) => r.ok).length;
+  const failed = results.filter((r) => !r.ok).length;
+  console.log(
+    `Audit Complete: ${passed} PASSED, ${failed} FAILED out of ${results.length} tested routes.`
+  );
+
   if (failed > 0) {
     console.log("\nFailed Routes Details:");
-    for (const f of results.filter(r => !r.ok)) {
-      console.log(`- ${f.path} (${f.label}): Status ${f.status}, Error: ${f.errorMsg || "Content error"}`);
+    for (const f of results.filter((r) => !r.ok)) {
+      console.log(
+        `- ${f.path} (${f.label}): Status ${f.status}, Error: ${f.errorMsg || "Content error"}`
+      );
     }
   }
 }

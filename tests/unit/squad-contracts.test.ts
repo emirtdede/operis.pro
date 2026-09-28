@@ -8,7 +8,8 @@ describe("Squad Agile Consortium Contract Generator (TBK m. 620 & FSEK m. 52)", 
     listingTitle: "Kurumsal B2B Mobil Uygulama & Mikroservis Mimarisi",
     category: "Mobil & Backend Çözümleri",
     matchedAt: "2026-09-19T10:00:00Z",
-    scopeSummary: "iOS/Android mobil istemci, Node.js GraphQL mikroservisleri ve Figma tasarım sistemi.",
+    scopeSummary:
+      "iOS/Android mobil istemci, Node.js GraphQL mikroservisleri ve Figma tasarım sistemi.",
     budgetLabel: "200.000 TL",
     timelineLabel: "8 Hafta",
     client: {
@@ -79,7 +80,9 @@ describe("Squad Agile Consortium Contract Generator (TBK m. 620 & FSEK m. 52)", 
     const result = ContractGeneratorService.generateContract(squadInput);
     const text = result.plainText;
 
-    expect(text).toContain("1.3. Konsorsiyum Hukuki Statüsü ve Lider Yüklenici Yetkisi (TBK m. 620 & TBK m. 162)");
+    expect(text).toContain(
+      "1.3. Konsorsiyum Hukuki Statüsü ve Lider Yüklenici Yetkisi (TBK m. 620 & TBK m. 162)"
+    );
     expect(text).toContain("Lider Yüklenici");
     expect(text).toContain("müştereken sorumludur");
   });
@@ -88,7 +91,9 @@ describe("Squad Agile Consortium Contract Generator (TBK m. 620 & FSEK m. 52)", 
     const result = ContractGeneratorService.generateContract(squadInput);
 
     // Markdown Table
-    expect(result.markdown).toContain("| Sıra | Adı Soyadı / Uzman | Rol / Uzmanlık Alanı | Hakediş Oranı (%) | Sorumluluk / İş Kapsamı |");
+    expect(result.markdown).toContain(
+      "| Sıra | Adı Soyadı / Uzman | Rol / Uzmanlık Alanı | Hakediş Oranı (%) | Sorumluluk / İş Kapsamı |"
+    );
     expect(result.markdown).toContain("Lider Yüklenici & Mobil Mimar");
     expect(result.markdown).toContain("%50");
     expect(result.markdown).toContain("%35");
@@ -123,7 +128,9 @@ describe("Squad Agile Consortium Contract Generator (TBK m. 620 & FSEK m. 52)", 
     expect(text).toContain("CONSORTIUM OF CO-CONTRACTORS (AGILE SQUAD - TBK Art. 620)");
     expect(text).toContain("LEAD CONTRACTOR");
     expect(text).toContain("1.3. Consortium Legal Framework & Lead Authority (TBK Art. 620 & 162)");
-    expect(result.markdown).toContain("| No | Specialist Name | Role Title | Revenue Share (%) | Scope Responsibilities |");
+    expect(result.markdown).toContain(
+      "| No | Specialist Name | Role Title | Revenue Share (%) | Scope Responsibilities |"
+    );
   });
 
   it("should not inject squad consortium clauses for solo contracts", () => {

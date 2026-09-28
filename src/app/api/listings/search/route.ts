@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { ListingService } from "@/src/modules/listings/service";
 import { getSession } from "@/src/modules/auth/session";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -52,10 +53,13 @@ export async function GET(req: Request) {
       })),
     });
   } catch (err: unknown) {
-    let message = isEn ? "Search failed" : "Arama başarısız oldu";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      err,
+      {
+        en: "Search failed",
+        tr: "Arama başarısız oldu",
+      },
+      { isEn, logPrefix: "[Listings Search GET Error]", status: 500 }
+    );
   }
 }

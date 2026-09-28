@@ -12,6 +12,7 @@ import {
   Check,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 import { EMOJI_REGEX } from "@/src/lib/security/content-moderator";
 import { ReviewDto } from "@/src/modules/reviews/types";
 
@@ -210,12 +211,15 @@ export function ReviewSubmissionModal({
   };
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 overflow-y-auto animate-in fade-in duration-200"
+    <ModalOverlay
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabel={isTr ? "İş Birliği Değerlendirmesi & Puanlama" : "Rate & Review Collaboration"}
     >
-      <div className="relative w-full max-w-xl my-8 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] shadow-2xl p-6 sm:p-8 space-y-6">
+      <div
+        className="relative w-full max-w-xl my-8 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] shadow-2xl p-6 sm:p-8 space-y-6"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-start justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-4">
           <div>
@@ -246,7 +250,9 @@ export function ReviewSubmissionModal({
         <div className="rounded-2xl border border-blue-500/20 bg-blue-500/5 p-4 text-xs space-y-1.5">
           <div className="flex items-center gap-2 font-semibold text-blue-400">
             <ShieldCheck className="h-4 w-4 shrink-0" />
-            <span>{isTr ? "Kör Eşzamanlı Açıklama Protokolü" : "Double-Blind Reveal Protocol"}</span>
+            <span>
+              {isTr ? "Kör Eşzamanlı Açıklama Protokolü" : "Double-Blind Reveal Protocol"}
+            </span>
           </div>
           <p className="text-[11px] text-[var(--color-text-secondary)] leading-relaxed">
             {isTr
@@ -354,9 +360,7 @@ export function ReviewSubmissionModal({
               <label className="font-semibold text-[var(--color-text-primary)]">
                 {isTr ? "Doğrulanmış İş Yorumu" : "Verified Review Comment"}
               </label>
-              <span
-                className={`font-mono text-[11px] ${getCharCountColorClass(charCount)}`}
-              >
+              <span className={`font-mono text-[11px] ${getCharCountColorClass(charCount)}`}>
                 {charCount} / 1000 {isTooShort && `(Min 20)`}
               </span>
             </div>
@@ -410,6 +414,6 @@ export function ReviewSubmissionModal({
           </div>
         </form>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

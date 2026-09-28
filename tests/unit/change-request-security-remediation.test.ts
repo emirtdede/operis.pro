@@ -51,9 +51,7 @@ describe("WP-15, WP-16, WP-17, WP-18: Change Request Security Remediation", () =
         email: "intruder@badactor.org",
       };
 
-      const { GET: getRoute } = await import(
-        "@/src/app/api/work/[id]/change-requests/route"
-      );
+      const { GET: getRoute } = await import("@/src/app/api/work/[id]/change-requests/route");
       const req = new Request(`http://localhost:3000/api/work/${engagementId}/change-requests`, {
         method: "GET",
       });
@@ -89,9 +87,7 @@ describe("WP-15, WP-16, WP-17, WP-18: Change Request Security Remediation", () =
         email: "freelancer@operis.dev",
       };
 
-      const { POST: postRoute } = await import(
-        "@/src/app/api/work/[id]/change-requests/route"
-      );
+      const { POST: postRoute } = await import("@/src/app/api/work/[id]/change-requests/route");
       const req = new Request(`http://localhost:3000/api/work/${engagementId}/change-requests`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -203,7 +199,8 @@ describe("WP-15, WP-16, WP-17, WP-18: Change Request Security Remediation", () =
         engagementId,
         requesterUserId: freelancerUserId,
         title: "CAS Koruma Testi - İptal",
-        description: "Onaylanmış bir talebin yüklenici tarafından sonradan iptal edilmesini önleme testi.",
+        description:
+          "Onaylanmış bir talebin yüklenici tarafından sonradan iptal edilmesini önleme testi.",
         reason: "CLIENT_REQUESTED",
         additionalBudget: 2000,
         currency: "TRY",

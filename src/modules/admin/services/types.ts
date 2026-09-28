@@ -111,11 +111,7 @@ export interface AdminAbuseItem {
 export interface AdminThreatItem {
   id: string;
   threatType:
-    | "BRUTE_FORCE"
-    | "RATE_LIMIT_DDOS"
-    | "INJECTION_PROBE"
-    | "UNAUTHORIZED_PATH"
-    | "TOKEN_FORGERY";
+    "BRUTE_FORCE" | "RATE_LIMIT_DDOS" | "INJECTION_PROBE" | "UNAUTHORIZED_PATH" | "TOKEN_FORGERY";
   severity: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
   sourceIp: string;
   targetEndpoint: string;

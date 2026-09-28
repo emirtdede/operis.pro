@@ -260,6 +260,20 @@
       "when": 1790400000000,
       "tag": "0036_enable_missing_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1790500000000,
+      "tag": "0037_search_trends_locale_normalized",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1790580000000,
+      "tag": "0038_counter_offer_lookup_index",
+      "breakpoints": true
     }
   ]
 }

@@ -93,7 +93,9 @@ export function useRealtimeNotifications({ locale, enabled = true }: RealtimeNot
       } else if (msg.type === "MARK_READ" && msg.notificationId) {
         const id = msg.notificationId;
         setNotifications((prev) =>
-          prev.map((n) => (n.id === id ? { ...n, readAt: n.readAt ?? new Date().toISOString() } : n))
+          prev.map((n) =>
+            n.id === id ? { ...n, readAt: n.readAt ?? new Date().toISOString() } : n
+          )
         );
         setUnreadCount((prev) => Math.max(prev - 1, 0));
       } else if (msg.type === "MARK_ALL_READ") {

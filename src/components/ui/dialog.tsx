@@ -4,6 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { lockScroll, unlockScroll } from "@/src/lib/dom/scroll-lock";
+import { useFocusTrap } from "@/src/lib/dom/focus-trap";
 
 export interface DialogProps {
   isOpen: boolean;
@@ -16,7 +18,6 @@ export interface DialogProps {
 
 export function Dialog({ isOpen, onClose, title, description, children, className }: DialogProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
-  const previousActiveElement = useRef<HTMLElement | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -25,26 +26,17 @@ export function Dialog({ isOpen, onClose, title, description, children, classNam
 
   useEffect(() => {
     if (!isOpen) return;
-
-    previousActiveElement.current = document.activeElement as HTMLElement;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    document.body.style.overflow = "hidden";
-
-    // Focus modal content
-    dialogRef.current?.focus();
-
+    lockScroll();
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "";
-      previousActiveElement.current?.focus();
+      unlockScroll();
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
+
+  useFocusTrap(dialogRef, {
+    isActive: isOpen && isMounted,
+    onEscape: onClose,
+    returnFocus: true,
+  });
 
   if (!isOpen) return null;
   if (!isMounted || typeof document === "undefined") return null;
@@ -130,7 +122,9 @@ export function Dialog({ isOpen, onClose, title, description, children, classNam
           </button>
         </div>
 
-        <div className="relative z-10 mt-1 flex-1 overflow-y-auto min-h-0 pr-1 overscroll-contain">{children}</div>
+        <div className="relative z-10 mt-1 flex-1 overflow-y-auto min-h-0 pr-1 overscroll-contain">
+          {children}
+        </div>
       </div>
     </div>,
     document.body

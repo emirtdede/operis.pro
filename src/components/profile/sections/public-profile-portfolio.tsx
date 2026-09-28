@@ -15,10 +15,7 @@ import { EmptyState } from "@/src/components/ui/empty-state";
 import { Button } from "@/src/components/ui/button";
 import type { PublicProfileDto } from "@/src/modules/profiles/service";
 import type { PersonaMode } from "@/src/modules/profiles/utils/persona";
-import {
-  getEmptyListingsDescription,
-  formatListingBudget,
-} from "./types";
+import { getEmptyListingsDescription, formatListingBudget } from "./types";
 
 export interface PublicProfilePortfolioProps {
   profile: PublicProfileDto;
@@ -80,7 +77,9 @@ export function PublicProfilePortfolio({
                         {personaMode === "employer" ? (
                           <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">
                             <span className="h-1.5 w-1.5 rounded-full bg-sky-400 animate-pulse" />
-                            {isTr ? "Proje İlanı • Freelancer Aranıyor" : "Hiring Brief • Seeking Talent"}
+                            {isTr
+                              ? "Proje İlanı • Freelancer Aranıyor"
+                              : "Hiring Brief • Seeking Talent"}
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">
@@ -205,7 +204,11 @@ export function PublicProfilePortfolio({
                       </span>
                     ) : (
                       <Link
-                        href={isTr ? `/tr/u/${work.counterparty.handle}` : `/en/u/${work.counterparty.handle}`}
+                        href={
+                          isTr
+                            ? `/tr/u/${work.counterparty.handle}`
+                            : `/en/u/${work.counterparty.handle}`
+                        }
                         className="font-semibold text-blue-400 hover:text-blue-300 transition-colors"
                       >
                         {work.counterparty.displayName} (@{work.counterparty.handle})

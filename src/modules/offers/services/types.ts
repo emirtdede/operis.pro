@@ -107,16 +107,20 @@ export interface NegotiationTimelineDto {
   canReject: boolean;
   canWithdraw: boolean;
   maxRoundsReached: boolean;
-  activeProposal: (CounterProposalDto & {
-    isByViewer: boolean;
-    isExpired: boolean;
-    timeRemainingMs: number;
-  }) | null;
-  history: Array<CounterProposalDto & {
-    isByViewer: boolean;
-    isExpired: boolean;
-    timeRemainingMs: number;
-  }>;
+  activeProposal:
+    | (CounterProposalDto & {
+        isByViewer: boolean;
+        isExpired: boolean;
+        timeRemainingMs: number;
+      })
+    | null;
+  history: Array<
+    CounterProposalDto & {
+      isByViewer: boolean;
+      isExpired: boolean;
+      timeRemainingMs: number;
+    }
+  >;
 }
 
 // In-memory runtime stores for session/testing (singleton instances)

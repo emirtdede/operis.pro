@@ -293,23 +293,16 @@ export async function runRotation(options?: RotatePiiKeysOptions) {
           eq(schema.userPrivateIdentity.userId, currentIdentity.userId),
           currentIdentity.legalFirstNameEnc !== null &&
           currentIdentity.legalFirstNameEnc !== undefined
-            ? eq(
-                schema.userPrivateIdentity.legalFirstNameEnc,
-                currentIdentity.legalFirstNameEnc
-              )
+            ? eq(schema.userPrivateIdentity.legalFirstNameEnc, currentIdentity.legalFirstNameEnc)
             : isNull(schema.userPrivateIdentity.legalFirstNameEnc),
           currentIdentity.legalLastNameEnc !== null &&
           currentIdentity.legalLastNameEnc !== undefined
-            ? eq(
-                schema.userPrivateIdentity.legalLastNameEnc,
-                currentIdentity.legalLastNameEnc
-              )
+            ? eq(schema.userPrivateIdentity.legalLastNameEnc, currentIdentity.legalLastNameEnc)
             : isNull(schema.userPrivateIdentity.legalLastNameEnc),
           currentIdentity.phoneE164Enc !== null && currentIdentity.phoneE164Enc !== undefined
             ? eq(schema.userPrivateIdentity.phoneE164Enc, currentIdentity.phoneE164Enc)
             : isNull(schema.userPrivateIdentity.phoneE164Enc),
-          currentIdentity.dateOfBirthEnc !== null &&
-          currentIdentity.dateOfBirthEnc !== undefined
+          currentIdentity.dateOfBirthEnc !== null && currentIdentity.dateOfBirthEnc !== undefined
             ? eq(schema.userPrivateIdentity.dateOfBirthEnc, currentIdentity.dateOfBirthEnc)
             : isNull(schema.userPrivateIdentity.dateOfBirthEnc),
         ];
@@ -496,7 +489,10 @@ export async function runRotation(options?: RotatePiiKeysOptions) {
                 const casSuccess = await attemptPartCas(part, compositeKey, 0);
 
                 if (!casSuccess) {
-                  cpManager.recordFailureAndHalt(compositeKey, "EXPORT_PART_CAS_CONFLICT_EXHAUSTED");
+                  cpManager.recordFailureAndHalt(
+                    compositeKey,
+                    "EXPORT_PART_CAS_CONFLICT_EXHAUSTED"
+                  );
                 }
 
                 nextCursor = { jobId: part.jobId, attemptNo: part.attemptNo, partNo: part.partNo };

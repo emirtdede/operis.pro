@@ -112,7 +112,9 @@ export function NotificationsSettingsTab({
               onChange={(e) => setEmailDigest(e.target.value)}
               className="rounded-xl bg-surface border border-[var(--color-border-subtle)] px-3 py-1.5 text-xs text-[var(--color-text-primary)] outline-none focus:border-blue-500 cursor-pointer"
             >
-              <option value="realtime">{isTr ? "Anında (Gerçek Zamanlı)" : "Instant (Realtime)"}</option>
+              <option value="realtime">
+                {isTr ? "Anında (Gerçek Zamanlı)" : "Instant (Realtime)"}
+              </option>
               <option value="daily">{isTr ? "Günlük Özet" : "Daily Digest"}</option>
               <option value="weekly">{isTr ? "Haftalık Özet" : "Weekly Digest"}</option>
               <option value="never">{isTr ? "E-posta Gönderme" : "Never"}</option>
@@ -200,13 +202,17 @@ export function NotificationsSettingsTab({
       <div className="pt-4 border-t border-[var(--color-border-subtle)] space-y-3">
         <label className="text-xs font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
           <TrendingUp className="h-4 w-4 text-purple-400" />
-          <span>{isTr ? "Piyasa Bülteni ve Analizler" : "Market Insights & Commercial Notice"}</span>
+          <span>
+            {isTr ? "Piyasa Bülteni ve Analizler" : "Market Insights & Commercial Notice"}
+          </span>
         </label>
 
         <div className="flex items-center justify-between p-3 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/30">
           <div>
             <span className="text-xs font-bold text-[var(--color-text-primary)] block">
-              {isTr ? "Haftalık Yazılım Piyasası & Fiyat Endeksi Bülteni" : "Weekly Software Index & Rates Digest"}
+              {isTr
+                ? "Haftalık Yazılım Piyasası & Fiyat Endeksi Bülteni"
+                : "Weekly Software Index & Rates Digest"}
             </span>
             <p className="text-[11px] text-[var(--color-text-tertiary)]">
               {isTr

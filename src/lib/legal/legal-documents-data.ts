@@ -603,9 +603,7 @@ export const LEGAL_DOCUMENTS: Record<string, Record<"tr" | "en", LegalDocumentMo
       sections: [
         {
           title: "1. No Platform Adjudication",
-          paragraphs: [
-            "Operis holds zero escrow and acts as neither court nor arbiter.",
-          ],
+          paragraphs: ["Operis holds zero escrow and acts as neither court nor arbiter."],
         },
       ],
     },

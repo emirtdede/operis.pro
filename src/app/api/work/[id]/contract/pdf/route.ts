@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { GET as contractGet } from "../route";
+import { handleApiError } from "@/src/lib/api/error-response";
 
 /**
  * Dedicated direct Vector PDF download endpoint for contracts.
@@ -8,6 +8,8 @@ import { GET as contractGet } from "../route";
  * - prevalence: "tr" | "en" (default: "tr")
  */
 export async function GET(req: Request, context: { params: Promise<{ id: string }> }) {
+  const isEn = req.headers.get("x-locale") === "en";
+
   try {
     const url = new URL(req.url);
     // Default to bilingual vector PDF if not specified
@@ -23,10 +25,13 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
 
     return await contractGet(forwardReq, context);
   } catch (error: unknown) {
-    console.error("[CONTRACT_PDF_ENDPOINT_ERROR]", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to generate contract PDF" },
-      { status: 500 }
+    return handleApiError(
+      error,
+      {
+        en: "Failed to generate contract PDF",
+        tr: "Sözleşme PDF belgesi oluşturulamadı",
+      },
+      { isEn, logPrefix: "[Contract PDF Error]", status: 500 }
     );
   }
 }

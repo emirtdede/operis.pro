@@ -90,7 +90,8 @@ export function validateAndSanitizeRasterSignature(dataUrl: string | undefined |
       sanitizedDataUrl: "",
       sha256Hash: "",
       mimeType: "",
-      error: "Invalid signature format: Only raster images (PNG, JPEG, WebP) in base64 format are allowed.",
+      error:
+        "Invalid signature format: Only raster images (PNG, JPEG, WebP) in base64 format are allowed.",
     };
   }
 
@@ -135,26 +136,14 @@ export function validateAndSanitizeRasterSignature(dataUrl: string | undefined |
   let isMagicValid = false;
   if (mimeType === "image/png") {
     isMagicValid =
-      buffer[0] === 0x89 &&
-      buffer[1] === 0x50 &&
-      buffer[2] === 0x4e &&
-      buffer[3] === 0x47;
+      buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4e && buffer[3] === 0x47;
   } else if (mimeType === "image/jpeg") {
-    isMagicValid =
-      buffer[0] === 0xff &&
-      buffer[1] === 0xd8 &&
-      buffer[2] === 0xff;
+    isMagicValid = buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
   } else if (mimeType === "image/webp") {
     const isRiff =
-      buffer[0] === 0x52 &&
-      buffer[1] === 0x49 &&
-      buffer[2] === 0x46 &&
-      buffer[3] === 0x46; // "RIFF"
+      buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46; // "RIFF"
     const isWebp =
-      buffer[8] === 0x57 &&
-      buffer[9] === 0x45 &&
-      buffer[10] === 0x42 &&
-      buffer[11] === 0x50; // "WEBP"
+      buffer[8] === 0x57 && buffer[9] === 0x45 && buffer[10] === 0x42 && buffer[11] === 0x50; // "WEBP"
     isMagicValid = isRiff && isWebp;
   }
 
@@ -590,7 +579,9 @@ ${squadMembers.map((m, i) => `| ${i + 1} | **${m.displayName}** ${m.isLead ? "*(
       : null;
 
     const clientSigAssetHash = clientSigAsset?.isValid ? clientSigAsset.sha256Hash : null;
-    const contractorSigAssetHash = contractorSigAsset?.isValid ? contractorSigAsset.sha256Hash : null;
+    const contractorSigAssetHash = contractorSigAsset?.isValid
+      ? contractorSigAsset.sha256Hash
+      : null;
 
     // Signatures Markdown block
     const clientSigMd = input.clientSignature
@@ -849,10 +840,7 @@ ${annexMarkdownEn}${includeDpa ? dpaMarkdownEn : ""}${includeSafeHarbor ? safeHa
     // Compute canonical SHA-256 fingerprint of the markdown contract text
     const sha256Fingerprint = this.calculateSha256(markdown);
 
-    const renderSignatureBlock = (
-      sig: typeof input.clientSignature,
-      altText: string
-    ) => {
+    const renderSignatureBlock = (sig: typeof input.clientSignature, altText: string) => {
       if (sig?.signatureDataUrl) {
         const validation = validateAndSanitizeRasterSignature(sig.signatureDataUrl);
         if (validation.isValid) {
@@ -1035,13 +1023,12 @@ ${annexMarkdownEn}${includeDpa ? dpaMarkdownEn : ""}${includeSafeHarbor ? safeHa
       </thead>
       <tbody>
         ${squadMembers
-          .map(
-            (m, i) => {
-              let leadBadge = "";
-              if (m.isLead) {
-                leadBadge = isTr ? "<em>(Lider Yüklenici)</em>" : "<em>(Lead)</em>";
-              }
-              return `
+          .map((m, i) => {
+            let leadBadge = "";
+            if (m.isLead) {
+              leadBadge = isTr ? "<em>(Lider Yüklenici)</em>" : "<em>(Lead)</em>";
+            }
+            return `
         <tr style="border-bottom: 1px solid #e2e8f0; background-color: #ffffff;">
           <td style="padding: 6px 10px; color: #64748b;">${i + 1}</td>
           <td style="padding: 6px 10px; font-weight: 600; color: #0f172a;">${m.displayName} ${leadBadge}</td>
@@ -1049,8 +1036,7 @@ ${annexMarkdownEn}${includeDpa ? dpaMarkdownEn : ""}${includeSafeHarbor ? safeHa
           <td style="padding: 6px 10px; text-align: center; font-weight: 700; font-family: monospace; color: #0284c7;">%${m.revenueSharePercentage}</td>
           <td style="padding: 6px 10px; color: #64748b;">${m.scopeSummary || (isTr ? "Proje içi geliştirme ve teslimat" : "Project development")}</td>
         </tr>`;
-            }
-          )
+          })
           .join("")}
       </tbody>
     </table>

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { OfferService } from "@/src/modules/offers/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -43,23 +44,34 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     return NextResponse.json({ success: true, offer }, { status: 200 });
   } catch (err: unknown) {
-    let message = isEn ? "Failed to reject offer" : "Teklif reddedilemedi";
-    if (err instanceof Error) {
-      const raw = err.message;
-      if (raw.includes("Offer not found")) {
-        message = isEn ? "Offer not found." : "Teklif bulunamadı.";
-      } else if (raw.includes("Only the listing creator can reject")) {
-        message = isEn
-          ? "Unauthorized: Only the listing creator can reject this offer."
-          : "Yetkisiz işlem: Sadece ilan sahibi bu teklifi reddedebilir.";
-      } else if (raw.includes("not in PENDING status")) {
-        message = isEn
-          ? "This offer is not in pending status."
-          : "Bu teklif bekleme durumunda değil.";
-      } else {
-        message = raw;
+    return handleApiError(
+      err,
+      {
+        en: "Failed to reject offer",
+        tr: "Teklif reddedilemedi",
+      },
+      {
+        isEn,
+        logPrefix: "[Offer Reject POST Error]",
+        status: 500,
+        allowedMessages: {
+          "Offer not found": {
+            en: "Offer not found.",
+            tr: "Teklif bulunamadı.",
+            status: 404,
+          },
+          "Only the listing creator can reject": {
+            en: "Unauthorized: Only the listing creator can reject this offer.",
+            tr: "Yetkisiz işlem: Sadece ilan sahibi bu teklifi reddedebilir.",
+            status: 403,
+          },
+          "not in PENDING status": {
+            en: "This offer is not in pending status.",
+            tr: "Bu teklif bekleme durumunda değil.",
+            status: 400,
+          },
+        },
       }
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+    );
   }
 }

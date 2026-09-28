@@ -18,7 +18,9 @@ export function resolveUserPersonaMode(params: PersonaResolverParams): PersonaMo
   const hasEmployerRole = roles.includes("employer") || roles.includes("founder");
 
   const isAvailable = Boolean(params.isAvailableForHire);
-  const isHiring = Boolean(params.isActivelyHiring || (params.activeListingsCount && params.activeListingsCount > 0));
+  const isHiring = Boolean(
+    params.isActivelyHiring || (params.activeListingsCount && params.activeListingsCount > 0)
+  );
 
   // 1. Explicit Dual Intent (Both Available for hire AND Actively Hiring)
   if ((isAvailable && isHiring) || (hasFreelanceRole && hasEmployerRole)) {
@@ -26,7 +28,11 @@ export function resolveUserPersonaMode(params: PersonaResolverParams): PersonaMo
   }
 
   // 2. Explicit Employer / Client Intent
-  if (isHiring || (hasEmployerRole && !hasFreelanceRole) || (params.isCompanyVerified && !isAvailable)) {
+  if (
+    isHiring ||
+    (hasEmployerRole && !hasFreelanceRole) ||
+    (params.isCompanyVerified && !isAvailable)
+  ) {
     return "employer";
   }
 
@@ -51,7 +57,9 @@ export function getPersonaBadgeConfig(
     return {
       mode: "employer",
       label: isTr ? "Doğrulanmış Şirket" : "Verified Company",
-      sublabel: isTr ? "GİB Resmi Kayıtlı Kurumsal İşveren" : "Officially Verified Corporate Entity",
+      sublabel: isTr
+        ? "GİB Resmi Kayıtlı Kurumsal İşveren"
+        : "Officially Verified Corporate Entity",
       colorClasses: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
       badgeText: isTr ? "Kurumsal İşveren" : "Corporate Client",
     };

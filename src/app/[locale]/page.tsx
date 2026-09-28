@@ -337,10 +337,16 @@ export default async function LandingPage({
           {/* Living Reactive Dual-Role CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-1">
             <Link href={isTr ? "/tr/akis" : "/en/feed"} className="w-full sm:w-auto">
-              <Button variant="shimmer" size="lg" className="w-full sm:w-auto px-8 py-4 text-base gap-2">
+              <Button
+                variant="shimmer"
+                size="lg"
+                className="w-full sm:w-auto px-8 py-4 text-base gap-2"
+              >
                 <Sparkles className="h-4 w-4" aria-hidden="true" />
                 <span>
-                  {isTr ? "Yetenek & Freelancer: İlanları Keşfet" : "Talents & Freelancers: Explore Listings"}
+                  {isTr
+                    ? "Yetenek & Freelancer: İlanları Keşfet"
+                    : "Talents & Freelancers: Explore Listings"}
                 </span>
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>
@@ -356,7 +362,9 @@ export default async function LandingPage({
               >
                 <Building2 className="h-4 w-4" aria-hidden="true" />
                 <span>
-                  {isTr ? "İşveren & Şirket: 2 Dakikada İlan Ver" : "Clients & Companies: Post a Free Listing"}
+                  {isTr
+                    ? "İşveren & Şirket: 2 Dakikada İlan Ver"
+                    : "Clients & Companies: Post a Free Listing"}
                 </span>
               </Button>
             </Link>

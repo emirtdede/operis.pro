@@ -13,9 +13,7 @@ export function ActiveSessionsSection({ locale }: ActiveSessionsSectionProps) {
     <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-6 sm:p-7 space-y-4 shadow-sm">
       <h2 className="text-base font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
         <Laptop className="h-4 w-4 text-emerald-400" aria-hidden="true" />
-        <span>
-          {isTr ? "Aktif Oturum ve Güvenlik Durumu" : "Active Session & Security Status"}
-        </span>
+        <span>{isTr ? "Aktif Oturum ve Güvenlik Durumu" : "Active Session & Security Status"}</span>
       </h2>
 
       <div className="p-4 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] flex items-center justify-between text-xs">

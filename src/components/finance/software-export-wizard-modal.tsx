@@ -14,6 +14,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "../ui/button";
+import { ModalOverlay } from "../ui/modal-overlay";
 import { TextInput } from "../ui/text-input";
 import type {
   SoftwareExportConfig,
@@ -101,7 +102,9 @@ export function SoftwareExportWizardModal({
   );
 
   // Active Tab
-  const [activeTab, setActiveTab] = useState<"checklist" | "invoice" | "bank" | "annex">("checklist");
+  const [activeTab, setActiveTab] = useState<"checklist" | "invoice" | "bank" | "annex">(
+    "checklist"
+  );
   const [copiedInvoice, setCopiedInvoice] = useState(false);
   const [copiedBank, setCopiedBank] = useState(false);
   const [copiedAnnex, setCopiedAnnex] = useState(false);
@@ -196,8 +199,19 @@ export function SoftwareExportWizardModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-3 sm:p-6 animate-in fade-in duration-200">
-      <div className="relative w-full max-w-4xl max-h-[92vh] flex flex-col rounded-3xl border border-cyan-500/30 bg-[#0c121e] text-[var(--color-text-primary)] shadow-2xl overflow-hidden">
+    <ModalOverlay
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabel={
+        isTr
+          ? "Yazılım İhracatı %100 Vergi İndirimi & KDV İstisnası Sihirbazı"
+          : "Software Export 100% Tax Deduction & Zero-VAT Wizard"
+      }
+    >
+      <div
+        className="relative w-full max-w-4xl max-h-[92vh] flex flex-col rounded-3xl border border-cyan-500/30 bg-[#0c121e] text-[var(--color-text-primary)] shadow-2xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-cyan-500/20 bg-gradient-to-r from-cyan-950/40 via-blue-950/20 to-transparent">
           <div className="flex items-center gap-3">
@@ -465,7 +479,9 @@ export function SoftwareExportWizardModal({
                   <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/25 space-y-2 text-xs text-rose-300">
                     <div className="font-bold flex items-center gap-1.5">
                       <AlertTriangle className="h-4 w-4" />
-                      <span>{isTr ? "Eksik Şartlar & Riskler:" : "Missing Requirements & Risks:"}</span>
+                      <span>
+                        {isTr ? "Eksik Şartlar & Riskler:" : "Missing Requirements & Risks:"}
+                      </span>
                     </div>
                     <ul className="list-disc list-inside space-y-1 opacity-90 text-[11px]">
                       {evaluation.missingRequirements.map((req, i) => (
@@ -478,7 +494,9 @@ export function SoftwareExportWizardModal({
                 <div className="p-4 rounded-2xl bg-cyan-950/20 border border-cyan-500/20 space-y-2 text-xs text-cyan-300">
                   <div className="font-bold flex items-center gap-1.5">
                     <ShieldCheck className="h-4 w-4" />
-                    <span>{isTr ? "Operis Yasal Güvence Notu:" : "Operis Statutory Protection:"}</span>
+                    <span>
+                      {isTr ? "Operis Yasal Güvence Notu:" : "Operis Statutory Protection:"}
+                    </span>
                   </div>
                   <p className="opacity-90 leading-relaxed text-[11px]">
                     {isTr
@@ -696,6 +714,6 @@ export function SoftwareExportWizardModal({
           </div>
         </div>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

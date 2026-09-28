@@ -9,12 +9,7 @@ describe("DPA Engine (6698 Sayılı KVKK m. 12 & GDPR Art. 28 Data Processing Ad
     enabled: true,
     accessLevel: "FULL_PRODUCTION_ACCESS",
     dataCategories: ["IDENTITY_CONTACT", "CUSTOMER_ACCOUNT_LOGS"],
-    securityMeasures: [
-      "TLS_ENCRYPTION",
-      "LOCAL_STORAGE_PROHIBITED",
-      "MFA_ACCESS",
-      "AUDIT_LOGGING",
-    ],
+    securityMeasures: ["TLS_ENCRYPTION", "LOCAL_STORAGE_PROHIBITED", "MFA_ACCESS", "AUDIT_LOGGING"],
     breachNotificationHours: 24,
     subProcessorAllowed: false,
     dataRetentionDaysAfterTermination: 0,
@@ -102,7 +97,9 @@ describe("DPA Engine (6698 Sayılı KVKK m. 12 & GDPR Art. 28 Data Processing Ad
       const annexTr = DpaEngine.generateAnnexMarkdown(standardConfig, "tr");
 
       // Statutory headings and laws
-      expect(annexTr).toContain("EK-2: 6698 SAYILI KVKK m. 12 VE GDPR m. 28 UYARINCA BİLİŞİM VERİ İŞLEME VE BİLGİ GÜVENLİĞİ PROTOKOLÜ (DPA)");
+      expect(annexTr).toContain(
+        "EK-2: 6698 SAYILI KVKK m. 12 VE GDPR m. 28 UYARINCA BİLİŞİM VERİ İŞLEME VE BİLGİ GÜVENLİĞİ PROTOKOLÜ (DPA)"
+      );
       expect(annexTr).toContain("6698 sayılı Kişisel Verilerin Korunması Kanunu");
       expect(annexTr).toContain("Kişisel Veri Güvenliği Rehberi");
 
@@ -130,7 +127,9 @@ describe("DPA Engine (6698 Sayılı KVKK m. 12 & GDPR Art. 28 Data Processing Ad
     it("generates comprehensive English ANNEX-2 with GDPR Art. 28 statutory clauses", () => {
       const annexEn = DpaEngine.generateAnnexMarkdown(standardConfig, "en");
 
-      expect(annexEn).toContain("ANNEX-2: STATUTORY DATA PROCESSING ADDENDUM (KVKK ART. 12 & GDPR ART. 28 COMPLIANT)");
+      expect(annexEn).toContain(
+        "ANNEX-2: STATUTORY DATA PROCESSING ADDENDUM (KVKK ART. 12 & GDPR ART. 28 COMPLIANT)"
+      );
       expect(annexEn).toContain("GDPR Art. 28");
       expect(annexEn).toContain("Data Controller");
       expect(annexEn).toContain("Data Processor");
@@ -141,7 +140,9 @@ describe("DPA Engine (6698 Sayılı KVKK m. 12 & GDPR Art. 28 Data Processing Ad
     it("generates responsive print-ready HTML for ANNEX-2", () => {
       const html = DpaEngine.generateAnnexHtml(standardConfig, "tr");
 
-      expect(html).toContain("EK-2: 6698 Sayılı KVKK m. 12 & GDPR m. 28 Bilişim Veri İşleme Protokolü (DPA)");
+      expect(html).toContain(
+        "EK-2: 6698 Sayılı KVKK m. 12 & GDPR m. 28 Bilişim Veri İşleme Protokolü (DPA)"
+      );
       expect(html).toContain("İhlal Bildirim Süresi: <strong>24 Saat</strong>");
       expect(html).toContain("Kimlik & İletişim");
       expect(html).toContain("TLS 1.3");
@@ -160,7 +161,9 @@ describe("DPA Engine (6698 Sayılı KVKK m. 12 & GDPR Art. 28 Data Processing Ad
         signedByContractor: true,
       });
 
-      expect(cert.markdown).toContain("6698 SAYILI KVKK UYARINCA KİŞİSEL VERİ SİLME VE İMHA TUTANAĞI");
+      expect(cert.markdown).toContain(
+        "6698 SAYILI KVKK UYARINCA KİŞİSEL VERİ SİLME VE İMHA TUTANAĞI"
+      );
       expect(cert.markdown).toContain("eng-dpa-test-1234");
       expect(cert.markdown).toContain("Ali Yılmaz");
       expect(cert.markdown).toContain("Acme Teknoloji A.Ş.");
@@ -187,8 +190,12 @@ describe("DPA Engine (6698 Sayılı KVKK m. 12 & GDPR Art. 28 Data Processing Ad
       expect(contractWithDpa.plainText).toContain("EK-2 Veri İşleme ve Bilgi Güvenliği Protokolü");
 
       // Appended EK-2
-      expect(contractWithDpa.markdown).toContain("EK-2: 6698 SAYILI KVKK m. 12 VE GDPR m. 28 UYARINCA BİLİŞİM VERİ İŞLEME VE BİLGİ GÜVENLİĞİ PROTOKOLÜ (DPA)");
-      expect(contractWithDpa.htmlContent).toContain("EK-2: 6698 Sayılı KVKK m. 12 & GDPR m. 28 Bilişim Veri İşleme Protokolü (DPA)");
+      expect(contractWithDpa.markdown).toContain(
+        "EK-2: 6698 SAYILI KVKK m. 12 VE GDPR m. 28 UYARINCA BİLİŞİM VERİ İŞLEME VE BİLGİ GÜVENLİĞİ PROTOKOLÜ (DPA)"
+      );
+      expect(contractWithDpa.htmlContent).toContain(
+        "EK-2: 6698 Sayılı KVKK m. 12 & GDPR m. 28 Bilişim Veri İşleme Protokolü (DPA)"
+      );
 
       // SHA-256 seal is valid for the full document
       expect(contractWithDpa.sha256Fingerprint).toBeDefined();
@@ -203,7 +210,9 @@ describe("DPA Engine (6698 Sayılı KVKK m. 12 & GDPR Art. 28 Data Processing Ad
       });
 
       expect(contractEn.metadata.dpaIncluded).toBe(true);
-      expect(contractEn.plainText).toContain("Personal Data Processing (KVKK Art. 12 & GDPR Art. 28)");
+      expect(contractEn.plainText).toContain(
+        "Personal Data Processing (KVKK Art. 12 & GDPR Art. 28)"
+      );
       expect(contractEn.markdown).toContain("ANNEX-2: STATUTORY DATA PROCESSING ADDENDUM");
       expect(contractEn.htmlContent).toContain("ANNEX-2: Data Processing Addendum");
     });

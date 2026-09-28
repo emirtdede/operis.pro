@@ -33,7 +33,8 @@ const USAGE_LEVEL_TEXT: Record<"tr" | "en", Record<AiUsageLevel, string>> = {
 
 const PRIVACY_TIER_TEXT: Record<"tr" | "en", Record<AiDataPrivacyTier, string>> = {
   tr: {
-    ENTERPRISE_ZERO_RETENTION: "Kurumsal Sıfır Veri Saklama (Zero Data Retention / Model Eğitimine Kapalı)",
+    ENTERPRISE_ZERO_RETENTION:
+      "Kurumsal Sıfır Veri Saklama (Zero Data Retention / Model Eğitimine Kapalı)",
     LOCAL_OFFLINE_EXECUTION: "Yerel Çevrimdışı Çalıştırma (Local Air-Gapped LLM)",
     CONSUMER_PUBLIC_TRAINING_RISK: "Halka Açık Tüketici Sürümü (Genel Model Eğitimi Riski)",
   },
@@ -279,11 +280,7 @@ export class AiGovernanceEngine {
 
     // Total gross score
     let totalScore =
-      usagePoints +
-      dataPrivacyPoints +
-      humanLoopPenalty +
-      copyleftPenalty +
-      defectPenalty;
+      usagePoints + dataPrivacyPoints + humanLoopPenalty + copyleftPenalty + defectPenalty;
 
     // Automated Code Review Bonus (-5 points)
     if (config.codeReviewToolUsed) {
@@ -295,8 +292,10 @@ export class AiGovernanceEngine {
         points: -5,
         maxPoints: 0,
         isHighRisk: false,
-        recommendationTr: "Otomatik statik analiz ve lisans tarama araçları risk seviyesini düşürmektedir.",
-        recommendationEn: "Automated static analysis and license screening tools mitigate contamination risks.",
+        recommendationTr:
+          "Otomatik statik analiz ve lisans tarama araçları risk seviyesini düşürmektedir.",
+        recommendationEn:
+          "Automated static analysis and license screening tools mitigate contamination risks.",
       });
     }
 
@@ -368,8 +367,10 @@ export class AiGovernanceEngine {
     const usageLevelTextTr = USAGE_LEVEL_TEXT.tr[config.usageLevel] ?? config.usageLevel;
     const usageLevelTextEn = USAGE_LEVEL_TEXT.en[config.usageLevel] ?? config.usageLevel;
 
-    const privacyTierTextTr = PRIVACY_TIER_TEXT.tr[config.dataPrivacyTier] ?? config.dataPrivacyTier;
-    const privacyTierTextEn = PRIVACY_TIER_TEXT.en[config.dataPrivacyTier] ?? config.dataPrivacyTier;
+    const privacyTierTextTr =
+      PRIVACY_TIER_TEXT.tr[config.dataPrivacyTier] ?? config.dataPrivacyTier;
+    const privacyTierTextEn =
+      PRIVACY_TIER_TEXT.en[config.dataPrivacyTier] ?? config.dataPrivacyTier;
 
     const riskLabelTr = RISK_LEVEL_LABELS_TR[evalResult.riskLevel] ?? "YÜKSEK RİSK BEYANI";
 

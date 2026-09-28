@@ -146,13 +146,21 @@ export async function POST(req: Request) {
     );
   } catch (err: unknown) {
     const isEn = headerLocale === "en";
-    let message = isEn
-      ? "An error occurred during request."
-      : "İşlem sırasında bir hata oluştu.";
     if (err instanceof z.ZodError) {
       const fallbackFormat = isEn ? "Invalid email." : "Geçersiz e-posta.";
-      message = err.issues[0]?.message || fallbackFormat;
+      return NextResponse.json(
+        { error: err.issues[0]?.message || fallbackFormat },
+        { status: 400 }
+      );
     }
-    return NextResponse.json({ error: message }, { status: 400 });
+    console.error("Forgot password unhandled error:", err);
+    return NextResponse.json(
+      {
+        error: isEn
+          ? "An error occurred during request. Please try again later."
+          : "İşlem sırasında bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.",
+      },
+      { status: 500 }
+    );
   }
 }

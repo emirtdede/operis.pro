@@ -1,8 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import {
-  ListingService,
-  inMemoryListings,
-} from "@/src/modules/listings/service";
+import { ListingService, inMemoryListings } from "@/src/modules/listings/service";
 import { GET } from "@/src/app/api/listings/[id]/clone-data/route";
 import * as sessionModule from "@/src/modules/auth/session";
 import * as rateLimitModule from "@/src/lib/security/rate-limit";
@@ -125,9 +122,9 @@ describe("Listing Duplicate & Quick Re-post Engine", () => {
       });
 
       // Attempt to clone using STRANGER_ID
-      await expect(
-        ListingService.getListingCloneData(STRANGER_ID, listingId)
-      ).rejects.toThrow("Listing not found or you are not authorized.");
+      await expect(ListingService.getListingCloneData(STRANGER_ID, listingId)).rejects.toThrow(
+        "Listing not found or you are not authorized."
+      );
     });
 
     it("supports cloning from any lifecycle status (INACTIVE_EXPIRED, COMPLETED, MATCHED)", async () => {
@@ -219,9 +216,12 @@ describe("Listing Duplicate & Quick Re-post Engine", () => {
         answersJson: {},
       });
 
-      const req = new Request("http://localhost:3000/api/listings/owned-by-someone-else/clone-data", {
-        headers: { "x-locale": "tr" },
-      });
+      const req = new Request(
+        "http://localhost:3000/api/listings/owned-by-someone-else/clone-data",
+        {
+          headers: { "x-locale": "tr" },
+        }
+      );
 
       const res = await GET(req, { params: Promise.resolve({ id: "owned-by-someone-else" }) });
       expect(res.status).toBe(403);

@@ -12,10 +12,8 @@ import {
   FileText,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
-import {
-  RunbookDto,
-  SaveRunbookInput,
-} from "@/src/modules/engagements/runbook-service";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
+import { RunbookDto, SaveRunbookInput } from "@/src/modules/engagements/runbook-service";
 import {
   RunbookEnvVar,
   RunbookBuildStep,
@@ -63,38 +61,42 @@ export function RunbookEditorModal({
 }: RunbookEditorModalProps) {
   const isTr = locale === "tr";
 
-  const [activeSection, setActiveSection] = useState<"arch" | "env" | "run" | "services" | "dr">("arch");
+  const [activeSection, setActiveSection] = useState<"arch" | "env" | "run" | "services" | "dr">(
+    "arch"
+  );
 
   // Form states
-  const [architectureSummary, setArchitectureSummary] = useState(initialRunbook.architectureSummary || "");
-  const [envVars, setEnvVars] = useState<RunbookEnvVar[]>(initialRunbook.environmentVariables || []);
-  const [buildSteps, setBuildSteps] = useState<RunbookBuildStep[]>(initialRunbook.buildAndRunSteps || []);
-  const [services, setServices] = useState<RunbookThirdPartyService[]>(initialRunbook.thirdPartyServices || []);
-  const [drSteps, setDrSteps] = useState<RunbookDisasterStep[]>(initialRunbook.disasterRecoverySteps || []);
+  const [architectureSummary, setArchitectureSummary] = useState(
+    initialRunbook.architectureSummary || ""
+  );
+  const [envVars, setEnvVars] = useState<RunbookEnvVar[]>(
+    initialRunbook.environmentVariables || []
+  );
+  const [buildSteps, setBuildSteps] = useState<RunbookBuildStep[]>(
+    initialRunbook.buildAndRunSteps || []
+  );
+  const [services, setServices] = useState<RunbookThirdPartyService[]>(
+    initialRunbook.thirdPartyServices || []
+  );
+  const [drSteps, setDrSteps] = useState<RunbookDisasterStep[]>(
+    initialRunbook.disasterRecoverySteps || []
+  );
   const [backupSchedule] = useState(initialRunbook.backupSchedule || { frequency: "DAILY" });
 
   const updateEnvVar = (idx: number, patch: Partial<RunbookEnvVar>) => {
-    setEnvVars((prev) =>
-      prev.map((item, i) => (i === idx ? { ...item, ...patch } : item))
-    );
+    setEnvVars((prev) => prev.map((item, i) => (i === idx ? { ...item, ...patch } : item)));
   };
 
   const updateBuildStep = (idx: number, patch: Partial<RunbookBuildStep>) => {
-    setBuildSteps((prev) =>
-      prev.map((item, i) => (i === idx ? { ...item, ...patch } : item))
-    );
+    setBuildSteps((prev) => prev.map((item, i) => (i === idx ? { ...item, ...patch } : item)));
   };
 
   const updateService = (idx: number, patch: Partial<RunbookThirdPartyService>) => {
-    setServices((prev) =>
-      prev.map((item, i) => (i === idx ? { ...item, ...patch } : item))
-    );
+    setServices((prev) => prev.map((item, i) => (i === idx ? { ...item, ...patch } : item)));
   };
 
   const updateDrStep = (idx: number, patch: Partial<RunbookDisasterStep>) => {
-    setDrSteps((prev) =>
-      prev.map((item, i) => (i === idx ? { ...item, ...patch } : item))
-    );
+    setDrSteps((prev) => prev.map((item, i) => (i === idx ? { ...item, ...patch } : item)));
   };
 
   // Raw .env parser modal state
@@ -123,7 +125,9 @@ export function RunbookEditorModal({
         if (json.environmentVariables && json.environmentVariables.length > 0) {
           // Merge avoiding duplicates by key
           const existingKeys = new Set(envVars.map((v) => v.key));
-          const newOnes = json.environmentVariables.filter((v: RunbookEnvVar) => !existingKeys.has(v.key));
+          const newOnes = json.environmentVariables.filter(
+            (v: RunbookEnvVar) => !existingKeys.has(v.key)
+          );
           setEnvVars([...envVars, ...newOnes]);
           setShowRawEnvInput(false);
           setRawEnvText("");
@@ -164,7 +168,9 @@ export function RunbookEditorModal({
         onSuccess();
       } else {
         const json = await res.json();
-        setErrorMessage(json.error || (isTr ? "Kayıt sırasında bir hata oluştu." : "Failed to save runbook."));
+        setErrorMessage(
+          json.error || (isTr ? "Kayıt sırasında bir hata oluştu." : "Failed to save runbook.")
+        );
       }
     } catch {
       setErrorMessage(isTr ? "Bağlantı hatası oluştu." : "Network connection failed.");
@@ -174,8 +180,15 @@ export function RunbookEditorModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 overflow-y-auto">
-      <div className="relative w-full max-w-4xl rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] shadow-2xl overflow-hidden my-8">
+    <ModalOverlay
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabel={isTr ? "Proje Devir Kılavuzunu Düzenle" : "Edit Project Runbook"}
+    >
+      <div
+        className="relative w-full max-w-4xl rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] shadow-2xl overflow-hidden my-8"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-subtle)]/50">
           <div className="flex items-center gap-3">
@@ -207,7 +220,9 @@ export function RunbookEditorModal({
           <button
             onClick={() => setActiveSection("arch")}
             className={`px-3 py-1.5 rounded-lg font-medium transition-colors shrink-0 ${
-              activeSection === "arch" ? "bg-white/10 text-white font-semibold" : "text-[var(--color-text-secondary)] hover:text-white"
+              activeSection === "arch"
+                ? "bg-white/10 text-white font-semibold"
+                : "text-[var(--color-text-secondary)] hover:text-white"
             }`}
           >
             {isTr ? "1. Mimari & Sistem" : "1. Architecture"}
@@ -215,7 +230,9 @@ export function RunbookEditorModal({
           <button
             onClick={() => setActiveSection("env")}
             className={`px-3 py-1.5 rounded-lg font-medium transition-colors shrink-0 ${
-              activeSection === "env" ? "bg-white/10 text-white font-semibold" : "text-[var(--color-text-secondary)] hover:text-white"
+              activeSection === "env"
+                ? "bg-white/10 text-white font-semibold"
+                : "text-[var(--color-text-secondary)] hover:text-white"
             }`}
           >
             {isTr ? "2. Çevre Değişkenleri (.env)" : "2. Environment (.env)"} ({envVars.length})
@@ -223,7 +240,9 @@ export function RunbookEditorModal({
           <button
             onClick={() => setActiveSection("run")}
             className={`px-3 py-1.5 rounded-lg font-medium transition-colors shrink-0 ${
-              activeSection === "run" ? "bg-white/10 text-white font-semibold" : "text-[var(--color-text-secondary)] hover:text-white"
+              activeSection === "run"
+                ? "bg-white/10 text-white font-semibold"
+                : "text-[var(--color-text-secondary)] hover:text-white"
             }`}
           >
             {isTr ? "3. Başlatma Komutları" : "3. Build & Run Steps"} ({buildSteps.length})
@@ -231,7 +250,9 @@ export function RunbookEditorModal({
           <button
             onClick={() => setActiveSection("services")}
             className={`px-3 py-1.5 rounded-lg font-medium transition-colors shrink-0 ${
-              activeSection === "services" ? "bg-white/10 text-white font-semibold" : "text-[var(--color-text-secondary)] hover:text-white"
+              activeSection === "services"
+                ? "bg-white/10 text-white font-semibold"
+                : "text-[var(--color-text-secondary)] hover:text-white"
             }`}
           >
             {isTr ? "4. Dış Servisler" : "4. 3rd Party"} ({services.length})
@@ -239,7 +260,9 @@ export function RunbookEditorModal({
           <button
             onClick={() => setActiveSection("dr")}
             className={`px-3 py-1.5 rounded-lg font-medium transition-colors shrink-0 ${
-              activeSection === "dr" ? "bg-white/10 text-white font-semibold" : "text-[var(--color-text-secondary)] hover:text-white"
+              activeSection === "dr"
+                ? "bg-white/10 text-white font-semibold"
+                : "text-[var(--color-text-secondary)] hover:text-white"
             }`}
           >
             {isTr ? "5. Felaket Kurtarma" : "5. Disaster Recovery"} ({drSteps.length})
@@ -285,7 +308,9 @@ export function RunbookEditorModal({
                     {isTr ? "Çevre Değişkenleri Sözlüğü" : "Environment Variables Dictionary"}
                   </h4>
                   <p className="text-[11px] text-[var(--color-text-secondary)]">
-                    {isTr ? "Asla canlı şifre yazmayınız; yalnızca format örneği veriniz." : "Never paste plaintext production secrets."}
+                    {isTr
+                      ? "Asla canlı şifre yazmayınız; yalnızca format örneği veriniz."
+                      : "Never paste plaintext production secrets."}
                   </p>
                 </div>
 
@@ -327,8 +352,15 @@ export function RunbookEditorModal({
               {showRawEnvInput && (
                 <div className="rounded-2xl border border-cyan-500/30 bg-cyan-500/5 p-4 space-y-3">
                   <div className="flex items-center justify-between text-xs font-semibold text-cyan-400">
-                    <span>{isTr ? "Ham .env.example İçeriğini Yapıştırın:" : "Paste Raw .env.example Content:"}</span>
-                    <button onClick={() => setShowRawEnvInput(false)} className="text-white/60 hover:text-white">
+                    <span>
+                      {isTr
+                        ? "Ham .env.example İçeriğini Yapıştırın:"
+                        : "Paste Raw .env.example Content:"}
+                    </span>
+                    <button
+                      onClick={() => setShowRawEnvInput(false)}
+                      className="text-white/60 hover:text-white"
+                    >
                       <X className="h-4 w-4" />
                     </button>
                   </div>
@@ -336,7 +368,9 @@ export function RunbookEditorModal({
                     value={rawEnvText}
                     onChange={(e) => setRawEnvText(e.target.value)}
                     rows={4}
-                    placeholder={"# Veritabanı\nDATABASE_URL=postgresql://user:pass@host:5432/db\nNEXTAUTH_SECRET=xyz"}
+                    placeholder={
+                      "# Veritabanı\nDATABASE_URL=postgresql://user:pass@host:5432/db\nNEXTAUTH_SECRET=xyz"
+                    }
                     className="w-full rounded-xl border border-white/10 bg-black/60 p-3 font-mono text-[11px] text-cyan-300 focus:outline-none"
                   />
                   <div className="flex justify-end">
@@ -379,7 +413,9 @@ export function RunbookEditorModal({
                         </label>
                         <select
                           value={env.secretCategory}
-                          onChange={(e) => updateEnvVar(idx, { secretCategory: e.target.value as SecretCategory })}
+                          onChange={(e) =>
+                            updateEnvVar(idx, { secretCategory: e.target.value as SecretCategory })
+                          }
                           className="w-full rounded-xl border border-white/10 bg-black/40 p-2 text-xs text-[var(--color-text-primary)] focus:outline-none"
                         >
                           <option value="DATABASE">DATABASE (Veritabanı)</option>
@@ -488,7 +524,11 @@ export function RunbookEditorModal({
                         </label>
                         <select
                           value={step.environment}
-                          onChange={(e) => updateBuildStep(idx, { environment: e.target.value as RunbookBuildStep["environment"] })}
+                          onChange={(e) =>
+                            updateBuildStep(idx, {
+                              environment: e.target.value as RunbookBuildStep["environment"],
+                            })
+                          }
                           className="w-full rounded-xl border border-white/10 bg-black/40 p-2 text-xs text-[var(--color-text-primary)] focus:outline-none"
                         >
                           <option value="LOCAL">LOCAL (Yerel)</option>
@@ -643,7 +683,9 @@ export function RunbookEditorModal({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h4 className="text-xs font-semibold text-[var(--color-text-primary)]">
-                  {isTr ? "Acil Durum & Felaket Kurtarma Senaryoları" : "Disaster Recovery Scenarios"}
+                  {isTr
+                    ? "Acil Durum & Felaket Kurtarma Senaryoları"
+                    : "Disaster Recovery Scenarios"}
                 </h4>
                 <Button
                   type="button"
@@ -690,7 +732,11 @@ export function RunbookEditorModal({
                         </label>
                         <select
                           value={dr.priority}
-                          onChange={(e) => updateDrStep(idx, { priority: e.target.value as RunbookDisasterStep["priority"] })}
+                          onChange={(e) =>
+                            updateDrStep(idx, {
+                              priority: e.target.value as RunbookDisasterStep["priority"],
+                            })
+                          }
                           className="w-full rounded-xl border border-white/10 bg-black/40 p-2 text-xs text-[var(--color-text-primary)] focus:outline-none"
                         >
                           <option value="CRITICAL">CRITICAL (Kritik)</option>
@@ -721,7 +767,9 @@ export function RunbookEditorModal({
                           type="text"
                           value={dr.verificationCommand || ""}
                           placeholder="curl -I https://..."
-                          onChange={(e) => updateDrStep(idx, { verificationCommand: e.target.value })}
+                          onChange={(e) =>
+                            updateDrStep(idx, { verificationCommand: e.target.value })
+                          }
                           className="w-full rounded-xl border border-white/10 bg-black/50 p-2 font-mono text-xs text-emerald-400 focus:outline-none"
                         />
                       </div>
@@ -745,7 +793,11 @@ export function RunbookEditorModal({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-6 border-t border-[var(--color-border-subtle)] bg-[var(--color-surface-subtle)]/50">
           <div className="text-xs text-[var(--color-text-tertiary)] flex items-center gap-1.5">
             <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />
-            <span>{isTr ? "Yayınlandığında SHA-256 ile mühürlenir." : "Sealed with SHA-256 upon publish."}</span>
+            <span>
+              {isTr
+                ? "Yayınlandığında SHA-256 ile mühürlenir."
+                : "Sealed with SHA-256 upon publish."}
+            </span>
           </div>
 
           <div className="flex items-center gap-2 self-end sm:self-auto">
@@ -780,6 +832,6 @@ export function RunbookEditorModal({
           </div>
         </div>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

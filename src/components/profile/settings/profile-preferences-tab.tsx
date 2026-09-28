@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  Shield,
-  Clock,
-  MessageSquare,
-} from "lucide-react";
+import { Shield, Clock, MessageSquare } from "lucide-react";
 import { Checkbox } from "@/src/components/ui/checkbox";
 
 export interface ProfilePreferencesTabProps {
@@ -107,7 +103,10 @@ export function ProfilePreferencesTab({
         {/* Preferred Contact Channel & Timezone */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-[var(--color-border-subtle)]">
           <div className="space-y-1.5">
-            <label htmlFor="preferred-channel-select" className="text-xs font-semibold text-[var(--color-text-primary)] flex items-center gap-1.5">
+            <label
+              htmlFor="preferred-channel-select"
+              className="text-xs font-semibold text-[var(--color-text-primary)] flex items-center gap-1.5"
+            >
               <MessageSquare className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />
               <span>{isTr ? "Öncelikli İletişim Tercihi" : "Preferred Contact Channel"}</span>
             </label>
@@ -117,14 +116,18 @@ export function ProfilePreferencesTab({
               onChange={(e) => onPreferredContactChannelChange(e.target.value)}
               className="w-full h-10 px-3 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] text-xs text-[var(--color-text-primary)] focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
             >
-              <option value="any">{isTr ? "Fark Etmez / Tümü (Varsayılan)" : "Any / All Channels (Default)"}</option>
+              <option value="any">
+                {isTr ? "Fark Etmez / Tümü (Varsayılan)" : "Any / All Channels (Default)"}
+              </option>
               <option value="whatsapp">WhatsApp</option>
               <option value="meet">Google Meet</option>
               <option value="zoom">Zoom</option>
               <option value="teams">Microsoft Teams</option>
               <option value="slack">Slack</option>
               <option value="email">{isTr ? "Kurumsal E-Posta" : "Corporate Email"}</option>
-              <option value="phone">{isTr ? "Telefonla Doğrudan Arama" : "Direct Phone Call"}</option>
+              <option value="phone">
+                {isTr ? "Telefonla Doğrudan Arama" : "Direct Phone Call"}
+              </option>
             </select>
             <p className="text-[11px] text-[var(--color-text-tertiary)]">
               {isTr
@@ -134,7 +137,10 @@ export function ProfilePreferencesTab({
           </div>
 
           <div className="space-y-1.5">
-            <label htmlFor="timezone-select" className="text-xs font-semibold text-[var(--color-text-primary)] flex items-center gap-1.5">
+            <label
+              htmlFor="timezone-select"
+              className="text-xs font-semibold text-[var(--color-text-primary)] flex items-center gap-1.5"
+            >
               <Clock className="h-3.5 w-3.5 text-amber-400" aria-hidden="true" />
               <span>{isTr ? "Saat Dilimi (Zaman Dilimi)" : "Primary Timezone"}</span>
             </label>
@@ -144,16 +150,27 @@ export function ProfilePreferencesTab({
               onChange={(e) => onTimeZoneChange(e.target.value)}
               className="w-full h-10 px-3 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] text-xs text-[var(--color-text-primary)] focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
             >
-              <option value="Europe/Istanbul">{isTr ? "Europe/Istanbul (Türkiye • UTC+3)" : "Europe/Istanbul (Turkey • UTC+3)"}</option>
+              <option value="Europe/Istanbul">
+                {isTr ? "Europe/Istanbul (Türkiye • UTC+3)" : "Europe/Istanbul (Turkey • UTC+3)"}
+              </option>
               <option value="Europe/London">Europe/London (UK • UTC+0/+1)</option>
               <option value="Europe/Berlin">Europe/Berlin (Central Europe • UTC+1/+2)</option>
               <option value="America/New_York">America/New_York (US East • UTC-5/-4)</option>
-              <option value="America/Los_Angeles">America/Los_Angeles (US Pacific • UTC-8/-7)</option>
+              <option value="America/Los_Angeles">
+                America/Los_Angeles (US Pacific • UTC-8/-7)
+              </option>
               <option value="Asia/Dubai">Asia/Dubai (Gulf • UTC+4)</option>
               <option value="Asia/Singapore">Asia/Singapore (SGT • UTC+8)</option>
-              {timeZone && !["Europe/Istanbul", "Europe/London", "Europe/Berlin", "America/New_York", "America/Los_Angeles", "Asia/Dubai", "Asia/Singapore"].includes(timeZone) && (
-                <option value={timeZone}>{timeZone}</option>
-              )}
+              {timeZone &&
+                ![
+                  "Europe/Istanbul",
+                  "Europe/London",
+                  "Europe/Berlin",
+                  "America/New_York",
+                  "America/Los_Angeles",
+                  "Asia/Dubai",
+                  "Asia/Singapore",
+                ].includes(timeZone) && <option value={timeZone}>{timeZone}</option>}
             </select>
             <p className="text-[11px] text-[var(--color-text-tertiary)]">
               {isTr

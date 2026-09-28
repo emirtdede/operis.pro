@@ -62,9 +62,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: isTr
-        ? "İhlal & Şikayet Bildirim Merkezi"
-        : "Trust, Safety & Incident Hub",
+      title: isTr ? "İhlal & Şikayet Bildirim Merkezi" : "Trust, Safety & Incident Hub",
       description: isTr
         ? "5651 ve FSEK standartlarında resmi güvenlik ve uyuşmazlık bildirim merkezi."
         : "Official incident intake desk for safety, escrow, and statutory copyright.",
@@ -94,25 +92,33 @@ export default async function ReportPage({
     {
       value: "< 2 Saat",
       label: isTr ? "Acil Triage SLA" : "Urgent Triage SLA",
-      detail: isTr ? "Finansal risk ve dolandırıcılıkta 7/24 anlık müdahale" : "24/7 Rapid response on financial risks & fraud",
+      detail: isTr
+        ? "Finansal risk ve dolandırıcılıkta 7/24 anlık müdahale"
+        : "24/7 Rapid response on financial risks & fraud",
       color: "text-rose-400 border-rose-500/20 bg-rose-500/10",
     },
     {
       value: "%100",
       label: isTr ? "Gizlilik Güvencesi" : "Confidentiality",
-      detail: isTr ? "İhbarcı kimliği karşı tarafa asla ifşa edilmez" : "Whistleblower identity strictly masked & protected",
+      detail: isTr
+        ? "İhbarcı kimliği karşı tarafa asla ifşa edilmez"
+        : "Whistleblower identity strictly masked & protected",
       color: "text-blue-400 border-blue-500/20 bg-blue-500/10",
     },
     {
       value: "%99.4",
       label: isTr ? "Hakem Çözüm Başarısı" : "Dispute Resolution",
-      detail: isTr ? "Çift taraflı dijital delil inceleme ve emanet koruma" : "Bilateral evidence audit & secure escrow freeze",
+      detail: isTr
+        ? "Çift taraflı dijital delil inceleme ve emanet koruma"
+        : "Bilateral evidence audit & secure escrow freeze",
       color: "text-emerald-400 border-emerald-500/20 bg-emerald-500/10",
     },
     {
       value: "5651 & FSEK",
       label: isTr ? "Yasal Uyum Zırhı" : "Statutory Defense",
-      detail: isTr ? "Resmi Yer Sağlayıcı Uyar-Kaldır & KEP Entegrasyonu" : "Statutory Notice & Takedown via registered KEP",
+      detail: isTr
+        ? "Resmi Yer Sağlayıcı Uyar-Kaldır & KEP Entegrasyonu"
+        : "Statutory Notice & Takedown via registered KEP",
       color: "text-purple-400 border-purple-500/20 bg-purple-500/10",
     },
   ];
@@ -322,7 +328,10 @@ export default async function ReportPage({
             href={`/${locale}`}
             className="inline-flex items-center gap-2 text-xs font-semibold text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] transition-colors group"
           >
-            <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" aria-hidden="true" />
+            <ArrowLeft
+              className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform"
+              aria-hidden="true"
+            />
             <span>{isTr ? "Operis Platformuna Dön" : "Return to Operis Platform"}</span>
           </Link>
         </div>
@@ -331,11 +340,17 @@ export default async function ReportPage({
         <header className="space-y-6 text-center max-w-3xl mx-auto -mt-2">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold tracking-wider text-rose-400 bg-rose-500/10 border border-rose-500/20 shadow-sm">
             <ShieldAlert className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>{isTr ? "5651 & KVKK UYUMLU GÜVENLİK VE UYUŞMAZLIK MERKEZİ" : "STATUTORY COMPLIANCE & INCIDENT HUB"}</span>
+            <span>
+              {isTr
+                ? "5651 & KVKK UYUMLU GÜVENLİK VE UYUŞMAZLIK MERKEZİ"
+                : "STATUTORY COMPLIANCE & INCIDENT HUB"}
+            </span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--color-text-primary)] leading-tight">
-            {isTr ? "Güvenlik, Denetim & İhlal Bildirim Merkezi" : "Trust, Safety & Incident Response Hub"}
+            {isTr
+              ? "Güvenlik, Denetim & İhlal Bildirim Merkezi"
+              : "Trust, Safety & Incident Response Hub"}
           </h1>
 
           <p className="text-sm sm:text-base text-[var(--color-text-secondary)] leading-relaxed">
@@ -345,312 +360,348 @@ export default async function ReportPage({
           </p>
         </header>
 
-      {/* 4 Trust & Safety Metrics */}
-      <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {safetyMetrics.map((m, idx) => (
-          <div
-            key={idx}
-            className="p-5 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-xl space-y-2 shadow-sm"
-          >
-            <div className={`inline-flex px-2.5 py-1 rounded-lg text-sm font-mono font-extrabold border ${m.color}`}>
-              {m.value}
+        {/* 4 Trust & Safety Metrics */}
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {safetyMetrics.map((m, idx) => (
+            <div
+              key={idx}
+              className="p-5 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-xl space-y-2 shadow-sm"
+            >
+              <div
+                className={`inline-flex px-2.5 py-1 rounded-lg text-sm font-mono font-extrabold border ${m.color}`}
+              >
+                {m.value}
+              </div>
+              <div>
+                <h2 className="text-sm font-bold text-[var(--color-text-primary)]">{m.label}</h2>
+                <p className="text-[11px] text-[var(--color-text-tertiary)] leading-snug mt-1">
+                  {m.detail}
+                </p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-sm font-bold text-[var(--color-text-primary)]">{m.label}</h2>
-              <p className="text-[11px] text-[var(--color-text-tertiary)] leading-snug mt-1">
-                {m.detail}
+          ))}
+        </section>
+
+        {/* 4 Specialized Intake Desks */}
+        <section className="space-y-6">
+          <div className="text-center space-y-2 max-w-xl mx-auto">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--color-text-tertiary)]">
+              {isTr ? "ÖZEL İNCELEME MASALARI" : "SPECIALIZED RESPONSE DESKS"}
+            </h2>
+            <p className="text-xl sm:text-2xl font-extrabold text-[var(--color-text-primary)]">
+              {isTr ? "Her İhlal Türüne Özel Yetkili Birim" : "Dedicated Units for Every Incident"}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {specializedDesks.map((desk, idx) => {
+              const Icon = desk.icon;
+              return (
+                <div
+                  key={idx}
+                  className="p-6 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-xl space-y-4 hover:border-[var(--color-border-strong)] transition-all shadow-sm flex flex-col justify-between"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className={`p-3 rounded-2xl border ${desk.color}`}>
+                        <Icon className="h-5 w-5" aria-hidden="true" />
+                      </div>
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] text-[var(--color-text-secondary)]">
+                        <Clock className="h-3 w-3 text-blue-400" />
+                        <span>{desk.sla}</span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="text-base font-bold text-[var(--color-text-primary)]">
+                        {desk.title}
+                      </h3>
+                      <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed mt-1.5">
+                        {desk.desc}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-[var(--color-border-subtle)]/60 flex items-center justify-between text-xs">
+                    <span className="text-[var(--color-text-tertiary)]">
+                      {isTr ? "Doğrudan Masası:" : "Direct Desk:"}
+                    </span>
+                    <a
+                      href={`mailto:${desk.email}`}
+                      className="font-mono font-semibold text-blue-400 hover:underline flex items-center gap-1"
+                    >
+                      <span>{desk.email}</span>
+                      <ExternalLink className="h-3 w-3 opacity-70" />
+                    </a>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Main Terminal Card (The Interactive Form) */}
+        <section className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/90 backdrop-blur-2xl p-6 sm:p-12 shadow-2xl space-y-8 relative overflow-hidden">
+          {/* Glow backdrop */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none -mr-32 -mt-32" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-rose-500/5 rounded-full blur-3xl pointer-events-none -ml-32 -mb-32" />
+
+          {/* Section Header */}
+          <div className="space-y-3 text-center max-w-2xl mx-auto relative">
+            <div className="mx-auto h-14 w-14 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center border border-rose-500/20 shadow-sm">
+              <FileWarning className="h-7 w-7" aria-hidden="true" />
+            </div>
+
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--color-text-primary)]">
+              {isTr
+                ? "Resmi İhlal & Şikayet Başvuru Formu"
+                : "Formal Incident & Violation Intake Form"}
+            </h2>
+
+            <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
+              {isTr
+                ? "Şüpheli durumu, hedef bağlantısını ve delillerinizi girerek güvenli vaka kaydı oluşturun. Bildiriminiz kriptografik olarak kaydedilir."
+                : "Provide incident context, target identifiers, and evidence links. Your filing is cryptographically indexed and queued for neutral adjudication."}
+            </p>
+          </div>
+
+          {/* Confidentiality Guarantee Banner */}
+          <div className="flex items-start gap-3.5 p-4 rounded-2xl bg-blue-500/5 border border-blue-500/20 text-xs">
+            <Lock className="h-4 w-4 text-blue-400 shrink-0 mt-0.5" aria-hidden="true" />
+            <div className="space-y-1">
+              <span className="font-bold text-[var(--color-text-primary)] block">
+                {isTr
+                  ? "100% Gizlilik ve Muhbirlik Koruma Zırhı"
+                  : "100% Whistleblower Protection Guarantee"}
+              </span>
+              <p className="text-[11px] text-[var(--color-text-secondary)] leading-relaxed">
+                {isTr
+                  ? "Kimliğiniz, kullanıcı adınız ve şikayet kayıtlarınız şikayet edilen kullanıcı veya ajansa ASLA ifşa edilmez. Tüm soruşturmalar bağımsız Operis denetim protokolü üzerinden yürütülür."
+                  : "Your identity, handle, and contact details are strictly confidential and NEVER disclosed to the reported entity under any circumstance."}
               </p>
             </div>
           </div>
-        ))}
-      </section>
 
-      {/* 4 Specialized Intake Desks */}
-      <section className="space-y-6">
-        <div className="text-center space-y-2 max-w-xl mx-auto">
-          <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--color-text-tertiary)]">
-            {isTr ? "ÖZEL İNCELEME MASALARI" : "SPECIALIZED RESPONSE DESKS"}
-          </h2>
-          <p className="text-xl sm:text-2xl font-extrabold text-[var(--color-text-primary)]">
-            {isTr ? "Her İhlal Türüne Özel Yetkili Birim" : "Dedicated Units for Every Incident"}
-          </p>
-        </div>
+          {/* The Form */}
+          <div className="pt-2 relative">
+            <ReportForm
+              locale={locale}
+              defaultTargetType={sp.type || "listing"}
+              defaultTargetIdentifier={sp.target || ""}
+              hasSession={Boolean(session?.userId)}
+            />
+          </div>
+        </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {specializedDesks.map((desk, idx) => {
-            const Icon = desk.icon;
-            return (
-              <div
-                key={idx}
-                className="p-6 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-xl space-y-4 hover:border-[var(--color-border-strong)] transition-all shadow-sm flex flex-col justify-between"
-              >
-                <div className="space-y-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className={`p-3 rounded-2xl border ${desk.color}`}>
-                      <Icon className="h-5 w-5" aria-hidden="true" />
-                    </div>
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold bg-[var(--color-surface-hover)] border border-[var(--color-border-subtle)] text-[var(--color-text-secondary)]">
-                      <Clock className="h-3 w-3 text-blue-400" />
-                      <span>{desk.sla}</span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="text-base font-bold text-[var(--color-text-primary)]">
-                      {desk.title}
-                    </h3>
-                    <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed mt-1.5">
-                      {desk.desc}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="pt-3 border-t border-[var(--color-border-subtle)]/60 flex items-center justify-between text-xs">
-                  <span className="text-[var(--color-text-tertiary)]">
-                    {isTr ? "Doğrudan Masası:" : "Direct Desk:"}
-                  </span>
-                  <a
-                    href={`mailto:${desk.email}`}
-                    className="font-mono font-semibold text-blue-400 hover:underline flex items-center gap-1"
-                  >
-                    <span>{desk.email}</span>
-                    <ExternalLink className="h-3 w-3 opacity-70" />
-                  </a>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Main Terminal Card (The Interactive Form) */}
-      <section className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/90 backdrop-blur-2xl p-6 sm:p-12 shadow-2xl space-y-8 relative overflow-hidden">
-        {/* Glow backdrop */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none -mr-32 -mt-32" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-rose-500/5 rounded-full blur-3xl pointer-events-none -ml-32 -mb-32" />
-
-        {/* Section Header */}
-        <div className="space-y-3 text-center max-w-2xl mx-auto relative">
-          <div className="mx-auto h-14 w-14 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center border border-rose-500/20 shadow-sm">
-            <FileWarning className="h-7 w-7" aria-hidden="true" />
+        {/* 4-Stage Investigation & Resolution Lifecycle */}
+        <section className="space-y-8">
+          <div className="text-center space-y-2 max-w-xl mx-auto">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--color-text-tertiary)]">
+              {isTr ? "DENETİM METODOLOJİSİ" : "RESOLUTION WORKFLOW"}
+            </h2>
+            <p className="text-xl sm:text-2xl font-extrabold text-[var(--color-text-primary)]">
+              {isTr
+                ? "Bildirim Sonrası 4 Aşamalı Soruşturma Süreci"
+                : "4-Stage Investigation & Enforcement Lifecycle"}
+            </p>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--color-text-primary)]">
-            {isTr ? "Resmi İhlal & Şikayet Başvuru Formu" : "Formal Incident & Violation Intake Form"}
-          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {resolutionLifecycle.map((stage, idx) => {
+              const Icon = stage.icon;
+              return (
+                <div
+                  key={idx}
+                  className="p-6 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-xl space-y-3 relative overflow-hidden"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-2xl font-extrabold font-mono text-[var(--color-border-strong)]">
+                      {stage.step}
+                    </span>
+                    <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                      <Icon className="h-4 w-4" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
+                      {stage.title}
+                    </h3>
+                    <span className="text-[10px] font-mono text-blue-400 block font-semibold">
+                      {stage.time}
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-[var(--color-text-tertiary)] leading-relaxed">
+                    {stage.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* 5651 & FSEK Statutory Notice & Takedown Protocol */}
+        <section className="rounded-3xl border border-purple-500/20 bg-purple-500/5 p-6 sm:p-10 space-y-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-bold font-mono tracking-wider text-purple-400 bg-purple-500/10 uppercase">
+                {isTr ? "Yasal Mevzuat Çerçevesi" : "Statutory Framework"}
+              </div>
+              <h2 className="text-xl font-bold text-[var(--color-text-primary)]">
+                {isTr
+                  ? "5651 Sayılı Kanun & FSEK m. 52 Uyar-Kaldır Bildirim Protokolü"
+                  : "Statutory Notice & Takedown Protocol (5651 & Copyright Act)"}
+              </h2>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-mono text-purple-300">
+                {isTr ? "Resmi Tebligat Masası" : "Official Legal Desk"}
+              </span>
+            </div>
+          </div>
 
           <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
             {isTr
-              ? "Şüpheli durumu, hedef bağlantısını ve delillerinizi girerek güvenli vaka kaydı oluşturun. Bildiriminiz kriptografik olarak kaydedilir."
-              : "Provide incident context, target identifiers, and evidence links. Your filing is cryptographically indexed and queued for neutral adjudication."}
+              ? "Vellium, 5651 Sayılı Kanun kapsamında 'Yetkili Yer Sağlayıcı' sıfatıyla Operis platformunu işletmektedir. Platformda yer alan kullanıcı içeriklerinden doğan hak ihlallerinde, Fikir ve Sanat Eserleri Kanunu (FSEK) Ek Madde 4 gereğince 'Uyar-Kaldır' (Notice & Takedown) mekanizması işletilir. Operis bir Vellium ürünüdür."
+              : "Vellium operates the Operis platform as a certified Hosting Provider under Law No. 5651. Operis is a product of Vellium. For intellectual property violations, statutory Notice & Takedown procedures are strictly executed under relevant copyright statutes."}
           </p>
-        </div>
 
-        {/* Confidentiality Guarantee Banner */}
-        <div className="flex items-start gap-3.5 p-4 rounded-2xl bg-blue-500/5 border border-blue-500/20 text-xs">
-          <Lock className="h-4 w-4 text-blue-400 shrink-0 mt-0.5" aria-hidden="true" />
-          <div className="space-y-1">
-            <span className="font-bold text-[var(--color-text-primary)] block">
-              {isTr ? "100% Gizlilik ve Muhbirlik Koruma Zırhı" : "100% Whistleblower Protection Guarantee"}
-            </span>
-            <p className="text-[11px] text-[var(--color-text-secondary)] leading-relaxed">
-              {isTr
-                ? "Kimliğiniz, kullanıcı adınız ve şikayet kayıtlarınız şikayet edilen kullanıcı veya ajansa ASLA ifşa edilmez. Tüm soruşturmalar bağımsız Operis denetim protokolü üzerinden yürütülür."
-                : "Your identity, handle, and contact details are strictly confidential and NEVER disclosed to the reported entity under any circumstance."}
-            </p>
-          </div>
-        </div>
-
-        {/* The Form */}
-        <div className="pt-2 relative">
-          <ReportForm
-            locale={locale}
-            defaultTargetType={sp.type || "listing"}
-            defaultTargetIdentifier={sp.target || ""}
-            hasSession={Boolean(session?.userId)}
-          />
-        </div>
-      </section>
-
-      {/* 4-Stage Investigation & Resolution Lifecycle */}
-      <section className="space-y-8">
-        <div className="text-center space-y-2 max-w-xl mx-auto">
-          <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--color-text-tertiary)]">
-            {isTr ? "DENETİM METODOLOJİSİ" : "RESOLUTION WORKFLOW"}
-          </h2>
-          <p className="text-xl sm:text-2xl font-extrabold text-[var(--color-text-primary)]">
-            {isTr ? "Bildirim Sonrası 4 Aşamalı Soruşturma Süreci" : "4-Stage Investigation & Enforcement Lifecycle"}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {resolutionLifecycle.map((stage, idx) => {
-            const Icon = stage.icon;
-            return (
-              <div
-                key={idx}
-                className="p-6 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-xl space-y-3 relative overflow-hidden"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-2xl font-extrabold font-mono text-[var(--color-border-strong)]">
-                    {stage.step}
-                  </span>
-                  <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                    <Icon className="h-4 w-4" />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
-                    {stage.title}
-                  </h3>
-                  <span className="text-[10px] font-mono text-blue-400 block font-semibold">
-                    {stage.time}
-                  </span>
-                </div>
-
-                <p className="text-xs text-[var(--color-text-tertiary)] leading-relaxed">
-                  {stage.desc}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* 5651 & FSEK Statutory Notice & Takedown Protocol */}
-      <section className="rounded-3xl border border-purple-500/20 bg-purple-500/5 p-6 sm:p-10 space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-bold font-mono tracking-wider text-purple-400 bg-purple-500/10 uppercase">
-              {isTr ? "Yasal Mevzuat Çerçevesi" : "Statutory Framework"}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs pt-2">
+            <div className="p-4 rounded-2xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] space-y-2">
+              <h3 className="font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
+                <Building2 className="h-4 w-4 text-purple-400" />
+                <span>
+                  {isTr ? "Resmi Tebligat & KEP Bilgileri" : "Registered Legal Addresses"}
+                </span>
+              </h3>
+              <ul className="space-y-1.5 text-[11px] text-[var(--color-text-tertiary)]">
+                <li>
+                  <strong className="text-[var(--color-text-secondary)]">
+                    {isTr ? "Ticari Unvan:" : "Entity:"}
+                  </strong>{" "}
+                  Vellium (Operis bir Vellium ürünüdür)
+                </li>
+                <li>
+                  <strong className="text-[var(--color-text-secondary)]">
+                    {isTr ? "Genel Merkez:" : "Headquarters:"}
+                  </strong>{" "}
+                  {isTr ? "İstanbul / Türkiye" : "İstanbul, Turkey"}
+                </li>
+                <li>
+                  <strong className="text-[var(--color-text-secondary)]">KEP:</strong>{" "}
+                  <code className="text-purple-400 font-mono">vellium@hs01.kep.tr</code>
+                </li>
+                <li>
+                  <strong className="text-[var(--color-text-secondary)]">UETS:</strong>{" "}
+                  <code className="text-purple-400 font-mono">25987-14235-89654</code>
+                </li>
+                <li>
+                  <strong className="text-[var(--color-text-secondary)]">
+                    {isTr ? "E-Posta:" : "Legal Email:"}
+                  </strong>{" "}
+                  <a href="mailto:legal@vellium.dev" className="text-purple-400 hover:underline">
+                    legal@vellium.dev
+                  </a>
+                </li>
+              </ul>
             </div>
-            <h2 className="text-xl font-bold text-[var(--color-text-primary)]">
+
+            <div className="p-4 rounded-2xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] space-y-2">
+              <h3 className="font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
+                <FileText className="h-4 w-4 text-purple-400" />
+                <span>
+                  {isTr ? "Zorunlu Hukuki Asgari Unsurlar" : "Mandatory Notice Requirements"}
+                </span>
+              </h3>
+              <ul className="space-y-1 text-[11px] text-[var(--color-text-tertiary)] list-disc list-inside">
+                <li>
+                  {isTr
+                    ? "Hak sahibi olduğunu tevsik eden tescil veya sözleşme belgesi"
+                    : "Proof of copyright ownership or license agreement"}
+                </li>
+                <li>
+                  {isTr
+                    ? "İhlale konu eserin Operis platformundaki tam sayfa URL'si"
+                    : "Exact Operis URL of the infringing listing or asset"}
+                </li>
+                <li>
+                  {isTr
+                    ? "Başvuranın açık kimlik, unvan, TCKN/VKN ve iletişim bilgileri"
+                    : "Legal entity identity, tax ID, and contact details"}
+                </li>
+                <li>
+                  {isTr
+                    ? "Elektronik imza veya ıslak imzalı başvuru dilekçesi"
+                    : "Qualified electronic signature or signed legal petition"}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Trust & Safety FAQ */}
+        <section className="space-y-6">
+          <div className="text-center space-y-2 max-w-xl mx-auto">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20">
+              <HelpCircle className="h-3.5 w-3.5" />
+              <span>{isTr ? "GÜVENLİK & ŞİKAYET SSS" : "TRUST & SAFETY FAQ"}</span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-extrabold text-[var(--color-text-primary)]">
               {isTr
-                ? "5651 Sayılı Kanun & FSEK m. 52 Uyar-Kaldır Bildirim Protokolü"
-                : "Statutory Notice & Takedown Protocol (5651 & Copyright Act)"}
+                ? "Sıkça Sorulan Sorular ve Yasal Güvenceler"
+                : "Frequently Asked Questions & Guarantees"}
             </h2>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono text-purple-300">
-              {isTr ? "Resmi Tebligat Masası" : "Official Legal Desk"}
-            </span>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {safetyFaq.map((item, idx) => (
+              <div
+                key={idx}
+                className="p-6 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 space-y-2.5 shadow-sm"
+              >
+                <h3 className="text-sm font-bold text-[var(--color-text-primary)] flex items-start gap-2">
+                  <span className="text-blue-400 font-mono text-xs mt-0.5">Q.</span>
+                  <span>{isTr ? item.qTr : item.qEn}</span>
+                </h3>
+                <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed pl-5">
+                  {isTr ? item.aTr : item.aEn}
+                </p>
+              </div>
+            ))}
           </div>
-        </div>
+        </section>
 
-        <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
-          {isTr
-            ? "Vellium, 5651 Sayılı Kanun kapsamında 'Yetkili Yer Sağlayıcı' sıfatıyla Operis platformunu işletmektedir. Platformda yer alan kullanıcı içeriklerinden doğan hak ihlallerinde, Fikir ve Sanat Eserleri Kanunu (FSEK) Ek Madde 4 gereğince 'Uyar-Kaldır' (Notice & Takedown) mekanizması işletilir. Operis bir Vellium ürünüdür."
-            : "Vellium operates the Operis platform as a certified Hosting Provider under Law No. 5651. Operis is a product of Vellium. For intellectual property violations, statutory Notice & Takedown procedures are strictly executed under relevant copyright statutes."}
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs pt-2">
-          <div className="p-4 rounded-2xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] space-y-2">
-            <h3 className="font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
-              <Building2 className="h-4 w-4 text-purple-400" />
-              <span>{isTr ? "Resmi Tebligat & KEP Bilgileri" : "Registered Legal Addresses"}</span>
-            </h3>
-            <ul className="space-y-1.5 text-[11px] text-[var(--color-text-tertiary)]">
-              <li>
-                <strong className="text-[var(--color-text-secondary)]">{isTr ? "Ticari Unvan:" : "Entity:"}</strong>{" "}
-                Vellium (Operis bir Vellium ürünüdür)
-              </li>
-              <li>
-                <strong className="text-[var(--color-text-secondary)]">{isTr ? "Genel Merkez:" : "Headquarters:"}</strong>{" "}
-                {isTr ? "İstanbul / Türkiye" : "İstanbul, Turkey"}
-              </li>
-              <li>
-                <strong className="text-[var(--color-text-secondary)]">KEP:</strong>{" "}
-                <code className="text-purple-400 font-mono">vellium@hs01.kep.tr</code>
-              </li>
-              <li>
-                <strong className="text-[var(--color-text-secondary)]">UETS:</strong>{" "}
-                <code className="text-purple-400 font-mono">25987-14235-89654</code>
-              </li>
-              <li>
-                <strong className="text-[var(--color-text-secondary)]">{isTr ? "E-Posta:" : "Legal Email:"}</strong>{" "}
-                <a href="mailto:legal@vellium.dev" className="text-purple-400 hover:underline">
-                  legal@vellium.dev
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] space-y-2">
-            <h3 className="font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
-              <FileText className="h-4 w-4 text-purple-400" />
-              <span>{isTr ? "Zorunlu Hukuki Asgari Unsurlar" : "Mandatory Notice Requirements"}</span>
-            </h3>
-            <ul className="space-y-1 text-[11px] text-[var(--color-text-tertiary)] list-disc list-inside">
-              <li>{isTr ? "Hak sahibi olduğunu tevsik eden tescil veya sözleşme belgesi" : "Proof of copyright ownership or license agreement"}</li>
-              <li>{isTr ? "İhlale konu eserin Operis platformundaki tam sayfa URL'si" : "Exact Operis URL of the infringing listing or asset"}</li>
-              <li>{isTr ? "Başvuranın açık kimlik, unvan, TCKN/VKN ve iletişim bilgileri" : "Legal entity identity, tax ID, and contact details"}</li>
-              <li>{isTr ? "Elektronik imza veya ıslak imzalı başvuru dilekçesi" : "Qualified electronic signature or signed legal petition"}</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust & Safety FAQ */}
-      <section className="space-y-6">
-        <div className="text-center space-y-2 max-w-xl mx-auto">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20">
-            <HelpCircle className="h-3.5 w-3.5" />
-            <span>{isTr ? "GÜVENLİK & ŞİKAYET SSS" : "TRUST & SAFETY FAQ"}</span>
-          </div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-[var(--color-text-primary)]">
-            {isTr ? "Sıkça Sorulan Sorular ve Yasal Güvenceler" : "Frequently Asked Questions & Guarantees"}
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {safetyFaq.map((item, idx) => (
-            <div
-              key={idx}
-              className="p-6 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 space-y-2.5 shadow-sm"
-            >
-              <h3 className="text-sm font-bold text-[var(--color-text-primary)] flex items-start gap-2">
-                <span className="text-blue-400 font-mono text-xs mt-0.5">Q.</span>
-                <span>{isTr ? item.qTr : item.qEn}</span>
-              </h3>
-              <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed pl-5">
-                {isTr ? item.aTr : item.aEn}
+        {/* Law Enforcement Inquiries Banner */}
+        <section className="p-6 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+          <div className="flex items-center gap-3 text-center sm:text-left">
+            <div className="p-2.5 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20 shrink-0">
+              <Scale className="h-5 w-5" />
+            </div>
+            <div className="space-y-0.5">
+              <span className="font-bold text-[var(--color-text-primary)] block">
+                {isTr
+                  ? "Adli Makamlar, Savcılık & Emniyet Müzekkereleri"
+                  : "Law Enforcement & Judicial Authority Inquiries"}
+              </span>
+              <p className="text-[11px] text-[var(--color-text-tertiary)]">
+                {isTr
+                  ? "Cumhuriyet Başsavcılıkları ve kolluk kuvvetlerinin resmi müzekkere talepleri için adli irtibat kanalı:"
+                  : "Official expedited channel for judicial court orders, prosecutor requests, and cybercrime units:"}
               </p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Law Enforcement Inquiries Banner */}
-      <section className="p-6 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
-        <div className="flex items-center gap-3 text-center sm:text-left">
-          <div className="p-2.5 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20 shrink-0">
-            <Scale className="h-5 w-5" />
           </div>
-          <div className="space-y-0.5">
-            <span className="font-bold text-[var(--color-text-primary)] block">
-              {isTr
-                ? "Adli Makamlar, Savcılık & Emniyet Müzekkereleri"
-                : "Law Enforcement & Judicial Authority Inquiries"}
-            </span>
-            <p className="text-[11px] text-[var(--color-text-tertiary)]">
-              {isTr
-                ? "Cumhuriyet Başsavcılıkları ve kolluk kuvvetlerinin resmi müzekkere talepleri için adli irtibat kanalı:"
-                : "Official expedited channel for judicial court orders, prosecutor requests, and cybercrime units:"}
-            </p>
-          </div>
-        </div>
 
-        <div className="flex items-center gap-3 shrink-0">
-          <a
-            href="mailto:legal@vellium.dev"
-            className="font-mono text-xs font-semibold px-4 py-2 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] hover:border-blue-500/40 text-blue-400 hover:text-blue-300 transition-colors"
-          >
-            legal@vellium.dev
-          </a>
-        </div>
-      </section>
-    </main>
+          <div className="flex items-center gap-3 shrink-0">
+            <a
+              href="mailto:legal@vellium.dev"
+              className="font-mono text-xs font-semibold px-4 py-2 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] hover:border-blue-500/40 text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              legal@vellium.dev
+            </a>
+          </div>
+        </section>
+      </main>
     </>
   );
 }

@@ -10,8 +10,9 @@ export class EngagementQueryService {
    * Strictly verifies participant authorization (IDOR protection).
    */
   static async getEngagementDetails(viewerUserId: string, engagementId: string) {
-    const isEngUuid =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(engagementId);
+    const isEngUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      engagementId
+    );
     if (!isEngUuid) {
       if (
         (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
@@ -220,9 +221,7 @@ export class EngagementQueryService {
         statusCondition = eq(schema.engagements.status, "CANCELLED");
       }
 
-      const whereClause = statusCondition
-        ? and(userCondition, statusCondition)
-        : userCondition;
+      const whereClause = statusCondition ? and(userCondition, statusCondition) : userCondition;
 
       const rows = await db
         .select({
@@ -261,10 +260,7 @@ export class EngagementQueryService {
           const demo = getDemoEngagement(userId);
           const demoRole = demo.engagement.ownerUserId === userId ? "owner" : "freelancer";
           const demoStatus = demo.engagement.status as
-            | "MATCHED"
-            | "COMPLETION_PENDING"
-            | "COMPLETED"
-            | "CANCELLED";
+            "MATCHED" | "COMPLETION_PENDING" | "COMPLETED" | "CANCELLED";
 
           if (role !== "all" && role !== demoRole) {
             return [];
@@ -349,9 +345,7 @@ export class EngagementQueryService {
 
       return rows.map((r) => {
         const isOwner = r.engagement.ownerUserId === userId;
-        const cpUserId = isOwner
-          ? r.engagement.freelancerUserId
-          : r.engagement.ownerUserId;
+        const cpUserId = isOwner ? r.engagement.freelancerUserId : r.engagement.ownerUserId;
         const cpProfile = profileMap.get(cpUserId);
 
         return {
@@ -361,10 +355,7 @@ export class EngagementQueryService {
           listingTitle: r.listing.title || r.engagement.listingTitleSnapshot,
           listingSummary: r.listing.summary || "",
           status: r.engagement.status as
-            | "MATCHED"
-            | "COMPLETION_PENDING"
-            | "COMPLETED"
-            | "CANCELLED",
+            "MATCHED" | "COMPLETION_PENDING" | "COMPLETED" | "CANCELLED",
           myRole: isOwner ? ("owner" as const) : ("freelancer" as const),
           matchedAt: r.engagement.matchedAt,
           completedAt: r.engagement.completedAt,
@@ -391,10 +382,7 @@ export class EngagementQueryService {
         const demo = getDemoEngagement(userId);
         const demoRole = demo.engagement.ownerUserId === userId ? "owner" : "freelancer";
         const demoStatus = demo.engagement.status as
-          | "MATCHED"
-          | "COMPLETION_PENDING"
-          | "COMPLETED"
-          | "CANCELLED";
+          "MATCHED" | "COMPLETION_PENDING" | "COMPLETED" | "CANCELLED";
 
         if (role !== "all" && role !== demoRole) {
           return [];

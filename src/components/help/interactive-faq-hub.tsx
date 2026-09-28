@@ -47,7 +47,11 @@ export function InteractiveFaqHub({
     { id: "listings", label: isTr ? "İlanlar & 168s Radarı" : "Listings & Radar", icon: Clock },
     { id: "commission", label: isTr ? "%0 Komisyon Modeli" : "0% Fee Model", icon: Zap },
     { id: "offers", label: isTr ? "Şifreli Teklifler" : "Encrypted Proposals", icon: Lock },
-    { id: "matching", label: isTr ? "Eşleşme & İletişim" : "Matching & Workspace", icon: Handshake },
+    {
+      id: "matching",
+      label: isTr ? "Eşleşme & İletişim" : "Matching & Workspace",
+      icon: Handshake,
+    },
     { id: "legal", label: isTr ? "Yasal & Fikri Mülkiyet" : "Legal & IP Rights", icon: Scale },
     { id: "safety", label: isTr ? "Güvenlik & Uyuşmazlık" : "Safety & Trust", icon: ShieldCheck },
   ];
@@ -74,11 +78,7 @@ export function InteractiveFaqHub({
         const question = isTr ? item.questionTr : item.questionEn;
         const answer = isTr ? item.answerTr : item.answerEn;
         const tagsMatch = item.tags.some((t) => t.toLowerCase().includes(q));
-        return (
-          question.toLowerCase().includes(q) ||
-          answer.toLowerCase().includes(q) ||
-          tagsMatch
-        );
+        return question.toLowerCase().includes(q) || answer.toLowerCase().includes(q) || tagsMatch;
       });
     }
 
@@ -122,17 +122,35 @@ export function InteractiveFaqHub({
   const getCategoryBadge = (catId: FAQItem["category"]) => {
     switch (catId) {
       case "listings":
-        return { label: isTr ? "İlanlar" : "Listings", color: "text-blue-400 bg-blue-500/10 border-blue-500/20" };
+        return {
+          label: isTr ? "İlanlar" : "Listings",
+          color: "text-blue-400 bg-blue-500/10 border-blue-500/20",
+        };
       case "commission":
-        return { label: isTr ? "%0 Komisyon" : "0% Fee", color: "text-amber-400 bg-amber-500/10 border-amber-500/20" };
+        return {
+          label: isTr ? "%0 Komisyon" : "0% Fee",
+          color: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+        };
       case "offers":
-        return { label: isTr ? "Şifreli Teklif" : "Encrypted Bid", color: "text-purple-400 bg-purple-500/10 border-purple-500/20" };
+        return {
+          label: isTr ? "Şifreli Teklif" : "Encrypted Bid",
+          color: "text-purple-400 bg-purple-500/10 border-purple-500/20",
+        };
       case "matching":
-        return { label: isTr ? "Eşleşme" : "Matching", color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" };
+        return {
+          label: isTr ? "Eşleşme" : "Matching",
+          color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+        };
       case "legal":
-        return { label: isTr ? "Yasal / Vergi" : "Legal / Tax", color: "text-rose-400 bg-rose-500/10 border-rose-500/20" };
+        return {
+          label: isTr ? "Yasal / Vergi" : "Legal / Tax",
+          color: "text-rose-400 bg-rose-500/10 border-rose-500/20",
+        };
       case "safety":
-        return { label: isTr ? "Güvenlik" : "Safety", color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20" };
+        return {
+          label: isTr ? "Güvenlik" : "Safety",
+          color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
+        };
     }
   };
 
@@ -208,9 +226,13 @@ export function InteractiveFaqHub({
       <div className="flex items-center justify-between px-1 text-xs text-[var(--color-text-tertiary)]">
         <div>
           {isTr ? (
-            <span>Toplam <strong>{filteredFaqs.length}</strong> soru listeleniyor</span>
+            <span>
+              Toplam <strong>{filteredFaqs.length}</strong> soru listeleniyor
+            </span>
           ) : (
-            <span>Showing <strong>{filteredFaqs.length}</strong> questions</span>
+            <span>
+              Showing <strong>{filteredFaqs.length}</strong> questions
+            </span>
           )}
           {searchQuery && (
             <span className="ml-2 px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20">
@@ -244,7 +266,9 @@ export function InteractiveFaqHub({
             <HelpCircle className="h-9 w-9 text-[var(--color-text-tertiary)] mx-auto opacity-60" />
             <div className="space-y-1">
               <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
-                {isTr ? "Aradığınız kriterlere uygun soru bulunamadı" : "No matching questions found"}
+                {isTr
+                  ? "Aradığınız kriterlere uygun soru bulunamadı"
+                  : "No matching questions found"}
               </h3>
               <p className="text-xs text-[var(--color-text-secondary)] max-w-md mx-auto">
                 {isTr

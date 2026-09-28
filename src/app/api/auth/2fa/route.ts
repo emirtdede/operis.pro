@@ -49,13 +49,15 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ secret, otpAuthUri, setupToken }, { status: 200 });
   } catch (err: unknown) {
-    let message = isEn
-      ? "Failed to retrieve 2FA setup information."
-      : "2FA kurulum bilgisi alınamadı.";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("2FA setup GET error:", err);
+    return NextResponse.json(
+      {
+        error: isEn
+          ? "Failed to retrieve 2FA setup information."
+          : "2FA kurulum bilgisi alınamadı.",
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -369,13 +371,19 @@ export async function POST(req: Request) {
       return response;
     }
   } catch (err: unknown) {
-    let message = isEn
-      ? "Failed to update 2FA status."
-      : "2FA durumu güncellenirken bir hata oluştu.";
     if (err instanceof z.ZodError) {
       const fallbackFormat = isEn ? "Invalid request format." : "Geçersiz veri biçimi.";
-      message = err.issues[0]?.message || fallbackFormat;
+      return NextResponse.json(
+        { error: err.issues[0]?.message || fallbackFormat },
+        { status: 400 }
+      );
     }
-    return NextResponse.json({ error: message }, { status: 400 });
+    console.error("2FA status update error:", err);
+    return NextResponse.json(
+      {
+        error: isEn ? "Failed to update 2FA status." : "2FA durumu güncellenirken bir hata oluştu.",
+      },
+      { status: 500 }
+    );
   }
 }

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { ResendPoolService } from "@/src/modules/email/resend-pool-service";
+import { handleApiError } from "@/src/lib/api/error-response";
 
 export async function GET(req: Request) {
   const locale = req.headers.get("x-locale") || "tr";
@@ -18,8 +19,14 @@ export async function GET(req: Request) {
     const consent = await ResendPoolService.getUserConsentStatus(session.userId);
     return NextResponse.json({ consent }, { status: 200 });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Internal error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to fetch marketing consent status",
+        tr: "Pazarlama izni durumu alınamadı",
+      },
+      { isEn, logPrefix: "[Marketing Consent GET Error]", status: 500 }
+    );
   }
 }
 
@@ -80,7 +87,13 @@ export async function POST(req: Request) {
       });
     }
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Internal error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to update marketing consent status",
+        tr: "Pazarlama izni durumu güncellenemedi",
+      },
+      { isEn, logPrefix: "[Marketing Consent POST Error]", status: 500 }
+    );
   }
 }

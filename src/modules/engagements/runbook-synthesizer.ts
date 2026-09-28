@@ -7,13 +7,7 @@
  */
 
 export type SecretCategory =
-  | "DATABASE"
-  | "AUTH"
-  | "PAYMENT"
-  | "STORAGE"
-  | "ANALYTICS"
-  | "COMMUNICATION"
-  | "OTHER";
+  "DATABASE" | "AUTH" | "PAYMENT" | "STORAGE" | "ANALYTICS" | "COMMUNICATION" | "OTHER";
 
 export type RunbookEnvironment = "LOCAL" | "DOCKER" | "PRODUCTION" | "CI_CD";
 
@@ -82,7 +76,10 @@ export interface SynthesizeRunbookInput {
 
 export class SecretLeakageDetector {
   private static readonly SECRET_PATTERNS: Array<{ pattern: RegExp; name: string }> = [
-    { pattern: /-----BEGIN (RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----/, name: "SSH/RSA Private Key" },
+    {
+      pattern: /-----BEGIN (RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----/,
+      name: "SSH/RSA Private Key",
+    },
     { pattern: /AKIA[0-9A-Z]{16}/, name: "AWS Access Key ID" },
     { pattern: /sk_live_[0-9a-zA-Z]{24,}/, name: "Stripe Live Secret Key" },
     { pattern: /ghp_[0-9a-zA-Z]{36}/, name: "GitHub Personal Access Token" },
@@ -155,24 +152,64 @@ export function parseEnvExampleText(rawText: string): RunbookEnvVar[] {
       let value = match[2] ? match[2].trim() : "";
 
       // Strip quotes if present
-      if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
         value = value.slice(1, -1);
       }
 
       // Infer category from key naming conventions
       const upperKey = key.toUpperCase();
       let category: SecretCategory = "OTHER";
-      if (upperKey.includes("DATABASE") || upperKey.includes("DB_") || upperKey.includes("POSTGRES") || upperKey.includes("MYSQL") || upperKey.includes("MONGO") || upperKey.includes("REDIS")) {
+      if (
+        upperKey.includes("DATABASE") ||
+        upperKey.includes("DB_") ||
+        upperKey.includes("POSTGRES") ||
+        upperKey.includes("MYSQL") ||
+        upperKey.includes("MONGO") ||
+        upperKey.includes("REDIS")
+      ) {
         category = "DATABASE";
-      } else if (upperKey.includes("AUTH") || upperKey.includes("SECRET") || upperKey.includes("JWT") || upperKey.includes("TOKEN") || upperKey.includes("CLERK") || upperKey.includes("SESSION")) {
+      } else if (
+        upperKey.includes("AUTH") ||
+        upperKey.includes("SECRET") ||
+        upperKey.includes("JWT") ||
+        upperKey.includes("TOKEN") ||
+        upperKey.includes("CLERK") ||
+        upperKey.includes("SESSION")
+      ) {
         category = "AUTH";
-      } else if (upperKey.includes("STRIPE") || upperKey.includes("IYZICO") || upperKey.includes("PAYMENT") || upperKey.includes("PAYPAL")) {
+      } else if (
+        upperKey.includes("STRIPE") ||
+        upperKey.includes("IYZICO") ||
+        upperKey.includes("PAYMENT") ||
+        upperKey.includes("PAYPAL")
+      ) {
         category = "PAYMENT";
-      } else if (upperKey.includes("S3") || upperKey.includes("STORAGE") || upperKey.includes("BLOB") || upperKey.includes("BUCKET") || upperKey.includes("UPLOAD")) {
+      } else if (
+        upperKey.includes("S3") ||
+        upperKey.includes("STORAGE") ||
+        upperKey.includes("BLOB") ||
+        upperKey.includes("BUCKET") ||
+        upperKey.includes("UPLOAD")
+      ) {
         category = "STORAGE";
-      } else if (upperKey.includes("ANALYTICS") || upperKey.includes("GA_") || upperKey.includes("POSTHOG") || upperKey.includes("SENTRY") || upperKey.includes("MIXPANEL")) {
+      } else if (
+        upperKey.includes("ANALYTICS") ||
+        upperKey.includes("GA_") ||
+        upperKey.includes("POSTHOG") ||
+        upperKey.includes("SENTRY") ||
+        upperKey.includes("MIXPANEL")
+      ) {
         category = "ANALYTICS";
-      } else if (upperKey.includes("RESEND") || upperKey.includes("MAIL") || upperKey.includes("SMTP") || upperKey.includes("SMS") || upperKey.includes("TWILIO")) {
+      } else if (
+        upperKey.includes("RESEND") ||
+        upperKey.includes("MAIL") ||
+        upperKey.includes("SMTP") ||
+        upperKey.includes("SMS") ||
+        upperKey.includes("TWILIO")
+      ) {
         category = "COMMUNICATION";
       }
 
@@ -384,7 +421,8 @@ export class RunbookSynthesizer {
           {
             stepNumber: 1,
             title: "Python Sanal Ortam Kurulumu",
-            command: "python -m venv venv && source venv/bin/activate && pip install -r requirements.txt",
+            command:
+              "python -m venv venv && source venv/bin/activate && pip install -r requirements.txt",
             description: "Python bağımlılıklarını izole sanal ortama kurar.",
             environment: "LOCAL",
           },
@@ -725,12 +763,14 @@ export class RunbookSynthesizer {
           key: "DATABASE_URL",
           description: "Ana PostgreSQL veritabanı bağlantı URI'si (Bağlantı havuzlu)",
           isRequired: true,
-          sampleValue: "postgresql://postgres:sample_password@db.example.com:5432/production_db?sslmode=require",
+          sampleValue:
+            "postgresql://postgres:sample_password@db.example.com:5432/production_db?sslmode=require",
           secretCategory: "DATABASE",
         },
         {
           key: "NEXTAUTH_SECRET",
-          description: "Oturum token'larını ve JWT çerezlerini şifreleyen 32+ baytlık rastgele gizli anahtar",
+          description:
+            "Oturum token'larını ve JWT çerezlerini şifreleyen 32+ baytlık rastgele gizli anahtar",
           isRequired: true,
           sampleValue: "generate_via_openssl_rand_hex_32",
           secretCategory: "AUTH",
@@ -776,7 +816,8 @@ export class RunbookSynthesizer {
           stepNumber: 4,
           title: "Üretim Paketini Derle (Build)",
           command: "pnpm build",
-          description: "TypeScript tip denetimini yapar ve optimize edilmiş üretim derlemesini oluşturur.",
+          description:
+            "TypeScript tip denetimini yapar ve optimize edilmiş üretim derlemesini oluşturur.",
           environment: "PRODUCTION",
         },
         {

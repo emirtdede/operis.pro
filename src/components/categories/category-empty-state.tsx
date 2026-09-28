@@ -40,11 +40,15 @@ export function CategoryEmptyState({
           <p className="text-xs text-[var(--color-text-primary)] leading-relaxed">
             {isTr ? (
               <>
-                Seçili <strong>&ldquo;{currentSectorLabel}&rdquo;</strong> sektöründe sonuç bulunamadı ancak diğer sektörlerde <strong>{globalCrossSectorMatchesCount}+</strong> uzmanlık alanı mevcut.
+                Seçili <strong>&ldquo;{currentSectorLabel}&rdquo;</strong> sektöründe sonuç
+                bulunamadı ancak diğer sektörlerde <strong>{globalCrossSectorMatchesCount}+</strong>{" "}
+                uzmanlık alanı mevcut.
               </>
             ) : (
               <>
-                No matches in <strong>&ldquo;{currentSectorLabel}&rdquo;</strong>, but found <strong>{globalCrossSectorMatchesCount}+</strong> matching specializations in other sectors.
+                No matches in <strong>&ldquo;{currentSectorLabel}&rdquo;</strong>, but found{" "}
+                <strong>{globalCrossSectorMatchesCount}+</strong> matching specializations in other
+                sectors.
               </>
             )}
           </p>

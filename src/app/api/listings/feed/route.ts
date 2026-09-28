@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { FeedService } from "@/src/modules/listings/feed/service";
 import { getSession } from "@/src/modules/auth/session";
+import { handleApiError } from "@/src/lib/api/error-response";
 
 export async function GET(req: NextRequest) {
   try {
@@ -14,13 +15,16 @@ export async function GET(req: NextRequest) {
     const timeRange = (searchParams.get("timeRange") as "all" | "24h" | "3d" | "7d") || undefined;
     const last24Hours = searchParams.get("last24Hours") === "true" || timeRange === "24h";
     const budgetSpecific = searchParams.get("budgetSpecific") === "true";
-    const budgetType = (searchParams.get("budgetType") as "all" | "fixed" | "hourly" | "open") || undefined;
+    const budgetType =
+      (searchParams.get("budgetType") as "all" | "fixed" | "hourly" | "open") || undefined;
     const minBudgetRaw = searchParams.get("minBudget");
     const minBudget = minBudgetRaw ? Number(minBudgetRaw) : undefined;
     const maxBudgetRaw = searchParams.get("maxBudget");
     const maxBudget = maxBudgetRaw ? Number(maxBudgetRaw) : undefined;
     const currency = searchParams.get("currency") || undefined;
-    const timelineScope = (searchParams.get("timelineScope") as "all" | "short" | "medium" | "long" | "flexible") || undefined;
+    const timelineScope =
+      (searchParams.get("timelineScope") as "all" | "short" | "medium" | "long" | "flexible") ||
+      undefined;
     const companyVerifiedOnly =
       searchParams.get("companyVerifiedOnly") === "true" ||
       searchParams.get("companyVerified") === "true";
@@ -33,16 +37,9 @@ export async function GET(req: NextRequest) {
       : undefined;
 
     const budgetMode = searchParams.get("budgetMode") as
-      | "SPECIFIED"
-      | "OPEN_OFFER"
-      | "UNSPECIFIED"
-      | null;
+      "SPECIFIED" | "OPEN_OFFER" | "UNSPECIFIED" | null;
     const timelineMode = searchParams.get("timelineMode") as
-      | "TARGET_DATE"
-      | "ESTIMATED_DURATION"
-      | "FLEXIBLE"
-      | "IN_NEGOTIATION"
-      | null;
+      "TARGET_DATE" | "ESTIMATED_DURATION" | "FLEXIBLE" | "IN_NEGOTIATION" | null;
 
     const session = await getSession();
     if (mode === "following" && !session?.userId) {
@@ -78,9 +75,15 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(feedResult);
   } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to fetch listings feed" },
-      { status: 500 }
+    const isEn =
+      req.headers.get("x-locale") === "en" || req.nextUrl.searchParams.get("locale") === "en";
+    return handleApiError(
+      error,
+      {
+        en: "Failed to fetch listings feed",
+        tr: "İlan akışı alınamadı",
+      },
+      { isEn, logPrefix: "[Listings Feed GET Error]", status: 500 }
     );
   }
 }

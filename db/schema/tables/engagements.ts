@@ -137,7 +137,9 @@ export const engagementChangeRequests = pgTable(
     title: varchar("title", { length: 160 }).notNull(),
     description: text("description").notNull(),
     reason: varchar("reason", { length: 40 }).notNull(), // CLIENT_REQUESTED, TECHNICAL_NECESSITY, SCOPE_DISCOVERY, UNFORESEEN_COMPLICATION
-    additionalBudget: numeric("additional_budget", { precision: 12, scale: 2 }).default("0").notNull(),
+    additionalBudget: numeric("additional_budget", { precision: 12, scale: 2 })
+      .default("0")
+      .notNull(),
     currency: varchar("currency", { length: 10 }).default("TRY").notNull(),
     additionalDays: integer("additional_days").default(0).notNull(),
     status: varchar("status", { length: 30 }).default("PENDING").notNull(), // PENDING, APPROVED, REJECTED, CANCELLED
@@ -216,14 +218,16 @@ export const engagementRetainerPeriods = pgTable(
     currency: varchar("currency", { length: 10 }).default("TRY").notNull(),
     taxSummary: jsonb("tax_summary"),
     workLogsJson: jsonb("work_logs_json")
-      .$type<Array<{
-        id: string;
-        userId: string;
-        hours: number;
-        taskDescription: string;
-        date: string;
-        loggedAt: string;
-      }>>()
+      .$type<
+        Array<{
+          id: string;
+          userId: string;
+          hours: number;
+          taskDescription: string;
+          date: string;
+          loggedAt: string;
+        }>
+      >()
       .default([])
       .notNull(),
     paymentStatus: varchar("payment_status", { length: 30 }).default("PENDING").notNull(), // PENDING, PAID, OVERDUE
@@ -256,7 +260,9 @@ export const engagementMilestones = pgTable(
     targetDate: date("target_date"),
 
     // Deliverable state (Freelancer progress tracking)
-    deliverableStatus: varchar("deliverable_status", { length: 30 }).default("NOT_STARTED").notNull(), // NOT_STARTED, IN_PROGRESS, SUBMITTED, ACCEPTED
+    deliverableStatus: varchar("deliverable_status", { length: 30 })
+      .default("NOT_STARTED")
+      .notNull(), // NOT_STARTED, IN_PROGRESS, SUBMITTED, ACCEPTED
     deliverableNote: text("deliverable_note"),
     deliverableUrl: text("deliverable_url"), // Private repo / staging / figma URL
     deliverableUrlType: varchar("deliverable_url_type", { length: 30 }), // CODE_REPO, DESIGN_PROTOTYPE, STAGING_URL, DOC_WORKSPACE, OTHER
@@ -300,43 +306,52 @@ export const engagementRunbooks = pgTable(
     version: integer("version").default(1).notNull(),
     architectureSummary: text("architecture_summary").notNull(),
     environmentVariables: jsonb("environment_variables")
-      .$type<Array<{
-        key: string;
-        description: string;
-        isRequired: boolean;
-        sampleValue?: string;
-        secretCategory: "DATABASE" | "AUTH" | "PAYMENT" | "STORAGE" | "ANALYTICS" | "COMMUNICATION" | "OTHER";
-      }>>()
+      .$type<
+        Array<{
+          key: string;
+          description: string;
+          isRequired: boolean;
+          sampleValue?: string;
+          secretCategory:
+            "DATABASE" | "AUTH" | "PAYMENT" | "STORAGE" | "ANALYTICS" | "COMMUNICATION" | "OTHER";
+        }>
+      >()
       .default([])
       .notNull(),
     buildAndRunSteps: jsonb("build_and_run_steps")
-      .$type<Array<{
-        stepNumber: number;
-        title: string;
-        command: string;
-        description: string;
-        environment: "LOCAL" | "DOCKER" | "PRODUCTION" | "CI_CD";
-      }>>()
+      .$type<
+        Array<{
+          stepNumber: number;
+          title: string;
+          command: string;
+          description: string;
+          environment: "LOCAL" | "DOCKER" | "PRODUCTION" | "CI_CD";
+        }>
+      >()
       .default([])
       .notNull(),
     thirdPartyServices: jsonb("third_party_services")
-      .$type<Array<{
-        serviceName: string;
-        category: string;
-        dashboardUrl?: string;
-        purpose: string;
-        credentialsTransferred: boolean;
-        notes?: string;
-      }>>()
+      .$type<
+        Array<{
+          serviceName: string;
+          category: string;
+          dashboardUrl?: string;
+          purpose: string;
+          credentialsTransferred: boolean;
+          notes?: string;
+        }>
+      >()
       .default([])
       .notNull(),
     disasterRecoverySteps: jsonb("disaster_recovery_steps")
-      .$type<Array<{
-        priority: "CRITICAL" | "HIGH" | "MEDIUM";
-        scenario: string;
-        procedure: string;
-        verificationCommand?: string;
-      }>>()
+      .$type<
+        Array<{
+          priority: "CRITICAL" | "HIGH" | "MEDIUM";
+          scenario: string;
+          procedure: string;
+          verificationCommand?: string;
+        }>
+      >()
       .default([])
       .notNull(),
     backupSchedule: jsonb("backup_schedule")
@@ -348,13 +363,12 @@ export const engagementRunbooks = pgTable(
       }>()
       .default({ frequency: "DAILY" })
       .notNull(),
-    emergencyContact: jsonb("emergency_contact")
-      .$type<{
-        name?: string;
-        email?: string;
-        phone?: string;
-        notes?: string;
-      }>(),
+    emergencyContact: jsonb("emergency_contact").$type<{
+      name?: string;
+      email?: string;
+      phone?: string;
+      notes?: string;
+    }>(),
     sha256Seal: varchar("sha256_seal", { length: 64 }),
     publishedAt: timestamp("published_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
@@ -425,7 +439,11 @@ export const engagementReviews = pgTable(
   },
   (table) => [
     uniqueIndex("reviews_engagement_author_unique_idx").on(table.engagementId, table.authorUserId),
-    index("reviews_recipient_revealed_idx").on(table.recipientUserId, table.isRevealed, table.createdAt),
+    index("reviews_recipient_revealed_idx").on(
+      table.recipientUserId,
+      table.isRevealed,
+      table.createdAt
+    ),
     index("reviews_author_revealed_idx").on(table.authorUserId, table.isRevealed, table.createdAt),
     index("reviews_engagement_idx").on(table.engagementId),
     check("reviews_overall_rating_chk", sql`overall_rating >= 1 AND overall_rating <= 5`),

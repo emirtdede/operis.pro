@@ -151,9 +151,7 @@ export async function migrateDatabase(options: MigrateDatabaseOptions): Promise<
     const throughTag = options.throughTag;
     const hasMatchingThroughTag = journal.entries.some(
       (e) =>
-        e.tag === throughTag ||
-        e.tag.startsWith(throughTag) ||
-        e.tag.startsWith(`${throughTag}_`)
+        e.tag === throughTag || e.tag.startsWith(throughTag) || e.tag.startsWith(`${throughTag}_`)
     );
     if (!hasMatchingThroughTag) {
       throw new Error(
@@ -166,9 +164,23 @@ export async function migrateDatabase(options: MigrateDatabaseOptions): Promise<
     options.connectionString.includes("supabase.co") ||
     options.connectionString.includes("pooler.supabase.com");
 
+  const caCert = process.env.SUPABASE_SSL_CA_CERT || process.env.DATABASE_SSL_CA;
+  const explicitReject = process.env.DATABASE_SSL_REJECT_UNAUTHORIZED;
+  const shouldRejectUnauthorized =
+    explicitReject !== undefined
+      ? explicitReject === "true"
+      : process.env.NODE_ENV === "production"
+        ? true
+        : Boolean(caCert);
+
   const client = new Client({
     connectionString: options.connectionString,
-    ssl: isSupabase ? { rejectUnauthorized: false } : undefined,
+    ssl: isSupabase
+      ? {
+          rejectUnauthorized: shouldRejectUnauthorized,
+          ca: caCert || undefined,
+        }
+      : undefined,
     statement_timeout: 60000,
   });
 

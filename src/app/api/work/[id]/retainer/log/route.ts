@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { RetainerService } from "@/src/modules/engagements/retainer-service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
 
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const isEn = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
@@ -49,14 +47,22 @@ export async function POST(
 
     if (!hours || typeof hours !== "number" || hours <= 0) {
       return NextResponse.json(
-        { error: isEn ? "Hours must be a positive number." : "Çalışma saati pozitif bir sayı olmalıdır." },
+        {
+          error: isEn
+            ? "Hours must be a positive number."
+            : "Çalışma saati pozitif bir sayı olmalıdır.",
+        },
         { status: 400 }
       );
     }
 
     if (!taskDescription || taskDescription.trim().length < 5) {
       return NextResponse.json(
-        { error: isEn ? "Task description must be at least 5 characters." : "Görev açıklaması en az 5 karakter olmalıdır." },
+        {
+          error: isEn
+            ? "Task description must be at least 5 characters."
+            : "Görev açıklaması en az 5 karakter olmalıdır.",
+        },
         { status: 400 }
       );
     }
@@ -71,8 +77,23 @@ export async function POST(
 
     return NextResponse.json(result);
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to log hours";
-    const status = message.includes("Yetkisiz") || message.includes("Güvenlik ihlali") ? 403 : message.includes("bulunamadı") || message.includes("not found") ? 404 : 400;
-    return NextResponse.json({ error: message }, { status });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to log hours",
+        tr: "Çalışma saatleri kaydedilemedi",
+      },
+      {
+        isEn,
+        logPrefix: "[Retainer Log Error]",
+        status: 500,
+        allowedMessages: {
+          Yetkisiz: { en: "Unauthorized", tr: "Yetkisiz erişim", status: 403 },
+          "Güvenlik ihlali": { en: "Security violation", tr: "Güvenlik ihlali", status: 403 },
+          bulunamadı: { en: "Retainer not found", tr: "Kayıt bulunamadı", status: 404 },
+          "not found": { en: "Retainer not found", tr: "Kayıt bulunamadı", status: 404 },
+        },
+      }
+    );
   }
 }

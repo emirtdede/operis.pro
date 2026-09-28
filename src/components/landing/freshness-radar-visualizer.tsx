@@ -176,7 +176,9 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
         className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono border backdrop-blur-md shadow-lg select-none whitespace-nowrap transition-transform duration-300 hover:scale-110 pointer-events-auto cursor-default ${styles.badge}`}
       >
         <span className="relative flex h-2 w-2 shrink-0">
-          <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${styles.pingBg}`} />
+          <span
+            className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${styles.pingBg}`}
+          />
           <span className={`relative inline-flex rounded-full h-2 w-2 ${styles.dotBg}`} />
         </span>
         <span className="font-semibold text-white/95">{blip.name}</span>
@@ -235,7 +237,6 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
       <div className="relative mx-auto max-w-6xl w-full">
         <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-2xl p-6 sm:p-12 shadow-2xl overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-            
             {/* Left Content Column: The Freshness Guarantee */}
             <div className="lg:col-span-6 space-y-6">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/10 text-xs font-semibold text-cyan-400">
@@ -277,7 +278,9 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
                 <Link href={isTr ? "/tr/akis" : "/en/feed"}>
                   <Button variant="primary" size="lg" className="w-full sm:w-auto gap-2">
                     <Clock className="h-4 w-4" />
-                    <span>{isTr ? "Canlı Radardaki İlanları Gör" : "Explore Active Radar Listings"}</span>
+                    <span>
+                      {isTr ? "Canlı Radardaki İlanları Gör" : "Explore Active Radar Listings"}
+                    </span>
                   </Button>
                 </Link>
               </div>
@@ -286,7 +289,6 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
             {/* Right Interactive Dynamic Radar Column */}
             <div className="lg:col-span-6 flex flex-col justify-center items-center gap-4">
               <div className="relative w-full max-w-[400px] aspect-square rounded-full border border-cyan-500/30 bg-[#05070d] shadow-2xl shadow-cyan-500/10 flex items-center justify-center overflow-hidden select-none">
-                
                 {/* Concentric Reference Rings */}
                 <div className="absolute inset-5 rounded-full border border-cyan-500/15 pointer-events-none" />
                 <div className="absolute inset-16 rounded-full border border-cyan-500/20 pointer-events-none" />
@@ -298,22 +300,21 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
                 <div className="absolute inset-y-0 left-1/2 w-[1px] bg-cyan-500/20 pointer-events-none" />
 
                 {/* Rotating Radar Sweep Cone with Phosphor Glow Trail */}
-                <div 
+                <div
                   className="absolute inset-0 rounded-full origin-center pointer-events-none anim-radar-sweep"
                   style={{
-                    background: "conic-gradient(from 0deg at 50% 50%, rgba(34, 211, 238, 0.45) 0deg, rgba(6, 182, 212, 0.15) 30deg, rgba(6, 182, 212, 0.02) 65deg, transparent 65deg, transparent 360deg)"
+                    background:
+                      "conic-gradient(from 0deg at 50% 50%, rgba(34, 211, 238, 0.45) 0deg, rgba(6, 182, 212, 0.15) 30deg, rgba(6, 182, 212, 0.02) 65deg, transparent 65deg, transparent 360deg)",
                   }}
                 />
-                
+
                 {/* Glowing Leading Needle on the Sweep Beam */}
-                <div 
-                  className="absolute inset-0 rounded-full origin-center pointer-events-none anim-radar-sweep"
-                >
+                <div className="absolute inset-0 rounded-full origin-center pointer-events-none anim-radar-sweep">
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1.5px] h-1/2 bg-gradient-to-t from-cyan-400 to-cyan-200 shadow-[0_0_10px_#22d3ee]" />
                 </div>
 
                 {/* Dynamic Drifting Orbital Blip Cohort (Smooth Discovery Transition) */}
-                <div 
+                <div
                   className={`absolute inset-0 transition-all duration-300 pointer-events-none ${
                     isTransitioning ? "opacity-0 scale-95" : "opacity-100 scale-100"
                   }`}
@@ -321,7 +322,7 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
                   {/* --- INNER ORBIT RING (Diameter: 44%, Radius: 22%, Clockwise) --- */}
                   <div className="absolute inset-0 m-auto w-[44%] h-[44%] rounded-full anim-orbit-inner pointer-events-none">
                     {/* Inner Blip positioned at 45 deg (top-right) */}
-                    <div 
+                    <div
                       className="absolute pointer-events-auto"
                       style={{ top: "14.65%", left: "85.35%", transform: "translate(-50%, -50%)" }}
                     >
@@ -334,17 +335,15 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
                   {/* --- MID ORBIT RING (Diameter: 60%, Radius: 30%, Counter-Clockwise) --- */}
                   <div className="absolute inset-0 m-auto w-[60%] h-[60%] rounded-full anim-orbit-mid pointer-events-none">
                     {/* Mid Blip positioned at 225 deg (bottom-left) */}
-                    <div 
+                    <div
                       className="absolute pointer-events-auto"
                       style={{ top: "85.35%", left: "14.65%", transform: "translate(-50%, -50%)" }}
                     >
-                      <div className="anim-counter-mid">
-                        {renderBlip(currentCohort.midBlip)}
-                      </div>
+                      <div className="anim-counter-mid">{renderBlip(currentCohort.midBlip)}</div>
                     </div>
 
                     {/* Pruned/Expired Job Marker positioned at 315 deg (top-left) */}
-                    <div 
+                    <div
                       className="absolute pointer-events-auto"
                       style={{ top: "14.65%", left: "14.65%", transform: "translate(-50%, -50%)" }}
                     >
@@ -360,7 +359,7 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
                   {/* --- OUTER ORBIT RING (Diameter: 72%, Radius: 36%, Clockwise) --- */}
                   <div className="absolute inset-0 m-auto w-[72%] h-[72%] rounded-full anim-orbit-outer pointer-events-none">
                     {/* Outer Blip positioned at 120 deg (bottom-right) */}
-                    <div 
+                    <div
                       className="absolute pointer-events-auto"
                       style={{ top: "75%", left: "93.3%", transform: "translate(-50%, -50%)" }}
                     >
@@ -394,7 +393,9 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
                 >
                   <Sparkles className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
                   <span className="font-semibold text-cyan-300">{currentCohort.sectorLabel}</span>
-                  <span className="text-[10px] text-cyan-400/80 font-mono font-bold">({activeCohort + 1}/{cohorts.length})</span>
+                  <span className="text-[10px] text-cyan-400/80 font-mono font-bold">
+                    ({activeCohort + 1}/{cohorts.length})
+                  </span>
                   <ChevronRight className="h-3.5 w-3.5 text-cyan-400 ml-0.5" />
                 </button>
 
@@ -406,20 +407,19 @@ export function FreshnessRadarVisualizer({ isTr, locale: _locale }: FreshnessRad
                       type="button"
                       onClick={() => setActiveCohort(idx)}
                       className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                        idx === activeCohort ? "w-5 bg-cyan-400 shadow-xs shadow-cyan-400" : "w-1.5 bg-cyan-900/60 hover:bg-cyan-700/60"
+                        idx === activeCohort
+                          ? "w-5 bg-cyan-400 shadow-xs shadow-cyan-400"
+                          : "w-1.5 bg-cyan-900/60 hover:bg-cyan-700/60"
                       }`}
                       aria-label={c.sectorLabel}
                     />
                   ))}
                 </div>
               </div>
-
             </div>
-
           </div>
         </div>
       </div>
     </section>
   );
 }
-

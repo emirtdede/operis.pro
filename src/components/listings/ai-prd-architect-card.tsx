@@ -118,10 +118,7 @@ export function AiPrdArchitectCard({
 
   const handleApplyBudget = () => {
     if (!result?.marketEstimate || !onApplyMarketBudget) return;
-    onApplyMarketBudget(
-      result.marketEstimate.minBudget,
-      result.marketEstimate.maxBudget
-    );
+    onApplyMarketBudget(result.marketEstimate.minBudget, result.marketEstimate.maxBudget);
     setAppliedBudgetSuccess(true);
     setTimeout(() => setAppliedBudgetSuccess(false), 3000);
   };
@@ -503,7 +500,9 @@ export function AiPrdArchitectCard({
               {/* 3 Phases List */}
               <div className="space-y-2.5">
                 <div className="text-[11px] font-semibold text-[var(--color-text-secondary)]">
-                  {isTr ? "Önerilen 3 Kademeli Hakediş ve Teslim Fazları:" : "Recommended 3-Phase Delivery:"}
+                  {isTr
+                    ? "Önerilen 3 Kademeli Hakediş ve Teslim Fazları:"
+                    : "Recommended 3-Phase Delivery:"}
                 </div>
                 {result.marketEstimate.phases.map((ph) => (
                   <div
@@ -538,7 +537,9 @@ export function AiPrdArchitectCard({
           {activeTab === "preview" && (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-[11px] text-[var(--color-text-tertiary)]">
-                <span>{isTr ? "Üretilen Tam Şartname (PRD):" : "Synthesized Full PRD Document:"}</span>
+                <span>
+                  {isTr ? "Üretilen Tam Şartname (PRD):" : "Synthesized Full PRD Document:"}
+                </span>
                 <button
                   type="button"
                   onClick={handleCopyPrd}

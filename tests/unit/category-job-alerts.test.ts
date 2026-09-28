@@ -28,9 +28,13 @@ describe("Takip Edilen Kategorilerde Canlı İlan Alarmları (Job Alerts)", () =
       expect(muted.minBudget).toBe(25000); // Preserves existing minBudget
 
       // 3. Clear min budget filter
-      const clearedBudget = await CategoryService.updateAlertPreferences(DEFAULT_USER.id, categoryId, {
-        minBudget: null,
-      });
+      const clearedBudget = await CategoryService.updateAlertPreferences(
+        DEFAULT_USER.id,
+        categoryId,
+        {
+          minBudget: null,
+        }
+      );
 
       expect(clearedBudget.success).toBe(true);
       expect(clearedBudget.minBudget).toBeNull();
@@ -47,7 +51,8 @@ describe("Takip Edilen Kategorilerde Canlı İlan Alarmları (Job Alerts)", () =
           listingTitle: "Kurumsal SaaS Mimarisi & API Entegrasyonu",
           budget: "45.000 ₺",
           timeline: "2-4 Hafta",
-          summary: "Modern Next.js App Router, Tailwind CSS ve PostgreSQL ile uçtan uca kurumsal platform.",
+          summary:
+            "Modern Next.js App Router, Tailwind CSS ve PostgreSQL ile uçtan uca kurumsal platform.",
           tags: "Next.js, TypeScript, PostgreSQL",
           relevanceBadge: "🔥 %95 Mükemmel Eşleşme: Uzmanlık Yeteneğinizle Uyumlu",
           actionUrl: "https://operis.pro/tr/ilanlar/kurumsal-saas-mimarisi",
@@ -132,7 +137,7 @@ describe("Takip Edilen Kategorilerde Canlı İlan Alarmları (Job Alerts)", () =
       const sentAlertTimestamps = [
         new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
         new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-        new Date(Date.now() - 30 * 60 * 1000),     // 30 mins ago
+        new Date(Date.now() - 30 * 60 * 1000), // 30 mins ago
       ];
 
       const fourHoursAgo = new Date(Date.now() - 4 * 60 * 60 * 1000);

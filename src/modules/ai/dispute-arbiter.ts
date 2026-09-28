@@ -399,13 +399,17 @@ export class DisputeArbiterService {
     if (verdictRecommendation === "FORCE_COMPLETE") {
       verdictSummaryTr = `Deliller ve PoW doğrulaması, yüklenicinin temel edimini yerine getirdiğini göstermektedir. Projenin %${clampedFreelancer} oranında yüklenici hakedişiyle TAMAMLANMASI (FORCE COMPLETE) önerilir.`;
       verdictSummaryEn = `Evidence & PoW inspection confirm core deliverables met. Recommended verdict: FORCE COMPLETE with ${clampedFreelancer}% contractor entitlement.`;
-      recommendedActionTr = "Yönetici panelinden 'Hakem Kararıyla Tamamla (Force Complete)' butonuna basarak projeyi onaylayınız ve FSEK m. 52 fikri mülkiyet devrini yürürlüğe koyunuz.";
-      recommendedActionEn = "Apply 'Force Complete' decree in Admin console and execute statutory IP assignment under FSEK Art. 52.";
+      recommendedActionTr =
+        "Yönetici panelinden 'Hakem Kararıyla Tamamla (Force Complete)' butonuna basarak projeyi onaylayınız ve FSEK m. 52 fikri mülkiyet devrini yürürlüğe koyunuz.";
+      recommendedActionEn =
+        "Apply 'Force Complete' decree in Admin console and execute statutory IP assignment under FSEK Art. 52.";
     } else if (verdictRecommendation === "FORCE_CANCEL") {
       verdictSummaryTr = `Teslim edilen kaynak kodun bulunmaması veya kritik canlı hatalar sebebiyle işverenin haklılığı ağır basmaktadır. Projenin %${clampedClient} iade ile İPTAL EDİLMESİ (FORCE CANCEL) önerilir.`;
       verdictSummaryEn = `Critical delivery failures or missing codebase attribute primary liability to contractor. Recommended verdict: FORCE CANCEL with ${clampedClient}% client refund.`;
-      recommendedActionTr = "Yönetici panelinden 'Hakem Kararıyla İptal Et (Force Cancel)' butonuna basarak projeyi feshediniz ve işverenin bütçesini iade ediniz.";
-      recommendedActionEn = "Apply 'Force Cancel' decree in Admin console and release full refund to Client.";
+      recommendedActionTr =
+        "Yönetici panelinden 'Hakem Kararıyla İptal Et (Force Cancel)' butonuna basarak projeyi feshediniz ve işverenin bütçesini iade ediniz.";
+      recommendedActionEn =
+        "Apply 'Force Cancel' decree in Admin console and release full refund to Client.";
     }
 
     const statutoryLegalGroundsTr = [

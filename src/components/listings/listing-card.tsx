@@ -3,14 +3,7 @@
 import { useState, useMemo, memo } from "react";
 import Link from "next/link";
 import { formatBudgetRange } from "@/src/lib/format/budget";
-import {
-  Clock,
-  ArrowUpRight,
-  CheckCircle2,
-  Zap,
-  CheckSquare,
-  Square,
-} from "lucide-react";
+import { Clock, ArrowUpRight, CheckCircle2, Zap, CheckSquare, Square } from "lucide-react";
 import { AvatarInitials } from "../ui/avatar-initials";
 import { BookmarkButton } from "./bookmark-button";
 import { VerifiedCompanyBadge } from "../ui/verified-company-badge";

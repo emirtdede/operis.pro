@@ -104,6 +104,9 @@ jobs:
       - name: 10. Install Playwright Browsers
         run: npx playwright install --with-deps chromium
 
+      - name: 10.1. Headless PDF Runtime Strict Verification
+        run: pnpm audit:pdf --strict
+
       - name: 11. End-to-End (E2E) Browser Test Suite (Production Mode on next start)
         env:
           TEST_PROD: "1"

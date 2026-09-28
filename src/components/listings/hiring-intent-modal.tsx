@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 import {
   X,
   ShieldCheck,
@@ -35,20 +35,6 @@ export function HiringIntentModal({
 }: HiringIntentModalProps) {
   const isTr = locale === "tr";
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    if (isOpen) {
-      window.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden";
-    }
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "unset";
-    };
-  }, [isOpen, onClose]);
-
   if (!isOpen || !breakdown) return null;
 
   const score = breakdown.overallScore;
@@ -61,16 +47,8 @@ export function HiringIntentModal({
   };
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="hiring-intent-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 animate-in fade-in duration-200"
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-6 sm:p-8 shadow-2xl space-y-6 text-[var(--color-text-primary)]"
-      >
+    <ModalOverlay isOpen={isOpen} onClose={onClose} ariaLabelledBy="hiring-intent-modal-title">
+      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] p-6 sm:p-8 shadow-2xl space-y-6 text-[var(--color-text-primary)]">
         {/* Header */}
         <div className="flex items-start justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-4">
           <div className="space-y-1">
@@ -253,6 +231,6 @@ export function HiringIntentModal({
           </button>
         </div>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

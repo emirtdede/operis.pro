@@ -51,15 +51,11 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
       id: "zero-commission",
       icon: Percent,
       badge: isTr ? "%0 Kesinti" : "0% Platform Cut",
-      title: isTr
-        ? "%0 Komisyon & Kesintisiz Kazanç"
-        : "Zero Commission & 100% Take-Home",
+      title: isTr ? "%0 Komisyon & Kesintisiz Kazanç" : "Zero Commission & 100% Take-Home",
       description: isTr
         ? "İşlem ücreti, para çekme kesintisi veya gizli maliyetler yok. Anlaşılan tutarın tamamı doğrudan uzmana gider; platform fonları havuzda bloke etmez."
         : "No transaction taxes, withdrawal cuts, or hidden escrow deductions. 100% of the agreed budget flows directly to the developer without lock-ins.",
-      highlight: isTr
-        ? "Doğrudan IBAN / Kripto Transferi"
-        : "Direct Peer-to-Peer Settlement",
+      highlight: isTr ? "Doğrudan IBAN / Kripto Transferi" : "Direct Peer-to-Peer Settlement",
       category: ["all", "freelancer", "client"],
       accentColor: {
         badge: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
@@ -71,15 +67,11 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
       id: "freshness-radar",
       icon: Clock,
       badge: isTr ? "168 Saat Sınırı" : "168h Lifetime",
-      title: isTr
-        ? "168 Saatlik Canlılık & Tazelik Radarı"
-        : "168-Hour Active Freshness Radar",
+      title: isTr ? "168 Saatlik Canlılık & Tazelik Radarı" : "168-Hour Active Freshness Radar",
       description: isTr
         ? "Sistemdeki tüm ilanlar maksimum 7 gün aktiftir. Güncellenmeyen ilanlar otomatik arşivlenir; haftalar önce unutulmuş hayalet ilanlara teklif vererek vakit kaybetmezsiniz."
         : "All projects expire after 7 days unless explicitly renewed. Say goodbye to dead, abandoned listings and submit offers only to genuinely active clients.",
-      highlight: isTr
-        ? "Sıfır Hayalet İlan Garantisi"
-        : "Strict Freshness Guarantee",
+      highlight: isTr ? "Sıfır Hayalet İlan Garantisi" : "Strict Freshness Guarantee",
       category: ["all", "freelancer"],
       accentColor: {
         badge: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
@@ -91,15 +83,11 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
       id: "encrypted-bids",
       icon: Lock,
       badge: isTr ? "Uçtan Uca Gizlilik" : "End-to-End Privacy",
-      title: isTr
-        ? "Tam Gizlilik Korumalı Teklifler"
-        : "Private & Confidential Proposals",
+      title: isTr ? "Tam Gizlilik Korumalı Teklifler" : "Private & Confidential Proposals",
       description: isTr
         ? "Teklif mektubunuz, bütçeniz ve teslimat planınız uçtan uca şifrelenerek korunur. Rakipler teklifinizi asla göremez; fiyat kırma savaşı ve fikir hırsızlığı yaşanmaz."
         : "Your pitch, timeline, and rate are protected with advanced encryption. Competitors cannot view them, completely eliminating price undercutting wars.",
-      highlight: isTr
-        ? "Gizli Teklif Güvencesi"
-        : "Zero Price Undercutting",
+      highlight: isTr ? "Gizli Teklif Güvencesi" : "Zero Price Undercutting",
       category: ["all", "security", "freelancer"],
       accentColor: {
         badge: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
@@ -117,9 +105,7 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
       description: isTr
         ? "İlanlardaki başvuru sayısı gizlenir. 'Zaten 100 kişi başvurmuş, bana sıra gelmez' korkusu biter; kıdemli yetenekler tereddüt etmeden teklif sunabilir."
         : "Total application numbers are masked to prevent bid fatigue. Senior developers are never discouraged by artificial crowd numbers.",
-      highlight: isTr
-        ? "Eşit & Nitelikli Değerlendirme"
-        : "Equal Evaluation Opportunity",
+      highlight: isTr ? "Eşit & Nitelikli Değerlendirme" : "Equal Evaluation Opportunity",
       category: ["all", "freelancer"],
       accentColor: {
         badge: "text-blue-400 bg-blue-500/10 border-blue-500/20",
@@ -131,15 +117,11 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
       id: "direct-handshake",
       icon: Handshake,
       badge: isTr ? "Açık İletişim" : "Uncensored",
-      title: isTr
-        ? "Doğrudan İkili Çalışma Alanı"
-        : "Direct Bilateral Handshake",
+      title: isTr ? "Doğrudan İkili Çalışma Alanı" : "Direct Bilateral Handshake",
       description: isTr
         ? "Teklif onaylandığı an telefon, e-posta, Slack, Discord ve GitHub iletişim bilgileri karşılıklı açılır. Sansürlenen mesajlar ve platforma hapsolma zorunluluğu yoktur."
         : "Once matched, verified contact channels (phone, email, Discord, GitHub) unlock instantly. No message redactions or platform entrapment.",
-      highlight: isTr
-        ? "Kendi Araçlarınızla Çalışın"
-        : "Freedom of Tooling",
+      highlight: isTr ? "Kendi Araçlarınızla Çalışın" : "Freedom of Tooling",
       category: ["all", "client", "freelancer"],
       accentColor: {
         badge: "text-purple-400 bg-purple-500/10 border-purple-500/20",
@@ -151,15 +133,11 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
       id: "command-palette",
       icon: Command,
       badge: isTr ? "⌘K Kısayolu" : "⌘K Fast Radar",
-      title: isTr
-        ? "Milisaniyelik Komut Paleti & Radar"
-        : "Sub-Millisecond Command Palette (⌘K)",
+      title: isTr ? "Milisaniyelik Komut Paleti & Radar" : "Sub-Millisecond Command Palette (⌘K)",
       description: isTr
         ? "Klavyeden ⌘K veya Ctrl+K tuşlarına basarak 110 uzmanlık kategorisi, teknoloji yığınları (Next.js, Go, Python, Rust) ve bütçeler arasında anında gezinin."
         : "Trigger our instant command radar anywhere. Filter across 110 tech niches, frameworks, and budgets without reloading the page.",
-      highlight: isTr
-        ? "Sayfa Yenilemesiz Hızlı Arama"
-        : "Instant Real-Time Filtering",
+      highlight: isTr ? "Sayfa Yenilemesiz Hızlı Arama" : "Instant Real-Time Filtering",
       category: ["all", "freelancer", "client"],
       accentColor: {
         badge: "text-amber-400 bg-amber-500/10 border-amber-500/20",
@@ -177,9 +155,7 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
       description: isTr
         ? "Platform dışı doğrudan çalışmayı yasal güvenceye alan hazır Freelance Hizmet Sözleşmesi ve Gizlilik (NDA) taslakları. Kapsam ve revizyon haklarını netleştirin."
         : "Downloadable, battle-tested service contracts and mutual NDA blueprints designed for direct peer-to-peer engagements with clear milestone clauses.",
-      highlight: isTr
-        ? "Hazır Yasal Koruma Taslağı"
-        : "Turnkey Legal Protection",
+      highlight: isTr ? "Hazır Yasal Koruma Taslağı" : "Turnkey Legal Protection",
       category: ["all", "security", "client"],
       accentColor: {
         badge: "text-teal-400 bg-teal-500/10 border-teal-500/20",
@@ -197,9 +173,7 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
       description: isTr
         ? "Yapay zeka modellerinden akıllı sözleşmelere, mobil uygulamalardan siber güvenliğe kadar özelleştirilmiş derin teknoloji etiketleri ile doğru ilanı bulun."
         : "Granular micro-tagging across AI/LLM, Web3, DevOps, Cloud Infrastructure, and UX Design. Zero clutter, hyper-targeted matches.",
-      highlight: isTr
-        ? "Mikro Teknoloji Hedefleme"
-        : "Laser-Focused Search",
+      highlight: isTr ? "Mikro Teknoloji Hedefleme" : "Laser-Focused Search",
       category: ["all", "client", "freelancer"],
       accentColor: {
         badge: "text-rose-400 bg-rose-500/10 border-rose-500/20",
@@ -217,9 +191,7 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
       description: isTr
         ? "Yapay zeka filtresi ve moderasyon denetimiyle sahte ilanlar, bot teklifleri ve yanıltıcı içerikler anında elenir. Sadece gerçek bütçeli işler yayınlanır."
         : "Automated fraud defense and verified talent safeguards actively weed out junk proposals and fake listings before they hit the live radar.",
-      highlight: isTr
-        ? "Temiz & Güvenli Pazar Yeri"
-        : "Zero Junk & Bot Free",
+      highlight: isTr ? "Temiz & Güvenli Pazar Yeri" : "Zero Junk & Bot Free",
       category: ["all", "security"],
       accentColor: {
         badge: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
@@ -231,15 +203,11 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
       id: "proposal-cockpit",
       icon: SlidersHorizontal,
       badge: isTr ? "Yönetim Terminali" : "Evaluation Cockpit",
-      title: isTr
-        ? "İşveren Teklif Kıyaslama Terminali"
-        : "Side-by-Side Proposal Cockpit",
+      title: isTr ? "İşveren Teklif Kıyaslama Terminali" : "Side-by-Side Proposal Cockpit",
       description: isTr
         ? "İşverenler gelen tüm şifreli teklifleri bütçe, teslimat süresi, GitHub geçmişi ve teknik portföy bazında yan yana sıralayıp objektifçe kıyaslayabilir."
         : "Clients review and benchmark candidate offers side-by-side: evaluate milestone estimates, GitHub repos, and tech stack compatibility in one view.",
-      highlight: isTr
-        ? "Veriye Dayalı Objektif Seçim"
-        : "Data-Driven Hiring",
+      highlight: isTr ? "Veriye Dayalı Objektif Seçim" : "Data-Driven Hiring",
       category: ["all", "client"],
       accentColor: {
         badge: "text-blue-400 bg-blue-500/10 border-blue-500/20",
@@ -250,9 +218,7 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
   ];
 
   const filteredFeatures =
-    activeTab === "all"
-      ? features
-      : features.filter((f) => f.category.includes(activeTab));
+    activeTab === "all" ? features : features.filter((f) => f.category.includes(activeTab));
 
   const filterTabs: { id: FeatureCategory; label: string; count: number }[] = [
     {
@@ -395,7 +361,10 @@ export function PlatformFeaturesGrid({ isTr, locale }: PlatformFeaturesGridProps
                 {/* Bottom Highlight Pill */}
                 <div className="pt-4 mt-4 border-t border-[var(--color-border-subtle)]/60 flex items-center justify-between text-xs">
                   <span className="inline-flex items-center gap-1.5 text-[var(--color-text-primary)] font-medium text-[11px]">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" aria-hidden="true" />
+                    <CheckCircle2
+                      className="h-3.5 w-3.5 text-emerald-400 shrink-0"
+                      aria-hidden="true"
+                    />
                     <span>{item.highlight}</span>
                   </span>
                   <span className="text-[10px] text-[var(--color-text-tertiary)] font-mono">

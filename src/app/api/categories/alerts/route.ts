@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/src/modules/auth/session";
 import { CategoryService } from "@/src/modules/categories/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -53,15 +54,18 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, preferences: result }, { status: 200 });
   } catch (err: unknown) {
-    let message = isEn
-      ? "Failed to update category alert preferences."
-      : "Kategori alarm tercihleri güncellenemedi.";
     if (err instanceof z.ZodError) {
       const fallbackMsg = isEn ? "Invalid alert parameters." : "Geçersiz alarm parametreleri.";
-      message = err.issues[0]?.message || fallbackMsg;
-    } else if (err instanceof Error) {
-      message = err.message;
+      return NextResponse.json({ error: err.issues[0]?.message || fallbackMsg }, { status: 400 });
     }
-    return NextResponse.json({ error: message }, { status: 400 });
+
+    return handleApiError(
+      err,
+      {
+        en: "Failed to update category alert preferences.",
+        tr: "Kategori alarm tercihleri güncellenemedi.",
+      },
+      { isEn, logPrefix: "[Category Alerts POST Error]", status: 500 }
+    );
   }
 }

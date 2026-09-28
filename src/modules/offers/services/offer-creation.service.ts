@@ -7,11 +7,7 @@ import { inMemoryListings } from "@/src/modules/listings/service";
 import { DEFAULT_USER } from "@/src/modules/auth/demo-user";
 import { SubmitOfferInput, submitOfferSchema } from "../validation";
 import { SquadRevenueEngine } from "../squad-engine";
-import {
-  inMemorySentOffers,
-  inMemoryReceivedOffers,
-  inMemorySquadMembers,
-} from "./types";
+import { inMemorySentOffers, inMemoryReceivedOffers, inMemorySquadMembers } from "./types";
 
 export class OfferCreationService {
   /**

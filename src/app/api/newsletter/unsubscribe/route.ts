@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { ResendPoolService } from "@/src/modules/email/resend-pool-service";
+import { handleApiError } from "@/src/lib/api/error-response";
 
 export async function GET(req: Request) {
   try {
@@ -98,10 +99,13 @@ export async function POST(req: Request) {
       message: "Unsubscribed from marketing emails",
     });
   } catch (error: unknown) {
-    console.error("[UNSUBSCRIBE_POST_ERROR]", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to unsubscribe" },
-      { status: 500 }
+    return handleApiError(
+      error,
+      {
+        en: "Failed to unsubscribe",
+        tr: "Abonelikten çıkılamadı",
+      },
+      { logPrefix: "[UNSUBSCRIBE_POST_ERROR]", status: 500 }
     );
   }
 }

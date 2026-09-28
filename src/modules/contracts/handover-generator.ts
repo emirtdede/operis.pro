@@ -86,29 +86,36 @@ export class HandoverGeneratorService {
       );
     }
 
-    const generatedDateFormatted = generatedAtDate.toLocaleDateString(
-      isTr ? "tr-TR" : "en-US",
-      { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" }
-    );
+    const generatedDateFormatted = generatedAtDate.toLocaleDateString(isTr ? "tr-TR" : "en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
     const clientName = input.client.displayName || "İşveren / Client";
     const clientEmail = input.client.email || "—";
-    const clientPhone = input.client.phone || (isTr ? "Gizli / Eşleşme Onaylı" : "Private / Verified");
+    const clientPhone =
+      input.client.phone || (isTr ? "Gizli / Eşleşme Onaylı" : "Private / Verified");
 
     const contractorName = input.contractor.displayName || "Yüklenici / Freelancer";
     const contractorEmail = input.contractor.email || "—";
-    const contractorPhone = input.contractor.phone || (isTr ? "Gizli / Eşleşme Onaylı" : "Private / Verified");
+    const contractorPhone =
+      input.contractor.phone || (isTr ? "Gizli / Eşleşme Onaylı" : "Private / Verified");
 
     const ACCEPTANCE_LABELS = {
       tr: {
         ACCEPTED_EXPRESS: "Açık Kabul Beyanı (TBK m. 477/1 - Express Acceptance)",
-        ACCEPTED_TACIT: "Zımni/Örtülü Yasal Kabul (TBK m. 477/2 - Yasal Muayene Süresinde İtiraz Edilmeyerek)",
+        ACCEPTED_TACIT:
+          "Zımni/Örtülü Yasal Kabul (TBK m. 477/2 - Yasal Muayene Süresinde İtiraz Edilmeyerek)",
         REVISION_REQUESTED: "Revizyon / Ayıp İnceleme Talebi (TBK m. 474)",
         DEFAULT: "Teslim Edildi, Muayene Aşamasında (TBK m. 474)",
       },
       en: {
         ACCEPTED_EXPRESS: "Express Acceptance (TBK Art. 477/1)",
-        ACCEPTED_TACIT: "Tacit Statutory Acceptance (TBK Art. 477/2 - Inspection Window Expired Without Dispute)",
+        ACCEPTED_TACIT:
+          "Tacit Statutory Acceptance (TBK Art. 477/2 - Inspection Window Expired Without Dispute)",
         REVISION_REQUESTED: "Defect Revision Notice (TBK Art. 474)",
         DEFAULT: "Submitted, In Inspection Window (TBK Art. 474)",
       },
@@ -406,14 +413,18 @@ This document constitutes conclusive evidence under HMK Art. 193, sealed determi
       <td>${isTr ? "Canlı / Dağıtım Ortamı" : "Live Deployment"}</td>
       <td>${input.liveUrl || "—"}</td>
     </tr>
-    ${input.deliveryHealth ? `
+    ${
+      input.deliveryHealth
+        ? `
     <tr>
       <td>${isTr ? "Canlı Sistem Sağlık Denetimi (PoW)" : "Delivery Health Inspection (PoW)"}</td>
       <td>
         <span style="color: #10b981; font-weight: bold;">${isTr ? input.deliveryHealth.badgeTextTr : input.deliveryHealth.badgeTextEn}</span>
         <br><small style="color: #64748b; font-family: monospace;">PoW SHA-256: ${input.deliveryHealth.powSeal.slice(0, 32)}...</small>
       </td>
-    </tr>` : ""}
+    </tr>`
+        : ""
+    }
     <tr>
       <td>${isTr ? "Devir Notları & Kurulum" : "Handover Notes"}</td>
       <td>${input.documentationNotes || "README"}</td>
@@ -433,9 +444,11 @@ This document constitutes conclusive evidence under HMK Art. 193, sealed determi
   </table>
 
   <div class="section-title">${isTr ? "3. Muayene ve Yasal Kabul Hükümleri" : "3. Inspection & Legal Acceptance"}</div>
-  <p>${isTr
-    ? `İşveren, TBK m. 474 uyarınca teslim tarihinden (${submittedDateFormatted}) itibaren 7 iş günü içinde (${inspectionExpiryFormatted} tarihine kadar) eseri muayene etmekle mükelleftir. Süre sonuna kadar haklı bir ayıp ihbarında bulunulmaması halinde eser TBK m. 477 uyarınca zımnen kabul edilmiş sayılır.`
-    : `Client is obligated to inspect the work under TBK Art. 474 within 7 business days until ${inspectionExpiryFormatted}. Failure to notify defects within this window constitutes tacit statutory acceptance under TBK Art. 477.`}
+  <p>${
+    isTr
+      ? `İşveren, TBK m. 474 uyarınca teslim tarihinden (${submittedDateFormatted}) itibaren 7 iş günü içinde (${inspectionExpiryFormatted} tarihine kadar) eseri muayene etmekle mükelleftir. Süre sonuna kadar haklı bir ayıp ihbarında bulunulmaması halinde eser TBK m. 477 uyarınca zımnen kabul edilmiş sayılır.`
+      : `Client is obligated to inspect the work under TBK Art. 474 within 7 business days until ${inspectionExpiryFormatted}. Failure to notify defects within this window constitutes tacit statutory acceptance under TBK Art. 477.`
+  }
   </p>
   <p><strong>${isTr ? "Mevcut Durum:" : "Current Status:"}</strong> ${acceptanceTypeLabel} (${acceptedDateFormatted})</p>
 

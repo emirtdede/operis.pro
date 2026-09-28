@@ -112,9 +112,7 @@ export default async function MatchPage({
   };
 
   const baseUrl = getBaseUrl();
-  const workspaceUrl = isTr
-    ? `${baseUrl}/tr/calisma-alani/${id}`
-    : `${baseUrl}/en/workspace/${id}`;
+  const workspaceUrl = isTr ? `${baseUrl}/tr/calisma-alani/${id}` : `${baseUrl}/en/workspace/${id}`;
 
   const jsonLd = {
     "@context": "https://schema.org",

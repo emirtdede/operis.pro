@@ -28,8 +28,14 @@ const PROJECT_TYPE_LABELS: Record<string, { tr: string; en: string }> = {
   improvement: { tr: "Mevcut Sistemi Geliştirme & Özellik Eklenmesi", en: "Feature Improvement" },
   bug_fix: { tr: "Hata Çözümü & Performans Optimizasyonu", en: "Bug Fix & Optimization" },
   migration: { tr: "Altyapı / Versiyon / Teknoloji Geçişi", en: "Migration & Modernization" },
-  integration: { tr: "API, Veri ve 3. Parti Servis Entegrasyonu", en: "API & Third-Party Integration" },
-  consulting: { tr: "Teknik Mimari & Stratejik Danışmanlık", en: "Technical Advisory & Consulting" },
+  integration: {
+    tr: "API, Veri ve 3. Parti Servis Entegrasyonu",
+    en: "API & Third-Party Integration",
+  },
+  consulting: {
+    tr: "Teknik Mimari & Stratejik Danışmanlık",
+    en: "Technical Advisory & Consulting",
+  },
   audit: { tr: "Güvenlik, Kod ve Süreç Denetimi", en: "Security & Codebase Audit" },
   maintenance: { tr: "Düzenli Bakım, Destek ve İyileştirme", en: "Ongoing Maintenance & Support" },
 };
@@ -42,11 +48,7 @@ const PROJECT_STAGE_LABELS: Record<string, { tr: string; en: string }> = {
   production_system: { tr: "Canlıda Çalışan Üretim Ortamı", en: "Active Production System" },
 };
 
-function formatAnswerText(
-  question: WizardQuestion,
-  answer: unknown,
-  isTr: boolean
-): string | null {
+function formatAnswerText(question: WizardQuestion, answer: unknown, isTr: boolean): string | null {
   if (answer === undefined || answer === null || answer === "") return null;
 
   if (question.type === "boolean") {
@@ -85,7 +87,9 @@ export function synthesizeScope(input: ScopeSynthesizerInput): string {
   const lines: string[] = [];
 
   // 1. Proje Amacı ve Genel Çerçeve
-  lines.push(isTr ? "### 1. Proje Amacı ve Genel Çerçeve" : "### 1. Project Objective & Strategic Context");
+  lines.push(
+    isTr ? "### 1. Proje Amacı ve Genel Çerçeve" : "### 1. Project Objective & Strategic Context"
+  );
 
   if (input.summary?.trim()) {
     lines.push(input.summary.trim());
@@ -304,8 +308,7 @@ export function calculateClarityScore(
   const titleLen = formData.title.trim().length;
   if (titleLen >= 20 && titleLen <= 120) {
     const isAllCaps =
-      titleLen > 15 &&
-      (formData.title.match(/[A-ZĞÜŞİÖÇ]/g) || []).length / titleLen > 0.7;
+      titleLen > 15 && (formData.title.match(/[A-ZĞÜŞİÖÇ]/g) || []).length / titleLen > 0.7;
     if (isAllCaps) {
       score += 5;
       tips.push(
@@ -325,9 +328,7 @@ export function calculateClarityScore(
     );
   } else {
     tips.push(
-      isTr
-        ? "Projenizi özetleyen profesyonel bir başlık girin."
-        : "Provide a clear project title."
+      isTr ? "Projenizi özetleyen profesyonel bir başlık girin." : "Provide a clear project title."
     );
   }
 
@@ -359,10 +360,7 @@ export function calculateClarityScore(
     for (const q of questions) {
       const val = formData.answers[q.key];
       const isAnswered =
-        val !== undefined &&
-        val !== null &&
-        val !== "" &&
-        (!Array.isArray(val) || val.length > 0);
+        val !== undefined && val !== null && val !== "" && (!Array.isArray(val) || val.length > 0);
 
       if (isAnswered) {
         answeredCount++;
@@ -404,16 +402,12 @@ export function calculateClarityScore(
   score += contextPts;
   if (contextPts < 10) {
     tips.push(
-      isTr
-        ? "İş türünü ve projenin mevcut aşamasını seçin."
-        : "Select job type and project stage."
+      isTr ? "İş türünü ve projenin mevcut aşamasını seçin." : "Select job type and project stage."
     );
   }
 
   // 6. Custom Notes / Rich Specification Detail (Max 10 pts)
-  const hasCustomNotes = Boolean(
-    formData.customNotes && formData.customNotes.trim().length >= 20
-  );
+  const hasCustomNotes = Boolean(formData.customNotes && formData.customNotes.trim().length >= 20);
   const scopeLen = (formData.scope || "").trim().length;
   if (hasCustomNotes || scopeLen >= 400) {
     score += 10;
@@ -450,7 +444,9 @@ export function validateCustomNotes(notes: string): { isValid: boolean; error?: 
   if (!mod.isValid) {
     return {
       isValid: false,
-      error: mod.reason || "Not alanında topluluk kurallarına aykırı veya uygunsuz içerik tespit edildi.",
+      error:
+        mod.reason ||
+        "Not alanında topluluk kurallarına aykırı veya uygunsuz içerik tespit edildi.",
     };
   }
 

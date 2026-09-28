@@ -1,7 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { GET as milestonesGetHandler, POST as milestonesPostHandler } from "@/src/app/api/work/[id]/milestones/route";
+import {
+  GET as milestonesGetHandler,
+  POST as milestonesPostHandler,
+} from "@/src/app/api/work/[id]/milestones/route";
 import { POST as deliverablePostHandler } from "@/src/app/api/work/[id]/milestones/[milestoneId]/deliverable/route";
-import { GET as paymentGetHandler, POST as paymentPostHandler } from "@/src/app/api/work/[id]/milestones/[milestoneId]/payment/route";
+import {
+  GET as paymentGetHandler,
+  POST as paymentPostHandler,
+} from "@/src/app/api/work/[id]/milestones/[milestoneId]/payment/route";
 import { inMemoryMilestones } from "@/src/modules/engagements/milestone-service";
 import * as sessionModule from "@/src/modules/auth/session";
 
@@ -173,17 +179,20 @@ describe("Zero-Escrow Milestone API Routes", () => {
 
     // 1. Submit deliverable as FREELANCER
     setFreelancerSession();
-    const updateReq = new Request(`http://localhost/api/work/${engagementId}/milestones/${mId}/deliverable`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "UPDATE",
-        status: "SUBMITTED",
-        deliverableUrl: "https://github.com/my-org/my-project",
-        deliverableUrlType: "CODE_REPO",
-        deliverableNote: "İlk teslimat hazır.",
-      }),
-    });
+    const updateReq = new Request(
+      `http://localhost/api/work/${engagementId}/milestones/${mId}/deliverable`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "UPDATE",
+          status: "SUBMITTED",
+          deliverableUrl: "https://github.com/my-org/my-project",
+          deliverableUrlType: "CODE_REPO",
+          deliverableNote: "İlk teslimat hazır.",
+        }),
+      }
+    );
 
     const updateRes = await deliverablePostHandler(updateReq, {
       params: Promise.resolve({ id: engagementId, milestoneId: mId }),
@@ -195,13 +204,16 @@ describe("Zero-Escrow Milestone API Routes", () => {
 
     // 2. Accept deliverable as CLIENT
     setClientSession();
-    const acceptReq = new Request(`http://localhost/api/work/${engagementId}/milestones/${mId}/deliverable`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "ACCEPT",
-      }),
-    });
+    const acceptReq = new Request(
+      `http://localhost/api/work/${engagementId}/milestones/${mId}/deliverable`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "ACCEPT",
+        }),
+      }
+    );
 
     const acceptRes = await deliverablePostHandler(acceptReq, {
       params: Promise.resolve({ id: engagementId, milestoneId: mId }),
@@ -222,14 +234,17 @@ describe("Zero-Escrow Milestone API Routes", () => {
     const mId = milestones[0].id;
 
     // 1. Mark paid as CLIENT
-    const markReq = new Request(`http://localhost/api/work/${engagementId}/milestones/${mId}/payment`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "MARK_PAID",
-        paymentReference: "EFT-8839210",
-      }),
-    });
+    const markReq = new Request(
+      `http://localhost/api/work/${engagementId}/milestones/${mId}/payment`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "MARK_PAID",
+          paymentReference: "EFT-8839210",
+        }),
+      }
+    );
 
     const markRes = await paymentPostHandler(markReq, {
       params: Promise.resolve({ id: engagementId, milestoneId: mId }),
@@ -239,13 +254,16 @@ describe("Zero-Escrow Milestone API Routes", () => {
     expect(markJson.milestone.paymentStatus).toBe("MARKED_PAID");
 
     // 2. Revert payment as CLIENT (zero-escrow reversibility)
-    const revertReq = new Request(`http://localhost/api/work/${engagementId}/milestones/${mId}/payment`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "REVERT_PAID",
-      }),
-    });
+    const revertReq = new Request(
+      `http://localhost/api/work/${engagementId}/milestones/${mId}/payment`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "REVERT_PAID",
+        }),
+      }
+    );
 
     const revertRes = await paymentPostHandler(revertReq, {
       params: Promise.resolve({ id: engagementId, milestoneId: mId }),
@@ -255,27 +273,33 @@ describe("Zero-Escrow Milestone API Routes", () => {
     expect(revertJson.milestone.paymentStatus).toBe("UNPAID");
 
     // 3. Re-mark as CLIENT and then Confirm Paid as FREELANCER
-    const remarkReq = new Request(`http://localhost/api/work/${engagementId}/milestones/${mId}/payment`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "MARK_PAID",
-        paymentReference: "EFT-8839210",
-      }),
-    });
+    const remarkReq = new Request(
+      `http://localhost/api/work/${engagementId}/milestones/${mId}/payment`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "MARK_PAID",
+          paymentReference: "EFT-8839210",
+        }),
+      }
+    );
     await paymentPostHandler(remarkReq, {
       params: Promise.resolve({ id: engagementId, milestoneId: mId }),
     });
 
     setFreelancerSession();
-    const confirmReq = new Request(`http://localhost/api/work/${engagementId}/milestones/${mId}/payment`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "CONFIRM_PAID",
-        invoiceNumber: "SMM-2026-0001",
-      }),
-    });
+    const confirmReq = new Request(
+      `http://localhost/api/work/${engagementId}/milestones/${mId}/payment`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "CONFIRM_PAID",
+          invoiceNumber: "SMM-2026-0001",
+        }),
+      }
+    );
 
     const confirmRes = await paymentPostHandler(confirmReq, {
       params: Promise.resolve({ id: engagementId, milestoneId: mId }),
@@ -297,31 +321,37 @@ describe("Zero-Escrow Milestone API Routes", () => {
     const mId = milestones[0].id;
 
     // 2. Mark payment sent as CLIENT
-    const markReq = new Request(`http://localhost/api/work/${engagementId}/milestones/${mId}/payment`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "MARK_PAID",
-        paymentReference: "FAST-20260919-8819",
-        senderBank: "GARANTI_BBVA",
-        transferChannel: "FAST",
-      }),
-    });
+    const markReq = new Request(
+      `http://localhost/api/work/${engagementId}/milestones/${mId}/payment`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "MARK_PAID",
+          paymentReference: "FAST-20260919-8819",
+          senderBank: "GARANTI_BBVA",
+          transferChannel: "FAST",
+        }),
+      }
+    );
     await paymentPostHandler(markReq, {
       params: Promise.resolve({ id: engagementId, milestoneId: mId }),
     });
 
     // 3. Specialist files dispute as FREELANCER
     setFreelancerSession();
-    const disputeReq = new Request(`http://localhost/api/work/${engagementId}/milestones/${mId}/payment`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "DISPUTE_PAID",
-        disputeReason: "FUNDS_NOT_RECEIVED",
-        disputeNote: "Para henüz hesabıma yansımadı, dekont sorgusu bulunamadı.",
-      }),
-    });
+    const disputeReq = new Request(
+      `http://localhost/api/work/${engagementId}/milestones/${mId}/payment`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "DISPUTE_PAID",
+          disputeReason: "FUNDS_NOT_RECEIVED",
+          disputeNote: "Para henüz hesabıma yansımadı, dekont sorgusu bulunamadı.",
+        }),
+      }
+    );
 
     const disputeRes = await paymentPostHandler(disputeReq, {
       params: Promise.resolve({ id: engagementId, milestoneId: mId }),
@@ -333,14 +363,17 @@ describe("Zero-Escrow Milestone API Routes", () => {
     expect(disputeJson.milestone.disputeReason).toBe("FUNDS_NOT_RECEIVED");
 
     // 4. Specialist subsequently confirms payment when resolved
-    const confirmReq = new Request(`http://localhost/api/work/${engagementId}/milestones/${mId}/payment`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "CONFIRM_PAID",
-        invoiceNumber: "SMM-2026-9912",
-      }),
-    });
+    const confirmReq = new Request(
+      `http://localhost/api/work/${engagementId}/milestones/${mId}/payment`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "CONFIRM_PAID",
+          invoiceNumber: "SMM-2026-9912",
+        }),
+      }
+    );
 
     const confirmRes = await paymentPostHandler(confirmReq, {
       params: Promise.resolve({ id: engagementId, milestoneId: mId }),
@@ -349,7 +382,9 @@ describe("Zero-Escrow Milestone API Routes", () => {
 
     // 5. GET /payment returns the HMK m. 193 Settlement Certificate and markdown representation
     setClientSession();
-    const certGetReq = new Request(`http://localhost/api/work/${engagementId}/milestones/${mId}/payment`);
+    const certGetReq = new Request(
+      `http://localhost/api/work/${engagementId}/milestones/${mId}/payment`
+    );
     const certGetRes = await paymentGetHandler(certGetReq, {
       params: Promise.resolve({ id: engagementId, milestoneId: mId }),
     });
@@ -377,19 +412,27 @@ describe("Zero-Escrow Milestone API Routes", () => {
       const mId = milestones[0].id;
 
       // Mark payment
-      const markReq = new Request(`http://localhost/api/work/${engagementId}/milestones/${mId}/payment`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "MARK_PAID", paymentReference: "FAST-12345678" }),
+      const markReq = new Request(
+        `http://localhost/api/work/${engagementId}/milestones/${mId}/payment`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "MARK_PAID", paymentReference: "FAST-12345678" }),
+        }
+      );
+      await paymentPostHandler(markReq, {
+        params: Promise.resolve({ id: engagementId, milestoneId: mId }),
       });
-      await paymentPostHandler(markReq, { params: Promise.resolve({ id: engagementId, milestoneId: mId }) });
 
       // Client tries to confirm paid -> MUST FAIL with 403
-      const confirmReq = new Request(`http://localhost/api/work/${engagementId}/milestones/${mId}/payment`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "CONFIRM_PAID", invoiceNumber: "ILLEGAL-001" }),
-      });
+      const confirmReq = new Request(
+        `http://localhost/api/work/${engagementId}/milestones/${mId}/payment`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "CONFIRM_PAID", invoiceNumber: "ILLEGAL-001" }),
+        }
+      );
 
       const confirmRes = await paymentPostHandler(confirmReq, {
         params: Promise.resolve({ id: engagementId, milestoneId: mId }),
@@ -410,11 +453,14 @@ describe("Zero-Escrow Milestone API Routes", () => {
 
       // Freelancer tries to mark payment -> MUST FAIL with 403
       setFreelancerSession();
-      const markReq = new Request(`http://localhost/api/work/${engagementId}/milestones/${mId}/payment`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "MARK_PAID", paymentReference: "FAST-12345678" }),
-      });
+      const markReq = new Request(
+        `http://localhost/api/work/${engagementId}/milestones/${mId}/payment`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "MARK_PAID", paymentReference: "FAST-12345678" }),
+        }
+      );
 
       const markRes = await paymentPostHandler(markReq, {
         params: Promise.resolve({ id: engagementId, milestoneId: mId }),
@@ -442,23 +488,32 @@ describe("Zero-Escrow Milestone API Routes", () => {
       setClientSession();
 
       // Initialize both engagements
-      await milestonesGetHandler(new Request(`http://localhost/api/work/${engagementId}/milestones`), {
-        params: Promise.resolve({ id: engagementId }),
-      });
+      await milestonesGetHandler(
+        new Request(`http://localhost/api/work/${engagementId}/milestones`),
+        {
+          params: Promise.resolve({ id: engagementId }),
+        }
+      );
 
-      const init2 = await milestonesGetHandler(new Request(`http://localhost/api/work/${otherEngagementId}/milestones`), {
-        params: Promise.resolve({ id: otherEngagementId }),
-      });
+      const init2 = await milestonesGetHandler(
+        new Request(`http://localhost/api/work/${otherEngagementId}/milestones`),
+        {
+          params: Promise.resolve({ id: otherEngagementId }),
+        }
+      );
       const { milestones: mList2 } = await init2.json();
 
       const victimMilestoneId = mList2[0].id;
 
       // Attempt to access/modify victimMilestoneId under engagementId (BOLA IDOR attack)
-      const attackReq = new Request(`http://localhost/api/work/${engagementId}/milestones/${victimMilestoneId}/payment`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "MARK_PAID", paymentReference: "FAST-88192301" }),
-      });
+      const attackReq = new Request(
+        `http://localhost/api/work/${engagementId}/milestones/${victimMilestoneId}/payment`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "MARK_PAID", paymentReference: "FAST-88192301" }),
+        }
+      );
 
       const attackRes = await paymentPostHandler(attackReq, {
         params: Promise.resolve({ id: engagementId, milestoneId: victimMilestoneId }),

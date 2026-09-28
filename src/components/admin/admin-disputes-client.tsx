@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import type { AdminDisputeItem } from "@/src/modules/admin/service";
 import { DisputeArbiterCard } from "./dispute-arbiter-card";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 
 interface AdminDisputesClientProps {
   initialDisputes: AdminDisputeItem[];
@@ -390,9 +391,20 @@ export function AdminDisputesClient({
       </div>
 
       {/* Review & Arbitration Modal */}
-      {selectedDispute && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-200">
-          <div className="bg-[#141720] border border-slate-700/80 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl space-y-0">
+      <ModalOverlay
+        isOpen={Boolean(selectedDispute)}
+        onClose={() => {
+          setSelectedDispute(null);
+          setDecisionModal(null);
+          setAdminNotes("");
+        }}
+        ariaLabel="Uyuşmazlık Hakemliği ve İnceleme"
+      >
+        {selectedDispute && (
+          <div
+            className="bg-[#141720] border border-slate-700/80 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl space-y-0"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Modal Header */}
             <div className="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
               <div className="flex items-center gap-2.5">
@@ -618,8 +630,8 @@ export function AdminDisputesClient({
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalOverlay>
     </div>
   );
 }

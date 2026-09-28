@@ -106,9 +106,7 @@ export default async function DashboardListingsPage({
   }
 
   const baseUrl = getBaseUrl();
-  const dashboardUrl = isTr
-    ? `${baseUrl}/tr/panel/ilanlarim`
-    : `${baseUrl}/en/dashboard/listings`;
+  const dashboardUrl = isTr ? `${baseUrl}/tr/panel/ilanlarim` : `${baseUrl}/en/dashboard/listings`;
 
   const jsonLd = {
     "@context": "https://schema.org",

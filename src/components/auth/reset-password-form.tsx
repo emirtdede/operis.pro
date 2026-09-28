@@ -31,6 +31,7 @@ export function ResetPasswordForm({ locale }: ResetPasswordFormProps) {
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileAttempt, setTurnstileAttempt] = useState(0);
 
   if (!token) {
     return (
@@ -123,6 +124,8 @@ export function ResetPasswordForm({ locale }: ResetPasswordFormProps) {
         : "Failed to reset password.";
       setError(err instanceof Error ? err.message : fallbackMsg);
     } finally {
+      setTurnstileToken(null);
+      setTurnstileAttempt((attempt) => attempt + 1);
       setIsLoading(false);
     }
   };
@@ -205,9 +208,11 @@ export function ResetPasswordForm({ locale }: ResetPasswordFormProps) {
 
       {/* Cloudflare Turnstile Bot Defense (Invisible / Interaction-Only) */}
       <TurnstileWidget
+        key={turnstileAttempt}
         appearance="interaction-only"
         onVerify={(token) => setTurnstileToken(token)}
         onExpire={() => setTurnstileToken(null)}
+        onError={() => setTurnstileToken(null)}
       />
 
       <Button
@@ -216,6 +221,7 @@ export function ResetPasswordForm({ locale }: ResetPasswordFormProps) {
         size="lg"
         className="w-full text-sm font-semibold mt-2"
         isLoading={isLoading}
+        disabled={Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) && !turnstileToken}
       >
         {isTr ? "Yeni Şifreyi Kaydet" : "Save New Password"}
       </Button>

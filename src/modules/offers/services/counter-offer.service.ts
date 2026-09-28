@@ -81,7 +81,9 @@ export class CounterOfferService {
             }
           } else {
             if (!isOwner) {
-              throw new Error("İlk karşı teklifi işveren başlatabilir veya teklifinizi güncelleyebilirsiniz.");
+              throw new Error(
+                "İlk karşı teklifi işveren başlatabilir veya teklifinizi güncelleyebilirsiniz."
+              );
             }
           }
 
@@ -189,7 +191,9 @@ export class CounterOfferService {
             if (isOwner) {
               counterActionUrl = isEn ? "/en/dashboard/offers/sent" : "/tr/panel/teklifler/giden";
             } else {
-              counterActionUrl = isEn ? "/en/dashboard/offers/received" : "/tr/panel/teklifler/gelen";
+              counterActionUrl = isEn
+                ? "/en/dashboard/offers/received"
+                : "/tr/panel/teklifler/gelen";
             }
 
             await NotificationService.createNotification(
@@ -270,7 +274,9 @@ export class CounterOfferService {
       }
     } else {
       if (!isOwner) {
-        throw new Error("İlk karşı teklifi işveren başlatabilir veya teklifinizi güncelleyebilirsiniz.");
+        throw new Error(
+          "İlk karşı teklifi işveren başlatabilir veya teklifinizi güncelleyebilirsiniz."
+        );
       }
     }
 
@@ -278,7 +284,9 @@ export class CounterOfferService {
     const nextRound = currentRound + 1;
 
     if (input.expectedRound !== undefined && input.expectedRound !== nextRound) {
-      throw new Error(`Pazarlık sırası güncel değil (beklenen tur: ${nextRound}). Lütfen sayfayı yenileyiniz.`);
+      throw new Error(
+        `Pazarlık sırası güncel değil (beklenen tur: ${nextRound}). Lütfen sayfayı yenileyiniz.`
+      );
     }
 
     if (nextRound > 6) {
@@ -287,7 +295,8 @@ export class CounterOfferService {
 
     const now = new Date();
     const ttl48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
-    const expiresAt = listing.activeUntil && listing.activeUntil < ttl48h ? listing.activeUntil : ttl48h;
+    const expiresAt =
+      listing.activeUntil && listing.activeUntil < ttl48h ? listing.activeUntil : ttl48h;
 
     for (const cp of inMemoryCounterProposals) {
       if (cp.offerId === offer.id && cp.status === "PENDING") {
@@ -420,7 +429,11 @@ export class CounterOfferService {
           }
 
           // 1. WP-27 & WP-28: Acquire transaction-level advisory lock on symmetric user pair (Fixes B07, R02)
-          await acquireUserPairAdvisoryLock(tx, initialListing.ownerUserId, initialOffer.offerorUserId);
+          await acquireUserPairAdvisoryLock(
+            tx,
+            initialListing.ownerUserId,
+            initialOffer.offerorUserId
+          );
 
           // 2. WP-28: Lock listing FIRST (canonical lock order: listings -> offers)
           let lQuery = tx
@@ -431,7 +444,12 @@ export class CounterOfferService {
             lQuery = (lQuery as { for: (mode: string) => typeof lQuery }).for("update");
           }
           const [listing] = await lQuery.limit(1);
-          if (!listing || listing.status !== "ACTIVE" || !listing.activeUntil || listing.activeUntil <= now) {
+          if (
+            !listing ||
+            listing.status !== "ACTIVE" ||
+            !listing.activeUntil ||
+            listing.activeUntil <= now
+          ) {
             throw new Error("Listing is not currently active");
           }
 
@@ -454,7 +472,10 @@ export class CounterOfferService {
             .from(schema.users)
             .where(
               and(
-                or(eq(schema.users.id, listing.ownerUserId), eq(schema.users.id, offer.offerorUserId)),
+                or(
+                  eq(schema.users.id, listing.ownerUserId),
+                  eq(schema.users.id, offer.offerorUserId)
+                ),
                 eq(schema.users.status, "ACTIVE")
               )
             );
@@ -786,7 +807,8 @@ export class CounterOfferService {
             .set({
               status: "REJECTED",
               rejectionCode: "COUNTER_OFFER_REJECTED",
-              rejectionNote: input.rejectionNote || "Karşı teklif reddedildi ve görüşme sonlandırıldı.",
+              rejectionNote:
+                input.rejectionNote || "Karşı teklif reddedildi ve görüşme sonlandırıldı.",
               resolvedAt: now,
               updatedAt: now,
             })
@@ -1136,13 +1158,9 @@ export class CounterOfferService {
       isViewerTurn,
       canCounter: isViewerTurn && !maxRoundsReached,
       canAccept:
-        isViewerTurn &&
-        Boolean(activeProposal) &&
-        activeProposal?.recipientUserId === viewerUserId,
+        isViewerTurn && Boolean(activeProposal) && activeProposal?.recipientUserId === viewerUserId,
       canReject:
-        isViewerTurn &&
-        Boolean(activeProposal) &&
-        activeProposal?.recipientUserId === viewerUserId,
+        isViewerTurn && Boolean(activeProposal) && activeProposal?.recipientUserId === viewerUserId,
       canWithdraw: Boolean(activeProposal) && activeProposal?.proposerUserId === viewerUserId,
       maxRoundsReached,
       activeProposal,

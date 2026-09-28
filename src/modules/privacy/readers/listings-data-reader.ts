@@ -8,7 +8,6 @@ import {
   MAX_RECORD_BYTES,
   METADATA_PADDING_BYTES,
   MAX_PAYLOAD_GROUP_BYTES,
-  serializeExportRecord,
   type ExportReaderContext,
 } from "./types";
 
@@ -42,50 +41,57 @@ export async function* readListingsData(
 
   async function* streamListingGroups(
     groups: ListingMetaRow[][],
-    idx: number
+    startIndex: number
   ): AsyncGenerator<string, void, unknown> {
-    if (idx >= groups.length) return;
-    const group = groups[idx];
-    if (!group) return;
-    if (signal?.aborted) {
-      throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
+    for (let idx = startIndex; idx < groups.length; idx++) {
+      const group = groups[idx];
+      if (!group) return;
+      if (signal?.aborted) {
+        throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
+      }
+      if (getRemainingMs() <= 0) {
+        throw new ExportError("EXPORT_TIMEOUT", "Deadline exceeded", 504, false);
+      }
+
+      const groupIds = group.map((g) => g.id);
+      const payloadRows = await txDb
+        .select({
+          id: schema.listings.id,
+          scope: sql<string>`to_json(${schema.listings.scope})::text`,
+        })
+        .from(schema.listings)
+        .where(inArray(schema.listings.id, groupIds));
+
+      const payloadMap = new Map(payloadRows.map((p) => [p.id, p.scope]));
+
+      for (const r of group) {
+        const scope = payloadMap.get(r.id);
+        if (scope === undefined) throw new Error("Export listing row missing");
+        yield firstListing ? "    " : ",\n    ";
+        yield* streamRecordWithJsonPayload(
+          {
+            id: r.id,
+            title: r.title,
+            slug: r.slug,
+            status: r.status,
+            summary: r.summary,
+            budgetMode: r.budgetMode,
+            budgetMin: r.budgetMin,
+            budgetMax: r.budgetMax,
+            budgetCurrency: r.budgetCurrency,
+            createdAt: r.createdAt.toISOString(),
+            updatedAt: r.updatedAt.toISOString(),
+          },
+          "scope",
+          scope,
+          MAX_RECORD_BYTES
+        );
+        payloadMap.delete(r.id);
+        firstListing = false;
+      }
+
+      payloadRows.length = 0;
     }
-    if (getRemainingMs() <= 0) {
-      throw new ExportError("EXPORT_TIMEOUT", "Deadline exceeded", 504, false);
-    }
-
-    const groupIds = group.map((g) => g.id);
-    const payloadRows = await txDb
-      .select({
-        id: schema.listings.id,
-        scope: schema.listings.scope,
-      })
-      .from(schema.listings)
-      .where(inArray(schema.listings.id, groupIds));
-
-    const payloadMap = new Map(payloadRows.map((p) => [p.id, p.scope]));
-
-    for (const r of group) {
-      const scope = payloadMap.get(r.id) ?? "";
-      const itemStr = serializeExportRecord({
-        id: r.id,
-        title: r.title,
-        slug: r.slug,
-        status: r.status,
-        summary: r.summary,
-        scope,
-        budgetMode: r.budgetMode,
-        budgetMin: r.budgetMin,
-        budgetMax: r.budgetMax,
-        budgetCurrency: r.budgetCurrency,
-        createdAt: r.createdAt.toISOString(),
-        updatedAt: r.updatedAt.toISOString(),
-      });
-      yield `${firstListing ? "    " : ",\n    "}${itemStr}`;
-      firstListing = false;
-    }
-
-    yield* streamListingGroups(groups, idx + 1);
   }
 
   async function* streamListingsPages(
@@ -209,50 +215,52 @@ export async function* readListingRevisionsData(
 
   async function* streamRevisionGroups(
     groups: RevisionMetaRow[][],
-    idx: number
+    startIndex: number
   ): AsyncGenerator<string, void, unknown> {
-    if (idx >= groups.length) return;
-    const group = groups[idx];
-    if (!group) return;
-    if (signal?.aborted) {
-      throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
+    for (let idx = startIndex; idx < groups.length; idx++) {
+      const group = groups[idx];
+      if (!group) return;
+      if (signal?.aborted) {
+        throw signal.reason || new ExportError("EXPORT_ABORTED", "Aborted", 400, false);
+      }
+      if (getRemainingMs() <= 0) {
+        throw new ExportError("EXPORT_TIMEOUT", "Deadline exceeded", 504, false);
+      }
+
+      const groupIds = group.map((g) => g.id);
+      const payloadRows = await txDb
+        .select({
+          id: schema.listingRevisions.id,
+          snapshotJson: sql<string>`${schema.listingRevisions.snapshotJson}::text`,
+        })
+        .from(schema.listingRevisions)
+        .where(inArray(schema.listingRevisions.id, groupIds));
+
+      const payloadMap = new Map(payloadRows.map((p) => [p.id, p.snapshotJson]));
+
+      for (const r of group) {
+        const snapshotJson = payloadMap.get(r.id);
+        if (snapshotJson === undefined) throw new Error("Export snapshot row missing");
+        yield firstLRev ? "    " : ",\n    ";
+        yield* streamRecordWithJsonPayload(
+          {
+            id: r.id,
+            listingId: r.listingId,
+            editorUserId: r.editorUserId,
+            revisionNo: r.revisionNo,
+            createdAt: r.createdAt.toISOString(),
+          },
+          "snapshotJson",
+          snapshotJson,
+          MAX_RECORD_BYTES
+        );
+        payloadMap.delete(r.id);
+        firstLRev = false;
+      }
+
+      // Release the driver result before fetching the next payload group.
+      payloadRows.length = 0;
     }
-    if (getRemainingMs() <= 0) {
-      throw new ExportError("EXPORT_TIMEOUT", "Deadline exceeded", 504, false);
-    }
-
-    const groupIds = group.map((g) => g.id);
-    const payloadRows = await txDb
-      .select({
-        id: schema.listingRevisions.id,
-        snapshotJson: sql<string>`${schema.listingRevisions.snapshotJson}::text`,
-      })
-      .from(schema.listingRevisions)
-      .where(inArray(schema.listingRevisions.id, groupIds));
-
-    const payloadMap = new Map(payloadRows.map((p) => [p.id, p.snapshotJson]));
-
-    for (const r of group) {
-      const snapshotJson = payloadMap.get(r.id);
-      if (snapshotJson === undefined) throw new Error("Export snapshot row missing");
-      yield firstLRev ? "    " : ",\n    ";
-      yield* streamRecordWithJsonPayload(
-        {
-          id: r.id,
-          listingId: r.listingId,
-          editorUserId: r.editorUserId,
-          revisionNo: r.revisionNo,
-          createdAt: r.createdAt.toISOString(),
-        },
-        "snapshotJson",
-        snapshotJson,
-        MAX_RECORD_BYTES
-      );
-      payloadMap.delete(r.id);
-      firstLRev = false;
-    }
-
-    yield* streamRevisionGroups(groups, idx + 1);
   }
 
   async function* streamRevisionPages(

@@ -11,19 +11,14 @@ export interface DpaBadgeProps {
   onClick?: () => void;
 }
 
-export function DpaBadge({
-  level,
-  score,
-  locale = "tr",
-  className = "",
-  onClick,
-}: DpaBadgeProps) {
+export function DpaBadge({ level, score, locale = "tr", className = "", onClick }: DpaBadgeProps) {
   const isTr = locale === "tr";
 
   const config = {
     LOW: {
       label: isTr ? "Düşük Risk (Standart DPA)" : "Low Risk (Standard DPA)",
-      badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/15",
+      badgeClass:
+        "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/15",
       icon: ShieldCheck,
     },
     MEDIUM: {

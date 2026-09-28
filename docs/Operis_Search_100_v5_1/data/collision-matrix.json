@@ -376,20 +376,14 @@
       "term": ".net",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "backend-ve-api-muhendisligi",
-        "masaustu-yazilim-gelistirme"
-      ],
+      "categorySlugs": ["backend-ve-api-muhendisligi", "masaustu-yazilim-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "2d animation",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "2d-oyun-sanati-ve-piksel-cizim",
-        "hareketli-grafik-motion-graphics"
-      ],
+      "categorySlugs": ["2d-oyun-sanati-ve-piksel-cizim", "hareketli-grafik-motion-graphics"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -406,20 +400,14 @@
       "term": "ad creative",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "sosyal-medya-ve-reklam-gorselleri",
-        "tiktok-ve-dikey-video-reklamciligi"
-      ],
+      "categorySlugs": ["sosyal-medya-ve-reklam-gorselleri", "tiktok-ve-dikey-video-reklamciligi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "adobe illustrator",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "illustrasyon-ve-vektorel-cizim",
-        "logo-ve-kurumsal-kimlik"
-      ],
+      "categorySlugs": ["illustrasyon-ve-vektorel-cizim", "logo-ve-kurumsal-kimlik"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -446,10 +434,7 @@
       "term": "api integration",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "no-code-ve-low-code-gelistirme",
-        "otomasyon-ve-entegrasyonlar"
-      ],
+      "categorySlugs": ["no-code-ve-low-code-gelistirme", "otomasyon-ve-entegrasyonlar"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -466,40 +451,28 @@
       "term": "audio editing",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "podcast-duzenleme-ve-ses-muhendisligi",
-        "ses-tasarimi-ve-efektleri-sfx"
-      ],
+      "categorySlugs": ["podcast-duzenleme-ve-ses-muhendisligi", "ses-tasarimi-ve-efektleri-sfx"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "authentication",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "backend-ve-api-muhendisligi",
-        "full-stack-web-gelistirme"
-      ],
+      "categorySlugs": ["backend-ve-api-muhendisligi", "full-stack-web-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "aws",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "bulut-mimarisi-ve-altyapi-yonetimi",
-        "devops-ve-bulut-bilisim"
-      ],
+      "categorySlugs": ["bulut-mimarisi-ve-altyapi-yonetimi", "devops-ve-bulut-bilisim"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "azure",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "bulut-mimarisi-ve-altyapi-yonetimi",
-        "devops-ve-bulut-bilisim"
-      ],
+      "categorySlugs": ["bulut-mimarisi-ve-altyapi-yonetimi", "devops-ve-bulut-bilisim"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -516,20 +489,14 @@
       "term": "bubble",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "cms-ve-no-code-gelistirme",
-        "no-code-ve-low-code-gelistirme"
-      ],
+      "categorySlugs": ["cms-ve-no-code-gelistirme", "no-code-ve-low-code-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "cad",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "3d-baski-modelleme-ve-stl-hazirligi",
-        "3d-urun-modelleme-ve-cad"
-      ],
+      "categorySlugs": ["3d-baski-modelleme-ve-stl-hazirligi", "3d-urun-modelleme-ve-cad"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -546,10 +513,7 @@
       "term": "cat tools",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "hukuki-tibbi-ve-akademik-ceviri",
-        "profesyonel-ceviri-ve-yerellestirme"
-      ],
+      "categorySlugs": ["hukuki-tibbi-ve-akademik-ceviri", "profesyonel-ceviri-ve-yerellestirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -566,10 +530,7 @@
       "term": "cinema 4d",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "3d-urun-animasyonu-ve-tanitim",
-        "hareketli-grafik-motion-graphics"
-      ],
+      "categorySlugs": ["3d-urun-animasyonu-ve-tanitim", "hareketli-grafik-motion-graphics"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -586,30 +547,21 @@
       "term": "code review",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "online-egitim-ozel-ders-ve-mentorluk",
-        "teknik-danismanlik"
-      ],
+      "categorySlugs": ["online-egitim-ozel-ders-ve-mentorluk", "teknik-danismanlik"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "color correction",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "fotograf-duzenleme-ve-retouching",
-        "video-renk-duzenleme-color-grading"
-      ],
+      "categorySlugs": ["fotograf-duzenleme-ve-retouching", "video-renk-duzenleme-color-grading"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "copy editing",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "editoryal-duzeltme-ve-redaksiyon",
-        "whitepaper-ve-e-kitap-yazimi"
-      ],
+      "categorySlugs": ["editoryal-duzeltme-ve-redaksiyon", "whitepaper-ve-e-kitap-yazimi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -626,20 +578,14 @@
       "term": "data modeling",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "is-zekasi-ve-dashboard-tasarimi",
-        "veri-muhendisligi-ve-analitik"
-      ],
+      "categorySlugs": ["is-zekasi-ve-dashboard-tasarimi", "veri-muhendisligi-ve-analitik"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "data visualization",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "is-zekasi-ve-dashboard-tasarimi",
-        "yatirimci-sunumu-ve-pitch-deck"
-      ],
+      "categorySlugs": ["is-zekasi-ve-dashboard-tasarimi", "yatirimci-sunumu-ve-pitch-deck"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -656,90 +602,63 @@
       "term": "django",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "backend-ve-api-muhendisligi",
-        "full-stack-web-gelistirme"
-      ],
+      "categorySlugs": ["backend-ve-api-muhendisligi", "full-stack-web-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "etl",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "veri-muhendisligi-ve-analitik",
-        "web-kazima-ve-veri-madenciligi"
-      ],
+      "categorySlugs": ["veri-muhendisligi-ve-analitik", "web-kazima-ve-veri-madenciligi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "fusion 360",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "3d-baski-modelleme-ve-stl-hazirligi",
-        "3d-urun-modelleme-ve-cad"
-      ],
+      "categorySlugs": ["3d-baski-modelleme-ve-stl-hazirligi", "3d-urun-modelleme-ve-cad"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "game art",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "2d-oyun-sanati-ve-piksel-cizim",
-        "karakter-tasarimi-ve-konsept-sanat"
-      ],
+      "categorySlugs": ["2d-oyun-sanati-ve-piksel-cizim", "karakter-tasarimi-ve-konsept-sanat"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "gcp",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "bulut-mimarisi-ve-altyapi-yonetimi",
-        "devops-ve-bulut-bilisim"
-      ],
+      "categorySlugs": ["bulut-mimarisi-ve-altyapi-yonetimi", "devops-ve-bulut-bilisim"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "git",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "teknik-yazarlik-ve-dokumantasyon",
-        "web-gelistirme"
-      ],
+      "categorySlugs": ["teknik-yazarlik-ve-dokumantasyon", "web-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "google search console",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "arama-motoru-optimizasyonu-seo",
-        "teknik-seo-ve-site-hizi-optimizasyonu"
-      ],
+      "categorySlugs": ["arama-motoru-optimizasyonu-seo", "teknik-seo-ve-site-hizi-optimizasyonu"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "graphql",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "backend-ve-api-muhendisligi",
-        "mikroservis-ve-api-mimarisi"
-      ],
+      "categorySlugs": ["backend-ve-api-muhendisligi", "mikroservis-ve-api-mimarisi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "helm",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "bulut-mimarisi-ve-altyapi-yonetimi",
-        "devops-ve-bulut-bilisim"
-      ],
+      "categorySlugs": ["bulut-mimarisi-ve-altyapi-yonetimi", "devops-ve-bulut-bilisim"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -766,80 +685,56 @@
       "term": "infrastructure as code",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "bulut-mimarisi-ve-altyapi-yonetimi",
-        "devops-ve-bulut-bilisim"
-      ],
+      "categorySlugs": ["bulut-mimarisi-ve-altyapi-yonetimi", "devops-ve-bulut-bilisim"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "it support",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "bilgisayar-donanimi-ve-teknik-destek",
-        "bt-sistem-ve-ag-yonetimi"
-      ],
+      "categorySlugs": ["bilgisayar-donanimi-ve-teknik-destek", "bt-sistem-ve-ag-yonetimi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "javascript",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "frontend-ve-arayuz-muhendisligi",
-        "web-gelistirme"
-      ],
+      "categorySlugs": ["frontend-ve-arayuz-muhendisligi", "web-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "js",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "frontend-ve-arayuz-muhendisligi",
-        "web-gelistirme"
-      ],
+      "categorySlugs": ["frontend-ve-arayuz-muhendisligi", "web-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "keyword research",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "arama-motoru-optimizasyonu-seo",
-        "seo-uyumlu-blog-ve-makale-yazarligi"
-      ],
+      "categorySlugs": ["arama-motoru-optimizasyonu-seo", "seo-uyumlu-blog-ve-makale-yazarligi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "kpi design",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "is-zekasi-ve-dashboard-tasarimi",
-        "surec-ve-operasyon-optimizasyonu"
-      ],
+      "categorySlugs": ["is-zekasi-ve-dashboard-tasarimi", "surec-ve-operasyon-optimizasyonu"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "langchain",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "llm-ve-gpt-uygulama-gelistirme",
-        "yapay-zeka-ajanlari-ve-is-akislari"
-      ],
+      "categorySlugs": ["llm-ve-gpt-uygulama-gelistirme", "yapay-zeka-ajanlari-ve-is-akislari"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "laravel",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "backend-ve-api-muhendisligi",
-        "full-stack-web-gelistirme"
-      ],
+      "categorySlugs": ["backend-ve-api-muhendisligi", "full-stack-web-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -856,10 +751,7 @@
       "term": "lead magnet",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "icerik-pazarlamasi-ve-donusum-hunisi",
-        "whitepaper-ve-e-kitap-yazimi"
-      ],
+      "categorySlugs": ["icerik-pazarlamasi-ve-donusum-hunisi", "whitepaper-ve-e-kitap-yazimi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -876,30 +768,21 @@
       "term": "lighting",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "3d-urun-animasyonu-ve-tanitim",
-        "ic-mimari-ve-3d-fotogercekci-render"
-      ],
+      "categorySlugs": ["3d-urun-animasyonu-ve-tanitim", "ic-mimari-ve-3d-fotogercekci-render"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "make",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "no-code-ve-low-code-gelistirme",
-        "otomasyon-ve-entegrasyonlar"
-      ],
+      "categorySlugs": ["no-code-ve-low-code-gelistirme", "otomasyon-ve-entegrasyonlar"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "maskot",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "illustrasyon-ve-vektorel-cizim",
-        "karakter-tasarimi-ve-konsept-sanat"
-      ],
+      "categorySlugs": ["illustrasyon-ve-vektorel-cizim", "karakter-tasarimi-ve-konsept-sanat"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -916,10 +799,7 @@
       "term": "mobile games",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "mobil-oyun-gelistirme-hypercasual-casual",
-        "unity-ile-oyun-gelistirme"
-      ],
+      "categorySlugs": ["mobil-oyun-gelistirme-hypercasual-casual", "unity-ile-oyun-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -936,210 +816,147 @@
       "term": "n8n",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "no-code-ve-low-code-gelistirme",
-        "otomasyon-ve-entegrasyonlar"
-      ],
+      "categorySlugs": ["no-code-ve-low-code-gelistirme", "otomasyon-ve-entegrasyonlar"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "nestjs",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "backend-ve-api-muhendisligi",
-        "full-stack-web-gelistirme"
-      ],
+      "categorySlugs": ["backend-ve-api-muhendisligi", "full-stack-web-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "next js",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "frontend-ve-arayuz-muhendisligi",
-        "full-stack-web-gelistirme"
-      ],
+      "categorySlugs": ["frontend-ve-arayuz-muhendisligi", "full-stack-web-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "next.js",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "frontend-ve-arayuz-muhendisligi",
-        "full-stack-web-gelistirme"
-      ],
+      "categorySlugs": ["frontend-ve-arayuz-muhendisligi", "full-stack-web-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "nextjs",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "frontend-ve-arayuz-muhendisligi",
-        "full-stack-web-gelistirme"
-      ],
+      "categorySlugs": ["frontend-ve-arayuz-muhendisligi", "full-stack-web-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "node js",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "backend-ve-api-muhendisligi",
-        "full-stack-web-gelistirme"
-      ],
+      "categorySlugs": ["backend-ve-api-muhendisligi", "full-stack-web-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "node.js",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "backend-ve-api-muhendisligi",
-        "full-stack-web-gelistirme"
-      ],
+      "categorySlugs": ["backend-ve-api-muhendisligi", "full-stack-web-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "nodejs",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "backend-ve-api-muhendisligi",
-        "full-stack-web-gelistirme"
-      ],
+      "categorySlugs": ["backend-ve-api-muhendisligi", "full-stack-web-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "oauth",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "backend-ve-api-muhendisligi",
-        "otomasyon-ve-entegrasyonlar"
-      ],
+      "categorySlugs": ["backend-ve-api-muhendisligi", "otomasyon-ve-entegrasyonlar"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "online magaza",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "e-ticaret-sitesi-gelistirme",
-        "e-ticaret-yonetimi-ve-buyume"
-      ],
+      "categorySlugs": ["e-ticaret-sitesi-gelistirme", "e-ticaret-yonetimi-ve-buyume"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "openai api",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "llm-ve-gpt-uygulama-gelistirme",
-        "yapay-zeka-ajanlari-ve-is-akislari"
-      ],
+      "categorySlugs": ["llm-ve-gpt-uygulama-gelistirme", "yapay-zeka-ajanlari-ve-is-akislari"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "oyun sesi",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "oyun-sesleri-ve-muzik-produksiyonu",
-        "ses-tasarimi-ve-efektleri-sfx"
-      ],
+      "categorySlugs": ["oyun-sesleri-ve-muzik-produksiyonu", "ses-tasarimi-ve-efektleri-sfx"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "platform engineer",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "bulut-mimarisi-ve-altyapi-yonetimi",
-        "devops-ve-bulut-bilisim"
-      ],
+      "categorySlugs": ["bulut-mimarisi-ve-altyapi-yonetimi", "devops-ve-bulut-bilisim"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "playwright",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "web-kazima-ve-veri-madenciligi",
-        "yazilim-testi-ve-kalite-guvencesi"
-      ],
+      "categorySlugs": ["web-kazima-ve-veri-madenciligi", "yazilim-testi-ve-kalite-guvencesi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "postgre sql",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "full-stack-web-gelistirme",
-        "veritabani-muhendisligi"
-      ],
+      "categorySlugs": ["full-stack-web-gelistirme", "veritabani-muhendisligi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "postgres",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "full-stack-web-gelistirme",
-        "veritabani-muhendisligi"
-      ],
+      "categorySlugs": ["full-stack-web-gelistirme", "veritabani-muhendisligi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "postgresql",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "full-stack-web-gelistirme",
-        "veritabani-muhendisligi"
-      ],
+      "categorySlugs": ["full-stack-web-gelistirme", "veritabani-muhendisligi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "pro tools",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "podcast-duzenleme-ve-ses-muhendisligi",
-        "ses-tasarimi-ve-efektleri-sfx"
-      ],
+      "categorySlugs": ["podcast-duzenleme-ve-ses-muhendisligi", "ses-tasarimi-ve-efektleri-sfx"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "procreate",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "illustrasyon-ve-vektorel-cizim",
-        "karakter-tasarimi-ve-konsept-sanat"
-      ],
+      "categorySlugs": ["illustrasyon-ve-vektorel-cizim", "karakter-tasarimi-ve-konsept-sanat"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "product design",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "3d-urun-modelleme-ve-cad",
-        "ui-ux-tasarim"
-      ],
+      "categorySlugs": ["3d-urun-modelleme-ve-cad", "ui-ux-tasarim"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "proofreading",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "editoryal-duzeltme-ve-redaksiyon",
-        "ses-ve-video-desifre-destegi"
-      ],
+      "categorySlugs": ["editoryal-duzeltme-ve-redaksiyon", "ses-ve-video-desifre-destegi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -1156,70 +973,49 @@
       "term": "pytorch",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "bilgisayarli-goru-ve-goruntu-isleme",
-        "yapay-zeka-ve-makine-ogrenimi"
-      ],
+      "categorySlugs": ["bilgisayarli-goru-ve-goruntu-isleme", "yapay-zeka-ve-makine-ogrenimi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "rag",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "llm-ve-gpt-uygulama-gelistirme",
-        "yapay-zeka-ajanlari-ve-is-akislari"
-      ],
+      "categorySlugs": ["llm-ve-gpt-uygulama-gelistirme", "yapay-zeka-ajanlari-ve-is-akislari"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "react",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "frontend-ve-arayuz-muhendisligi",
-        "full-stack-web-gelistirme"
-      ],
+      "categorySlugs": ["frontend-ve-arayuz-muhendisligi", "full-stack-web-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "rendering",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "3d-urun-animasyonu-ve-tanitim",
-        "ic-mimari-ve-3d-fotogercekci-render"
-      ],
+      "categorySlugs": ["3d-urun-animasyonu-ve-tanitim", "ic-mimari-ve-3d-fotogercekci-render"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "replication",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "unreal-engine-ve-c-oyun-gelistirme",
-        "veritabani-muhendisligi"
-      ],
+      "categorySlugs": ["unreal-engine-ve-c-oyun-gelistirme", "veritabani-muhendisligi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "responsive design",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "web-gelistirme",
-        "web-sitesi-ui-ux-tasarimi"
-      ],
+      "categorySlugs": ["web-gelistirme", "web-sitesi-ui-ux-tasarimi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "rest",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "backend-ve-api-muhendisligi",
-        "mikroservis-ve-api-mimarisi"
-      ],
+      "categorySlugs": ["backend-ve-api-muhendisligi", "mikroservis-ve-api-mimarisi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -1236,40 +1032,28 @@
       "term": "selenium",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "web-kazima-ve-veri-madenciligi",
-        "yazilim-testi-ve-kalite-guvencesi"
-      ],
+      "categorySlugs": ["web-kazima-ve-veri-madenciligi", "yazilim-testi-ve-kalite-guvencesi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "seo",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "arama-motoru-optimizasyonu-seo",
-        "icerik-pazarlamasi-ve-donusum-hunisi"
-      ],
+      "categorySlugs": ["arama-motoru-optimizasyonu-seo", "icerik-pazarlamasi-ve-donusum-hunisi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "shopify",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "e-ticaret-sitesi-gelistirme",
-        "e-ticaret-yonetimi-ve-buyume"
-      ],
+      "categorySlugs": ["e-ticaret-sitesi-gelistirme", "e-ticaret-yonetimi-ve-buyume"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "sound design",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "oyun-sesleri-ve-muzik-produksiyonu",
-        "ses-tasarimi-ve-efektleri-sfx"
-      ],
+      "categorySlugs": ["oyun-sesleri-ve-muzik-produksiyonu", "ses-tasarimi-ve-efektleri-sfx"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -1286,110 +1070,77 @@
       "term": "stl",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "3d-baski-modelleme-ve-stl-hazirligi",
-        "3d-urun-modelleme-ve-cad"
-      ],
+      "categorySlugs": ["3d-baski-modelleme-ve-stl-hazirligi", "3d-urun-modelleme-ve-cad"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "storybook",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "frontend-ve-arayuz-muhendisligi",
-        "tasarim-sistemleri-design-systems"
-      ],
+      "categorySlugs": ["frontend-ve-arayuz-muhendisligi", "tasarim-sistemleri-design-systems"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "storytelling",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "yatirimci-sunumu-ve-pitch-deck",
-        "youtube-ve-uzun-format-video-kurgusu"
-      ],
+      "categorySlugs": ["yatirimci-sunumu-ve-pitch-deck", "youtube-ve-uzun-format-video-kurgusu"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "swot",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "girisim-stratejisi-ve-is-plani",
-        "pazar-ve-rakip-arastirmasi"
-      ],
+      "categorySlugs": ["girisim-stratejisi-ve-is-plani", "pazar-ve-rakip-arastirmasi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "tam sam som",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "girisim-stratejisi-ve-is-plani",
-        "pazar-ve-rakip-arastirmasi"
-      ],
+      "categorySlugs": ["girisim-stratejisi-ve-is-plani", "pazar-ve-rakip-arastirmasi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "tam/sam/som",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "girisim-stratejisi-ve-is-plani",
-        "pazar-ve-rakip-arastirmasi"
-      ],
+      "categorySlugs": ["girisim-stratejisi-ve-is-plani", "pazar-ve-rakip-arastirmasi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "technical drawing",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "3d-urun-modelleme-ve-cad",
-        "mimari-proje-plan-ve-bim"
-      ],
+      "categorySlugs": ["3d-urun-modelleme-ve-cad", "mimari-proje-plan-ve-bim"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "technical writing",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "teknik-yazarlik-ve-dokumantasyon",
-        "whitepaper-ve-e-kitap-yazimi"
-      ],
+      "categorySlugs": ["teknik-yazarlik-ve-dokumantasyon", "whitepaper-ve-e-kitap-yazimi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "tensorflow",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "bilgisayarli-goru-ve-goruntu-isleme",
-        "yapay-zeka-ve-makine-ogrenimi"
-      ],
+      "categorySlugs": ["bilgisayarli-goru-ve-goruntu-isleme", "yapay-zeka-ve-makine-ogrenimi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "terraform",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "bulut-mimarisi-ve-altyapi-yonetimi",
-        "devops-ve-bulut-bilisim"
-      ],
+      "categorySlugs": ["bulut-mimarisi-ve-altyapi-yonetimi", "devops-ve-bulut-bilisim"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "tiktok ads",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "sosyal-medya-reklamciligi",
-        "tiktok-ve-dikey-video-reklamciligi"
-      ],
+      "categorySlugs": ["sosyal-medya-reklamciligi", "tiktok-ve-dikey-video-reklamciligi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -1416,10 +1167,7 @@
       "term": "translation qa",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "hukuki-tibbi-ve-akademik-ceviri",
-        "profesyonel-ceviri-ve-yerellestirme"
-      ],
+      "categorySlugs": ["hukuki-tibbi-ve-akademik-ceviri", "profesyonel-ceviri-ve-yerellestirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -1436,20 +1184,14 @@
       "term": "ui design",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "ui-ux-tasarim",
-        "web-sitesi-ui-ux-tasarimi"
-      ],
+      "categorySlugs": ["ui-ux-tasarim", "web-sitesi-ui-ux-tasarimi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "ux design",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "ui-ux-tasarim",
-        "web-sitesi-ui-ux-tasarimi"
-      ],
+      "categorySlugs": ["ui-ux-tasarim", "web-sitesi-ui-ux-tasarimi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -1476,20 +1218,14 @@
       "term": "vector databases",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "llm-ve-gpt-uygulama-gelistirme",
-        "yapay-zeka-ajanlari-ve-is-akislari"
-      ],
+      "categorySlugs": ["llm-ve-gpt-uygulama-gelistirme", "yapay-zeka-ajanlari-ve-is-akislari"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "vector design",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "ikon-ve-tipografi-tasarimi",
-        "logo-ve-kurumsal-kimlik"
-      ],
+      "categorySlugs": ["ikon-ve-tipografi-tasarimi", "logo-ve-kurumsal-kimlik"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -1516,40 +1252,28 @@
       "term": "web tasarim",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "web-gelistirme",
-        "web-sitesi-ui-ux-tasarimi"
-      ],
+      "categorySlugs": ["web-gelistirme", "web-sitesi-ui-ux-tasarimi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "webflow",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "cms-ve-no-code-gelistirme",
-        "no-code-ve-low-code-gelistirme"
-      ],
+      "categorySlugs": ["cms-ve-no-code-gelistirme", "no-code-ve-low-code-gelistirme"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "whisper",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "dogal-dil-isleme-ve-ses-teknolojileri",
-        "ses-ve-video-desifre-destegi"
-      ],
+      "categorySlugs": ["dogal-dil-isleme-ve-ses-teknolojileri", "ses-ve-video-desifre-destegi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "wireframing",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "ui-ux-tasarim",
-        "web-sitesi-ui-ux-tasarimi"
-      ],
+      "categorySlugs": ["ui-ux-tasarim", "web-sitesi-ui-ux-tasarimi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
@@ -1586,40 +1310,28 @@
       "term": "wordpress",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "cms-ve-no-code-gelistirme",
-        "seo-uyumlu-blog-ve-makale-yazarligi"
-      ],
+      "categorySlugs": ["cms-ve-no-code-gelistirme", "seo-uyumlu-blog-ve-makale-yazarligi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "workflow automation",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "no-code-ve-low-code-gelistirme",
-        "otomasyon-ve-entegrasyonlar"
-      ],
+      "categorySlugs": ["no-code-ve-low-code-gelistirme", "otomasyon-ve-entegrasyonlar"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "wp",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "cms-ve-no-code-gelistirme",
-        "seo-uyumlu-blog-ve-makale-yazarligi"
-      ],
+      "categorySlugs": ["cms-ve-no-code-gelistirme", "seo-uyumlu-blog-ve-makale-yazarligi"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {
       "term": "zapier",
       "categoryCount": 2,
       "severity": "low",
-      "categorySlugs": [
-        "no-code-ve-low-code-gelistirme",
-        "otomasyon-ve-entegrasyonlar"
-      ],
+      "categorySlugs": ["no-code-ve-low-code-gelistirme", "otomasyon-ve-entegrasyonlar"],
       "resolution": "query coverage + term specificity + context + contrastive ranking rules"
     },
     {

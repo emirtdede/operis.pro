@@ -5,12 +5,12 @@
 
 export interface SearchTelemetryPayload {
   event:
-    | 'search_started'
-    | 'search_results_shown'
-    | 'search_result_clicked'
-    | 'search_zero_result'
-    | 'search_query_refined'
-    | 'search_category_selected';
+    | "search_started"
+    | "search_results_shown"
+    | "search_result_clicked"
+    | "search_zero_result"
+    | "search_query_refined"
+    | "search_category_selected";
   queryLength: number;
   queryHash?: string;
   latencyMs: number;
@@ -52,7 +52,7 @@ function simpleHash(str: string): string {
  * Emits a structured telemetry event safely without blocking search execution.
  */
 export function recordSearchTelemetry(
-  event: SearchTelemetryPayload['event'],
+  event: SearchTelemetryPayload["event"],
   details: {
     rawQuery?: string;
     queryLength?: number;
@@ -92,9 +92,11 @@ export function recordSearchTelemetry(
     timestamp: new Date().toISOString(),
   };
 
-  if (process.env.NODE_ENV === 'development' && isZero) {
+  if (process.env.NODE_ENV === "development" && isZero) {
     // Debug logging for zero-result queries in development
-    console.info(`[SearchTelemetry] Zero results for query length=${queryLen}, latency=${payload.latencyMs}ms`);
+    console.info(
+      `[SearchTelemetry] Zero results for query length=${queryLen}, latency=${payload.latencyMs}ms`
+    );
   }
 
   return payload;

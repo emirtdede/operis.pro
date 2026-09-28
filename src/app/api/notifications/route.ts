@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { eq, desc, and, isNull, sql } from "drizzle-orm";
 import { getSession } from "@/src/modules/auth/session";
 import { getDb, schema } from "@/src/lib/db";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -66,13 +67,14 @@ export async function GET(req: Request) {
       { status: 200 }
     );
   } catch (err: unknown) {
-    let message = isEn
-      ? "Failed to fetch notifications."
-      : "Bildirimler alınamadı.";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to fetch notifications.",
+        tr: "Bildirimler alınamadı.",
+      },
+      { isEn, logPrefix: "[Notifications GET Error]", status: 500 }
+    );
   }
 }
 
@@ -134,12 +136,13 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err: unknown) {
-    let message = isEn
-      ? "Failed to update notification."
-      : "Bildirim güncellenemedi.";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to update notification.",
+        tr: "Bildirim güncellenemedi.",
+      },
+      { isEn, logPrefix: "[Notifications POST Error]", status: 500 }
+    );
   }
 }

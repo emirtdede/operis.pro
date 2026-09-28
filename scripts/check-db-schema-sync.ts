@@ -1,3 +1,5 @@
+import { auditSchema } from "./lib/schema-audit";
+import path from "node:path";
 const proc = process as unknown as { loadEnvFile?: (path?: string) => void };
 if (typeof proc.loadEnvFile === "function") {
   try {
@@ -25,6 +27,13 @@ interface SchemaColumnMatch {
 }
 
 async function runSchemaSyncCheck(): Promise<void> {
+  if (process.env.SKIP_DB_CHECK === "true" || process.env.CI_OFFLINE_BUILD === "true") {
+    console.info(
+      "ℹ SKIP_DB_CHECK is enabled. Skipping live database schema connectivity verification."
+    );
+    process.exit(0);
+  }
+
   const env = getEnv();
   const connectionString =
     process.env.DATABASE_MIGRATION_URL || env.DATABASE_MIGRATION_URL || env.DATABASE_URL;
@@ -34,7 +43,11 @@ async function runSchemaSyncCheck(): Promise<void> {
   const caCert = process.env.SUPABASE_SSL_CA_CERT || process.env.DATABASE_SSL_CA;
   const explicitReject = process.env.DATABASE_SSL_REJECT_UNAUTHORIZED;
   const shouldRejectUnauthorized =
-    explicitReject !== undefined ? explicitReject === "true" : Boolean(caCert);
+    explicitReject !== undefined
+      ? explicitReject === "true"
+      : process.env.NODE_ENV === "production"
+        ? true
+        : Boolean(caCert);
 
   const client = new Client({
     connectionString,
@@ -97,7 +110,9 @@ async function runSchemaSyncCheck(): Promise<void> {
       }
     }
 
-    console.info(`📊 Inspected ${totalCheckedTables} tables and ${totalCheckedColumns} columns in Drizzle schema.`);
+    console.info(
+      `📊 Inspected ${totalCheckedTables} tables and ${totalCheckedColumns} columns in Drizzle schema.`
+    );
 
     // 3. Report findings
     if (missingTables.length > 0 || missingColumns.length > 0) {
@@ -112,16 +127,24 @@ async function runSchemaSyncCheck(): Promise<void> {
       if (missingColumns.length > 0) {
         console.error(`\nMissing Columns in Database (${missingColumns.length}):`);
         for (const col of missingColumns) {
-          console.error(`  - Column '${col.tableName}.${col.columnName}' exists in TypeScript schema but NOT in live database.`);
+          console.error(
+            `  - Column '${col.tableName}.${col.columnName}' exists in TypeScript schema but NOT in live database.`
+          );
         }
       }
 
       console.error("\n💡 REMEDY:");
-      console.error("  Run 'pnpm db:generate' to generate migration SQL, then 'pnpm db:migrate' to apply it.\n");
+      console.error(
+        "  Run 'pnpm db:generate' to generate migration SQL, then 'pnpm db:migrate' to apply it.\n"
+      );
       process.exit(1);
     }
 
-    console.info("✅ All Drizzle schema tables and columns are 100% in sync with live PostgreSQL database!\n");
+    const issues = await auditSchema(client, schema, path.resolve("db/migrations"));
+    if (issues.length) throw new Error(issues.join("\n"));
+    console.info(
+      "Drizzle model, migration hashes and canonical PostgreSQL catalog definitions match the reviewed baseline."
+    );
   } catch (err) {
     console.error("❌ Failed to connect to database or execute schema check:", err);
     process.exit(1);

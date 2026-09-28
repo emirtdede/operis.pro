@@ -74,7 +74,9 @@ export function MatchEscrowStatus({
       );
     }
 
-    let markCompleteButtonText = isTr ? "İşi Tamamlandı Olarak Onayla" : "Confirm Work as Completed";
+    let markCompleteButtonText = isTr
+      ? "İşi Tamamlandı Olarak Onayla"
+      : "Confirm Work as Completed";
     if (myMark === "MARKED_COMPLETE") {
       markCompleteButtonText = isTr ? "Tamamlandı Olarak İşaretlendi" : "Marked Complete";
     }

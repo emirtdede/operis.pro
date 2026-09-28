@@ -65,7 +65,9 @@ export function AddendumViewerModal({
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-base font-bold text-[var(--color-text-primary)]">
-                  {isTr ? `Sözleşme Zeyilnamesi (Ek Protokol No: ${seqPadded})` : `Contract Addendum (Protocol No: ${seqPadded})`}
+                  {isTr
+                    ? `Sözleşme Zeyilnamesi (Ek Protokol No: ${seqPadded})`
+                    : `Contract Addendum (Protocol No: ${seqPadded})`}
                 </h2>
                 <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold text-emerald-400">
                   {isTr ? "TBK m. 470/480 Uyumlu" : "Legally Executed"}
@@ -78,13 +80,12 @@ export function AddendumViewerModal({
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleCopy}
-              className="text-xs gap-1.5"
-            >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+            <Button variant="outline" size="sm" onClick={handleCopy} className="text-xs gap-1.5">
+              {copied ? (
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+              ) : (
+                <Copy className="w-3.5 h-3.5" />
+              )}
               <span>{getCopyButtonLabel(copied, isTr)}</span>
             </Button>
             <Button
@@ -115,7 +116,11 @@ export function AddendumViewerModal({
           <div className="mt-6 p-4 rounded-xl border border-dashed border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] space-y-2">
             <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400">
               <Hash className="w-4 h-4" />
-              <span>{isTr ? "Zaman Damgalı Dijital Onay Mührü" : "Cryptographically Verified Digital Seal"}</span>
+              <span>
+                {isTr
+                  ? "Zaman Damgalı Dijital Onay Mührü"
+                  : "Cryptographically Verified Digital Seal"}
+              </span>
             </div>
             <div className="font-mono text-[11px] text-[var(--color-text-secondary)] break-all bg-[var(--color-surface-hover)] p-2.5 rounded-lg border border-[var(--color-border-subtle)]">
               {changeRequest.addendumSha256 || "SHA-256-PENDING"}
@@ -123,7 +128,9 @@ export function AddendumViewerModal({
             {changeRequest.parentContractSha256 && (
               <div className="text-[10px] text-[var(--color-text-tertiary)]">
                 {isTr ? "Dayanak Ana Sözleşme Parmak İzi: " : "Parent Contract Fingerprint: "}
-                <span className="font-mono text-[var(--color-text-secondary)]">{changeRequest.parentContractSha256}</span>
+                <span className="font-mono text-[var(--color-text-secondary)]">
+                  {changeRequest.parentContractSha256}
+                </span>
               </div>
             )}
           </div>

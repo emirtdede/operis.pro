@@ -1,17 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import {
-  X,
-  Plus,
-  Trash2,
-  AlertCircle,
-  CheckCircle2,
-  Layers,
-  ArrowRight,
-} from "lucide-react";
+import { X, Plus, Trash2, AlertCircle, CheckCircle2, Layers, ArrowRight } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
-import { CustomMilestoneInputItem, MilestoneDto } from "@/src/modules/engagements/milestone-service";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
+import {
+  CustomMilestoneInputItem,
+  MilestoneDto,
+} from "@/src/modules/engagements/milestone-service";
 import { MilestoneDeliverableUrlType } from "@/src/modules/engagements/milestone-synthesizer";
 
 interface MilestoneEditorModalProps {
@@ -71,7 +67,9 @@ export function MilestoneEditorModal({
       {
         sequenceNumber: 2,
         title: isTr ? "Çekirdek Geliştirme & Demo" : "Core Development & Demo",
-        description: isTr ? "Ana fonksiyonlar ve ara entegrasyonlar" : "Core features and integrations",
+        description: isTr
+          ? "Ana fonksiyonlar ve ara entegrasyonlar"
+          : "Core features and integrations",
         deliverableCriteria: isTr ? "Test edilebilir çalışan demo linki" : "Interactive demo URL",
         percentage: 40,
         amount: Math.round(totalBudget * 0.4),
@@ -81,8 +79,12 @@ export function MilestoneEditorModal({
       {
         sequenceNumber: 3,
         title: isTr ? "Kapanış, Testler & Kod Devri" : "Final Delivery & Handover",
-        description: isTr ? "Canlıya alma, temiz repo ve FSEK devri" : "Production cutover and IP transfer",
-        deliverableCriteria: isTr ? "Eksiksiz repo ve canlı doğrulama" : "Full repo handover and sign-off",
+        description: isTr
+          ? "Canlıya alma, temiz repo ve FSEK devri"
+          : "Production cutover and IP transfer",
+        deliverableCriteria: isTr
+          ? "Eksiksiz repo ve canlı doğrulama"
+          : "Full repo handover and sign-off",
         percentage: 30,
         amount: Math.round(totalBudget * 0.3),
         currency,
@@ -105,7 +107,7 @@ export function MilestoneEditorModal({
     if (!item) return;
 
     item.percentage = newPercent;
-    item.amount = Math.round((totalBudget * (newPercent / 100)) * 100) / 100;
+    item.amount = Math.round(totalBudget * (newPercent / 100) * 100) / 100;
     setItems(updated);
   };
 
@@ -133,7 +135,9 @@ export function MilestoneEditorModal({
         description: isTr ? "Kapsam ve gereksinim açıklaması" : "Scope details",
         deliverableCriteria: "",
         percentage: remainingPercent > 0 ? remainingPercent : 10,
-        amount: Math.round((totalBudget * ((remainingPercent > 0 ? remainingPercent : 10) / 100)) * 100) / 100,
+        amount:
+          Math.round(totalBudget * ((remainingPercent > 0 ? remainingPercent : 10) / 100) * 100) /
+          100,
         currency,
         deliverableUrlType: "CODE_REPO",
       },
@@ -191,8 +195,15 @@ export function MilestoneEditorModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5 text-white max-h-[90vh] overflow-y-auto">
+    <ModalOverlay
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabel={isTr ? "Süreç & Hakediş Planını Özelleştir" : "Customize Milestone Plan"}
+    >
+      <div
+        className="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5 text-white max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-800 pb-4">
           <div className="flex items-center gap-2.5">
@@ -259,7 +270,9 @@ export function MilestoneEditorModal({
                         max={100}
                         step="0.5"
                         value={item.percentage}
-                        onChange={(e) => handlePercentageChange(index, parseFloat(e.target.value) || 0)}
+                        onChange={(e) =>
+                          handlePercentageChange(index, parseFloat(e.target.value) || 0)
+                        }
                         className="w-12 bg-transparent text-xs font-mono font-bold text-indigo-300 text-right focus:outline-none"
                         required
                       />
@@ -296,14 +309,26 @@ export function MilestoneEditorModal({
                     <input
                       type="text"
                       value={item.deliverableCriteria || ""}
-                      onChange={(e) => handleFieldChange(index, "deliverableCriteria", e.target.value)}
-                      placeholder={isTr ? "Beklenen Teslimat Çıktısı (Örn: Figma, PR)" : "Expected Deliverable Criteria"}
+                      onChange={(e) =>
+                        handleFieldChange(index, "deliverableCriteria", e.target.value)
+                      }
+                      placeholder={
+                        isTr
+                          ? "Beklenen Teslimat Çıktısı (Örn: Figma, PR)"
+                          : "Expected Deliverable Criteria"
+                      }
                       className="w-full bg-slate-900/90 border border-slate-800 rounded-xl px-2.5 py-1.5 text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-indigo-500"
                     />
 
                     <select
                       value={item.deliverableUrlType || "CODE_REPO"}
-                      onChange={(e) => handleFieldChange(index, "deliverableUrlType", e.target.value as MilestoneDeliverableUrlType)}
+                      onChange={(e) =>
+                        handleFieldChange(
+                          index,
+                          "deliverableUrlType",
+                          e.target.value as MilestoneDeliverableUrlType
+                        )
+                      }
                       className="bg-slate-900 border border-slate-800 rounded-xl px-2 py-1.5 text-[11px] text-slate-300 focus:outline-none"
                     >
                       <option value="CODE_REPO">{isTr ? "Repo" : "Repo"}</option>
@@ -374,6 +399,6 @@ export function MilestoneEditorModal({
           </div>
         </form>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

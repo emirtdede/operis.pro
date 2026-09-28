@@ -5,7 +5,10 @@ import {
   inMemoryRetainers,
   inMemoryRetainerPeriods,
 } from "@/src/modules/engagements/retainer-service";
-import { GET as retainerGetHandler, POST as retainerPostHandler } from "@/src/app/api/work/[id]/retainer/route";
+import {
+  GET as retainerGetHandler,
+  POST as retainerPostHandler,
+} from "@/src/app/api/work/[id]/retainer/route";
 import { POST as logHoursPostHandler } from "@/src/app/api/work/[id]/retainer/log/route";
 
 import * as sessionModule from "@/src/modules/auth/session";
@@ -185,7 +188,9 @@ describe("🔄 Smart Retainer & Recurring Maintenance Agreement Suite (TBK m. 50
       });
 
       expect(markdown).toContain("TBK m. 502 / m. 470");
-      expect(markdown).toContain("4857 sayılı İş Kanunu kapsamında bir iş/hizmet akdi doğurmadığını");
+      expect(markdown).toContain(
+        "4857 sayılı İş Kanunu kapsamında bir iş/hizmet akdi doğurmadığını"
+      );
       expect(markdown).toContain("HMK m. 193");
       expect(markdown).toContain("25.000 TRY / Ay");
       expect(sha256Seal).toHaveLength(64);
@@ -353,11 +358,14 @@ describe("🔄 Smart Retainer & Recurring Maintenance Agreement Suite (TBK m. 50
       expect(propRes.status).toBe(200);
 
       // 2. Freelancer attempts to self-approve proposal -> MUST FAIL with 403
-      const selfApproveReq = new NextRequest(`http://localhost:3000/api/work/${engagementId}/retainer`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "ACTIVATE" }),
-      });
+      const selfApproveReq = new NextRequest(
+        `http://localhost:3000/api/work/${engagementId}/retainer`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "ACTIVATE" }),
+        }
+      );
       const selfApproveRes = await retainerPostHandler(selfApproveReq, {
         params: Promise.resolve({ id: engagementId }),
       });
@@ -367,11 +375,14 @@ describe("🔄 Smart Retainer & Recurring Maintenance Agreement Suite (TBK m. 50
 
       // 3. Counterparty (Client) approves proposal -> MUST SUCCEED with 200
       setClientSession();
-      const clientApproveReq = new NextRequest(`http://localhost:3000/api/work/${engagementId}/retainer`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "ACTIVATE" }),
-      });
+      const clientApproveReq = new NextRequest(
+        `http://localhost:3000/api/work/${engagementId}/retainer`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "ACTIVATE" }),
+        }
+      );
       const clientApproveRes = await retainerPostHandler(clientApproveReq, {
         params: Promise.resolve({ id: engagementId }),
       });
@@ -426,15 +437,18 @@ describe("🔄 Smart Retainer & Recurring Maintenance Agreement Suite (TBK m. 50
       expect(retainer).toBeDefined();
 
       setClientSession();
-      const logReq = new NextRequest(`http://localhost:3000/api/work/${engagementId}/retainer/log`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          retainerId: retainer!.id,
-          hours: 3,
-          taskDescription: "Employer trying to log hours illegally",
-        }),
-      });
+      const logReq = new NextRequest(
+        `http://localhost:3000/api/work/${engagementId}/retainer/log`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            retainerId: retainer!.id,
+            hours: 3,
+            taskDescription: "Employer trying to log hours illegally",
+          }),
+        }
+      );
 
       const logRes = await logHoursPostHandler(logReq, {
         params: Promise.resolve({ id: engagementId }),
@@ -452,15 +466,18 @@ describe("🔄 Smart Retainer & Recurring Maintenance Agreement Suite (TBK m. 50
       const otherEngagementId = "eng-test-other-88";
 
       setFreelancerSession();
-      const attackReq = new NextRequest(`http://localhost:3000/api/work/${otherEngagementId}/retainer/log`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          retainerId: retainer!.id,
-          hours: 4,
-          taskDescription: "BOLA/IDOR attempt logging hours across different engagement ID",
-        }),
-      });
+      const attackReq = new NextRequest(
+        `http://localhost:3000/api/work/${otherEngagementId}/retainer/log`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            retainerId: retainer!.id,
+            hours: 4,
+            taskDescription: "BOLA/IDOR attempt logging hours across different engagement ID",
+          }),
+        }
+      );
 
       const attackRes = await logHoursPostHandler(attackReq, {
         params: Promise.resolve({ id: otherEngagementId }),

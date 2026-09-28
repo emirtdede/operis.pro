@@ -49,12 +49,18 @@ export function get2FAButtonLabel(enabled: boolean, isTr: boolean): string {
   return isTr ? "2FA Kur & Etkinleştir" : "Setup 2FA";
 }
 
-export function getExportJobStatusMessage(status: string, progressPercent: number, isTr: boolean): string {
+export function getExportJobStatusMessage(
+  status: string,
+  progressPercent: number,
+  isTr: boolean
+): string {
   if (status === "QUEUED" || status === "PENDING") {
     return isTr ? "Dışa aktarım sıraya alındı..." : "Export queued...";
   }
   if (status === "PROCESSING") {
-    return isTr ? `Veriler hazırlanıyor (%${progressPercent})...` : `Preparing data (${progressPercent}%)...`;
+    return isTr
+      ? `Veriler hazırlanıyor (%${progressPercent})...`
+      : `Preparing data (${progressPercent}%)...`;
   }
   if (status === "READY") {
     return isTr ? "Veri aktarımı tamamlandı ve hazır." : "Data export ready.";

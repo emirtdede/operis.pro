@@ -21,7 +21,8 @@ describe("IpAssignmentDeedEngine (FSEK m. 48-52 IP Assignment Deed)", () => {
     currency: "TRY",
     repositoryUrl: "https://github.com/operis-client/core-banking",
     gitCommitHash: "7f8a9b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a",
-    deliverableUrl: "https://github.com/operis-client/core-banking/commit/7f8a9b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a",
+    deliverableUrl:
+      "https://github.com/operis-client/core-banking/commit/7f8a9b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a",
     deliverableUrlType: "CODE_REPO",
     paymentReference: "FAST-20260918-009988",
     paymentDualSeal: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -64,7 +65,8 @@ describe("IpAssignmentDeedEngine (FSEK m. 48-52 IP Assignment Deed)", () => {
 
   describe("Git Commit Extraction Helper", () => {
     it("should extract 40-character SHA-1 commit hash from GitHub URL", () => {
-      const url = "https://github.com/operis-client/core/commit/7f8a9b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a";
+      const url =
+        "https://github.com/operis-client/core/commit/7f8a9b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a";
       const hash = IpAssignmentDeedEngine.extractCommitHashFromUrl(url);
       expect(hash).toBe("7f8a9b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a");
     });

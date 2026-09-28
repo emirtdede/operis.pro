@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { OfferService } from "@/src/modules/offers/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -43,11 +44,44 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     return NextResponse.json({ success: true, ...result }, { status: 200 });
   } catch (err: unknown) {
-    let message = isEn ? "Failed to reject counter-offer" : "Karşı teklif reddedilemedi";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    const status = message.includes("Unauthorized") || message.includes("yalnızca") ? 403 : 400;
-    return NextResponse.json({ error: message }, { status });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to reject counter-offer",
+        tr: "Karşı teklif reddedilemedi",
+      },
+      {
+        isEn,
+        logPrefix: "[Counter Reject POST Error]",
+        status: 500,
+        allowedMessages: {
+          Unauthorized: {
+            en: "Unauthorized to reject this counter-offer.",
+            tr: "Bu karşı teklifi reddetme yetkiniz yok.",
+            status: 403,
+          },
+          yalnızca: {
+            en: "Unauthorized to reject this counter-offer.",
+            tr: "Bu karşı teklifi reddetme yetkiniz yok.",
+            status: 403,
+          },
+          "not found": {
+            en: "Counter-offer not found.",
+            tr: "Karşı teklif bulunamadı.",
+            status: 400,
+          },
+          "not pending": {
+            en: "Counter-offer is not pending.",
+            tr: "Karşı teklif beklemede değil.",
+            status: 400,
+          },
+          bulunamadı: {
+            en: "Counter-offer not found.",
+            tr: "Karşı teklif bulunamadı.",
+            status: 400,
+          },
+        },
+      }
+    );
   }
 }

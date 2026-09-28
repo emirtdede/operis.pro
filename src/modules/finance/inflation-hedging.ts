@@ -100,14 +100,14 @@ export const TUIK_INDEX_DATABASE: Record<string, { tufe: number; yiUfe: number }
   "2024-07": { tufe: 2393.63, yiUfe: 3619.64 },
   "2024-08": { tufe: 2452.99, yiUfe: 3680.45 },
   "2024-09": { tufe: 2525.86, yiUfe: 3730.98 },
-  "2024-10": { tufe: 2598.60, yiUfe: 3779.48 },
+  "2024-10": { tufe: 2598.6, yiUfe: 3779.48 },
   "2024-11": { tufe: 2656.81, yiUfe: 3842.22 },
   "2024-12": { tufe: 2684.97, yiUfe: 3896.01 },
   // 2025
   "2025-01": { tufe: 2859.49, yiUfe: 4051.85 },
-  "2025-02": { tufe: 2945.28, yiUfe: 4165.20 },
+  "2025-02": { tufe: 2945.28, yiUfe: 4165.2 },
   "2025-03": { tufe: 3010.08, yiUfe: 4256.83 },
-  "2025-04": { tufe: 3085.33, yiUfe: 4359.00 },
+  "2025-04": { tufe: 3085.33, yiUfe: 4359.0 },
   "2025-05": { tufe: 3140.87, yiUfe: 4437.46 },
   "2025-06": { tufe: 3191.12, yiUfe: 4508.46 },
   "2025-07": { tufe: 3261.33, yiUfe: 4598.63 },
@@ -124,7 +124,7 @@ export const TUIK_INDEX_DATABASE: Record<string, { tufe: number; yiUfe: number }
   "2026-05": { tufe: 4191.29, yiUfe: 5770.23 },
   "2026-06": { tufe: 4262.54, yiUfe: 5862.55 },
   "2026-07": { tufe: 4339.27, yiUfe: 5962.22 },
-  "2026-08": { tufe: 4408.70, yiUfe: 6051.65 },
+  "2026-08": { tufe: 4408.7, yiUfe: 6051.65 },
   "2026-09": { tufe: 4479.24, yiUfe: 6142.43 },
   "2026-10": { tufe: 4546.43, yiUfe: 6228.42 },
   "2026-11": { tufe: 4614.63, yiUfe: 6315.62 },
@@ -226,7 +226,11 @@ export class InflationHedgingEngine {
     let capApplied = false;
     let finalAdjustmentRate = rateAfterFloor;
 
-    if (params.capPercentage !== undefined && params.capPercentage !== null && params.capPercentage > 0) {
+    if (
+      params.capPercentage !== undefined &&
+      params.capPercentage !== null &&
+      params.capPercentage > 0
+    ) {
       const capFraction = params.capPercentage / 100;
       if (rateAfterFloor > capFraction) {
         finalAdjustmentRate = capFraction;

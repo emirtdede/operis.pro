@@ -1,6 +1,4 @@
-import {
-  getInterviewQuestions,
-} from "./acceptance/archetype-templates";
+import { getInterviewQuestions } from "./acceptance/archetype-templates";
 import { AcceptanceRulesEvaluator } from "./acceptance/acceptance-rules-evaluator";
 import { AcceptanceSignoffService } from "./acceptance/acceptance-signoff.service";
 import type {

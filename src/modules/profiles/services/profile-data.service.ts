@@ -7,10 +7,7 @@ import { DEFAULT_USER } from "../../auth/demo-user";
 import { EndorsementService, EndorsementDto } from "../../endorsements/service";
 import { ReviewService } from "../../reviews/service";
 import { UserReviewsSummaryDto } from "../../reviews/types";
-import {
-  AvailabilityStatus,
-  resolveDynamicAvailability,
-} from "./availability.service";
+import { AvailabilityStatus, resolveDynamicAvailability } from "./availability.service";
 import { z } from "zod";
 
 import { PersonaMode, resolveUserPersonaMode } from "../utils/persona";
@@ -350,7 +347,8 @@ export class ProfileDataService {
       const availability = resolveDynamicAvailability({
         status: (profile as { availabilityStatus?: string }).availabilityStatus,
         hoursPerWeek: (profile as { availabilityHoursPerWeek?: number }).availabilityHoursPerWeek,
-        availableFromDate: (profile as { availableFromDate?: string | Date | null }).availableFromDate,
+        availableFromDate: (profile as { availableFromDate?: string | Date | null })
+          .availableFromDate,
         notice: (profile as { availabilityNotice?: string | null }).availabilityNotice,
         updatedAt: (profile as { availabilityUpdatedAt?: Date }).availabilityUpdatedAt,
       });
@@ -368,7 +366,8 @@ export class ProfileDataService {
         roles: profile.roles || [],
         personaMode: resolveUserPersonaMode({
           roles: profile.roles,
-          isAvailableForHire: availability.effectiveStatus !== "BUSY" && Boolean(profile.isAvailableForHire),
+          isAvailableForHire:
+            availability.effectiveStatus !== "BUSY" && Boolean(profile.isAvailableForHire),
           isActivelyHiring,
           isCompanyVerified: profile.isCompanyVerified ?? false,
           activeListingsCount: activeListings.length,
@@ -383,7 +382,9 @@ export class ProfileDataService {
         isAvailabilityStale: availability.isStale,
         about: profile.about,
         avatarUrl: profile.avatarUrl || null,
-        avatarSource: ((profile as { avatarSource?: string }).avatarSource as "oauth" | "custom" | "none") || "oauth",
+        avatarSource:
+          ((profile as { avatarSource?: string }).avatarSource as "oauth" | "custom" | "none") ||
+          "oauth",
         showLocation: profile.showLocation,
         location,
         links,
@@ -519,7 +520,9 @@ export class ProfileDataService {
     }
 
     if (input.availabilityNotice !== undefined) {
-      const notice = input.availabilityNotice ? input.availabilityNotice.trim().slice(0, 140) : null;
+      const notice = input.availabilityNotice
+        ? input.availabilityNotice.trim().slice(0, 140)
+        : null;
       if (notice && !validateContentAppropriateness(notice).isValid) {
         throw new Error("Availability notice contains inappropriate content.");
       }
@@ -598,13 +601,15 @@ export class ProfileDataService {
       }
     }
 
-    if (input.isCompanyVerified !== undefined) updateData.isCompanyVerified = input.isCompanyVerified;
+    if (input.isCompanyVerified !== undefined)
+      updateData.isCompanyVerified = input.isCompanyVerified;
     if (input.companyName !== undefined) updateData.companyName = input.companyName;
     if (input.companyType !== undefined) updateData.companyType = input.companyType;
     if (input.taxOffice !== undefined) updateData.taxOffice = input.taxOffice;
     if (input.vknMasked !== undefined) updateData.vknMasked = input.vknMasked;
     if (input.vknHmac !== undefined) updateData.vknHmac = input.vknHmac;
-    if (input.companyVerifiedAt !== undefined) updateData.companyVerifiedAt = input.companyVerifiedAt;
+    if (input.companyVerifiedAt !== undefined)
+      updateData.companyVerifiedAt = input.companyVerifiedAt;
 
     let validatedLinks: ProfileLinkInput[] | undefined;
     if (input.links !== undefined) {
@@ -630,7 +635,8 @@ export class ProfileDataService {
       if (input.isActivelyHiring !== undefined)
         DEFAULT_USER.profile.isActivelyHiring = updateData.isActivelyHiring;
       if (input.availabilityStatus !== undefined) {
-        DEFAULT_USER.profile.availabilityStatus = updateData.availabilityStatus as AvailabilityStatus;
+        DEFAULT_USER.profile.availabilityStatus =
+          updateData.availabilityStatus as AvailabilityStatus;
         DEFAULT_USER.profile.isAvailableForHire = updateData.isAvailableForHire;
         DEFAULT_USER.profile.availabilityUpdatedAt = updateData.availabilityUpdatedAt;
       }
@@ -835,7 +841,8 @@ export class ProfileDataService {
       const availability = resolveDynamicAvailability({
         status: (profile as { availabilityStatus?: string }).availabilityStatus,
         hoursPerWeek: (profile as { availabilityHoursPerWeek?: number }).availabilityHoursPerWeek,
-        availableFromDate: (profile as { availableFromDate?: string | Date | null }).availableFromDate,
+        availableFromDate: (profile as { availableFromDate?: string | Date | null })
+          .availableFromDate,
         notice: (profile as { availabilityNotice?: string | null }).availabilityNotice,
         updatedAt: (profile as { availabilityUpdatedAt?: Date }).availabilityUpdatedAt,
       });

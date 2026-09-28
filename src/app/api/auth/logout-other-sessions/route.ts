@@ -34,15 +34,28 @@ export async function POST(req: Request) {
       return access.response;
     }
 
-    // Atomically bump authVersion to invalidate all previous sessions
+    // Atomically bump authVersion in DB to invalidate all existing sessions
     const newVersion = await bumpUserAuthVersion(session.userId);
-    const updatedVersion = newVersion ?? ((session.authVersion ?? 1) + 1);
+    if (!newVersion) {
+      console.error(
+        "[Logout Other Sessions] Database authVersion bump failed for user:",
+        session.userId
+      );
+      return NextResponse.json(
+        {
+          error: isEn
+            ? "Failed to terminate other sessions. Database update could not be completed."
+            : "Diğer oturumlar sonlandırılamadı. Veritabanı güncellemesi tamamlanamadı.",
+        },
+        { status: 500 }
+      );
+    }
 
     // Revoke active Clerk sessions across other devices if Clerk is configured
-    if (
-      process.env.CLERK_SECRET_KEY &&
-      process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-    ) {
+    if (process.env.CLERK_SECRET_KEY && process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
+      let clerkRevocationError = false;
+      const failedRevocations: string[] = [];
+
       try {
         const { getDb, schema } = await import("@/src/lib/db");
         const { eq } = await import("drizzle-orm");
@@ -54,36 +67,107 @@ export async function POST(req: Request) {
           .limit(1);
 
         if (dbUser?.clerkUserId) {
-          const { clerkClient } = await import("@clerk/nextjs/server");
+          const { clerkClient, auth } = await import("@clerk/nextjs/server");
+          let currentClerkSessionId: string | null = null;
+          try {
+            const currentClerkAuth = await auth();
+            currentClerkSessionId = currentClerkAuth?.sessionId || null;
+          } catch {
+            // Ignore failure to detect current Clerk session
+          }
+
           const client = await clerkClient();
           if (client?.sessions && typeof client.sessions.getSessionList === "function") {
-            const sessionsResponse = await client.sessions.getSessionList({
-              userId: dbUser.clerkUserId,
-              status: "active",
-            });
-            const sessionsList: Array<{ id: string }> = Array.isArray(sessionsResponse)
-              ? (sessionsResponse as unknown as Array<{ id: string }>)
-              : ((sessionsResponse as unknown as { data?: Array<{ id: string }> })?.data || []);
+            const sessionIdsToRevoke = new Set<string>();
+            let offset = 0;
+            const limit = 100;
+            let hasMore = true;
 
-            for (const s of sessionsList) {
-              if (s?.id) {
-                await client.sessions.revokeSession(s.id).catch(() => {});
+            // Phase 1: Collect all active session IDs across pages without mutating during collection
+            while (hasMore) {
+              const sessionsResponse = await client.sessions.getSessionList({
+                userId: dbUser.clerkUserId,
+                status: "active",
+                limit,
+                offset,
+              });
+              const sessionsList: Array<{ id: string }> = Array.isArray(sessionsResponse)
+                ? (sessionsResponse as unknown as Array<{ id: string }>)
+                : (sessionsResponse as unknown as { data?: Array<{ id: string }> })?.data || [];
+
+              if (sessionsList.length === 0) {
+                hasMore = false;
+                break;
+              }
+
+              for (const s of sessionsList) {
+                if (s?.id) {
+                  sessionIdsToRevoke.add(s.id);
+                }
+              }
+
+              if (sessionsList.length < limit) {
+                hasMore = false;
+              } else {
+                offset += limit;
+              }
+            }
+
+            // Phase 2: Revoke other sessions with exponential backoff retries
+            for (const sId of sessionIdsToRevoke) {
+              // Preserve current device's Clerk session if active
+              if (currentClerkSessionId && sId === currentClerkSessionId) {
+                continue;
+              }
+
+              let revoked = false;
+              let attempts = 0;
+              while (!revoked && attempts < 3) {
+                attempts++;
+                try {
+                  await client.sessions.revokeSession(sId);
+                  revoked = true;
+                } catch (e) {
+                  if (attempts >= 3) {
+                    console.error(
+                      `[Logout Other Sessions] Error: Failed to revoke Clerk session ${sId} after 3 attempts:`,
+                      e
+                    );
+                    failedRevocations.push(sId);
+                  } else {
+                    await new Promise((resolve) => setTimeout(resolve, 100 * attempts));
+                  }
+                }
               }
             }
           }
         }
       } catch (clerkErr) {
-        console.warn("[Logout Other Sessions] Clerk session revocation warning:", clerkErr);
+        console.error("[Logout Other Sessions] Clerk session revocation error:", clerkErr);
+        clerkRevocationError = true;
+      }
+
+      if (clerkRevocationError || failedRevocations.length > 0) {
+        return NextResponse.json(
+          {
+            error: isEn
+              ? "Failed to fully terminate other Clerk sessions. Please try again."
+              : "Diğer Clerk oturumlarının tamamı sonlandırılamadı. Lütfen tekrar deneyin.",
+            code: "REMOTE_SESSION_REVOCATION_FAILED",
+          },
+          { status: 502 }
+        );
       }
     }
 
-    // Reissue current device's cookie with the new authVersion
+    // Reissue current device's cookie with the verified new authVersion
     const freshToken = createSessionToken({
       id: session.userId,
       email: session.email,
       role: session.role,
       status: "ACTIVE",
-      authVersion: updatedVersion,
+      authVersion: newVersion,
+      twoFactorVerified: session.twoFactorVerified,
     });
 
     // Log the security event
@@ -93,7 +177,7 @@ export async function POST(req: Request) {
       ipAddress: ip,
       userAgent: req.headers.get("user-agent"),
       riskMetadata: {
-        newAuthVersion: updatedVersion,
+        newAuthVersion: newVersion,
         action: "logout_other_devices",
       },
     });
@@ -118,7 +202,14 @@ export async function POST(req: Request) {
 
     return response;
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to logout other sessions";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[Logout Other Sessions] Unexpected error:", err);
+    return NextResponse.json(
+      {
+        error: isEn
+          ? "An unexpected error occurred while terminating sessions."
+          : "Oturumlar kapatılırken beklenmeyen bir hata oluştu.",
+      },
+      { status: 500 }
+    );
   }
 }

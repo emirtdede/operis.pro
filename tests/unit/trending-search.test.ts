@@ -25,7 +25,9 @@ describe("Navbar & Trending Search Ecosystem Specifications", () => {
   describe("Query Validation & Anti-Spam Guards", () => {
     it("accepts valid developer queries between 2 and 40 characters", () => {
       expect(TrendingSearchService.validateQuery("Next.js")).toBe("Next.js");
-      expect(TrendingSearchService.validateQuery("React Native Developer")).toBe("React Native Developer");
+      expect(TrendingSearchService.validateQuery("React Native Developer")).toBe(
+        "React Native Developer"
+      );
       expect(TrendingSearchService.validateQuery("  PostgreSQL 16  ")).toBe("PostgreSQL 16");
     });
 
@@ -71,7 +73,7 @@ describe("Navbar & Trending Search Ecosystem Specifications", () => {
       // The recorded item should be present
       expect(topTrending).toContain("Docker & Kubernetes");
       // The remaining 4 items should be filled from seeds
-      expect(topTrending.filter(item => getSeedTrending("tr").includes(item)).length).toBe(4);
+      expect(topTrending.filter((item) => getSeedTrending("tr").includes(item)).length).toBe(4);
     });
 
     it("increments search counts and ranks more frequently searched queries higher", async () => {
@@ -110,6 +112,21 @@ describe("Navbar & Trending Search Ecosystem Specifications", () => {
       expect(top).toContain("PostgreSQL Advanced Architecture");
       expect(top.length).toBe(5);
     });
+
+    it("purges expired search trends and returns counts for deleted DB rows and pruned memory items", async () => {
+      const dbModule = await import("@/src/lib/db");
+      const { vi } = await import("vitest");
+
+      vi.spyOn(dbModule, "getDb").mockReturnValue({
+        execute: vi.fn().mockResolvedValue({
+          rows: [{ count: 12 }],
+        }),
+      } as unknown as ReturnType<typeof dbModule.getDb>);
+
+      const result = await TrendingSearchService.purgeExpiredTrends(30, 1000);
+      expect(result).toHaveProperty("deletedDbRows");
+      expect(result).toHaveProperty("prunedMemoryItems");
+      expect(result.deletedDbRows).toBe(12);
+    });
   });
 });
-

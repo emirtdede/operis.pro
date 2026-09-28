@@ -207,13 +207,18 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (err: unknown) {
-    let message = isEn
-      ? "Failed to submit report."
-      : "Bildirim iletilemedi.";
     if (err instanceof z.ZodError) {
       const fallbackMsg = isEn ? "Invalid form data." : "Form verileri geçersiz.";
-      message = err.issues[0]?.message || fallbackMsg;
+      return NextResponse.json({ error: err.issues[0]?.message || fallbackMsg }, { status: 400 });
     }
-    return NextResponse.json({ error: message }, { status: 400 });
+    console.error("Report route unhandled error:", err);
+    return NextResponse.json(
+      {
+        error: isEn
+          ? "Failed to submit report. Please try again later."
+          : "Bildirim iletilemedi. Lütfen daha sonra tekrar deneyiniz.",
+      },
+      { status: 500 }
+    );
   }
 }

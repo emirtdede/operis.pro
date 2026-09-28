@@ -1,15 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  TrendingUp,
-  Sparkles,
-  ArrowRight,
-  Check,
-  Plus,
-  PlusCircle,
-  Zap,
-} from "lucide-react";
+import { TrendingUp, Sparkles, ArrowRight, Check, Plus, PlusCircle, Zap } from "lucide-react";
 import type { CategoryDto } from "@/src/modules/categories/service";
 import type { FeedListingItem } from "@/src/modules/listings/feed/service";
 import { Button } from "@/src/components/ui/button";
@@ -181,10 +173,10 @@ export function FeedRightPanel({
                             ? `${cat.listingCount} aktif ilan`
                             : `${cat.listingCount} active listings`
                           : cat.description
-                          ? cat.description
-                          : isTr
-                          ? "Popüler Uzmanlık"
-                          : "Specialization"}
+                            ? cat.description
+                            : isTr
+                              ? "Popüler Uzmanlık"
+                              : "Specialization"}
                       </div>
                     </Link>
 

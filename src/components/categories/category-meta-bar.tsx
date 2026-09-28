@@ -30,7 +30,10 @@ export function CategoryMetaBar({
         aria-atomic="true"
         className="flex items-center gap-2 text-[var(--color-text-secondary)] font-medium"
       >
-        <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
+        <span
+          className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"
+          aria-hidden="true"
+        />
         <span>
           <strong className="font-bold text-[var(--color-text-primary)]">
             {filteredCategoriesCount}
@@ -49,7 +52,10 @@ export function CategoryMetaBar({
       {/* Sağ: Takip Durumu & Toplu Aksiyonlar */}
       <div className="flex items-center gap-3 self-end sm:self-auto flex-wrap">
         <div className="inline-flex items-center gap-1.5 text-xs text-[var(--color-text-secondary)]">
-          <BookmarkCheck className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+          <BookmarkCheck
+            className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400"
+            aria-hidden="true"
+          />
           <span>
             <strong className="font-semibold text-[var(--color-text-primary)]">
               {followedCount}

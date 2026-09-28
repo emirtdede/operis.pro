@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import type pg from "pg";
+import pg from "pg";
 import {
   acquireClientWithDeadline,
   getDb,
@@ -325,6 +325,7 @@ export async function claimAndProcessExportJob(
     }
   };
 
+  let snapshotPool: pg.Pool | undefined;
   try {
     if (abortController.signal.aborted) {
       throw abortController.signal.reason || new Error("Export attempt aborted");
@@ -348,11 +349,26 @@ export async function claimAndProcessExportJob(
       }
     }
 
+    // A snapshot holds its connection while the writer and lease updates run.
+    // The serverless pool has one slot, so give the reader one owned connection.
+    if (pool.options.max === 1) {
+      snapshotPool = new pg.Pool({
+        ...pool.options,
+        password: pool.options.password,
+        ssl: pool.options.ssl,
+        max: 1,
+      });
+      snapshotPool.on("error", () => {
+        abortController.abort(
+          new ExportError("EXPORT_DB_UNAVAILABLE", "Snapshot connection failed", 503, true)
+        );
+      });
+    }
     // 2. Stream user data snapshot under REPEATABLE READ READ ONLY with true query cancellation
     const dataStream = streamUserDataExport(claimed.userId, {
       signal: abortController.signal,
       deadlineAt,
-      pool,
+      pool: snapshotPool ?? pool,
       onSection: async (sectionName) => {
         const progressTime = new Date();
         await updateJobProgress(progressTime);
@@ -543,7 +559,10 @@ export async function claimAndProcessExportJob(
     let specificErrorCode: string;
     if (err instanceof ExportError) {
       specificErrorCode = err.code;
-    } else if (abortController.signal.aborted && abortController.signal.reason instanceof ExportError) {
+    } else if (
+      abortController.signal.aborted &&
+      abortController.signal.reason instanceof ExportError
+    ) {
       specificErrorCode = abortController.signal.reason.code;
     } else {
       specificErrorCode = willFail ? "EXPORT_FAILED" : "EXPORT_RETRY_SCHEDULED";
@@ -608,6 +627,7 @@ export async function claimAndProcessExportJob(
         new Promise((resolve) => setTimeout(resolve, 1000)),
       ]);
     }
+    if (snapshotPool) await snapshotPool.end();
   }
 }
 

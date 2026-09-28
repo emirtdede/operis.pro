@@ -78,7 +78,9 @@ export function SignaturePadModal({
   };
 
   // Drawing handlers
-  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  const startDrawing = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -150,7 +152,9 @@ export function SignaturePadModal({
     setErrorMessage(null);
 
     if (!signerName.trim()) {
-      setErrorMessage(isTr ? "Lütfen imzalayan isim ve unvanını girin." : "Please enter signer name.");
+      setErrorMessage(
+        isTr ? "Lütfen imzalayan isim ve unvanını girin." : "Please enter signer name."
+      );
       return;
     }
 
@@ -173,7 +177,9 @@ export function SignaturePadModal({
       finalDataUrl = canvas.toDataURL("image/png");
     } else {
       if (!uploadedDataUrl) {
-        setErrorMessage(isTr ? "Lütfen bir imza veya kaşe görseli yükleyin." : "Please upload a signature image.");
+        setErrorMessage(
+          isTr ? "Lütfen bir imza veya kaşe görseli yükleyin." : "Please upload a signature image."
+        );
         return;
       }
       finalDataUrl = uploadedDataUrl;
@@ -205,7 +211,9 @@ export function SignaturePadModal({
               : "Contract package was updated by another process. Please refresh to review the latest package."
           );
         }
-        throw new Error(data.error || (isTr ? "İmza kaydedilemedi." : "Failed to submit signature."));
+        throw new Error(
+          data.error || (isTr ? "İmza kaydedilemedi." : "Failed to submit signature.")
+        );
       }
 
       onSignatureSuccess();
@@ -218,7 +226,11 @@ export function SignaturePadModal({
   };
 
   return (
-    <Dialog isOpen={isOpen} onClose={onClose} title={isTr ? "E-İmza & Kaşe Onayı" : "Digital Signature & Stamp Approval"}>
+    <Dialog
+      isOpen={isOpen}
+      onClose={onClose}
+      title={isTr ? "E-İmza & Kaşe Onayı" : "Digital Signature & Stamp Approval"}
+    >
       <div className="space-y-4 max-w-lg mx-auto">
         <p className="text-xs text-[var(--color-text-muted)]">
           {isTr
@@ -285,7 +297,9 @@ export function SignaturePadModal({
               />
               {!hasDrawn && (
                 <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-xs text-zinc-500">
-                  {isTr ? "İmzanızı bu alana çizin (dokunmatik veya fare)" : "Draw your signature here"}
+                  {isTr
+                    ? "İmzanızı bu alana çizin (dokunmatik veya fare)"
+                    : "Draw your signature here"}
                 </div>
               )}
             </div>
@@ -354,16 +368,20 @@ export function SignaturePadModal({
             <span className="text-[11px] leading-relaxed text-amber-200">
               {isTr ? (
                 <>
-                  <strong>Platform Sorumsuzluğu ve Dava Muafiyeti Onayı (TBK m. 115 & HMK m. 193):</strong> Operis
-                  platformunun bu sözleşmenin tarafı olmadığını, yalnızca iki tarafı bir araya getiren bağımsız bir yer
-                  sağlayıcı olduğunu; sözleşmenin %100 opsiyonel olduğunu ve doğabilecek her türlü hukuki, cezai ve mali
-                  ihtilafın münhasıran karşı tarafla aramda çözümleneceğini peşinen kabul ve taahhüt ediyorum.
+                  <strong>
+                    Platform Sorumsuzluğu ve Dava Muafiyeti Onayı (TBK m. 115 & HMK m. 193):
+                  </strong>{" "}
+                  Operis platformunun bu sözleşmenin tarafı olmadığını, yalnızca iki tarafı bir
+                  araya getiren bağımsız bir yer sağlayıcı olduğunu; sözleşmenin %100 opsiyonel
+                  olduğunu ve doğabilecek her türlü hukuki, cezai ve mali ihtilafın münhasıran karşı
+                  tarafla aramda çözümleneceğini peşinen kabul ve taahhüt ediyorum.
                 </>
               ) : (
                 <>
-                  <strong>Platform Liability Waiver & Safe Harbor Acknowledgment:</strong> I acknowledge that Operis is
-                  not a party to this agreement and merely acts as an independent venue provider. All liabilities and
-                  disputes remain strictly bilateral between Client and Contractor.
+                  <strong>Platform Liability Waiver & Safe Harbor Acknowledgment:</strong> I
+                  acknowledge that Operis is not a party to this agreement and merely acts as an
+                  independent venue provider. All liabilities and disputes remain strictly bilateral
+                  between Client and Contractor.
                 </>
               )}
             </span>

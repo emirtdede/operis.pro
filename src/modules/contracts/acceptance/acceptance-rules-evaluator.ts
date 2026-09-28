@@ -68,10 +68,7 @@ export class AcceptanceRulesEvaluator {
     }
 
     // Calculate confidence percentage
-    const confidence =
-      highestScore === 0
-        ? 40
-        : Math.min(100, Math.max(65, highestScore * 2));
+    const confidence = highestScore === 0 ? 40 : Math.min(100, Math.max(65, highestScore * 2));
 
     return {
       archetype: bestArchetype,
@@ -113,14 +110,17 @@ export class AcceptanceRulesEvaluator {
       id: `crit-${criterionIndex++}`,
       phaseNumber: 1,
       category: "DELIVERY_QUALITY",
-      humanCriterionTr: "Kod tabanı temiz bir Git reposunda düzenli commit geçmişi ve kurulum kılavuzu (README) ile teslim edilmelidir.",
-      humanCriterionEn: "Codebase must be delivered in a clean Git repository with meaningful commit history and a setup guide (README).",
+      humanCriterionTr:
+        "Kod tabanı temiz bir Git reposunda düzenli commit geçmişi ve kurulum kılavuzu (README) ile teslim edilmelidir.",
+      humanCriterionEn:
+        "Codebase must be delivered in a clean Git repository with meaningful commit history and a setup guide (README).",
       gherkinGivenTr: "Geliştirici projeyi tamamladığında",
       gherkinWhenTr: "Kaynak kod deposu klonlanıp 'README' adımları uygulandığında",
       gherkinThenTr: "Proje sıfır derleme/build hatası ile yerel ortamda başarıyla çalışmalıdır",
       gherkinGivenEn: "Given the developer finishes implementation",
       gherkinWhenEn: "When the repository is cloned and README setup instructions are run",
-      gherkinThenEn: "Then the application builds and boots locally with zero compile or dependency errors",
+      gherkinThenEn:
+        "Then the application builds and boots locally with zero compile or dependency errors",
       isMandatory: true,
     });
 
@@ -133,14 +133,19 @@ export class AcceptanceRulesEvaluator {
             slotKey: "auth_roles",
             phaseNumber: 1,
             category: "AUTH_SECURITY",
-            humanCriterionTr: "Yönetici (Admin) yeni kullanıcı oluşturabilmeli ve kullanıcının rolüne göre (Editör, Muhasebe vb.) yetkisiz menüler gizlenmelidir.",
-            humanCriterionEn: "Admin must be able to invite users and assign roles; restricted menu items must be hidden and inaccessible for unauthorized roles.",
+            humanCriterionTr:
+              "Yönetici (Admin) yeni kullanıcı oluşturabilmeli ve kullanıcının rolüne göre (Editör, Muhasebe vb.) yetkisiz menüler gizlenmelidir.",
+            humanCriterionEn:
+              "Admin must be able to invite users and assign roles; restricted menu items must be hidden and inaccessible for unauthorized roles.",
             gherkinGivenTr: "Sistemde kısıtlı yetkili bir kullanıcı oturum açtığında",
-            gherkinWhenTr: "Yalnızca adminlerin görebileceği bir URL'e doğrudan erişmeye çalıştığında",
-            gherkinThenTr: "Sistem 403 Yetkisiz Erişim uyarısı vermeli veya kullanıcıyı ana sayfaya yönlendirmelidir",
+            gherkinWhenTr:
+              "Yalnızca adminlerin görebileceği bir URL'e doğrudan erişmeye çalıştığında",
+            gherkinThenTr:
+              "Sistem 403 Yetkisiz Erişim uyarısı vermeli veya kullanıcıyı ana sayfaya yönlendirmelidir",
             gherkinGivenEn: "Given a non-admin authenticated user",
             gherkinWhenEn: "When attempting direct navigation to restricted administrative routes",
-            gherkinThenEn: "Then the application rejects access with 403 Forbidden or safe redirects",
+            gherkinThenEn:
+              "Then the application rejects access with 403 Forbidden or safe redirects",
             isMandatory: true,
           });
         }
@@ -151,11 +156,14 @@ export class AcceptanceRulesEvaluator {
             slotKey: "data_source",
             phaseNumber: 2,
             category: "DATA_INTEGRATION",
-            humanCriterionTr: "Panel, mevcut REST/GraphQL API'den verileri 2 saniye altında çekmeli ve bağlantı koptuğunda kullanıcıya anlaşılır hata mesajı göstermelidir.",
-            humanCriterionEn: "Dashboard must fetch records from the external API within 2s and display user-friendly error banners upon network failure.",
+            humanCriterionTr:
+              "Panel, mevcut REST/GraphQL API'den verileri 2 saniye altında çekmeli ve bağlantı koptuğunda kullanıcıya anlaşılır hata mesajı göstermelidir.",
+            humanCriterionEn:
+              "Dashboard must fetch records from the external API within 2s and display user-friendly error banners upon network failure.",
             gherkinGivenTr: "Harici API uç noktası aktif durumdayken",
             gherkinWhenTr: "Kullanıcı veri listeleme sayfasını açtığında",
-            gherkinThenTr: "Kayıtlar sayfalanmış (pagination) biçimde yüklenmeli ve sayfa donmamalıdır",
+            gherkinThenTr:
+              "Kayıtlar sayfalanmış (pagination) biçimde yüklenmeli ve sayfa donmamalıdır",
             gherkinGivenEn: "Given external API service is reachable",
             gherkinWhenEn: "When opening the data management view",
             gherkinThenEn: "Then records render with responsive pagination without thread blocking",
@@ -167,11 +175,15 @@ export class AcceptanceRulesEvaluator {
             slotKey: "data_source",
             phaseNumber: 2,
             category: "DATA_INTEGRATION",
-            humanCriterionTr: "Kullanıcı geçerli bir .xlsx veya .csv dosyası yüklediğinde, tüm satırlar veritabanına aktarılmalı ve hatalı satırlar raporlanmalıdır.",
-            humanCriterionEn: "When uploading valid .xlsx or .csv files, rows must be parsed into the database with invalid lines clearly flagged.",
+            humanCriterionTr:
+              "Kullanıcı geçerli bir .xlsx veya .csv dosyası yüklediğinde, tüm satırlar veritabanına aktarılmalı ve hatalı satırlar raporlanmalıdır.",
+            humanCriterionEn:
+              "When uploading valid .xlsx or .csv files, rows must be parsed into the database with invalid lines clearly flagged.",
             gherkinGivenTr: "Kullanıcı dosya yükleme ekranındayken",
-            gherkinWhenTr: "Örnek şablona uygun bir Excel dosyası seçip 'Yükle' butonuna bastığında",
-            gherkinThenTr: "Sistem toplam aktarılan satır sayısını ve başarı bildirimini ekranda göstermelidir",
+            gherkinWhenTr:
+              "Örnek şablona uygun bir Excel dosyası seçip 'Yükle' butonuna bastığında",
+            gherkinThenTr:
+              "Sistem toplam aktarılan satır sayısını ve başarı bildirimini ekranda göstermelidir",
             gherkinGivenEn: "Given user is on the bulk import screen",
             gherkinWhenEn: "When uploading an Excel file compliant with the provided template",
             gherkinThenEn: "Then system validates rows and displays total imported records count",
@@ -185,14 +197,18 @@ export class AcceptanceRulesEvaluator {
             slotKey: "reporting_output",
             phaseNumber: 3,
             category: "OUTPUT_REPORTING",
-            humanCriterionTr: "Tablodaki 'Excel İndir' butonuna basıldığında, aktif filtrelemelere uygun sipariş/veri listesi 3 saniye içinde .xlsx olarak indirilmelidir.",
-            humanCriterionEn: "Clicking 'Export Excel' must trigger a browser download of an .xlsx file matching the active filter criteria within 3 seconds.",
+            humanCriterionTr:
+              "Tablodaki 'Excel İndir' butonuna basıldığında, aktif filtrelemelere uygun sipariş/veri listesi 3 saniye içinde .xlsx olarak indirilmelidir.",
+            humanCriterionEn:
+              "Clicking 'Export Excel' must trigger a browser download of an .xlsx file matching the active filter criteria within 3 seconds.",
             gherkinGivenTr: "Kullanıcı tarih veya kategori filtresi uygulamışken",
             gherkinWhenTr: "'Excel Dışa Aktar' butonuna tıkladığında",
-            gherkinThenTr: "HTTP 200 ile geçerli .xlsx dosyası inmeli ve dosya içeriğinde filtrelenen kayıtlar eksiksiz yer almalıdır",
+            gherkinThenTr:
+              "HTTP 200 ile geçerli .xlsx dosyası inmeli ve dosya içeriğinde filtrelenen kayıtlar eksiksiz yer almalıdır",
             gherkinGivenEn: "Given active search and date filters are applied",
             gherkinWhenEn: "When clicking 'Export Excel' button",
-            gherkinThenEn: "Then browser receives valid .xlsx spreadsheet matching table count with HTTP 200",
+            gherkinThenEn:
+              "Then browser receives valid .xlsx spreadsheet matching table count with HTTP 200",
             isMandatory: true,
           });
         } else if (answers.reporting_output === "pdf_official") {
@@ -201,14 +217,18 @@ export class AcceptanceRulesEvaluator {
             slotKey: "reporting_output",
             phaseNumber: 3,
             category: "OUTPUT_REPORTING",
-            humanCriterionTr: "Kayıt detayında 'PDF Yazdır / İndir' butonuna tıklandığında, şirket logolu ve standart şablonlu resmi PDF evrak oluşturulmalıdır.",
-            humanCriterionEn: "Clicking 'Download PDF' must generate a branded, formatted official PDF document with proper headers and totals.",
+            humanCriterionTr:
+              "Kayıt detayında 'PDF Yazdır / İndir' butonuna tıklandığında, şirket logolu ve standart şablonlu resmi PDF evrak oluşturulmalıdır.",
+            humanCriterionEn:
+              "Clicking 'Download PDF' must generate a branded, formatted official PDF document with proper headers and totals.",
             gherkinGivenTr: "Seçili bir işlem kaydı açıkken",
             gherkinWhenTr: "'PDF İndir' butonuna tıklandığında",
-            gherkinThenTr: "A4 formatında, yazı tipleri düzgün ve toplam tutarlar doğru hesaplanmış PDF dosyası üretilmelidir",
+            gherkinThenTr:
+              "A4 formatında, yazı tipleri düzgün ve toplam tutarlar doğru hesaplanmış PDF dosyası üretilmelidir",
             gherkinGivenEn: "Given an active transaction detail view",
             gherkinWhenEn: "When triggering 'Download PDF'",
-            gherkinThenEn: "Then an A4 printable PDF document is generated with accurate calculations",
+            gherkinThenEn:
+              "Then an A4 printable PDF document is generated with accurate calculations",
             isMandatory: true,
           });
         }
@@ -220,14 +240,18 @@ export class AcceptanceRulesEvaluator {
           slotKey: "cart_checkout",
           phaseNumber: 1,
           category: "CORE_LOGIC",
-          humanCriterionTr: "Kullanıcı sepete ürün ekleyip adet güncelleyebilmeli ve toplam tutar KDV dahil doğru hesaplanmalıdır.",
-          humanCriterionEn: "Users must be able to add/update items in cart with accurate subtotal, tax, and shipping calculations.",
+          humanCriterionTr:
+            "Kullanıcı sepete ürün ekleyip adet güncelleyebilmeli ve toplam tutar KDV dahil doğru hesaplanmalıdır.",
+          humanCriterionEn:
+            "Users must be able to add/update items in cart with accurate subtotal, tax, and shipping calculations.",
           gherkinGivenTr: "Kullanıcı ürün detay sayfasındayken",
           gherkinWhenTr: "'Sepete Ekle' butonuna basıp adeti 2 yaptığında",
-          gherkinThenTr: "Sepet sayacında 2 görünmeli ve toplam tutar 2 katı olarak güncellenmelidir",
+          gherkinThenTr:
+            "Sepet sayacında 2 görünmeli ve toplam tutar 2 katı olarak güncellenmelidir",
           gherkinGivenEn: "Given user is on a product detail page",
           gherkinWhenEn: "When adding to cart and increasing quantity to 2",
-          gherkinThenEn: "Then cart counter shows 2 and subtotal reflects exact unit price multiplication",
+          gherkinThenEn:
+            "Then cart counter shows 2 and subtotal reflects exact unit price multiplication",
           isMandatory: true,
         });
 
@@ -237,14 +261,18 @@ export class AcceptanceRulesEvaluator {
             slotKey: "payment_system",
             phaseNumber: 2,
             category: "AUTH_SECURITY",
-            humanCriterionTr: "Ödeme adımında 3D Secure SMS şifresi doğru girildiğinde sipariş 'Ödendi' durumuna geçmeli, hatalı şifrede bakiye çekilmemelidir.",
-            humanCriterionEn: "Successful 3D Secure OTP verification transitions order to 'PAID'; declined cards must display specific bank rejection message.",
+            humanCriterionTr:
+              "Ödeme adımında 3D Secure SMS şifresi doğru girildiğinde sipariş 'Ödendi' durumuna geçmeli, hatalı şifrede bakiye çekilmemelidir.",
+            humanCriterionEn:
+              "Successful 3D Secure OTP verification transitions order to 'PAID'; declined cards must display specific bank rejection message.",
             gherkinGivenTr: "Kullanıcı checkout adımında kart bilgilerini girdiğinde",
             gherkinWhenTr: "Banka 3D Secure onayını ilettiğinde",
-            gherkinThenTr: "Sipariş veritabanında onaylanmalı, stoklar düşmeli ve müşteriye sipariş numarası gösterilmelidir",
+            gherkinThenTr:
+              "Sipariş veritabanında onaylanmalı, stoklar düşmeli ve müşteriye sipariş numarası gösterilmelidir",
             gherkinGivenEn: "Given customer enters card info on checkout",
             gherkinWhenEn: "When bank returns successful 3D Secure callback",
-            gherkinThenEn: "Then order status sets to PAID, inventory decrements, and confirmation screen renders",
+            gherkinThenEn:
+              "Then order status sets to PAID, inventory decrements, and confirmation screen renders",
             isMandatory: true,
           });
         }
@@ -256,11 +284,14 @@ export class AcceptanceRulesEvaluator {
           slotKey: "location_tracking",
           phaseNumber: 2,
           category: "CORE_LOGIC",
-          humanCriterionTr: "Harita ekranı açıldığında kullanıcının mevcut GPS konumu 3 saniye içinde tespit edilip haritada doğru pinlenmelidir.",
-          humanCriterionEn: "Map view must accurately acquire device GPS coordinates within 3 seconds and place the marker on the viewport.",
+          humanCriterionTr:
+            "Harita ekranı açıldığında kullanıcının mevcut GPS konumu 3 saniye içinde tespit edilip haritada doğru pinlenmelidir.",
+          humanCriterionEn:
+            "Map view must accurately acquire device GPS coordinates within 3 seconds and place the marker on the viewport.",
           gherkinGivenTr: "Kullanıcı konum izni vermişken",
           gherkinWhenTr: "Uygulamada harita sekmesini açtığında",
-          gherkinThenTr: "Mevcut enlem ve boylam harita merkezine yerleştirilmeli ve yakınlaştırma (zoom) ayarlanmalıdır",
+          gherkinThenTr:
+            "Mevcut enlem ve boylam harita merkezine yerleştirilmeli ve yakınlaştırma (zoom) ayarlanmalıdır",
           gherkinGivenEn: "Given location permission is granted",
           gherkinWhenEn: "When opening the mobile map view",
           gherkinThenEn: "Then device GPS lat/long centers the map viewport within 3s",
@@ -274,14 +305,18 @@ export class AcceptanceRulesEvaluator {
           slotKey: "fintech_core",
           phaseNumber: 1,
           category: "AUTH_SECURITY",
-          humanCriterionTr: "Tüm finansal para giriş ve çıkışlarında çift girişli kayıt tutulmalı; sistem toplam borç ve alacak farkı daima sıfır olmalıdır.",
-          humanCriterionEn: "All ledger balance updates must follow double-entry principles ensuring total credits equal total debits at all times.",
+          humanCriterionTr:
+            "Tüm finansal para giriş ve çıkışlarında çift girişli kayıt tutulmalı; sistem toplam borç ve alacak farkı daima sıfır olmalıdır.",
+          humanCriterionEn:
+            "All ledger balance updates must follow double-entry principles ensuring total credits equal total debits at all times.",
           gherkinGivenTr: "Kullanıcı cüzdanına bakiye yüklediğinde",
           gherkinWhenTr: "Banka transferi tamamlandığında",
-          gherkinThenTr: "Kullanıcı cüzdan hesabı alacaklandırılırken sistem havuz hesabı borçlandırılmalı ve mutabakat logu oluşturulmalıdır",
+          gherkinThenTr:
+            "Kullanıcı cüzdan hesabı alacaklandırılırken sistem havuz hesabı borçlandırılmalı ve mutabakat logu oluşturulmalıdır",
           gherkinGivenEn: "Given user funds wallet with an amount",
           gherkinWhenEn: "When payment processor confirms transfer",
-          gherkinThenEn: "Then user wallet credits and escrow debits by exact amount with SHA-256 ledger hash",
+          gherkinThenEn:
+            "Then user wallet credits and escrow debits by exact amount with SHA-256 ledger hash",
           isMandatory: true,
         });
         break;
@@ -292,14 +327,18 @@ export class AcceptanceRulesEvaluator {
           slotKey: "lead_conversion",
           phaseNumber: 2,
           category: "DATA_INTEGRATION",
-          humanCriterionTr: "İletişim formuna isim, telefon ve mesaj yazılıp gönderildiğinde, talep anında yönetici e-postasına iletilmeli ve ekranda teşekkür mesajı çıkmalıdır.",
-          humanCriterionEn: "Submitting the contact inquiry form must trigger an instant email alert to the owner and render a clear success modal.",
+          humanCriterionTr:
+            "İletişim formuna isim, telefon ve mesaj yazılıp gönderildiğinde, talep anında yönetici e-postasına iletilmeli ve ekranda teşekkür mesajı çıkmalıdır.",
+          humanCriterionEn:
+            "Submitting the contact inquiry form must trigger an instant email alert to the owner and render a clear success modal.",
           gherkinGivenTr: "Ziyaretçi iletişim formundaki tüm zorunlu alanları doldurmuşken",
           gherkinWhenTr: "'Gönder' butonuna tıkladığında",
-          gherkinThenTr: "Form verileri kaydedilmeli, e-posta gönderilmeli ve form temizlenerek başarı mesajı görünmelidir",
+          gherkinThenTr:
+            "Form verileri kaydedilmeli, e-posta gönderilmeli ve form temizlenerek başarı mesajı görünmelidir",
           gherkinGivenEn: "Given visitor fills all mandatory contact inputs",
           gherkinWhenEn: "When clicking 'Submit'",
-          gherkinThenEn: "Then payload persists to database, notification fires, and success prompt renders",
+          gherkinThenEn:
+            "Then payload persists to database, notification fires, and success prompt renders",
           isMandatory: true,
         });
         break;
@@ -310,11 +349,14 @@ export class AcceptanceRulesEvaluator {
           slotKey: "error_handling",
           phaseNumber: 2,
           category: "CORE_LOGIC",
-          humanCriterionTr: "Otomasyon görevi sırasında beklenmeyen bir ağ veya ayrıştırma hatası oluştuğunda, sistem çökmek yerine hatayı loglamalı ve 3 kez otomatik tekrar denemelidir.",
-          humanCriterionEn: "Upon unexpected network or parsing exceptions, agent must log the error and retry up to 3 times before triggering an alert.",
+          humanCriterionTr:
+            "Otomasyon görevi sırasında beklenmeyen bir ağ veya ayrıştırma hatası oluştuğunda, sistem çökmek yerine hatayı loglamalı ve 3 kez otomatik tekrar denemelidir.",
+          humanCriterionEn:
+            "Upon unexpected network or parsing exceptions, agent must log the error and retry up to 3 times before triggering an alert.",
           gherkinGivenTr: "Harici servis geçici olarak 503 yanıtı verdiğinde",
           gherkinWhenTr: "Otomasyon görevi çalıştığında",
-          gherkinThenTr: "Sistem görevi sonlandırmadan önce 5 saniye aralıklarla 3 defa yeniden denemelidir",
+          gherkinThenTr:
+            "Sistem görevi sonlandırmadan önce 5 saniye aralıklarla 3 defa yeniden denemelidir",
           gherkinGivenEn: "Given third-party service temporarily responds with HTTP 503",
           gherkinWhenEn: "When automation workflow executes",
           gherkinThenEn: "Then agent performs 3 exponential retries before logging failure",
@@ -328,14 +370,18 @@ export class AcceptanceRulesEvaluator {
           slotKey: "api_style",
           phaseNumber: 1,
           category: "CORE_LOGIC",
-          humanCriterionTr: "Tüm API uç noktaları için Swagger/OpenAPI interaktif arayüzü `/docs` altında çalışmalı ve her uç noktanın girdi/çıktı şeması doğrulanabilir olmalıdır.",
-          humanCriterionEn: "All API endpoints must expose OpenAPI/Swagger UI at `/docs` with validated request and response JSON schemas.",
+          humanCriterionTr:
+            "Tüm API uç noktaları için Swagger/OpenAPI interaktif arayüzü `/docs` altında çalışmalı ve her uç noktanın girdi/çıktı şeması doğrulanabilir olmalıdır.",
+          humanCriterionEn:
+            "All API endpoints must expose OpenAPI/Swagger UI at `/docs` with validated request and response JSON schemas.",
           gherkinGivenTr: "Backend servisi ayağa kaldırıldığında",
           gherkinWhenTr: "Tarayıcıdan `/docs` veya `/swagger` adresine gidildiğinde",
-          gherkinThenTr: "Tüm uç noktalar, parametre tipleri ve örnek JSON yanıtları başarıyla görüntülenmelidir",
+          gherkinThenTr:
+            "Tüm uç noktalar, parametre tipleri ve örnek JSON yanıtları başarıyla görüntülenmelidir",
           gherkinGivenEn: "Given backend server is running",
           gherkinWhenEn: "When navigating to `/docs`",
-          gherkinThenEn: "Then OpenAPI interactive documentation renders all active endpoints and models",
+          gherkinThenEn:
+            "Then OpenAPI interactive documentation renders all active endpoints and models",
           isMandatory: true,
         });
         break;
@@ -347,14 +393,19 @@ export class AcceptanceRulesEvaluator {
           slotKey: "testing_assurance",
           phaseNumber: 2,
           category: "CORE_LOGIC",
-          humanCriterionTr: "Sistem hem masaüstü hem de mobil ekranlarda bozulma olmadan responsive çalışmalı ve tarayıcı konsolunda kritik hata (error) üretmemelidir.",
-          humanCriterionEn: "System must render responsively across desktop and mobile screens without UI overlap or breaking console errors.",
+          humanCriterionTr:
+            "Sistem hem masaüstü hem de mobil ekranlarda bozulma olmadan responsive çalışmalı ve tarayıcı konsolunda kritik hata (error) üretmemelidir.",
+          humanCriterionEn:
+            "System must render responsively across desktop and mobile screens without UI overlap or breaking console errors.",
           gherkinGivenTr: "Kullanıcı mobil veya masaüstü tarayıcıdan uygulamayı açtığında",
-          gherkinWhenTr: "Ana akış adımları (giriş, form doldurma, işlem tamamlama) gerçekleştirildiğinde",
-          gherkinThenTr: "Arayüz düzgün görüntülenmeli ve tarayıcı konsolunda 'Uncaught Exception' oluşmamalıdır",
+          gherkinWhenTr:
+            "Ana akış adımları (giriş, form doldurma, işlem tamamlama) gerçekleştirildiğinde",
+          gherkinThenTr:
+            "Arayüz düzgün görüntülenmeli ve tarayıcı konsolunda 'Uncaught Exception' oluşmamalıdır",
           gherkinGivenEn: "Given user opens application in mobile viewport",
           gherkinWhenEn: "When navigating core user journeys",
-          gherkinThenEn: "Then elements layout responsively with zero fatal uncaught console exceptions",
+          gherkinThenEn:
+            "Then elements layout responsively with zero fatal uncaught console exceptions",
           isMandatory: true,
         });
         break;
@@ -365,11 +416,14 @@ export class AcceptanceRulesEvaluator {
       id: `crit-${criterionIndex}`,
       phaseNumber: 3,
       category: "DELIVERY_QUALITY",
-      humanCriterionTr: "Tüm kaynak kodlar, ortam değişkenleri (.env.example) ve varsa canlı yayın/deployment adımları eksiksiz teslim edilmelidir.",
-      humanCriterionEn: "All source code, environment templates (.env.example), and live deployment instructions must be fully handed over.",
+      humanCriterionTr:
+        "Tüm kaynak kodlar, ortam değişkenleri (.env.example) ve varsa canlı yayın/deployment adımları eksiksiz teslim edilmelidir.",
+      humanCriterionEn:
+        "All source code, environment templates (.env.example), and live deployment instructions must be fully handed over.",
       gherkinGivenTr: "Geliştirici teslimat tutanağını doldurduğunda",
       gherkinWhenTr: "İşveren teslim edilen kodları incelediğinde",
-      gherkinThenTr: "Geliştirme için gerekli tüm API anahtarı şablonları ve çalıştırma komutları eksiksiz mevcut olmalıdır",
+      gherkinThenTr:
+        "Geliştirme için gerekli tüm API anahtarı şablonları ve çalıştırma komutları eksiksiz mevcut olmalıdır",
       gherkinGivenEn: "Given developer submits formal handover package",
       gherkinWhenEn: "When employer reviews repository files",
       gherkinThenEn: "Then all configuration keys and deployment steps are fully documented",
@@ -397,8 +451,10 @@ export class AcceptanceRulesEvaluator {
         titleEn: "Core Business Logic, Integrations & User Journeys",
         percentage: 45,
         criteriaCount: phase2Criteria.length,
-        descriptionTr: "Temel özelliklerin kodlanması, harici servis bağlantıları ve çalışan prototip.",
-        descriptionEn: "Feature development, third-party integrations, and working prototype verification.",
+        descriptionTr:
+          "Temel özelliklerin kodlanması, harici servis bağlantıları ve çalışan prototip.",
+        descriptionEn:
+          "Feature development, third-party integrations, and working prototype verification.",
       },
       {
         phase: 3,
@@ -406,8 +462,10 @@ export class AcceptanceRulesEvaluator {
         titleEn: "Reporting, Quality Tests, Deployment & Final Handover",
         percentage: 25,
         criteriaCount: phase3Criteria.length,
-        descriptionTr: "Çıktı formatları, hata testleri, canlı ortama kurulum ve FSEK m. 52 fikri hak devri.",
-        descriptionEn: "Output generation, regression tests, production deployment, and IP transfer.",
+        descriptionTr:
+          "Çıktı formatları, hata testleri, canlı ortama kurulum ve FSEK m. 52 fikri hak devri.",
+        descriptionEn:
+          "Output generation, regression tests, production deployment, and IP transfer.",
       },
     ];
 
@@ -486,7 +544,9 @@ export class AcceptanceRulesEvaluator {
         const then = isTr ? item.gherkinThenTr : item.gherkinThenEn;
 
         lines.push(`* [x] **${text}**`);
-        lines.push(`  * *Teknik Doğrulama (BDD):* \`GIVEN ${given} | WHEN ${when} | THEN ${then}\``);
+        lines.push(
+          `  * *Teknik Doğrulama (BDD):* \`GIVEN ${given} | WHEN ${when} | THEN ${then}\``
+        );
         lines.push("");
       }
     }
@@ -497,7 +557,9 @@ export class AcceptanceRulesEvaluator {
   /**
    * Evaluates revision request inputs against defined criteria to prevent subjective rejections.
    */
-  static evaluateRevisionCriteria(input: EvaluateRevisionCriteriaInput): EvaluateRevisionCriteriaResult {
+  static evaluateRevisionCriteria(
+    input: EvaluateRevisionCriteriaInput
+  ): EvaluateRevisionCriteriaResult {
     const { criteria, evaluations } = input;
     const totalCount = criteria.length;
 

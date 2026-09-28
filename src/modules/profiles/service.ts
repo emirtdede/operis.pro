@@ -16,11 +16,7 @@ import {
   inMemoryUserLinks,
 } from "./services/profile-data.service";
 
-import {
-  PersonaMode,
-  resolveUserPersonaMode,
-  getPersonaBadgeConfig,
-} from "./utils/persona";
+import { PersonaMode, resolveUserPersonaMode, getPersonaBadgeConfig } from "./utils/persona";
 
 export type {
   AvailabilityStatus,
@@ -78,7 +74,10 @@ export class ProfileService {
   /**
    * Verifies and records corporate company credentials (VKN/TCKN) with GİB checksum and blind indexing.
    */
-  static async verifyCompany(userId: string, input: VerifyCompanyInput): Promise<VerifyCompanyResult> {
+  static async verifyCompany(
+    userId: string,
+    input: VerifyCompanyInput
+  ): Promise<VerifyCompanyResult> {
     return CompanyVerificationService.verifyCompany(userId, input);
   }
 
@@ -92,7 +91,11 @@ export class ProfileService {
   /**
    * Rejects corporate verification (Admin only).
    */
-  static async rejectCompanyVerification(adminUserId: string, targetUserId: string, reason?: string) {
+  static async rejectCompanyVerification(
+    adminUserId: string,
+    targetUserId: string,
+    reason?: string
+  ) {
     return CompanyVerificationService.rejectCompanyVerification(adminUserId, targetUserId, reason);
   }
 }

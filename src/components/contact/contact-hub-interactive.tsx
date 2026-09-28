@@ -128,17 +128,27 @@ export function ContactHubInteractive({ locale }: ContactHubInteractiveProps) {
                 {isTr ? "Yetkili İletişim Masaları" : "Dedicated Support Desks"}
               </h2>
               <p className="text-xs text-[var(--color-text-secondary)]">
-                {isTr ? "Konuya özel doğrudan yönlendirme & SLA güvencesi" : "Direct routing by domain & committed SLAs"}
+                {isTr
+                  ? "Konuya özel doğrudan yönlendirme & SLA güvencesi"
+                  : "Direct routing by domain & committed SLAs"}
               </p>
             </div>
             <span className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full shrink-0">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>{isTr ? `${officialDesks.length} Masa Çevrim İçi` : `${officialDesks.length} Desks Online`}</span>
+              <span>
+                {isTr
+                  ? `${officialDesks.length} Masa Çevrim İçi`
+                  : `${officialDesks.length} Desks Online`}
+              </span>
             </span>
           </div>
 
           {/* 5 Desks Interactive List */}
-          <div className="space-y-2.5" role="tablist" aria-label={isTr ? "İletişim Masaları" : "Support Desks"}>
+          <div
+            className="space-y-2.5"
+            role="tablist"
+            aria-label={isTr ? "İletişim Masaları" : "Support Desks"}
+          >
             {officialDesks.map((desk) => {
               const Icon = desk.icon;
               const isSelected = selectedDeptId === desk.id;
@@ -166,7 +176,9 @@ export function ContactHubInteractive({ locale }: ContactHubInteractiveProps) {
                   {/* Row 1: Icon + Full Title (Zero Truncation) + Active Indicator */}
                   <div className="flex items-center justify-between gap-3 mb-1">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className={`h-7 w-7 rounded-lg border flex items-center justify-center shrink-0 ${desk.color}`}>
+                      <div
+                        className={`h-7 w-7 rounded-lg border flex items-center justify-center shrink-0 ${desk.color}`}
+                      >
                         <Icon className="h-3.5 w-3.5" />
                       </div>
                       <h3 className="text-xs sm:text-[13px] font-bold text-[var(--color-text-primary)] leading-snug">

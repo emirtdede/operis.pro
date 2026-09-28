@@ -1,6 +1,15 @@
 import { useState, type Dispatch, SetStateAction } from "react";
 import Link from "next/link";
-import { Search, PlusCircle, Flame, Briefcase, X, SlidersHorizontal, LayoutList, LayoutGrid } from "lucide-react";
+import {
+  Search,
+  PlusCircle,
+  Flame,
+  Briefcase,
+  X,
+  SlidersHorizontal,
+  LayoutList,
+  LayoutGrid,
+} from "lucide-react";
 import type { CategoryDto } from "@/src/modules/categories/service";
 import { SortDropdown } from "@/src/components/ui/sort-dropdown";
 import { Button } from "@/src/components/ui/button";
@@ -94,7 +103,11 @@ export function ListingsSearchHeader({
           </form>
 
           <Link href={getLocalizedRoute("newListing", locale)}>
-            <Button variant="shimmer" size="sm" className="h-9 px-3 gap-1 rounded-xl text-xs shrink-0">
+            <Button
+              variant="shimmer"
+              size="sm"
+              className="h-9 px-3 gap-1 rounded-xl text-xs shrink-0"
+            >
               <PlusCircle className="h-3.5 w-3.5" />
               <span>{isTr ? "Yayınla" : "Post"}</span>
             </Button>
@@ -180,7 +193,9 @@ export function ListingsSearchHeader({
                 ? "bg-blue-600/15 border-blue-500/40 text-blue-400 font-bold shadow-xs"
                 : "bg-[var(--color-surface-hover)] border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-blue-500/30"
             }`}
-            title={isTr ? "Gelişmiş filtreleme seçeneklerini aç" : "Open advanced filtering options"}
+            title={
+              isTr ? "Gelişmiş filtreleme seçeneklerini aç" : "Open advanced filtering options"
+            }
           >
             <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
             <span>{isTr ? "Gelişmiş Filtrele" : "Filter"}</span>

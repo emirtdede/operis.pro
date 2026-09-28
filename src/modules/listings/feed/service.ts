@@ -293,9 +293,7 @@ export class FeedService {
           sql`(${schema.listings.timelineUnit} = 'MONTHS' AND ${schema.listings.timelineValue} > 3)`
         );
       } else if (params.timelineScope === "flexible") {
-        conditions.push(
-          sql`${schema.listings.timelineMode} IN ('FLEXIBLE', 'IN_NEGOTIATION')`
-        );
+        conditions.push(sql`${schema.listings.timelineMode} IN ('FLEXIBLE', 'IN_NEGOTIATION')`);
       } else if (params.timelineMode) {
         if (params.timelineMode === "TARGET_DATE" || params.timelineMode === "SPECIFIC_DATE") {
           conditions.push(sql`${schema.listings.timelineMode} IN ('SPECIFIC_DATE', 'TARGET_DATE')`);

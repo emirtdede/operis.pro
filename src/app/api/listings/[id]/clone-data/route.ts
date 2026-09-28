@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { ListingService } from "@/src/modules/listings/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const ip = getClientIp(req);
   const locale = req.headers.get("x-locale") || "tr";
   const isEn = locale === "en";
@@ -41,23 +39,29 @@ export async function GET(
 
     return NextResponse.json({ success: true, data }, { status: 200 });
   } catch (err: unknown) {
-    let message = isEn
-      ? "Failed to load listing clone data"
-      : "İlan klonlama verisi yüklenemedi";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-
-    const isAuthError =
-      message.includes("Listing not found") || message.includes("not authorized");
-
-    if (isAuthError) {
-      message = isEn
-        ? "Listing not found or you are not authorized to clone this listing."
-        : "İlan bulunamadı veya bu ilanı klonlama yetkiniz yok.";
-      return NextResponse.json({ error: message }, { status: 403 });
-    }
-
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to load listing clone data",
+        tr: "İlan klonlama verisi yüklenemedi",
+      },
+      {
+        isEn,
+        logPrefix: "[Listing Clone Data GET Error]",
+        status: 500,
+        allowedMessages: {
+          "Listing not found": {
+            en: "Listing not found or you are not authorized to clone this listing.",
+            tr: "İlan bulunamadı veya bu ilanı klonlama yetkiniz yok.",
+            status: 403,
+          },
+          "not authorized": {
+            en: "Listing not found or you are not authorized to clone this listing.",
+            tr: "İlan bulunamadı veya bu ilanı klonlama yetkiniz yok.",
+            status: 403,
+          },
+        },
+      }
+    );
   }
 }

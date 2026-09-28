@@ -131,7 +131,10 @@ export default async function NewListingPage({ params }: { params: Promise<{ loc
       </div>
 
       {/* Split-Screen Wizard Form */}
-      <section aria-label={isTr ? "İlan Oluşturma Sihirbazı" : "Listing Creation Wizard"} className="w-full">
+      <section
+        aria-label={isTr ? "İlan Oluşturma Sihirbazı" : "Listing Creation Wizard"}
+        className="w-full"
+      >
         <Suspense
           fallback={
             <div className="w-full rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 p-12 text-center text-sm text-[var(--color-text-secondary)] animate-pulse">

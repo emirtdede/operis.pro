@@ -89,10 +89,7 @@ function renderAvailabilityIndicator(
   }
   if (availabilityStatus === "PARTIALLY_AVAILABLE") {
     return (
-      <span
-        className={`${dotClasses} bg-amber-500`}
-        title={isTr ? "Yarı Zamanlı" : "Part-Time"}
-      />
+      <span className={`${dotClasses} bg-amber-500`} title={isTr ? "Yarı Zamanlı" : "Part-Time"} />
     );
   }
   if (availabilityStatus === "PROJECT_BASED") {
@@ -385,7 +382,9 @@ export function PublicProfileHero({
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-sky-400" />
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-400" />
                       </span>
-                      <span className="font-semibold">{isTr ? "Aktif İşe Alım Yapıyor" : "Actively Hiring"}</span>
+                      <span className="font-semibold">
+                        {isTr ? "Aktif İşe Alım Yapıyor" : "Actively Hiring"}
+                      </span>
                       {activeListings.length > 0 && (
                         <>
                           <span className="opacity-40">•</span>
@@ -401,7 +400,9 @@ export function PublicProfileHero({
                       title={isTr ? "İşe Alım Kapalı" : "Hiring Inactive"}
                     >
                       <span className="h-2 w-2 rounded-full bg-slate-400" />
-                      <span className="font-semibold">{isTr ? "İşe Alım Kapalı" : "Not Hiring"}</span>
+                      <span className="font-semibold">
+                        {isTr ? "İşe Alım Kapalı" : "Not Hiring"}
+                      </span>
                     </div>
                   )
                 ) : personaMode === "hybrid" ? (
@@ -425,7 +426,9 @@ export function PublicProfileHero({
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-sky-400" />
                           <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-400" />
                         </span>
-                        <span className="font-semibold">{isTr ? "İşe Alım Yapıyor" : "Actively Hiring"}</span>
+                        <span className="font-semibold">
+                          {isTr ? "İşe Alım Yapıyor" : "Actively Hiring"}
+                        </span>
                         {activeListings.length > 0 && (
                           <>
                             <span className="opacity-40">•</span>
@@ -592,7 +595,9 @@ export function PublicProfileHero({
                             className="w-full px-4 py-2.5 text-left text-xs font-semibold text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] flex items-center gap-2.5 cursor-pointer transition-colors"
                           >
                             <Pencil className="h-3.5 w-3.5 text-purple-400" />
-                            <span>{isTr ? "Sosyal & Portfolyo Linkleri" : "Links & Portfolio"}</span>
+                            <span>
+                              {isTr ? "Sosyal & Portfolyo Linkleri" : "Links & Portfolio"}
+                            </span>
                           </button>
                         )}
 
@@ -628,10 +633,18 @@ export function PublicProfileHero({
                   </a>
                 ) : (
                   <Link
-                    href={isTr ? `/tr/iletisim?to=${profile.handle}` : `/en/contact?to=${profile.handle}`}
+                    href={
+                      isTr
+                        ? `/tr/iletisim?to=${profile.handle}`
+                        : `/en/contact?to=${profile.handle}`
+                    }
                     className="w-full sm:w-auto"
                   >
-                    <Button variant="primary" size="sm" className="w-full sm:w-auto shadow-xs gap-2">
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      className="w-full sm:w-auto shadow-xs gap-2"
+                    >
                       <Briefcase className="h-3.5 w-3.5" />
                       <span>{isTr ? "İletişime Geç" : "Contact Client"}</span>
                     </Button>
@@ -659,14 +672,21 @@ export function PublicProfileHero({
                     href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"}
                     className="w-full sm:w-auto"
                   >
-                    <Button variant="primary" size="sm" className="w-full sm:w-auto shadow-xs gap-2">
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      className="w-full sm:w-auto shadow-xs gap-2"
+                    >
                       <Sparkles className="h-3.5 w-3.5" />
                       <span>{isTr ? "Projeye Davet Et" : "Invite to Project"}</span>
                     </Button>
                   </Link>
                 </div>
               ) : (
-                <Link href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"} className="w-full sm:w-auto">
+                <Link
+                  href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"}
+                  className="w-full sm:w-auto"
+                >
                   <Button variant="primary" size="sm" className="w-full sm:w-auto shadow-xs gap-2">
                     <Sparkles className="h-3.5 w-3.5" />
                     <span>{isTr ? "Projeye Davet Et" : "Invite to Project"}</span>
@@ -691,8 +711,8 @@ export function PublicProfileHero({
       </div>
 
       {/* Bento Stat Strip (Unified credibility metrics) */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 border-t border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/60 divide-x divide-[var(--color-border-subtle)] text-center">
-        <div className="p-3.5 space-y-0.5">
+      <div className="grid grid-cols-2 sm:grid-cols-4 border-t border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/60 text-center">
+        <div className="p-3.5 space-y-0.5 border-r border-b sm:border-b-0 border-[var(--color-border-subtle)]">
           <span className="text-[10px] uppercase font-bold tracking-wider text-[var(--color-text-tertiary)] block">
             {isTr ? "Güven Skoru" : "Trust Level"}
           </span>
@@ -700,7 +720,7 @@ export function PublicProfileHero({
             {isTr ? "%100 Doğrulanmış" : "100% Verified"}
           </span>
         </div>
-        <div className="p-3.5 space-y-0.5">
+        <div className="p-3.5 space-y-0.5 border-b sm:border-b-0 sm:border-r border-[var(--color-border-subtle)]">
           <span className="text-[10px] uppercase font-bold tracking-wider text-[var(--color-text-tertiary)] block">
             {isTr ? "Açık İlanlar" : "Active Listings"}
           </span>
@@ -708,7 +728,7 @@ export function PublicProfileHero({
             {activeListings.length}
           </span>
         </div>
-        <div className="p-3.5 space-y-0.5">
+        <div className="p-3.5 space-y-0.5 border-r border-[var(--color-border-subtle)]">
           <span className="text-[10px] uppercase font-bold tracking-wider text-[var(--color-text-tertiary)] block">
             {isTr ? "Tamamlanan İş" : "Completed Projects"}
           </span>

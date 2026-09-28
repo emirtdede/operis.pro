@@ -15,11 +15,7 @@
  */
 
 export type FsekEconomicRightCode =
-  | "ISLEME_M21"
-  | "COGALTMA_M22"
-  | "YAYMA_M23"
-  | "TEMSIL_M24"
-  | "UMUMA_ILETIM_M25";
+  "ISLEME_M21" | "COGALTMA_M22" | "YAYMA_M23" | "TEMSIL_M24" | "UMUMA_ILETIM_M25";
 
 export interface StatutoryEconomicRight {
   code: FsekEconomicRightCode;

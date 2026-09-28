@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import type { AdminAbuseItem } from "@/src/modules/admin/service";
 import { resolveReportAction, moderateUserAction } from "@/src/modules/admin/actions";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 
 const STATUS_TAB_LABELS: Record<string, string> = {
   ALL: "Tümü",
@@ -223,9 +224,7 @@ export function AbuseManagementClient({ initialAbuseItems }: AbuseManagementClie
                   <tr key={item.id} className="hover:bg-slate-800/30 transition-colors">
                     <td className="px-4 py-3.5">
                       <div className="flex items-center gap-2">
-                        <div
-                          className={`p-1.5 rounded-lg ${getReasonBadgeClass(item.reasonCode)}`}
-                        >
+                        <div className={`p-1.5 rounded-lg ${getReasonBadgeClass(item.reasonCode)}`}>
                           <AlertTriangle className="h-3.5 w-3.5" />
                         </div>
                         <div>
@@ -278,7 +277,8 @@ export function AbuseManagementClient({ initialAbuseItems }: AbuseManagementClie
                     <td className="px-4 py-3.5">
                       <span
                         className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
-                          STATUS_BADGE_CLASSES[item.status] ?? "bg-slate-700/30 text-slate-400 border-slate-700"
+                          STATUS_BADGE_CLASSES[item.status] ??
+                          "bg-slate-700/30 text-slate-400 border-slate-700"
                         }`}
                       >
                         {ITEM_STATUS_LABELS[item.status] ?? "Geçersiz"}
@@ -341,9 +341,16 @@ export function AbuseManagementClient({ initialAbuseItems }: AbuseManagementClie
       </div>
 
       {/* Details Modal Drawer */}
-      {selectedItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in">
-          <div className="bg-[#12141a] border border-slate-800 rounded-3xl p-4 sm:p-6 w-full max-w-xl max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden shadow-2xl">
+      <ModalOverlay
+        isOpen={Boolean(selectedItem)}
+        onClose={() => setSelectedItem(null)}
+        ariaLabel="İhlal Bildirimi Detayı"
+      >
+        {selectedItem && (
+          <div
+            className="bg-[#12141a] border border-slate-800 rounded-3xl p-4 sm:p-6 w-full max-w-xl max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-slate-800 pb-4 shrink-0">
               <div className="flex items-center gap-2">
                 <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0" />
@@ -437,13 +444,23 @@ export function AbuseManagementClient({ initialAbuseItems }: AbuseManagementClie
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalOverlay>
 
       {/* Suspend Confirmation Modal */}
-      {suspendModalItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in">
-          <div className="bg-[#12141a] border border-rose-500/30 rounded-3xl p-4 sm:p-6 w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden shadow-2xl">
+      <ModalOverlay
+        isOpen={Boolean(suspendModalItem)}
+        onClose={() => {
+          setSuspendModalItem(null);
+          setSuspendReason("");
+        }}
+        ariaLabel="Kullanıcıyı Askıya Al"
+      >
+        {suspendModalItem && (
+          <div
+            className="bg-[#12141a] border border-rose-500/30 rounded-3xl p-4 sm:p-6 w-full max-w-md max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center gap-3 text-rose-400 pb-3 border-b border-slate-800/80 shrink-0">
               <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 shrink-0">
                 <ShieldBan className="h-6 w-6" />
@@ -490,8 +507,8 @@ export function AbuseManagementClient({ initialAbuseItems }: AbuseManagementClie
               </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalOverlay>
     </div>
   );
 }

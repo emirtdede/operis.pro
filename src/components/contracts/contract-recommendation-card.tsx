@@ -50,11 +50,14 @@ export function ContractRecommendationCard({
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-4 w-4 text-emerald-400" />
             <h5 className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-              {isTr ? "İlanınız İçin Önerilen Sözleşmeler" : "Recommended Agreements For This Scope"}
+              {isTr
+                ? "İlanınız İçin Önerilen Sözleşmeler"
+                : "Recommended Agreements For This Scope"}
             </h5>
           </div>
           <span className="text-xs text-[var(--color-text-muted)]">
-            {recommended.filter((c) => selectedContractIds.includes(c.id)).length} / {recommended.length} {isTr ? "seçili" : "selected"}
+            {recommended.filter((c) => selectedContractIds.includes(c.id)).length} /{" "}
+            {recommended.length} {isTr ? "seçili" : "selected"}
           </span>
         </div>
 
@@ -133,7 +136,9 @@ export function ContractRecommendationCard({
               </h5>
             </div>
             <span className="text-xs text-[var(--color-text-muted)]">
-              {isTr ? "Dilediğiniz sözleşmeyi pakete ekleyebilirsiniz" : "You can add any agreement to package"}
+              {isTr
+                ? "Dilediğiniz sözleşmeyi pakete ekleyebilirsiniz"
+                : "You can add any agreement to package"}
             </span>
           </div>
 
@@ -185,7 +190,11 @@ export function ContractRecommendationCard({
                           : "border-[var(--color-border-subtle)] bg-transparent"
                       }`}
                     >
-                      {isSelected ? <Check className="h-3.5 w-3.5" /> : <Plus className="h-3 w-3 text-zinc-400" />}
+                      {isSelected ? (
+                        <Check className="h-3.5 w-3.5" />
+                      ) : (
+                        <Plus className="h-3 w-3 text-zinc-400" />
+                      )}
                     </div>
                   </div>
                 </div>

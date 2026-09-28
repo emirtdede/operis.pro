@@ -1,3 +1,4 @@
+import { createContentSecurityPolicy } from "./lib/security/csp";
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { locales } from "./lib/i18n/config";
@@ -8,8 +9,6 @@ const intlMiddleware = createMiddleware({
   localePrefix: "always",
   localeDetection: false, // Handled explicitly below for 100% deterministic user requirement
 });
-
-
 
 const TR_EXACT_REDIRECTS: Record<string, string> = {
   "/tr/categories": "/tr/kategoriler",
@@ -223,7 +222,7 @@ const clerkHandler = clerkMiddleware(async (_auth, req) => {
   return baseProxy(req);
 });
 
-export async function proxy(request: NextRequest, event?: NextFetchEvent) {
+async function dispatchProxy(request: NextRequest, event?: NextFetchEvent) {
   if (
     !process.env.VITEST &&
     process.env.CLERK_SECRET_KEY &&
@@ -234,9 +233,33 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
   return baseProxy(request);
 }
 
+export async function proxy(request: NextRequest, event?: NextFetchEvent) {
+  // API responses have their own content policy (including printable contracts).
+  if (request.nextUrl.pathname.startsWith("/api/")) return dispatchProxy(request, event);
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  const policy = createContentSecurityPolicy(nonce, process.env.NODE_ENV === "production");
+  request.headers.set("x-nonce", nonce);
+  request.headers.set("Content-Security-Policy", policy);
+  const response = (await dispatchProxy(request, event)) ?? NextResponse.next();
+  const overrides = new Set(
+    (response.headers.get("x-middleware-override-headers") || "").split(",").filter(Boolean)
+  );
+  // Keep next-intl/Clerk request overrides while forwarding the trusted nonce to SSR.
+  for (const [name, value] of request.headers) {
+    if (!overrides.has(name)) response.headers.set("x-middleware-request-" + name, value);
+    overrides.add(name);
+  }
+  response.headers.set("x-middleware-request-x-nonce", nonce);
+  response.headers.set("x-middleware-request-content-security-policy", policy);
+  response.headers.set("x-middleware-override-headers", [...overrides].join(","));
+  response.headers.set("Content-Security-Policy", policy);
+  response.headers.set("Cache-Control", "private, no-store");
+  return response;
+}
+
 export default proxy;
 
 export const config = {
   // Match internationalized pathnames, API routes for Clerk auth, excluding admin, static files, and assets
-  matcher: ["/", "/(tr|en)/:path*", "/((?!admin|_next|_vercel|.*\\..*).*)"],
+  matcher: ["/", "/admin/:path*", "/(tr|en)/:path*", "/((?!admin|_next|_vercel|.*\\..*).*)"],
 };

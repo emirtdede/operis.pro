@@ -76,7 +76,9 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
               }`}
             >
               <Sparkles className="h-4 w-4" aria-hidden="true" />
-              <span>{isTr ? "Bağımsız Yetenek & Freelancer" : "For Independent Talents & Freelancers"}</span>
+              <span>
+                {isTr ? "Bağımsız Yetenek & Freelancer" : "For Independent Talents & Freelancers"}
+              </span>
             </button>
 
             <button
@@ -102,17 +104,23 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
             <div className="relative overflow-hidden rounded-3xl border border-blue-500/20 bg-gradient-to-r from-blue-500/5 via-indigo-500/5 to-cyan-500/5 p-6 sm:p-8 backdrop-blur-xl">
               <div className="max-w-3xl space-y-2">
                 <span className="text-xs font-bold uppercase tracking-wider text-blue-400">
-                  {isTr ? "UZMANA VE FREELANCER'A ÖZEL KAZANIMLAR" : "TALENT & FREELANCER VALUE PROPOSITION"}
+                  {isTr
+                    ? "UZMANA VE FREELANCER'A ÖZEL KAZANIMLAR"
+                    : "TALENT & FREELANCER VALUE PROPOSITION"}
                 </span>
                 <h3 className="text-xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] leading-tight">
                   {isTr ? (
                     <>
-                      <span className="block">Emeğinizin %100&apos;ü Sizde Kalır. Sıfır Komisyon,</span>
+                      <span className="block">
+                        Emeğinizin %100&apos;ü Sizde Kalır. Sıfır Komisyon,
+                      </span>
                       <span className="block">Sıfır Fiyat Kırma Savaşı.</span>
                     </>
                   ) : (
                     <>
-                      <span className="block">Retain 100% of Your Earnings. Zero Platform Fees,</span>
+                      <span className="block">
+                        Retain 100% of Your Earnings. Zero Platform Fees,
+                      </span>
                       <span className="block">Zero Undercutting Wars.</span>
                     </>
                   )}
@@ -289,7 +297,9 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
                 </span>
                 <Link href={isTr ? "/tr/akis" : "/en/feed"}>
                   <Button variant="shimmer" size="md">
-                    <span>{isTr ? "Canlı İlanları ve Akışı İncele" : "Browse Live Tech Radar"}</span>
+                    <span>
+                      {isTr ? "Canlı İlanları ve Akışı İncele" : "Browse Live Tech Radar"}
+                    </span>
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 </Link>
@@ -399,7 +409,9 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
                   </h4>
                 </div>
                 <span className="text-xs text-[var(--color-text-tertiary)]">
-                  {isTr ? "4 Kolay Adım • Kredi Kartı Gerekmez" : "4 Clean Steps • No Credit Card Required"}
+                  {isTr
+                    ? "4 Kolay Adım • Kredi Kartı Gerekmez"
+                    : "4 Clean Steps • No Credit Card Required"}
                 </span>
               </div>
 
@@ -482,7 +494,9 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
                 </span>
                 <Link href={isTr ? "/tr/ilanlar/yeni" : "/en/listings/new"}>
                   <Button variant="secondary" size="md">
-                    <span>{isTr ? "2 Dakikada Ücretsiz İlan Ver" : "Post a Free Project (2 Mins)"}</span>
+                    <span>
+                      {isTr ? "2 Dakikada Ücretsiz İlan Ver" : "Post a Free Project (2 Mins)"}
+                    </span>
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 </Link>
@@ -499,7 +513,9 @@ export function RolePerspectiveSection({ isTr, locale: _locale }: RolePerspectiv
             </div>
             <div className="space-y-1">
               <h4 className="text-base font-bold text-[var(--color-text-primary)]">
-                {isTr ? "Tek Hesap, Çift Yetenek: Ayrı Hesap Açmanıza Gerek Yok" : "Single Account, Dual Capability: No Split Profiles"}
+                {isTr
+                  ? "Tek Hesap, Çift Yetenek: Ayrı Hesap Açmanıza Gerek Yok"
+                  : "Single Account, Dual Capability: No Split Profiles"}
               </h4>
               <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
                 {isTr

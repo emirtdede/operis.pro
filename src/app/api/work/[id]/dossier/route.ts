@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { DossierService } from "@/src/modules/contracts/dossier-service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const isEnHeader = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
@@ -32,9 +30,7 @@ export async function GET(
     if (!session?.userId) {
       return NextResponse.json(
         {
-          error: isEnHeader
-            ? "Unauthorized. Please sign in."
-            : "Oturum açmanız gerekmektedir.",
+          error: isEnHeader ? "Unauthorized. Please sign in." : "Oturum açmanız gerekmektedir.",
         },
         { status: 401 }
       );
@@ -78,8 +74,13 @@ export async function GET(
       },
     });
   } catch (error: unknown) {
-    const message =
-      error instanceof Error ? error.message : "Failed to export evidentiary dossier";
-    return NextResponse.json({ error: message }, { status: 400 });
+    return handleApiError(
+      error,
+      {
+        en: "Failed to export evidentiary dossier",
+        tr: "Delil dosyası dışa aktarılamadı",
+      },
+      { isEn: isEnHeader, logPrefix: "[Dossier Export Error]", status: 500 }
+    );
   }
 }

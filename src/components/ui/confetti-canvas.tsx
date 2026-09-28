@@ -68,7 +68,7 @@ export function ConfettiCanvas({
     // Initialize confetti particles from top-center burst
     const particles: Particle[] = [];
     for (let i = 0; i < particleCount; i++) {
-      const angle = (Math.PI / 4) + Math.random() * (Math.PI / 2); // Spread downwards
+      const angle = Math.PI / 4 + Math.random() * (Math.PI / 2); // Spread downwards
       const speed = 4 + Math.random() * 12;
       particles.push({
         x: width * 0.5 + (Math.random() - 0.5) * 200,
@@ -147,10 +147,6 @@ export function ConfettiCanvas({
   }, [durationMs, particleCount, onComplete]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-50"
-      aria-hidden="true"
-    />
+    <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-50" aria-hidden="true" />
   );
 }

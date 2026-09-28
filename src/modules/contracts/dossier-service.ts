@@ -12,7 +12,10 @@
 
 import { DossierIntegrityService } from "./dossier/dossier-integrity.service";
 import { DossierExportService } from "./dossier/dossier-export.service";
-import { DossierCompilerService, type GenerateDossierOptions } from "./dossier/dossier-compiler.service";
+import {
+  DossierCompilerService,
+  type GenerateDossierOptions,
+} from "./dossier/dossier-compiler.service";
 import type {
   EvidenceFileItem,
   DossierPartyInfo,

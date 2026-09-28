@@ -114,28 +114,25 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
-  const saveConsent = useCallback(
-    (prefs: { analytics: boolean; functional: boolean }) => {
-      const record: CookiePreferences = {
-        essential: true,
-        analytics: prefs.analytics,
-        marketing: false, // Operis strictly operates with 0% advertising and zero marketing trackers
-        functional: prefs.functional,
-        updatedAt: new Date().toISOString(),
-      };
+  const saveConsent = useCallback((prefs: { analytics: boolean; functional: boolean }) => {
+    const record: CookiePreferences = {
+      essential: true,
+      analytics: prefs.analytics,
+      marketing: false, // Operis strictly operates with 0% advertising and zero marketing trackers
+      functional: prefs.functional,
+      updatedAt: new Date().toISOString(),
+    };
 
-      try {
-        localStorage.setItem(COOKIE_STORAGE_KEY, JSON.stringify(record));
-        document.cookie = `operis_cookie_consent=1; path=/; max-age=31536000; SameSite=Lax`;
-        window.dispatchEvent(new CustomEvent(COOKIE_CONSENT_EVENT, { detail: record }));
-      } catch {
-        // Silent error handling for restricted storage environments
-      }
+    try {
+      localStorage.setItem(COOKIE_STORAGE_KEY, JSON.stringify(record));
+      document.cookie = `operis_cookie_consent=1; path=/; max-age=31536000; SameSite=Lax`;
+      window.dispatchEvent(new CustomEvent(COOKIE_CONSENT_EVENT, { detail: record }));
+    } catch {
+      // Silent error handling for restricted storage environments
+    }
 
-      setIsOpen(false);
-    },
-    []
-  );
+    setIsOpen(false);
+  }, []);
 
   const handleAcceptAll = () => {
     setAnalytics(true);
@@ -179,9 +176,10 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
                   <strong className="font-bold text-[var(--color-text-primary)]">
                     &ldquo;Tümünü Kabul Et&rdquo;
                   </strong>{" "}
-                  butonuna tıklayarak; site gezintisini güvenli kılmak, temel fonksiyonları çalıştırmak
-                  ve tercihlerinizi (tema, dil) hatırlamak amacıyla cihazınızda birinci taraf çerez saklanmasını
-                  kabul etmiş olursunuz. Operis reklam veya pazarlama çerezi kullanmaz. Detaylar için{" "}
+                  butonuna tıklayarak; site gezintisini güvenli kılmak, temel fonksiyonları
+                  çalıştırmak ve tercihlerinizi (tema, dil) hatırlamak amacıyla cihazınızda birinci
+                  taraf çerez saklanmasını kabul etmiş olursunuz. Operis reklam veya pazarlama
+                  çerezi kullanmaz. Detaylar için{" "}
                   <Link
                     href={getLocalizedLegalPath("privacy", locale as Locale)}
                     className="font-semibold text-[var(--color-text-primary)] underline underline-offset-4 decoration-[var(--color-border-strong)] hover:text-blue-500 hover:decoration-blue-500 transition-colors"
@@ -203,9 +201,10 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
                   <strong className="font-bold text-[var(--color-text-primary)]">
                     &ldquo;Accept All&rdquo;
                   </strong>
-                  , you consent to the storage of first-party cookies on your device to ensure secure
-                  browsing, support vital operations, and remember your preferences (theme, language).
-                  Operis does not use advertising or marketing cookies. For details, review our{" "}
+                  , you consent to the storage of first-party cookies on your device to ensure
+                  secure browsing, support vital operations, and remember your preferences (theme,
+                  language). Operis does not use advertising or marketing cookies. For details,
+                  review our{" "}
                   <Link
                     href={getLocalizedLegalPath("privacy", locale as Locale)}
                     className="font-semibold text-[var(--color-text-primary)] underline underline-offset-4 decoration-[var(--color-border-strong)] hover:text-blue-500 hover:decoration-blue-500 transition-colors"
@@ -312,7 +311,10 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
           <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)]/70 p-3.5 sm:p-4 flex items-start justify-between gap-3">
             <div className="space-y-1">
               <div className="font-bold text-sm text-[var(--color-text-primary)] flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-emerald-500 dark:text-emerald-400 shrink-0" aria-hidden="true" />
+                <ShieldCheck
+                  className="h-4 w-4 text-emerald-500 dark:text-emerald-400 shrink-0"
+                  aria-hidden="true"
+                />
                 <span>{isTr ? "Zorunlu Çerezler" : "Strictly Necessary"}</span>
               </div>
               <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
@@ -330,7 +332,10 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
           <label className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)]/70 hover:bg-[var(--color-surface-hover)] p-3.5 sm:p-4 flex items-start justify-between gap-3 cursor-pointer transition-colors">
             <div className="space-y-1">
               <div className="font-bold text-sm text-[var(--color-text-primary)] flex items-center gap-2">
-                <ChartColumn className="h-4 w-4 text-blue-500 dark:text-blue-400 shrink-0" aria-hidden="true" />
+                <ChartColumn
+                  className="h-4 w-4 text-blue-500 dark:text-blue-400 shrink-0"
+                  aria-hidden="true"
+                />
                 <span>{isTr ? "Analitik & Performans" : "Analytics & Performance"}</span>
               </div>
               <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
@@ -353,7 +358,10 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
           <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)]/70 p-3.5 sm:p-4 flex items-start justify-between gap-3">
             <div className="space-y-1">
               <div className="font-bold text-sm text-[var(--color-text-primary)] flex items-center gap-2">
-                <Megaphone className="h-4 w-4 text-purple-500 dark:text-purple-400 shrink-0" aria-hidden="true" />
+                <Megaphone
+                  className="h-4 w-4 text-purple-500 dark:text-purple-400 shrink-0"
+                  aria-hidden="true"
+                />
                 <span>{isTr ? "Pazarlama & Reklam Çerezleri" : "Marketing & Ad Trackers"}</span>
               </div>
               <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
@@ -371,8 +379,13 @@ export function CookieConsentModal({ locale }: CookieConsentModalProps) {
           <label className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)]/70 hover:bg-[var(--color-surface-hover)] p-3.5 sm:p-4 flex items-start justify-between gap-3 cursor-pointer transition-colors">
             <div className="space-y-1">
               <div className="font-bold text-sm text-[var(--color-text-primary)] flex items-center gap-2">
-                <SlidersHorizontal className="h-4 w-4 text-amber-500 dark:text-amber-400 shrink-0" aria-hidden="true" />
-                <span>{isTr ? "İşlevsel & Yerel Tercihler" : "Functional & Regional Preferences"}</span>
+                <SlidersHorizontal
+                  className="h-4 w-4 text-amber-500 dark:text-amber-400 shrink-0"
+                  aria-hidden="true"
+                />
+                <span>
+                  {isTr ? "İşlevsel & Yerel Tercihler" : "Functional & Regional Preferences"}
+                </span>
               </div>
               <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
                 {isTr

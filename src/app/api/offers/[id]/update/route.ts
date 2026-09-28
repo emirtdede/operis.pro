@@ -62,7 +62,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
           ? "Unauthorized: Only the proposal creator can update this offer."
           : "Yetkisiz işlem: Sadece teklif sahibi bu teklifi güncelleyebilir.";
       } else {
-        message = raw;
+        console.error("[Update Offer Error]:", err);
+        return NextResponse.json(
+          { error: isEn ? "Failed to update offer." : "Teklif güncellenemedi." },
+          { status: 500 }
+        );
       }
     }
     return NextResponse.json({ error: message }, { status: 400 });

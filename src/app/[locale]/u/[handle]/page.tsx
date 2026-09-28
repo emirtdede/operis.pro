@@ -160,11 +160,7 @@ export default async function PublicProfilePage({
       </nav>
 
       {/* Main Profile View with In-Place Editing */}
-      <PublicProfileView
-        initialProfile={profile}
-        locale={locale}
-        isSelf={isSelf}
-      />
+      <PublicProfileView initialProfile={profile} locale={locale} isSelf={isSelf} />
     </main>
   );
 }

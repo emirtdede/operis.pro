@@ -28,7 +28,10 @@ describe("PaymentHandshakeEngine Unit Tests", () => {
     });
 
     it("accepts full-length FAST reference without warning", () => {
-      const res = PaymentHandshakeEngine.validateReferenceFormat("FAST", "TR202609190019283746152431");
+      const res = PaymentHandshakeEngine.validateReferenceFormat(
+        "FAST",
+        "TR202609190019283746152431"
+      );
       expect(res.isValid).toBe(true);
       expect(res.warning).toBeUndefined();
     });

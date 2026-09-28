@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { ContractSigningService } from "@/src/modules/contracts/contract-signing-service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const isEnHeader = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
@@ -57,7 +55,8 @@ export async function GET(
         status: 200,
         headers: {
           "Content-Type": "text/html; charset=utf-8",
-          "Content-Security-Policy": "default-src 'none'; img-src data:; style-src 'unsafe-inline'; sandbox",
+          "Content-Security-Policy":
+            "default-src 'none'; img-src data:; style-src 'unsafe-inline'; sandbox",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "DENY",
         },
@@ -69,12 +68,13 @@ export async function GET(
       package: packageDetails,
     });
   } catch (err: unknown) {
-    let message = isEnHeader
-      ? "Failed to retrieve contract package."
-      : "Sözleşme paketi alınamadı.";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to retrieve contract package.",
+        tr: "Sözleşme paketi alınamadı.",
+      },
+      { isEn: isEnHeader, logPrefix: "[Contract Package Error]", status: 500 }
+    );
   }
 }

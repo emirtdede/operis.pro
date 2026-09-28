@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { EngagementService } from "@/src/modules/engagements/service";
 import { NotificationService } from "@/src/modules/notifications/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -108,7 +109,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       engagementId,
       {
         senderUserId: session.userId,
-        senderDisplayName: workspace.engagement.ownerUserId === session.userId ? "İşveren" : "Yazılımcı",
+        senderDisplayName:
+          workspace.engagement.ownerUserId === session.userId ? "İşveren" : "Yazılımcı",
         engagementId,
         listingTitle,
         templateKey,
@@ -130,12 +132,13 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       { status: 200 }
     );
   } catch (err: unknown) {
-    let message = isEn
-      ? "Failed to dispatch communication ping."
-      : "İletişim bildirimi gönderilemedi.";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to dispatch communication ping.",
+        tr: "İletişim bildirimi gönderilemedi.",
+      },
+      { isEn, logPrefix: "[Work Ping Error]", status: 500 }
+    );
   }
 }

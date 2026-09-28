@@ -36,9 +36,7 @@ export function FeedSidebar({
   onToggleCategoryFollow,
 }: FeedSidebarProps) {
   const isTr = locale === "tr";
-  const [followedIds, setFollowedIds] = useState<Set<string>>(
-    new Set(initialFollowedCategoryIds)
-  );
+  const [followedIds, setFollowedIds] = useState<Set<string>>(new Set(initialFollowedCategoryIds));
   const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
 
   const popularCategories = categories.slice(0, 6);
@@ -101,7 +99,9 @@ export function FeedSidebar({
         <div className="space-y-2 pt-1 border-t border-blue-500/15 text-xs">
           <div className="flex items-center gap-2 text-[var(--color-text-secondary)]">
             <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />
-            <span>{isTr ? "%0 Komisyon — Ücret kesintisi yok" : "0% Commission — Direct deals"}</span>
+            <span>
+              {isTr ? "%0 Komisyon — Ücret kesintisi yok" : "0% Commission — Direct deals"}
+            </span>
           </div>
           <div className="flex items-center gap-2 text-[var(--color-text-secondary)]">
             <Lock className="h-4 w-4 text-indigo-400 shrink-0" />

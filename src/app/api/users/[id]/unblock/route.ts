@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { ModerationService } from "@/src/modules/moderation/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -53,12 +54,13 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       { status: 200 }
     );
   } catch (err: unknown) {
-    let message = isEn
-      ? "Failed to unblock user."
-      : "Kullanıcının engeli kaldırılamadı.";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to unblock user.",
+        tr: "Kullanıcının engeli kaldırılamadı.",
+      },
+      { isEn, logPrefix: "[User Unblock Error]", status: 500 }
+    );
   }
 }

@@ -12,6 +12,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { Button } from "../ui/button";
+import { ModalOverlay } from "../ui/modal-overlay";
 
 export interface OfferRevisionItem {
   id: string;
@@ -137,9 +138,7 @@ export function OfferRevisionsModal({
             <div className="text-[10px] text-slate-500 flex items-center gap-1">
               <Clock className="h-2.5 w-2.5" />
               <span>
-                {new Date(rev.createdAt).toLocaleDateString(
-                  locale === "tr" ? "tr-TR" : "en-US"
-                )}
+                {new Date(rev.createdAt).toLocaleDateString(locale === "tr" ? "tr-TR" : "en-US")}
               </span>
             </div>
           </div>
@@ -150,13 +149,15 @@ export function OfferRevisionsModal({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-200"
-      role="dialog"
-      aria-modal="true"
-      aria-label={isTr ? "Teklif Revizyon Geçmişi" : "Offer Revision History"}
+    <ModalOverlay
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabel={isTr ? "Teklif Revizyon Geçmişi" : "Offer Revision History"}
     >
-      <div className="bg-[#141720] border border-slate-700/80 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
+      <div
+        className="bg-[#141720] border border-slate-700/80 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
           <div className="flex items-center gap-2.5 text-blue-400">
@@ -266,6 +267,6 @@ export function OfferRevisionsModal({
           </Button>
         </div>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

@@ -147,7 +147,11 @@ export class RetainerService {
     // If NO_ROLLOVER: 0 hours roll over.
     // If MAX_25_PERCENT: at most 25% of included hours can roll over from previous month.
     let rolloverHours = 0;
-    if (planType === "HOURLY_POOL" && rolloverPolicy === "MAX_25_PERCENT" && previousUnusedHours > 0) {
+    if (
+      planType === "HOURLY_POOL" &&
+      rolloverPolicy === "MAX_25_PERCENT" &&
+      previousUnusedHours > 0
+    ) {
       const maxAllowed = Math.floor(includedHours * 0.25);
       rolloverHours = Math.min(previousUnusedHours, maxAllowed);
     }
@@ -265,7 +269,9 @@ export class RetainerService {
       throw new Error("Yetkisiz işlem: Oturum açılması zorunludur.");
     }
 
-    const isMock = input.engagementId.startsWith("eng-test-") || input.engagementId.startsWith("eng-demo-");
+    const isMock =
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (input.engagementId.startsWith("eng-test-") || input.engagementId.startsWith("eng-demo-"));
 
     if (isMock) {
       if (input.requesterUserId.includes("outsider")) {
@@ -276,7 +282,9 @@ export class RetainerService {
 
       const existing = inMemoryRetainers.get(input.engagementId);
       if (existing && existing.status !== "CANCELLED") {
-        throw new Error("Bu iş için zaten aktif veya teklif aşamasında bir bakım sözleşmesi bulunmaktadır.");
+        throw new Error(
+          "Bu iş için zaten aktif veya teklif aşamasında bir bakım sözleşmesi bulunmaktadır."
+        );
       }
 
       const isFreelancer =
@@ -348,7 +356,9 @@ export class RetainerService {
       .limit(1);
 
     if (existing && existing.status !== "CANCELLED") {
-      throw new Error("Bu iş için zaten aktif veya teklif aşamasında bir bakım sözleşmesi bulunmaktadır.");
+      throw new Error(
+        "Bu iş için zaten aktif veya teklif aşamasında bir bakım sözleşmesi bulunmaktadır."
+      );
     }
 
     const clientUserId = engagement.ownerUserId;
@@ -403,7 +413,9 @@ export class RetainerService {
       throw new Error("Yetkisiz erişim: Kullanıcı kimliği doğrulanmalıdır.");
     }
 
-    const isMock = engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-");
+    const isMock =
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-"));
 
     if (isMock) {
       if (userId.includes("outsider")) {
@@ -643,9 +655,11 @@ export class RetainerService {
     }
 
     const isMock =
-      (input.engagementId &&
-        (input.engagementId.startsWith("eng-test-") || input.engagementId.startsWith("eng-demo-"))) ||
-      input.retainerId.startsWith("ret-");
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      ((input.engagementId &&
+        (input.engagementId.startsWith("eng-test-") ||
+          input.engagementId.startsWith("eng-demo-"))) ||
+        input.retainerId.startsWith("ret-"));
 
     if (isMock) {
       if (input.userId.includes("outsider") || input.userId.includes("client")) {
@@ -749,7 +763,9 @@ export class RetainerService {
       }
 
       const newHours = parseFloat(currentPeriod.hoursLogged) + input.hours;
-      const prevUnused = ((currentPeriod.taxSummary as Record<string, unknown> | null)?.previousUnusedHours as number) || 0;
+      const prevUnused =
+        ((currentPeriod.taxSummary as Record<string, unknown> | null)
+          ?.previousUnusedHours as number) || 0;
       const metrics = this.calculatePeriodMetrics({
         planType: (r?.planType as RetainerPlanType) || "HOURLY_POOL",
         monthlyPrice: parseFloat(currentPeriod.basePrice),
@@ -899,7 +915,9 @@ export class RetainerService {
       }
 
       const newHours = parseFloat(currentPeriod.hoursLogged) + input.hours;
-      const prevUnused = ((currentPeriod.taxSummary as Record<string, unknown> | null)?.previousUnusedHours as number) || 0;
+      const prevUnused =
+        ((currentPeriod.taxSummary as Record<string, unknown> | null)
+          ?.previousUnusedHours as number) || 0;
       const metrics = this.calculatePeriodMetrics({
         planType: retainer.planType as RetainerPlanType,
         monthlyPrice: parseFloat(retainer.monthlyPrice),
@@ -967,7 +985,9 @@ export class RetainerService {
       throw new Error("Yetkisiz işlem: Oturum açılması zorunludur.");
     }
 
-    const isMock = engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-");
+    const isMock =
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-"));
 
     if (isMock) {
       if (userId.includes("outsider")) {
@@ -1066,7 +1086,9 @@ export class RetainerService {
       throw new Error("Yetkisiz erişim: Oturum açılması zorunludur.");
     }
 
-    const isMock = engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-");
+    const isMock =
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-"));
 
     if (isMock) {
       if (currentUserId.includes("outsider")) {
@@ -1098,7 +1120,9 @@ export class RetainerService {
               periodIndex: currentPeriod.periodIndex,
               startDate: currentPeriod.startDate,
               endDate: currentPeriod.endDate,
-              previousUnusedHours: ((currentPeriod.taxSummary as Record<string, unknown> | null)?.previousUnusedHours as number) || 0,
+              previousUnusedHours:
+                ((currentPeriod.taxSummary as Record<string, unknown> | null)
+                  ?.previousUnusedHours as number) || 0,
             })
           : null;
 
@@ -1176,7 +1200,9 @@ export class RetainerService {
           periodIndex: currentPeriod.periodIndex,
           startDate: currentPeriod.startDate,
           endDate: currentPeriod.endDate,
-          previousUnusedHours: ((currentPeriod.taxSummary as Record<string, unknown> | null)?.previousUnusedHours as number) || 0,
+          previousUnusedHours:
+            ((currentPeriod.taxSummary as Record<string, unknown> | null)
+              ?.previousUnusedHours as number) || 0,
         })
       : null;
 

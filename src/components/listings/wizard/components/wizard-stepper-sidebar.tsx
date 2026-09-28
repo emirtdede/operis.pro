@@ -193,8 +193,7 @@ export function WizardStepperSidebar({
     },
   ];
 
-  const currentStepInfo =
-    stepsConfig.find((s) => s.stepNumber === step) ??
+  const currentStepInfo = stepsConfig.find((s) => s.stepNumber === step) ??
     stepsConfig[0] ?? {
       stepNumber: 1,
       tag: isTr ? "ADIM 01" : "STEP 01",
@@ -250,7 +249,9 @@ export function WizardStepperSidebar({
                       {d.title || (isTr ? "İsimsiz İlan Taslağı" : "Untitled Draft")}
                     </div>
                     <div className="text-[10px] text-[var(--color-text-tertiary)] mt-0.5 truncate">
-                      {d.categoryName || (isTr ? "Genel İlan" : "General")} • {isTr ? `${d.step}. Aşama` : `Stage ${d.step}`} • {formatDraftTime(d.updatedAt, isTr)}
+                      {d.categoryName || (isTr ? "Genel İlan" : "General")} •{" "}
+                      {isTr ? `${d.step}. Aşama` : `Stage ${d.step}`} •{" "}
+                      {formatDraftTime(d.updatedAt, isTr)}
                     </div>
                   </div>
 
@@ -413,7 +414,11 @@ export function WizardStepperSidebar({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5 text-[11px] font-semibold text-[var(--color-text-primary)]">
                 <BookmarkCheck className="h-3.5 w-3.5 text-blue-400" />
-                <span>{isTr ? `Kayıtlı Taslaklar (${draftsList.length})` : `Saved Drafts (${draftsList.length})`}</span>
+                <span>
+                  {isTr
+                    ? `Kayıtlı Taslaklar (${draftsList.length})`
+                    : `Saved Drafts (${draftsList.length})`}
+                </span>
               </div>
               {onStartNewListing && (
                 <button
@@ -442,7 +447,9 @@ export function WizardStepperSidebar({
                         {d.title || (isTr ? "İsimsiz Taslak" : "Untitled Draft")}
                       </div>
                       <div className="text-[10px] text-[var(--color-text-tertiary)] truncate">
-                        {d.categoryName || (isTr ? "Kategori Yok" : "No Category")} • {isTr ? `${d.step}. Aşama` : `Stage ${d.step}`} • {formatDraftTime(d.updatedAt, isTr)}
+                        {d.categoryName || (isTr ? "Kategori Yok" : "No Category")} •{" "}
+                        {isTr ? `${d.step}. Aşama` : `Stage ${d.step}`} •{" "}
+                        {formatDraftTime(d.updatedAt, isTr)}
                       </div>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">

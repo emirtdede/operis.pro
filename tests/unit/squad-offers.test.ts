@@ -7,7 +7,8 @@ describe("Squad Offer Validation & Service", () => {
     it("should accept a standard solo offer without squad fields", () => {
       const parsed = submitOfferSchema.safeParse({
         listingId: "11111111-1111-1111-1111-111111111111",
-        message: "This is a detailed proposal message explaining relevant skills and technical delivery approach.",
+        message:
+          "This is a detailed proposal message explaining relevant skills and technical delivery approach.",
         budgetCurrency: "TRY",
         budgetMin: "10000",
         budgetMax: "20000",
@@ -22,7 +23,8 @@ describe("Squad Offer Validation & Service", () => {
     it("should accept a valid squad offer with 100% distribution", () => {
       const parsed = submitOfferSchema.safeParse({
         listingId: "11111111-1111-1111-1111-111111111111",
-        message: "This is a detailed consortium proposal message explaining our squad credentials and approach.",
+        message:
+          "This is a detailed consortium proposal message explaining our squad credentials and approach.",
         budgetCurrency: "TRY",
         budgetMin: "150000",
         budgetMax: "200000",
@@ -61,7 +63,8 @@ describe("Squad Offer Validation & Service", () => {
     it("should reject squad offer if shares do not sum to 100%", () => {
       const parsed = submitOfferSchema.safeParse({
         listingId: "11111111-1111-1111-1111-111111111111",
-        message: "This is a detailed consortium proposal message explaining our squad credentials and approach.",
+        message:
+          "This is a detailed consortium proposal message explaining our squad credentials and approach.",
         isSquadOffer: true,
         squadMembers: [
           {
@@ -89,7 +92,8 @@ describe("Squad Offer Validation & Service", () => {
     it("should reject squad offer if fewer than 2 members", () => {
       const parsed = submitOfferSchema.safeParse({
         listingId: "11111111-1111-1111-1111-111111111111",
-        message: "This is a detailed consortium proposal message explaining our squad credentials and approach.",
+        message:
+          "This is a detailed consortium proposal message explaining our squad credentials and approach.",
         isSquadOffer: true,
         squadMembers: [
           {
@@ -111,7 +115,8 @@ describe("Squad Offer Validation & Service", () => {
     it("should reject squad offer if multiple leads are specified", () => {
       const parsed = submitOfferSchema.safeParse({
         listingId: "11111111-1111-1111-1111-111111111111",
-        message: "This is a detailed consortium proposal message explaining our squad credentials and approach.",
+        message:
+          "This is a detailed consortium proposal message explaining our squad credentials and approach.",
         isSquadOffer: true,
         squadMembers: [
           {
@@ -185,16 +190,19 @@ describe("Squad Offer Validation & Service", () => {
       ];
 
       // Seed in-memory store
-      inMemorySquadMembers.set(offerId, members.map((m, idx) => ({
-        id: `sm-${idx + 1}`,
+      inMemorySquadMembers.set(
         offerId,
-        displayName: m.displayName,
-        roleTitle: m.roleTitle,
-        revenueSharePercentage: m.revenueSharePercentage,
-        scopeSummary: m.scopeSummary,
-        isLead: m.isLead,
-        handleOrEmail: null,
-      })));
+        members.map((m, idx) => ({
+          id: `sm-${idx + 1}`,
+          offerId,
+          displayName: m.displayName,
+          roleTitle: m.roleTitle,
+          revenueSharePercentage: m.revenueSharePercentage,
+          scopeSummary: m.scopeSummary,
+          isLead: m.isLead,
+          handleOrEmail: null,
+        }))
+      );
 
       const retrieved = await OfferService.getOfferSquadMembers(offerId);
       expect(retrieved).toHaveLength(2);

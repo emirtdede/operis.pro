@@ -8,7 +8,8 @@ export const softwareItQuestions: WizardQuestion[] = [
     labelKey: "Projenin Başlangıç Durumu",
     labelEn: "Project Starting Point",
     clarityWeight: 10,
-    helpTip: "Projenin sıfırdan mı yoksa mevcut kod tabanı üzerinden mi geliştirileceğini belirtin.",
+    helpTip:
+      "Projenin sıfırdan mı yoksa mevcut kod tabanı üzerinden mi geliştirileceğini belirtin.",
     helpTipEn: "Specify whether this is a greenfield build or an existing codebase.",
     options: [
       {

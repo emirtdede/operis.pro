@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import {
   X,
   RotateCcw,
@@ -14,6 +13,7 @@ import {
   Check,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 import type { FeedCustomizationSettings } from "./use-feed-customization";
 
 export interface FeedCustomizationModalProps {
@@ -33,25 +33,8 @@ export function FeedCustomizationModal({
   resetSettings,
   isTr,
 }: FeedCustomizationModalProps) {
-  // Close on ESC key
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
-
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="feed-customization-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200"
-    >
+    <ModalOverlay isOpen={isOpen} onClose={onClose} ariaLabelledBy="feed-customization-title">
       <div
         className="relative w-full max-w-lg rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] shadow-2xl p-6 sm:p-7 space-y-6 overflow-hidden max-h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
@@ -105,7 +88,9 @@ export function FeedCustomizationModal({
                       {isTr ? "Mini Profil & Canlı Müsaitlik" : "Mini Profile & Live Status"}
                     </div>
                     <div className="text-[11px] text-[var(--color-text-tertiary)]">
-                      {isTr ? "Avatarınız, unvanınız ve tek tıkla müsaitlik durumu" : "Your avatar, headline and status toggle"}
+                      {isTr
+                        ? "Avatarınız, unvanınız ve tek tıkla müsaitlik durumu"
+                        : "Your avatar, headline and status toggle"}
                     </div>
                   </div>
                 </div>
@@ -126,7 +111,9 @@ export function FeedCustomizationModal({
                       {isTr ? "Çalışma Alanı Kısayolları" : "Workspace Shortcuts"}
                     </div>
                     <div className="text-[11px] text-[var(--color-text-tertiary)]">
-                      {isTr ? "İlanlarım, tekliflerim ve kaydedilenler linkleri" : "Links to my listings, offers & bookmarks"}
+                      {isTr
+                        ? "İlanlarım, tekliflerim ve kaydedilenler linkleri"
+                        : "Links to my listings, offers & bookmarks"}
                     </div>
                   </div>
                 </div>
@@ -147,7 +134,9 @@ export function FeedCustomizationModal({
                       {isTr ? "Takip Ettiğim Kategoriler" : "Followed Specializations"}
                     </div>
                     <div className="text-[11px] text-[var(--color-text-tertiary)]">
-                      {isTr ? "Takip ettiğiniz kategorilerin hızlı filtre listesi" : "Fast filter list of your followed categories"}
+                      {isTr
+                        ? "Takip ettiğiniz kategorilerin hızlı filtre listesi"
+                        : "Fast filter list of your followed categories"}
                     </div>
                   </div>
                 </div>
@@ -177,7 +166,9 @@ export function FeedCustomizationModal({
                       {isTr ? "İlan Verme Kartı (Projeniz mi Var?)" : "Publish Listing Card"}
                     </div>
                     <div className="text-[11px] text-[var(--color-text-tertiary)]">
-                      {isTr ? "Sağ panelde hızlı ilan oluşturma kısayolu" : "Top card shortcut to create new listings"}
+                      {isTr
+                        ? "Sağ panelde hızlı ilan oluşturma kısayolu"
+                        : "Top card shortcut to create new listings"}
                     </div>
                   </div>
                 </div>
@@ -198,7 +189,9 @@ export function FeedCustomizationModal({
                       {isTr ? "Gündemdeki Teknolojiler" : "Trending Technologies"}
                     </div>
                     <div className="text-[11px] text-[var(--color-text-tertiary)]">
-                      {isTr ? "İlanlarda öne çıkan beceriler ve teknoloji nabzı" : "Trending skills and technology market pulse"}
+                      {isTr
+                        ? "İlanlarda öne çıkan beceriler ve teknoloji nabzı"
+                        : "Trending skills and technology market pulse"}
                     </div>
                   </div>
                 </div>
@@ -219,7 +212,9 @@ export function FeedCustomizationModal({
                       {isTr ? "Önerilen Alanlar" : "Suggested Categories"}
                     </div>
                     <div className="text-[11px] text-[var(--color-text-tertiary)]">
-                      {isTr ? "İlginizi çekebilecek kategoriler ve hızlı takip" : "Recommended categories tailored to your activity"}
+                      {isTr
+                        ? "İlginizi çekebilecek kategoriler ve hızlı takip"
+                        : "Recommended categories tailored to your activity"}
                     </div>
                   </div>
                 </div>
@@ -263,7 +258,9 @@ export function FeedCustomizationModal({
                 }`}
               >
                 <span>{isTr ? "Sana Özel (Takip)" : "For You (Following)"}</span>
-                {settings.defaultFeedMode === "following" && <Check className="h-4 w-4 text-blue-400" />}
+                {settings.defaultFeedMode === "following" && (
+                  <Check className="h-4 w-4 text-blue-400" />
+                )}
               </button>
             </div>
           </div>
@@ -291,6 +288,6 @@ export function FeedCustomizationModal({
           </Button>
         </div>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

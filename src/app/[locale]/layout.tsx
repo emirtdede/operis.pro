@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
@@ -75,7 +76,7 @@ export async function generateMetadata({
       "geo.region": "TR-34",
       "geo.placename": "İstanbul, Türkiye",
       "geo.position": "41.0766;29.0125",
-      "ICBM": "41.0766, 29.0125",
+      ICBM: "41.0766, 29.0125",
     },
     verification: {
       google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
@@ -89,9 +90,7 @@ export async function generateMetadata({
         { url: "/favicon.svg", type: "image/svg+xml" },
       ],
       shortcut: "/favicon.ico",
-      apple: [
-        { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-      ],
+      apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
     },
     manifest: "/manifest.webmanifest",
   };
@@ -134,7 +133,7 @@ export default async function RootLocaleLayout({
   }
 
   return (
-    <OperisClerkProvider locale={locale}>
+    <OperisClerkProvider locale={locale} nonce={(await headers()).get("x-nonce") ?? undefined}>
       <OperisPostHogProvider userId={session?.userId || null}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider defaultTheme="dark">

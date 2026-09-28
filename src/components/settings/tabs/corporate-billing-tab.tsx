@@ -95,15 +95,23 @@ export function CorporateBillingTab({
         <div className="flex items-center justify-between">
           <label className="text-xs font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
             <ShieldCheck className="h-4 w-4 text-emerald-400" />
-            <span>{isTr ? "Resmi Şirket & Vergi Doğrulaması (GİB)" : "Official Tax Verification"}</span>
+            <span>
+              {isTr ? "Resmi Şirket & Vergi Doğrulaması (GİB)" : "Official Tax Verification"}
+            </span>
           </label>
           {companyData.isCompanyVerified ? (
-            <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px]">
+            <Badge
+              variant="outline"
+              className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px]"
+            >
               <CheckCircle2 className="h-3 w-3 mr-1" />
               {isTr ? "Kurumsal Onaylı Şirket" : "Verified Corporate Entity"}
             </Badge>
           ) : (
-            <Badge variant="outline" className="bg-amber-500/10 text-amber-400 border-amber-500/20 text-[10px]">
+            <Badge
+              variant="outline"
+              className="bg-amber-500/10 text-amber-400 border-amber-500/20 text-[10px]"
+            >
               <AlertCircle className="h-3 w-3 mr-1" />
               {isTr ? "Henüz Doğrulanmadı" : "Unverified"}
             </Badge>
@@ -111,10 +119,7 @@ export function CorporateBillingTab({
         </div>
 
         {/* Kurumsal Doğrulama Bileşeni */}
-        <CompanyVerificationCard
-          initialData={companyData}
-          locale={locale}
-        />
+        <CompanyVerificationCard initialData={companyData} locale={locale} />
       </div>
 
       {/* 2. Resmi Fatura Adresi */}
@@ -146,7 +151,9 @@ export function CorporateBillingTab({
         <div className="flex items-center justify-between">
           <label className="text-xs font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
             <CreditCard className="h-4 w-4 text-purple-400" />
-            <span>{isTr ? "Hakediş Ödeme Transfer Hesabı (IBAN)" : "Payout Bank Account (IBAN)"}</span>
+            <span>
+              {isTr ? "Hakediş Ödeme Transfer Hesabı (IBAN)" : "Payout Bank Account (IBAN)"}
+            </span>
           </label>
           <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
             {isTr ? "%0 Komisyon Doğrudan Transfer" : "0% Commission Direct Payout"}
@@ -174,7 +181,9 @@ export function CorporateBillingTab({
               <TextInput
                 value={accountHolder}
                 onChange={(e) => setAccountHolder(e.target.value)}
-                placeholder={isTr ? "Vergi levhası veya kimlikle eşleşmeli" : "Legal account holder name"}
+                placeholder={
+                  isTr ? "Vergi levhası veya kimlikle eşleşmeli" : "Legal account holder name"
+                }
                 className="text-xs"
               />
             </div>
@@ -196,8 +205,8 @@ export function CorporateBillingTab({
                       ? "✓ Geçerli IBAN Biçimi"
                       : "✓ Valid Format"
                     : isTr
-                    ? "26 karakter (TR ile başlamalı)"
-                    : "26 characters (Must start with TR)"}
+                      ? "26 karakter (TR ile başlamalı)"
+                      : "26 characters (Must start with TR)"}
                 </span>
               )}
             </div>

@@ -4,10 +4,7 @@ import {
   parseEnvExampleText,
   RunbookSynthesizer,
 } from "@/src/modules/engagements/runbook-synthesizer";
-import {
-  RunbookService,
-  inMemoryRunbooks,
-} from "@/src/modules/engagements/runbook-service";
+import { RunbookService, inMemoryRunbooks } from "@/src/modules/engagements/runbook-service";
 import { RunbookGeneratorService } from "@/src/modules/contracts/runbook-generator";
 
 describe("SecretLeakageDetector", () => {
@@ -40,7 +37,8 @@ describe("SecretLeakageDetector", () => {
   });
 
   it("detects private SSH/RSA keys", () => {
-    const leakedText = "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0...\n-----END RSA PRIVATE KEY-----";
+    const leakedText =
+      "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0...\n-----END RSA PRIVATE KEY-----";
     const result = SecretLeakageDetector.scanForSecrets(leakedText);
     expect(result.hasSecretLeakage).toBe(true);
     expect(result.leakedCategory).toContain("Private Key");
@@ -125,7 +123,12 @@ describe("RunbookSynthesizer", () => {
     });
 
     expect(runbook.architectureSummary).toContain("Mobil");
-    expect(runbook.buildAndRunSteps.some((s) => s.command.includes("ios") || s.command.includes("android") || s.command.includes("pod"))).toBe(true);
+    expect(
+      runbook.buildAndRunSteps.some(
+        (s) =>
+          s.command.includes("ios") || s.command.includes("android") || s.command.includes("pod")
+      )
+    ).toBe(true);
   });
 
   it("synthesizes specialized blueprint for AI & Data projects", () => {
@@ -136,7 +139,9 @@ describe("RunbookSynthesizer", () => {
     });
 
     expect(runbook.architectureSummary).toContain("Yapay Zeka");
-    expect(runbook.environmentVariables.some((e) => e.key.includes("OPENAI") || e.key.includes("MODEL"))).toBe(true);
+    expect(
+      runbook.environmentVariables.some((e) => e.key.includes("OPENAI") || e.key.includes("MODEL"))
+    ).toBe(true);
   });
 
   it("synthesizes specialized blueprint for UI/UX Design projects", () => {
@@ -180,7 +185,8 @@ describe("RunbookService", () => {
             description: "Postgres production pooler connection string",
             isRequired: true,
             secretCategory: "DATABASE",
-            sampleValue: "postgresql://postgres:sample_password@aws-0-eu-central-1.pooler.supabase.com:6543/postgres",
+            sampleValue:
+              "postgresql://postgres:sample_password@aws-0-eu-central-1.pooler.supabase.com:6543/postgres",
           },
         ],
         buildAndRunSteps: [
@@ -369,4 +375,3 @@ describe("RunbookGeneratorService", () => {
     ).rejects.toThrow("Forbidden. You are not a participant in this engagement.");
   });
 });
-

@@ -16,6 +16,7 @@ import {
   ScrollText,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 import {
   MilestoneDto,
   TransferChannel,
@@ -113,9 +114,16 @@ export function MilestoneDisputeTrigger({
   return (
     <>
       {/* MODAL: Mark Payment (Employer) */}
-      {paymentModalOpen && selectedMilestone && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-200">
-          <div className="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4 text-white max-h-[90vh] overflow-y-auto">
+      <ModalOverlay
+        isOpen={paymentModalOpen && Boolean(selectedMilestone)}
+        onClose={() => setPaymentModalOpen(false)}
+        ariaLabel={isTr ? "Hakediş Ödemesi Bildirimi (El Sıkışma)" : "Bilateral Payment Handshake"}
+      >
+        {selectedMilestone && (
+          <div
+            className="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4 text-white max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 className="text-sm font-bold flex items-center gap-2 text-teal-400">
                 <DollarSign className="h-4 w-4" />
@@ -329,13 +337,20 @@ export function MilestoneDisputeTrigger({
               </Button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalOverlay>
 
       {/* MODAL: Confirm Payment (Freelancer) */}
-      {confirmModalOpen && selectedMilestone && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-200">
-          <div className="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4 text-white">
+      <ModalOverlay
+        isOpen={confirmModalOpen && Boolean(selectedMilestone)}
+        onClose={() => setConfirmModalOpen(false)}
+        ariaLabel={isTr ? "Tahsilatı Teyit Et" : "Confirm Payment Receipt"}
+      >
+        {selectedMilestone && (
+          <div
+            className="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4 text-white"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 className="text-sm font-bold flex items-center gap-2 text-emerald-400">
                 <ShieldCheck className="h-4 w-4" />
@@ -408,13 +423,20 @@ export function MilestoneDisputeTrigger({
               </Button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalOverlay>
 
       {/* MODAL: Dispute Payment (Freelancer) */}
-      {disputeModalOpen && selectedMilestone && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-200">
-          <div className="relative w-full max-w-md bg-slate-900 border border-rose-500/30 rounded-3xl p-6 shadow-2xl space-y-4 text-white">
+      <ModalOverlay
+        isOpen={disputeModalOpen && Boolean(selectedMilestone)}
+        onClose={() => setDisputeModalOpen(false)}
+        ariaLabel={isTr ? "Ödeme Ulaşmadı / İtiraz Bildir" : "Dispute Payment"}
+      >
+        {selectedMilestone && (
+          <div
+            className="relative w-full max-w-md bg-slate-900 border border-rose-500/30 rounded-3xl p-6 shadow-2xl space-y-4 text-white"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 className="text-sm font-bold flex items-center gap-2 text-rose-400">
                 <AlertTriangle className="h-4 w-4" />
@@ -571,13 +593,20 @@ export function MilestoneDisputeTrigger({
               </Button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalOverlay>
 
       {/* MODAL: Settlement Certificate Modal (Dual-Seal Proof of Settlement) */}
-      {certificateModalOpen && selectedCertificate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 animate-in fade-in duration-200">
-          <div className="relative w-full max-w-2xl bg-slate-900 border border-emerald-500/30 rounded-3xl p-6 shadow-2xl space-y-4 text-white max-h-[92vh] overflow-y-auto">
+      <ModalOverlay
+        isOpen={certificateModalOpen && Boolean(selectedCertificate)}
+        onClose={() => setCertificateModalOpen(false)}
+        ariaLabel={isTr ? "Dijital Tahkikat ve İtfa Belgesi" : "Proof of Settlement Certificate"}
+      >
+        {selectedCertificate && (
+          <div
+            className="relative w-full max-w-2xl bg-slate-900 border border-emerald-500/30 rounded-3xl p-6 shadow-2xl space-y-4 text-white max-h-[92vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center gap-2.5">
@@ -748,7 +777,9 @@ export function MilestoneDisputeTrigger({
               <div>
                 <strong className="text-slate-200 flex items-center gap-1.5">
                   <Scale className="h-3.5 w-3.5 text-purple-400 shrink-0" aria-hidden="true" />
-                  <span>{isTr ? "TBK m. 132 Karşılıklı İbra Hükmü:" : "TBK m. 132 Statutory Discharge:"}</span>
+                  <span>
+                    {isTr ? "TBK m. 132 Karşılıklı İbra Hükmü:" : "TBK m. 132 Statutory Discharge:"}
+                  </span>
                 </strong>
                 <p className="text-slate-400 italic mt-0.5">
                   &ldquo;
@@ -762,7 +793,11 @@ export function MilestoneDisputeTrigger({
               <div className="pt-1.5 border-t border-slate-800/80">
                 <strong className="text-slate-200 flex items-center gap-1.5">
                   <ScrollText className="h-3.5 w-3.5 text-indigo-400 shrink-0" aria-hidden="true" />
-                  <span>{isTr ? "HMK m. 193 Delil Sözleşmesi Hükmü:" : "HMK m. 193 Evidentiary Contract:"}</span>
+                  <span>
+                    {isTr
+                      ? "HMK m. 193 Delil Sözleşmesi Hükmü:"
+                      : "HMK m. 193 Evidentiary Contract:"}
+                  </span>
                 </strong>
                 <p className="text-slate-400 italic mt-0.5">
                   &ldquo;
@@ -828,8 +863,8 @@ export function MilestoneDisputeTrigger({
               </Button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalOverlay>
     </>
   );
 }

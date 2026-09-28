@@ -100,7 +100,6 @@ export function StepScopeSkills({
 
   return (
     <div className="space-y-6">
-
       {/* Accepted Scope Package (Acceptance Criteria Active Banner) */}
       {acceptedScopePackage && (
         <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 animate-in fade-in duration-200">
@@ -111,7 +110,9 @@ export function StepScopeSkills({
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-bold text-sm text-emerald-300">
-                  {isTr ? "Objektif Kabul Şartnamesi Tanımlandı" : "Objective Acceptance Criteria Active"}
+                  {isTr
+                    ? "Objektif Kabul Şartnamesi Tanımlandı"
+                    : "Objective Acceptance Criteria Active"}
                 </span>
                 <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[11px] font-semibold text-emerald-300">
                   {acceptedScopePackage.criteria.length} {isTr ? "Kriter" : "Criteria"}
@@ -337,9 +338,7 @@ export function StepScopeSkills({
               className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 transition-all cursor-pointer"
             >
               <Eye className="h-3 w-3" />
-              <span>
-                {getScopePreviewButtonLabel(isScopePreviewOpen, isTr)}
-              </span>
+              <span>{getScopePreviewButtonLabel(isScopePreviewOpen, isTr)}</span>
             </button>
 
             {scopeMode === "wizard" ? (

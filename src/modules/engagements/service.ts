@@ -73,15 +73,17 @@ export class EngagementService {
    * with counterparty profiles, listing information, and completion status.
    * Wrapped in React.cache() for request-scoped deduplication across layouts and server components.
    */
-  static getUserEngagements = cache(async (
-    userId: string,
-    options: {
-      role?: "all" | "owner" | "freelancer";
-      status?: "all" | "active" | "completed" | "cancelled";
-      limit?: number;
-      offset?: number;
-    } = {}
-  ) => {
-    return EngagementQueryService.getUserEngagements(userId, options);
-  });
+  static getUserEngagements = cache(
+    async (
+      userId: string,
+      options: {
+        role?: "all" | "owner" | "freelancer";
+        status?: "all" | "active" | "completed" | "cancelled";
+        limit?: number;
+        offset?: number;
+      } = {}
+    ) => {
+      return EngagementQueryService.getUserEngagements(userId, options);
+    }
+  );
 }

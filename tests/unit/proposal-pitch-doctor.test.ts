@@ -26,7 +26,8 @@ describe("Operis AI Proposal Pitch Doctor Suite", () => {
     id: "lst_sample_123",
     title: "Next.js ve PostgreSQL ile Gerçek Zamanlı E-Ticaret Paneli",
     summary: "B2B müşterilerimiz için yüksek performanslı yönetim paneli geliştirilecek.",
-    scope: "Next.js 15, PostgreSQL, Redis ve Docker kullanılacak. REST API ve WebSocket entegrasyonu gereklidir.",
+    scope:
+      "Next.js 15, PostgreSQL, Redis ve Docker kullanılacak. REST API ve WebSocket entegrasyonu gereklidir.",
     tags: ["Next.js", "PostgreSQL", "Redis", "Docker", "TypeScript"],
     timelineValue: 3,
     timelineUnit: "WEEKS",
@@ -58,7 +59,9 @@ describe("Operis AI Proposal Pitch Doctor Suite", () => {
       expect(result.overallScore).toBeLessThan(50);
       expect(result.tier).toBe("weak");
       expect(result.redFlags.length).toBeGreaterThan(0);
-      expect(result.redFlags.some((rf) => rf.includes("Ben yaparım") || rf.includes("İletişime geçin"))).toBe(true);
+      expect(
+        result.redFlags.some((rf) => rf.includes("Ben yaparım") || rf.includes("İletişime geçin"))
+      ).toBe(true);
 
       const professionalismDim = result.dimensions.find((d) => d.id === "professionalism");
       expect(professionalismDim?.status).toBe("critical");
@@ -69,7 +72,8 @@ describe("Operis AI Proposal Pitch Doctor Suite", () => {
 
     it("should identify missing technologies from the listing", () => {
       const draftWithoutTech: ProposalDraft = {
-        message: "Merhaba, projenizi inceledim. Benzer birçok panel geliştirdim, zamanında teslim ederim.",
+        message:
+          "Merhaba, projenizi inceledim. Benzer birçok panel geliştirdim, zamanında teslim ederim.",
         proposedTimelineValue: 2,
         proposedTimelineUnit: "WEEKS",
       };
@@ -155,7 +159,8 @@ Hemen başlayabilirim ve 3 hafta içerisinde projenizi eksiksiz teslim edebiliri
 
   describe("API Route POST /api/ai/proposal-pitch-doctor", () => {
     it("should return evaluation and enhancement for authenticated requests", async () => {
-      const { POST: pitchDoctorRoute } = await import("@/src/app/api/ai/proposal-pitch-doctor/route");
+      const { POST: pitchDoctorRoute } =
+        await import("@/src/app/api/ai/proposal-pitch-doctor/route");
 
       const request = new Request("http://localhost:3000/api/ai/proposal-pitch-doctor", {
         method: "POST",

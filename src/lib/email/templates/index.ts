@@ -295,7 +295,8 @@ export function renderEmailTemplate({
 
     case "category_follow_match": {
       const categoryName = variables.categoryName || (isTr ? "Teknoloji" : "Technology");
-      const listingTitle = variables.listingTitle || variables.title || (isTr ? "Yeni İlan" : "New Listing");
+      const listingTitle =
+        variables.listingTitle || variables.title || (isTr ? "Yeni İlan" : "New Listing");
       const budgetText = variables.budget || (isTr ? "Görüşülebilir" : "Negotiable");
       const timelineText = variables.timeline || (isTr ? "Esnek" : "Flexible");
       const summaryText = variables.summary || "";

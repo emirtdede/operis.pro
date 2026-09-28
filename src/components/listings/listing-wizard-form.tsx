@@ -90,7 +90,9 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-bold text-cyan-300 uppercase tracking-wider">
-                        {state.isTr ? "İlan Klonlandı & Düzenlemeye Hazır" : "Listing Cloned & Ready to Post"}
+                        {state.isTr
+                          ? "İlan Klonlandı & Düzenlemeye Hazır"
+                          : "Listing Cloned & Ready to Post"}
                       </span>
                       <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-medium">
                         {state.isTr ? "Hızlı Yeniden Yayınlama" : "Quick Re-post"}
@@ -126,27 +128,40 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
               </div>
             )}
 
-
             {/* Focused Step Banner Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-[var(--color-border-subtle)] pb-5 gap-3">
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
                   <span className="inline-flex items-center text-[11px] font-mono font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-2.5 py-0.5 rounded-full border border-blue-500/20">
-                    {state.isTr ? `${state.step}. Aşama / ${state.totalSteps}` : `Stage ${state.step} of ${state.totalSteps}`}
+                    {state.isTr
+                      ? `${state.step}. Aşama / ${state.totalSteps}`
+                      : `Stage ${state.step} of ${state.totalSteps}`}
                   </span>
                   <span className="text-xs text-[var(--color-text-tertiary)]">
                     {STEP_SUBTITLES[state.step]?.[state.isTr ? "tr" : "en"] || ""}
                   </span>
                 </div>
                 <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-[var(--color-text-primary)]">
-                  {state.step === 1 && (state.isTr ? "İlan Tanımı & Kategori Seçimi" : "Listing Info & Category")}
-                  {state.step === 2 && (state.isTr ? "Teknik Kapsam & Yetkinlikler" : "Technical Scope & Skills")}
-                  {state.step === 3 && (state.isTr ? "Bütçe, Süreç & Yasal Onay" : "Budget, Timeline & Review")}
+                  {state.step === 1 &&
+                    (state.isTr ? "İlan Tanımı & Kategori Seçimi" : "Listing Info & Category")}
+                  {state.step === 2 &&
+                    (state.isTr ? "Teknik Kapsam & Yetkinlikler" : "Technical Scope & Skills")}
+                  {state.step === 3 &&
+                    (state.isTr ? "Bütçe, Süreç & Yasal Onay" : "Budget, Timeline & Review")}
                 </h2>
                 <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] mt-1">
-                  {state.step === 1 && (state.isTr ? "Projenize uygun kategoriyi belirleyin ve net bir başlık yazarak başlayın." : "Select the best category and define a clear title for your project.")}
-                  {state.step === 2 && (state.isTr ? "İhtiyaç duyulan teknolojileri, teslim edilecek çıktıları ve proje kapsamını netleştirin." : "Define required tech stacks, deliverable milestones, and specifications.")}
-                  {state.step === 3 && (state.isTr ? "Tahmini bütçe aralığınızı, teslim sürenizi belirleyin ve yasal beyanları onaylayın." : "Set estimated budget, delivery timeline, and confirm platform terms.")}
+                  {state.step === 1 &&
+                    (state.isTr
+                      ? "Projenize uygun kategoriyi belirleyin ve net bir başlık yazarak başlayın."
+                      : "Select the best category and define a clear title for your project.")}
+                  {state.step === 2 &&
+                    (state.isTr
+                      ? "İhtiyaç duyulan teknolojileri, teslim edilecek çıktıları ve proje kapsamını netleştirin."
+                      : "Define required tech stacks, deliverable milestones, and specifications.")}
+                  {state.step === 3 &&
+                    (state.isTr
+                      ? "Tahmini bütçe aralığınızı, teslim sürenizi belirleyin ve yasal beyanları onaylayın."
+                      : "Set estimated budget, delivery timeline, and confirm platform terms.")}
                 </p>
               </div>
 
@@ -393,4 +408,3 @@ export function ListingWizardForm({ categories, locale, userId }: ListingWizardF
     </div>
   );
 }
-

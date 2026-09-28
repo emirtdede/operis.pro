@@ -308,9 +308,7 @@ export class ClerkSyncService {
 
       // 2. Email verification invariant: Cannot link an unverified external email to an existing account
       if (!input.emailVerified) {
-        throw new Error(
-          "Doğrulanmamış e-posta adresi ile mevcut bir hesaba bağlantı yapılamaz."
-        );
+        throw new Error("Doğrulanmamış e-posta adresi ile mevcut bir hesaba bağlantı yapılamaz.");
       }
 
       // 3. Identity conflict invariant: Cannot overwrite an existing, different Clerk identity

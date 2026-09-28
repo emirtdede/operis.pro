@@ -30,14 +30,14 @@ export interface CategoryRelation {
   slug: string;
   name: string;
   score: number;
-  strength: 'strong' | 'medium' | 'weak';
+  strength: "strong" | "medium" | "weak";
   sharedFamilies?: string[];
 }
 
 export interface TermWeight {
   term: string;
   normalized: string;
-  field: 'canonical' | 'searchTerm' | 'skillTag' | 'alias' | 'serviceIntent' | string;
+  field: "canonical" | "searchTerm" | "skillTag" | "alias" | "serviceIntent" | string;
   categoryDocumentFrequency: number;
   specificity: number;
   weight: number;
@@ -59,22 +59,22 @@ export interface DisambiguationRule {
 export interface CollisionEntry {
   term: string;
   categoryCount: number;
-  severity: 'high' | 'medium' | 'low';
+  severity: "high" | "medium" | "low";
   categorySlugs: string[];
   resolution?: string;
 }
 
 export type MatchClass =
-  | 'exactCategoryName'
-  | 'exactCanonicalTerm'
-  | 'exactSearchTerm'
-  | 'exactSkillTag'
-  | 'prefixSearchTerm'
-  | 'aliasExact'
-  | 'serviceIntentPhrase'
-  | 'problemLanguage'
-  | 'fuzzySearchTerm'
-  | 'relationPrior';
+  | "exactCategoryName"
+  | "exactCanonicalTerm"
+  | "exactSearchTerm"
+  | "exactSkillTag"
+  | "prefixSearchTerm"
+  | "aliasExact"
+  | "serviceIntentPhrase"
+  | "problemLanguage"
+  | "fuzzySearchTerm"
+  | "relationPrior";
 
 export interface SearchResult {
   id: number;
@@ -100,7 +100,13 @@ export interface SearchOptions {
 }
 
 export interface SearchTelemetryEvent {
-  event: 'search_started' | 'search_results_shown' | 'search_result_clicked' | 'search_zero_result' | 'search_query_refined' | 'search_category_selected';
+  event:
+    | "search_started"
+    | "search_results_shown"
+    | "search_result_clicked"
+    | "search_zero_result"
+    | "search_query_refined"
+    | "search_category_selected";
   queryLength: number;
   latencyMs: number;
   top1Slug?: string;

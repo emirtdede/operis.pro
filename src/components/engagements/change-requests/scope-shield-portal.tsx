@@ -643,12 +643,7 @@ export function ScopeShieldPortal({
                             isCancelled
                           )}`}
                         >
-                          {getChangeRequestStatusLabel(
-                            isApproved,
-                            isRejected,
-                            isCancelled,
-                            isTr
-                          )}
+                          {getChangeRequestStatusLabel(isApproved, isRejected, isCancelled, isTr)}
                         </span>
                         <span className="text-xs font-semibold text-[var(--color-text-primary)]">
                           #{cr.sequenceNumber} &bull; {cr.title}

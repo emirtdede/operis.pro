@@ -40,13 +40,14 @@ export function ProfileGeneralTab({
 }: ProfileGeneralTabProps) {
   const isTr = locale === "tr";
 
-  const initials = (displayName || "DY")
-    .trim()
-    .split(/\s+/)
-    .map((p) => p[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase() || "DY";
+  const initials =
+    (displayName || "DY")
+      .trim()
+      .split(/\s+/)
+      .map((p) => p[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "DY";
 
   return (
     <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-6 sm:p-7 space-y-5">
@@ -83,9 +84,7 @@ export function ProfileGeneralTab({
             <div className="flex items-center justify-between gap-2">
               <label className="text-xs font-semibold text-[var(--color-text-primary)] flex items-center gap-1.5">
                 <ImageIcon className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />
-                <span>
-                  {isTr ? "Profil Resmi Bağlantısı (URL)" : "Profile Picture Link (URL)"}
-                </span>
+                <span>{isTr ? "Profil Resmi Bağlantısı (URL)" : "Profile Picture Link (URL)"}</span>
               </label>
               {avatarUrl.trim().length > 0 && (
                 <button

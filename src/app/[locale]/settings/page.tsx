@@ -88,7 +88,18 @@ export default async function SettingsPage({
     headline: (profile as { headline?: string | null })?.headline || null,
     about: profile?.about || "",
     avatarUrl: profile?.avatarUrl || "",
-    links: (profile as { links?: Array<{ id?: string; type: string; label: string; url: string; sortOrder?: number }> })?.links || [],
+    links:
+      (
+        profile as {
+          links?: Array<{
+            id?: string;
+            type: string;
+            label: string;
+            url: string;
+            sortOrder?: number;
+          }>;
+        }
+      )?.links || [],
     roles: (profile as { roles?: string[] })?.roles || ["freelancer"],
     showLocation: profile?.showLocation ?? true,
     revealPhoneAfterMatch: profile?.revealPhoneAfterMatch ?? false,
@@ -99,8 +110,11 @@ export default async function SettingsPage({
     isAvailableForHire: (profile as { isAvailableForHire?: boolean })?.isAvailableForHire ?? true,
     isActivelyHiring: (profile as { isActivelyHiring?: boolean })?.isActivelyHiring ?? false,
     availabilityStatus:
-      (profile as { availabilityStatus?: import("@/src/modules/profiles/services/availability.service").AvailabilityStatus })
-        ?.availabilityStatus || "AVAILABLE_NOW",
+      (
+        profile as {
+          availabilityStatus?: import("@/src/modules/profiles/services/availability.service").AvailabilityStatus;
+        }
+      )?.availabilityStatus || "AVAILABLE_NOW",
     availabilityHoursPerWeek:
       (profile as { availabilityHoursPerWeek?: number })?.availabilityHoursPerWeek || 40,
     availableFromDate:
@@ -117,7 +131,8 @@ export default async function SettingsPage({
     companyType: (profile as { companyType?: string | null })?.companyType || null,
     taxOffice: (profile as { taxOffice?: string | null })?.taxOffice || null,
     vknMasked: (profile as { vknMasked?: string | null })?.vknMasked || null,
-    companyVerifiedAt: (profile as { companyVerifiedAt?: Date | string | null })?.companyVerifiedAt || null,
+    companyVerifiedAt:
+      (profile as { companyVerifiedAt?: Date | string | null })?.companyVerifiedAt || null,
   };
 
   return (
@@ -155,9 +170,7 @@ export default async function SettingsPage({
         </div>
 
         <div className="flex items-center gap-2">
-          <Link
-            href={getLocalizedProfilePath(initialProfile.handle, locale)}
-          >
+          <Link href={getLocalizedProfilePath(initialProfile.handle, locale)}>
             <Button variant="outline" size="sm">
               <span>{isTr ? "Profili Görüntüle" : "View Public Profile"}</span>
             </Button>

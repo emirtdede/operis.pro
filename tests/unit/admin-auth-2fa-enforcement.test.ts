@@ -107,7 +107,9 @@ describe("Admin Session 2FA Enforcement Suite", () => {
       expiresAt: Date.now() + 10000,
     });
 
-    await expect(requireAdminSession()).rejects.toThrow("Two-factor authentication (2FA) verification is required");
+    await expect(requireAdminSession()).rejects.toThrow(
+      "Two-factor authentication (2FA) verification is required"
+    );
   });
 
   it("permits requireAdminSession when admin session has twoFactorVerified: true", async () => {
@@ -131,4 +133,3 @@ describe("Admin Session 2FA Enforcement Suite", () => {
     expect(session.twoFactorVerified).toBe(true);
   });
 });
-

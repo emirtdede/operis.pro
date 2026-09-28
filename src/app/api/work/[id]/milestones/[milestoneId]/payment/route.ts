@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { MilestoneService } from "@/src/modules/engagements/milestone-service";
 import { PaymentHandshakeEngine } from "@/src/modules/engagements/payment-handshake/payment-handshake-engine";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -31,7 +32,11 @@ export async function GET(
 
     if (!cert) {
       return NextResponse.json(
-        { error: isEn ? "Certificate not found or not yet confirmed" : "İtfa belgesi bulunamadı veya henüz teyit edilmedi." },
+        {
+          error: isEn
+            ? "Certificate not found or not yet confirmed"
+            : "İtfa belgesi bulunamadı veya henüz teyit edilmedi.",
+        },
         { status: 404 }
       );
     }
@@ -44,9 +49,23 @@ export async function GET(
       markdown,
     });
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Failed to retrieve certificate";
-    const status = msg.includes("Yetkisiz") || msg.includes("Güvenlik ihlali") ? 403 : msg.includes("bulunamadı") ? 404 : 400;
-    return NextResponse.json({ error: msg }, { status });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to retrieve certificate",
+        tr: "Mutabakat belgesi alınamadı",
+      },
+      {
+        isEn,
+        logPrefix: "[Milestone Payment Cert GET Error]",
+        status: 500,
+        allowedMessages: {
+          Yetkisiz: { en: "Unauthorized", tr: "Yetkisiz erişim", status: 403 },
+          "Güvenlik ihlali": { en: "Security violation", tr: "Güvenlik ihlali", status: 403 },
+          bulunamadı: { en: "Certificate not found", tr: "Belge bulunamadı", status: 404 },
+        },
+      }
+    );
   }
 }
 
@@ -109,7 +128,9 @@ export async function POST(
       return NextResponse.json({
         success: true,
         milestone: result.milestone,
-        message: isEn ? "Payment receipt confirmed by freelancer." : "Ödeme tahsilatı freelancer tarafından teyit edildi.",
+        message: isEn
+          ? "Payment receipt confirmed by freelancer."
+          : "Ödeme tahsilatı freelancer tarafından teyit edildi.",
       });
     }
 
@@ -162,12 +183,27 @@ export async function POST(
     return NextResponse.json({
       success: true,
       milestone: result.milestone,
-      message: isEn ? "Payment marked as sent by employer." : "Ödeme işveren tarafından yapıldı olarak işaretlendi.",
+      message: isEn
+        ? "Payment marked as sent by employer."
+        : "Ödeme işveren tarafından yapıldı olarak işaretlendi.",
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to process milestone payment";
-    const status = message.includes("Yetkisiz") || message.includes("Güvenlik ihlali") ? 403 : message.includes("bulunamadı") ? 404 : 400;
-    return NextResponse.json({ error: message }, { status });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to process milestone payment",
+        tr: "Aşama ödemesi işlenemedi",
+      },
+      {
+        isEn,
+        logPrefix: "[Milestone Payment POST Error]",
+        status: 500,
+        allowedMessages: {
+          Yetkisiz: { en: "Unauthorized", tr: "Yetkisiz erişim", status: 403 },
+          "Güvenlik ihlali": { en: "Security violation", tr: "Güvenlik ihlali", status: 403 },
+          bulunamadı: { en: "Milestone not found", tr: "Aşama bulunamadı", status: 404 },
+        },
+      }
+    );
   }
 }
-

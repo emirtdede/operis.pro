@@ -15,7 +15,9 @@ async function generateAllPdfs() {
     .filter((f) => f.endsWith(".html"))
     .sort();
 
-  console.info(`🚀 Toplam ${htmlFiles.length} adet sözleşme HTML dosyasından resmi A4 vektörel PDF üretiliyor...`);
+  console.info(
+    `🚀 Toplam ${htmlFiles.length} adet sözleşme HTML dosyasından resmi A4 vektörel PDF üretiliyor...`
+  );
 
   const browser = await chromium.launch({
     headless: true,
@@ -62,7 +64,9 @@ async function generateAllPdfs() {
   await processFile(0);
 
   await browser.close();
-  console.info(`\n✅ BAŞARILI: ${htmlFiles.length} adet resmi PDF dosyası '${DIR}' klasörüne kaydedildi!`);
+  console.info(
+    `\n✅ BAŞARILI: ${htmlFiles.length} adet resmi PDF dosyası '${DIR}' klasörüne kaydedildi!`
+  );
 }
 
 generateAllPdfs().catch((err) => {

@@ -52,8 +52,12 @@ export function DirectNetworkDiagram({ isTr = true }: { isTr?: boolean }) {
             </div>
             <ArrowRight className="h-3.5 w-3.5 text-red-400/70 shrink-0" aria-hidden="true" />
             <div className="flex flex-col items-center rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-1.5 text-red-400 shadow-sm text-center">
-              <span className="font-bold text-xs">{isTr ? "%20 - %30 Kesinti" : "20% - 30% Fee Cut"}</span>
-              <span className="text-[9px] text-red-300/70">{isTr ? "Haftalarca Bloke" : "Weeks of Escrow Freeze"}</span>
+              <span className="font-bold text-xs">
+                {isTr ? "%20 - %30 Kesinti" : "20% - 30% Fee Cut"}
+              </span>
+              <span className="text-[9px] text-red-300/70">
+                {isTr ? "Haftalarca Bloke" : "Weeks of Escrow Freeze"}
+              </span>
             </div>
             <ArrowRight className="h-3.5 w-3.5 text-red-400/70 shrink-0" aria-hidden="true" />
             <div className="rounded-xl border border-red-500/20 bg-[var(--color-surface-base)]/90 px-3 py-2 text-center text-[var(--color-text-primary)] shadow-sm">

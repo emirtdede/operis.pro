@@ -1,4 +1,8 @@
-import { encryptEnvelopeV2, decryptEnvelopeV2, type EnvelopeAadContext } from "@/src/lib/crypto/envelope";
+import {
+  encryptEnvelopeV2,
+  decryptEnvelopeV2,
+  type EnvelopeAadContext,
+} from "@/src/lib/crypto/envelope";
 
 /**
  * Encrypts an offer proposal message using Envelope v2 AES-256-GCM with AAD context binding.
@@ -20,7 +24,10 @@ export function encryptOfferMessage(plaintext: string, offerId: string): string 
  * - If the message starts with "v2:", decrypts using Envelope v2 with verified AAD context.
  * - If the message is legacy plaintext (from before encryption was applied), returns it as-is.
  */
-export function decryptOfferMessage(rawMessage: string | null | undefined, offerId?: string): string {
+export function decryptOfferMessage(
+  rawMessage: string | null | undefined,
+  offerId?: string
+): string {
   if (!rawMessage) return "";
 
   if (rawMessage.startsWith("v2:")) {

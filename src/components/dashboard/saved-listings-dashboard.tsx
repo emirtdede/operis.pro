@@ -20,10 +20,7 @@ import {
   Lightbulb,
 } from "lucide-react";
 import { SavedListingItem } from "@/src/modules/listings/saved-service";
-import {
-  filterAndSortByRelevance,
-  computeRangeSelection,
-} from "@/src/lib/search/token-matcher";
+import { filterAndSortByRelevance, computeRangeSelection } from "@/src/lib/search/token-matcher";
 import { getLocalizedListingPath } from "@/src/lib/i18n/routes";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
@@ -154,22 +151,20 @@ export function SavedListingsDashboard({
     const copy = [...searchFilteredItems];
     switch (sortBy) {
       case "oldest":
-        return copy.sort(
-          (a, b) => new Date(a.savedAt).getTime() - new Date(b.savedAt).getTime()
-        );
+        return copy.sort((a, b) => new Date(a.savedAt).getTime() - new Date(b.savedAt).getTime());
       case "budget_desc":
         return copy.sort(
-          (a, b) => Number(b.budgetMax || b.budgetMin || 0) - Number(a.budgetMax || a.budgetMin || 0)
+          (a, b) =>
+            Number(b.budgetMax || b.budgetMin || 0) - Number(a.budgetMax || a.budgetMin || 0)
         );
       case "budget_asc":
         return copy.sort(
-          (a, b) => Number(a.budgetMin || a.budgetMax || 0) - Number(b.budgetMin || b.budgetMax || 0)
+          (a, b) =>
+            Number(a.budgetMin || a.budgetMax || 0) - Number(b.budgetMin || b.budgetMax || 0)
         );
       case "newest":
       default:
-        return copy.sort(
-          (a, b) => new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime()
-        );
+        return copy.sort((a, b) => new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime());
     }
   }, [searchFilteredItems, sortBy, searchQuery]);
 
@@ -184,8 +179,7 @@ export function SavedListingsDashboard({
     return count;
   }, [displayItems, selectedIds]);
 
-  const isAllSelected =
-    displayItems.length > 0 && visibleSelectedCount === displayItems.length;
+  const isAllSelected = displayItems.length > 0 && visibleSelectedCount === displayItems.length;
   const isPartiallySelected =
     visibleSelectedCount > 0 && visibleSelectedCount < displayItems.length;
 
@@ -222,12 +216,7 @@ export function SavedListingsDashboard({
     if (e.shiftKey && lastSelectedId) {
       // Range selection
       const itemsForSelection = displayItems.map((i) => ({ id: i.listingId }));
-      const next = computeRangeSelection(
-        itemsForSelection,
-        lastSelectedId,
-        listingId,
-        selectedIds
-      );
+      const next = computeRangeSelection(itemsForSelection, lastSelectedId, listingId, selectedIds);
       setSelectedIds(next);
       setLastSelectedId(listingId);
     } else {
@@ -261,7 +250,9 @@ export function SavedListingsDashboard({
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || (isTr ? "Kaldırma işlemi başarısız oldu." : "Failed to unsave."));
+        throw new Error(
+          data.error || (isTr ? "Kaldırma işlemi başarısız oldu." : "Failed to unsave.")
+        );
       }
 
       // Update client state
@@ -331,7 +322,10 @@ export function SavedListingsDashboard({
         <div className="flex flex-wrap items-center gap-2.5 shrink-0">
           {/* Single Status Filter Dropdown Button */}
           <div className="relative inline-flex items-center">
-            <ListFilter className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ListFilter
+              className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
@@ -339,29 +333,50 @@ export function SavedListingsDashboard({
               className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
             >
               {(["all", "active", "closed"] as const).map((st) => (
-                <option key={st} value={st} className="bg-[#141517] text-[var(--color-text-primary)]">
+                <option
+                  key={st}
+                  value={st}
+                  className="bg-[#141517] text-[var(--color-text-primary)]"
+                >
                   {getStatusFilterLabel(st, isTr)} ({statusCounts[st]})
                 </option>
               ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ChevronDown
+              className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
           </div>
 
           {/* Single Sort Dropdown Button */}
           <div className="relative inline-flex items-center">
-            <ArrowUpDown className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ArrowUpDown
+              className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
               aria-label={isTr ? "Sıralama ölçütü" : "Sort by"}
               className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
             >
-              <option value="newest" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yeni" : "Newest"}</option>
-              <option value="oldest" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Eski" : "Oldest"}</option>
-              <option value="budget_desc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yüksek Bütçe" : "Highest Budget"}</option>
-              <option value="budget_asc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Düşük Bütçe" : "Lowest Budget"}</option>
+              <option value="newest" className="bg-[#141517] text-[var(--color-text-primary)]">
+                {isTr ? "En Yeni" : "Newest"}
+              </option>
+              <option value="oldest" className="bg-[#141517] text-[var(--color-text-primary)]">
+                {isTr ? "En Eski" : "Oldest"}
+              </option>
+              <option value="budget_desc" className="bg-[#141517] text-[var(--color-text-primary)]">
+                {isTr ? "En Yüksek Bütçe" : "Highest Budget"}
+              </option>
+              <option value="budget_asc" className="bg-[#141517] text-[var(--color-text-primary)]">
+                {isTr ? "En Düşük Bütçe" : "Lowest Budget"}
+              </option>
             </select>
-            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ChevronDown
+              className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
           </div>
         </div>
       </div>
@@ -493,7 +508,10 @@ export function SavedListingsDashboard({
                           <span>{isTr ? "İlan Kapanmış" : "Closed"}</span>
                         </Badge>
                       ) : (
-                        <Badge variant="outline" className="text-[10px] font-semibold py-0.5 text-emerald-400 border-emerald-500/30 bg-emerald-500/10">
+                        <Badge
+                          variant="outline"
+                          className="text-[10px] font-semibold py-0.5 text-emerald-400 border-emerald-500/30 bg-emerald-500/10"
+                        >
                           {isTr ? "Aktif Başvuruya Açık" : "Active"}
                         </Badge>
                       )}
@@ -531,7 +549,9 @@ export function SavedListingsDashboard({
                       {/* Budget */}
                       <div className="flex items-center gap-1 font-semibold text-emerald-400">
                         <Coins className="h-3.5 w-3.5" />
-                        <span>{formatBudget(item.budgetCurrency, item.budgetMin, item.budgetMax)}</span>
+                        <span>
+                          {formatBudget(item.budgetCurrency, item.budgetMin, item.budgetMax)}
+                        </span>
                       </div>
 
                       {/* Tags */}
@@ -558,7 +578,8 @@ export function SavedListingsDashboard({
 
                       {/* Owner */}
                       <span className="text-[var(--color-text-tertiary)] text-[11px]">
-                        {isTr ? "İlan Sahibi:" : "Owner:"} {item.ownerDisplayName} (@{item.ownerHandle})
+                        {isTr ? "İlan Sahibi:" : "Owner:"} {item.ownerDisplayName} (@
+                        {item.ownerHandle})
                       </span>
                     </div>
                   </div>
@@ -566,10 +587,7 @@ export function SavedListingsDashboard({
 
                 {/* Right Action Buttons */}
                 <div className="flex items-center gap-2 self-end md:self-center shrink-0 pt-2 md:pt-0">
-                  <Link
-                    href={listingUrl}
-                    onClick={(e) => e.stopPropagation()}
-                  >
+                  <Link href={listingUrl} onClick={(e) => e.stopPropagation()}>
                     <Button
                       variant={item.isClosed ? "outline" : "shimmer"}
                       size="sm"

@@ -1,9 +1,6 @@
 import { eq } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
-import {
-  type ClonedListingData,
-  inMemoryListings,
-} from "./types";
+import { type ClonedListingData, inMemoryListings } from "./types";
 
 export class ListingCloneService {
   /**
@@ -21,9 +18,7 @@ export class ListingCloneService {
         .select()
         .from(schema.listings)
         .where(
-          isListingUuid
-            ? eq(schema.listings.id, listingId)
-            : eq(schema.listings.slug, listingId)
+          isListingUuid ? eq(schema.listings.id, listingId) : eq(schema.listings.slug, listingId)
         )
         .limit(1);
 
@@ -47,10 +42,19 @@ export class ListingCloneService {
           tags: Array.isArray(listing.tags) ? listing.tags : [],
           budgetMode: listing.budgetMode || "RANGE",
           budgetCurrency: listing.budgetCurrency || "TRY",
-          budgetMin: listing.budgetMin !== null && listing.budgetMin !== undefined ? String(listing.budgetMin) : "",
-          budgetMax: listing.budgetMax !== null && listing.budgetMax !== undefined ? String(listing.budgetMax) : "",
+          budgetMin:
+            listing.budgetMin !== null && listing.budgetMin !== undefined
+              ? String(listing.budgetMin)
+              : "",
+          budgetMax:
+            listing.budgetMax !== null && listing.budgetMax !== undefined
+              ? String(listing.budgetMax)
+              : "",
           timelineMode: listing.timelineMode || "DURATION_ESTIMATE",
-          timelineValue: listing.timelineValue !== null && listing.timelineValue !== undefined ? String(listing.timelineValue) : "2",
+          timelineValue:
+            listing.timelineValue !== null && listing.timelineValue !== undefined
+              ? String(listing.timelineValue)
+              : "2",
           timelineUnit: listing.timelineUnit || "WEEKS",
           targetDate: null,
           answers: rawAnswers,
@@ -69,9 +73,7 @@ export class ListingCloneService {
     }
 
     // In-memory fallback (useful in Vitest isolated suites)
-    const item = inMemoryListings.find(
-      (l) => (l.id === listingId || l.slug === listingId)
-    );
+    const item = inMemoryListings.find((l) => l.id === listingId || l.slug === listingId);
 
     if (item) {
       if (item.ownerUserId !== userId) {
@@ -92,10 +94,15 @@ export class ListingCloneService {
         tags: Array.isArray(item.tags) ? item.tags : [],
         budgetMode: item.budgetMode || "RANGE",
         budgetCurrency: item.budgetCurrency || "TRY",
-        budgetMin: item.budgetMin !== null && item.budgetMin !== undefined ? String(item.budgetMin) : "",
-        budgetMax: item.budgetMax !== null && item.budgetMax !== undefined ? String(item.budgetMax) : "",
+        budgetMin:
+          item.budgetMin !== null && item.budgetMin !== undefined ? String(item.budgetMin) : "",
+        budgetMax:
+          item.budgetMax !== null && item.budgetMax !== undefined ? String(item.budgetMax) : "",
         timelineMode: item.timelineMode || "DURATION_ESTIMATE",
-        timelineValue: item.timelineValue !== null && item.timelineValue !== undefined ? String(item.timelineValue) : "2",
+        timelineValue:
+          item.timelineValue !== null && item.timelineValue !== undefined
+            ? String(item.timelineValue)
+            : "2",
         timelineUnit: item.timelineUnit || "WEEKS",
         targetDate: null,
         answers: rawAnswers,

@@ -1,8 +1,5 @@
 import { cache } from "react";
-import {
-  type ListingWizardInput,
-  type UpdateListingInput,
-} from "./wizard/schema";
+import { type ListingWizardInput, type UpdateListingInput } from "./wizard/schema";
 import {
   ListingCloneService,
   ListingCrudService,

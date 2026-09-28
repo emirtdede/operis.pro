@@ -77,8 +77,11 @@ export async function POST(req: Request) {
         if (user) {
           const primaryEmailObj =
             user.emailAddresses?.find(
-              (e: { id: string; emailAddress: string; verification?: { status?: string } | null }) =>
-                e.id === user.primaryEmailAddressId
+              (e: {
+                id: string;
+                emailAddress: string;
+                verification?: { status?: string } | null;
+              }) => e.id === user.primaryEmailAddressId
             ) || user.emailAddresses?.[0];
 
           if (primaryEmailObj) {
@@ -126,14 +129,14 @@ export async function POST(req: Request) {
     }
 
     let legalConsent:
-      | { accepted: boolean; locale?: string; documentVersions?: Record<string, string> }
-      | undefined;
+      { accepted: boolean; locale?: string; documentVersions?: Record<string, string> } | undefined;
     try {
       const body = await req.json();
       if (body?.legalConsent && typeof body.legalConsent === "object") {
         legalConsent = {
           accepted: Boolean(body.legalConsent.accepted),
-          locale: typeof body.legalConsent.locale === "string" ? body.legalConsent.locale : undefined,
+          locale:
+            typeof body.legalConsent.locale === "string" ? body.legalConsent.locale : undefined,
           documentVersions:
             typeof body.legalConsent.documentVersions === "object"
               ? body.legalConsent.documentVersions
@@ -232,7 +235,14 @@ export async function POST(req: Request) {
 
     return response;
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Session synchronization failed";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[Clerk Sync] Unexpected synchronization error:", err);
+    return NextResponse.json(
+      {
+        error: isTr
+          ? "Oturum senkronizasyonu sırasında bir hata oluştu."
+          : "An error occurred during session synchronization.",
+      },
+      { status: 500 }
+    );
   }
 }

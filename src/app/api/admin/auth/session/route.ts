@@ -1,8 +1,8 @@
 import crypto from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { createSessionToken, SESSION_COOKIE_NAME, getSession } from "@/src/modules/auth/session";
-
 import { evaluateSecurityAccessAsync, getClientIp } from "@/src/lib/security/rate-limit";
+import { handleApiError } from "@/src/lib/api/error-response";
 
 export async function GET() {
   try {
@@ -12,9 +12,9 @@ export async function GET() {
       session,
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to retrieve session";
+    console.error("[Admin Session GET Error]:", err);
     return NextResponse.json(
-      { authenticated: false, session: null, error: message },
+      { authenticated: false, session: null, error: "Failed to retrieve session" },
       { status: 500 }
     );
   }
@@ -115,7 +115,10 @@ export async function POST(request: NextRequest) {
         // Enforce 2FA TOTP for privileged admin roles (ADMIN, SECURITY_ADMIN)
         const isPrivilegedAdmin = ["ADMIN", "SECURITY_ADMIN"].includes(existingUser.role);
 
-        if (isPrivilegedAdmin && (!existingUser.twoFactorEnabled || !existingUser.twoFactorSecret)) {
+        if (
+          isPrivilegedAdmin &&
+          (!existingUser.twoFactorEnabled || !existingUser.twoFactorSecret)
+        ) {
           return NextResponse.json(
             {
               error:
@@ -198,8 +201,10 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Session error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(err, "Yönetici oturum işlemi başarısız oldu.", {
+      logPrefix: "[Admin Session POST Error]",
+      status: 500,
+    });
   }
 }
 
@@ -214,7 +219,9 @@ export async function DELETE() {
 
     return response;
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Session termination error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(err, "Yönetici oturumu sonlandırılamadı.", {
+      logPrefix: "[Admin Session DELETE Error]",
+      status: 500,
+    });
   }
 }

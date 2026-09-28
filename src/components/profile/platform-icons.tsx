@@ -363,8 +363,7 @@ export const PLATFORM_REGISTRY: Record<string, PlatformConfig> = {
     label: "Özel Bağlantı",
     placeholder: "https://...",
     brandColor: "#3b82f6",
-    badgeClass:
-      "border-blue-500/30 bg-blue-500/10 text-blue-400 hover:border-blue-400",
+    badgeClass: "border-blue-500/30 bg-blue-500/10 text-blue-400 hover:border-blue-400",
     icon: ExternalLink,
   },
   other: {
@@ -381,14 +380,14 @@ export const PLATFORM_REGISTRY: Record<string, PlatformConfig> = {
  * Detects platform config either by explicit type or by parsing the URL
  */
 export function getPlatformConfig(type?: string, url?: string): PlatformConfig {
-  const fallback = PLATFORM_REGISTRY.custom ?? PLATFORM_REGISTRY.other ?? {
-    label: "Özel Bağlantı",
-    placeholder: "https://...",
-    brandColor: "#3b82f6",
-    badgeClass:
-      "border-blue-500/30 bg-blue-500/10 text-blue-400 hover:border-blue-400",
-    icon: ExternalLink,
-  };
+  const fallback = PLATFORM_REGISTRY.custom ??
+    PLATFORM_REGISTRY.other ?? {
+      label: "Özel Bağlantı",
+      placeholder: "https://...",
+      brandColor: "#3b82f6",
+      badgeClass: "border-blue-500/30 bg-blue-500/10 text-blue-400 hover:border-blue-400",
+      icon: ExternalLink,
+    };
 
   if (type) {
     const fromType = PLATFORM_REGISTRY[type.toLowerCase()];
@@ -400,10 +399,13 @@ export function getPlatformConfig(type?: string, url?: string): PlatformConfig {
     if (u.includes("github.com")) return PLATFORM_REGISTRY.github ?? fallback;
     if (u.includes("gitlab.com")) return PLATFORM_REGISTRY.gitlab ?? fallback;
     if (u.includes("linkedin.com")) return PLATFORM_REGISTRY.linkedin ?? fallback;
-    if (u.includes("discord.gg") || u.includes("discord.com")) return PLATFORM_REGISTRY.discord ?? fallback;
-    if (u.includes("t.me") || u.includes("telegram.me")) return PLATFORM_REGISTRY.telegram ?? fallback;
+    if (u.includes("discord.gg") || u.includes("discord.com"))
+      return PLATFORM_REGISTRY.discord ?? fallback;
+    if (u.includes("t.me") || u.includes("telegram.me"))
+      return PLATFORM_REGISTRY.telegram ?? fallback;
     if (u.includes("instagram.com")) return PLATFORM_REGISTRY.instagram ?? fallback;
-    if (u.includes("wa.me") || u.includes("whatsapp.com")) return PLATFORM_REGISTRY.whatsapp ?? fallback;
+    if (u.includes("wa.me") || u.includes("whatsapp.com"))
+      return PLATFORM_REGISTRY.whatsapp ?? fallback;
     if (u.includes("behance.net")) return PLATFORM_REGISTRY.behance ?? fallback;
     if (u.includes("dribbble.com")) return PLATFORM_REGISTRY.dribbble ?? fallback;
     if (u.includes("figma.com")) return PLATFORM_REGISTRY.figma ?? fallback;
@@ -411,7 +413,8 @@ export function getPlatformConfig(type?: string, url?: string): PlatformConfig {
     if (u.includes("sketchfab.com")) return PLATFORM_REGISTRY.sketchfab ?? fallback;
     if (u.includes("medium.com")) return PLATFORM_REGISTRY.medium ?? fallback;
     if (u.includes("substack.com")) return PLATFORM_REGISTRY.substack ?? fallback;
-    if (u.includes("youtube.com") || u.includes("youtu.be")) return PLATFORM_REGISTRY.youtube ?? fallback;
+    if (u.includes("youtube.com") || u.includes("youtu.be"))
+      return PLATFORM_REGISTRY.youtube ?? fallback;
     if (u.includes("vimeo.com")) return PLATFORM_REGISTRY.vimeo ?? fallback;
     if (u.includes("soundcloud.com")) return PLATFORM_REGISTRY.soundcloud ?? fallback;
     if (u.includes("spotify.com")) return PLATFORM_REGISTRY.spotify ?? fallback;

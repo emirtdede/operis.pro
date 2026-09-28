@@ -1,6 +1,6 @@
 /**
  * Comprehensive Legal Deeds & Warranties Types
- * 
+ *
  * Statutory Foundations:
  * - TBK m. 132 & m. 166, HMK m. 313: Mutual Discharge & Release (İbraname ve Sulh Senedi)
  * - TCK m. 243-245, TBK m. 474-477, ISO 27001 / SOC 2: Clean Code & No-Backdoor Warranty
@@ -168,10 +168,7 @@ export interface NonSolicitationProtocol {
 // 5. CONTRACT TERMINATION & ASSET LIQUIDATION DEED (TBK m. 484-486)
 // ============================================================================
 export type TerminationGround =
-  | "MUTUAL_IKALE"
-  | "CLIENT_TERMINATION_TBK484"
-  | "IMPOSSIBILITY_TBK485"
-  | "DISPUTE_SETTLEMENT";
+  "MUTUAL_IKALE" | "CLIENT_TERMINATION_TBK484" | "IMPOSSIBILITY_TBK485" | "DISPUTE_SETTLEMENT";
 
 export interface GenerateTerminationLiquidationInput {
   engagementId: string;

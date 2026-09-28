@@ -1,4 +1,3 @@
-
 export interface CounterpartyInfo {
   userId: string;
   displayName: string;
@@ -119,7 +118,8 @@ export function resolveStatusBadgeLabel(
   if (completed) return isTr ? "Tamamlandı" : "Completed";
   if (currentStatus === "CANCELLED") return isTr ? "İptal Edildi" : "Cancelled";
   if (currentStatus === "DISPUTED") return isTr ? "Uyuşmazlık Bildirildi" : "Disputed";
-  if (currentStatus === "COMPLETION_PENDING") return isTr ? "Onay Bekleniyor" : "Completion Pending";
+  if (currentStatus === "COMPLETION_PENDING")
+    return isTr ? "Onay Bekleniyor" : "Completion Pending";
   return isTr ? "Eşleşti / Aktif" : "Matched";
 }
 
@@ -128,7 +128,8 @@ export function resolveTimezonePillClass(counterpartyTime: {
   isBusiness: boolean;
 }): string {
   if (counterpartyTime.isNight) return "border-purple-500/30 bg-purple-500/10 text-purple-300";
-  if (counterpartyTime.isBusiness) return "border-emerald-500/30 bg-emerald-500/10 text-emerald-300";
+  if (counterpartyTime.isBusiness)
+    return "border-emerald-500/30 bg-emerald-500/10 text-emerald-300";
   return "border-amber-500/30 bg-amber-500/10 text-amber-300";
 }
 
@@ -187,5 +188,3 @@ export function getSendPingButtonLabel(isPinging: boolean, isTr: boolean): strin
   if (isPinging) return isTr ? "İletiliyor..." : "Sending...";
   return isTr ? "Dürtme Bildirimini Gönder" : "Send Ping Notification";
 }
-
-

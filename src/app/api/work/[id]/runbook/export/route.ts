@@ -2,16 +2,14 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { RunbookService } from "@/src/modules/engagements/runbook-service";
 import { RunbookGeneratorService } from "@/src/modules/contracts/runbook-generator";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const url = new URL(req.url);
   const format = url.searchParams.get("format") || "markdown";
   const lang = (url.searchParams.get("lang") || "tr") as "tr" | "en";
@@ -88,7 +86,13 @@ export async function GET(
       },
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to export runbook";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to export runbook",
+        tr: "Devir kılavuzu dışa aktarılamadı",
+      },
+      { isEn, logPrefix: "[Runbook Export Error]", status: 500 }
+    );
   }
 }

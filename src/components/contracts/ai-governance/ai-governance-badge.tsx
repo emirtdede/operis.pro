@@ -26,9 +26,7 @@ export function AiGovernanceBadge({
 }: AiGovernanceBadgeProps) {
   const isTr = locale === "tr";
 
-  const evalResult = config
-    ? AiGovernanceEngine.evaluateAiGovernanceRisk(config)
-    : null;
+  const evalResult = config ? AiGovernanceEngine.evaluateAiGovernanceRisk(config) : null;
 
   const effectiveLevel = level || evalResult?.riskLevel || "PRISTINE_IP_SAFE";
   const effectiveScore = score !== undefined ? score : evalResult?.riskScore;
@@ -36,7 +34,8 @@ export function AiGovernanceBadge({
   const badgeConfig = {
     PRISTINE_IP_SAFE: {
       label: isTr ? "FSEK 52 Telif Güvenceli" : "Pristine IP Safe (FSEK Art. 52)",
-      badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/15",
+      badgeClass:
+        "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/15",
       icon: ShieldCheck,
     },
     COMMERCIALLY_VIABLE_MONITORED: {

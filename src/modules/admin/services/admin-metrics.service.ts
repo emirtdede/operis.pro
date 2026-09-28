@@ -2,15 +2,8 @@ import { count, desc, eq, gt, lte, or, sql } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
 import { ListingService } from "@/src/modules/listings/service";
 import { NotificationService } from "@/src/modules/notifications/service";
-import {
-  blockedIpSet,
-  loadBlockedIpsFromDb,
-} from "@/src/lib/security/rate-limit";
-import {
-  type AdminLogItem,
-  type AdminThreatItem,
-  type PaginatedResult,
-} from "./types";
+import { blockedIpSet, loadBlockedIpsFromDb } from "@/src/lib/security/rate-limit";
+import { type AdminLogItem, type AdminThreatItem, type PaginatedResult } from "./types";
 
 export class AdminMetricsService {
   /**

@@ -1,6 +1,14 @@
 "use client";
 
-import { Users, Plus, Trash2, ShieldCheck, Sparkles, AlertCircle, CheckCircle2 } from "lucide-react";
+import {
+  Users,
+  Plus,
+  Trash2,
+  ShieldCheck,
+  Sparkles,
+  AlertCircle,
+  CheckCircle2,
+} from "lucide-react";
 import { Button } from "../../ui/button";
 import { TextInput } from "../../ui/text-input";
 import { SquadRevenueEngine, SquadMemberInput } from "@/src/modules/offers/squad-engine";
@@ -97,21 +105,27 @@ export function SquadBuilderSection({
           displayName: members[0]?.displayName || (isTr ? "Siz (Ekip Lideri)" : "You (Lead)"),
           roleTitle: isTr ? "Mobil Uygulama Mimarı (iOS/Android)" : "Mobile Architect",
           revenueSharePercentage: 45,
-          scopeSummary: isTr ? "Mobil istemci, yerel modüller ve arayüz entegrasyonu" : "Mobile client app",
+          scopeSummary: isTr
+            ? "Mobil istemci, yerel modüller ve arayüz entegrasyonu"
+            : "Mobile client app",
           isLead: true,
         },
         {
           displayName: isTr ? "Backend Uzmanı" : "Backend Specialist",
           roleTitle: isTr ? "Kıdemli Backend & API Mühendisi" : "Senior Backend Engineer",
           revenueSharePercentage: 35,
-          scopeSummary: isTr ? "REST/GraphQL API, veritabanı şeması ve kimlik doğrulama" : "API & DB architecture",
+          scopeSummary: isTr
+            ? "REST/GraphQL API, veritabanı şeması ve kimlik doğrulama"
+            : "API & DB architecture",
           isLead: false,
         },
         {
           displayName: isTr ? "UI/UX Tasarımcısı" : "UI/UX Designer",
           roleTitle: isTr ? "Ürün & Arayüz Tasarımcısı" : "Product & UI/UX Designer",
           revenueSharePercentage: 20,
-          scopeSummary: isTr ? "Figma tasarım sistemi, prototipleme ve kullanıcı testleri" : "Figma design system",
+          scopeSummary: isTr
+            ? "Figma tasarım sistemi, prototipleme ve kullanıcı testleri"
+            : "Figma design system",
           isLead: false,
         },
       ]);
@@ -122,21 +136,27 @@ export function SquadBuilderSection({
           displayName: members[0]?.displayName || (isTr ? "Siz (Ekip Lideri)" : "You (Lead)"),
           roleTitle: isTr ? "Kıdemli Fullstack Lideri" : "Senior Fullstack Lead",
           revenueSharePercentage: 50,
-          scopeSummary: isTr ? "Uçtan uca mimari, iş mantığı ve çekirdek geliştirme" : "Architecture & core logic",
+          scopeSummary: isTr
+            ? "Uçtan uca mimari, iş mantığı ve çekirdek geliştirme"
+            : "Architecture & core logic",
           isLead: true,
         },
         {
           displayName: isTr ? "Frontend Geliştirici" : "Frontend Engineer",
           roleTitle: isTr ? "Modern Web & Next.js Uzmanı" : "Modern Web & UI Specialist",
           revenueSharePercentage: 30,
-          scopeSummary: isTr ? "Bileşen kütüphanesi, SEO optimizasyonu ve reaktif arayüz" : "UI components & SEO",
+          scopeSummary: isTr
+            ? "Bileşen kütüphanesi, SEO optimizasyonu ve reaktif arayüz"
+            : "UI components & SEO",
           isLead: false,
         },
         {
           displayName: isTr ? "DevOps & QA Mühendisi" : "DevOps & QA Engineer",
           roleTitle: isTr ? "Bulut Altyapı & Test Mühendisi" : "Cloud & QA Engineer",
           revenueSharePercentage: 20,
-          scopeSummary: isTr ? "CI/CD boru hatları, Docker container ve otomatik testler" : "CI/CD & E2E tests",
+          scopeSummary: isTr
+            ? "CI/CD boru hatları, Docker container ve otomatik testler"
+            : "CI/CD & E2E tests",
           isLead: false,
         },
       ]);
@@ -147,21 +167,27 @@ export function SquadBuilderSection({
           displayName: members[0]?.displayName || (isTr ? "Siz (Ekip Lideri)" : "You (Lead)"),
           roleTitle: isTr ? "Yapay Zeka / ML Araştırmacısı" : "AI / ML Specialist",
           revenueSharePercentage: 50,
-          scopeSummary: isTr ? "Model eğitimi, RAG boru hattı ve zeka motoru" : "RAG & LLM pipelines",
+          scopeSummary: isTr
+            ? "Model eğitimi, RAG boru hattı ve zeka motoru"
+            : "RAG & LLM pipelines",
           isLead: true,
         },
         {
           displayName: isTr ? "Veri Mühendisi" : "Data Engineer",
           roleTitle: isTr ? "Veri Boru Hattı & ETL Uzmanı" : "Data & ETL Engineer",
           revenueSharePercentage: 30,
-          scopeSummary: isTr ? "Vektör veritabanı, veri temizleme ve besleme boru hattı" : "Vector DB & ETL",
+          scopeSummary: isTr
+            ? "Vektör veritabanı, veri temizleme ve besleme boru hattı"
+            : "Vector DB & ETL",
           isLead: false,
         },
         {
           displayName: isTr ? "Sistem & API Entegratörü" : "Systems Integrator",
           roleTitle: isTr ? "API & Bulut Servis Entegratörü" : "Cloud & API Integrator",
           revenueSharePercentage: 20,
-          scopeSummary: isTr ? "Mikroservisler, API ağ geçidi ve yük testi" : "Microservices & gateway",
+          scopeSummary: isTr
+            ? "Mikroservisler, API ağ geçidi ve yük testi"
+            : "Microservices & gateway",
           isLead: false,
         },
       ]);
@@ -172,28 +198,38 @@ export function SquadBuilderSection({
           displayName: members[0]?.displayName || (isTr ? "Siz (Ekip Lideri)" : "You (Lead)"),
           roleTitle: isTr ? "Kıdemli Ürün Tasarımcısı" : "Lead Product Designer",
           revenueSharePercentage: 50,
-          scopeSummary: isTr ? "Kullanıcı deneyimi araştırması, tel kafesler ve prototipler" : "UX research & prototypes",
+          scopeSummary: isTr
+            ? "Kullanıcı deneyimi araştırması, tel kafesler ve prototipler"
+            : "UX research & prototypes",
           isLead: true,
         },
         {
           displayName: isTr ? "Tasarım Sistemi Uzmanı" : "Design System Specialist",
           roleTitle: isTr ? "Tasarım Sistemi & İllüstrasyon" : "Design System & Illustration",
           revenueSharePercentage: 25,
-          scopeSummary: isTr ? "Marka kılavuzu, tipografi ve token kütüphanesi" : "Design tokens & branding",
+          scopeSummary: isTr
+            ? "Marka kılavuzu, tipografi ve token kütüphanesi"
+            : "Design tokens & branding",
           isLead: false,
         },
         {
           displayName: isTr ? "Frontend / UI Geliştirici" : "UI Developer",
           roleTitle: isTr ? "Tasarım Kodlayıcı & Web Uzmanı" : "Creative Web Developer",
           revenueSharePercentage: 25,
-          scopeSummary: isTr ? "Mikro-etkileşimler, Tailwind/CSS ve responsive kodlama" : "Interactions & styling",
+          scopeSummary: isTr
+            ? "Mikro-etkileşimler, Tailwind/CSS ve responsive kodlama"
+            : "Interactions & styling",
           isLead: false,
         },
       ]);
     }
   };
 
-  const handleMemberChange = (index: number, field: keyof SquadMemberDraft, value: string | number) => {
+  const handleMemberChange = (
+    index: number,
+    field: keyof SquadMemberDraft,
+    value: string | number
+  ) => {
     const updated = [...members];
     const target = updated[index];
     if (!target) return;
@@ -237,7 +273,9 @@ export function SquadBuilderSection({
           </div>
           <div>
             <span className="text-xs font-semibold text-[var(--color-text-primary)] block">
-              {isTr ? "Ekip Arkadaşı Ekle (Ortak Teklif / Kolektif)" : "Add Squad Members (Consortium Offer)"}
+              {isTr
+                ? "Ekip Arkadaşı Ekle (Ortak Teklif / Kolektif)"
+                : "Add Squad Members (Consortium Offer)"}
             </span>
             <span className="text-[11px] text-[var(--color-text-tertiary)]">
               {isTr
@@ -258,7 +296,9 @@ export function SquadBuilderSection({
                   displayName: isTr ? "Siz (Ekip Lideri)" : "You (Lead Contractor)",
                   roleTitle: isTr ? "Baş Mühendis / Ekip Lideri" : "Lead Contractor",
                   revenueSharePercentage: 60,
-                  scopeSummary: isTr ? "Mimari, koordinasyon ve iş teslimatı" : "Architecture & coordination",
+                  scopeSummary: isTr
+                    ? "Mimari, koordinasyon ve iş teslimatı"
+                    : "Architecture & coordination",
                   isLead: true,
                 },
                 {
@@ -328,12 +368,16 @@ export function SquadBuilderSection({
           {/* Squad Title Input */}
           <div className="space-y-1">
             <label className="text-xs font-medium text-[var(--color-text-secondary)]">
-              {isTr ? "Kolektif / Ekip Başlığı (Örn: 'iOS & Backend Çevik Takımı')" : "Squad Title (e.g. 'iOS & Cloud Team')"}
+              {isTr
+                ? "Kolektif / Ekip Başlığı (Örn: 'iOS & Backend Çevik Takımı')"
+                : "Squad Title (e.g. 'iOS & Cloud Team')"}
             </label>
             <TextInput
               value={squadTitle}
               onChange={(e) => onTitleChange(e.target.value)}
-              placeholder={isTr ? "Örn: Finansal Teknoloji Çevik Kolektifi" : "e.g. Fintech Agile Squad"}
+              placeholder={
+                isTr ? "Örn: Finansal Teknoloji Çevik Kolektifi" : "e.g. Fintech Agile Squad"
+              }
               maxLength={120}
             />
           </div>
@@ -342,7 +386,9 @@ export function SquadBuilderSection({
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <label className="text-xs font-semibold text-[var(--color-text-primary)]">
-                {isTr ? "Ekip Üyeleri & Hakediş Dağılımı (2 - 5 Uzman)" : "Squad Members & Split (2 - 5 Specialists)"}
+                {isTr
+                  ? "Ekip Üyeleri & Hakediş Dağılımı (2 - 5 Uzman)"
+                  : "Squad Members & Split (2 - 5 Specialists)"}
               </label>
               <span className="text-[11px] text-[var(--color-text-tertiary)]">
                 {members.length}/5 {isTr ? "üye" : "members"}
@@ -388,7 +434,9 @@ export function SquadBuilderSection({
                     required
                   />
                   <TextInput
-                    placeholder={isTr ? "Rol (örn: Kıdemli Backend Dev)" : "Role (e.g. Senior Backend Dev)"}
+                    placeholder={
+                      isTr ? "Rol (örn: Kıdemli Backend Dev)" : "Role (e.g. Senior Backend Dev)"
+                    }
                     value={member.roleTitle}
                     onChange={(e) => handleMemberChange(idx, "roleTitle", e.target.value)}
                     required
@@ -400,9 +448,15 @@ export function SquadBuilderSection({
                       max={99}
                       step="0.5"
                       placeholder="%"
-                      value={member.revenueSharePercentage ? String(member.revenueSharePercentage) : ""}
+                      value={
+                        member.revenueSharePercentage ? String(member.revenueSharePercentage) : ""
+                      }
                       onChange={(e) =>
-                        handleMemberChange(idx, "revenueSharePercentage", parseFloat(e.target.value) || 0)
+                        handleMemberChange(
+                          idx,
+                          "revenueSharePercentage",
+                          parseFloat(e.target.value) || 0
+                        )
                       }
                       className="text-right font-mono"
                       required
@@ -484,7 +538,9 @@ export function SquadBuilderSection({
             <ShieldCheck className="h-4 w-4 text-indigo-400 shrink-0 mt-0.5" />
             <div>
               <span className="font-semibold text-indigo-200 block">
-                {isTr ? "TBK m. 620 Adi Ortaklık & Konsorsiyum Güvencesi" : "Legal Consortium Protection"}
+                {isTr
+                  ? "TBK m. 620 Adi Ortaklık & Konsorsiyum Güvencesi"
+                  : "Legal Consortium Protection"}
               </span>
               <span>
                 {isTr

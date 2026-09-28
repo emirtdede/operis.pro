@@ -1,14 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { setRequestLocale } from "next-intl/server";
-import {
-  ShieldCheck,
-  Sparkles,
-  Clock,
-  ShieldAlert,
-  Layers,
-  Scale,
-} from "lucide-react";
+import { ShieldCheck, Sparkles, Clock, ShieldAlert, Layers, Scale } from "lucide-react";
 import { ContactHubInteractive } from "@/src/components/contact/contact-hub-interactive";
 import { RegistryInteractive } from "@/src/components/contact/registry-interactive";
 import { getLocalizedRoute } from "@/src/lib/i18n/routes";
@@ -50,7 +43,9 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
       icon: Layers,
       value: isTr ? "7 Masa" : "7 Desks",
       label: isTr ? "Yetkili Destek Birimi" : "Dedicated Desks",
-      detail: isTr ? "Kurumsal, Güvenlik, Hukuk, Destek, KVKK, Finans, Basın" : "Enterprise, Security, Legal, Support, Privacy, Billing, Press",
+      detail: isTr
+        ? "Kurumsal, Güvenlik, Hukuk, Destek, KVKK, Finans, Basın"
+        : "Enterprise, Security, Legal, Support, Privacy, Billing, Press",
       color: "text-blue-400 border-blue-500/20 bg-blue-500/10",
       accent: "bg-blue-500",
     },
@@ -182,11 +177,17 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
       <header className="relative z-10 text-center space-y-5 max-w-3xl mx-auto pt-2">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/25 text-xs font-semibold text-blue-400 shadow-sm backdrop-blur-md">
           <Sparkles className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />
-          <span>{isTr ? "Operis Kurumsal Destek & Operasyon Merkezi" : "Operis Enterprise Operations & Support Desks"}</span>
+          <span>
+            {isTr
+              ? "Operis Kurumsal Destek & Operasyon Merkezi"
+              : "Operis Enterprise Operations & Support Desks"}
+          </span>
         </div>
 
         <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-[var(--color-text-primary)] leading-tight">
-          {isTr ? "Resmi İletişim Masaları & Genel Merkez" : "Official Communications & Headquarters"}
+          {isTr
+            ? "Resmi İletişim Masaları & Genel Merkez"
+            : "Official Communications & Headquarters"}
         </h1>
 
         <p className="text-sm sm:text-base text-[var(--color-text-secondary)] leading-relaxed max-w-2xl mx-auto">
@@ -214,7 +215,9 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
                   <div className={`h-6 w-6 rounded-lg flex items-center justify-center ${m.color}`}>
                     <Icon className="h-3.5 w-3.5" />
                   </div>
-                  <div className={`text-xl sm:text-2xl font-black font-mono tracking-tight ${m.color.split(" ")[0]}`}>
+                  <div
+                    className={`text-xl sm:text-2xl font-black font-mono tracking-tight ${m.color.split(" ")[0]}`}
+                  >
                     {m.value}
                   </div>
                 </div>
@@ -235,7 +238,10 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
       </section>
 
       {/* 3. Corporate Registry & Headquarters Showcase (Balanced 50/50 Grid) */}
-      <section className="space-y-8" aria-label={isTr ? "Şirket Künyesi ve Yerleşke" : "Corporate Registry and Headquarters"}>
+      <section
+        className="space-y-8"
+        aria-label={isTr ? "Şirket Künyesi ve Yerleşke" : "Corporate Registry and Headquarters"}
+      >
         <div className="text-center space-y-2 max-w-2xl mx-auto">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400 mb-1">
             <ShieldCheck className="h-3.5 w-3.5" />
@@ -264,7 +270,9 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <h2 className="text-base sm:text-lg font-bold text-[var(--color-text-primary)]">
-                {isTr ? "Acil Kötüye Kullanım veya Dolandırıcılık İhbarı" : "Urgent Abuse or Fraud Escalation Desk"}
+                {isTr
+                  ? "Acil Kötüye Kullanım veya Dolandırıcılık İhbarı"
+                  : "Urgent Abuse or Fraud Escalation Desk"}
               </h2>
               <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-400 border border-rose-500/20">
                 24/7 SLA

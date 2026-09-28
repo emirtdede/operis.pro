@@ -66,7 +66,11 @@ function getCurrencySymbol(currency: string): string {
   return CURRENCY_SYMBOLS[currency] || currency;
 }
 
-function getStatusFilterLabel(st: "active" | "completed" | "all", activeCount: number, isTr: boolean): string {
+function getStatusFilterLabel(
+  st: "active" | "completed" | "all",
+  activeCount: number,
+  isTr: boolean
+): string {
   if (st === "active") {
     return isTr ? `Devam Eden (${activeCount})` : `Active (${activeCount})`;
   }
@@ -183,9 +187,8 @@ export function ActiveEngagementsDashboard({
 
   // Active count for badge preview
   const activeCount = useMemo(() => {
-    return engagements.filter(
-      (e) => e.status === "MATCHED" || e.status === "COMPLETION_PENDING"
-    ).length;
+    return engagements.filter((e) => e.status === "MATCHED" || e.status === "COMPLETION_PENDING")
+      .length;
   }, [engagements]);
 
   // Format currency
@@ -231,7 +234,10 @@ export function ActiveEngagementsDashboard({
         <div className="flex flex-wrap items-center gap-2.5 shrink-0">
           {/* Single Status Filter Dropdown Button */}
           <div className="relative inline-flex items-center">
-            <ListFilter className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ListFilter
+              className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
@@ -239,17 +245,27 @@ export function ActiveEngagementsDashboard({
               className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
             >
               {(["active", "completed", "all"] as const).map((st) => (
-                <option key={st} value={st} className="bg-[#141517] text-[var(--color-text-primary)]">
+                <option
+                  key={st}
+                  value={st}
+                  className="bg-[#141517] text-[var(--color-text-primary)]"
+                >
                   {getStatusFilterLabel(st, activeCount, isTr)}
                 </option>
               ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ChevronDown
+              className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
           </div>
 
           {/* Single Role Filter Dropdown Button */}
           <div className="relative inline-flex items-center">
-            <UserCheck className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <UserCheck
+              className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value as RoleFilter)}
@@ -262,23 +278,41 @@ export function ActiveEngagementsDashboard({
                 </option>
               ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ChevronDown
+              className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
           </div>
 
           {/* Single Sort Dropdown Button */}
           <div className="relative inline-flex items-center">
-            <ArrowUpDown className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ArrowUpDown
+              className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as ActiveEngagementSortOption)}
               aria-label={isTr ? "Sıralama ölçütü" : "Sort by"}
               className="appearance-none h-9 py-1.5 pl-8 pr-8 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)] text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all shadow-xs"
             >
-              <option value="recent_activity" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "Son Aktivite" : "Recent Activity"}</option>
-              <option value="newest" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yeni" : "Newest"}</option>
-              <option value="budget_desc" className="bg-[#141517] text-[var(--color-text-primary)]">{isTr ? "En Yüksek Bütçe" : "Highest Budget"}</option>
+              <option
+                value="recent_activity"
+                className="bg-[#141517] text-[var(--color-text-primary)]"
+              >
+                {isTr ? "Son Aktivite" : "Recent Activity"}
+              </option>
+              <option value="newest" className="bg-[#141517] text-[var(--color-text-primary)]">
+                {isTr ? "En Yeni" : "Newest"}
+              </option>
+              <option value="budget_desc" className="bg-[#141517] text-[var(--color-text-primary)]">
+                {isTr ? "En Yüksek Bütçe" : "Highest Budget"}
+              </option>
             </select>
-            <ChevronDown className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" aria-hidden="true" />
+            <ChevronDown
+              className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-[var(--color-text-tertiary)]"
+              aria-hidden="true"
+            />
           </div>
         </div>
       </div>
@@ -330,7 +364,10 @@ export function ActiveEngagementsDashboard({
         <div className="grid grid-cols-1 gap-4">
           {displayEngagements.map((item) => {
             const workspaceUrl = getLocalizedWorkspacePath(item.id, locale);
-            const counterpartyProfileUrl = getLocalizedProfilePath(item.counterparty.handle, locale);
+            const counterpartyProfileUrl = getLocalizedProfilePath(
+              item.counterparty.handle,
+              locale
+            );
             const isOwner = item.myRole === "owner";
             const dateStr = new Date(item.matchedAt).toLocaleDateString(isTr ? "tr-TR" : "en-US");
 
@@ -355,21 +392,30 @@ export function ActiveEngagementsDashboard({
 
                     {/* Status badge */}
                     {item.status === "MATCHED" && (
-                      <Badge variant="outline" className="text-[10px] font-semibold py-0.5 text-emerald-400 border-emerald-500/30 bg-emerald-500/10 gap-1">
+                      <Badge
+                        variant="outline"
+                        className="text-[10px] font-semibold py-0.5 text-emerald-400 border-emerald-500/30 bg-emerald-500/10 gap-1"
+                      >
                         <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                         <span>{isTr ? "Devam Ediyor" : "In Progress"}</span>
                       </Badge>
                     )}
 
                     {item.status === "COMPLETION_PENDING" && (
-                      <Badge variant="outline" className="text-[10px] font-semibold py-0.5 text-amber-400 border-amber-500/30 bg-amber-500/10 gap-1">
+                      <Badge
+                        variant="outline"
+                        className="text-[10px] font-semibold py-0.5 text-amber-400 border-amber-500/30 bg-amber-500/10 gap-1"
+                      >
                         <AlertCircle className="h-3 w-3" />
                         <span>{isTr ? "Tamamlama Onayı Bekleniyor" : "Pending Completion"}</span>
                       </Badge>
                     )}
 
                     {item.status === "COMPLETED" && (
-                      <Badge variant="outline" className="text-[10px] font-semibold py-0.5 text-blue-400 border-blue-500/30 bg-blue-500/10 gap-1">
+                      <Badge
+                        variant="outline"
+                        className="text-[10px] font-semibold py-0.5 text-blue-400 border-blue-500/30 bg-blue-500/10 gap-1"
+                      >
                         <CheckCircle2 className="h-3 w-3" />
                         <span>{isTr ? "Tamamlandı" : "Completed"}</span>
                       </Badge>
@@ -383,7 +429,9 @@ export function ActiveEngagementsDashboard({
 
                     <span className="text-[11px] text-[var(--color-text-tertiary)] flex items-center gap-1 ml-auto">
                       <Clock className="h-3 w-3" />
-                      <span>{isTr ? "Başlangıç:" : "Started:"} {dateStr}</span>
+                      <span>
+                        {isTr ? "Başlangıç:" : "Started:"} {dateStr}
+                      </span>
                     </span>
                   </div>
 
@@ -423,7 +471,9 @@ export function ActiveEngagementsDashboard({
                     {/* Agreed Budget */}
                     <div className="flex items-center gap-1 font-semibold text-emerald-400">
                       <Coins className="h-3.5 w-3.5" />
-                      <span>{formatBudget(item.budgetCurrency, item.budgetMin, item.budgetMax)}</span>
+                      <span>
+                        {formatBudget(item.budgetCurrency, item.budgetMin, item.budgetMax)}
+                      </span>
                     </div>
 
                     {/* Completion mark indicator */}

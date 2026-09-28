@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
 import { HiringIntentService } from "@/src/modules/listings/hiring-intent/hiring-intent-service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const ip = getClientIp(req);
   const url = new URL(req.url);
   const lang = url.searchParams.get("lang") || "tr";
@@ -43,7 +41,29 @@ export async function GET(
       hiringIntent: breakdown,
     });
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Error fetching hiring intent";
-    return NextResponse.json({ error: message }, { status: 404 });
+    return handleApiError(
+      error,
+      {
+        en: "Error fetching hiring intent",
+        tr: "İşe alım niyeti analizi alınamadı",
+      },
+      {
+        isEn,
+        logPrefix: "[Listing Hiring Intent GET Error]",
+        status: 500,
+        allowedMessages: {
+          bulunamadı: {
+            en: "Listing not found",
+            tr: "İlan bulunamadı",
+            status: 404,
+          },
+          "not found": {
+            en: "Listing not found",
+            tr: "İlan bulunamadı",
+            status: 404,
+          },
+        },
+      }
+    );
   }
 }

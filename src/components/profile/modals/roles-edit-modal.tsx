@@ -56,7 +56,9 @@ export function RolesEditModal({
   const isTr = locale === "tr";
   const [roles, setRoles] = useState<string[]>(initialRoles);
   const [isActivelyHiring, setIsActivelyHiring] = useState(initialIsActivelyHiring);
-  const fallbackAvailability: AvailabilityStatus = initialIsAvailableForHire ? "AVAILABLE_NOW" : "BUSY";
+  const fallbackAvailability: AvailabilityStatus = initialIsAvailableForHire
+    ? "AVAILABLE_NOW"
+    : "BUSY";
   const [availabilityStatus, setAvailabilityStatus] = useState<AvailabilityStatus>(
     initialAvailabilityStatus || fallbackAvailability
   );
@@ -370,9 +372,7 @@ export function RolesEditModal({
                       <span className="text-xs font-bold text-[var(--color-text-primary)]">
                         {opt.label}
                       </span>
-                      {selected && (
-                        <CheckCircle2 className="h-4 w-4 text-blue-400 shrink-0" />
-                      )}
+                      {selected && <CheckCircle2 className="h-4 w-4 text-blue-400 shrink-0" />}
                     </div>
                     <p className="text-[11px] text-[var(--color-text-tertiary)] mt-0.5 leading-snug">
                       {opt.desc}
@@ -500,7 +500,11 @@ export function RolesEditModal({
             <input
               type="text"
               maxLength={120}
-              placeholder={isTr ? "Örn: Yalnızca Next.js ve yapay zeka projelerine açığım." : "E.g. Only open for Next.js AI integrations."}
+              placeholder={
+                isTr
+                  ? "Örn: Yalnızca Next.js ve yapay zeka projelerine açığım."
+                  : "E.g. Only open for Next.js AI integrations."
+              }
               value={availabilityNotice}
               onChange={(e) => setAvailabilityNotice(e.target.value)}
               className="w-full px-3 py-1.5 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] text-xs text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -530,7 +534,9 @@ export function RolesEditModal({
         </div>
 
         <div className="flex items-center justify-between text-xs text-[var(--color-text-tertiary)] pt-2 border-t border-[var(--color-border-subtle)]/60">
-          <span>{isTr ? "Kapsamlı çalışma ve fatura ayarları:" : "Advanced work and billing settings:"}</span>
+          <span>
+            {isTr ? "Kapsamlı çalışma ve fatura ayarları:" : "Advanced work and billing settings:"}
+          </span>
           <Link
             href={isTr ? "/tr/ayarlar?tab=work" : "/en/settings?tab=work"}
             onClick={onClose}
@@ -546,7 +552,14 @@ export function RolesEditModal({
             {isTr ? "Vazgeç" : "Cancel"}
           </Button>
           <Button type="submit" variant="primary" size="sm" disabled={loading}>
-            {getLoadingButtonLabel(loading, "Rolleri Güncelle", "Update Roles", "Kaydediliyor...", "Saving...", isTr)}
+            {getLoadingButtonLabel(
+              loading,
+              "Rolleri Güncelle",
+              "Update Roles",
+              "Kaydediliyor...",
+              "Saving...",
+              isTr
+            )}
           </Button>
         </div>
       </form>

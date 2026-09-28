@@ -12,6 +12,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 import { calculateFreelanceTax } from "@/src/modules/finance/tax-calculator";
 import type {
   RetainerPlanType,
@@ -109,7 +110,9 @@ export function RetainerProposalModal({
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || (isTr ? "Teklif oluşturulamadı." : "Failed to propose retainer."));
+        throw new Error(
+          data.error || (isTr ? "Teklif oluşturulamadı." : "Failed to propose retainer.")
+        );
       }
 
       onSuccess();
@@ -123,8 +126,19 @@ export function RetainerProposalModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-200">
-      <div className="bg-[#12151e] border border-indigo-500/30 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl space-y-0 text-slate-200">
+    <ModalOverlay
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabel={
+        isTr
+          ? "Aylık Düzenli Bakım & SLA Sözleşmesi Teklifi"
+          : "Monthly Retainer & SLA Agreement Proposal"
+      }
+    >
+      <div
+        className="bg-[#12151e] border border-indigo-500/30 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl space-y-0 text-slate-200"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="p-5 sm:p-6 border-b border-slate-800 flex items-center justify-between bg-gradient-to-r from-indigo-950/60 via-slate-900 to-slate-900/60">
           <div className="flex items-center gap-3">
@@ -133,7 +147,11 @@ export function RetainerProposalModal({
             </div>
             <div>
               <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <span>{isTr ? "Aylık Düzenli Bakım & SLA Sözleşmesi Teklifi" : "Monthly Retainer & SLA Agreement Proposal"}</span>
+                <span>
+                  {isTr
+                    ? "Aylık Düzenli Bakım & SLA Sözleşmesi Teklifi"
+                    : "Monthly Retainer & SLA Agreement Proposal"}
+                </span>
                 <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
                   TBK m. 502 / m. 470
                 </span>
@@ -184,7 +202,9 @@ export function RetainerProposalModal({
                     <Clock className="h-3.5 w-3.5" />
                     {isTr ? "Aylık Saat Havuzu" : "Hourly Retainer Pool"}
                   </span>
-                  {planType === "HOURLY_POOL" && <CheckCircle2 className="h-4 w-4 text-indigo-400" />}
+                  {planType === "HOURLY_POOL" && (
+                    <CheckCircle2 className="h-4 w-4 text-indigo-400" />
+                  )}
                 </div>
                 <p className="text-[11px] text-slate-400 leading-normal">
                   {isTr
@@ -207,7 +227,9 @@ export function RetainerProposalModal({
                     <ShieldCheck className="h-3.5 w-3.5" />
                     {isTr ? "Sabit Altyapı Bakımı" : "Fixed Scope Maintenance"}
                   </span>
-                  {planType === "FIXED_MAINTENANCE" && <CheckCircle2 className="h-4 w-4 text-indigo-400" />}
+                  {planType === "FIXED_MAINTENANCE" && (
+                    <CheckCircle2 className="h-4 w-4 text-indigo-400" />
+                  )}
                 </div>
                 <p className="text-[11px] text-slate-400 leading-normal">
                   {isTr
@@ -235,7 +257,9 @@ export function RetainerProposalModal({
                   placeholder="15000"
                   required
                 />
-                <span className="absolute right-3 top-2.5 text-xs text-slate-400 font-bold">{currency}</span>
+                <span className="absolute right-3 top-2.5 text-xs text-slate-400 font-bold">
+                  {currency}
+                </span>
               </div>
             </div>
 
@@ -255,7 +279,9 @@ export function RetainerProposalModal({
                     placeholder="20"
                     required
                   />
-                  <span className="absolute right-3 top-2.5 text-xs text-slate-400 font-bold">{isTr ? "Saat" : "Hours"}</span>
+                  <span className="absolute right-3 top-2.5 text-xs text-slate-400 font-bold">
+                    {isTr ? "Saat" : "Hours"}
+                  </span>
                 </div>
               </div>
             ) : (
@@ -293,7 +319,9 @@ export function RetainerProposalModal({
                     placeholder="1000"
                     required
                   />
-                  <span className="absolute right-3 top-2.5 text-xs text-slate-400 font-bold">{currency}/saat</span>
+                  <span className="absolute right-3 top-2.5 text-xs text-slate-400 font-bold">
+                    {currency}/saat
+                  </span>
                 </div>
               </div>
 
@@ -307,10 +335,14 @@ export function RetainerProposalModal({
                   className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
                 >
                   <option value="NO_ROLLOVER">
-                    {isTr ? "Devretmez (Dönem Sonu Sıfırlanır — Tavsiye Edilen)" : "No Rollover (Resets at End of Period — Recommended)"}
+                    {isTr
+                      ? "Devretmez (Dönem Sonu Sıfırlanır — Tavsiye Edilen)"
+                      : "No Rollover (Resets at End of Period — Recommended)"}
                   </option>
                   <option value="MAX_25_PERCENT">
-                    {isTr ? "Kısmi Devir (Azami %25, 1 Ay Geçerli)" : "Partial Rollover (Max 25%, Valid for 1 Month)"}
+                    {isTr
+                      ? "Kısmi Devir (Azami %25, 1 Ay Geçerli)"
+                      : "Partial Rollover (Max 25%, Valid for 1 Month)"}
                   </option>
                 </select>
               </div>
@@ -321,7 +353,9 @@ export function RetainerProposalModal({
           <div className="space-y-2">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
               <Zap className="h-3.5 w-3.5 text-amber-400" />
-              <span>{isTr ? "2. Hizmet Seviyesi Taahhüdü (SLA)" : "2. Service Level Agreement (SLA)"}</span>
+              <span>
+                {isTr ? "2. Hizmet Seviyesi Taahhüdü (SLA)" : "2. Service Level Agreement (SLA)"}
+              </span>
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <button
@@ -390,25 +424,33 @@ export function RetainerProposalModal({
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-[11px]">
               <div className="p-2 rounded-lg bg-slate-900/80 border border-slate-800">
-                <span className="text-slate-400 block text-[10px]">{isTr ? "Brüt Bedel" : "Gross"}</span>
+                <span className="text-slate-400 block text-[10px]">
+                  {isTr ? "Brüt Bedel" : "Gross"}
+                </span>
                 <span className="font-mono font-bold text-white">
                   {taxBreakdown.grossAmount.toLocaleString("tr-TR")} {currency}
                 </span>
               </div>
               <div className="p-2 rounded-lg bg-slate-900/80 border border-slate-800">
-                <span className="text-slate-400 block text-[10px]">{isTr ? "%20 Stopaj" : "%20 Withholding"}</span>
+                <span className="text-slate-400 block text-[10px]">
+                  {isTr ? "%20 Stopaj" : "%20 Withholding"}
+                </span>
                 <span className="font-mono font-bold text-amber-400">
                   {taxBreakdown.withholdingAmount.toLocaleString("tr-TR")} {currency}
                 </span>
               </div>
               <div className="p-2 rounded-lg bg-slate-900/80 border border-slate-800">
-                <span className="text-slate-400 block text-[10px]">{isTr ? "%20 KDV" : "%20 VAT"}</span>
+                <span className="text-slate-400 block text-[10px]">
+                  {isTr ? "%20 KDV" : "%20 VAT"}
+                </span>
                 <span className="font-mono font-bold text-blue-400">
                   {taxBreakdown.vatTotalAmount.toLocaleString("tr-TR")} {currency}
                 </span>
               </div>
               <div className="p-2 rounded-lg bg-emerald-950/40 border border-emerald-800/40">
-                <span className="text-emerald-300 block text-[10px] font-semibold">{isTr ? "Banka Havalesi" : "Net Payout"}</span>
+                <span className="text-emerald-300 block text-[10px] font-semibold">
+                  {isTr ? "Banka Havalesi" : "Net Payout"}
+                </span>
                 <span className="font-mono font-bold text-emerald-400">
                   {taxBreakdown.totalCashToFreelancer.toLocaleString("tr-TR")} {currency}
                 </span>
@@ -436,13 +478,11 @@ export function RetainerProposalModal({
               className="gap-2 bg-gradient-to-r from-indigo-600 to-teal-600 hover:from-indigo-500 hover:to-teal-500 text-white font-semibold text-xs shadow-lg shadow-indigo-600/25"
             >
               <Repeat className="h-4 w-4" />
-              <span>
-                {getRetainerSubmitButtonLabel(isSubmitting, isTr)}
-              </span>
+              <span>{getRetainerSubmitButtonLabel(isSubmitting, isTr)}</span>
             </Button>
           </div>
         </form>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

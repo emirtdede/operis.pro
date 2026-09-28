@@ -91,7 +91,9 @@ describe("HMK m. 193 Legal Evidence & Mediation Dossier Service", () => {
 
       // 00. Manifest & Index
       expect(paths.some((p) => p.includes("00_HMK193_DELIL_LISTESI_VE_DIZIN_OZETI.md"))).toBe(true);
-      expect(paths.some((p) => p.includes("00_HMK193_DELIL_LISTESI_VE_DIZIN_OZETI.html"))).toBe(true);
+      expect(paths.some((p) => p.includes("00_HMK193_DELIL_LISTESI_VE_DIZIN_OZETI.html"))).toBe(
+        true
+      );
 
       // 01. Contract & Annexes
       expect(paths.some((p) => p.startsWith("01_ASIL_SOZLESME_VE_EKLERI/"))).toBe(true);
@@ -114,15 +116,15 @@ describe("HMK m. 193 Legal Evidence & Mediation Dossier Service", () => {
 
       // 07. FSEK m. 52 IP Assignment Deeds
       expect(paths.some((p) => p.startsWith("07_FIKRI_MULKIYET_VE_DEVIR_TESCIL/"))).toBe(true);
-      expect(
-        result.manifest.documents.some((d) => d.category === "IP_ASSIGNMENT_DEEDS")
-      ).toBe(true);
+      expect(result.manifest.documents.some((d) => d.category === "IP_ASSIGNMENT_DEEDS")).toBe(
+        true
+      );
 
       // 08. Closing & Discharge / Liquidation Deeds (TBK m. 132 / HMK m. 313 & TBK m. 484-486)
       expect(paths.some((p) => p.startsWith("08_KAPANIS_VE_SULH_IBRA/"))).toBe(true);
-      expect(
-        result.manifest.documents.some((d) => d.category === "CLOSING_DISCHARGE_DEEDS")
-      ).toBe(true);
+      expect(result.manifest.documents.some((d) => d.category === "CLOSING_DISCHARGE_DEEDS")).toBe(
+        true
+      );
 
       // EK-6, EK-7, EK-8 360 lifecycle exhibits
       expect(paths.some((p) => p.includes("EK_6_TEMIZ_KOD_VE_SIBER_GUVENLIK.md"))).toBe(true);
@@ -140,7 +142,9 @@ describe("HMK m. 193 Legal Evidence & Mediation Dossier Service", () => {
       const paths = result.manifest.documents.map((d) => d.path);
       expect(paths.some((p) => p.includes("ERKEN_FESIH_VE_TASFIYE_SENEDI.md"))).toBe(true);
       expect(paths.some((p) => p.includes("ERKEN_FESIH_VE_TASFIYE_SENEDI.html"))).toBe(true);
-      const liquidationDoc = result.manifest.documents.find((d) => d.path.includes("ERKEN_FESIH_VE_TASFIYE_SENEDI.md"));
+      const liquidationDoc = result.manifest.documents.find((d) =>
+        d.path.includes("ERKEN_FESIH_VE_TASFIYE_SENEDI.md")
+      );
       expect(liquidationDoc?.content).toContain("TBK m. 484-486");
       expect(liquidationDoc?.content).toContain("TASFİYE");
     });
@@ -174,7 +178,9 @@ describe("HMK m. 193 Legal Evidence & Mediation Dossier Service", () => {
 
       const html = result.unifiedHtml;
       expect(html).toContain("<!DOCTYPE html>");
-      expect(html).toContain("6100 Sayılı Hukuk Muhakemeleri Kanunu m. 193 Uyarınca Münhasır Delil Manifestosu");
+      expect(html).toContain(
+        "6100 Sayılı Hukuk Muhakemeleri Kanunu m. 193 Uyarınca Münhasır Delil Manifestosu"
+      );
       expect(html).toContain("MASTER DELİL KÖK MÜHRÜ (SHA-256 ROOT HASH)");
       expect(html).toContain(result.manifest.masterDossierSha256);
       expect(html).toContain("RESMİ ADLİ DELİL LİSTESİ VE DİZİN İNDEKSİ");
@@ -202,7 +208,9 @@ describe("HMK m. 193 Legal Evidence & Mediation Dossier Service", () => {
       });
 
       expect(result.manifest.locale).toBe("en");
-      expect(result.manifestMarkdown).toContain("STATUTORY LEGAL EVIDENCE & MEDIATION DOSSIER (HMK ART. 193");
+      expect(result.manifestMarkdown).toContain(
+        "STATUTORY LEGAL EVIDENCE & MEDIATION DOSSIER (HMK ART. 193"
+      );
       expect(result.manifestMarkdown).toContain("Master SHA-256 Root Digest");
       expect(result.unifiedHtml).toContain("Statutory Evidence & Mediation Dossier (HMK Art. 193)");
     });

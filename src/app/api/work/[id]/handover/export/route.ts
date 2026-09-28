@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { HandoverService } from "@/src/modules/engagements/handover-service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const isEnHeader = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
@@ -44,7 +42,11 @@ export async function GET(
     const handoverData = await HandoverService.getHandover(session.userId, id, lang);
     if (!handoverData || !handoverData.protocol) {
       return NextResponse.json(
-        { error: isEnHeader ? "Handover protocol not found or not submitted yet." : "Teslim tutanağı henüz oluşturulmamış veya erişim yetkiniz yok." },
+        {
+          error: isEnHeader
+            ? "Handover protocol not found or not submitted yet."
+            : "Teslim tutanağı henüz oluşturulmamış veya erişim yetkiniz yok.",
+        },
         { status: 404 }
       );
     }
@@ -70,7 +72,13 @@ export async function GET(
       },
     });
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Internal Server Error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      error,
+      {
+        en: "Failed to export handover protocol",
+        tr: "Teslim tutanağı dışa aktarılamadı",
+      },
+      { isEn: isEnHeader, logPrefix: "[Handover Export Error]", status: 500 }
+    );
   }
 }

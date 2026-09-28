@@ -127,7 +127,10 @@ describe("Final Security Remediation (WP-35 & WP-36)", () => {
       expect(clientSign.isFullySigned).toBe(false);
 
       // 2. Read package back to ensure persisted / mapped status is strictly PARTIALLY_SIGNED
-      const { packageDetails } = await ContractSigningService.getOrInitPackage(engId, "user-client-real");
+      const { packageDetails } = await ContractSigningService.getOrInitPackage(
+        engId,
+        "user-client-real"
+      );
       expect(packageDetails.status).toBe("PARTIALLY_SIGNED");
       expect(packageDetails.clientSignature).not.toBeNull();
       expect(packageDetails.contractorSignature).toBeNull();
@@ -152,7 +155,10 @@ describe("Final Security Remediation (WP-35 & WP-36)", () => {
       expect(contractorSign.isFullySigned).toBe(true);
 
       // 3. Read back package
-      const { packageDetails } = await ContractSigningService.getOrInitPackage(engId, "u-techcorp-1");
+      const { packageDetails } = await ContractSigningService.getOrInitPackage(
+        engId,
+        "u-techcorp-1"
+      );
       expect(packageDetails.status).toBe("FULLY_SIGNED");
       expect(packageDetails.clientSignature).not.toBeNull();
       expect(packageDetails.contractorSignature).not.toBeNull();

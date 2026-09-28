@@ -139,12 +139,16 @@ describe("Acceptance Engine (Deterministic Scope & Contract Acceptance Testing)"
         title: "B2B Yönetim Paneli",
       });
 
-      expect(pkg.contractAnnexMarkdownTr).toContain("EK-1: TARAFLARCA KARARLAŞTIRILAN OBJEKTİF KABUL KRİTERLERİ");
+      expect(pkg.contractAnnexMarkdownTr).toContain(
+        "EK-1: TARAFLARCA KARARLAŞTIRILAN OBJEKTİF KABUL KRİTERLERİ"
+      );
       expect(pkg.contractAnnexMarkdownTr).toContain("Türk Borçlar Kanunu (TBK) m. 470 ve m. 474");
       expect(pkg.contractAnnexMarkdownTr).toContain("GIVEN");
       expect(pkg.contractAnnexMarkdownTr).toContain("THEN");
 
-      expect(pkg.contractAnnexMarkdownEn).toContain("ANNEX-1: AGREED OBJECTIVE ACCEPTANCE CRITERIA");
+      expect(pkg.contractAnnexMarkdownEn).toContain(
+        "ANNEX-1: AGREED OBJECTIVE ACCEPTANCE CRITERIA"
+      );
       expect(pkg.contractAnnexMarkdownEn).toContain("TBK");
     });
   });
@@ -181,9 +185,15 @@ describe("Acceptance Engine (Deterministic Scope & Contract Acceptance Testing)"
       const result = ContractGeneratorService.generateContract(contractInput);
 
       expect(result.metadata.hasAcceptanceCriteria).toBe(true);
-      expect(result.markdown).toContain("EK-1: TARAFLARCA KARARLAŞTIRILAN OBJEKTİF KABUL KRİTERLERİ");
-      expect(result.markdown).toContain("Muayene ve Kabul (TBK m. 474):** İş Sahibi, Yüklenici tarafından yapılan teslimatı takip eden");
-      expect(result.markdown).toContain("Objektif Kabul Kriterleri çerçevesinde incelemekle yükümlüdür");
+      expect(result.markdown).toContain(
+        "EK-1: TARAFLARCA KARARLAŞTIRILAN OBJEKTİF KABUL KRİTERLERİ"
+      );
+      expect(result.markdown).toContain(
+        "Muayene ve Kabul (TBK m. 474):** İş Sahibi, Yüklenici tarafından yapılan teslimatı takip eden"
+      );
+      expect(result.markdown).toContain(
+        "Objektif Kabul Kriterleri çerçevesinde incelemekle yükümlüdür"
+      );
       expect(result.htmlContent).toContain("EK-1: Objektif Kabul Kriterleri & Definition of Done");
       expect(result.sha256Fingerprint).toBeTruthy();
     });
@@ -240,7 +250,10 @@ describe("Acceptance Engine (Deterministic Scope & Contract Acceptance Testing)"
         criteria: sampleCriteria,
         evaluations: {
           "crit-1": { passed: true },
-          "crit-2": { passed: false, failureReason: "Butona basınca 500 hatası veriyor, dosya inmiyor." },
+          "crit-2": {
+            passed: false,
+            failureReason: "Butona basınca 500 hatası veriyor, dosya inmiyor.",
+          },
         },
       });
 
@@ -265,7 +278,9 @@ describe("Acceptance Engine (Deterministic Scope & Contract Acceptance Testing)"
       });
 
       expect(demoResult.status).toBe("REVISION_REQUESTED");
-      expect(demoResult.revisionNotes).toContain("[OBJEKTİF KABUL KRİTERLERİ KUSUR LİSTESİ (TBK m. 474)]");
+      expect(demoResult.revisionNotes).toContain(
+        "[OBJEKTİF KABUL KRİTERLERİ KUSUR LİSTESİ (TBK m. 474)]"
+      );
       expect(demoResult.revisionNotes).toContain("Excel çıktısında KDV kolonu boş geliyor.");
     });
   });

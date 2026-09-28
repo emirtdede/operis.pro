@@ -75,8 +75,10 @@ export function HiringIntentBadge({
 }: HiringIntentBadgeProps) {
   const isTr = locale === "tr";
 
-  const effectiveScore = typeof breakdown?.overallScore === "number" ? breakdown.overallScore : (propScore ?? 85);
-  const fallbackLevel: HiringIntentLevel = effectiveScore >= 85 ? "PROVEN_HIGH_INTENT" : "ACTIVE_HIRING_LIKELY";
+  const effectiveScore =
+    typeof breakdown?.overallScore === "number" ? breakdown.overallScore : (propScore ?? 85);
+  const fallbackLevel: HiringIntentLevel =
+    effectiveScore >= 85 ? "PROVEN_HIGH_INTENT" : "ACTIVE_HIRING_LIKELY";
   const effectiveLevel: HiringIntentLevel = breakdown?.level || propLevel || fallbackLevel;
 
   const { label, shortLabel, badgeClass, dotClass, Icon } = getHiringIntentDisplay(

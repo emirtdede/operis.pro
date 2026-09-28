@@ -112,7 +112,9 @@ describe("4857 Sayılı İş Kanunu m. 8 & TBK m. 470 Safe Harbor Engine Suite",
         "John Doe"
       );
 
-      expect(md).toContain("### ANNEX-3: INDEPENDENT CONTRACTOR SAFE HARBOR & ANTI-MISCLASSIFICATION PROTOCOL");
+      expect(md).toContain(
+        "### ANNEX-3: INDEPENDENT CONTRACTOR SAFE HARBOR & ANTI-MISCLASSIFICATION PROTOCOL"
+      );
       expect(md).toContain("Global FinTech Ltd");
       expect(md).toContain("John Doe");
       expect(md).toContain("SECTION 1: LEGAL STATUS & COMPLETE REJECTION OF EMPLOYMENT");
@@ -130,7 +132,9 @@ describe("4857 Sayılı İş Kanunu m. 8 & TBK m. 470 Safe Harbor Engine Suite",
       const html = SafeHarborEngine.generateSafeHarborAnnexHtml(safeDefaultConfig, "tr");
 
       expect(html).toContain("safe-harbor-annex");
-      expect(html).toContain("EK-3: 4857 Sayılı İş Kanunu m. 8 Uyumlu Bağımsız Yüklenici Güvenli Liman Şartnamesi");
+      expect(html).toContain(
+        "EK-3: 4857 Sayılı İş Kanunu m. 8 Uyumlu Bağımsız Yüklenici Güvenli Liman Şartnamesi"
+      );
       expect(html).toContain("GÜVENLİ LİMAN");
       expect(html).toContain("(0/100)");
       expect(html).toContain("BYOD");
@@ -171,8 +175,12 @@ describe("4857 Sayılı İş Kanunu m. 8 & TBK m. 470 Safe Harbor Engine Suite",
       expect(result.safeHarborEvaluation?.riskLevel).toBe("SAFE_HARBOR");
 
       // Verify Markdown includes EK-3
-      expect(result.markdown).toContain("### EK-3: 4857 SAYILI İŞ KANUNU m. 8 UYUMLU BAĞIMSIZ YÜKLENİCİ");
-      expect(result.markdown).toContain("MADDE 1: TARAFLARIN HUKUKİ SIFATI VE İŞÇİ-İŞVEREN İLİŞKİSİNİN KESİN REDDİ");
+      expect(result.markdown).toContain(
+        "### EK-3: 4857 SAYILI İŞ KANUNU m. 8 UYUMLU BAĞIMSIZ YÜKLENİCİ"
+      );
+      expect(result.markdown).toContain(
+        "MADDE 1: TARAFLARIN HUKUKİ SIFATI VE İŞÇİ-İŞVEREN İLİŞKİSİNİN KESİN REDDİ"
+      );
 
       // Verify HTML includes safe harbor container
       expect(result.htmlContent).toContain("safe-harbor-annex");
@@ -215,7 +223,9 @@ describe("4857 Sayılı İş Kanunu m. 8 & TBK m. 470 Safe Harbor Engine Suite",
 
       // Verify that the manifest contains the safe harbor document checksum
       expect(dossier.zipBuffer.length).toBeGreaterThan(0);
-      expect(dossier.manifest.checksumsSha256Content).toContain("EK_3_IS_KANUNU_M8_GUVENLI_LIMAN.md");
+      expect(dossier.manifest.checksumsSha256Content).toContain(
+        "EK_3_IS_KANUNU_M8_GUVENLI_LIMAN.md"
+      );
     });
   });
 });

@@ -286,7 +286,9 @@ export function FeedLeftPanel({
                       {statusBadge.label}
                     </span>
                   </div>
-                  <ChevronDown className={`h-3.5 w-3.5 text-[var(--color-text-tertiary)] group-hover:text-[var(--color-text-secondary)] transition-transform duration-200 ${isStatusMenuOpen ? "rotate-180" : ""}`} />
+                  <ChevronDown
+                    className={`h-3.5 w-3.5 text-[var(--color-text-tertiary)] group-hover:text-[var(--color-text-secondary)] transition-transform duration-200 ${isStatusMenuOpen ? "rotate-180" : ""}`}
+                  />
                 </button>
 
                 {isStatusMenuOpen && (
@@ -302,7 +304,9 @@ export function FeedLeftPanel({
                           <span className={`h-2 w-2 rounded-full shrink-0 ${opt.dotColor}`} />
                           <span className="truncate">{isTr ? opt.labelTr : opt.labelEn}</span>
                         </div>
-                        {currentStatus === opt.key && <Check className="h-3.5 w-3.5 text-blue-400 shrink-0" />}
+                        {currentStatus === opt.key && (
+                          <Check className="h-3.5 w-3.5 text-blue-400 shrink-0" />
+                        )}
                       </button>
                     ))}
 
@@ -528,9 +532,7 @@ export function FeedLeftPanel({
                   <h3 className="text-base font-bold text-[var(--color-text-primary)]">
                     {currentUserProfile.displayName}
                   </h3>
-                  <p className="text-xs font-mono text-blue-400">
-                    @{currentUserProfile.handle}
-                  </p>
+                  <p className="text-xs font-mono text-blue-400">@{currentUserProfile.handle}</p>
                   {currentUserProfile.headline && (
                     <p className="text-xs text-[var(--color-text-tertiary)] pt-1 max-w-xs leading-relaxed">
                       {currentUserProfile.headline}

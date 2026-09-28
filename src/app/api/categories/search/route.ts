@@ -1,21 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
-import { searchCategories } from '@/src/lib/search/engine';
-import { recordSearchTelemetry } from '@/src/lib/search/telemetry';
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { searchCategories } from "@/src/lib/search/engine";
+import { recordSearchTelemetry } from "@/src/lib/search/telemetry";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
   normalizeIp,
-} from '@/src/lib/security/rate-limit';
+} from "@/src/lib/security/rate-limit";
 
 const searchQuerySchema = z.object({
-  q: z.string().max(160, 'Query exceeds maximum length of 160 characters').default(''),
+  q: z.string().max(160, "Query exceeds maximum length of 160 characters").default(""),
   limit: z.coerce.number().int().min(1).max(50).default(10),
   sector: z.string().optional(),
 });
 
 const searchPostSchema = z.object({
-  query: z.string().max(160, 'Query exceeds maximum length of 160 characters'),
+  query: z.string().max(160, "Query exceeds maximum length of 160 characters"),
   limit: z.number().int().min(1).max(50).optional().default(10),
   sectorKey: z.string().optional(),
   enableFuzzy: z.boolean().optional().default(true),
@@ -31,7 +32,7 @@ export async function GET(req: NextRequest) {
     // Rate limiting: 120 searches / minute per IP
     const access = await evaluateSecurityAccessAsync({
       ip,
-      purpose: 'cat:search',
+      purpose: "cat:search",
       subject: normalizeIp(ip),
       limit: 120,
       windowMs: 60 * 1000,
@@ -43,14 +44,14 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const parseResult = searchQuerySchema.safeParse({
-      q: searchParams.get('q') || '',
-      limit: searchParams.get('limit') || 10,
-      sector: searchParams.get('sector') || undefined,
+      q: searchParams.get("q") || "",
+      limit: searchParams.get("limit") || 10,
+      sector: searchParams.get("sector") || undefined,
     });
 
     if (!parseResult.success) {
       return NextResponse.json(
-        { error: parseResult.error.issues[0]?.message || 'Invalid search parameters' },
+        { error: parseResult.error.issues[0]?.message || "Invalid search parameters" },
         { status: 400 }
       );
     }
@@ -58,10 +59,7 @@ export async function GET(req: NextRequest) {
     const { q, limit, sector } = parseResult.data;
 
     if (!q.trim()) {
-      return NextResponse.json(
-        { results: [], total: 0, query: '', latencyMs: 0 },
-        { status: 200 }
-      );
+      return NextResponse.json({ results: [], total: 0, query: "", latencyMs: 0 }, { status: 200 });
     }
 
     const results = searchCategories(q, {
@@ -75,7 +73,7 @@ export async function GET(req: NextRequest) {
     const latencyMs = performance.now() - startTime;
     const isZero = results.length === 0;
 
-    recordSearchTelemetry(isZero ? 'search_zero_result' : 'search_results_shown', {
+    recordSearchTelemetry(isZero ? "search_zero_result" : "search_results_shown", {
       rawQuery: q,
       latencyMs,
       top1Slug: results[0]?.slug,
@@ -93,13 +91,20 @@ export async function GET(req: NextRequest) {
       {
         status: 200,
         headers: {
-          'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=120',
+          "Cache-Control": "public, s-maxage=30, stale-while-revalidate=120",
         },
       }
     );
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Category search failed';
-    return NextResponse.json({ error: message }, { status: 500 });
+    const isEn = req.headers.get("x-locale") === "en";
+    return handleApiError(
+      err,
+      {
+        en: "Category search failed",
+        tr: "Kategori araması başarısız oldu",
+      },
+      { isEn, logPrefix: "[Category Search GET Error]", status: 500 }
+    );
   }
 }
 
@@ -110,7 +115,7 @@ export async function POST(req: NextRequest) {
 
     const access = await evaluateSecurityAccessAsync({
       ip,
-      purpose: 'cat:search',
+      purpose: "cat:search",
       subject: normalizeIp(ip),
       limit: 120,
       windowMs: 60 * 1000,
@@ -125,10 +130,7 @@ export async function POST(req: NextRequest) {
       searchPostSchema.parse(body);
 
     if (!query.trim()) {
-      return NextResponse.json(
-        { results: [], total: 0, query: '', latencyMs: 0 },
-        { status: 200 }
-      );
+      return NextResponse.json({ results: [], total: 0, query: "", latencyMs: 0 }, { status: 200 });
     }
 
     const results = searchCategories(query, {
@@ -142,7 +144,7 @@ export async function POST(req: NextRequest) {
     const latencyMs = performance.now() - startTime;
     const isZero = results.length === 0;
 
-    recordSearchTelemetry(isZero ? 'search_zero_result' : 'search_results_shown', {
+    recordSearchTelemetry(isZero ? "search_zero_result" : "search_results_shown", {
       rawQuery: query,
       latencyMs,
       top1Slug: results[0]?.slug,
@@ -162,12 +164,12 @@ export async function POST(req: NextRequest) {
   } catch (err: unknown) {
     if (err instanceof z.ZodError) {
       return NextResponse.json(
-        { error: err.issues[0]?.message || 'Invalid request body' },
+        { error: err.issues[0]?.message || "Invalid request body" },
         { status: 400 }
       );
     }
     return NextResponse.json(
-      { error: 'An unexpected error occurred while searching' },
+      { error: "An unexpected error occurred while searching" },
       { status: 500 }
     );
   }

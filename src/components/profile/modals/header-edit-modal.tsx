@@ -43,7 +43,9 @@ export function HeaderEditModal({
   const [displayName, setDisplayName] = useState(initialDisplayName);
   const [headline, setHeadline] = useState(initialHeadline);
   const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl);
-  const [avatarSource, setAvatarSource] = useState<"oauth" | "custom" | "none">(initialAvatarSource);
+  const [avatarSource, setAvatarSource] = useState<"oauth" | "custom" | "none">(
+    initialAvatarSource
+  );
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -54,7 +56,9 @@ export function HeaderEditModal({
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      setError(isTr ? "Lütfen geçerli bir görsel dosyası seçin." : "Please select a valid image file.");
+      setError(
+        isTr ? "Lütfen geçerli bir görsel dosyası seçin." : "Please select a valid image file."
+      );
       return;
     }
 
@@ -110,32 +114,26 @@ export function HeaderEditModal({
         img.src = objectUrl;
       });
 
-      // 2. Request Presigned URL from API
-      const presignedRes = await fetch("/api/upload/avatar/presigned-url", {
+      // 2. Upload through server route with Sharp validation & transcoding
+      const uploadFile = new File([compressedBlob], "avatar.webp", { type: "image/webp" });
+      const formData = new FormData();
+      formData.append("file", uploadFile);
+
+      const res = await fetch("/api/upload/avatar", {
         method: "POST",
         headers: { "x-locale": locale },
+        body: formData,
       });
 
-      if (!presignedRes.ok) {
-        const data = await presignedRes.json().catch(() => ({}));
-        const fallbackMsg = isTr ? "Yükleme izni alınamadı." : "Failed to obtain upload token.";
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        const fallbackMsg = isTr ? "Fotoğraf yüklenemedi." : "Upload failed.";
         throw new Error(data.error || fallbackMsg);
       }
 
-      const { uploadUrl, publicUrl } = await presignedRes.json();
+      const { avatarUrl } = await res.json();
 
-      // 3. Direct upload to Cloudflare R2
-      const uploadRes = await fetch(uploadUrl, {
-        method: "PUT",
-        headers: { "Content-Type": "image/webp" },
-        body: compressedBlob,
-      });
-
-      if (!uploadRes.ok) {
-        throw new Error(isTr ? "Görsel depolama sunucusuna yüklenemedi." : "Upload to storage failed.");
-      }
-
-      setAvatarUrl(publicUrl);
+      setAvatarUrl(avatarUrl);
       setAvatarSource("custom");
     } catch (err: unknown) {
       setError(getErrorMessage(err, isTr ? "Fotoğraf yüklenemedi" : "Upload failed"));
@@ -301,7 +299,9 @@ export function HeaderEditModal({
         </div>
 
         <div className="flex items-center justify-between text-xs text-[var(--color-text-tertiary)] pt-2 border-t border-[var(--color-border-subtle)]/60">
-          <span>{isTr ? "Kullanıcı adı, dil ve tema için:" : "For username, language, and theme:"}</span>
+          <span>
+            {isTr ? "Kullanıcı adı, dil ve tema için:" : "For username, language, and theme:"}
+          </span>
           <Link
             href={isTr ? "/tr/ayarlar?tab=identity" : "/en/settings?tab=identity"}
             onClick={onClose}
@@ -313,11 +313,24 @@ export function HeaderEditModal({
         </div>
 
         <div className="flex items-center justify-end gap-2 pt-3 border-t border-[var(--color-border-subtle)]">
-          <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={loading || uploading}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onClose}
+            disabled={loading || uploading}
+          >
             {isTr ? "Vazgeç" : "Cancel"}
           </Button>
           <Button type="submit" variant="primary" size="sm" disabled={loading || uploading}>
-            {getLoadingButtonLabel(loading, "Değişiklikleri Kaydet", "Save Changes", "Kaydediliyor...", "Saving...", isTr)}
+            {getLoadingButtonLabel(
+              loading,
+              "Değişiklikleri Kaydet",
+              "Save Changes",
+              "Kaydediliyor...",
+              "Saving...",
+              isTr
+            )}
           </Button>
         </div>
       </form>

@@ -251,8 +251,12 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
     },
     {
       feature: isTr ? "İletişim Kanalları" : "Communication Freedom",
-      operis: isTr ? "WhatsApp, Telefon, Slack, E-Posta Serbest" : "Direct Phone, WhatsApp, Slack Allowed",
-      traditional: isTr ? "Sansürlü Chat & Platform Dışı Yasak" : "Censored Chat & Banning Penalties",
+      operis: isTr
+        ? "WhatsApp, Telefon, Slack, E-Posta Serbest"
+        : "Direct Phone, WhatsApp, Slack Allowed",
+      traditional: isTr
+        ? "Sansürlü Chat & Platform Dışı Yasak"
+        : "Censored Chat & Banning Penalties",
     },
     {
       feature: isTr ? "Ödeme ve Para Blokesi" : "Payment Custody",
@@ -327,7 +331,11 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       <section className="relative text-center space-y-6 max-w-4xl mx-auto pt-6">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/25 text-xs font-semibold text-blue-400 shadow-sm backdrop-blur-md">
           <Sparkles className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />
-          <span>{isTr ? "Operis Açık Teknoloji Manifestosu & Kurumsal Profil" : "Operis Enterprise Profile & Open Tech Manifesto"}</span>
+          <span>
+            {isTr
+              ? "Operis Açık Teknoloji Manifestosu & Kurumsal Profil"
+              : "Operis Enterprise Profile & Open Tech Manifesto"}
+          </span>
         </div>
 
         <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--color-text-primary)] leading-[1.12]">
@@ -365,7 +373,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                 {m.value}
               </div>
               <h3 className="text-xs font-bold text-[var(--color-text-primary)]">{m.label}</h3>
-              <p className="text-[11px] text-[var(--color-text-tertiary)] leading-tight">{m.detail}</p>
+              <p className="text-[11px] text-[var(--color-text-tertiary)] leading-tight">
+                {m.detail}
+              </p>
             </div>
           ))}
         </div>
@@ -393,7 +403,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <span>{isTr ? "Doğuş Hikayemiz" : "The Origin Story"}</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-[var(--color-text-primary)] tracking-tight">
-            {isTr ? "Geleneksel Freelance Tekellerinin Çıkmazı ve Operis" : "The Failure of Legacy Monopolies & The Rise of Operis"}
+            {isTr
+              ? "Geleneksel Freelance Tekellerinin Çıkmazı ve Operis"
+              : "The Failure of Legacy Monopolies & The Rise of Operis"}
           </h2>
           <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
             {isTr
@@ -406,7 +418,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <div className="p-6 rounded-2xl bg-[var(--color-surface-hover)]/40 border border-rose-500/20 space-y-3">
             <h3 className="text-sm font-bold text-rose-400 flex items-center gap-2">
               <XCircle className="h-4 w-4" />
-              <span>{isTr ? "Geleneksel Sistem Neden İflas Etti?" : "Why the Legacy Model Failed"}</span>
+              <span>
+                {isTr ? "Geleneksel Sistem Neden İflas Etti?" : "Why the Legacy Model Failed"}
+              </span>
             </h3>
             <p className="text-[var(--color-text-secondary)]">
               {isTr
@@ -418,7 +432,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <div className="p-6 rounded-2xl bg-[var(--color-surface-hover)]/40 border border-emerald-500/20 space-y-3">
             <h3 className="text-sm font-bold text-emerald-400 flex items-center gap-2">
               <CheckCircle2 className="h-4 w-4" />
-              <span>{isTr ? "Operis'in Radikal Alternatifi" : "The Radical Operis Alternative"}</span>
+              <span>
+                {isTr ? "Operis'in Radikal Alternatifi" : "The Radical Operis Alternative"}
+              </span>
             </h3>
             <p className="text-[var(--color-text-secondary)]">
               {isTr
@@ -439,7 +455,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             {isTr ? "Misyonumuz" : "Our Mission"}
           </span>
           <h2 className="text-xl font-bold text-[var(--color-text-primary)]">
-            {isTr ? "Yazılım Mühendisliğini Aracılardan Arındırmak" : "Purifying Engineering from Intermediary Friction"}
+            {isTr
+              ? "Yazılım Mühendisliğini Aracılardan Arındırmak"
+              : "Purifying Engineering from Intermediary Friction"}
           </h2>
           <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
             {isTr
@@ -456,7 +474,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             {isTr ? "Vizyonumuz" : "Our Vision"}
           </span>
           <h2 className="text-xl font-bold text-[var(--color-text-primary)]">
-            {isTr ? "Küresel Ölçekte Güvenilir Açık Standart" : "The Global Benchmark for Direct Tech Matching"}
+            {isTr
+              ? "Küresel Ölçekte Güvenilir Açık Standart"
+              : "The Global Benchmark for Direct Tech Matching"}
           </h2>
           <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
             {isTr
@@ -495,7 +515,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                 className={`scroll-mt-28 relative rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/80 backdrop-blur-2xl p-7 space-y-5 shadow-xl overflow-hidden hover:border-blue-500/40 transition-all duration-300 group flex flex-col justify-between md:col-span-1 lg:col-span-2 ${
                   isPillar4 ? "lg:col-start-2" : ""
                 } ${
-                  isPillar5 ? "md:col-span-2 md:max-w-md md:mx-auto w-full lg:max-w-none lg:mx-0 lg:col-span-2" : ""
+                  isPillar5
+                    ? "md:col-span-2 md:max-w-md md:mx-auto w-full lg:max-w-none lg:mx-0 lg:col-span-2"
+                    : ""
                 }`}
               >
                 <div
@@ -529,8 +551,14 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
                 <div className="pt-3 border-t border-[var(--color-border-subtle)]/70 space-y-2 relative z-10">
                   {p.bullets.map((b, i) => (
-                    <div key={i} className="flex items-start gap-2 text-xs text-[var(--color-text-tertiary)]">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0 mt-0.5" aria-hidden="true" />
+                    <div
+                      key={i}
+                      className="flex items-start gap-2 text-xs text-[var(--color-text-tertiary)]"
+                    >
+                      <CheckCircle2
+                        className="h-3.5 w-3.5 text-emerald-400 shrink-0 mt-0.5"
+                        aria-hidden="true"
+                      />
                       <span>{b}</span>
                     </div>
                   ))}
@@ -549,7 +577,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <span>{isTr ? "Kurumsal Güvenlik Mimarisi" : "Enterprise Security Architecture"}</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight">
-            {isTr ? "Teknik Standartlar & Mahremiyet Güvencesi" : "Technical Standards & Privacy Protocols"}
+            {isTr
+              ? "Teknik Standartlar & Mahremiyet Güvencesi"
+              : "Technical Standards & Privacy Protocols"}
           </h2>
           <p className="text-xs sm:text-sm text-[var(--color-text-secondary)]">
             {isTr
@@ -589,7 +619,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <span>{isTr ? "Radikal Şeffaflık Matrisi" : "Radical Transparency Matrix"}</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight">
-            {isTr ? "Operis vs. Geleneksel Freelance Tekelleri" : "Operis vs. Legacy Freelance Monopolies"}
+            {isTr
+              ? "Operis vs. Geleneksel Freelance Tekelleri"
+              : "Operis vs. Legacy Freelance Monopolies"}
           </h2>
           <p className="text-xs sm:text-sm text-[var(--color-text-secondary)]">
             {isTr
@@ -622,7 +654,10 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                       {c.feature}
                     </td>
                     <td className="p-4 sm:p-5 font-medium text-emerald-400 flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" aria-hidden="true" />
+                      <CheckCircle2
+                        className="h-4 w-4 shrink-0 text-emerald-400"
+                        aria-hidden="true"
+                      />
                       <span>{c.operis}</span>
                     </td>
                     <td className="p-4 sm:p-5 text-[var(--color-text-tertiary)]">
@@ -649,15 +684,27 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <ul className="space-y-3 text-xs sm:text-sm text-[var(--color-text-secondary)]">
             <li className="flex items-start gap-2">
               <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
-              <span>{isTr ? "Komisyon faturası yok; bütçenizin tamamı gerçek mühendislik emeğine dönüşür." : "No commission markup; 100% of your budget goes to technical execution."}</span>
+              <span>
+                {isTr
+                  ? "Komisyon faturası yok; bütçenizin tamamı gerçek mühendislik emeğine dönüşür."
+                  : "No commission markup; 100% of your budget goes to technical execution."}
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
-              <span>{isTr ? "168 saatlik canlılık radarı sayesinde ilanınıza sadece acil müsaitliği olan aktif uzmanlar teklif verir." : "Only actively available, verified talent proposals within the live 168-hour window."}</span>
+              <span>
+                {isTr
+                  ? "168 saatlik canlılık radarı sayesinde ilanınıza sadece acil müsaitliği olan aktif uzmanlar teklif verir."
+                  : "Only actively available, verified talent proposals within the live 168-hour window."}
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
-              <span>{isTr ? "Eser Sözleşmesi ve FSEK m. 52 devir taslaklarımızla kaynak kodların mülkiyeti güvendedir." : "Pre-vetted statutory agreements secure complete source code and IP assignment."}</span>
+              <span>
+                {isTr
+                  ? "Eser Sözleşmesi ve FSEK m. 52 devir taslaklarımızla kaynak kodların mülkiyeti güvendedir."
+                  : "Pre-vetted statutory agreements secure complete source code and IP assignment."}
+              </span>
             </li>
           </ul>
         </div>
@@ -670,15 +717,27 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <ul className="space-y-3 text-xs sm:text-sm text-[var(--color-text-secondary)]">
             <li className="flex items-start gap-2">
               <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
-              <span>{isTr ? "Teklif jetonları (connects) için cebinizden tek kuruş çıkmaz; her teklif ücretsizdir." : "Zero fee-to-pitch connects; submitting proposals is 100% free forever."}</span>
+              <span>
+                {isTr
+                  ? "Teklif jetonları (connects) için cebinizden tek kuruş çıkmaz; her teklif ücretsizdir."
+                  : "Zero fee-to-pitch connects; submitting proposals is 100% free forever."}
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
-              <span>{isTr ? "AES-256 kör teklif sayesinde rakipler fiyatınızı göremez; değer odaklı teklif verirsiniz." : "AES-256 blind bidding protects your pricing integrity against toxic race-to-the-bottom."}</span>
+              <span>
+                {isTr
+                  ? "AES-256 kör teklif sayesinde rakipler fiyatınızı göremez; değer odaklı teklif verirsiniz."
+                  : "AES-256 blind bidding protects your pricing integrity against toxic race-to-the-bottom."}
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
-              <span>{isTr ? "Müşteriyle doğrudan telefon ve WhatsApp üzerinden iletişim kurup kendi sözleşmenizle çalışırsınız." : "Communicate directly via phone, Slack, or WhatsApp with complete contractual autonomy."}</span>
+              <span>
+                {isTr
+                  ? "Müşteriyle doğrudan telefon ve WhatsApp üzerinden iletişim kurup kendi sözleşmenizle çalışırsınız."
+                  : "Communicate directly via phone, Slack, or WhatsApp with complete contractual autonomy."}
+              </span>
             </li>
           </ul>
         </div>
@@ -690,7 +749,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-semibold text-blue-400">
               <Building2 className="h-3.5 w-3.5" />
-              <span>{isTr ? "Kurumsal Çatı & Tüzel Kişilik" : "Corporate Governance & Entity"}</span>
+              <span>
+                {isTr ? "Kurumsal Çatı & Tüzel Kişilik" : "Corporate Governance & Entity"}
+              </span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-text-primary)]">
               {isTr
@@ -723,15 +784,21 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-2 border-t border-[var(--color-border-subtle)] text-xs text-[var(--color-text-tertiary)]">
           <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)]">
             <CheckCircle2 className="h-4 w-4 text-blue-400 shrink-0" />
-            <span>{isTr ? "Genel Merkez: İstanbul, Türkiye" : "Headquarters: Istanbul, Turkey"}</span>
+            <span>
+              {isTr ? "Genel Merkez: İstanbul, Türkiye" : "Headquarters: Istanbul, Turkey"}
+            </span>
           </div>
           <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)]">
             <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-            <span>{isTr ? "Resmi Tebligat: KEP & UETS Kayıtlı" : "Statutory KEP & Electronic Notice"}</span>
+            <span>
+              {isTr ? "Resmi Tebligat: KEP & UETS Kayıtlı" : "Statutory KEP & Electronic Notice"}
+            </span>
           </div>
           <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[var(--color-surface-base)] border border-[var(--color-border-subtle)]">
             <CheckCircle2 className="h-4 w-4 text-purple-400 shrink-0" />
-            <span>{isTr ? "5651 Sayılı Yer Sağlayıcı Güvencesi" : "Statutory Intermediary Hosting"}</span>
+            <span>
+              {isTr ? "5651 Sayılı Yer Sağlayıcı Güvencesi" : "Statutory Intermediary Hosting"}
+            </span>
           </div>
         </div>
       </section>
@@ -758,7 +825,11 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
         <div className="relative z-10 flex flex-wrap items-center justify-center gap-4 pt-2">
           <Link href={getLocalizedRoute("register", locale)}>
-            <Button variant="primary" size="lg" className="gap-2 px-8 py-3 text-sm font-semibold shadow-lg shadow-blue-500/25">
+            <Button
+              variant="primary"
+              size="lg"
+              className="gap-2 px-8 py-3 text-sm font-semibold shadow-lg shadow-blue-500/25"
+            >
               <span>{isTr ? "Ücretsiz Üye Ol" : "Create Free Account"}</span>
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Button>

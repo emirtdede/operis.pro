@@ -39,7 +39,9 @@ export function useMatchDetailsActions({
 
   // Quick Ping state
   const [pingModalOpen, setPingModalOpen] = useState(false);
-  const [pingTemplate, setPingTemplate] = useState<"whatsapp" | "meeting" | "email" | "ready">("whatsapp");
+  const [pingTemplate, setPingTemplate] = useState<"whatsapp" | "meeting" | "email" | "ready">(
+    "whatsapp"
+  );
   const [isPinging, setIsPinging] = useState(false);
   const [pingCooldown, setPingCooldown] = useState(0);
   const [pingFeedback, setPingFeedback] = useState<{
@@ -74,18 +76,15 @@ export function useMatchDetailsActions({
       if (!res.ok) {
         throw new Error(
           data.error ||
-            (isTr
-              ? "Dürtme bildirimi gönderilemedi."
-              : "Failed to send ping notification.")
+            (isTr ? "Dürtme bildirimi gönderilemedi." : "Failed to send ping notification.")
         );
       }
       setPingCooldown(900); // 15 minutes
       setPingFeedback({
         type: "success",
-        message:
-          isTr
-            ? "Hafif dürtme bildirimi karşı tarafın ziline anında iletildi!"
-            : "Quick ping notification has been delivered to counterparty's notification bell!",
+        message: isTr
+          ? "Hafif dürtme bildirimi karşı tarafın ziline anında iletildi!"
+          : "Quick ping notification has been delivered to counterparty's notification bell!",
       });
       setTimeout(() => {
         setPingModalOpen(false);
@@ -228,9 +227,7 @@ export function useMatchDetailsActions({
           : "Engagement has been cancelled. The listing was moved to inactive; the owner can reactivate it from their dashboard."
       );
     } catch (err: unknown) {
-      let cancelErrMsg = isTr
-        ? "İptal işleminde hata oluştu"
-        : "Error cancelling engagement";
+      let cancelErrMsg = isTr ? "İptal işleminde hata oluştu" : "Error cancelling engagement";
       if (err instanceof Error) {
         cancelErrMsg = err.message;
       }
@@ -300,9 +297,7 @@ export function useMatchDetailsActions({
           : "Your verified endorsement has been recorded and published on your counterparty's profile!"
       );
     } catch (err: unknown) {
-      let endorseErrMsg = isTr
-        ? "Tavsiye kaydedilemedi."
-        : "Failed to record endorsement.";
+      let endorseErrMsg = isTr ? "Tavsiye kaydedilemedi." : "Failed to record endorsement.";
       if (err instanceof Error) {
         endorseErrMsg = err.message;
       }

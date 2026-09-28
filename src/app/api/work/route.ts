@@ -1,12 +1,18 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { EngagementService } from "@/src/modules/engagements/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 
 export async function GET(req: Request) {
+  const isEn = req.headers.get("x-locale") === "en";
+
   try {
     const session = await getSession();
     if (!session?.userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        { error: isEn ? "Unauthorized" : "Yetkisiz erişim" },
+        { status: 401 }
+      );
     }
 
     const { searchParams } = new URL(req.url);
@@ -28,7 +34,13 @@ export async function GET(req: Request) {
       total: items.length,
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to fetch engagements";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to fetch engagements",
+        tr: "İş birlikleri listelenemedi",
+      },
+      { isEn, logPrefix: "[Work Route GET Error]", status: 500 }
+    );
   }
 }

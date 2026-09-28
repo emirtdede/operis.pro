@@ -401,7 +401,10 @@ describe("Counter-Offer & Negotiation Cycle — State Machine & Business Invaria
       });
 
       // Freelancer views timeline
-      const timelineFreelancer = await OfferService.getCounterNegotiationTimeline(freelancerId, offerId);
+      const timelineFreelancer = await OfferService.getCounterNegotiationTimeline(
+        freelancerId,
+        offerId
+      );
 
       expect(timelineFreelancer.offer.counterRound).toBe(1);
       expect(timelineFreelancer.isViewerTurn).toBe(true); // Freelancer's turn!
@@ -413,7 +416,10 @@ describe("Counter-Offer & Negotiation Cycle — State Machine & Business Invaria
       expect(timelineFreelancer.activeProposal?.timeRemainingMs).toBeGreaterThan(0);
 
       // Employer views timeline
-      const timelineEmployer = await OfferService.getCounterNegotiationTimeline(listingOwnerId, offerId);
+      const timelineEmployer = await OfferService.getCounterNegotiationTimeline(
+        listingOwnerId,
+        offerId
+      );
       expect(timelineEmployer.isViewerTurn).toBe(false); // Not employer's turn!
       expect(timelineEmployer.canAccept).toBe(false);
       expect(timelineEmployer.canWithdraw).toBe(true); // Employer is proposer, can withdraw

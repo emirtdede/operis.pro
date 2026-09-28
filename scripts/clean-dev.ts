@@ -20,7 +20,14 @@ console.info("🚀 Starting Next.js dev server on port 8000...");
 
 const child = spawn(
   process.execPath,
-  ["--max-old-space-size=4096", "./node_modules/next/dist/bin/next", "dev", "--webpack", "-p", "8000"],
+  [
+    "--max-old-space-size=4096",
+    "./node_modules/next/dist/bin/next",
+    "dev",
+    "--webpack",
+    "-p",
+    "8000",
+  ],
   {
     stdio: "inherit",
     env: process.env,

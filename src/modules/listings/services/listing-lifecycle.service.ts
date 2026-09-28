@@ -4,11 +4,7 @@ import { mapConcurrent } from "@/src/lib/async/concurrency";
 import { NotificationService } from "@/src/modules/notifications/service";
 import { DEFAULT_USER } from "@/src/modules/auth/demo-user";
 import { inMemoryReceivedOffers, inMemorySentOffers } from "@/src/modules/offers/service";
-import {
-  inMemoryExpiringNotified,
-  inMemoryListings,
-  SEVEN_DAYS_MS,
-} from "./types";
+import { inMemoryExpiringNotified, inMemoryListings, SEVEN_DAYS_MS } from "./types";
 
 export class ListingLifecycleService {
   /**
@@ -474,7 +470,8 @@ export class ListingLifecycleService {
     ) => Promise<string[]>
   ): Promise<void> {
     const radarNotifier = dispatchRadarFn || ListingLifecycleService.dispatchRadarNotifications;
-    const categoryNotifier = dispatchCategoryFn || ListingLifecycleService.dispatchCategoryFollowNotifications;
+    const categoryNotifier =
+      dispatchCategoryFn || ListingLifecycleService.dispatchCategoryFollowNotifications;
 
     const isListingUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
       listingId
@@ -706,13 +703,7 @@ export class ListingLifecycleService {
               radarNotifiedUsers
             );
           } else {
-            await categoryNotifier(
-              listingId,
-              item.categoryId,
-              item.title,
-              item.slug,
-              userId
-            );
+            await categoryNotifier(listingId, item.categoryId, item.title, item.slug, userId);
           }
         }
       } catch {
@@ -1270,7 +1261,9 @@ export class ListingLifecycleService {
               message: messageText,
               actionUrl,
             }
-          ).then(() => true).catch(() => false);
+          )
+            .then(() => true)
+            .catch(() => false);
         });
 
         const results = await Promise.allSettled(tasks);

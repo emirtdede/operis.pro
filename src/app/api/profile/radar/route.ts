@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { ProfileService } from "@/src/modules/profiles/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import { EMOJI_REGEX, validateContentAppropriateness } from "@/src/lib/security/content-moderator";
 import {
   evaluateSecurityAccessAsync,
@@ -26,11 +27,14 @@ export async function GET(req: Request) {
       trackedSkills: profile?.trackedSkills ?? [],
     });
   } catch (err: unknown) {
-    let message = isEn ? "Failed to fetch radar skills" : "Radar teknolojileri alınamadı";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to fetch radar skills",
+        tr: "Radar teknolojileri alınamadı",
+      },
+      { isEn, logPrefix: "[Profile Radar GET Error]", status: 500 }
+    );
   }
 }
 
@@ -117,10 +121,13 @@ export async function POST(req: Request) {
     });
   } catch (err: unknown) {
     const isEn = headerLocale === "en";
-    let message = isEn ? "Could not update radar" : "Radar güncellenemedi";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+    return handleApiError(
+      err,
+      {
+        en: "Could not update radar",
+        tr: "Radar güncellenemedi",
+      },
+      { isEn, logPrefix: "[Profile Radar POST Error]", status: 500 }
+    );
   }
 }

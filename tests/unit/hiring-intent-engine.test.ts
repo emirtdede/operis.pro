@@ -44,7 +44,8 @@ describe("HiringIntentEngine (Hiring Intent Index & Client Trust Score)", () => 
         listingId: "listing-new-corp-1",
         title: "Next.js 15 ve PostgreSQL Tabanlı B2B Platformu",
         summary: "Kurumsal e-ticaret altyapısı için deneyimli Fullstack ekibi aranıyor.",
-        scope: "Next.js 15 App Router, TypeScript ve PostgreSQL tabanlı e-ticaret platformu geliştirilecektir. 3 ana aşamada teslimat yapılacak: 1. Arayüz ve auth, 2. Sepet ve ödeme entegrasyonu, 3. Admin paneli ve testler. Figma tasarımları hazırdır.",
+        scope:
+          "Next.js 15 App Router, TypeScript ve PostgreSQL tabanlı e-ticaret platformu geliştirilecektir. 3 ana aşamada teslimat yapılacak: 1. Arayüz ve auth, 2. Sepet ve ödeme entegrasyonu, 3. Admin paneli ve testler. Figma tasarımları hazırdır.",
         clarityScore: 92,
         budgetMin: 50000,
         budgetMax: 70000,
@@ -93,7 +94,8 @@ describe("HiringIntentEngine (Hiring Intent Index & Client Trust Score)", () => 
         listingId: "listing-new-ind-1",
         title: "Flutter Mobil Prototip Tasarımı",
         summary: "MVP aşamasında mobil ekran prototipleri.",
-        scope: "Bir mobil uygulama prototipi için Flutter arayüzü tasarlanacak. 5 ekran tasarlanması bekleniyor.",
+        scope:
+          "Bir mobil uygulama prototipi için Flutter arayüzü tasarlanacak. 5 ekran tasarlanması bekleniyor.",
         clarityScore: 65,
         budgetMin: 20000,
         budgetMax: 25000,
@@ -136,7 +138,8 @@ describe("HiringIntentEngine (Hiring Intent Index & Client Trust Score)", () => 
         listingId: "listing-established-1",
         title: "Fintech Mobil Bankacılık Modülü",
         summary: "iOS Swift ve Kotlin mimarisi kurulacak.",
-        scope: "Fintech mobil bankacılık modülü için iOS Swift ve Kotlin Multiplatform uzmanı aranıyor. Detaylı teknik şartname ve Figma tasarımları mevcuttur. 3 sprintlik MVP çalışması planlandı.",
+        scope:
+          "Fintech mobil bankacılık modülü için iOS Swift ve Kotlin Multiplatform uzmanı aranıyor. Detaylı teknik şartname ve Figma tasarımları mevcuttur. 3 sprintlik MVP çalışması planlandı.",
         clarityScore: 95,
         budgetMin: 80000,
         budgetMax: 100000,
@@ -230,7 +233,8 @@ describe("HiringIntentEngine (Hiring Intent Index & Client Trust Score)", () => 
         listingId: "listing-lowball-1",
         title: "Büyük Kurumsal CRM Sistemi",
         summary: "Mikroservis mimarisinde kurumsal CRM.",
-        scope: "Büyük çaplı CRM sistemi kodlanacak, mikroservis mimarisi kurulacak, Kafka ve Redis kullanılacak.",
+        scope:
+          "Büyük çaplı CRM sistemi kodlanacak, mikroservis mimarisi kurulacak, Kafka ve Redis kullanılacak.",
         clarityScore: 80,
         budgetMin: 2000,
         budgetMax: 2500, // Market median is 50,000 -> 2500 is only 5% of median!
@@ -271,7 +275,8 @@ describe("HiringIntentEngine (Hiring Intent Index & Client Trust Score)", () => 
         listingId: "listing-sparse-1",
         title: "Kuantum Hesaplama Simülasyonu",
         summary: "Kuantum algoritmaları araştırma projesi.",
-        scope: "Kuantum hesaplama algoritmaları üzerine araştırma ve simülasyon projesi. Qiskit kütüphanesi kullanılacaktır.",
+        scope:
+          "Kuantum hesaplama algoritmaları üzerine araştırma ve simülasyon projesi. Qiskit kütüphanesi kullanılacaktır.",
         clarityScore: 88,
         budgetMin: 40000,
         budgetMax: 50000,
@@ -316,8 +321,21 @@ describe("HiringIntentEngine (Hiring Intent Index & Client Trust Score)", () => 
         budgetMin: 35000,
         budgetMax: 45000,
         budgetCurrency: "TRY",
-        categoryBenchmark: { hasBenchmark: true, sampleCount: 10, min: 30000, median: 35000, max: 45000 },
-        clientHistory: { totalListings: 0, closedListings: 0, matchedEngagements: 0, hireRateRaw: 0, hireRateBayesian: 0.67, isFirstTimeClient: true },
+        categoryBenchmark: {
+          hasBenchmark: true,
+          sampleCount: 10,
+          min: 30000,
+          median: 35000,
+          max: 45000,
+        },
+        clientHistory: {
+          totalListings: 0,
+          closedListings: 0,
+          matchedEngagements: 0,
+          hireRateRaw: 0,
+          hireRateBayesian: 0.67,
+          isFirstTimeClient: true,
+        },
       };
 
       const asResult = HiringIntentEngine.evaluateHiringIntent({
@@ -363,9 +381,22 @@ describe("HiringIntentEngine (Hiring Intent Index & Client Trust Score)", () => 
         budgetMin: 10000,
         budgetMax: 12000,
         budgetCurrency: "TRY",
-        categoryBenchmark: { hasBenchmark: true, sampleCount: 10, min: 20000, median: 28000, max: 35000 },
+        categoryBenchmark: {
+          hasBenchmark: true,
+          sampleCount: 10,
+          min: 20000,
+          median: 28000,
+          max: 35000,
+        },
         ownerProfile: { isCompanyVerified: false, emailVerified: true, phoneVerified: true },
-        clientHistory: { totalListings: 0, closedListings: 0, matchedEngagements: 0, hireRateRaw: 0, hireRateBayesian: 0.67, isFirstTimeClient: true },
+        clientHistory: {
+          totalListings: 0,
+          closedListings: 0,
+          matchedEngagements: 0,
+          hireRateRaw: 0,
+          hireRateBayesian: 0.67,
+          isFirstTimeClient: true,
+        },
       };
 
       const result = HiringIntentEngine.evaluateHiringIntent(input);
@@ -399,7 +430,8 @@ describe("HiringIntentEngine (Hiring Intent Index & Client Trust Score)", () => 
     });
 
     it("should safely compute client historical metrics with fallback", async () => {
-      const metrics = await HiringIntentService.getClientHistoricalMetrics("user-test-fallback-999");
+      const metrics =
+        await HiringIntentService.getClientHistoricalMetrics("user-test-fallback-999");
       expect(metrics.totalListings).toBe(0);
       expect(metrics.closedListings).toBe(0);
       expect(metrics.matchedEngagements).toBe(0);
@@ -408,7 +440,10 @@ describe("HiringIntentEngine (Hiring Intent Index & Client Trust Score)", () => 
     });
 
     it("should safely evaluate listing hiring intent with fallback when listing does not exist", async () => {
-      const breakdown = await HiringIntentService.getListingHiringIntent("non-existent-listing-id", "tr");
+      const breakdown = await HiringIntentService.getListingHiringIntent(
+        "non-existent-listing-id",
+        "tr"
+      );
       expect(breakdown.listingId).toBe("non-existent-listing-id");
       expect(breakdown.overallScore).toBeGreaterThanOrEqual(0);
       expect(breakdown.badgeLabelTr).toBeDefined();

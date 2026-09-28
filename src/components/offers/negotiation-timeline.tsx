@@ -15,6 +15,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Button } from "../ui/button";
+import { ModalOverlay } from "../ui/modal-overlay";
 import { CounterOfferModal } from "./counter-offer-modal";
 import { NegotiationTimelineDto } from "@/src/modules/offers/service";
 
@@ -115,7 +116,9 @@ export function NegotiationTimelineModal({
     try {
       const res = await fetch(`/api/offers/${offerId}/counter`);
       if (!res.ok) {
-        throw new Error(isTr ? "Pazarlık geçmişi yüklenemedi." : "Failed to load negotiation timeline.");
+        throw new Error(
+          isTr ? "Pazarlık geçmişi yüklenemedi." : "Failed to load negotiation timeline."
+        );
       }
       const json = await res.json();
       setData(json);
@@ -145,7 +148,10 @@ export function NegotiationTimelineModal({
       });
       const resJson = await res.json();
       if (!res.ok) {
-        throw new Error(resJson.error || (isTr ? "Karşı teklif kabul edilemedi." : "Failed to accept counter-offer."));
+        throw new Error(
+          resJson.error ||
+            (isTr ? "Karşı teklif kabul edilemedi." : "Failed to accept counter-offer.")
+        );
       }
       await fetchTimeline();
       if (onOfferUpdated) onOfferUpdated();
@@ -167,7 +173,10 @@ export function NegotiationTimelineModal({
       });
       const resJson = await res.json();
       if (!res.ok) {
-        throw new Error(resJson.error || (isTr ? "Karşı teklif reddedilemedi." : "Failed to reject counter-offer."));
+        throw new Error(
+          resJson.error ||
+            (isTr ? "Karşı teklif reddedilemedi." : "Failed to reject counter-offer.")
+        );
       }
       setShowRejectConfirm(false);
       await fetchTimeline();
@@ -190,7 +199,10 @@ export function NegotiationTimelineModal({
       });
       const resJson = await res.json();
       if (!res.ok) {
-        throw new Error(resJson.error || (isTr ? "Karşı teklif geri çekilemedi." : "Failed to withdraw counter-offer."));
+        throw new Error(
+          resJson.error ||
+            (isTr ? "Karşı teklif geri çekilemedi." : "Failed to withdraw counter-offer.")
+        );
       }
       await fetchTimeline();
       if (onOfferUpdated) onOfferUpdated();
@@ -288,7 +300,9 @@ export function NegotiationTimelineModal({
                     <div className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2">
                         <span className="font-bold text-white">
-                          {isTr ? `${cp.round}. Tur Karşı Teklif` : `Round ${cp.round} Counter-Offer`}
+                          {isTr
+                            ? `${cp.round}. Tur Karşı Teklif`
+                            : `Round ${cp.round} Counter-Offer`}
                         </span>
                         <span className="text-[11px] text-slate-400">
                           {getProposalAuthorBadge(Boolean(cp.isByViewer), isTr)}
@@ -435,13 +449,15 @@ export function NegotiationTimelineModal({
 
   return (
     <>
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-200"
-        role="dialog"
-        aria-modal="true"
-        aria-label={isTr ? "Pazarlık ve Karşı Teklif Döngüsü" : "Negotiation & Counter-Offer Cycle"}
+      <ModalOverlay
+        isOpen={isOpen}
+        onClose={onClose}
+        ariaLabel={isTr ? "Pazarlık ve Karşı Teklif Döngüsü" : "Negotiation & Counter-Offer Cycle"}
       >
-        <div className="bg-[#121620] border border-slate-700/80 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+        <div
+          className="bg-[#121620] border border-slate-700/80 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
+          onClick={(e) => e.stopPropagation()}
+        >
           {/* Header */}
           <div className="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/60">
             <div className="flex items-center gap-3">
@@ -513,9 +529,7 @@ export function NegotiationTimelineModal({
           )}
 
           {/* Scrollable Stepper Timeline */}
-          <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-6">
-            {renderTimelineBody()}
-          </div>
+          <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-6">{renderTimelineBody()}</div>
 
           {/* Footer */}
           <div className="p-4 border-t border-slate-800 flex items-center justify-between bg-slate-900/60">
@@ -533,12 +547,20 @@ export function NegotiationTimelineModal({
             </Button>
           </div>
         </div>
-      </div>
+      </ModalOverlay>
 
       {/* Reject Confirmation Dialog */}
       {showRejectConfirm && activeProposal && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/80 animate-in fade-in">
-          <div className="bg-[#141824] border border-red-900/50 rounded-2xl w-full max-w-md p-5 space-y-4 shadow-2xl">
+        <ModalOverlay
+          isOpen={showRejectConfirm}
+          onClose={() => setShowRejectConfirm(false)}
+          zIndex="z-[110]"
+          ariaLabel={isTr ? "Karşı Teklifi Reddet" : "Reject Counter-Offer"}
+        >
+          <div
+            className="bg-[#141824] border border-red-900/50 rounded-2xl w-full max-w-md p-5 space-y-4 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center gap-2.5 text-red-400">
               <XCircle className="h-5 w-5" />
               <h4 className="text-sm font-bold text-white">
@@ -559,7 +581,11 @@ export function NegotiationTimelineModal({
                 maxLength={300}
                 value={rejectNote}
                 onChange={(e) => setRejectNote(e.target.value)}
-                placeholder={isTr ? "Pazarlığın neden sonlandırıldığını belirtebilirsiniz..." : "Specify reason..."}
+                placeholder={
+                  isTr
+                    ? "Pazarlığın neden sonlandırıldığını belirtebilirsiniz..."
+                    : "Specify reason..."
+                }
                 className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-red-500"
               />
             </div>
@@ -582,7 +608,7 @@ export function NegotiationTimelineModal({
               </Button>
             </div>
           </div>
-        </div>
+        </ModalOverlay>
       )}
 
       {/* Counter Offer Modal Sub-dialog */}
@@ -601,10 +627,14 @@ export function NegotiationTimelineModal({
           currentBudgetMin={activeProposal ? activeProposal.budgetMin : data?.offer.budgetMin}
           currentBudgetMax={activeProposal ? activeProposal.budgetMax : data?.offer.budgetMax}
           currentDurationValue={
-            activeProposal ? activeProposal.estimatedDurationValue : data?.offer.estimatedDurationValue
+            activeProposal
+              ? activeProposal.estimatedDurationValue
+              : data?.offer.estimatedDurationValue
           }
           currentDurationUnit={
-            activeProposal ? activeProposal.estimatedDurationUnit : data?.offer.estimatedDurationUnit
+            activeProposal
+              ? activeProposal.estimatedDurationUnit
+              : data?.offer.estimatedDurationUnit
           }
           locale={locale}
         />

@@ -38,7 +38,9 @@ export class HiringIntentService {
       const matchedStatuses = ["MATCHED", "COMPLETED"];
 
       const closedListings = userListings.filter((l) => closedStatuses.includes(l.status)).length;
-      const matchedEngagements = userListings.filter((l) => matchedStatuses.includes(l.status)).length;
+      const matchedEngagements = userListings.filter((l) =>
+        matchedStatuses.includes(l.status)
+      ).length;
 
       const { bayesianRate, rawRate } = HiringIntentEngine.calculateBayesianHireRate(
         matchedEngagements,
@@ -57,15 +59,17 @@ export class HiringIntentService {
       // In-memory or testing fallback
       const inMem = inMemoryListings.filter((l) => l.ownerUserId === userId);
       const total = inMem.length;
-      const matched = inMem.filter((l) => l.status === "MATCHED" || l.status === "COMPLETED").length;
+      const matched = inMem.filter(
+        (l) => l.status === "MATCHED" || l.status === "COMPLETED"
+      ).length;
       const closed = inMem.filter(
-        (l) =>
-          l.status === "MATCHED" ||
-          l.status === "COMPLETED" ||
-          l.status === "INACTIVE_EXPIRED"
+        (l) => l.status === "MATCHED" || l.status === "COMPLETED" || l.status === "INACTIVE_EXPIRED"
       ).length;
 
-      const { bayesianRate, rawRate } = HiringIntentEngine.calculateBayesianHireRate(matched, closed);
+      const { bayesianRate, rawRate } = HiringIntentEngine.calculateBayesianHireRate(
+        matched,
+        closed
+      );
 
       return {
         totalListings: total,

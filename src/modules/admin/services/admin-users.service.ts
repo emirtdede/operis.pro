@@ -10,11 +10,7 @@ import {
   removeBlockedIpFromCache,
   unblockIpAddressAsync,
 } from "@/src/lib/security/rate-limit";
-import {
-  type AdminUserItem,
-  type PaginatedResult,
-  ROLE_HIERARCHY,
-} from "./types";
+import { type AdminUserItem, type PaginatedResult, ROLE_HIERARCHY } from "./types";
 
 export class AdminUsersService {
   /**

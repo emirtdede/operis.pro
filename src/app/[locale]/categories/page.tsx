@@ -78,9 +78,7 @@ export default async function CategoriesPage({
   const initialFollowedIds = categories.filter((c) => c.isFollowed).map((c) => c.id);
 
   const baseUrl = getBaseUrl();
-  const categoriesUrl = isTr
-    ? `${baseUrl}/tr/kategoriler`
-    : `${baseUrl}/en/categories`;
+  const categoriesUrl = isTr ? `${baseUrl}/tr/kategoriler` : `${baseUrl}/en/categories`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -99,9 +97,7 @@ export default async function CategoriesPage({
             "@type": "ListItem",
             position: idx + 1,
             name: cat.name,
-            url: isTr
-              ? `${baseUrl}/tr/kategori/${cat.slug}`
-              : `${baseUrl}/en/category/${cat.slug}`,
+            url: isTr ? `${baseUrl}/tr/kategori/${cat.slug}` : `${baseUrl}/en/category/${cat.slug}`,
           })),
         },
       },

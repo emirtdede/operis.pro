@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  Eye,
-  Clock,
-  Calendar,
-} from "lucide-react";
+import { Eye, Clock, Calendar } from "lucide-react";
 import type { AvailabilityStatus } from "@/src/modules/profiles/services/availability.service";
 
 export interface VisibilitySettingsTabProps {
@@ -104,7 +100,9 @@ export function VisibilitySettingsTab({
       <div className="pt-4 border-t border-[var(--color-border-subtle)] flex items-center justify-between gap-4">
         <div className="space-y-0.5">
           <label className="text-xs font-bold text-[var(--color-text-primary)] block">
-            {isTr ? "Arama Motorlarının Profilinizi Dizinlemesine İzin Ver" : "Public Search Indexing"}
+            {isTr
+              ? "Arama Motorlarının Profilinizi Dizinlemesine İzin Ver"
+              : "Public Search Indexing"}
           </label>
           <p className="text-[11px] text-[var(--color-text-tertiary)]">
             {isTr
@@ -209,7 +207,8 @@ export function VisibilitySettingsTab({
             },
           ].map((tier) => {
             const selected = availabilityStatus === tier.id;
-            let cardClasses = "border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] opacity-70 hover:opacity-100";
+            let cardClasses =
+              "border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)] opacity-70 hover:opacity-100";
             if (selected) {
               cardClasses = `${tier.border} ring-2 ring-blue-500/40 shadow-xs font-semibold`;
             }

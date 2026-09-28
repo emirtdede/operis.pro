@@ -3,15 +3,20 @@ import { getSession } from "@/src/modules/auth/session";
 import { OfferService } from "@/src/modules/offers/service";
 import { evaluateSecurityAccessAsync, getClientIp } from "@/src/lib/security/rate-limit";
 import { mapConcurrent } from "@/src/lib/async/concurrency";
+import { handleApiError } from "@/src/lib/api/error-response";
 
 const MAX_BULK_WITHDRAW_COUNT = 50;
 const BATCH_CONCURRENCY_CHUNK_SIZE = 5;
 
 export async function POST(req: Request) {
+  const isEn = req.headers.get("x-locale") === "en";
   try {
     const session = await getSession();
     if (!session?.userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        { error: isEn ? "Unauthorized" : "Yetkisiz erişim" },
+        { status: 401 }
+      );
     }
 
     const ip = getClientIp(req);
@@ -46,9 +51,21 @@ export async function POST(req: Request) {
         await OfferService.withdrawOffer(session.userId, offerId);
         successfulWithdrawals.push(offerId);
       } catch (err: unknown) {
+        let itemError = isEn ? "Failed to withdraw" : "Geri çekilemedi";
+        if (err instanceof Error) {
+          if (err.message.includes("Offer not found")) {
+            itemError = isEn ? "Offer not found." : "Teklif bulunamadı.";
+          } else if (err.message.includes("Only pending offers can be withdrawn")) {
+            itemError = isEn
+              ? "Only pending offers can be withdrawn."
+              : "Sadece bekleme durumundaki teklifler geri çekilebilir.";
+          } else if (err.message.includes("Unauthorized")) {
+            itemError = isEn ? "Unauthorized." : "Yetkisiz işlem.";
+          }
+        }
         errors.push({
           id: offerId,
-          error: err instanceof Error ? err.message : "Failed to withdraw",
+          error: itemError,
         });
       }
     });
@@ -60,7 +77,13 @@ export async function POST(req: Request) {
       errors: errors.length > 0 ? errors : undefined,
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to bulk withdraw offers";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to bulk withdraw offers",
+        tr: "Toplu teklif geri çekme işlemi başarısız oldu",
+      },
+      { isEn, logPrefix: "[Offers Bulk Withdraw POST Error]", status: 500 }
+    );
   }
 }

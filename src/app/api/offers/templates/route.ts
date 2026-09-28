@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/src/modules/auth/session";
 import { OfferService } from "@/src/modules/offers/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -29,13 +30,14 @@ export async function GET(req: Request) {
     const templates = await OfferService.getUserOfferTemplates(session.userId);
     return NextResponse.json({ templates }, { status: 200 });
   } catch (err: unknown) {
-    let message = isEn
-      ? "Failed to fetch templates."
-      : "Şablonlar yüklenirken bir sorun oluştu.";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to fetch templates.",
+        tr: "Şablonlar yüklenirken bir sorun oluştu.",
+      },
+      { isEn, logPrefix: "[Offer Templates GET Error]", status: 500 }
+    );
   }
 }
 
@@ -71,9 +73,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, template }, { status: 200 });
   } catch (err: unknown) {
-    let message = isEn ? "Failed to save template." : "Şablon kaydedilemedi.";
-
     if (err instanceof z.ZodError) {
+      let message: string;
       const rawMsg = err.issues[0]?.message || "";
       if (isEn) {
         if (rawMsg.includes("en az 2")) {
@@ -98,11 +99,17 @@ export async function POST(req: Request) {
           message = rawMsg || "Geçersiz şablon formatı.";
         }
       }
-    } else if (err instanceof Error) {
-      message = err.message;
+      return NextResponse.json({ error: message }, { status: 400 });
     }
 
-    return NextResponse.json({ error: message }, { status: 400 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to save template.",
+        tr: "Şablon kaydedilemedi.",
+      },
+      { isEn, logPrefix: "[Offer Templates POST Error]", status: 500 }
+    );
   }
 }
 
@@ -160,12 +167,13 @@ export async function DELETE(req: Request) {
     }
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err: unknown) {
-    let message = isEn
-      ? "Failed to delete template."
-      : "Şablon silinemedi.";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to delete template.",
+        tr: "Şablon silinemedi.",
+      },
+      { isEn, logPrefix: "[Offer Templates DELETE Error]", status: 500 }
+    );
   }
 }

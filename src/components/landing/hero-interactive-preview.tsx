@@ -63,8 +63,10 @@ const POPULAR_LISTINGS: ProjectPreviewData[] = [
     budgetEn: "$1,950",
     daysLeftTr: "5 Gün Kaldı (Taze İlan)",
     daysLeftEn: "5 Days Left (Active)",
-    descriptionTr: "Mevcut PostgreSQL şemamız üzerine Next.js 15 App Router, Tailwind CSS ve Supabase Auth entegre edilecek; müşteri faturalandırma ve analitik grafikleri hazırlanacaktır.",
-    descriptionEn: "Building a modern SaaS administrative dashboard on top of our existing PostgreSQL schema with Next.js 15, Supabase Auth, and usage analytics.",
+    descriptionTr:
+      "Mevcut PostgreSQL şemamız üzerine Next.js 15 App Router, Tailwind CSS ve Supabase Auth entegre edilecek; müşteri faturalandırma ve analitik grafikleri hazırlanacaktır.",
+    descriptionEn:
+      "Building a modern SaaS administrative dashboard on top of our existing PostgreSQL schema with Next.js 15, Supabase Auth, and usage analytics.",
     tags: ["Next.js 15", "TypeScript", "PostgreSQL", "Supabase", "Tailwind CSS"],
     offerPriceTr: "60.000 ₺",
     offerPriceEn: "$1,800",
@@ -75,8 +77,10 @@ const POPULAR_LISTINGS: ProjectPreviewData[] = [
     freelancerExpTr: "14 Yıllık Deneyim • %100 Başarı",
     freelancerExpEn: "14 Yrs Exp • 100% Rate",
     freelancerInitials: "DY",
-    bidMessageTr: "«Next.js 15 ve Supabase mimarilerine hakimim. İlgili analitik paneli temiz mimari ve TypeScript ile eksiksiz teslim edebilirim.»",
-    bidMessageEn: "«Experienced in Next.js 15 and Supabase. Can deliver clean code with full test coverage.»",
+    bidMessageTr:
+      "«Next.js 15 ve Supabase mimarilerine hakimim. İlgili analitik paneli temiz mimari ve TypeScript ile eksiksiz teslim edebilirim.»",
+    bidMessageEn:
+      "«Experienced in Next.js 15 and Supabase. Can deliver clean code with full test coverage.»",
   },
   {
     id: "design",
@@ -89,8 +93,10 @@ const POPULAR_LISTINGS: ProjectPreviewData[] = [
     budgetEn: "$1,350",
     daysLeftTr: "6 Gün Kaldı (Taze İlan)",
     daysLeftEn: "6 Days Left (Active)",
-    descriptionTr: "B2B finansal ödeme ve cüzdan uygulamamız için 80+ bileşenden oluşan token tabanlı Figma Design System, kullanıcı yolculuk haritaları ve interaktif prototipler tasarlanacak.",
-    descriptionEn: "Designing an 80+ component token-based Figma design system, user journey maps, and high-fidelity interactive prototypes for a B2B payment app.",
+    descriptionTr:
+      "B2B finansal ödeme ve cüzdan uygulamamız için 80+ bileşenden oluşan token tabanlı Figma Design System, kullanıcı yolculuk haritaları ve interaktif prototipler tasarlanacak.",
+    descriptionEn:
+      "Designing an 80+ component token-based Figma design system, user journey maps, and high-fidelity interactive prototypes for a B2B payment app.",
     tags: ["Figma", "Design System", "Mobile UX", "Prototyping", "Fintech"],
     offerPriceTr: "42.000 ₺",
     offerPriceEn: "$1,250",
@@ -101,8 +107,10 @@ const POPULAR_LISTINGS: ProjectPreviewData[] = [
     freelancerExpTr: "8 Yıllık Deneyim • 40+ Teslimat",
     freelancerExpEn: "8 Yrs Exp • 40+ Projects",
     freelancerInitials: "SK",
-    bidMessageTr: "«Fintech ve SaaS design system projelerinde uzmanım. Figma Variables ve responsive auto-layout bileşenleriyle eksiksiz teslim ederim.»",
-    bidMessageEn: "«Specialized in fintech design systems with Figma variables and full token architecture ready for engineering handoff.»",
+    bidMessageTr:
+      "«Fintech ve SaaS design system projelerinde uzmanım. Figma Variables ve responsive auto-layout bileşenleriyle eksiksiz teslim ederim.»",
+    bidMessageEn:
+      "«Specialized in fintech design systems with Figma variables and full token architecture ready for engineering handoff.»",
   },
   {
     id: "ai",
@@ -115,8 +123,10 @@ const POPULAR_LISTINGS: ProjectPreviewData[] = [
     budgetEn: "$1,650",
     daysLeftTr: "4 Gün Kaldı (Taze İlan)",
     daysLeftEn: "4 Days Left (Active)",
-    descriptionTr: "PDF dökümanlarımızı ve şirket bilgi tabanını vektör veritabanına indeksleyerek çalışan, halüsinasyon oranı minimum RAG arama ve otomatik bilet yanıtlama botu geliştirilecek.",
-    descriptionEn: "Developing a low-hallucination RAG enterprise customer support bot leveraging vector embeddings, LangChain, and automated ticket triaging.",
+    descriptionTr:
+      "PDF dökümanlarımızı ve şirket bilgi tabanını vektör veritabanına indeksleyerek çalışan, halüsinasyon oranı minimum RAG arama ve otomatik bilet yanıtlama botu geliştirilecek.",
+    descriptionEn:
+      "Developing a low-hallucination RAG enterprise customer support bot leveraging vector embeddings, LangChain, and automated ticket triaging.",
     tags: ["Python", "LangChain", "OpenAI API", "Qdrant", "FastAPI"],
     offerPriceTr: "50.000 ₺",
     offerPriceEn: "$1,500",
@@ -127,8 +137,10 @@ const POPULAR_LISTINGS: ProjectPreviewData[] = [
     freelancerExpTr: "9 Yıllık Deneyim • 25+ LLM Sistemi",
     freelancerExpEn: "9 Yrs Exp • 25+ LLM Systems",
     freelancerInitials: "BT",
-    bidMessageTr: "«Vektör veritabanları ve kurumsal RAG boru hatları konusunda uzmanım. Doğruluk oranı yüksek hibrit arama mimarisi kurabilirim.»",
-    bidMessageEn: "«Specialized in vector retrieval and enterprise RAG pipelines with hybrid re-ranking and telemetry.»",
+    bidMessageTr:
+      "«Vektör veritabanları ve kurumsal RAG boru hatları konusunda uzmanım. Doğruluk oranı yüksek hibrit arama mimarisi kurabilirim.»",
+    bidMessageEn:
+      "«Specialized in vector retrieval and enterprise RAG pipelines with hybrid re-ranking and telemetry.»",
   },
   {
     id: "marketing",
@@ -141,8 +153,10 @@ const POPULAR_LISTINGS: ProjectPreviewData[] = [
     budgetEn: "$1,150",
     daysLeftTr: "5 Gün Kaldı (Taze İlan)",
     daysLeftEn: "5 Days Left (Active)",
-    descriptionTr: "B2B SaaS platformumuz için Google Search & LinkedIn reklam kampanyalarının kurulumu, PostHog dönüşüm funnel analitiği ve A/B landing page optimizasyon testleri yürütülecek.",
-    descriptionEn: "Setting up B2B LinkedIn & Google Ads pipelines, PostHog funnel telemetry, and running scientific A/B conversion tests.",
+    descriptionTr:
+      "B2B SaaS platformumuz için Google Search & LinkedIn reklam kampanyalarının kurulumu, PostHog dönüşüm funnel analitiği ve A/B landing page optimizasyon testleri yürütülecek.",
+    descriptionEn:
+      "Setting up B2B LinkedIn & Google Ads pipelines, PostHog funnel telemetry, and running scientific A/B conversion tests.",
     tags: ["B2B Growth", "Google Ads", "PostHog", "Funnel CRO", "LinkedIn Ads"],
     offerPriceTr: "35.000 ₺",
     offerPriceEn: "$1,050",
@@ -153,8 +167,10 @@ const POPULAR_LISTINGS: ProjectPreviewData[] = [
     freelancerExpTr: "6 Yıllık Deneyim • $2M+ Reklam Yönetimi",
     freelancerExpEn: "6 Yrs Exp • $2M+ Ad Spend",
     freelancerInitials: "MA",
-    bidMessageTr: "«B2B SaaS büyüme pazarlamasında derin tecrübem var. İlk 30 günde CAC değerinizi %30 düşürecek net funnel stratejisini hazırlarım.»",
-    bidMessageEn: "«Managed $2M+ B2B ad spend with proven payback period compression and event tracking setup.»",
+    bidMessageTr:
+      "«B2B SaaS büyüme pazarlamasında derin tecrübem var. İlk 30 günde CAC değerinizi %30 düşürecek net funnel stratejisini hazırlarım.»",
+    bidMessageEn:
+      "«Managed $2M+ B2B ad spend with proven payback period compression and event tracking setup.»",
   },
   {
     id: "video",
@@ -167,8 +183,10 @@ const POPULAR_LISTINGS: ProjectPreviewData[] = [
     budgetEn: "$1,500",
     daysLeftTr: "7 Gün Kaldı (Yeni İlan)",
     daysLeftEn: "7 Days Left (New)",
-    descriptionTr: "Yeni nesil IoT cihazımızın CAD modelleri üzerinden 45 saniyelik 4K 60fps sinematik patlatılmış montaj ve stüdyo aydınlatmalı lansman tanıtım videosu render edilecek.",
-    descriptionEn: "Creating a 45-second 4K cinematic exploded-assembly 3D teaser video from CAD engineering assets in Blender with sound design.",
+    descriptionTr:
+      "Yeni nesil IoT cihazımızın CAD modelleri üzerinden 45 saniyelik 4K 60fps sinematik patlatılmış montaj ve stüdyo aydınlatmalı lansman tanıtım videosu render edilecek.",
+    descriptionEn:
+      "Creating a 45-second 4K cinematic exploded-assembly 3D teaser video from CAD engineering assets in Blender with sound design.",
     tags: ["Blender 3D", "After Effects", "CAD Render", "Sound Design", "Octane"],
     offerPriceTr: "48.000 ₺",
     offerPriceEn: "$1,450",
@@ -179,8 +197,10 @@ const POPULAR_LISTINGS: ProjectPreviewData[] = [
     freelancerExpTr: "7 Yıllık Deneyim • 50+ Lansman Videosu",
     freelancerExpEn: "7 Yrs Exp • 50+ Launch Videos",
     freelancerInitials: "EZ",
-    bidMessageTr: "«Blender ve Cycles ile Apple/Tesla standartlarında donanım animasyonları yapıyorum. 4K render ve ses tasarımı dahil anahtar teslim sunarım.»",
-    bidMessageEn: "«Crafting Apple-grade industrial product animations with sound design and 4K masters included.»",
+    bidMessageTr:
+      "«Blender ve Cycles ile Apple/Tesla standartlarında donanım animasyonları yapıyorum. 4K render ve ses tasarımı dahil anahtar teslim sunarım.»",
+    bidMessageEn:
+      "«Crafting Apple-grade industrial product animations with sound design and 4K masters included.»",
   },
 ];
 
@@ -290,7 +310,8 @@ export function HeroInteractivePreview({ isTr = true }: HeroInteractivePreviewPr
                             {isTr ? listing.category : listing.categoryEn}
                           </div>
                           <div className="text-[10px] text-[var(--color-text-tertiary)] truncate">
-                            {isTr ? listing.budgetTr : listing.budgetEn} • {isTr ? listing.daysLeftTr : listing.daysLeftEn}
+                            {isTr ? listing.budgetTr : listing.budgetEn} •{" "}
+                            {isTr ? listing.daysLeftTr : listing.daysLeftEn}
                           </div>
                         </div>
                       </div>
@@ -511,7 +532,11 @@ export function HeroInteractivePreview({ isTr = true }: HeroInteractivePreviewPr
                       <div className="text-xs sm:text-sm font-bold text-[var(--color-text-primary)]">
                         {currentProject.freelancerName}{" "}
                         <span className="text-[10px] text-emerald-400 font-normal">
-                          ({isTr ? currentProject.freelancerBadgeTr : currentProject.freelancerBadgeEn})
+                          (
+                          {isTr
+                            ? currentProject.freelancerBadgeTr
+                            : currentProject.freelancerBadgeEn}
+                          )
                         </span>
                       </div>
                       <div className="text-[11px] text-[var(--color-text-tertiary)]">

@@ -1,14 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useMemo } from "react";
-import {
-  Search,
-  X,
-  ChevronDown,
-  Check,
-  Briefcase,
-  Layers,
-} from "lucide-react";
+import { Search, X, ChevronDown, Check, Briefcase, Layers } from "lucide-react";
 import { SEED_SECTORS } from "@/db/seeds/categories";
 import { SECTOR_ICONS } from "./category-icons-map";
 import type { CategoryItem } from "./category-grid-card";
@@ -144,7 +137,8 @@ export function CategorySearchFilter({
     containerZIndexClass = "z-50 ring-1 ring-blue-500/25 border-blue-500/40";
   }
 
-  let triggerStyleClass = "bg-[var(--color-surface-hover)] hover:bg-[var(--color-surface-hover)]/80 border-[var(--color-border-subtle)]/70 text-[var(--color-text-primary)]";
+  let triggerStyleClass =
+    "bg-[var(--color-surface-hover)] hover:bg-[var(--color-surface-hover)]/80 border-[var(--color-border-subtle)]/70 text-[var(--color-text-primary)]";
   if (isSectorDropdownOpen) {
     triggerStyleClass = "bg-blue-500/10 border-blue-500/40 text-[var(--color-text-primary)]";
   }
@@ -203,14 +197,14 @@ export function CategorySearchFilter({
               <div className="h-6 w-6 rounded-lg bg-blue-500/15 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
                 <ActiveSectorIcon className="h-3.5 w-3.5" aria-hidden="true" />
               </div>
-              <span className="text-xs font-semibold truncate">
-                {currentSectorLabel}
-              </span>
+              <span className="text-xs font-semibold truncate">{currentSectorLabel}</span>
             </div>
 
             <div className="flex items-center gap-1.5 shrink-0">
               <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[var(--color-surface-base)] text-[var(--color-text-secondary)] border border-[var(--color-border-subtle)]">
-                <span className="hidden min-[380px]:inline">{currentSectorCount} {isTr ? "alan" : "areas"} • </span>
+                <span className="hidden min-[380px]:inline">
+                  {currentSectorCount} {isTr ? "alan" : "areas"} •{" "}
+                </span>
                 {currentSectorListingCount} {isTr ? "ilan" : "listings"}
               </span>
               <ChevronDown
@@ -223,9 +217,7 @@ export function CategorySearchFilter({
 
           {/* Dropdown Menu (With Search Filter Inside Popover, Right Aligned) */}
           {isSectorDropdownOpen && (
-            <div
-              className="absolute top-full right-0 mt-2 w-[calc(100vw-2rem)] sm:w-full min-w-0 max-w-[calc(100vw-2rem)] sm:max-w-[480px] sm:min-w-[420px] rounded-2xl border border-[var(--border-strong)] bg-[var(--bg-elevated)] shadow-2xl shadow-black/50 p-1.5 z-[100] animate-in fade-in zoom-in-95 duration-150"
-            >
+            <div className="absolute top-full left-0 sm:left-auto sm:right-0 mt-2 w-[calc(100vw-2rem)] sm:w-full min-w-0 max-w-[calc(100vw-2rem)] sm:max-w-[480px] sm:min-w-[420px] rounded-2xl border border-[var(--border-strong)] bg-[var(--bg-elevated)] shadow-2xl shadow-black/50 p-1.5 z-[100] animate-in fade-in zoom-in-95 duration-150">
               <div className="p-1 mb-1">
                 <div className="relative">
                   <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--color-text-tertiary)]" />
@@ -253,9 +245,7 @@ export function CategorySearchFilter({
                 {sectorOptions.length === 0 ? (
                   <div className="p-6 text-center space-y-2">
                     <p className="text-xs text-[var(--color-text-tertiary)]">
-                      {isTr
-                        ? "Aramanızla eşleşen sektör bulunamadı."
-                        : "No matching sector found."}
+                      {isTr ? "Aramanızla eşleşen sektör bulunamadı." : "No matching sector found."}
                     </p>
                     <button
                       type="button"
@@ -270,19 +260,25 @@ export function CategorySearchFilter({
                     const Icon = item.icon;
                     const isSelected = selectedSector === item.key;
 
-                    let rowClass = "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]";
+                    let rowClass =
+                      "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]";
                     if (isSelected) {
-                      rowClass = "bg-blue-500/10 dark:bg-blue-600/15 text-blue-700 dark:text-blue-400 border border-blue-500/30 font-semibold";
+                      rowClass =
+                        "bg-blue-500/10 dark:bg-blue-600/15 text-blue-700 dark:text-blue-400 border border-blue-500/30 font-semibold";
                     }
 
-                    let iconBgClass = "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)]";
+                    let iconBgClass =
+                      "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)]";
                     if (isSelected) {
-                      iconBgClass = "bg-blue-500/15 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400";
+                      iconBgClass =
+                        "bg-blue-500/15 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400";
                     }
 
-                    let countBadgeClass = "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)]";
+                    let countBadgeClass =
+                      "bg-[var(--color-surface-hover)] text-[var(--color-text-tertiary)]";
                     if (isSelected) {
-                      countBadgeClass = "bg-blue-500/10 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/20 dark:border-transparent";
+                      countBadgeClass =
+                        "bg-blue-500/10 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/20 dark:border-transparent";
                     }
 
                     return (
@@ -297,7 +293,9 @@ export function CategorySearchFilter({
                         className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs transition-colors cursor-pointer text-left ${rowClass}`}
                       >
                         <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                          <div className={`h-7 w-7 rounded-lg flex items-center justify-center shrink-0 ${iconBgClass}`}>
+                          <div
+                            className={`h-7 w-7 rounded-lg flex items-center justify-center shrink-0 ${iconBgClass}`}
+                          >
                             <Icon className="h-3.5 w-3.5" aria-hidden="true" />
                           </div>
                           <div className="min-w-0">
@@ -311,12 +309,19 @@ export function CategorySearchFilter({
                         </div>
 
                         <div className="flex items-center gap-2 shrink-0">
-                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${countBadgeClass}`}>
-                            <span className="hidden min-[360px]:inline">{item.count} {isTr ? "uzmanlık" : "specializations"} • </span>
+                          <span
+                            className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${countBadgeClass}`}
+                          >
+                            <span className="hidden min-[360px]:inline">
+                              {item.count} {isTr ? "uzmanlık" : "specializations"} •{" "}
+                            </span>
                             {item.listingCount} {isTr ? "ilan" : "listings"}
                           </span>
                           {isSelected && (
-                            <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+                            <Check
+                              className="h-4 w-4 text-blue-600 dark:text-blue-400"
+                              aria-hidden="true"
+                            />
                           )}
                         </div>
                       </button>

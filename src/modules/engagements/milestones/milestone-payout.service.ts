@@ -44,8 +44,8 @@ export class MilestonePayoutService {
     }
 
     const isMock =
-      engagementId.startsWith("eng-test-") ||
-      engagementId.startsWith("eng-demo-");
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-"));
 
     const channel: TransferChannel = (input.transferChannel as TransferChannel) || "FAST";
     const bank = input.senderBank || "GARANTI_BBVA";
@@ -290,8 +290,8 @@ export class MilestonePayoutService {
     }
 
     const isMock =
-      engagementId.startsWith("eng-test-") ||
-      engagementId.startsWith("eng-demo-");
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-"));
 
     if (isMock) {
       const list = inMemoryMilestones.get(engagementId) || [];
@@ -469,8 +469,8 @@ export class MilestonePayoutService {
     }
 
     const isMock =
-      engagementId.startsWith("eng-test-") ||
-      engagementId.startsWith("eng-demo-");
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-"));
 
     if (isMock) {
       const list = inMemoryMilestones.get(engagementId) || [];
@@ -621,7 +621,9 @@ export class MilestonePayoutService {
           paymentReference: existing.paymentReference,
           paymentReceiptUrl: existing.paymentReceiptUrl,
           invoiceNumber: existing.invoiceNumber,
-          paidMarkedAt: existing.paidMarkedAt ? new Date(existing.paidMarkedAt).toISOString() : null,
+          paidMarkedAt: existing.paidMarkedAt
+            ? new Date(existing.paidMarkedAt).toISOString()
+            : null,
           paidConfirmedAt: existing.paidConfirmedAt
             ? new Date(existing.paidConfirmedAt).toISOString()
             : null,
@@ -862,8 +864,8 @@ export class MilestonePayoutService {
     }
 
     const isMock =
-      engagementId.startsWith("eng-test-") ||
-      engagementId.startsWith("eng-demo-");
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-"));
 
     if (isMock) {
       const list = inMemoryMilestones.get(engagementId) || [];
@@ -975,9 +977,7 @@ export class MilestonePayoutService {
       .returning();
 
     if (!updated) {
-      throw new Error(
-        "Hakediş bulunamadı veya itiraz edilebilecek bir ödeme bildirimi yok."
-      );
+      throw new Error("Hakediş bulunamadı veya itiraz edilebilecek bir ödeme bildirimi yok.");
     }
 
     try {
@@ -1055,8 +1055,8 @@ export class MilestonePayoutService {
     );
 
     const isMock =
-      engagementId.startsWith("eng-test-") ||
-      engagementId.startsWith("eng-demo-");
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-"));
 
     if (isMock) {
       const list = inMemoryMilestones.get(engagementId) || [];

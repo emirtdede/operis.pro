@@ -180,7 +180,9 @@ describe.runIf(isIntegration)("PostgreSQL listings_budget_integrity_chk comprehe
         activeUntil: new Date(Date.now() + 7 * 86400000),
         lastActivatedAt: new Date(),
       })
-    ).rejects.toThrow(/listings_budget_integrity_chk/);
+    ).rejects.toMatchObject({
+      cause: { code: "23514", constraint: "listings_budget_integrity_chk" },
+    });
   });
 
   it("fails check constraint if FIXED_RANGE has min > max", async () => {
@@ -207,6 +209,8 @@ describe.runIf(isIntegration)("PostgreSQL listings_budget_integrity_chk comprehe
         activeUntil: new Date(Date.now() + 7 * 86400000),
         lastActivatedAt: new Date(),
       })
-    ).rejects.toThrow(/listings_budget_integrity_chk/);
+    ).rejects.toMatchObject({
+      cause: { code: "23514", constraint: "listings_budget_integrity_chk" },
+    });
   });
 });

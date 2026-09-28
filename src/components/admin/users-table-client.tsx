@@ -4,6 +4,7 @@ import { useState, useTransition, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, X, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { AdminUserItem } from "@/src/modules/admin/service";
+import { ModalOverlay } from "@/src/components/ui/modal-overlay";
 
 interface UsersTableClientProps {
   initialUsers: AdminUserItem[];
@@ -410,16 +411,25 @@ export function UsersTableClient({
       </div>
 
       {/* User Details Modal / Drawer */}
-      {selectedUser && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 animate-in fade-in-0 duration-200">
-          <div className="w-full max-w-xl max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-[#12141a] p-4 sm:p-6 shadow-2xl">
+      <ModalOverlay
+        isOpen={Boolean(selectedUser)}
+        onClose={() => setSelectedUser(null)}
+        ariaLabel={selectedUser ? `${selectedUser.displayName} Detayı` : "Kullanıcı Detayı"}
+      >
+        {selectedUser && (
+          <div
+            className="w-full max-w-xl max-h-[min(92dvh,calc(100dvh-2rem))] flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-[#12141a] p-4 sm:p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-slate-800 pb-4 shrink-0">
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-bold text-sm flex items-center justify-center shrink-0">
                   {selectedUser.displayName.slice(0, 2).toUpperCase()}
                 </div>
                 <div className="min-w-0">
-                  <h3 className="text-base font-bold text-white truncate">{selectedUser.displayName}</h3>
+                  <h3 className="text-base font-bold text-white truncate">
+                    {selectedUser.displayName}
+                  </h3>
                   <div className="text-xs font-mono text-slate-400 truncate">
                     @{selectedUser.handle} • ID: {selectedUser.id}
                   </div>
@@ -437,7 +447,9 @@ export function UsersTableClient({
               <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 text-xs">
                 <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
                   <div className="text-slate-500 font-medium">E-Posta Adresi</div>
-                  <div className="font-mono text-slate-200 font-semibold break-all">{selectedUser.email}</div>
+                  <div className="font-mono text-slate-200 font-semibold break-all">
+                    {selectedUser.email}
+                  </div>
                   <div className="text-[10px] text-emerald-400">
                     {selectedUser.emailVerified ? "✓ Doğrulanmış" : "⚠ Doğrulanmamış"}
                   </div>
@@ -467,9 +479,9 @@ export function UsersTableClient({
               <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1 text-xs">
                 <div className="text-slate-400 font-semibold">Gizlilik & Kimlik Güvencesi:</div>
                 <p className="text-[11px] text-slate-500 leading-relaxed">
-                  Operis kuralları uyarınca kullanıcının telefon ve kimlik PII verileri veritabanında
-                  AES-256 ile şifreli tutulmakta olup yönetici ekranına doğrudan açık metin olarak
-                  gösterilmez (Zero-Knowledge Audit).
+                  Operis kuralları uyarınca kullanıcının telefon ve kimlik PII verileri
+                  veritabanında AES-256 ile şifreli tutulmakta olup yönetici ekranına doğrudan açık
+                  metin olarak gösterilmez (Zero-Knowledge Audit).
                 </p>
               </div>
             </div>
@@ -498,8 +510,8 @@ export function UsersTableClient({
               </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalOverlay>
     </div>
   );
 }

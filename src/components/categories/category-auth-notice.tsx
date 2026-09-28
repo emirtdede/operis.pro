@@ -10,12 +10,7 @@ export interface CategoryAuthNoticeProps {
   loginUrl: string;
 }
 
-export function CategoryAuthNotice({
-  isOpen,
-  onClose,
-  isTr,
-  loginUrl,
-}: CategoryAuthNoticeProps) {
+export function CategoryAuthNotice({ isOpen, onClose, isTr, loginUrl }: CategoryAuthNoticeProps) {
   if (!isOpen) return null;
 
   return (

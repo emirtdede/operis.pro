@@ -46,18 +46,38 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     return NextResponse.json({ success: true, result });
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Failed to cancel engagement";
-    let errorMessage = msg;
+    console.error("[Work Cancel Error]:", err);
+    const msg = err instanceof Error ? err.message : "";
+
     if (msg === "CANNOT_CANCEL_DISPUTED_ENGAGEMENT") {
-      errorMessage = isEn
-        ? "Projects in dispute review cannot be cancelled unilaterally. Please await admin arbitration."
-        : "İnceleme/ihtilaf sürecindeki projeler tek taraflı iptal edilemez. Lütfen yönetici hakemlik kararını bekleyin.";
-    } else if (msg === "Cannot cancel an already completed engagement") {
-      errorMessage = isEn
-        ? "Cannot cancel an already completed engagement."
-        : "Tamamlanmış bir iş ortaklığı iptal edilemez.";
+      return NextResponse.json(
+        {
+          error: isEn
+            ? "Projects in dispute review cannot be cancelled unilaterally. Please await admin arbitration."
+            : "İnceleme/ihtilaf sürecindeki projeler tek taraflı iptal edilemez. Lütfen yönetici hakemlik kararını bekleyin.",
+          code: "CANNOT_CANCEL_DISPUTED_ENGAGEMENT",
+        },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json({ error: errorMessage, code: msg }, { status: 400 });
+    if (msg === "Cannot cancel an already completed engagement") {
+      return NextResponse.json(
+        {
+          error: isEn
+            ? "Cannot cancel an already completed engagement."
+            : "Tamamlanmış bir iş ortaklığı iptal edilemez.",
+          code: "ALREADY_COMPLETED",
+        },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        error: isEn ? "Failed to cancel engagement." : "İş birliği iptal edilemedi.",
+      },
+      { status: 500 }
+    );
   }
 }

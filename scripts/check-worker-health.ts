@@ -91,8 +91,7 @@ async function main() {
         } else {
           const fallbackDelay =
             RETRY_BACKOFF_DELAYS_MS[RETRY_BACKOFF_DELAYS_MS.length - 1] ?? 60000;
-          const delay =
-            RETRY_BACKOFF_DELAYS_MS[pendingAlert.attemptCount - 1] ?? fallbackDelay;
+          const delay = RETRY_BACKOFF_DELAYS_MS[pendingAlert.attemptCount - 1] ?? fallbackDelay;
           pendingAlert.nextAttemptAt = new Date(Date.now() + delay).toISOString();
         }
       }

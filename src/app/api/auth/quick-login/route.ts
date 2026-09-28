@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
+import { handleApiError } from "@/src/lib/api/error-response";
 import { DEFAULT_USER } from "@/src/modules/auth/demo-user";
 import {
   createSessionToken,
@@ -44,9 +45,7 @@ export async function POST(req: Request) {
       admin: "admin@operis.pro",
     };
     const targetEmail =
-      body.email ||
-      (body.role ? ROLE_DEFAULT_EMAILS[body.role] : undefined) ||
-      DEFAULT_USER.email;
+      body.email || (body.role ? ROLE_DEFAULT_EMAILS[body.role] : undefined) || DEFAULT_USER.email;
 
     let userRecord = {
       id: DEFAULT_USER.id,
@@ -125,7 +124,13 @@ export async function POST(req: Request) {
 
     return response;
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Quick login failed";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(
+      err,
+      {
+        en: "Quick login failed",
+        tr: "Hızlı giriş işlemi başarısız oldu",
+      },
+      { isEn, logPrefix: "[Auth Quick Login POST Error]", status: 500 }
+    );
   }
 }

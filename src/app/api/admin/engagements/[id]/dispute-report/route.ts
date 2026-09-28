@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
 import { getAdminSession } from "@/src/modules/admin/auth-guard";
 import { DisputeArbiterService } from "@/src/modules/ai/dispute-arbiter";
+import { handleApiError } from "@/src/lib/api/error-response";
 import { getDb } from "@/src/lib/db";
 import * as schema from "@/db/schema";
 import type { DeliveryHealthReport } from "@/src/modules/engagements/delivery-inspector";
 import { eq, desc, asc } from "drizzle-orm";
 
-export async function GET(
-  _req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const auth = await getAdminSession();
   if (!auth.isAdmin || !auth.session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
@@ -21,7 +19,10 @@ export async function GET(
   }
 
   try {
-    const isMock = Boolean(process.env.VITEST) || engagementId.startsWith("eng-dispute-") || engagementId === "eng-demo-101";
+    const isMock =
+      Boolean(process.env.VITEST) ||
+      engagementId.startsWith("eng-dispute-") ||
+      engagementId === "eng-demo-101";
 
     if (isMock) {
       // Return high-fidelity fixture for testing and admin demonstration
@@ -135,7 +136,8 @@ export async function GET(
         id: m.id,
         title: m.title,
         percentage: Number(m.percentage),
-        deliverableStatus: m.deliverableStatus as "PENDING" | "SUBMITTED" | "ACCEPTED" | "REVISION_REQUESTED",
+        deliverableStatus: m.deliverableStatus as
+          "PENDING" | "SUBMITTED" | "ACCEPTED" | "REVISION_REQUESTED",
         paymentStatus: m.paymentStatus as "PENDING" | "MARKED_PAID" | "CONFIRMED_PAID",
         deliverableUrl: m.deliverableUrl,
       })),
@@ -144,7 +146,9 @@ export async function GET(
 
     return NextResponse.json({ success: true, report });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed to analyze dispute";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return handleApiError(error, "Failed to analyze dispute", {
+      logPrefix: "[Admin Dispute Report GET Error]",
+      status: 500,
+    });
   }
 }

@@ -329,49 +329,51 @@ Doğrulama Komutu: sha256sum -c checksums.sha256`;
               </div>
 
               <div className="border border-[var(--color-border-subtle)] rounded-xl overflow-hidden bg-[var(--color-surface)]">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="bg-[var(--color-surface-hover)] border-b border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] font-semibold">
-                      <th className="p-3 w-12 text-center">#</th>
-                      <th className="p-3">
-                        {isTr ? "Belge Başlığı & Dosya Yolu" : "Exhibit & Path"}
-                      </th>
-                      <th className="p-3 w-28">{isTr ? "Kategori" : "Category"}</th>
-                      <th className="p-3 w-40">{isTr ? "Yasal Dayanak" : "Statutory Basis"}</th>
-                      <th className="p-3 w-32 font-mono text-[11px]">
-                        {isTr ? "SHA-256 Özeti" : "SHA-256"}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[var(--color-border-subtle)]">
-                    {manifest.documents.map((doc, idx) => (
-                      <tr
-                        key={doc.path}
-                        className="hover:bg-[var(--color-surface-hover)]/40 transition-colors"
-                      >
-                        <td className="p-3 text-center font-bold text-[var(--color-text-tertiary)]">
-                          {idx + 1}
-                        </td>
-                        <td className="p-3 space-y-0.5">
-                          <div className="font-semibold text-[var(--color-text-primary)] flex items-center gap-1.5">
-                            {renderDocIcon(doc.mimeType, doc.path)}
-                            <span>{doc.title}</span>
-                          </div>
-                          <div className="font-mono text-[10px] text-[var(--color-text-tertiary)]">
-                            {doc.path}
-                          </div>
-                        </td>
-                        <td className="p-3">{getCategoryBadge(doc.category)}</td>
-                        <td className="p-3 text-[11px] text-[var(--color-text-secondary)]">
-                          {isTr ? doc.legalGroundTr : doc.legalGroundEn}
-                        </td>
-                        <td className="p-3 font-mono text-[11px] text-emerald-400/90 truncate">
-                          {doc.sha256.slice(0, 10)}...{doc.sha256.slice(-4)}
-                        </td>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="bg-[var(--color-surface-hover)] border-b border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] font-semibold">
+                        <th className="p-3 w-12 text-center">#</th>
+                        <th className="p-3">
+                          {isTr ? "Belge Başlığı & Dosya Yolu" : "Exhibit & Path"}
+                        </th>
+                        <th className="p-3 w-28">{isTr ? "Kategori" : "Category"}</th>
+                        <th className="p-3 w-40">{isTr ? "Yasal Dayanak" : "Statutory Basis"}</th>
+                        <th className="p-3 w-32 font-mono text-[11px]">
+                          {isTr ? "SHA-256 Özeti" : "SHA-256"}
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-[var(--color-border-subtle)]">
+                      {manifest.documents.map((doc, idx) => (
+                        <tr
+                          key={doc.path}
+                          className="hover:bg-[var(--color-surface-hover)]/40 transition-colors"
+                        >
+                          <td className="p-3 text-center font-bold text-[var(--color-text-tertiary)]">
+                            {idx + 1}
+                          </td>
+                          <td className="p-3 space-y-0.5">
+                            <div className="font-semibold text-[var(--color-text-primary)] flex items-center gap-1.5">
+                              {renderDocIcon(doc.mimeType, doc.path)}
+                              <span>{doc.title}</span>
+                            </div>
+                            <div className="font-mono text-[10px] text-[var(--color-text-tertiary)]">
+                              {doc.path}
+                            </div>
+                          </td>
+                          <td className="p-3">{getCategoryBadge(doc.category)}</td>
+                          <td className="p-3 text-[11px] text-[var(--color-text-secondary)]">
+                            {isTr ? doc.legalGroundTr : doc.legalGroundEn}
+                          </td>
+                          <td className="p-3 font-mono text-[11px] text-emerald-400/90 truncate">
+                            {doc.sha256.slice(0, 10)}...{doc.sha256.slice(-4)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 

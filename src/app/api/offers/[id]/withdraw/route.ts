@@ -52,7 +52,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
           ? "Unauthorized: Only the proposal creator can withdraw this offer."
           : "Yetkisiz işlem: Sadece teklif sahibi bu teklifi geri çekebilir.";
       } else {
-        message = raw;
+        console.error("[Withdraw Offer Error]:", err);
+        return NextResponse.json(
+          { error: isEn ? "Failed to withdraw offer." : "Teklif geri çekilemedi." },
+          { status: 500 }
+        );
       }
     }
     return NextResponse.json({ error: message }, { status: 400 });

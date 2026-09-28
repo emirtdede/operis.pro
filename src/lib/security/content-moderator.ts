@@ -15,7 +15,6 @@ export function containsEmoji(text: string): boolean {
 // Common Turkish & English profanity, slurs, offensive roots
 const BLOCKED_WORDS = [
   // Küfür ve Hakaret Kökleri (TR)
-  "küfür",
   "orospu",
   "piç",
   "sik",
@@ -141,24 +140,44 @@ export function validateContentAppropriateness(rawText: string): ModerationResul
 
     // Word boundary check
     if (words.includes(blocked) || asciiWords.includes(asciiBlocked)) {
-      flagged.add(blocked);
+      if (blocked === "sik") {
+        // Disambiguate Turkish "sık" (frequent/tight), "sıkça", "sıkıntı" from the vulgar term "sik" (with dotted 'i')
+        const hasActualVulgarSik = words.some(
+          (w, idx) =>
+            (w === "sik" || asciiWords[idx] === "sik") && w !== "sık" && !w.startsWith("sık")
+        );
+        if (hasActualVulgarSik) {
+          flagged.add(blocked);
+        }
+      } else {
+        flagged.add(blocked);
+      }
     }
 
     // Direct substring check for severe slurs (longer than 3 chars)
-    if (
-      blocked.length >= 4 &&
-      (compressed.includes(blocked) || asciiCompressed.includes(asciiBlocked))
-    ) {
-      flagged.add(blocked);
+    if (blocked.length >= 4) {
+      if (blocked === "sikiş") {
+        if (compressed.includes("sikiş")) {
+          flagged.add(blocked);
+        }
+      } else if (compressed.includes(blocked) || asciiCompressed.includes(asciiBlocked)) {
+        flagged.add(blocked);
+      }
     }
   }
 
   // Contact leakage & off-platform solicitation guards
   const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/i;
-  const PHONE_REGEX = /(?:\+?90\s*|\b0\s*)[5][0-9]{2}[\s.-]*[0-9]{3}[\s.-]*[0-9]{2}[\s.-]*[0-9]{2}\b/;
-  const CONTACT_INVITE_REGEX = /(?:wa\.me\/|t\.me\/|discord\.gg\/|instagram\.com\/[a-zA-Z0-9_.]+|wp(?:'den|\s*tan|\s*den)?\s*(?:yaz|ulas|ara)|dm(?:'den|\s*den)?\s*(?:yaz|ulas))/i;
+  const PHONE_REGEX =
+    /(?:\+?90\s*|\b0\s*)[5][0-9]{2}[\s.-]*[0-9]{3}[\s.-]*[0-9]{2}[\s.-]*[0-9]{2}\b/;
+  const CONTACT_INVITE_REGEX =
+    /(?:wa\.me\/|t\.me\/|discord\.gg\/|instagram\.com\/[a-zA-Z0-9_.]+|wp(?:'den|\s*tan|\s*den)?\s*(?:yaz|ulas|ara)|dm(?:'den|\s*den)?\s*(?:yaz|ulas))/i;
 
-  if (EMAIL_REGEX.test(rawText) || PHONE_REGEX.test(rawText) || CONTACT_INVITE_REGEX.test(rawText)) {
+  if (
+    EMAIL_REGEX.test(rawText) ||
+    PHONE_REGEX.test(rawText) ||
+    CONTACT_INVITE_REGEX.test(rawText)
+  ) {
     return {
       isValid: false,
       flaggedTerms: ["CONTACT_LEAK"],

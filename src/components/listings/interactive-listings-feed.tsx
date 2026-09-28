@@ -164,7 +164,19 @@ export function InteractiveListingsFeed({
     return () => {
       controller.abort();
     };
-  }, [chipLast24h, chipFixedBudget, locale, mode, categorySlug, searchQuery, filterRetryKey, initialHasMore, initialNextCursor, isTr, items]);
+  }, [
+    chipLast24h,
+    chipFixedBudget,
+    locale,
+    mode,
+    categorySlug,
+    searchQuery,
+    filterRetryKey,
+    initialHasMore,
+    initialNextCursor,
+    isTr,
+    items,
+  ]);
 
   const handleLoadMore = async () => {
     if (!nextCursor || isLoadingMore || isFilterLoading) return;
@@ -350,9 +362,7 @@ export function InteractiveListingsFeed({
             }`}
           >
             <Layers className="h-3.5 w-3.5" />
-            <span>
-              {getBatchModeButtonLabel(isBatchMode, isTr)}
-            </span>
+            <span>{getBatchModeButtonLabel(isBatchMode, isTr)}</span>
           </button>
         </div>
       </div>

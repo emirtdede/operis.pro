@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { RetainerService } from "@/src/modules/engagements/retainer-service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
   normalizeIp,
 } from "@/src/lib/security/rate-limit";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const isEn = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
@@ -41,16 +39,28 @@ export async function GET(
 
     return NextResponse.json({ success: true, ...details });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to fetch retainer details";
-    const status = message.includes("Yetkisiz") || message.includes("Güvenlik ihlali") ? 403 : message.includes("bulunamadı") || message.includes("not found") ? 404 : 500;
-    return NextResponse.json({ error: message }, { status });
+    return handleApiError(
+      err,
+      {
+        en: "Failed to fetch retainer details",
+        tr: "Sürekli çalışma detayları alınamadı",
+      },
+      {
+        isEn,
+        logPrefix: "[Retainer GET Error]",
+        status: 500,
+        allowedMessages: {
+          Yetkisiz: { en: "Unauthorized", tr: "Yetkisiz erişim", status: 403 },
+          "Güvenlik ihlali": { en: "Security violation", tr: "Güvenlik ihlali", status: 403 },
+          bulunamadı: { en: "Retainer not found", tr: "Kayıt bulunamadı", status: 404 },
+          "not found": { en: "Retainer not found", tr: "Kayıt bulunamadı", status: 404 },
+        },
+      }
+    );
   }
 }
 
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const isEn = req.headers.get("x-locale") === "en";
   const ip = getClientIp(req);
 
@@ -95,14 +105,22 @@ export async function POST(
 
       if (!monthlyPrice || monthlyPrice <= 0) {
         return NextResponse.json(
-          { error: isEn ? "Monthly price must be greater than zero." : "Aylık ücret sıfırdan büyük olmalıdır." },
+          {
+            error: isEn
+              ? "Monthly price must be greater than zero."
+              : "Aylık ücret sıfırdan büyük olmalıdır.",
+          },
           { status: 400 }
         );
       }
 
       if (!scopeDescription || scopeDescription.trim().length < 10) {
         return NextResponse.json(
-          { error: isEn ? "Scope description must be at least 10 characters." : "Kapsam açıklaması en az 10 karakter olmalıdır." },
+          {
+            error: isEn
+              ? "Scope description must be at least 10 characters."
+              : "Kapsam açıklaması en az 10 karakter olmalıdır.",
+          },
           { status: 400 }
         );
       }
@@ -139,8 +157,28 @@ export async function POST(
       { status: 400 }
     );
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Retainer action failed";
-    const status = message.includes("Yetkisiz") || message.includes("Güvenlik ihlali") ? 403 : message.includes("bulunamadı") || message.includes("not found") ? 404 : 400;
-    return NextResponse.json({ error: message }, { status });
+    return handleApiError(
+      err,
+      {
+        en: "Retainer action failed",
+        tr: "Sürekli çalışma işlemi gerçekleştirilemedi",
+      },
+      {
+        isEn,
+        logPrefix: "[Retainer POST Error]",
+        status: 500,
+        allowedMessages: {
+          "Teklif sahibi kendi teklifini karşı taraf adına onaylayamaz": {
+            en: "Proposer cannot approve their own retainer proposal on behalf of the counterparty.",
+            tr: "Teklif sahibi kendi teklifini karşı taraf adına onaylayamaz.",
+            status: 403,
+          },
+          Yetkisiz: { en: "Unauthorized", tr: "Yetkisiz erişim", status: 403 },
+          "Güvenlik ihlali": { en: "Security violation", tr: "Güvenlik ihlali", status: 403 },
+          bulunamadı: { en: "Retainer not found", tr: "Kayıt bulunamadı", status: 404 },
+          "not found": { en: "Retainer not found", tr: "Kayıt bulunamadı", status: 404 },
+        },
+      }
+    );
   }
 }

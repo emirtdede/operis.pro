@@ -99,8 +99,7 @@ describe("Scope Synthesizer Engine", () => {
   it("appends Part 5 when clean custom notes are provided", () => {
     const markdown = synthesizeScope({
       title: "Next.js Kurumsal Web Sitesi Yenilenmesi",
-      summary:
-        "Mevcut web sitemizin Next.js ve modern Tailwind arayüzü ile yeniden yazılması işi.",
+      summary: "Mevcut web sitemizin Next.js ve modern Tailwind arayüzü ile yeniden yazılması işi.",
       categorySlug: "web-development",
       sectorKey: "sector-software-it",
       answers: {},
@@ -125,7 +124,9 @@ describe("Scope Synthesizer Engine", () => {
   });
 
   it("validates custom notes against contact leakage (emails)", () => {
-    const result = validateCustomNotes("Lütfen cv ve portfolyonuzu boss@sirketim.com adresine atın");
+    const result = validateCustomNotes(
+      "Lütfen cv ve portfolyonuzu boss@sirketim.com adresine atın"
+    );
     expect(result.isValid).toBe(false);
     expect(result.error).toContain("iletişim");
   });

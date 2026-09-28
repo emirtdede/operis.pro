@@ -51,7 +51,8 @@ describe("Scope Shield & Change Request Service (TBK m. 470 / m. 480/2)", () => 
           role: "CONTRACTOR",
         },
         title: "Stripe Çoklu Para Birimi Entegrasyonu",
-        description: "Stripe Checkout, Webhook dinleyicileri ve otomatik fatura oluşturma altyapısı.",
+        description:
+          "Stripe Checkout, Webhook dinleyicileri ve otomatik fatura oluşturma altyapısı.",
         reason: "CLIENT_REQUESTED",
         additionalBudget: 15000,
         currency: "TRY",
@@ -110,7 +111,8 @@ describe("Scope Shield & Change Request Service (TBK m. 470 / m. 480/2)", () => 
         engagementId,
         requesterUserId: freelancerUserId,
         title: "Webhook Güvenliği & HMAC Doğrulama",
-        description: "Tüm webhook çağrıları için HMAC SHA-256 imza doğrulama kalkanı ve replay saldırı koruması.",
+        description:
+          "Tüm webhook çağrıları için HMAC SHA-256 imza doğrulama kalkanı ve replay saldırı koruması.",
         reason: "TECHNICAL_NECESSITY",
         additionalBudget: 6000,
         currency: "TRY",
@@ -184,7 +186,8 @@ describe("Scope Shield & Change Request Service (TBK m. 470 / m. 480/2)", () => 
         engagementId,
         requesterUserId: freelancerUserId,
         title: "Redis Cache Katmanı ve Hızlandırma",
-        description: "Sorgu sürelerini 20ms altına çekmek için Redis distributed cache ve TTL yapılandırması.",
+        description:
+          "Sorgu sürelerini 20ms altına çekmek için Redis distributed cache ve TTL yapılandırması.",
         reason: "TECHNICAL_NECESSITY",
         additionalBudget: 8000,
         currency: "TRY",
@@ -201,7 +204,9 @@ describe("Scope Shield & Change Request Service (TBK m. 470 / m. 480/2)", () => 
       expect(approved.status).toBe("APPROVED");
       expect(approved.addendumSha256).toHaveLength(64);
       expect(approved.parentContractSha256).toBeDefined();
-      expect(approved.addendumContentMarkdown).toContain("SÖZLEŞME ZEYİLNAMESİ (EK PROTOKOL NO: 01)");
+      expect(approved.addendumContentMarkdown).toContain(
+        "SÖZLEŞME ZEYİLNAMESİ (EK PROTOKOL NO: 01)"
+      );
       expect(approved.addendumContentMarkdown).toContain("+8.000,00 TRY");
       expect(approved.respondedAt).toBeInstanceOf(Date);
 
@@ -218,7 +223,8 @@ describe("Scope Shield & Change Request Service (TBK m. 470 / m. 480/2)", () => 
         engagementId,
         requesterUserId: freelancerUserId,
         title: "Mobil Uygulama Portu",
-        description: "React Native ile iOS ve Android uygulamasının da bu projeye dahil edilmesi talebi.",
+        description:
+          "React Native ile iOS ve Android uygulamasının da bu projeye dahil edilmesi talebi.",
         reason: "CLIENT_REQUESTED",
         additionalBudget: 35000,
         currency: "TRY",
@@ -233,7 +239,9 @@ describe("Scope Shield & Change Request Service (TBK m. 470 / m. 480/2)", () => 
       });
 
       expect(rejected.status).toBe("REJECTED");
-      expect(rejected.rejectionReason).toBe("Mobil uygulama için ayrı bir ilan açılması daha uygun olacaktır.");
+      expect(rejected.rejectionReason).toBe(
+        "Mobil uygulama için ayrı bir ilan açılması daha uygun olacaktır."
+      );
       expect(rejected.addendumSha256).toBeNull();
 
       const summary = await ChangeRequestService.getChangeRequests(employerUserId, engagementId);
@@ -369,9 +377,8 @@ describe("Scope Shield & Change Request Service (TBK m. 470 / m. 480/2)", () => 
         additionalDays: 1,
       });
 
-      const { POST: respondRoute } = await import(
-        "@/src/app/api/work/[id]/change-requests/[crId]/respond/route"
-      );
+      const { POST: respondRoute } =
+        await import("@/src/app/api/work/[id]/change-requests/[crId]/respond/route");
       const req = new Request(
         `http://localhost:3000/api/work/${engagementId}/change-requests/${cr.id}/respond`,
         {
@@ -404,9 +411,8 @@ describe("Scope Shield & Change Request Service (TBK m. 470 / m. 480/2)", () => 
         additionalDays: 1,
       });
 
-      const { POST: cancelRoute } = await import(
-        "@/src/app/api/work/[id]/change-requests/[crId]/cancel/route"
-      );
+      const { POST: cancelRoute } =
+        await import("@/src/app/api/work/[id]/change-requests/[crId]/cancel/route");
       const req = new Request(
         `http://localhost:3000/api/work/${engagementId}/change-requests/${cr.id}/cancel`,
         {
@@ -424,4 +430,3 @@ describe("Scope Shield & Change Request Service (TBK m. 470 / m. 480/2)", () => 
     });
   });
 });
-

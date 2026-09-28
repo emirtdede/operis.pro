@@ -1,20 +1,22 @@
-import { searchV5 } from '../src/lib/search/engine';
-import regData from '../docs/Operis_Search_100_v5_1/tests/regression-queries.json';
-import goldData from '../docs/Operis_Search_100_v5_1/tests/gold-human-style-queries.json';
-import contrastiveData from '../docs/Operis_Search_100_v5_1/tests/contrastive-queries.json';
-import advData from '../docs/Operis_Search_100_v5_1/tests/adversarial-queries-v5.json';
+import { searchV5 } from "../src/lib/search/engine";
+import regData from "../docs/Operis_Search_100_v5_1/tests/regression-queries.json";
+import goldData from "../docs/Operis_Search_100_v5_1/tests/gold-human-style-queries.json";
+import contrastiveData from "../docs/Operis_Search_100_v5_1/tests/contrastive-queries.json";
+import advData from "../docs/Operis_Search_100_v5_1/tests/adversarial-queries-v5.json";
 
-console.info('=== OPERIS SEARCH v5 — ALL BENCHMARK GATES (PRODUCTION ENGINE) ===\n');
+console.info("=== OPERIS SEARCH v5 — ALL BENCHMARK GATES (PRODUCTION ENGINE) ===\n");
 
 // Gate 4: Adversarial (100 cases)
 let advPassed = 0;
 for (const c of advData.cases) {
   const res = searchV5(c.query);
-  if (c.expectation === 'no-results' && res.length === 0) advPassed++;
-  else if (c.expectation !== 'no-results') advPassed++;
+  if (c.expectation === "no-results" && res.length === 0) advPassed++;
+  else if (c.expectation !== "no-results") advPassed++;
 }
 const advPct = ((advPassed / advData.cases.length) * 100).toFixed(2);
-console.info(`Gate 4 (Adversarial): ${advPassed} / ${advData.cases.length} (${advPct}%) [Target >= 95%] ${Number(advPct) >= 95 ? 'PASS' : 'FAIL'}`);
+console.info(
+  `Gate 4 (Adversarial): ${advPassed} / ${advData.cases.length} (${advPct}%) [Target >= 95%] ${Number(advPct) >= 95 ? "PASS" : "FAIL"}`
+);
 
 // Gate 3: Contrastive (50 cases)
 let contTop1Passed = 0;
@@ -36,8 +38,12 @@ for (const c of contrastiveData.cases) {
 }
 const contTop1Pct = ((contTop1Passed / contrastiveData.cases.length) * 100).toFixed(2);
 const contPairsPct = ((contPairsPassed / contPairsTotal) * 100).toFixed(2);
-console.info(`Gate 3 (Contrastive Top-1): ${contTop1Passed} / ${contrastiveData.cases.length} (${contTop1Pct}%) [Target >= 90%] ${Number(contTop1Pct) >= 90 ? 'PASS' : 'FAIL'}`);
-console.info(`Gate 3 (Contrastive Pairs): ${contPairsPassed} / ${contPairsTotal} (${contPairsPct}%) [Target >= 95%] ${Number(contPairsPct) >= 95 ? 'PASS' : 'FAIL'}`);
+console.info(
+  `Gate 3 (Contrastive Top-1): ${contTop1Passed} / ${contrastiveData.cases.length} (${contTop1Pct}%) [Target >= 90%] ${Number(contTop1Pct) >= 90 ? "PASS" : "FAIL"}`
+);
+console.info(
+  `Gate 3 (Contrastive Pairs): ${contPairsPassed} / ${contPairsTotal} (${contPairsPct}%) [Target >= 95%] ${Number(contPairsPct) >= 95 ? "PASS" : "FAIL"}`
+);
 
 // Gate 1: Deterministic Regression (3,032 cases)
 let regPassed = 0;
@@ -49,7 +55,9 @@ for (const c of regData.cases) {
   }
 }
 const regPct = ((regPassed / regData.cases.length) * 100).toFixed(2);
-console.info(`Gate 1 (Regression): ${regPassed} / ${regData.cases.length} (${regPct}%) [Target >= 99%] ${Number(regPct) >= 99 ? 'PASS' : 'FAIL'}`);
+console.info(
+  `Gate 1 (Regression): ${regPassed} / ${regData.cases.length} (${regPct}%) [Target >= 99%] ${Number(regPct) >= 99 ? "PASS" : "FAIL"}`
+);
 
 // Gate 2: Gold Human-Style Benchmark (660 cases)
 let goldHighConfTotal = 0;
@@ -63,10 +71,10 @@ for (const c of goldData.cases) {
   const res = searchV5(c.query, { limit: 10 });
   const top1 = res[0]?.slug;
 
-  if (c.labelConfidence === 'high') {
+  if (c.labelConfidence === "high") {
     goldHighConfTotal++;
     if (top1 === c.preferredTop1) goldHighConfPassed++;
-  } else if (c.labelConfidence === 'medium') {
+  } else if (c.labelConfidence === "medium") {
     goldMedConfTotal++;
     if (top1 && c.allowedTop1 && c.allowedTop1.includes(top1)) goldMedConfPassed++;
   }
@@ -124,9 +132,17 @@ const medPct = ((goldMedConfPassed / goldMedConfTotal) * 100).toFixed(2);
 const recall3Pct = ((goldRecall3Passed / goldData.cases.length) * 100).toFixed(2);
 const meanNdcg = (goldNdcgSum / goldData.cases.length).toFixed(4);
 
-console.info(`Gate 2 (Gold High-Conf Top-1): ${goldHighConfPassed} / ${goldHighConfTotal} (${highPct}%) [Target >= 97%] ${Number(highPct) >= 97 ? 'PASS' : 'FAIL'}`);
-console.info(`Gate 2 (Gold Med-Conf Top-1): ${goldMedConfPassed} / ${goldMedConfTotal} (${medPct}%) [Target >= 98%] ${Number(medPct) >= 98 ? 'PASS' : 'FAIL'}`);
-console.info(`Gate 2 (Gold Recall@3): ${goldRecall3Passed} / ${goldData.cases.length} (${recall3Pct}%) [Target >= 99.5%] ${Number(recall3Pct) >= 99.5 ? 'PASS' : 'FAIL'}`);
-console.info(`Gate 2 (Gold Mean nDCG@5): ${meanNdcg} [Target >= 0.97] ${Number(meanNdcg) >= 0.97 ? 'PASS' : 'FAIL'}`);
+console.info(
+  `Gate 2 (Gold High-Conf Top-1): ${goldHighConfPassed} / ${goldHighConfTotal} (${highPct}%) [Target >= 97%] ${Number(highPct) >= 97 ? "PASS" : "FAIL"}`
+);
+console.info(
+  `Gate 2 (Gold Med-Conf Top-1): ${goldMedConfPassed} / ${goldMedConfTotal} (${medPct}%) [Target >= 98%] ${Number(medPct) >= 98 ? "PASS" : "FAIL"}`
+);
+console.info(
+  `Gate 2 (Gold Recall@3): ${goldRecall3Passed} / ${goldData.cases.length} (${recall3Pct}%) [Target >= 99.5%] ${Number(recall3Pct) >= 99.5 ? "PASS" : "FAIL"}`
+);
+console.info(
+  `Gate 2 (Gold Mean nDCG@5): ${meanNdcg} [Target >= 0.97] ${Number(meanNdcg) >= 0.97 ? "PASS" : "FAIL"}`
+);
 
-console.info('\n=== ALL 4 GATES EVALUATED ON PRODUCTION ENGINE ===');
+console.info("\n=== ALL 4 GATES EVALUATED ON PRODUCTION ENGINE ===");

@@ -1,18 +1,12 @@
 import { getSession } from "@/src/modules/auth/session";
 import { EngagementService } from "@/src/modules/engagements/service";
 import { ContractSigningService } from "@/src/modules/contracts/contract-signing-service";
-import {
-  notificationPubSub,
-  RealtimeContractEvent,
-} from "@/src/modules/notifications/pubsub";
+import { notificationPubSub, RealtimeContractEvent } from "@/src/modules/notifications/pubsub";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getSession();
     if (!session?.userId) {
@@ -81,12 +75,9 @@ export async function GET(
         }
 
         // 2. Subscribe to real-time contract events on this engagement channel
-        const unsubscribe = notificationPubSub.subscribeContract(
-          engagementId,
-          (event) => {
-            sendEvent(event);
-          }
-        );
+        const unsubscribe = notificationPubSub.subscribeContract(engagementId, (event) => {
+          sendEvent(event);
+        });
 
         // 3. Keepalive ping every 15 seconds to avoid proxy/gateway drops
         const pingInterval = setInterval(() => {
@@ -120,13 +111,13 @@ export async function GET(
       headers: {
         "Content-Type": "text/event-stream; charset=utf-8",
         "Cache-Control": "no-cache, no-transform",
-        "Connection": "keep-alive",
+        Connection: "keep-alive",
         "X-Accel-Buffering": "no",
       },
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to initialize contract stream";
-    return new Response(JSON.stringify({ error: message }), {
+    console.error("[Contract Stream Error]:", err);
+    return new Response(JSON.stringify({ error: "Failed to initialize contract stream" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });

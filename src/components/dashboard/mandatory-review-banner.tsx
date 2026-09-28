@@ -17,7 +17,9 @@ export function MandatoryReviewBanner({
 }: MandatoryReviewBannerProps) {
   const isTr = locale === "tr";
   const [pendingList, setPendingList] = useState<PendingMandatoryReviewDto[]>(initialPending);
-  const [activeReviewModal, setActiveReviewModal] = useState<PendingMandatoryReviewDto | null>(null);
+  const [activeReviewModal, setActiveReviewModal] = useState<PendingMandatoryReviewDto | null>(
+    null
+  );
 
   useEffect(() => {
     if (initialPending.length === 0) {
@@ -58,7 +60,8 @@ export function MandatoryReviewBanner({
                 </span>
               </div>
               <h4 className="text-sm sm:text-base font-bold text-[var(--color-text-primary)]">
-                "{item.projectTitle}" {isTr ? "iş birliğinizi değerlendirin" : "review your engagement"}
+                "{item.projectTitle}"{" "}
+                {isTr ? "iş birliğinizi değerlendirin" : "review your engagement"}
               </h4>
               <p className="text-xs text-[var(--color-text-secondary)]">
                 {isTr

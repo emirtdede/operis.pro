@@ -3,61 +3,61 @@
  * Compiles in-memory lookup maps and inverted indexes for all 110 categories.
  */
 
-import taxonomyData from './data/categories.search-taxonomy.json';
-import termWeightsData from './data/term-weights.json';
-import categorySynonymsData from './data/category-synonyms.json';
-import relationGraphData from './data/relation-graph.json';
-import disambiguationData from './data/disambiguation-rules.json';
-import collisionMatrixData from './data/collision-matrix.json';
-import globalAliasesData from './data/global-aliases.json';
-import problemAliasesData from './data/problem-aliases.json';
-import problemCorpusData from './data/problem-language-corpus.json';
-import typoCorpusData from './data/typo-corpus.json';
-import { SEED_CATEGORIES } from '@/db/seeds/categories';
+import taxonomyData from "./data/categories.search-taxonomy.json";
+import termWeightsData from "./data/term-weights.json";
+import categorySynonymsData from "./data/category-synonyms.json";
+import relationGraphData from "./data/relation-graph.json";
+import disambiguationData from "./data/disambiguation-rules.json";
+import collisionMatrixData from "./data/collision-matrix.json";
+import globalAliasesData from "./data/global-aliases.json";
+import problemAliasesData from "./data/problem-aliases.json";
+import problemCorpusData from "./data/problem-language-corpus.json";
+import typoCorpusData from "./data/typo-corpus.json";
+import { SEED_CATEGORIES } from "@/db/seeds/categories";
 import {
   TaxonomyCategory,
   CategoryRelation,
   TermWeight,
   DisambiguationRule,
   CollisionEntry,
-} from './types';
-import { normalizeSearchQuery, toAsciiShadow, stemTurkishWord } from './normalization';
+} from "./types";
+import { normalizeSearchQuery, toAsciiShadow, stemTurkishWord } from "./normalization";
 
 export const TOOL_COLLISION_PRIORITY: Record<string, string> = {
-  'apollo': 'potansiyel-musteri-ve-veri-zenginlestirme',
-  'n8n': 'otomasyon-ve-entegrasyonlar',
-  'bubble': 'no-code-ve-low-code-gelistirme',
-  'premiere pro': 'youtube-ve-uzun-format-video-kurgusu',
-  'pro tools': 'ses-tasarimi-ve-efektleri-sfx',
-  'transcription': 'ses-ve-video-desifre-destegi',
-  'contract drafting': 'freelance-ve-yazilim-hizmet-sozlesmeleri',
-  'sql': 'veri-muhendisligi-ve-analitik',
-  'python': 'web-kazima-ve-veri-madenciligi',
-  'excel': 'finansal-modelleme-ve-fizibilite',
-  'illustrator': 'ambalaj-etiket-ve-baski-tasarimi',
-  'adobe audition': 'podcast-duzenleme-ve-ses-muhendisligi',
-  'c sharp': 'masaustu-yazilim-gelistirme',
-  'crm': 'e-posta-pazarlamasi-ve-crm-akislari',
-  'blender': '3d-oyun-varliklari-ve-karakter-modelleme',
-  'ai otomasyon': 'yapay-zeka-ajanlari-ve-is-akislari',
-  'ai strategy': 'prompt-muhendisligi-ve-ai-danismanligi',
-  'ai danismanligi': 'prompt-muhendisligi-ve-ai-danismanligi',
-  'online satis sitesi': 'e-ticaret-sitesi-gelistirme',
-  'online satış sitesi': 'e-ticaret-sitesi-gelistirme',
-  'uygulamamin arayuzunu tasarlatmak': 'ui-ux-tasarim',
-  'uygulamamin arayuzunu': 'ui-ux-tasarim',
-  'uygulamamın arayüzü': 'ui-ux-tasarim',
-  'uygulama arayuzu': 'ui-ux-tasarim',
-  'uygulama arayuzunu': 'ui-ux-tasarim',
-  'nodejs': 'backend-ve-api-muhendisligi',
-  'node.js': 'backend-ve-api-muhendisligi',
-  'unity': 'unity-ile-oyun-gelistirme',
-  'figma tasarimci': 'ui-ux-tasarim',
+  apollo: "potansiyel-musteri-ve-veri-zenginlestirme",
+  n8n: "otomasyon-ve-entegrasyonlar",
+  bubble: "no-code-ve-low-code-gelistirme",
+  "premiere pro": "youtube-ve-uzun-format-video-kurgusu",
+  "pro tools": "ses-tasarimi-ve-efektleri-sfx",
+  transcription: "ses-ve-video-desifre-destegi",
+  "contract drafting": "freelance-ve-yazilim-hizmet-sozlesmeleri",
+  sql: "veri-muhendisligi-ve-analitik",
+  python: "web-kazima-ve-veri-madenciligi",
+  excel: "finansal-modelleme-ve-fizibilite",
+  illustrator: "ambalaj-etiket-ve-baski-tasarimi",
+  "adobe audition": "podcast-duzenleme-ve-ses-muhendisligi",
+  "c sharp": "masaustu-yazilim-gelistirme",
+  crm: "e-posta-pazarlamasi-ve-crm-akislari",
+  blender: "3d-oyun-varliklari-ve-karakter-modelleme",
+  "ai otomasyon": "yapay-zeka-ajanlari-ve-is-akislari",
+  "ai strategy": "prompt-muhendisligi-ve-ai-danismanligi",
+  "ai danismanligi": "prompt-muhendisligi-ve-ai-danismanligi",
+  "online satis sitesi": "e-ticaret-sitesi-gelistirme",
+  "online satış sitesi": "e-ticaret-sitesi-gelistirme",
+  "uygulamamin arayuzunu tasarlatmak": "ui-ux-tasarim",
+  "uygulamamin arayuzunu": "ui-ux-tasarim",
+  "uygulamamın arayüzü": "ui-ux-tasarim",
+  "uygulama arayuzu": "ui-ux-tasarim",
+  "uygulama arayuzunu": "ui-ux-tasarim",
+  nodejs: "backend-ve-api-muhendisligi",
+  "node.js": "backend-ve-api-muhendisligi",
+  unity: "unity-ile-oyun-gelistirme",
+  "figma tasarimci": "ui-ux-tasarim",
 };
 
 export interface IndexedTerm {
   categorySlug: string;
-  field: 'canonical' | 'searchTerm' | 'skillTag' | 'alias' | 'serviceIntent';
+  field: "canonical" | "searchTerm" | "skillTag" | "alias" | "serviceIntent";
   weight: number;
   specificity: number;
 }
@@ -154,10 +154,7 @@ class TaxonomyIndex {
   private initCategoryMappings(): void {
     // Build seed by normalized Turkish name
     const seedByName = new Map(
-      SEED_CATEGORIES.map((s) => [
-        normalizeSearchQuery(s.translations.tr.name),
-        s,
-      ])
+      SEED_CATEGORIES.map((s) => [normalizeSearchQuery(s.translations.tr.name), s])
     );
 
     for (const cat of this.categories) {
@@ -310,7 +307,13 @@ class TaxonomyIndex {
   private initRelationGraph(): void {
     const rawGraph = relationGraphData.categoriesBySlug as Record<
       string,
-      Array<{ categorySlug: string; categoryName: string; score: number; strength: 'strong' | 'medium' | 'weak'; sharedFamilies?: string[] }>
+      Array<{
+        categorySlug: string;
+        categoryName: string;
+        score: number;
+        strength: "strong" | "medium" | "weak";
+        sharedFamilies?: string[];
+      }>
     >;
     for (const [slug, rels] of Object.entries(rawGraph)) {
       const relations: CategoryRelation[] = rels.map((r) => ({
@@ -339,7 +342,7 @@ class TaxonomyIndex {
 
       const addTerm = (
         term: string,
-        field: 'canonical' | 'searchTerm' | 'skillTag' | 'alias' | 'serviceIntent',
+        field: "canonical" | "searchTerm" | "skillTag" | "alias" | "serviceIntent",
         defaultWeight: number
       ) => {
         const norm = normalizeSearchQuery(term);
@@ -387,7 +390,7 @@ class TaxonomyIndex {
 
       // Canonical terms
       for (const ct of cat.canonicalTerms) {
-        addTerm(ct, 'canonical', 0.98);
+        addTerm(ct, "canonical", 0.98);
         const norm = normalizeSearchQuery(ct);
         let canonicalSet = this.canonicalTerms.get(norm);
         if (!canonicalSet) {
@@ -399,22 +402,22 @@ class TaxonomyIndex {
 
       // Search terms
       for (const st of cat.searchTerms) {
-        addTerm(st, 'searchTerm', 0.94);
+        addTerm(st, "searchTerm", 0.94);
       }
 
       // Skill tags
       for (const sk of cat.skillTags) {
-        addTerm(sk, 'skillTag', 0.90);
+        addTerm(sk, "skillTag", 0.9);
       }
 
       // Aliases
       for (const al of cat.aliases) {
-        addTerm(al, 'alias', 0.80);
+        addTerm(al, "alias", 0.8);
       }
 
       // Service intents
       for (const si of cat.serviceIntents) {
-        addTerm(si, 'serviceIntent', 0.78);
+        addTerm(si, "serviceIntent", 0.78);
       }
     }
   }

@@ -50,38 +50,28 @@ const BADGE_MAP: Record<ExportEligibilityStatus, (isTr: boolean) => BadgeConfigI
       ? "Yazılım İhracatı (Döviz Tevsiki Bekleniyor)"
       : "Software Export (Repatriation Pending)",
     shortLabel: isTr ? "İhracat (Şartlı)" : "Export (Pending)",
-    badgeClass:
-      "bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/15",
+    badgeClass: "bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/15",
     icon: Globe,
     dotClass: "bg-amber-400",
   }),
   COMPLIANCE_DEFICIT_WARNING: (isTr) => ({
-    label: isTr
-      ? "Yazılım İhracatı (Tevsik Eksikliği)"
-      : "Software Export (Deficit Warning)",
+    label: isTr ? "Yazılım İhracatı (Tevsik Eksikliği)" : "Software Export (Deficit Warning)",
     shortLabel: isTr ? "İhracat (Eksik)" : "Deficit Warning",
-    badgeClass:
-      "bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/15",
+    badgeClass: "bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/15",
     icon: AlertTriangle,
     dotClass: "bg-amber-400",
   }),
   NON_COMPLIANT: (isTr) => ({
-    label: isTr
-      ? "İhracat İstisnası Uygulanamaz"
-      : "Export Exemption Ineligible",
+    label: isTr ? "İhracat İstisnası Uygulanamaz" : "Export Exemption Ineligible",
     shortLabel: isTr ? "İhracat Dışı" : "Ineligible",
-    badgeClass:
-      "bg-rose-500/10 text-rose-400 border-rose-500/30 hover:bg-rose-500/15",
+    badgeClass: "bg-rose-500/10 text-rose-400 border-rose-500/30 hover:bg-rose-500/15",
     icon: AlertTriangle,
     dotClass: "bg-rose-400",
   }),
   DOMESTIC_STANDARD_TAX: (isTr) => ({
-    label: isTr
-      ? "Yurt İçi Standart Vergi Rejimi"
-      : "Domestic Standard Tax Regime",
+    label: isTr ? "Yurt İçi Standart Vergi Rejimi" : "Domestic Standard Tax Regime",
     shortLabel: isTr ? "Standart Rejim" : "Standard Regime",
-    badgeClass:
-      "bg-slate-500/10 text-slate-400 border-slate-500/30 hover:bg-slate-500/15",
+    badgeClass: "bg-slate-500/10 text-slate-400 border-slate-500/30 hover:bg-slate-500/15",
     icon: AlertTriangle,
     dotClass: "bg-slate-400",
   }),
@@ -97,12 +87,9 @@ export function SoftwareExportBadge({
 }: SoftwareExportBadgeProps) {
   const isTr = locale === "tr";
 
-  const evalResult = config
-    ? SoftwareExportEngine.evaluateExportEligibility(config)
-    : null;
+  const evalResult = config ? SoftwareExportEngine.evaluateExportEligibility(config) : null;
 
-  const effectiveStatus: ExportEligibilityStatus =
-    status || evalResult?.status || "FULLY_ELIGIBLE";
+  const effectiveStatus: ExportEligibilityStatus = status || evalResult?.status || "FULLY_ELIGIBLE";
 
   const configFactory = BADGE_MAP[effectiveStatus] || BADGE_MAP.FULLY_ELIGIBLE;
   const badgeConfig = configFactory(isTr);

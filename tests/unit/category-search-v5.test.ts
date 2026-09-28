@@ -64,15 +64,21 @@ describe("Operis Search v5 Engine & Taxonomy", () => {
     });
 
     it("strips common hiring intent prefixes and suffixes", () => {
-      const q1 = cleanHiringIntent(normalizeSearchQuery("mevcut projemde web sitesi yaptırmak istiyorum"));
+      const q1 = cleanHiringIntent(
+        normalizeSearchQuery("mevcut projemde web sitesi yaptırmak istiyorum")
+      );
       expect(q1.hasHiringIntent).toBe(true);
       expect(q1.coreQuery).toBe("web sitesi");
 
-      const q2 = cleanHiringIntent(normalizeSearchQuery("projem için SQL bilen bir uzman arıyorum"));
+      const q2 = cleanHiringIntent(
+        normalizeSearchQuery("projem için SQL bilen bir uzman arıyorum")
+      );
       expect(q2.hasHiringIntent).toBe(true);
       expect(q2.coreQuery).toBe("sql");
 
-      const q3 = cleanHiringIntent(normalizeSearchQuery("Contract Drafting konusunda tecrübeli bir freelancer lazım"));
+      const q3 = cleanHiringIntent(
+        normalizeSearchQuery("Contract Drafting konusunda tecrübeli bir freelancer lazım")
+      );
       expect(q3.hasHiringIntent).toBe(true);
       expect(q3.coreQuery).toBe("contract drafting");
     });
@@ -99,7 +105,9 @@ describe("Operis Search v5 Engine & Taxonomy", () => {
       expect(sqlRes[0]?.slug).toBe("veri-muhendisligi-ve-analitik");
 
       // Contract drafting should prioritize freelance & software contracts
-      const contractRes = searchCategories("Contract Drafting konusunda tecrübeli bir freelancer lazım");
+      const contractRes = searchCategories(
+        "Contract Drafting konusunda tecrübeli bir freelancer lazım"
+      );
       expect(contractRes[0]?.slug).toBe("freelance-ve-yazilim-hizmet-sozlesmeleri");
 
       // Online sales site should prioritize e-commerce site development
@@ -130,7 +138,9 @@ describe("Operis Search v5 Engine & Taxonomy", () => {
     it("searches query 'web' and verifies top matches and repoKey", () => {
       const res = searchCategories("web");
       expect(res.length).toBeGreaterThan(0);
-      expect(res.some((r) => r.slug === "web-gelistirme" && r.repoKey === "web-development")).toBe(true);
+      expect(res.some((r) => r.slug === "web-gelistirme" && r.repoKey === "web-development")).toBe(
+        true
+      );
     });
 
     it("alias searchV5 behaves identically to searchCategories", () => {

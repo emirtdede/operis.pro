@@ -3,10 +3,7 @@
  * Facade Entry Point
  */
 
-import {
-  claimAndProcessExportJob,
-  processNextExportJob,
-} from "./jobs/export-lease.manager";
+import { claimAndProcessExportJob, processNextExportJob } from "./jobs/export-lease.manager";
 import {
   enqueueExportJob,
   getExportJobStatus,

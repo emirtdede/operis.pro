@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/src/modules/auth/session";
 import { ListingService } from "@/src/modules/listings/service";
+import { handleApiError } from "@/src/lib/api/error-response";
 import {
   evaluateSecurityAccessAsync,
   getClientIp,
@@ -38,25 +39,39 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err: unknown) {
-    let message = isEn
-      ? "Failed to reactivate listing"
-      : "İlan yeniden yayınlanamadı";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-
-    if (!isEn) {
-      if (message.includes("Listing not found") || message.includes("not authorized")) {
-        message = "İlan bulunamadı veya bu işlem için yetkiniz yok.";
-      } else if (message.includes("Cannot reactivate listing in")) {
-        message = "Bu durumdaki bir ilan yeniden yayına alınamaz.";
+    return handleApiError(
+      err,
+      {
+        en: "Failed to reactivate listing",
+        tr: "İlan yeniden yayınlanamadı",
+      },
+      {
+        isEn,
+        logPrefix: "[Listing Reactivate POST Error]",
+        status: 500,
+        allowedMessages: {
+          "Listing not found": {
+            en: "Listing not found or you are not authorized.",
+            tr: "İlan bulunamadı veya bu işlem için yetkiniz yok.",
+            status: 404,
+          },
+          "not authorized": {
+            en: "Listing not found or you are not authorized.",
+            tr: "İlan bulunamadı veya bu işlem için yetkiniz yok.",
+            status: 403,
+          },
+          "bu işlem için yetkiniz yok": {
+            en: "Listing not found or you are not authorized.",
+            tr: "İlan bulunamadı veya bu işlem için yetkiniz yok.",
+            status: 403,
+          },
+          "Cannot reactivate listing in": {
+            en: "A listing in this status cannot be reactivated.",
+            tr: "Bu durumdaki bir ilan yeniden yayına alınamaz.",
+            status: 400,
+          },
+        },
       }
-    } else {
-      if (message.includes("bu işlem için yetkiniz yok")) {
-        message = "Listing not found or you are not authorized.";
-      }
-    }
-
-    return NextResponse.json({ error: message }, { status: 400 });
+    );
   }
 }

@@ -158,7 +158,8 @@ export class CategoryBenchmarkService {
     const currency = (params.currency || "TRY").toUpperCase().trim();
     const days = Math.min(Math.max(params.days || 30, 7), 180);
 
-    const resolvedCatId = params.categoryId || (params.categorySlug ? getDeterministicUuid(params.categorySlug) : "");
+    const resolvedCatId =
+      params.categoryId || (params.categorySlug ? getDeterministicUuid(params.categorySlug) : "");
     const cacheKey = `${resolvedCatId}:${params.categorySlug || ""}:${currency}:${days}`;
 
     const cached = benchmarkCache.get(cacheKey);
@@ -212,7 +213,14 @@ export class CategoryBenchmarkService {
       for (const r of rows) {
         const oMin = r.offerBudgetMin ? Number(r.offerBudgetMin) : null;
         const oMax = r.offerBudgetMax ? Number(r.offerBudgetMax) : null;
-        if (oMin !== null && oMin !== undefined && oMax !== null && oMax !== undefined && oMin > 0 && oMax > 0) {
+        if (
+          oMin !== null &&
+          oMin !== undefined &&
+          oMax !== null &&
+          oMax !== undefined &&
+          oMin > 0 &&
+          oMax > 0
+        ) {
           rates.push((oMin + oMax) / 2);
           continue;
         }
@@ -228,7 +236,14 @@ export class CategoryBenchmarkService {
         // Fallback to listing budget bounds
         const lMin = r.listingBudgetMin ? Number(r.listingBudgetMin) : null;
         const lMax = r.listingBudgetMax ? Number(r.listingBudgetMax) : null;
-        if (lMin !== null && lMin !== undefined && lMax !== null && lMax !== undefined && lMin > 0 && lMax > 0) {
+        if (
+          lMin !== null &&
+          lMin !== undefined &&
+          lMax !== null &&
+          lMax !== undefined &&
+          lMin > 0 &&
+          lMax > 0
+        ) {
           rates.push((lMin + lMax) / 2);
           continue;
         }

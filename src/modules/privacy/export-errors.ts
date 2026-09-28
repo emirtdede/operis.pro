@@ -15,6 +15,7 @@ export type ExportErrorCode =
   | "EXPORT_LEASE_LOST"
   | "LEASE_LOST"
   | "EXPORT_ABORTED"
+  | "EXPORT_DB_UNAVAILABLE"
   | "EXPORT_RECORD_TOO_LARGE"
   | "EXPORT_TIMEOUT";
 

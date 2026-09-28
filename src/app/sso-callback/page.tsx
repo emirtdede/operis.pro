@@ -10,9 +10,7 @@ export default function RootSSOCallbackPage() {
   if (!publishableKey) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center space-y-4 px-4 text-center">
-        <p className="text-sm font-medium text-slate-300">
-          Kimlik doğrulama anahtarı eksik.
-        </p>
+        <p className="text-sm font-medium text-slate-300">Kimlik doğrulama anahtarı eksik.</p>
       </div>
     );
   }
@@ -34,4 +32,3 @@ export default function RootSSOCallbackPage() {
     </OperisClerkProvider>
   );
 }
-

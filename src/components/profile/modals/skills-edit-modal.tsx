@@ -49,9 +49,7 @@ export function SkillsEditModal({
     if (!trimmed) return;
     if (skills.length >= 5) {
       setError(
-        isTr
-          ? "En fazla 5 teknoloji seçebilirsiniz."
-          : "You can select up to 5 technologies."
+        isTr ? "En fazla 5 teknoloji seçebilirsiniz." : "You can select up to 5 technologies."
       );
       return;
     }
@@ -143,7 +141,9 @@ export function SkillsEditModal({
                   addSkill(inputVal);
                 }
               }}
-              placeholder={isTr ? "Örn: Rust, GraphQL, Kubernetes..." : "e.g. Rust, GraphQL, Kubernetes..."}
+              placeholder={
+                isTr ? "Örn: Rust, GraphQL, Kubernetes..." : "e.g. Rust, GraphQL, Kubernetes..."
+              }
             />
             <Button
               type="button"
@@ -182,7 +182,11 @@ export function SkillsEditModal({
         </div>
 
         <div className="flex items-center justify-between text-xs text-[var(--color-text-tertiary)] pt-2 border-t border-[var(--color-border-subtle)]/60">
-          <span>{isTr ? "Kapsamlı beceri ve müsaitlik tercihleri:" : "Full skills and availability preferences:"}</span>
+          <span>
+            {isTr
+              ? "Kapsamlı beceri ve müsaitlik tercihleri:"
+              : "Full skills and availability preferences:"}
+          </span>
           <Link
             href={isTr ? "/tr/ayarlar?tab=work" : "/en/settings?tab=work"}
             onClick={onClose}

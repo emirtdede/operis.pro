@@ -1,12 +1,12 @@
-const fs = require('fs');
-const path = require('path');
-const sharp = require('sharp');
+const fs = require("fs");
+const path = require("path");
+const sharp = require("sharp");
 
 async function run() {
-  const publicDir = path.join(__dirname, '..', 'public');
-  const faviconSvg = fs.readFileSync(path.join(publicDir, 'favicon.svg'));
+  const publicDir = path.join(__dirname, "..", "public");
+  const faviconSvg = fs.readFileSync(path.join(publicDir, "favicon.svg"));
 
-  console.log('Generating favicon PNG suite...');
+  console.log("Generating favicon PNG suite...");
   const sizes = [48, 96, 144, 192, 512];
   for (const s of sizes) {
     await sharp(faviconSvg)
@@ -20,21 +20,18 @@ async function run() {
   await sharp(faviconSvg)
     .resize(180, 180)
     .png()
-    .toFile(path.join(publicDir, 'apple-touch-icon.png'));
-  console.log('Generated apple-touch-icon.png (180x180)');
+    .toFile(path.join(publicDir, "apple-touch-icon.png"));
+  console.log("Generated apple-touch-icon.png (180x180)");
 
   // Standalone Organization logo (512x512)
   await sharp(faviconSvg)
     .resize(512, 512)
     .png()
-    .toFile(path.join(publicDir, 'operis-logo-512x512.png'));
-  console.log('Generated operis-logo-512x512.png');
+    .toFile(path.join(publicDir, "operis-logo-512x512.png"));
+  console.log("Generated operis-logo-512x512.png");
 
   // favicon.png (48x48)
-  await sharp(faviconSvg)
-    .resize(48, 48)
-    .png()
-    .toFile(path.join(publicDir, 'favicon.png'));
+  await sharp(faviconSvg).resize(48, 48).png().toFile(path.join(publicDir, "favicon.png"));
 
   // Generate multi-resolution binary favicon.ico (16, 32, 48)
   const png16 = await sharp(faviconSvg).resize(16, 16).png().toBuffer();
@@ -48,7 +45,7 @@ async function run() {
 
   const dirEntrySize = 16;
   const entriesOffset = 6;
-  let currentOffset = entriesOffset + (dirEntrySize * 3);
+  let currentOffset = entriesOffset + dirEntrySize * 3;
 
   const images = [
     { width: 16, height: 16, buf: png16 },
@@ -71,16 +68,12 @@ async function run() {
     currentOffset += img.buf.length;
   }
 
-  const icoFile = Buffer.concat([
-    icoHeader,
-    ...entries,
-    ...images.map(img => img.buf)
-  ]);
-  fs.writeFileSync(path.join(publicDir, 'favicon.ico'), icoFile);
-  console.log('Generated multi-resolution binary favicon.ico');
+  const icoFile = Buffer.concat([icoHeader, ...entries, ...images.map((img) => img.buf)]);
+  fs.writeFileSync(path.join(publicDir, "favicon.ico"), icoFile);
+  console.log("Generated multi-resolution binary favicon.ico");
 
   // Generate 1200x630 Open Graph PNG Card
-  console.log('Generating og-image.png (1200x630)...');
+  console.log("Generating og-image.png (1200x630)...");
   const ogSvg = `
 <svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
   <defs>
@@ -196,10 +189,10 @@ async function run() {
   await sharp(Buffer.from(ogSvg))
     .resize(1200, 630)
     .png()
-    .toFile(path.join(publicDir, 'og-image.png'));
-  console.log('Generated og-image.png (1200x630)');
+    .toFile(path.join(publicDir, "og-image.png"));
+  console.log("Generated og-image.png (1200x630)");
 
-  console.log('All branding and Google assets generated successfully!');
+  console.log("All branding and Google assets generated successfully!");
 }
 
 run().catch(console.error);

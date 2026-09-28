@@ -259,7 +259,9 @@ describe("ClerkSyncService Unit Tests", () => {
           email: "admin@operis.pro",
           emailVerified: true,
         })
-      ).rejects.toThrow("Yönetici hesapları sosyal kimlik sağlayıcı ile otomatik olarak eşleştirilemez.");
+      ).rejects.toThrow(
+        "Yönetici hesapları sosyal kimlik sağlayıcı ile otomatik olarak eşleştirilemez."
+      );
     }
   });
 

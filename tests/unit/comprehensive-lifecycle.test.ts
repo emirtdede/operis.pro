@@ -123,8 +123,12 @@ describe("360° Software Legal Lifecycle (HLLG-RM Architecture & Complete Matrix
       expect(fossWarranty.warrantyId).toContain("OPR-FOSS-");
       expect(fossWarranty.permittedLicenses).toContain("MIT License");
       expect(fossWarranty.permittedLicenses).toContain("Apache License 2.0");
-      expect(fossWarranty.prohibitedLicenses).toContain("GNU General Public License (GPL v2 / GPL v3)");
-      expect(fossWarranty.prohibitedLicenses).toContain("GNU Affero General Public License (AGPL v3)");
+      expect(fossWarranty.prohibitedLicenses).toContain(
+        "GNU General Public License (GPL v2 / GPL v3)"
+      );
+      expect(fossWarranty.prohibitedLicenses).toContain(
+        "GNU Affero General Public License (AGPL v3)"
+      );
       expect(fossWarranty.curePeriodDays).toBe(14);
 
       const markdown = ComprehensiveDeedEngine.formatFossComplianceMarkdown(fossWarranty, "tr");
@@ -165,9 +169,15 @@ describe("360° Software Legal Lifecycle (HLLG-RM Architecture & Complete Matrix
       expect(result.metadata.fsekClauseIncluded).toBe(true);
 
       // Verify all 3 annexes are embedded in canonical markdown
-      expect(result.markdown).toContain("EK-6: TEMİZ KOD, ARKA KAPI İÇERMEME VE SİBER GÜVENLİK TAAHHÜTNAMESİ");
-      expect(result.markdown).toContain("EK-7: AÇIK KAYNAK LİSANS SAFLIĞI VE COPYLEFT BULAŞMAMA ŞARTNAMESİ");
-      expect(result.markdown).toContain("EK-8: MÜŞTERİ VE PERSONEL AYARTMAMA & PLATFORM SADAKAT PROTOKOLÜ");
+      expect(result.markdown).toContain(
+        "EK-6: TEMİZ KOD, ARKA KAPI İÇERMEME VE SİBER GÜVENLİK TAAHHÜTNAMESİ"
+      );
+      expect(result.markdown).toContain(
+        "EK-7: AÇIK KAYNAK LİSANS SAFLIĞI VE COPYLEFT BULAŞMAMA ŞARTNAMESİ"
+      );
+      expect(result.markdown).toContain(
+        "EK-8: MÜŞTERİ VE PERSONEL AYARTMAMA & PLATFORM SADAKAT PROTOKOLÜ"
+      );
 
       // Verify HTML report has print sections for all 3 annexes
       expect(result.htmlContent).toContain("EK-6: Temiz Kod ve Siber Güvenlik Taahhütnamesi");
@@ -217,7 +227,9 @@ describe("360° Software Legal Lifecycle (HLLG-RM Architecture & Complete Matrix
       expect(markdown).toContain("SÖZLEŞME SONU KARŞILIKLI İBRANAME VE SULH SENEDİ");
       expect(markdown).toContain("60.000 TRY");
       expect(markdown).toContain("Dava ve Takipten Feragat (HMK m. 313)");
-      expect(markdown).toContain("TBK m. 477/2 uyarınca yüklenicinin kasten gizlediği hileli ve ağır kusurlu ayıplara karşı haklar saklıdır");
+      expect(markdown).toContain(
+        "TBK m. 477/2 uyarınca yüklenicinin kasten gizlediği hileli ve ağır kusurlu ayıplara karşı haklar saklıdır"
+      );
     });
 
     it("generates Early Termination & Liquidation Deed (TBK m. 484-486) on dispute or early offboarding", () => {

@@ -49,10 +49,7 @@ export class DpaEngine {
     return this.generateDpaAnnexMarkdown(config, locale, clientName, contractorName);
   }
 
-  static generateAnnexHtml(
-    config: DpaContractConfig,
-    locale: ContractLanguage = "tr"
-  ): string {
+  static generateAnnexHtml(config: DpaContractConfig, locale: ContractLanguage = "tr"): string {
     return this.generateDpaAnnexHtml(config, locale);
   }
 
@@ -76,10 +73,7 @@ export class DpaEngine {
     const categories = config.dataCategories;
     const accessLevel = config.accessLevel;
 
-    const baseWeightSum = categories.reduce(
-      (acc, cat) => acc + (CATEGORY_WEIGHTS[cat] || 15),
-      0
-    );
+    const baseWeightSum = categories.reduce((acc, cat) => acc + (CATEGORY_WEIGHTS[cat] || 15), 0);
 
     const multiplier = ACCESS_LEVEL_MULTIPLIERS[accessLevel] || 0.6;
     let rawScore = Math.round(baseWeightSum * multiplier);
@@ -208,16 +202,31 @@ export class DpaEngine {
     };
 
     const measureLabels: Record<DpaSecurityMeasure, { tr: string; en: string }> = {
-      TLS_ENCRYPTION: { tr: "Uçtan Uca Şifreleme (TLS 1.3)", en: "End-to-End Encryption (TLS 1.3)" },
-      AES256_AT_REST: { tr: "Durağan Veri Şifreleme (AES-256)", en: "Encryption at Rest (AES-256)" },
-      MFA_ACCESS: { tr: "Çok Faktörlü Doğrulama (2FA/MFA)", en: "Multi-Factor Authentication (2FA/MFA)" },
-      IP_RESTRICTION: { tr: "Sabit IP / VPN Kısıtlaması (Bastion)", en: "Dedicated IP / VPN Bastion Restriction" },
+      TLS_ENCRYPTION: {
+        tr: "Uçtan Uca Şifreleme (TLS 1.3)",
+        en: "End-to-End Encryption (TLS 1.3)",
+      },
+      AES256_AT_REST: {
+        tr: "Durağan Veri Şifreleme (AES-256)",
+        en: "Encryption at Rest (AES-256)",
+      },
+      MFA_ACCESS: {
+        tr: "Çok Faktörlü Doğrulama (2FA/MFA)",
+        en: "Multi-Factor Authentication (2FA/MFA)",
+      },
+      IP_RESTRICTION: {
+        tr: "Sabit IP / VPN Kısıtlaması (Bastion)",
+        en: "Dedicated IP / VPN Bastion Restriction",
+      },
       LOCAL_STORAGE_PROHIBITED: {
         tr: "Yerel Cihaza Veri İndirme Yasağı",
         en: "Local Storage Prohibition",
       },
       AUDIT_LOGGING: { tr: "Değiştirilemez Denetim Logları", en: "Immutable Audit Trails" },
-      ANONYMIZATION_MASKING: { tr: "Dinamik Veri Maskeleme", en: "Dynamic Data Masking & Pseudonymization" },
+      ANONYMIZATION_MASKING: {
+        tr: "Dinamik Veri Maskeleme",
+        en: "Dynamic Data Masking & Pseudonymization",
+      },
     };
 
     const categoriesList = config.dataCategories
@@ -288,10 +297,7 @@ ${measuresList}
   /**
    * Generates clean HTML table view of the DPA annex for @media print and web inspection.
    */
-  static generateDpaAnnexHtml(
-    config: DpaContractConfig,
-    locale: ContractLanguage = "tr"
-  ): string {
+  static generateDpaAnnexHtml(config: DpaContractConfig, locale: ContractLanguage = "tr"): string {
     const isTr = locale === "tr";
     const evaluation = this.evaluateDpaRisk(config);
 

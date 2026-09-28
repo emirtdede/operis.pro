@@ -30,12 +30,7 @@ interface HelpGuideTabsProps {
 }
 
 type TabType =
-  | "client-guide"
-  | "freelancer-guide"
-  | "security-rules"
-  | "legal-tax"
-  | "all-faq"
-  | "glossary";
+  "client-guide" | "freelancer-guide" | "security-rules" | "legal-tax" | "all-faq" | "glossary";
 
 interface NavTabItem {
   id: TabType;
@@ -278,7 +273,8 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
                                 className={`px-2 py-0.5 rounded-md text-[10px] font-extrabold shrink-0 border ${
                                   isActive
                                     ? "bg-white/20 text-white border-white/30"
-                                    : tab.badgeColor || "bg-blue-500/10 text-blue-400 border-blue-500/20"
+                                    : tab.badgeColor ||
+                                      "bg-blue-500/10 text-blue-400 border-blue-500/20"
                                 }`}
                               >
                                 {isTr ? tab.badgeTr : tab.badgeEn}
@@ -339,10 +335,16 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
             <div className="space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-semibold text-blue-400">
                 <Building2 className="h-3.5 w-3.5" />
-                <span>{isTr ? "İlan Sahipleri & Girişimciler İçin Rehber" : "Client Hiring & Management Guide"}</span>
+                <span>
+                  {isTr
+                    ? "İlan Sahipleri & Girişimciler İçin Rehber"
+                    : "Client Hiring & Management Guide"}
+                </span>
               </div>
               <h2 className="text-2xl sm:text-4xl font-black text-[var(--color-text-primary)] tracking-tight">
-                {isTr ? "Doğru Yazılımcıyla Başarıya Ulaşmanın 3 Adımı" : "Hire & Ship Software in 3 Confident Steps"}
+                {isTr
+                  ? "Doğru Yazılımcıyla Başarıya Ulaşmanın 3 Adımı"
+                  : "Hire & Ship Software in 3 Confident Steps"}
               </h2>
               <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed max-w-3xl">
                 {isTr
@@ -356,7 +358,9 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
               {[
                 {
                   step: "01",
-                  title: isTr ? "Net Brief & 168 Saatlik Canlılık Radarı" : "1. Clear Brief & 168-Hour Radar",
+                  title: isTr
+                    ? "Net Brief & 168 Saatlik Canlılık Radarı"
+                    : "1. Clear Brief & 168-Hour Radar",
                   badge: isTr ? "Brief & Kapsam" : "Scope & Radar",
                   badgeColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
                   desc: isTr
@@ -365,7 +369,9 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
                 },
                 {
                   step: "02",
-                  title: isTr ? "AES-256 Şifreli Kör Teklifleri İnceleyin" : "2. Review Encrypted Blind Bids",
+                  title: isTr
+                    ? "AES-256 Şifreli Kör Teklifleri İnceleyin"
+                    : "2. Review Encrypted Blind Bids",
                   badge: isTr ? "Şifreli Teklif" : "Merit-Based Bids",
                   badgeColor: "bg-purple-500/10 text-purple-400 border-purple-500/20",
                   desc: isTr
@@ -374,7 +380,9 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
                 },
                 {
                   step: "03",
-                  title: isTr ? "İkili El Sıkışma & 3 Kademeli Güvenli Hakediş" : "3. Handshake & 3-Tier Milestone Settlement",
+                  title: isTr
+                    ? "İkili El Sıkışma & 3 Kademeli Güvenli Hakediş"
+                    : "3. Handshake & 3-Tier Milestone Settlement",
                   badge: isTr ? "Güvenli Çalışma" : "3-Stage Milestones",
                   badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
                   desc: isTr
@@ -413,20 +421,36 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
               <div className="rounded-3xl border border-emerald-500/30 bg-emerald-500/5 p-6 space-y-3">
                 <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm sm:text-base">
                   <CheckCircle2 className="h-5 w-5" />
-                  <span>{isTr ? "İşverenler İçin Başarı İpuçları (Do's)" : "Client Success Guidelines (Do's)"}</span>
+                  <span>
+                    {isTr
+                      ? "İşverenler İçin Başarı İpuçları (Do's)"
+                      : "Client Success Guidelines (Do's)"}
+                  </span>
                 </div>
                 <ul className="text-xs sm:text-sm text-[var(--color-text-secondary)] space-y-2.5">
                   <li className="flex items-start gap-2">
                     <span className="text-emerald-400 font-bold">•</span>
-                    <span>{isTr ? "Proje isterlerini ve 'Kabul Kriterleri'ni net maddeler halinde yazın." : "Define specific deliverables and tangible Acceptance Criteria upfront."}</span>
+                    <span>
+                      {isTr
+                        ? "Proje isterlerini ve 'Kabul Kriterleri'ni net maddeler halinde yazın."
+                        : "Define specific deliverables and tangible Acceptance Criteria upfront."}
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-emerald-400 font-bold">•</span>
-                    <span>{isTr ? "Teklif verenlerden benzer alanda 1-2 canlı referans veya açık repo isteyin." : "Ask engineers for 1-2 relevant live demos or open-source repositories."}</span>
+                    <span>
+                      {isTr
+                        ? "Teklif verenlerden benzer alanda 1-2 canlı referans veya açık repo isteyin."
+                        : "Ask engineers for 1-2 relevant live demos or open-source repositories."}
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-emerald-400 font-bold">•</span>
-                    <span>{isTr ? "Ödemeleri her zaman 3 aşamalı hakediş takvimiyle ve banka transferiyle yapın." : "Always settle phased payments via official bank transfer matching milestones."}</span>
+                    <span>
+                      {isTr
+                        ? "Ödemeleri her zaman 3 aşamalı hakediş takvimiyle ve banka transferiyle yapın."
+                        : "Always settle phased payments via official bank transfer matching milestones."}
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -434,20 +458,36 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
               <div className="rounded-3xl border border-rose-500/30 bg-rose-500/5 p-6 space-y-3">
                 <div className="flex items-center gap-2 text-rose-400 font-bold text-sm sm:text-base">
                   <AlertTriangle className="h-5 w-5" />
-                  <span>{isTr ? "Kaçınılması Gereken Hatalar (Don'ts)" : "Critical Pitfalls to Avoid (Don'ts)"}</span>
+                  <span>
+                    {isTr
+                      ? "Kaçınılması Gereken Hatalar (Don'ts)"
+                      : "Critical Pitfalls to Avoid (Don'ts)"}
+                  </span>
                 </div>
                 <ul className="text-xs sm:text-sm text-[var(--color-text-secondary)] space-y-2.5">
                   <li className="flex items-start gap-2">
                     <span className="text-rose-400 font-bold">•</span>
-                    <span>{isTr ? "'Her şeyi yapacak tam yetkin biri aranıyor' gibi belirsiz ilanlar açmayın." : "Avoid vague 'fullstack rockstar who does everything' listings."}</span>
+                    <span>
+                      {isTr
+                        ? "'Her şeyi yapacak tam yetkin biri aranıyor' gibi belirsiz ilanlar açmayın."
+                        : "Avoid vague 'fullstack rockstar who does everything' listings."}
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-rose-400 font-bold">•</span>
-                    <span>{isTr ? "Sözleşme imzalamadan ve FSEK m. 52 telif maddesi koymadan işe başlamayın." : "Never proceed without a written contract and FSEK Art. 52 IP clause."}</span>
+                    <span>
+                      {isTr
+                        ? "Sözleşme imzalamadan ve FSEK m. 52 telif maddesi koymadan işe başlamayın."
+                        : "Never proceed without a written contract and FSEK Art. 52 IP clause."}
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-rose-400 font-bold">•</span>
-                    <span>{isTr ? "Yazılımcıdan avans ödemeksizin tüm kodu baştan teslim etmesini beklemeyin." : "Do not expect developers to write full production code without advance."}</span>
+                    <span>
+                      {isTr
+                        ? "Yazılımcıdan avans ödemeksizin tüm kodu baştan teslim etmesini beklemeyin."
+                        : "Do not expect developers to write full production code without advance."}
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -458,10 +498,14 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-lg sm:text-xl font-bold text-[var(--color-text-primary)]">
-                    {isTr ? "İşverenlerin En Sık Sorduğu Sorular" : "Frequently Asked Questions by Clients"}
+                    {isTr
+                      ? "İşverenlerin En Sık Sorduğu Sorular"
+                      : "Frequently Asked Questions by Clients"}
                   </h3>
                   <p className="text-xs text-[var(--color-text-secondary)]">
-                    {isTr ? "İlan açma, bütçe, telif hakları ve uyuşmazlıklar hakkında hızlı yanıtlar." : "Key answers on budgets, IP rights, contractor vetting, and disputes."}
+                    {isTr
+                      ? "İlan açma, bütçe, telif hakları ve uyuşmazlıklar hakkında hızlı yanıtlar."
+                      : "Key answers on budgets, IP rights, contractor vetting, and disputes."}
                   </p>
                 </div>
               </div>
@@ -478,7 +522,9 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
             <div className="rounded-3xl border border-blue-500/30 bg-gradient-to-r from-blue-500/10 via-[var(--color-surface-base)] to-transparent p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
               <div className="space-y-1.5 text-center sm:text-left">
                 <h3 className="text-lg sm:text-xl font-bold text-[var(--color-text-primary)]">
-                  {isTr ? "İlanınız İçin Doğru Mühendisi Bulmaya Hazır mısınız?" : "Ready to Find the Ideal Software Engineer?"}
+                  {isTr
+                    ? "İlanınız İçin Doğru Mühendisi Bulmaya Hazır mısınız?"
+                    : "Ready to Find the Ideal Software Engineer?"}
                 </h3>
                 <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] max-w-xl">
                   {isTr
@@ -509,10 +555,16 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
             <div className="space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400">
                 <Cpu className="h-3.5 w-3.5" />
-                <span>{isTr ? "Bağımsız Mühendisler & Freelancerlar İçin Rehber" : "Engineer Career & Revenue Playbook"}</span>
+                <span>
+                  {isTr
+                    ? "Bağımsız Mühendisler & Freelancerlar İçin Rehber"
+                    : "Engineer Career & Revenue Playbook"}
+                </span>
               </div>
               <h2 className="text-2xl sm:text-4xl font-black text-[var(--color-text-primary)] tracking-tight">
-                {isTr ? "Emeğinizin %100'ünü Kazanın: Komisyonsuz & Güvenli" : "Keep 100% of Your Earnings: Zero Platform Cut"}
+                {isTr
+                  ? "Emeğinizin %100'ünü Kazanın: Komisyonsuz & Güvenli"
+                  : "Keep 100% of Your Earnings: Zero Platform Cut"}
               </h2>
               <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed max-w-3xl">
                 {isTr
@@ -526,7 +578,9 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
               {[
                 {
                   step: "01",
-                  title: isTr ? "Değer Odaklı Şifreli Kör Teklif Stratejisi" : "1. Value-Driven Encrypted Blind Bidding",
+                  title: isTr
+                    ? "Değer Odaklı Şifreli Kör Teklif Stratejisi"
+                    : "1. Value-Driven Encrypted Blind Bidding",
                   badge: isTr ? "Özgün Teklif" : "Bespoke Pitch",
                   badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
                   desc: isTr
@@ -535,7 +589,9 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
                 },
                 {
                   step: "02",
-                  title: isTr ? "%100 Ücretsiz Teklifler (Sıfır Jeton / No Connects)" : "2. 100% Free Proposals (Zero Connects)",
+                  title: isTr
+                    ? "%100 Ücretsiz Teklifler (Sıfır Jeton / No Connects)"
+                    : "2. 100% Free Proposals (Zero Connects)",
                   badge: isTr ? "0 TL Jeton" : "No Pay-to-Bid",
                   badgeColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
                   desc: isTr
@@ -544,7 +600,9 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
                 },
                 {
                   step: "03",
-                  title: isTr ? "Güvenli Teslimat: Staging, Avans & e-SMM / Fatura" : "3. Safe Handover: Staging, Advance & Invoicing",
+                  title: isTr
+                    ? "Güvenli Teslimat: Staging, Avans & e-SMM / Fatura"
+                    : "3. Safe Handover: Staging, Advance & Invoicing",
                   badge: isTr ? "Kod Güvenliği" : "Safe Escrow-Free",
                   badgeColor: "bg-purple-500/10 text-purple-400 border-purple-500/20",
                   desc: isTr
@@ -583,20 +641,36 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
               <div className="rounded-3xl border border-emerald-500/30 bg-emerald-500/5 p-6 space-y-3">
                 <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm sm:text-base">
                   <CheckCircle2 className="h-5 w-5" />
-                  <span>{isTr ? "Mühendisler İçin Altın Kurallar (Do's)" : "Developer Best Practices (Do's)"}</span>
+                  <span>
+                    {isTr
+                      ? "Mühendisler İçin Altın Kurallar (Do's)"
+                      : "Developer Best Practices (Do's)"}
+                  </span>
                 </div>
                 <ul className="text-xs sm:text-sm text-[var(--color-text-secondary)] space-y-2.5">
                   <li className="flex items-start gap-2">
                     <span className="text-emerald-400 font-bold">•</span>
-                    <span>{isTr ? "Sözleşmenize 'en fazla 2 tur makul revizyon dahildir' maddesi ekleyin." : "Specify that up to 2 rounds of reasonable revisions are included."}</span>
+                    <span>
+                      {isTr
+                        ? "Sözleşmenize 'en fazla 2 tur makul revizyon dahildir' maddesi ekleyin."
+                        : "Specify that up to 2 rounds of reasonable revisions are included."}
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-emerald-400 font-bold">•</span>
-                    <span>{isTr ? "18-29 yaş arasındaysanız 3 yıl Genç Girişimci vergi istisnasını kullanın." : "Leverage the 3-year Youth Entrepreneur tax exemption if aged 18-29."}</span>
+                    <span>
+                      {isTr
+                        ? "18-29 yaş arasındaysanız 3 yıl Genç Girişimci vergi istisnasını kullanın."
+                        : "Leverage the 3-year Youth Entrepreneur tax exemption if aged 18-29."}
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-emerald-400 font-bold">•</span>
-                    <span>{isTr ? "Teklif onaylandığında doğrudan WhatsApp/Slack üzerinden hızlı keşif toplantısı yapın." : "Conduct a direct 15-min discovery sync upon proposal acceptance."}</span>
+                    <span>
+                      {isTr
+                        ? "Teklif onaylandığında doğrudan WhatsApp/Slack üzerinden hızlı keşif toplantısı yapın."
+                        : "Conduct a direct 15-min discovery sync upon proposal acceptance."}
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -604,20 +678,36 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
               <div className="rounded-3xl border border-rose-500/30 bg-rose-500/5 p-6 space-y-3">
                 <div className="flex items-center gap-2 text-rose-400 font-bold text-sm sm:text-base">
                   <AlertTriangle className="h-5 w-5" />
-                  <span>{isTr ? "Kritik Dolandırıcılık Uyarıları (Red Flags)" : "Critical Scam Warnings (Red Flags)"}</span>
+                  <span>
+                    {isTr
+                      ? "Kritik Dolandırıcılık Uyarıları (Red Flags)"
+                      : "Critical Scam Warnings (Red Flags)"}
+                  </span>
                 </div>
                 <ul className="text-xs sm:text-sm text-[var(--color-text-secondary)] space-y-2.5">
                   <li className="flex items-start gap-2">
                     <span className="text-rose-400 font-bold">•</span>
-                    <span>{isTr ? "İşe başlamanız için teminat/ekipman parası isteyenlere ASLA para göndermeyin." : "NEVER send upfront money for 'registration or equipment deposits'."}</span>
+                    <span>
+                      {isTr
+                        ? "İşe başlamanız için teminat/ekipman parası isteyenlere ASLA para göndermeyin."
+                        : "NEVER send upfront money for 'registration or equipment deposits'."}
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-rose-400 font-bold">•</span>
-                    <span>{isTr ? "'Ücretsiz deneme modülü yazın' tuzaklarını reddedin; portfolyonuzu gösterin." : "Reject uncompensated test modules; demonstrate existing work instead."}</span>
+                    <span>
+                      {isTr
+                        ? "'Ücretsiz deneme modülü yazın' tuzaklarını reddedin; portfolyonuzu gösterin."
+                        : "Reject uncompensated test modules; demonstrate existing work instead."}
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-rose-400 font-bold">•</span>
-                    <span>{isTr ? "Son hakediş hesabınıza geçmeden ana kod deposu yetkilerini teslim etmeyin." : "Never transfer production keys before final payment clearance."}</span>
+                    <span>
+                      {isTr
+                        ? "Son hakediş hesabınıza geçmeden ana kod deposu yetkilerini teslim etmeyin."
+                        : "Never transfer production keys before final payment clearance."}
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -627,10 +717,14 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
             <div className="space-y-4 pt-4">
               <div>
                 <h3 className="text-lg sm:text-xl font-bold text-[var(--color-text-primary)]">
-                  {isTr ? "Yazılımcıların En Sık Sorduğu Sorular" : "Frequently Asked Questions by Developers"}
+                  {isTr
+                    ? "Yazılımcıların En Sık Sorduğu Sorular"
+                    : "Frequently Asked Questions by Developers"}
                 </h3>
                 <p className="text-xs text-[var(--color-text-secondary)]">
-                  {isTr ? "Kör teklifler, komisyonsuz kazanç, fatura ve ödeme güvencesi." : "Proposals, 0% commissions, invoicing and payment safeguards."}
+                  {isTr
+                    ? "Kör teklifler, komisyonsuz kazanç, fatura ve ödeme güvencesi."
+                    : "Proposals, 0% commissions, invoicing and payment safeguards."}
                 </p>
               </div>
 
@@ -676,10 +770,14 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
             <div className="space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-xs font-semibold text-purple-400">
                 <ShieldAlert className="h-3.5 w-3.5" />
-                <span>{isTr ? "Güvenlik & Ödeme Protokolü" : "Trust, Escrow-Free & Payment Matrix"}</span>
+                <span>
+                  {isTr ? "Güvenlik & Ödeme Protokolü" : "Trust, Escrow-Free & Payment Matrix"}
+                </span>
               </div>
               <h2 className="text-2xl sm:text-4xl font-black text-[var(--color-text-primary)] tracking-tight">
-                {isTr ? "%0 Komisyon Manifestosu & 3 Kademeli Hakediş" : "The 0% Commission Manifesto & 3-Tier Milestone Protocol"}
+                {isTr
+                  ? "%0 Komisyon Manifestosu & 3 Kademeli Hakediş"
+                  : "The 0% Commission Manifesto & 3-Tier Milestone Protocol"}
               </h2>
               <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed max-w-3xl">
                 {isTr
@@ -783,14 +881,18 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
               <div className="flex items-center gap-2.5 text-rose-400">
                 <AlertTriangle className="h-5 w-5 shrink-0" />
                 <h3 className="text-base sm:text-lg font-bold">
-                  {isTr ? "Dolandırıcılık Kırmızı Bayrakları (Red Flags)" : "Critical Scam Red Flags"}
+                  {isTr
+                    ? "Dolandırıcılık Kırmızı Bayrakları (Red Flags)"
+                    : "Critical Scam Red Flags"}
                 </h3>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm text-[var(--color-text-secondary)]">
                 <div className="p-4 rounded-2xl bg-[var(--color-surface-base)] border border-rose-500/20 space-y-1.5">
                   <strong className="text-rose-400 font-bold flex items-center gap-1.5">
                     <Flag className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                    <span>{isTr ? "Para / Teminat İsteyen İlanlar" : "Clients Demanding Upfront Fees"}</span>
+                    <span>
+                      {isTr ? "Para / Teminat İsteyen İlanlar" : "Clients Demanding Upfront Fees"}
+                    </span>
                   </strong>
                   <p>
                     {isTr
@@ -835,10 +937,16 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
             <div className="space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-400">
                 <Scale className="h-3.5 w-3.5" />
-                <span>{isTr ? "2026 Mevzuat, Fikri Mülkiyet & Vergi Standartları" : "2026 Legal Compliance & IP Standards"}</span>
+                <span>
+                  {isTr
+                    ? "2026 Mevzuat, Fikri Mülkiyet & Vergi Standartları"
+                    : "2026 Legal Compliance & IP Standards"}
+                </span>
               </div>
               <h2 className="text-2xl sm:text-4xl font-black text-[var(--color-text-primary)] tracking-tight">
-                {isTr ? "Telif Hakları (FSEK m. 52), Faturalandırma & Sözleşmeler" : "Intellectual Property, Invoicing & Contracts"}
+                {isTr
+                  ? "Telif Hakları (FSEK m. 52), Faturalandırma & Sözleşmeler"
+                  : "Intellectual Property, Invoicing & Contracts"}
               </h2>
               <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed max-w-3xl">
                 {isTr
@@ -895,7 +1003,9 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
             {/* Legal FAQs */}
             <div className="space-y-4 pt-2">
               <h3 className="text-lg sm:text-xl font-bold text-[var(--color-text-primary)]">
-                {isTr ? "Yasal Mevzuat & Vergi Sıkça Sorulan Sorular" : "Legal & Tax Frequently Asked Questions"}
+                {isTr
+                  ? "Yasal Mevzuat & Vergi Sıkça Sorulan Sorular"
+                  : "Legal & Tax Frequently Asked Questions"}
               </h3>
               <InteractiveFaqHub
                 locale={locale}
@@ -941,7 +1051,9 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
             <div className="space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-xs font-semibold text-rose-400">
                 <BookMarked className="h-3.5 w-3.5" />
-                <span>{isTr ? "Operis Platform Terimleri Sözlüğü" : "Operis Technical Glossary"}</span>
+                <span>
+                  {isTr ? "Operis Platform Terimleri Sözlüğü" : "Operis Technical Glossary"}
+                </span>
               </div>
               <h2 className="text-2xl sm:text-4xl font-black text-[var(--color-text-primary)] tracking-tight">
                 {isTr ? "Kavramlar & Mimari Terimler Rehberi" : "Architectural Glossary & Terms"}
@@ -980,7 +1092,9 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
                     : "Statutory written copyright agreement transferring economic software rights to the client upon full milestone financial clearance.",
                 },
                 {
-                  term: isTr ? "e-SMM (Elektronik Serbest Meslek Makbuzu)" : "e-SMM (Electronic Receipt)",
+                  term: isTr
+                    ? "e-SMM (Elektronik Serbest Meslek Makbuzu)"
+                    : "e-SMM (Electronic Receipt)",
                   def: isTr
                     ? "Türkiye vergi mevzuatında serbest meslek erbabı bağımsız yazılımcı ve mühendislerin hizmet bedeli karşılığında düzenlediği resmi vergi belgesi."
                     : "Official electronic self-employment invoice issued by independent Turkish contractors for professional software and design services.",
@@ -998,7 +1112,9 @@ export function HelpGuideTabs({ locale }: HelpGuideTabsProps) {
                     : "Balanced payment schedule consisting of 30% advance, 40% alpha demo, and 30% final code acceptance.",
                 },
                 {
-                  term: isTr ? "5651 Sayılı Yer Sağlayıcı Statüsü" : "Law 5651 Intermediary Hosting",
+                  term: isTr
+                    ? "5651 Sayılı Yer Sağlayıcı Statüsü"
+                    : "Law 5651 Intermediary Hosting",
                   def: isTr
                     ? "Operis'in ticari borçların tarafı veya kefili olmadığı, tarafları güvenli altyapıyla bir araya getiren bağımsız ilan yer sağlayıcısı olduğu yasal konumu."
                     : "Legal standing as an intermediary platform provider facilitating connections rather than acting as a commercial party or guarantor.",

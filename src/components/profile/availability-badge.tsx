@@ -32,7 +32,8 @@ export function AvailabilityBadge({
   let busyUntilFormatted: string | null = null;
   if (availableFromDate) {
     try {
-      const d = typeof availableFromDate === "string" ? new Date(availableFromDate) : availableFromDate;
+      const d =
+        typeof availableFromDate === "string" ? new Date(availableFromDate) : availableFromDate;
       if (!isNaN(d.getTime())) {
         busyUntilFormatted = d.toLocaleDateString(isTr ? "tr-TR" : "en-US", {
           day: "numeric",
@@ -113,12 +114,8 @@ export function AvailabilityBadge({
       colorClasses: "bg-rose-500/10 text-rose-400 border-rose-500/30",
       dotColor: "bg-rose-400",
       pulse: false,
-      labelTr: busyUntilFormatted
-        ? `${busyUntilFormatted} Tarihine Kadar Meşgul`
-        : "Şu An Meşgul",
-      labelEn: busyUntilFormatted
-        ? `Busy until ${busyUntilFormatted}`
-        : "Currently Busy",
+      labelTr: busyUntilFormatted ? `${busyUntilFormatted} Tarihine Kadar Meşgul` : "Şu An Meşgul",
+      labelEn: busyUntilFormatted ? `Busy until ${busyUntilFormatted}` : "Currently Busy",
       subtextTr: "Yeni proje kabul etmiyor",
       subtextEn: "Not taking new projects",
     },
@@ -143,7 +140,9 @@ export function AvailabilityBadge({
       >
         <span className="relative flex h-2 w-2 shrink-0">
           {statusConfig.pulse && (
-            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${statusConfig.dotColor}`} />
+            <span
+              className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${statusConfig.dotColor}`}
+            />
           )}
           <span className={`relative inline-flex rounded-full h-2 w-2 ${statusConfig.dotColor}`} />
         </span>
@@ -162,9 +161,13 @@ export function AvailabilityBadge({
           <div className="flex items-center gap-2">
             <span className="relative flex h-2.5 w-2.5 shrink-0">
               {statusConfig.pulse && (
-                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${statusConfig.dotColor}`} />
+                <span
+                  className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${statusConfig.dotColor}`}
+                />
               )}
-              <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${statusConfig.dotColor}`} />
+              <span
+                className={`relative inline-flex rounded-full h-2.5 w-2.5 ${statusConfig.dotColor}`}
+              />
             </span>
             <span className="font-semibold text-xs sm:text-sm">{label}</span>
           </div>
@@ -186,7 +189,11 @@ export function AvailabilityBadge({
         {isStale && (
           <div className="flex items-center gap-1.5 text-[10px] opacity-75 pt-1">
             <AlertCircle className="h-3 w-3 shrink-0" aria-hidden="true" />
-            <span>{isTr ? "Müsaitlik bilgisi 45 günden uzun süredir güncellenmedi." : "Availability hasn't been refreshed in 45+ days."}</span>
+            <span>
+              {isTr
+                ? "Müsaitlik bilgisi 45 günden uzun süredir güncellenmedi."
+                : "Availability hasn't been refreshed in 45+ days."}
+            </span>
           </div>
         )}
       </div>
@@ -201,7 +208,9 @@ export function AvailabilityBadge({
     >
       <span className="relative flex h-2 w-2 shrink-0">
         {statusConfig.pulse && (
-          <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${statusConfig.dotColor}`} />
+          <span
+            className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${statusConfig.dotColor}`}
+          />
         )}
         <span className={`relative inline-flex rounded-full h-2 w-2 ${statusConfig.dotColor}`} />
       </span>

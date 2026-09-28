@@ -39,4 +39,3 @@ export default async function RootPage() {
   // Primary market default matches x-default: /tr
   permanentRedirect("/tr");
 }
-

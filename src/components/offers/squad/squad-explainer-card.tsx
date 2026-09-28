@@ -1,7 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Users, ShieldCheck, UserCheck, ChevronDown, ChevronUp, Sparkles, HelpCircle } from "lucide-react";
+import {
+  Users,
+  ShieldCheck,
+  UserCheck,
+  ChevronDown,
+  ChevronUp,
+  Sparkles,
+  HelpCircle,
+} from "lucide-react";
 
 export interface SquadExplainerCardProps {
   locale?: string;
@@ -36,7 +44,9 @@ export function SquadExplainerCard({
           <div>
             <div className="flex items-center gap-2">
               <h4 className="text-sm font-semibold text-[var(--color-text-primary)]">
-                {isTr ? "Çevik Ekip (Kolektif Teklif) Nedir?" : "What is a Freelance Squad Proposal?"}
+                {isTr
+                  ? "Çevik Ekip (Kolektif Teklif) Nedir?"
+                  : "What is a Freelance Squad Proposal?"}
               </h4>
               <span className="inline-flex items-center rounded-md bg-indigo-500/15 px-2 py-0.5 text-[10px] font-medium text-indigo-300 border border-indigo-500/30">
                 {isTr ? "İşveren Kılavuzu" : "Employer Guide"}
@@ -57,7 +67,11 @@ export function SquadExplainerCard({
           aria-expanded={isExpanded}
         >
           <span>{getExplainerToggleLabel(isExpanded, isTr)}</span>
-          {isExpanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+          {isExpanded ? (
+            <ChevronUp className="h-3.5 w-3.5" />
+          ) : (
+            <ChevronDown className="h-3.5 w-3.5" />
+          )}
         </button>
       </div>
 
@@ -84,7 +98,9 @@ export function SquadExplainerCard({
               <Sparkles className="h-4 w-4 text-purple-400 shrink-0 mt-0.5" />
               <div>
                 <strong className="text-[var(--color-text-primary)] block">
-                  {isTr ? "2. Entegre Disiplinler (Squad Sinerjisi)" : "2. Integrated Disciplinary Synergy"}
+                  {isTr
+                    ? "2. Entegre Disiplinler (Squad Sinerjisi)"
+                    : "2. Integrated Disciplinary Synergy"}
                 </strong>
                 <span>
                   {isTr
@@ -99,7 +115,9 @@ export function SquadExplainerCard({
               <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
               <div>
                 <strong className="text-[var(--color-text-primary)] block">
-                  {isTr ? "3. Hukuki Güvence (TBK m. 620 Adi Ortaklık)" : "3. Legal Consortium Protection"}
+                  {isTr
+                    ? "3. Hukuki Güvence (TBK m. 620 Adi Ortaklık)"
+                    : "3. Legal Consortium Protection"}
                 </strong>
                 <span>
                   {isTr
@@ -114,7 +132,9 @@ export function SquadExplainerCard({
               <HelpCircle className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
               <div>
                 <strong className="text-[var(--color-text-primary)] block">
-                  {isTr ? "4. Baştan Belirli Şeffaf Hakediş Dağılımı" : "4. Transparent Revenue Split"}
+                  {isTr
+                    ? "4. Baştan Belirli Şeffaf Hakediş Dağılımı"
+                    : "4. Transparent Revenue Split"}
                 </strong>
                 <span>
                   {isTr

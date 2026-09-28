@@ -115,10 +115,9 @@ describe("WP-30 & WP-31: Reviews Security and Concurrency Remediation", () => {
 
   describe("WP-30: Auto-reveal Expired Reviews Sweeper", () => {
     it("updates unrevealed expired reviews to revealed in database", async () => {
-      const mockReturning = vi.fn().mockResolvedValue([
-        { id: "rev-expired-1" },
-        { id: "rev-expired-2" },
-      ]);
+      const mockReturning = vi
+        .fn()
+        .mockResolvedValue([{ id: "rev-expired-1" }, { id: "rev-expired-2" }]);
 
       const mockDb = {
         update: vi.fn().mockReturnValue({

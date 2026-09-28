@@ -2,13 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import {
-  Sparkles,
-  Loader2,
-  Plus,
-  ArrowRight,
-  Check,
-} from "lucide-react";
+import { Sparkles, Loader2, Plus, ArrowRight, Check } from "lucide-react";
 import { FeedListingItem } from "@/src/modules/listings/feed/service";
 import { CategoryDto } from "@/src/modules/categories/service";
 import { SocialListingCard } from "./social-listing-card";
@@ -73,7 +67,8 @@ export function SocialFeedStream({
     id: string;
     title: string;
   } | null>(null);
-  const [fullModalInitialData, setFullModalInitialData] = useState<SubmitOfferModalProps["initialData"]>(undefined);
+  const [fullModalInitialData, setFullModalInitialData] =
+    useState<SubmitOfferModalProps["initialData"]>(undefined);
 
   // Sentinel ref & performance refs for infinite scroll
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -137,9 +132,7 @@ export function SocialFeedStream({
 
       setItems((prev) => {
         const existingIds = new Set(prev.map((i) => i.id));
-        const newUnique = (data.items || []).filter(
-          (i: FeedListingItem) => !existingIds.has(i.id)
-        );
+        const newUnique = (data.items || []).filter((i: FeedListingItem) => !existingIds.has(i.id));
         return [...prev, ...newUnique];
       });
       setCursor(data.nextCursor ?? null);
@@ -291,7 +284,11 @@ export function SocialFeedStream({
         </div>
 
         <Link href={getLocalizedRoute("newListing", locale)}>
-          <Button variant="shimmer" size="sm" className="gap-1 px-3.5 py-1 text-xs rounded-full font-medium h-7.5">
+          <Button
+            variant="shimmer"
+            size="sm"
+            className="gap-1 px-3.5 py-1 text-xs rounded-full font-medium h-7.5"
+          >
             <Plus className="h-3 w-3" />
             <span>{isTr ? "İlan Ver" : "Post"}</span>
           </Button>
@@ -389,11 +386,7 @@ export function SocialFeedStream({
                 action={
                   <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
                     {mode === "following" && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleSwitchMode("all")}
-                      >
+                      <Button variant="outline" size="sm" onClick={() => handleSwitchMode("all")}>
                         {isTr ? "Tüm İlanları Gör" : "View All Listings"}
                       </Button>
                     )}
@@ -435,11 +428,7 @@ export function SocialFeedStream({
               {!hasMore && items.length > 0 && (
                 <div className="py-4 text-xs text-[var(--color-text-tertiary)] flex items-center justify-center gap-1.5">
                   <Sparkles className="h-3.5 w-3.5 text-blue-400" />
-                  <span>
-                    {isTr
-                      ? "Tüm güncel ilanları gördünüz."
-                      : "You're all caught up."}
-                  </span>
+                  <span>{isTr ? "Tüm güncel ilanları gördünüz." : "You're all caught up."}</span>
                 </div>
               )}
             </div>

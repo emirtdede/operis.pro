@@ -4,12 +4,7 @@ import { useState, useMemo, memo } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { formatBudgetRange } from "@/src/lib/format/budget";
-import {
-  ArrowUpRight,
-  Zap,
-  Share2,
-  Check,
-} from "lucide-react";
+import { ArrowUpRight, Zap, Share2, Check } from "lucide-react";
 import { AvatarInitials } from "../ui/avatar-initials";
 import { VerifiedCompanyBadge } from "../ui/verified-company-badge";
 import { FeedListingItem } from "@/src/modules/listings/feed/service";
@@ -340,8 +335,8 @@ export const SocialListingCard = memo(function SocialListingCard({
                       ? "Bağlantı Kopyalandı!"
                       : "Link Copied!"
                     : isTr
-                    ? "İlan Bağlantısını Paylaş"
-                    : "Share Listing Link"
+                      ? "İlan Bağlantısını Paylaş"
+                      : "Share Listing Link"
                 }
                 aria-label={isTr ? "İlanı Paylaş" : "Share Listing"}
               >
@@ -365,28 +360,30 @@ export const SocialListingCard = memo(function SocialListingCard({
       />
 
       {/* Floating Link Copied Notification */}
-      {copyToast && typeof document !== "undefined" && createPortal(
-        <div
-          role="status"
-          aria-live="polite"
-          className="fixed bottom-6 right-6 z-[9999] flex items-center gap-3 px-4 py-3 rounded-2xl border border-emerald-500/40 bg-[var(--color-surface-base)]/95 text-[var(--color-text-primary)] shadow-2xl shadow-black/60 backdrop-blur-xl animate-in slide-in-from-bottom-4 fade-in duration-200"
-        >
-          <div className="h-7 w-7 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0">
-            <Check className="h-4 w-4 text-emerald-400" />
-          </div>
-          <div className="flex flex-col pr-1">
-            <span className="text-xs font-bold text-[var(--color-text-primary)]">
-              {isTr ? "Bağlantı Kopyalandı!" : "Link Copied!"}
-            </span>
-            <span className="text-[11px] text-[var(--color-text-secondary)]">
-              {isTr
-                ? "İlan bağlantısı panoya kopyalandı, dilediğiniz yerde paylaşabilirsiniz."
-                : "Listing link copied to clipboard, ready to share."}
-            </span>
-          </div>
-        </div>,
-        document.body
-      )}
+      {copyToast &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            role="status"
+            aria-live="polite"
+            className="fixed bottom-6 right-6 z-[9999] flex items-center gap-3 px-4 py-3 rounded-2xl border border-emerald-500/40 bg-[var(--color-surface-base)]/95 text-[var(--color-text-primary)] shadow-2xl shadow-black/60 backdrop-blur-xl animate-in slide-in-from-bottom-4 fade-in duration-200"
+          >
+            <div className="h-7 w-7 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0">
+              <Check className="h-4 w-4 text-emerald-400" />
+            </div>
+            <div className="flex flex-col pr-1">
+              <span className="text-xs font-bold text-[var(--color-text-primary)]">
+                {isTr ? "Bağlantı Kopyalandı!" : "Link Copied!"}
+              </span>
+              <span className="text-[11px] text-[var(--color-text-secondary)]">
+                {isTr
+                  ? "İlan bağlantısı panoya kopyalandı, dilediğiniz yerde paylaşabilirsiniz."
+                  : "Listing link copied to clipboard, ready to share."}
+              </span>
+            </div>
+          </div>,
+          document.body
+        )}
     </article>
   );
 });

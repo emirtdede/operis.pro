@@ -72,7 +72,11 @@ export class RunbookService {
   static calculateCompleteness(
     runbook: Pick<
       RunbookDto,
-      "architectureSummary" | "environmentVariables" | "buildAndRunSteps" | "thirdPartyServices" | "disasterRecoverySteps"
+      | "architectureSummary"
+      | "environmentVariables"
+      | "buildAndRunSteps"
+      | "thirdPartyServices"
+      | "disasterRecoverySteps"
     >
   ): { score: number; grade: "A+" | "B" | "C" } {
     let score = 0;
@@ -118,7 +122,11 @@ export class RunbookService {
     engagementId: string,
     currentUserId: string
   ): Promise<RunbookDetailsResult> {
-    const isMock = Boolean(process.env.VITEST) || engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-");
+    const isMock =
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (Boolean(process.env.VITEST) ||
+        engagementId.startsWith("eng-test-") ||
+        engagementId.startsWith("eng-demo-"));
 
     if (isMock) {
       let runbook = inMemoryRunbooks.get(engagementId);
@@ -151,9 +159,12 @@ export class RunbookService {
         inMemoryRunbooks.set(engagementId, runbook);
       }
 
-      const isParticipant = !currentUserId.includes("outsider");
-      const isOwner = currentUserId === "user-client-001" || currentUserId === "user-client";
-      const isFreelancer = currentUserId === "user-freelancer-001" || currentUserId === "user-freelancer";
+      const isCreator = currentUserId === runbook.createdById;
+      const isOwner =
+        isCreator || currentUserId === "user-client-001" || currentUserId === "user-client";
+      const isFreelancer =
+        currentUserId === "user-freelancer-001" || currentUserId === "user-freelancer";
+      const isParticipant = (isOwner || isFreelancer) && !currentUserId.includes("outsider");
 
       const { score, grade } = this.calculateCompleteness(runbook);
 
@@ -304,7 +315,13 @@ export class RunbookService {
     engagementId: string,
     input: SaveRunbookInput,
     userId: string
-  ): Promise<{ success: boolean; runbook: RunbookDto; sha256Seal?: string; messageTr: string; messageEn: string }> {
+  ): Promise<{
+    success: boolean;
+    runbook: RunbookDto;
+    sha256Seal?: string;
+    messageTr: string;
+    messageEn: string;
+  }> {
     // 1. Security Anti-Leak Scan across all inputs
     const contentToCheck = [
       input.architectureSummary,
@@ -318,7 +335,11 @@ export class RunbookService {
       throw new Error(scan.warningTr || "Canlı şifre tespit edildi.");
     }
 
-    const isMock = Boolean(process.env.VITEST) || engagementId.startsWith("eng-test-") || engagementId.startsWith("eng-demo-");
+    const isMock =
+      (Boolean(process.env.VITEST) || process.env.NODE_ENV !== "production") &&
+      (Boolean(process.env.VITEST) ||
+        engagementId.startsWith("eng-test-") ||
+        engagementId.startsWith("eng-demo-"));
 
     const status = input.publish ? "PUBLISHED" : "DRAFT";
     let sha256Seal: string | null = null;
@@ -346,10 +367,14 @@ export class RunbookService {
     }
 
     if (isMock) {
-      if (userId.includes("outsider")) {
+      const existing = inMemoryRunbooks.get(engagementId);
+      const isCreator = existing ? userId === existing.createdById : true;
+      const isOwner = isCreator || userId === "user-client-001" || userId === "user-client";
+      const isFreelancer = userId === "user-freelancer-001" || userId === "user-freelancer";
+      const isParticipant = (isOwner || isFreelancer) && !userId.includes("outsider");
+      if (!isParticipant) {
         throw new Error("Forbidden. You are not a participant in this engagement.");
       }
-      const existing = inMemoryRunbooks.get(engagementId);
       const updated: RunbookDto = {
         id: existing?.id || `rb-mock-${engagementId}`,
         engagementId,
@@ -479,9 +504,7 @@ export class RunbookService {
       messageTr: input.publish
         ? "Proje devir kılavuzu başarıyla yayınlandı ve mühürlendi."
         : "Taslak kaydedildi.",
-      messageEn: input.publish
-        ? "Project runbook published successfully."
-        : "Draft saved.",
+      messageEn: input.publish ? "Project runbook published successfully." : "Draft saved.",
     };
   }
 }

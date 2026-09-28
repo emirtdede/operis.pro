@@ -16,6 +16,7 @@ import { SEED_USERS } from "@/db/seeds/users";
 import { SEED_LISTINGS } from "@/db/seeds/listings";
 import { SEED_OFFERS } from "@/db/seeds/offers";
 import { SEED_ENGAGEMENTS } from "@/db/seeds/engagements";
+import { getDbSslConfig } from "@/src/lib/db";
 import { getEnv } from "@/src/config/env";
 import { encryptEnvelopeV2, hashPhoneBlindIndex, hashPassword } from "@/src/lib/crypto";
 import { runSequentially } from "@/src/lib/async/concurrency";
@@ -27,12 +28,10 @@ export async function runSeed(customConnectionString?: string) {
   const connStr = customConnectionString || process.env.DATABASE_URL || env.DATABASE_URL;
   console.info("Seeding database taxonomy on:", connStr.replace(/:[^:@]+@/, ":***@"));
 
-  const isSupabase = connStr.includes("supabase.co") || connStr.includes("pooler.supabase.com");
-
   const pool = new Pool({
     connectionString: connStr,
     max: 2,
-    ssl: isSupabase ? { rejectUnauthorized: false } : undefined,
+    ssl: getDbSslConfig(connStr),
   });
 
   const db = drizzle(pool, { schema });

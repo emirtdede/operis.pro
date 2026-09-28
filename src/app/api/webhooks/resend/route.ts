@@ -106,7 +106,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ received: true, type: eventType });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Webhook processing error";
-    return NextResponse.json({ error: message }, { status: 400 });
+    console.error("[Resend Webhook Error]:", err);
+    return NextResponse.json({ error: "Webhook processing error" }, { status: 400 });
   }
 }

@@ -23,7 +23,7 @@ export function FooterQuickSettings() {
 
   // Close menus on outside click or Escape key
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
       if (langRef.current && !langRef.current.contains(event.target as Node)) {
         setLangOpen(false);
       }
@@ -40,9 +40,11 @@ export function FooterQuickSettings() {
     }
 
     document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside, { passive: true });
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
@@ -103,7 +105,7 @@ export function FooterQuickSettings() {
           <div
             role="menu"
             aria-orientation="vertical"
-            className="absolute bottom-full right-0 sm:right-auto sm:left-0 mb-2 w-44 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-1.5 shadow-2xl shadow-black/20 dark:shadow-black/70 z-50 animate-in fade-in zoom-in-95 duration-150 select-none"
+            className="absolute bottom-full left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-0 sm:right-auto mb-2 w-44 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-1.5 shadow-2xl shadow-black/20 dark:shadow-black/70 z-50 animate-in fade-in zoom-in-95 duration-150 select-none"
           >
             <div className="px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
               {isTr ? "Dil Seçimi" : "Select Language"}
@@ -168,7 +170,7 @@ export function FooterQuickSettings() {
           <div
             role="menu"
             aria-orientation="vertical"
-            className="absolute bottom-full right-0 mb-2 w-48 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-1.5 shadow-2xl shadow-black/20 dark:shadow-black/70 z-50 animate-in fade-in zoom-in-95 duration-150 select-none"
+            className="absolute bottom-full left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-auto sm:right-0 mb-2 w-48 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-1.5 shadow-2xl shadow-black/20 dark:shadow-black/70 z-50 animate-in fade-in zoom-in-95 duration-150 select-none"
           >
             <div className="px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
               {isTr ? "Görünüm Teması" : "Display Theme"}

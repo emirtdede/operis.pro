@@ -182,13 +182,11 @@ describe("Freelance Tax & Withholding Calculator Engine (GVK 94 & SMM)", () => {
       const result = calculateFreelanceTax(input);
 
       // Verify exact arithmetic invariant: Gross - Withholding === Net
-      expect(roundCurrency(result.grossAmount - result.withholdingAmount)).toBe(
-        result.netTakeHome
-      );
+      expect(roundCurrency(result.grossAmount - result.withholdingAmount)).toBe(result.netTakeHome);
       // Verify exact arithmetic invariant: Net + VAT payable === Total cash to freelancer
-      expect(
-        roundCurrency(result.netTakeHome + result.vatPayableToFreelancer)
-      ).toBe(result.totalCashToFreelancer);
+      expect(roundCurrency(result.netTakeHome + result.vatPayableToFreelancer)).toBe(
+        result.totalCashToFreelancer
+      );
     });
 
     it("handles zero, negative, or invalid amounts gracefully without throwing", () => {

@@ -106,7 +106,11 @@ export function AdminMobileNav({ navItems, alertEngines }: AdminMobileNavProps) 
             <div className="space-y-6">
               {/* Header & Close Button */}
               <div className="flex items-center justify-between pb-4 border-b border-slate-800/80">
-                <Link href="/admin" className="flex items-center gap-2" onClick={() => setIsOpen(false)}>
+                <Link
+                  href="/admin"
+                  className="flex items-center gap-2"
+                  onClick={() => setIsOpen(false)}
+                >
                   <BrandLogo size="sm" showText={true} />
                 </Link>
                 <div className="flex items-center gap-2">
@@ -144,7 +148,9 @@ export function AdminMobileNav({ navItems, alertEngines }: AdminMobileNavProps) 
                       }`}
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <Icon className={`h-4 w-4 shrink-0 ${isActive ? "text-blue-400" : "text-slate-500"}`} />
+                        <Icon
+                          className={`h-4 w-4 shrink-0 ${isActive ? "text-blue-400" : "text-slate-500"}`}
+                        />
                         <span className="truncate">{item.label}</span>
                       </div>
                       {item.badge && (
@@ -178,7 +184,9 @@ export function AdminMobileNav({ navItems, alertEngines }: AdminMobileNavProps) 
                       }`}
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <Icon className={`h-4 w-4 shrink-0 ${isActive ? "text-red-400" : "text-slate-500"}`} />
+                        <Icon
+                          className={`h-4 w-4 shrink-0 ${isActive ? "text-red-400" : "text-slate-500"}`}
+                        />
                         <span className="truncate">{item.label}</span>
                       </div>
                       {item.badge && (

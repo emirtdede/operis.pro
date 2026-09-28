@@ -25,10 +25,7 @@ import {
   PaymentLedgerStatus,
 } from "@/src/modules/engagements/milestone-service";
 import { MilestoneDeliverableUrlType } from "@/src/modules/engagements/milestone-synthesizer";
-import {
-  getMilestoneCardBgClass,
-  getMilestoneSeqBadgeClass,
-} from "../types";
+import { getMilestoneCardBgClass, getMilestoneSeqBadgeClass } from "../types";
 
 interface MilestoneTimelineNodeProps {
   milestone: MilestoneDto;
@@ -157,9 +154,7 @@ export function MilestoneTimelineNode({
           </span>
 
           <div>
-            <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
-              {m.title}
-            </h3>
+            <h3 className="text-sm font-bold text-[var(--color-text-primary)]">{m.title}</h3>
             <p className="text-xs text-[var(--color-text-secondary)]">{m.description}</p>
           </div>
         </div>
@@ -201,11 +196,7 @@ export function MilestoneTimelineNode({
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-[11px] text-indigo-300 hover:bg-indigo-500/20 transition-colors"
-            title={
-              isTr
-                ? "Yalnızca taraflara açık gizli çalışma bağlantısı"
-                : "Confidential link"
-            }
+            title={isTr ? "Yalnızca taraflara açık gizli çalışma bağlantısı" : "Confidential link"}
           >
             {getUrlTypeIcon(m.deliverableUrlType)}
             <span className="truncate max-w-[180px]">{m.deliverableUrl}</span>
@@ -217,10 +208,12 @@ export function MilestoneTimelineNode({
       {/* Deliverable Note if present */}
       {m.deliverableNote && (
         <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80 text-[11px] text-slate-300 flex items-start gap-1.5">
-          <MessageSquare className="h-3.5 w-3.5 text-slate-400 shrink-0 mt-0.5" aria-hidden="true" />
+          <MessageSquare
+            className="h-3.5 w-3.5 text-slate-400 shrink-0 mt-0.5"
+            aria-hidden="true"
+          />
           <div>
-            <strong>{isTr ? "Teslimat Notu:" : "Handover Note:"}</strong>{" "}
-            {m.deliverableNote}
+            <strong>{isTr ? "Teslimat Notu:" : "Handover Note:"}</strong> {m.deliverableNote}
           </div>
         </div>
       )}
@@ -246,12 +239,8 @@ export function MilestoneTimelineNode({
               <strong className="text-slate-200">{m.senderBank || "Garanti BBVA"}</strong>
             </div>
             <div>
-              <span className="text-slate-500 text-[10px] block">
-                Banka Ref / Sorgu No:
-              </span>
-              <strong className="font-mono text-amber-200">
-                {m.paymentReference || "N/A"}
-              </strong>
+              <span className="text-slate-500 text-[10px] block">Banka Ref / Sorgu No:</span>
+              <strong className="font-mono text-amber-200">{m.paymentReference || "N/A"}</strong>
             </div>
             <div>
               <span className="text-slate-500 text-[10px] block">Transfer Zamanı:</span>
@@ -260,9 +249,7 @@ export function MilestoneTimelineNode({
               </span>
             </div>
             <div>
-              <span className="text-slate-500 text-[10px] block">
-                İşlem / Teyit Modu:
-              </span>
+              <span className="text-slate-500 text-[10px] block">İşlem / Teyit Modu:</span>
               <span className="text-emerald-400 text-xs font-medium">
                 {isTr ? "Doğrudan Banka Beyanı" : "Direct Bank Settlement"}
               </span>
@@ -272,9 +259,7 @@ export function MilestoneTimelineNode({
           {m.timingGuidance?.warningTr && (
             <div className="p-2 rounded-xl bg-amber-950/50 border border-amber-500/30 text-[11px] text-amber-200 flex items-start gap-2">
               <Info className="h-4 w-4 shrink-0 mt-0.5 text-amber-400" />
-              <span>
-                {isTr ? m.timingGuidance.warningTr : m.timingGuidance.warningEn}
-              </span>
+              <span>{isTr ? m.timingGuidance.warningTr : m.timingGuidance.warningEn}</span>
             </div>
           )}
         </div>
@@ -296,7 +281,10 @@ export function MilestoneTimelineNode({
           </div>
           {m.disputeNote && (
             <div className="text-[11px] text-slate-300 bg-black/40 p-2 rounded-xl border border-rose-500/20 flex items-start gap-1.5">
-              <MessageSquare className="h-3.5 w-3.5 text-rose-400 shrink-0 mt-0.5" aria-hidden="true" />
+              <MessageSquare
+                className="h-3.5 w-3.5 text-rose-400 shrink-0 mt-0.5"
+                aria-hidden="true"
+              />
               <div>
                 <strong>{isTr ? "Yazılımcı Açıklaması:" : "Specialist Note:"}</strong>{" "}
                 {m.disputeNote}
@@ -408,9 +396,7 @@ export function MilestoneTimelineNode({
             className="text-xs text-amber-300 border-amber-500/30 hover:bg-amber-500/10 gap-1 cursor-pointer"
           >
             <Undo2 className="h-3 w-3" />
-            <span>
-              {isTr ? "Ödeme İşaretini Geri Al & Tekrar Dene" : "Revert & Retry Payment"}
-            </span>
+            <span>{isTr ? "Ödeme İşaretini Geri Al & Tekrar Dene" : "Revert & Retry Payment"}</span>
           </Button>
         )}
 

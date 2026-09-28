@@ -100,53 +100,188 @@ export function ProfileIdentityTab({
     {
       group: isTr ? "Geliştirici & Kod" : "Developer & Code",
       items: [
-        { value: "github", label: "GitHub", placeholder: "https://github.com/kullaniciadi", defaultLabel: "GitHub" },
-        { value: "gitlab", label: "GitLab", placeholder: "https://gitlab.com/kullaniciadi", defaultLabel: "GitLab" },
-        { value: "stackoverflow", label: "Stack Overflow", placeholder: "https://stackoverflow.com/users/...", defaultLabel: "Stack Overflow" },
-        { value: "devto", label: "Dev.to", placeholder: "https://dev.to/kullaniciadi", defaultLabel: "Dev.to" },
-        { value: "codepen", label: "CodePen", placeholder: "https://codepen.io/kullaniciadi", defaultLabel: "CodePen" },
-        { value: "huggingface", label: "Hugging Face", placeholder: "https://huggingface.co/kullaniciadi", defaultLabel: "Hugging Face" },
-        { value: "kaggle", label: "Kaggle", placeholder: "https://kaggle.com/kullaniciadi", defaultLabel: "Kaggle" },
+        {
+          value: "github",
+          label: "GitHub",
+          placeholder: "https://github.com/kullaniciadi",
+          defaultLabel: "GitHub",
+        },
+        {
+          value: "gitlab",
+          label: "GitLab",
+          placeholder: "https://gitlab.com/kullaniciadi",
+          defaultLabel: "GitLab",
+        },
+        {
+          value: "stackoverflow",
+          label: "Stack Overflow",
+          placeholder: "https://stackoverflow.com/users/...",
+          defaultLabel: "Stack Overflow",
+        },
+        {
+          value: "devto",
+          label: "Dev.to",
+          placeholder: "https://dev.to/kullaniciadi",
+          defaultLabel: "Dev.to",
+        },
+        {
+          value: "codepen",
+          label: "CodePen",
+          placeholder: "https://codepen.io/kullaniciadi",
+          defaultLabel: "CodePen",
+        },
+        {
+          value: "huggingface",
+          label: "Hugging Face",
+          placeholder: "https://huggingface.co/kullaniciadi",
+          defaultLabel: "Hugging Face",
+        },
+        {
+          value: "kaggle",
+          label: "Kaggle",
+          placeholder: "https://kaggle.com/kullaniciadi",
+          defaultLabel: "Kaggle",
+        },
       ],
     },
     {
       group: isTr ? "Tasarım & Kreatif" : "Design & Creative",
       items: [
-        { value: "figma", label: "Figma", placeholder: "https://figma.com/@kullaniciadi", defaultLabel: "Figma" },
-        { value: "dribbble", label: "Dribbble", placeholder: "https://dribbble.com/kullaniciadi", defaultLabel: "Dribbble" },
-        { value: "behance", label: "Behance", placeholder: "https://behance.net/kullaniciadi", defaultLabel: "Behance" },
-        { value: "artstation", label: "ArtStation", placeholder: "https://artstation.com/kullaniciadi", defaultLabel: "ArtStation" },
-        { value: "sketchfab", label: "Sketchfab", placeholder: "https://sketchfab.com/kullaniciadi", defaultLabel: "Sketchfab" },
+        {
+          value: "figma",
+          label: "Figma",
+          placeholder: "https://figma.com/@kullaniciadi",
+          defaultLabel: "Figma",
+        },
+        {
+          value: "dribbble",
+          label: "Dribbble",
+          placeholder: "https://dribbble.com/kullaniciadi",
+          defaultLabel: "Dribbble",
+        },
+        {
+          value: "behance",
+          label: "Behance",
+          placeholder: "https://behance.net/kullaniciadi",
+          defaultLabel: "Behance",
+        },
+        {
+          value: "artstation",
+          label: "ArtStation",
+          placeholder: "https://artstation.com/kullaniciadi",
+          defaultLabel: "ArtStation",
+        },
+        {
+          value: "sketchfab",
+          label: "Sketchfab",
+          placeholder: "https://sketchfab.com/kullaniciadi",
+          defaultLabel: "Sketchfab",
+        },
       ],
     },
     {
       group: isTr ? "Profesyonel & Ağ" : "Professional & Community",
       items: [
-        { value: "linkedin", label: "LinkedIn", placeholder: "https://linkedin.com/in/kullaniciadi", defaultLabel: "LinkedIn" },
-        { value: "x", label: "X (Twitter)", placeholder: "https://x.com/kullaniciadi", defaultLabel: "X (Twitter)" },
-        { value: "discord", label: "Discord", placeholder: "https://discord.gg/davet veya kullanıcı adı", defaultLabel: "Discord" },
-        { value: "telegram", label: "Telegram", placeholder: "https://t.me/kullaniciadi", defaultLabel: "Telegram" },
-        { value: "instagram", label: "Instagram", placeholder: "https://instagram.com/kullaniciadi", defaultLabel: "Instagram" },
-        { value: "whatsapp", label: "WhatsApp", placeholder: "https://wa.me/905xxxxxxxxx", defaultLabel: "WhatsApp" },
+        {
+          value: "linkedin",
+          label: "LinkedIn",
+          placeholder: "https://linkedin.com/in/kullaniciadi",
+          defaultLabel: "LinkedIn",
+        },
+        {
+          value: "x",
+          label: "X (Twitter)",
+          placeholder: "https://x.com/kullaniciadi",
+          defaultLabel: "X (Twitter)",
+        },
+        {
+          value: "discord",
+          label: "Discord",
+          placeholder: "https://discord.gg/davet veya kullanıcı adı",
+          defaultLabel: "Discord",
+        },
+        {
+          value: "telegram",
+          label: "Telegram",
+          placeholder: "https://t.me/kullaniciadi",
+          defaultLabel: "Telegram",
+        },
+        {
+          value: "instagram",
+          label: "Instagram",
+          placeholder: "https://instagram.com/kullaniciadi",
+          defaultLabel: "Instagram",
+        },
+        {
+          value: "whatsapp",
+          label: "WhatsApp",
+          placeholder: "https://wa.me/905xxxxxxxxx",
+          defaultLabel: "WhatsApp",
+        },
       ],
     },
     {
       group: isTr ? "Yayın & Medya" : "Media & Publications",
       items: [
-        { value: "medium", label: "Medium", placeholder: "https://medium.com/@kullaniciadi", defaultLabel: "Medium" },
-        { value: "substack", label: "Substack", placeholder: "https://kullaniciadi.substack.com", defaultLabel: "Substack" },
-        { value: "youtube", label: "YouTube", placeholder: "https://youtube.com/@kanal", defaultLabel: "YouTube" },
-        { value: "vimeo", label: "Vimeo", placeholder: "https://vimeo.com/kullaniciadi", defaultLabel: "Vimeo" },
-        { value: "spotify", label: "Spotify", placeholder: "https://open.spotify.com/...", defaultLabel: "Spotify" },
-        { value: "soundcloud", label: "SoundCloud", placeholder: "https://soundcloud.com/kullaniciadi", defaultLabel: "SoundCloud" },
+        {
+          value: "medium",
+          label: "Medium",
+          placeholder: "https://medium.com/@kullaniciadi",
+          defaultLabel: "Medium",
+        },
+        {
+          value: "substack",
+          label: "Substack",
+          placeholder: "https://kullaniciadi.substack.com",
+          defaultLabel: "Substack",
+        },
+        {
+          value: "youtube",
+          label: "YouTube",
+          placeholder: "https://youtube.com/@kanal",
+          defaultLabel: "YouTube",
+        },
+        {
+          value: "vimeo",
+          label: "Vimeo",
+          placeholder: "https://vimeo.com/kullaniciadi",
+          defaultLabel: "Vimeo",
+        },
+        {
+          value: "spotify",
+          label: "Spotify",
+          placeholder: "https://open.spotify.com/...",
+          defaultLabel: "Spotify",
+        },
+        {
+          value: "soundcloud",
+          label: "SoundCloud",
+          placeholder: "https://soundcloud.com/kullaniciadi",
+          defaultLabel: "SoundCloud",
+        },
       ],
     },
     {
       group: isTr ? "Web & Özel Bağlantı" : "Web & Custom Link",
       items: [
-        { value: "website", label: isTr ? "Kişisel Web Sitesi" : "Personal Website", placeholder: "https://websiteniz.com", defaultLabel: isTr ? "Web Sitesi" : "Website" },
-        { value: "portfolio", label: isTr ? "Portfolyo / Demo" : "Portfolio / Showcase", placeholder: "https://portfolyonuz.com", defaultLabel: isTr ? "Portfolyo" : "Portfolio" },
-        { value: "custom", label: isTr ? "Özel Bağlantı" : "Custom Link", placeholder: "https://...", defaultLabel: isTr ? "Özel Bağlantı" : "Custom Link" },
+        {
+          value: "website",
+          label: isTr ? "Kişisel Web Sitesi" : "Personal Website",
+          placeholder: "https://websiteniz.com",
+          defaultLabel: isTr ? "Web Sitesi" : "Website",
+        },
+        {
+          value: "portfolio",
+          label: isTr ? "Portfolyo / Demo" : "Portfolio / Showcase",
+          placeholder: "https://portfolyonuz.com",
+          defaultLabel: isTr ? "Portfolyo" : "Portfolio",
+        },
+        {
+          value: "custom",
+          label: isTr ? "Özel Bağlantı" : "Custom Link",
+          placeholder: "https://...",
+          defaultLabel: isTr ? "Özel Bağlantı" : "Custom Link",
+        },
       ],
     },
   ];
@@ -168,10 +303,7 @@ export function ProfileIdentityTab({
     setNewLinkType(typeVal);
     const plat = allPlatformItems.find((item) => item.value === typeVal);
     if (plat) {
-      if (
-        !newLinkLabel ||
-        allPlatformItems.some((p) => p.defaultLabel === newLinkLabel)
-      ) {
+      if (!newLinkLabel || allPlatformItems.some((p) => p.defaultLabel === newLinkLabel)) {
         setNewLinkLabel(plat.defaultLabel);
       }
     }
@@ -239,7 +371,9 @@ export function ProfileIdentityTab({
   const handleRemoveAvatar = () => {
     setAvatarUrl("");
     setAvatarUploadSuccess(
-      isTr ? "Profil fotoğrafı kaldırıldı (Baş harfler kullanılacak)." : "Avatar removed (Initials will be shown)."
+      isTr
+        ? "Profil fotoğrafı kaldırıldı (Baş harfler kullanılacak)."
+        : "Avatar removed (Initials will be shown)."
     );
     setTimeout(() => setAvatarUploadSuccess(null), 3000);
   };
@@ -368,11 +502,7 @@ export function ProfileIdentityTab({
           <div className="flex items-center gap-3.5 min-w-0">
             <div className="relative h-14 w-14 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-600/20 to-indigo-600/30 border border-blue-500/30 flex items-center justify-center shrink-0 shadow-inner">
               {avatarUrl ? (
-                <img
-                  src={avatarUrl}
-                  alt={displayName}
-                  className="h-full w-full object-cover"
-                />
+                <img src={avatarUrl} alt={displayName} className="h-full w-full object-cover" />
               ) : (
                 <span className="text-lg font-bold text-blue-400">
                   {displayName.slice(0, 2).toUpperCase() || "OP"}
@@ -401,7 +531,11 @@ export function ProfileIdentityTab({
           </div>
 
           <Link href={publicProfileUrl} target="_blank" className="shrink-0 w-full sm:w-auto">
-            <Button variant="outline" size="sm" className="gap-1.5 text-xs w-full sm:w-auto justify-center">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1.5 text-xs w-full sm:w-auto justify-center"
+            >
               <span>{isTr ? "Genel Profili Aç" : "View Public Profile"}</span>
               <ExternalLink className="h-3.5 w-3.5" />
             </Button>
@@ -523,8 +657,8 @@ export function ProfileIdentityTab({
                         ? "Fotoğraf Yükleniyor..."
                         : "Uploading Photo..."
                       : isTr
-                      ? "Fotoğraf Yükle"
-                      : "Upload Photo"}
+                        ? "Fotoğraf Yükle"
+                        : "Upload Photo"}
                   </span>
                 </Button>
 
@@ -575,7 +709,9 @@ export function ProfileIdentityTab({
           {showUrlInput && (
             <div className="mt-4 pt-3 border-t border-[var(--color-border-subtle)] space-y-1.5 animate-in fade-in duration-200">
               <label className="text-[11px] font-semibold text-[var(--color-text-tertiary)] block">
-                {isTr ? "Doğrudan Harici Resim Bağlantısı (Avatar URL)" : "Direct Image Link (Avatar URL)"}
+                {isTr
+                  ? "Doğrudan Harici Resim Bağlantısı (Avatar URL)"
+                  : "Direct Image Link (Avatar URL)"}
               </label>
               <TextInput
                 value={avatarUrl}
@@ -594,28 +730,42 @@ export function ProfileIdentityTab({
           <label className="text-xs font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
             <AtSign className="h-4 w-4 text-cyan-400" />
             <span>
-              {isTr ? "Kullanıcı Adı (Handle / Özel Profil URL'si)" : "Username (Handle / Vanity URL)"}
+              {isTr
+                ? "Kullanıcı Adı (Handle / Özel Profil URL'si)"
+                : "Username (Handle / Vanity URL)"}
             </span>
           </label>
 
           {/* Durum Rozeti */}
           {handleStatus.checking ? (
-            <Badge variant="outline" className="text-[10px] gap-1 bg-amber-500/10 text-amber-400 border-amber-500/20">
+            <Badge
+              variant="outline"
+              className="text-[10px] gap-1 bg-amber-500/10 text-amber-400 border-amber-500/20"
+            >
               <Loader2 className="h-3 w-3 animate-spin" />
               <span>{isTr ? "Kontrol ediliyor..." : "Checking..."}</span>
             </Badge>
           ) : handleStatus.isCurrent ? (
-            <Badge variant="outline" className="text-[10px] gap-1 bg-blue-500/10 text-blue-400 border-blue-500/20">
+            <Badge
+              variant="outline"
+              className="text-[10px] gap-1 bg-blue-500/10 text-blue-400 border-blue-500/20"
+            >
               <CheckCircle2 className="h-3 w-3" />
               <span>{handleStatus.message}</span>
             </Badge>
           ) : handleStatus.available ? (
-            <Badge variant="outline" className="text-[10px] gap-1 bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+            <Badge
+              variant="outline"
+              className="text-[10px] gap-1 bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+            >
               <CheckCircle2 className="h-3 w-3" />
               <span>{handleStatus.message}</span>
             </Badge>
           ) : (
-            <Badge variant="outline" className="text-[10px] gap-1 bg-red-500/10 text-red-400 border-red-500/20">
+            <Badge
+              variant="outline"
+              className="text-[10px] gap-1 bg-red-500/10 text-red-400 border-red-500/20"
+            >
               <AlertCircle className="h-3 w-3" />
               <span>{handleStatus.message}</span>
             </Badge>
@@ -676,7 +826,11 @@ export function ProfileIdentityTab({
             value={headline}
             onChange={(e) => setHeadline(e.target.value)}
             maxLength={140}
-            placeholder={isTr ? "Örn: Senior Full Stack Architect & Tech Lead" : "e.g. Senior Full Stack Architect"}
+            placeholder={
+              isTr
+                ? "Örn: Senior Full Stack Architect & Tech Lead"
+                : "e.g. Senior Full Stack Architect"
+            }
             className="text-xs"
           />
         </div>
@@ -815,8 +969,8 @@ export function ProfileIdentityTab({
                         ? "Özel Başlık"
                         : "Custom Label"
                       : isTr
-                      ? "Etiket"
-                      : "Label"
+                        ? "Etiket"
+                        : "Label"
                   }
                   className="w-full h-10 rounded-xl bg-surface border border-[var(--color-border-subtle)] px-3 text-xs text-[var(--color-text-primary)] outline-none focus:border-blue-500 transition-colors"
                 />

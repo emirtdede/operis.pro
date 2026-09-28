@@ -1,8 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import {
-  MilestoneService,
-  inMemoryMilestones,
-} from "@/src/modules/engagements/milestone-service";
+import { MilestoneService, inMemoryMilestones } from "@/src/modules/engagements/milestone-service";
 
 describe("Milestone Security & Handshake Remediation Suite (WP-11, WP-12, WP-13)", () => {
   const engagementId = "eng-test-payout-guards-101";
@@ -34,9 +31,9 @@ describe("Milestone Security & Handshake Remediation Suite (WP-11, WP-12, WP-13)
       const mId = plan.milestones[0]!.id;
 
       // Employer attempts to revert payment when nothing was marked
-      await expect(
-        MilestoneService.revertPayment(engagementId, mId, clientUserId)
-      ).rejects.toThrow(/Ödeme bildirimi yapılmamış bir hakediş geri alınamaz/);
+      await expect(MilestoneService.revertPayment(engagementId, mId, clientUserId)).rejects.toThrow(
+        /Ödeme bildirimi yapılmamış bir hakediş geri alınamaz/
+      );
     });
 
     it("rejects disputing payment on an UNPAID milestone", async () => {
@@ -85,9 +82,9 @@ describe("Milestone Security & Handshake Remediation Suite (WP-11, WP-12, WP-13)
       ).rejects.toThrow(/Bu hakedişin ödemesi zaten kesinleşmiştir/);
 
       // 4. Employer cannot revert confirmed payment
-      await expect(
-        MilestoneService.revertPayment(engagementId, mId, clientUserId)
-      ).rejects.toThrow(/Kesinleşmiş \(onaylanmış\) ödeme geri alınamaz/);
+      await expect(MilestoneService.revertPayment(engagementId, mId, clientUserId)).rejects.toThrow(
+        /Kesinleşmiş \(onaylanmış\) ödeme geri alınamaz/
+      );
 
       // 5. Freelancer cannot dispute confirmed payment
       await expect(

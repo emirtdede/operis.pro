@@ -1,9 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { NextRequest } from "next/server";
-import {
-  DisputeArbiterService,
-  type DisputeAnalysisInput,
-} from "@/src/modules/ai/dispute-arbiter";
+import { DisputeArbiterService, type DisputeAnalysisInput } from "@/src/modules/ai/dispute-arbiter";
 import { GET as adminReportRouteHandler } from "@/src/app/api/admin/engagements/[id]/dispute-report/route";
 import { GET as workReportRouteHandler } from "@/src/app/api/work/[id]/dispute-report/route";
 
@@ -131,8 +128,16 @@ describe("⚖️ Operis AI Dispute Arbiter & Evidence Analyzer Suite", () => {
       expect(report.clientRefundPercent).toBeGreaterThanOrEqual(75);
       expect(report.freelancerEntitlementPercent).toBeLessThanOrEqual(25);
       expect(report.verdictRecommendation).toBe("FORCE_CANCEL");
-      expect(report.identifiedBreaches.some((b) => b.party === "CONTRACTOR" && b.clause.includes("Madde 2"))).toBe(true);
-      expect(report.identifiedBreaches.some((b) => b.party === "CONTRACTOR" && b.clause.includes("Madde 7"))).toBe(true);
+      expect(
+        report.identifiedBreaches.some(
+          (b) => b.party === "CONTRACTOR" && b.clause.includes("Madde 2")
+        )
+      ).toBe(true);
+      expect(
+        report.identifiedBreaches.some(
+          (b) => b.party === "CONTRACTOR" && b.clause.includes("Madde 7")
+        )
+      ).toBe(true);
     });
 
     it("should detect unauthorized Scope Creep (Madde 4.3 / TBK m. 480/2) in client chat messages", () => {
@@ -148,7 +153,8 @@ describe("⚖️ Operis AI Dispute Arbiter & Evidence Analyzer Suite", () => {
         messages: [
           {
             senderRole: "CLIENT",
-            content: "Lütfen sözleşme dışı 4 yeni sayfa ve ilave ödeme ekranı ekleyin, aksi halde onay vermeyeceğim.",
+            content:
+              "Lütfen sözleşme dışı 4 yeni sayfa ve ilave ödeme ekranı ekleyin, aksi halde onay vermeyeceğim.",
             createdAt: new Date(),
           },
         ],
@@ -182,7 +188,8 @@ describe("⚖️ Operis AI Dispute Arbiter & Evidence Analyzer Suite", () => {
       const report = DisputeArbiterService.analyzeDispute(input);
 
       const revBreach = report.identifiedBreaches.find(
-        (b) => b.party === "CLIENT" && b.clause.includes("Madde 4.3") && b.titleTr.includes("Revizyon")
+        (b) =>
+          b.party === "CLIENT" && b.clause.includes("Madde 4.3") && b.titleTr.includes("Revizyon")
       );
       expect(revBreach).toBeDefined();
       expect(report.evidenceSummary.revisionRoundsCount).toBeGreaterThanOrEqual(3);
@@ -200,7 +207,9 @@ describe("⚖️ Operis AI Dispute Arbiter & Evidence Analyzer Suite", () => {
       expect(reportExtreme.freelancerEntitlementPercent).toBeLessThanOrEqual(100);
       expect(reportExtreme.clientRefundPercent).toBeGreaterThanOrEqual(0);
       expect(reportExtreme.clientRefundPercent).toBeLessThanOrEqual(100);
-      expect(reportExtreme.freelancerEntitlementPercent + reportExtreme.clientRefundPercent).toBe(100);
+      expect(reportExtreme.freelancerEntitlementPercent + reportExtreme.clientRefundPercent).toBe(
+        100
+      );
     });
 
     it("should generate comprehensive bilingual executive reports (TR and EN)", () => {
@@ -242,14 +251,18 @@ describe("⚖️ Operis AI Dispute Arbiter & Evidence Analyzer Suite", () => {
 
       expect(report.markdownReportTr).toContain("# ⚖️ OPERİS AI TARAFSIZ TAHKİM VE DELİL RAPORU");
       expect(report.markdownReportTr).toContain("PROOF-OF-WORK");
-      expect(report.markdownReportEn).toContain("# ⚖️ OPERIS NEUTRAL ARBITRATION & SETTLEMENT REPORT");
+      expect(report.markdownReportEn).toContain(
+        "# ⚖️ OPERIS NEUTRAL ARBITRATION & SETTLEMENT REPORT"
+      );
       expect(report.markdownReportEn).toContain("Recommended Verdict");
     });
   });
 
   describe("API Route Handlers", () => {
     it("should allow admin to fetch dispute arbitration report via /api/admin/engagements/[id]/dispute-report", async () => {
-      const req = new NextRequest("http://localhost:3000/api/admin/engagements/eng-dispute-test/dispute-report");
+      const req = new NextRequest(
+        "http://localhost:3000/api/admin/engagements/eng-dispute-test/dispute-report"
+      );
       const res = await adminReportRouteHandler(req, {
         params: Promise.resolve({ id: "eng-dispute-test" }),
       });

@@ -107,12 +107,32 @@ describe("Multi-Sector Portfolio Platforms & Branding", () => {
   it("validates all new platform link types across 10 sectors", () => {
     const platforms = [
       { type: "artstation" as const, url: "https://artstation.com/artist", label: "ArtStation 3D" },
-      { type: "sketchfab" as const, url: "https://sketchfab.com/model3d", label: "Sketchfab Model" },
+      {
+        type: "sketchfab" as const,
+        url: "https://sketchfab.com/model3d",
+        label: "Sketchfab Model",
+      },
       { type: "kaggle" as const, url: "https://kaggle.com/datascience", label: "Kaggle Profile" },
-      { type: "huggingface" as const, url: "https://huggingface.co/ai-model", label: "Hugging Face Space" },
-      { type: "substack" as const, url: "https://author.substack.com", label: "Substack Newsletter" },
-      { type: "spotify" as const, url: "https://open.spotify.com/artist/123", label: "Spotify Artist" },
-      { type: "soundcloud" as const, url: "https://soundcloud.com/producer", label: "SoundCloud Audio" },
+      {
+        type: "huggingface" as const,
+        url: "https://huggingface.co/ai-model",
+        label: "Hugging Face Space",
+      },
+      {
+        type: "substack" as const,
+        url: "https://author.substack.com",
+        label: "Substack Newsletter",
+      },
+      {
+        type: "spotify" as const,
+        url: "https://open.spotify.com/artist/123",
+        label: "Spotify Artist",
+      },
+      {
+        type: "soundcloud" as const,
+        url: "https://soundcloud.com/producer",
+        label: "SoundCloud Audio",
+      },
       { type: "vimeo" as const, url: "https://vimeo.com/director", label: "Vimeo Showreel" },
     ];
 
@@ -133,8 +153,12 @@ describe("Multi-Sector Portfolio Platforms & Branding", () => {
 
     // Match by URL auto-detection
     expect(getPlatformConfig(undefined, "https://github.com/torvalds").label).toBe("GitHub");
-    expect(getPlatformConfig(undefined, "https://artstation.com/artwork/123").label).toBe("ArtStation");
-    expect(getPlatformConfig(undefined, "https://open.spotify.com/track/abc").label).toBe("Spotify");
+    expect(getPlatformConfig(undefined, "https://artstation.com/artwork/123").label).toBe(
+      "ArtStation"
+    );
+    expect(getPlatformConfig(undefined, "https://open.spotify.com/track/abc").label).toBe(
+      "Spotify"
+    );
   });
 
   it("handles R2 storage configuration gracefully when env is missing", async () => {
@@ -143,4 +167,3 @@ describe("Multi-Sector Portfolio Platforms & Branding", () => {
     expect(typeof isR2Configured()).toBe("boolean");
   });
 });
-

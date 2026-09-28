@@ -1,5 +1,4 @@
 import crypto from "node:crypto";
-import { cookies } from "next/headers";
 import { getEnv } from "@/src/config/env";
 
 export const SESSION_COOKIE_NAME = "fp_session";
@@ -121,6 +120,7 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
   let token = explicitToken;
   if (!token) {
     try {
+      const { cookies } = await import("next/headers");
       const cookieStore = await cookies();
       const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME);
       if (sessionCookie?.value) {
@@ -157,6 +157,7 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
               status: schema.users.status,
               authVersion: schema.users.authVersion,
               twoFactorEnabled: schema.users.twoFactorEnabled,
+              updatedAt: schema.users.updatedAt,
             })
             .from(schema.users)
             .where(eq(schema.users.clerkUserId, clerkAuth.userId))
@@ -189,6 +190,7 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
                     status: schema.users.status,
                     authVersion: schema.users.authVersion,
                     twoFactorEnabled: schema.users.twoFactorEnabled,
+                    updatedAt: schema.users.updatedAt,
                   })
                   .from(schema.users)
                   .where(eq(schema.users.id, syncResult.userId))
@@ -198,6 +200,19 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
           }
 
           if (dbUser && dbUser.status === "ACTIVE") {
+            const tokenIatSec =
+              typeof clerkAuth.sessionClaims?.iat === "number" ? clerkAuth.sessionClaims.iat : null;
+            if (
+              tokenIatSec &&
+              (dbUser.authVersion ?? 1) > 1 &&
+              dbUser.updatedAt &&
+              tokenIatSec * 1000 < new Date(dbUser.updatedAt).getTime() - 2000
+            ) {
+              // The Clerk session token was minted before the user's security version was bumped.
+              // Invalidate access so obsolete remote Clerk sessions cannot resurrect access.
+              return null;
+            }
+
             const payload: SessionPayload = {
               type: "SESSION",
               userId: dbUser.id,
@@ -205,7 +220,7 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
               role: dbUser.role,
               status: dbUser.status,
               authVersion: dbUser.authVersion ?? 1,
-              twoFactorVerified: Boolean(dbUser.twoFactorEnabled),
+              twoFactorVerified: false,
               createdAt: Date.now(),
               expiresAt: Date.now() + SESSION_EXPIRY_DAYS * 24 * 60 * 60 * 1000,
             };

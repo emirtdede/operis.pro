@@ -84,6 +84,7 @@ export function TurnstileWidget({
       }
     };
 
+    let checkInterval: ReturnType<typeof setInterval> | undefined;
     if (window.turnstile) {
       renderWidget();
     } else {
@@ -100,19 +101,16 @@ export function TurnstileWidget({
         document.head.appendChild(script);
       }
 
-      const checkInterval = setInterval(() => {
+      checkInterval = setInterval(() => {
         if (window.turnstile) {
           clearInterval(checkInterval);
           renderWidget();
         }
       }, 100);
-
-      return () => {
-        clearInterval(checkInterval);
-      };
     }
 
     return () => {
+      if (checkInterval) clearInterval(checkInterval);
       if (widgetIdRef.current && window.turnstile) {
         try {
           window.turnstile.remove(widgetIdRef.current);
@@ -130,14 +128,7 @@ export function TurnstileWidget({
   }
 
   return (
-    <div
-      className={
-        appearance === "interaction-only"
-          ? "sr-only pointer-events-none absolute -z-50 h-0 w-0 overflow-hidden"
-          : "my-2 flex justify-center"
-      }
-      aria-hidden={appearance === "interaction-only"}
-    >
+    <div className="my-2 flex justify-center">
       <div ref={containerRef} />
     </div>
   );

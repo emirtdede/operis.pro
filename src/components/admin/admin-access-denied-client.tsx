@@ -54,7 +54,8 @@ export function AdminAccessDeniedClient({
             adminKey: adminKey.trim(),
             role,
             email: adminEmail.trim(),
-            displayName: role === "ADMIN" ? (adminEmail.split("@")[0] || "Yönetici") : "Güvenlik Sorumlusu",
+            displayName:
+              role === "ADMIN" ? adminEmail.split("@")[0] || "Yönetici" : "Güvenlik Sorumlusu",
             totpCode: requires2FA ? totpCode.trim() : undefined,
           }),
         });
@@ -180,9 +181,7 @@ export function AdminAccessDeniedClient({
                 className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 cursor-pointer disabled:opacity-50"
               >
                 <UserCheck className="h-4 w-4" />
-                <span>
-                  {getAdminLoginButtonLabel(isPending, requires2FA)}
-                </span>
+                <span>{getAdminLoginButtonLabel(isPending, requires2FA)}</span>
               </button>
 
               <button

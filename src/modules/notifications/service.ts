@@ -167,7 +167,10 @@ export class NotificationService {
           type: result.type,
           payloadJson: (result.payloadJson as Record<string, unknown>) || {},
           readAt: result.readAt ? result.readAt.toISOString() : null,
-          createdAt: result.createdAt instanceof Date ? result.createdAt.toISOString() : String(result.createdAt),
+          createdAt:
+            result.createdAt instanceof Date
+              ? result.createdAt.toISOString()
+              : String(result.createdAt),
         });
       }
       return result;
@@ -212,9 +215,7 @@ export class NotificationService {
       const [res] = await db
         .select({ count: sql<number>`count(*)::int` })
         .from(schema.notifications)
-        .where(
-          and(eq(schema.notifications.userId, userId), isNull(schema.notifications.readAt))
-        );
+        .where(and(eq(schema.notifications.userId, userId), isNull(schema.notifications.readAt)));
       return Number(res?.count ?? 0);
     } catch {
       return inMemoryFallbackNotifications.filter((n) => n.userId === userId && !n.readAt).length;
@@ -352,7 +353,7 @@ export class NotificationService {
 
       let processedCount = 0;
 
-      const processSingleEvent = async (event: typeof pendingEvents[0]): Promise<boolean> => {
+      const processSingleEvent = async (event: (typeof pendingEvents)[0]): Promise<boolean> => {
         const workerLeaseToken = crypto.randomUUID();
         const leaseUntil = new Date(Date.now() + leaseDurationMs);
 
@@ -570,7 +571,8 @@ export class NotificationService {
               timeline: typeof payload.timeline === "string" ? payload.timeline : "",
               summary: typeof payload.summary === "string" ? payload.summary : "",
               tags: typeof payload.tags === "string" ? payload.tags : "",
-              relevanceBadge: typeof payload.relevanceBadge === "string" ? payload.relevanceBadge : "",
+              relevanceBadge:
+                typeof payload.relevanceBadge === "string" ? payload.relevanceBadge : "",
               actionUrl: typeof payload.actionUrl === "string" ? payload.actionUrl : "",
             },
           });

@@ -1,14 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { setRequestLocale } from "next-intl/server";
-import {
-  MessageSquare,
-  Sparkles,
-  ShieldCheck,
-  Zap,
-  Clock,
-  Lock,
-} from "lucide-react";
+import { MessageSquare, Sparkles, ShieldCheck, Zap, Clock, Lock } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { HelpGuideTabs } from "@/src/components/help/help-guide-tabs";
 import { FaqSchemaLd } from "@/src/components/help/faq-schema-ld";
@@ -48,25 +41,33 @@ export default async function HelpPage({ params }: { params: Promise<{ locale: s
     {
       icon: Zap,
       title: isTr ? "%0 Komisyon Modeli" : "0% Platform Cut",
-      desc: isTr ? "Gizli kesinti veya aidat yok; kazancın %100'ü doğrudan sizin." : "Zero fee deductions; keep 100% of agreed budget.",
+      desc: isTr
+        ? "Gizli kesinti veya aidat yok; kazancın %100'ü doğrudan sizin."
+        : "Zero fee deductions; keep 100% of agreed budget.",
       color: "text-amber-400 bg-amber-500/10 border-amber-500/20",
     },
     {
       icon: Clock,
       title: isTr ? "168 Saatlik Canlılık Radarı" : "168h Freshness Radar",
-      desc: isTr ? "Bayat ve terk edilmiş ilanlar yok; haftalık taze akış." : "No abandoned ghost postings; purely active listings.",
+      desc: isTr
+        ? "Bayat ve terk edilmiş ilanlar yok; haftalık taze akış."
+        : "No abandoned ghost postings; purely active listings.",
       color: "text-blue-400 bg-blue-500/10 border-blue-500/20",
     },
     {
       icon: Lock,
       title: isTr ? "AES-256 Şifreli Kör Teklif" : "AES-256 Blind Bids",
-      desc: isTr ? "Rakipler fiyat kıramaz; değer odaklı teklif ortamı." : "Competitors cannot inspect rates; merit-based pricing.",
+      desc: isTr
+        ? "Rakipler fiyat kıramaz; değer odaklı teklif ortamı."
+        : "Competitors cannot inspect rates; merit-based pricing.",
       color: "text-purple-400 bg-purple-500/10 border-purple-500/20",
     },
     {
       icon: ShieldCheck,
       title: isTr ? "2026 Mevzuat Uyumu" : "2026 Legal Compliance",
-      desc: isTr ? "FSEK m. 52 telif devri, e-SMM ve hazır NDA taslakları." : "Pre-vetted IP assignment, e-SMM guidelines & NDAs.",
+      desc: isTr
+        ? "FSEK m. 52 telif devri, e-SMM ve hazır NDA taslakları."
+        : "Pre-vetted IP assignment, e-SMM guidelines & NDAs.",
       color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
     },
   ];
@@ -102,7 +103,9 @@ export default async function HelpPage({ params }: { params: Promise<{ locale: s
                 key={i}
                 className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 p-3.5 text-left space-y-1.5 shadow-sm"
               >
-                <div className={`h-8 w-8 rounded-xl border flex items-center justify-center ${h.color}`}>
+                <div
+                  className={`h-8 w-8 rounded-xl border flex items-center justify-center ${h.color}`}
+                >
                   <Icon className="h-4 w-4" />
                 </div>
                 <h2 className="text-xs font-bold text-[var(--color-text-primary)] leading-snug">

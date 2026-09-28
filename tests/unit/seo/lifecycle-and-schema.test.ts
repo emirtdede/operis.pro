@@ -47,6 +47,6 @@ describe("SEO: Category Resolution & Structured Data Specifications", () => {
     };
 
     expect(robotsDirective.index).toBe(false); // Prevents index bloat
-    expect(robotsDirective.follow).toBe(true);  // Retains crawl equity to related listings
+    expect(robotsDirective.follow).toBe(true); // Retains crawl equity to related listings
   });
 });

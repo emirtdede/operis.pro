@@ -135,7 +135,9 @@ describe("GVK 89/13 & KDVK 11/1-a Software Export & Zero-VAT Engine Suite", () =
       expect(annexMd).toContain("MADDE 2: MÜNHASIRAN YURT DIŞINDA FAYDALANMA GÜVENCESİ");
       expect(annexMd).toContain("MADDE 3: %0 KDV VE GİB E-FATURA İSTİSNA KODU (KOD 302)");
       expect(annexMd).toContain("MADDE 4: DÖVİZ BEDELİNİN TEVSİKİ");
-      expect(annexMd).toContain("MADDE 5: 6100 SAYILI HMK m. 193 UYARINCA ADLİ VE MALİ DELİL NİTELİĞİ");
+      expect(annexMd).toContain(
+        "MADDE 5: 6100 SAYILI HMK m. 193 UYARINCA ADLİ VE MALİ DELİL NİTELİĞİ"
+      );
 
       const annexHtml = SoftwareExportEngine.generateExportAnnexHtml(defaultConfig, "tr");
       expect(annexHtml).toContain("EK-5: Yazılım İhracatı %100 Vergi İndirimi");
@@ -175,7 +177,8 @@ describe("GVK 89/13 & KDVK 11/1-a Software Export & Zero-VAT Engine Suite", () =
         listingTitle: "Cross-Border FinTech Core Engine",
         category: "Fintech Yazılımı",
         matchedAt: "2026-09-01T10:00:00Z",
-        scopeSummary: "High-performance matching and payment routing infrastructure for EU clients.",
+        scopeSummary:
+          "High-performance matching and payment routing infrastructure for EU clients.",
         budgetLabel: "$25,000 USD",
         timelineLabel: "8 Hafta",
         client: {
@@ -241,7 +244,9 @@ describe("GVK 89/13 & KDVK 11/1-a Software Export & Zero-VAT Engine Suite", () =
       expect(contract.metadata.softwareExportIncluded).toBe(true);
       expect(contract.markdown).toContain("Cross-Border Software Export");
       expect(contract.markdown).toContain("ANNEX-5 Software Export & Tax Exemption Addendum");
-      expect(contract.markdown).toContain("ANNEX-5: 100% CROSS-BORDER SOFTWARE EXPORT TAX INCENTIVE");
+      expect(contract.markdown).toContain(
+        "ANNEX-5: 100% CROSS-BORDER SOFTWARE EXPORT TAX INCENTIVE"
+      );
     });
   });
 

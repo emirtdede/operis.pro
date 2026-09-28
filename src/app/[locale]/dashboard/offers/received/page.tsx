@@ -185,7 +185,11 @@ export default async function ReceivedOffersPage({
               : "Temporary server connection delay. Displaying offline view."}
           </span>
           <Link href={isTr ? "/tr/panel/teklifler/gelen" : "/en/dashboard/offers/received"}>
-            <Button variant="ghost" size="sm" className="h-7 px-2 text-xs text-amber-300 hover:text-amber-200">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 px-2 text-xs text-amber-300 hover:text-amber-200"
+            >
               <RefreshCw className="h-3 w-3 mr-1" />
               {isTr ? "Yenile" : "Refresh"}
             </Button>

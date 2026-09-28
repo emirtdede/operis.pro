@@ -95,7 +95,9 @@ export function ContractDraftModal({
   const [showAiGovModal, setShowAiGovModal] = useState(false);
   const [aiGovConfig, setAiGovConfig] = useState<AiGovernanceConfig | null>(null);
   const [showExportWizard, setShowExportWizard] = useState(false);
-  const [softwareExportConfig, setSoftwareExportConfig] = useState<SoftwareExportConfig | null>(null);
+  const [softwareExportConfig, setSoftwareExportConfig] = useState<SoftwareExportConfig | null>(
+    null
+  );
   const [isWhiteLabel, setIsWhiteLabel] = useState(false);
 
   const isTr = activeLang === "tr" || activeLang === "bilingual";
@@ -324,7 +326,12 @@ export function ContractDraftModal({
                 }`}
               >
                 <Scale className="h-3.5 w-3.5" />
-                <span>{getSafeHarborButtonLabel(Boolean(safeHarborConfig && safeHarborConfig.enabled), isTr)}</span>
+                <span>
+                  {getSafeHarborButtonLabel(
+                    Boolean(safeHarborConfig && safeHarborConfig.enabled),
+                    isTr
+                  )}
+                </span>
               </button>
 
               <button
@@ -337,7 +344,9 @@ export function ContractDraftModal({
                 }`}
               >
                 <Sparkles className="h-3.5 w-3.5" />
-                <span>{getAiGovButtonLabel(Boolean(aiGovConfig && aiGovConfig.enabled), isTr)}</span>
+                <span>
+                  {getAiGovButtonLabel(Boolean(aiGovConfig && aiGovConfig.enabled), isTr)}
+                </span>
               </button>
 
               <button
@@ -350,7 +359,12 @@ export function ContractDraftModal({
                 }`}
               >
                 <Globe className="h-3.5 w-3.5" />
-                <span>{getSoftwareExportButtonLabel(Boolean(softwareExportConfig && softwareExportConfig.enabled), isTr)}</span>
+                <span>
+                  {getSoftwareExportButtonLabel(
+                    Boolean(softwareExportConfig && softwareExportConfig.enabled),
+                    isTr
+                  )}
+                </span>
               </button>
 
               <button
@@ -507,7 +521,12 @@ export function ContractDraftModal({
                   }`}
                 >
                   <Scale className="h-3.5 w-3.5" />
-                  <span>{getSafeHarborButtonLabel(Boolean(safeHarborConfig && safeHarborConfig.enabled), isTr)}</span>
+                  <span>
+                    {getSafeHarborButtonLabel(
+                      Boolean(safeHarborConfig && safeHarborConfig.enabled),
+                      isTr
+                    )}
+                  </span>
                 </button>
 
                 <button
@@ -520,7 +539,9 @@ export function ContractDraftModal({
                   }`}
                 >
                   <Sparkles className="h-3.5 w-3.5" />
-                  <span>{getAiGovButtonLabel(Boolean(aiGovConfig && aiGovConfig.enabled), isTr)}</span>
+                  <span>
+                    {getAiGovButtonLabel(Boolean(aiGovConfig && aiGovConfig.enabled), isTr)}
+                  </span>
                 </button>
 
                 <button
@@ -533,7 +554,12 @@ export function ContractDraftModal({
                   }`}
                 >
                   <Globe className="h-3.5 w-3.5" />
-                  <span>{getSoftwareExportButtonLabel(Boolean(softwareExportConfig && softwareExportConfig.enabled), isTr)}</span>
+                  <span>
+                    {getSoftwareExportButtonLabel(
+                      Boolean(softwareExportConfig && softwareExportConfig.enabled),
+                      isTr
+                    )}
+                  </span>
                 </button>
               </div>
             </div>

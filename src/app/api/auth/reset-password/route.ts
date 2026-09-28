@@ -177,13 +177,21 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (err: unknown) {
-    let message = isEn
-      ? "Password reset failed. Please try again."
-      : "Şifre sıfırlama işlemi başarısız oldu.";
     if (err instanceof z.ZodError) {
       const fallbackFormat = isEn ? "Invalid password format." : "Geçersiz şifre formatı.";
-      message = err.issues[0]?.message || fallbackFormat;
+      return NextResponse.json(
+        { error: err.issues[0]?.message || fallbackFormat },
+        { status: 400 }
+      );
     }
-    return NextResponse.json({ error: message }, { status: 400 });
+    console.error("Password reset unhandled error:", err);
+    return NextResponse.json(
+      {
+        error: isEn
+          ? "Password reset failed. Please try again."
+          : "Şifre sıfırlama işlemi başarısız oldu.",
+      },
+      { status: 500 }
+    );
   }
 }

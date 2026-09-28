@@ -13,15 +13,13 @@ export const searchTrends = pgTable(
   {
     id: serial("id").primaryKey(),
     query: varchar("query", { length: 100 }).notNull(),
-    normalized: varchar("normalized", { length: 100 }).notNull().unique(),
+    normalized: varchar("normalized", { length: 100 }).notNull(),
     locale: varchar("locale", { length: 10 }).notNull().default("tr"),
     count: integer("count").notNull().default(1),
-    lastSearchedAt: timestamp("last_searched_at", { withTimezone: true })
-      .defaultNow()
-      .notNull(),
+    lastSearchedAt: timestamp("last_searched_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [
-    uniqueIndex("search_trends_normalized_idx").on(table.normalized),
+    uniqueIndex("search_trends_locale_normalized_idx").on(table.locale, table.normalized),
     index("search_trends_locale_count_idx").on(table.locale, table.count, table.lastSearchedAt),
   ]
 );

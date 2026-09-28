@@ -1,7 +1,10 @@
 import { and, eq, gt } from "drizzle-orm";
 import { getSession } from "@/src/modules/auth/session";
 import { getDb, schema } from "@/src/lib/db";
-import { notificationPubSub, RealtimeNotificationPayload } from "@/src/modules/notifications/pubsub";
+import {
+  notificationPubSub,
+  RealtimeNotificationPayload,
+} from "@/src/modules/notifications/pubsub";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -47,7 +50,9 @@ export async function GET(req: Request) {
         };
 
         // 1. Send connected event
-        safeEnqueue(`event: connected\ndata: ${JSON.stringify({ status: "connected", userId })}\n\n`);
+        safeEnqueue(
+          `event: connected\ndata: ${JSON.stringify({ status: "connected", userId })}\n\n`
+        );
 
         // 2. Subscribe to in-memory PubSub for instant local notifications
         const unsubscribe = notificationPubSub.subscribe(userId, (notif) => {
@@ -96,41 +101,43 @@ export async function GET(req: Request) {
           doCleanup();
         }, 45000);
 
-      const doCleanup = () => {
-        if (isClosed) return;
-        isClosed = true;
-        clearInterval(pingInterval);
-        clearTimeout(maxLifetimeTimer);
-        unsubscribe();
-        try {
-          controller.close();
-        } catch {
-          // Ignore
-        }
-      };
+        const doCleanup = () => {
+          if (isClosed) return;
+          isClosed = true;
+          clearInterval(pingInterval);
+          clearTimeout(maxLifetimeTimer);
+          unsubscribe();
+          try {
+            controller.close();
+          } catch {
+            // Ignore
+          }
+        };
 
-      cleanup = doCleanup;
+        cleanup = doCleanup;
 
-      // Handle client abort
-      req.signal.addEventListener("abort", () => {
-        doCleanup();
-      });
-    },
-    cancel() {
-      if (cleanup) cleanup();
-    },
-  });
+        // Handle client abort
+        req.signal.addEventListener("abort", () => {
+          doCleanup();
+        });
+      },
+      cancel() {
+        if (cleanup) cleanup();
+      },
+    });
 
     return new Response(stream, {
       headers: {
         "Content-Type": "text/event-stream; charset=utf-8",
         "Cache-Control": "no-cache, no-transform",
-        "Connection": "keep-alive",
+        Connection: "keep-alive",
         "X-Accel-Buffering": "no",
       },
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to initialize stream";
+    console.error("[Notification Stream Error]:", err);
+    const isEn = req.headers.get("x-locale") === "en";
+    const message = isEn ? "Failed to initialize stream" : "Bildirim akışı başlatılamadı";
     return new Response(JSON.stringify({ error: message }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

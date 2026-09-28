@@ -24,11 +24,11 @@ export async function GET(req: Request) {
     const profile = await ProfileService.getProfileByUserId(session.userId);
     return NextResponse.json({ profile }, { status: 200 });
   } catch (err: unknown) {
-    let message = isEn ? "Failed to get profile" : "Profil bilgileri alınamadı";
-    if (err instanceof Error) {
-      message = err.message;
-    }
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[Profile API GET Error]:", err);
+    return NextResponse.json(
+      { error: isEn ? "Failed to get profile" : "Profil bilgileri alınamadı" },
+      { status: 500 }
+    );
   }
 }
 
@@ -64,10 +64,16 @@ export async function PATCH(req: Request) {
     await ProfileService.updateProfile(session.userId, body);
 
     // Determine eventType for audit log
-    let eventType: "HANDLE_CHANGED" | "AVAILABILITY_CHANGED" | "PREFERENCES_UPDATED" | "PROFILE_UPDATED" = "PROFILE_UPDATED";
+    let eventType:
+      "HANDLE_CHANGED" | "AVAILABILITY_CHANGED" | "PREFERENCES_UPDATED" | "PROFILE_UPDATED" =
+      "PROFILE_UPDATED";
     if (body.handle) {
       eventType = "HANDLE_CHANGED";
-    } else if (body.availabilityStatus || body.availabilityHoursPerWeek !== undefined || body.availableFromDate !== undefined) {
+    } else if (
+      body.availabilityStatus ||
+      body.availabilityHoursPerWeek !== undefined ||
+      body.availableFromDate !== undefined
+    ) {
       eventType = "AVAILABILITY_CHANGED";
     } else if (body.theme || body.preferredContactChannel || body.timeZone) {
       eventType = "PREFERENCES_UPDATED";
@@ -123,31 +129,58 @@ export async function PATCH(req: Request) {
   } catch (err: unknown) {
     const locale = headerLocale || "tr";
     const isEn = locale === "en";
-    let message = isEn ? "Failed to update profile" : "Güncelleme başarısız oldu";
-    if (err instanceof Error) {
-      message = err.message;
-    }
 
-    if (!isEn) {
-      if (message.includes("Display name must be 2-80 characters")) {
-        message = "Görünen ad 2-80 karakter arasında olmalı ve emoji içermemelidir.";
-      } else if (message.includes("Display name contains inappropriate")) {
-        message = "Görünen ad uygunsuz veya yasaklı içerik barındıramaz.";
-      } else if (message.includes("Invalid or reserved handle")) {
-        message = "Geçersiz veya sistem tarafından ayrılmış kullanıcı adı.";
-      } else if (message.includes("This handle is already taken")) {
-        message = "Bu kullanıcı adı zaten başka bir kullanıcı tarafından alınmış.";
-      } else if (message.includes("About text cannot exceed 1000 characters")) {
-        message = "Hakkında metni 1000 karakteri geçemez ve emoji içeremez.";
-      } else if (message.includes("About text contains inappropriate")) {
-        message = "Hakkında metni uygunsuz veya yasaklı içerik barındıramaz.";
-      } else if (message.includes("Avatar URL cannot exceed 2000 characters")) {
-        message = "Profil resmi bağlantısı 2000 karakteri geçemez.";
-      } else if (message.includes("Invalid profile picture URL")) {
-        message = "Geçersiz profil resmi bağlantısı. Geçerli bir HTTPS adresi giriniz.";
+    const KNOWN_VALIDATION_MESSAGES: Record<string, { en: string; tr: string }> = {
+      "Display name must be 2-80 characters": {
+        en: "Display name must be 2-80 characters and not contain emojis.",
+        tr: "Görünen ad 2-80 karakter arasında olmalı ve emoji içermemelidir.",
+      },
+      "Display name contains inappropriate": {
+        en: "Display name contains inappropriate content.",
+        tr: "Görünen ad uygunsuz veya yasaklı içerik barındıramaz.",
+      },
+      "Invalid or reserved handle": {
+        en: "Invalid or reserved handle.",
+        tr: "Geçersiz veya sistem tarafından ayrılmış kullanıcı adı.",
+      },
+      "This handle is already taken": {
+        en: "This handle is already taken.",
+        tr: "Bu kullanıcı adı zaten başka bir kullanıcı tarafından alınmış.",
+      },
+      "About text cannot exceed 1000 characters": {
+        en: "About text cannot exceed 1000 characters and cannot contain emojis.",
+        tr: "Hakkında metni 1000 karakteri geçemez ve emoji içeremez.",
+      },
+      "About text contains inappropriate": {
+        en: "About text contains inappropriate content.",
+        tr: "Hakkında metni uygunsuz veya yasaklı içerik barındıramaz.",
+      },
+      "Avatar URL cannot exceed 2000 characters": {
+        en: "Avatar URL cannot exceed 2000 characters.",
+        tr: "Profil resmi bağlantısı 2000 karakteri geçemez.",
+      },
+      "Invalid profile picture URL": {
+        en: "Invalid profile picture URL. Please enter a valid HTTPS address.",
+        tr: "Geçersiz profil resmi bağlantısı. Geçerli bir HTTPS adresi giriniz.",
+      },
+    };
+
+    if (err instanceof Error) {
+      for (const [key, localized] of Object.entries(KNOWN_VALIDATION_MESSAGES)) {
+        if (err.message.includes(key)) {
+          return NextResponse.json({ error: isEn ? localized.en : localized.tr }, { status: 400 });
+        }
       }
     }
 
-    return NextResponse.json({ error: message }, { status: 400 });
+    console.error("[Profile API PATCH Error] Internal error:", err);
+    return NextResponse.json(
+      {
+        error: isEn
+          ? "An unexpected error occurred while updating profile."
+          : "Profil güncellenirken beklenmeyen bir hata oluştu.",
+      },
+      { status: 500 }
+    );
   }
 }
