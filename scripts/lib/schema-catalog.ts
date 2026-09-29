@@ -41,11 +41,12 @@ export async function readSchemaCatalog(client: Pick<Client, "query">): Promise<
 }
 
 export function compareSchemaCatalog(expected: CatalogEntry[], actual: CatalogEntry[]): string[] {
+  const normalize = (s?: string) => s?.replace(/\r\n/g, "\n");
   const key = (entry: CatalogEntry) => `${entry.kind}:${entry.table_name}.${entry.name}`;
-  const remaining = new Map(actual.map((entry) => [key(entry), entry.definition]));
+  const remaining = new Map(actual.map((entry) => [key(entry), normalize(entry.definition)]));
   const issues: string[] = [];
   for (const entry of expected) {
-    if (remaining.get(key(entry)) !== entry.definition)
+    if (remaining.get(key(entry)) !== normalize(entry.definition))
       issues.push(`Catalog mismatch: ${key(entry)}`);
     remaining.delete(key(entry));
   }
