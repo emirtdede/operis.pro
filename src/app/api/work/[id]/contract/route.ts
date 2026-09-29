@@ -95,6 +95,167 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     const { engagement, listing, acceptedOffer, counterpartyContact } = details;
     const isOwner = session.userId === engagement.ownerUserId;
 
+    // R06: Check if a FULLY_SIGNED immutable package already exists
+    const db = getDb();
+    let signedPackage: typeof schema.engagementContractPackages.$inferSelect | undefined;
+    try {
+      const [pkg] = await db
+        .select()
+        .from(schema.engagementContractPackages)
+        .where(eq(schema.engagementContractPackages.engagementId, engagement.id))
+        .limit(1);
+
+      const isEngagementSigned =
+        (engagement as Record<string, unknown>).contractStatus === "SIGNED" ||
+        (engagement as Record<string, unknown>).contractStatus === "FULLY_SIGNED";
+
+      if (pkg) {
+        if (pkg.status === "FULLY_SIGNED") {
+          if (!pkg.compiledHtml || !pkg.compiledMarkdown || !pkg.sha256Seal) {
+            console.error(
+              `[Contract API] Integrity error: Package ${pkg.id} for engagement ${engagement.id} is FULLY_SIGNED but compiledHtml/markdown/seal is missing.`
+            );
+            return NextResponse.json(
+              {
+                error: isEnHeader
+                  ? "Contract integrity error: Signed contract content or seal is missing."
+                  : "Sözleşme bütünlük hatası: İmzalı sözleşme içeriği veya mührü eksik.",
+              },
+              { status: 500 }
+            );
+          }
+          signedPackage = pkg;
+        } else if (isEngagementSigned) {
+          return NextResponse.json(
+            {
+              error: isEnHeader
+                ? "Contract is not fully executed by both parties."
+                : "Sözleşme henüz her iki tarafça tam olarak imzalanmamıştır.",
+            },
+            { status: 409 }
+          );
+        }
+      } else if (isEngagementSigned) {
+        return NextResponse.json(
+          {
+            error: isEnHeader
+              ? "Contract package record is missing for signed engagement."
+              : "İmzalı iş birliği için sözleşme paketi kaydı bulunamadı.",
+          },
+          { status: 500 }
+        );
+      }
+    } catch (dbErr) {
+      console.error(
+        `[Contract API] Database error querying contract package for engagement ${engagement.id}:`,
+        dbErr
+      );
+      return NextResponse.json(
+        {
+          error: isEnHeader
+            ? "Database error while querying contract package."
+            : "Sözleşme paketi sorgulanırken veritabanı hatası oluştu.",
+        },
+        { status: 500 }
+      );
+    }
+
+    const filenamePrefix = whiteLabel ? "sozlesme-" : "operis-contract-";
+
+    if (signedPackage) {
+      const sealHeaders = {
+        "X-Contract-Status": "FULLY_SIGNED",
+        "X-Contract-Seal": signedPackage.sha256Seal || "",
+      };
+
+      if (format === "markdown") {
+        return new NextResponse(signedPackage.compiledMarkdown || "", {
+          status: 200,
+          headers: {
+            "Content-Type": "text/markdown; charset=utf-8",
+            "Content-Disposition": `attachment; filename="${filenamePrefix}sealed-${engagement.id.slice(0, 8)}.md"`,
+            ...sealHeaders,
+          },
+        });
+      }
+
+      if (format === "html") {
+        return new NextResponse(signedPackage.compiledHtml, {
+          status: 200,
+          headers: {
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Security-Policy":
+              "default-src 'none'; img-src data:; style-src 'unsafe-inline'; sandbox",
+            "X-Content-Type-Options": "nosniff",
+            "X-Frame-Options": "DENY",
+            ...sealHeaders,
+          },
+        });
+      }
+
+      if (format === "pdf") {
+        try {
+          const { VectorPdfEngine } = await import("@/src/lib/pdf/vector-pdf-engine");
+          const cacheKey = `sealed-${engagement.id}-${signedPackage.sha256Seal || "noseal"}`;
+          const pdfBuffer = await VectorPdfEngine.generateVectorPdf(
+            signedPackage.compiledHtml as string,
+            cacheKey
+          );
+
+          return new NextResponse(pdfBuffer as unknown as BodyInit, {
+            status: 200,
+            headers: {
+              "Content-Type": "application/pdf",
+              "Content-Disposition": `attachment; filename="${filenamePrefix}sealed-${engagement.id.slice(0, 8)}.pdf"`,
+              "X-Contract-Sha256": signedPackage.sha256Seal || "",
+              ...sealHeaders,
+            },
+          });
+        } catch {
+          return new NextResponse(
+            signedPackage.compiledHtml +
+              `<script>window.onload=function(){window.print();}</script>`,
+            {
+              status: 200,
+              headers: {
+                "Content-Type": "text/html; charset=utf-8",
+                "X-PDF-Fallback": "client-print",
+                ...sealHeaders,
+              },
+            }
+          );
+        }
+      }
+
+      return NextResponse.json(
+        {
+          success: true,
+          isSealed: true,
+          status: "FULLY_SIGNED",
+          contract: {
+            contractRef: `OP-SEALED-${engagement.id.slice(0, 8).toUpperCase()}`,
+            sha256Fingerprint: signedPackage.sha256Seal,
+            htmlContent: signedPackage.compiledHtml,
+            markdown: signedPackage.compiledMarkdown || "",
+            signedAt: signedPackage.signedAt,
+            clientSignerName: signedPackage.clientSignerName,
+            freelancerSignerName: signedPackage.freelancerSignerName,
+          },
+          package: {
+            id: signedPackage.id,
+            status: signedPackage.status,
+            sha256Seal: signedPackage.sha256Seal,
+            signedAt: signedPackage.signedAt,
+            clientSignedAt: signedPackage.clientSignedAt,
+            freelancerSignedAt: signedPackage.freelancerSignedAt,
+          },
+        },
+        {
+          headers: sealHeaders,
+        }
+      );
+    }
+
     // Fetch viewer user details
     let viewerDisplayName: string = isOwner ? "İşveren" : "Yüklenici";
     let viewerEmail: string = "—";
@@ -377,8 +538,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
       softwareExportConfig,
     });
 
-    const filenamePrefix = whiteLabel ? "sozlesme-" : "operis-contract-";
-
+    // Format responses below use filenamePrefix defined above
     if (format === "markdown") {
       return new NextResponse(contract.markdown, {
         status: 200,

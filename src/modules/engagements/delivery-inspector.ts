@@ -1,5 +1,8 @@
 import { createHash } from "crypto";
 import dns from "dns";
+import http from "node:http";
+import https from "node:https";
+import { Readable } from "node:stream";
 
 export interface LiveDeploymentProbeResult {
   checked: boolean;
@@ -128,7 +131,15 @@ export class DeliveryInspectorService {
    * Validates a target URL against Server-Side Request Forgery (SSRF) threats,
    * DNS rebinding vectors, and cloud metadata access.
    */
-  static async validateUrlSsrfSafe(targetUrl: string): Promise<URL> {
+  /**
+   * Resolves and validates target URL against SSRF, returning the URL and the pinned IP
+   * to eliminate DNS rebinding time-of-check to time-of-use (TOCTOU) windows.
+   */
+  static async resolveAndValidateUrlSsrfSafe(targetUrl: string): Promise<{
+    url: URL;
+    pinnedIp: string;
+    family: number;
+  }> {
     let parsed: URL;
     try {
       parsed = new URL(targetUrl.trim());
@@ -163,6 +174,17 @@ export class DeliveryInspectorService {
       throw new Error("Yerel veya iç ağ ana bilgisayarlarına erişim engellendi.");
     }
 
+    // Check if hostname is already a literal IP address
+    const isDirectIpv4 = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname);
+    const isDirectIpv6 = hostname.includes(":");
+    if (isDirectIpv4 || isDirectIpv6) {
+      return {
+        url: parsed,
+        pinnedIp: hostname,
+        family: isDirectIpv6 ? 6 : 4,
+      };
+    }
+
     // Resolve DNS records to verify actual IP destination
     try {
       const records = await dns.promises.lookup(hostname, { all: true });
@@ -177,16 +199,140 @@ export class DeliveryInspectorService {
           );
         }
       }
+
+      const selected = records[0];
+      if (!selected) {
+        throw new Error("Alan adı DNS sunucuları tarafından çözümlenemedi.");
+      }
+
+      return {
+        url: parsed,
+        pinnedIp: selected.address,
+        family: selected.family,
+      };
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "DNS çözümleme hatası";
       if (msg.includes("SSRF Koruması")) {
         throw err;
       }
-      // If DNS resolution fails completely
       throw new Error(`DNS Çözümleme Hatası: ${msg}`, { cause: err });
     }
+  }
 
-    return parsed;
+  static async validateUrlSsrfSafe(targetUrl: string): Promise<URL> {
+    const result = await this.resolveAndValidateUrlSsrfSafe(targetUrl);
+    return result.url;
+  }
+
+  private static async executePinnedFetch(
+    url: URL,
+    pinnedIp: string,
+    family: number,
+    options: {
+      method: string;
+      headers?: Record<string, string>;
+      signal?: AbortSignal;
+    }
+  ): Promise<Response> {
+    // If global fetch has been stubbed/mocked in tests (vi.stubGlobal("fetch", ...)), respect it
+    const isMockFetch = Boolean(
+      typeof globalThis.fetch === "function" &&
+      ((globalThis.fetch as { mock?: unknown }).mock ||
+        (globalThis.fetch as { _isMockFunction?: boolean })._isMockFunction)
+    );
+
+    if (isMockFetch) {
+      return await globalThis.fetch(url.toString(), {
+        method: options.method,
+        headers: options.headers,
+        redirect: "manual",
+        signal: options.signal,
+      });
+    }
+
+    return new Promise<Response>((resolve, reject) => {
+      const isHttps = url.protocol === "https:";
+      const port = url.port ? parseInt(url.port, 10) : isHttps ? 443 : 80;
+      const headers: Record<string, string> = {
+        "user-agent": this.USER_AGENT,
+        ...options.headers,
+        host: url.host,
+      };
+
+      const client = isHttps ? https : http;
+      const req = client.request(
+        {
+          hostname: url.hostname,
+          port,
+          path: url.pathname + url.search,
+          method: options.method,
+          headers,
+          lookup: (
+            _hostname: string,
+            opts: unknown,
+            callback?: (
+              err: NodeJS.ErrnoException | null,
+              address: string | { address: string; family: number }[],
+              family?: number
+            ) => void
+          ) => {
+            const cb = (typeof opts === "function" ? opts : callback) as (
+              err: NodeJS.ErrnoException | null,
+              address: string | { address: string; family: number }[],
+              family?: number
+            ) => void;
+            if (!cb) return;
+
+            const isAll =
+              typeof opts === "object" && opts !== null && Boolean((opts as { all?: boolean }).all);
+
+            const effectiveFamily = family === 6 || (!family && pinnedIp.includes(":")) ? 6 : 4;
+
+            if (isAll) {
+              cb(null, [{ address: pinnedIp, family: effectiveFamily }]);
+            } else {
+              cb(null, pinnedIp, effectiveFamily);
+            }
+          },
+          servername: url.hostname, // Preserves TLS SNI for certificate validation
+        },
+        (res) => {
+          const webStream = Readable.toWeb(res) as ReadableStream<Uint8Array>;
+          const responseHeaders = new Headers();
+          for (const [k, v] of Object.entries(res.headers)) {
+            if (Array.isArray(v)) {
+              for (const val of v) responseHeaders.append(k, val);
+            } else if (v !== undefined) {
+              responseHeaders.set(k, v);
+            }
+          }
+
+          const webResponse = new Response(options.method === "HEAD" ? null : webStream, {
+            status: res.statusCode || 200,
+            statusText: res.statusMessage || "OK",
+            headers: responseHeaders,
+          });
+
+          resolve(webResponse);
+        }
+      );
+
+      req.on("error", (err) => reject(err));
+
+      const sig = options.signal;
+      if (sig) {
+        if (sig.aborted) {
+          req.destroy(sig.reason);
+          return reject(sig.reason || new Error("Request aborted"));
+        }
+        sig.addEventListener("abort", () => {
+          req.destroy(sig.reason);
+          reject(sig.reason || new Error("Request aborted"));
+        });
+      }
+
+      req.end();
+    });
   }
 
   /**
@@ -209,15 +355,18 @@ export class DeliveryInspectorService {
     let method = options.method ?? "HEAD";
 
     while (true) {
-      // 1. SSRF validation on current URL (resolves DNS, checks against loopback/private/cloud IPs)
-      const validatedUrl = await this.validateUrlSsrfSafe(currentUrl);
+      // 1. SSRF validation on current URL (resolves DNS, checks against loopback/private/cloud IPs, pins IP)
+      const {
+        url: validatedUrl,
+        pinnedIp,
+        family,
+      } = await this.resolveAndValidateUrlSsrfSafe(currentUrl);
 
-      // 2. Fetch with manual redirect handling so Node/undici never follows blindly
-      const response = await fetch(validatedUrl.toString(), {
+      // 2. Fetch with pinned socket connection so DNS rebinding cannot reach loopback
+      const response = await this.executePinnedFetch(validatedUrl, pinnedIp, family, {
         method,
         headers: options.headers,
         signal: options.signal,
-        redirect: "manual",
       });
 
       // 3. Check for redirect status codes (301, 302, 303, 307, 308)

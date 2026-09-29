@@ -94,6 +94,8 @@ export async function POST(req: Request) {
         .select({
           id: schema.users.id,
           passwordHash: schema.users.passwordHash,
+          clerkUserId: schema.users.clerkUserId,
+          authVersion: schema.users.authVersion,
         })
         .from(schema.users)
         .where(or(eq(schema.users.emailHmac, emailHmac), eq(schema.users.email, payload.email)))
@@ -123,7 +125,7 @@ export async function POST(req: Request) {
           .where(
             and(eq(schema.users.id, user.id), eq(schema.users.passwordHash, user.passwordHash))
           )
-          .returning({ id: schema.users.id });
+          .returning({ id: schema.users.id, authVersion: schema.users.authVersion });
 
         if (updateResult.length === 0) {
           return NextResponse.json(

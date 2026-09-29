@@ -68,6 +68,16 @@ describe("Worker Health Evaluation Engine (K01)", () => {
     expect(result.dbProbeStatus).toBe("UP");
   });
 
+  it.each([
+    { deadCount: 1, oldestPendingSeconds: 0, hasErrors: false },
+    { deadCount: 0, oldestPendingSeconds: 901, hasErrors: false },
+    { deadCount: 0, oldestPendingSeconds: 0, hasErrors: true },
+  ])("reports stalled security/storage jobs as unhealthy", (reliability) => {
+    const result = evaluateWorkerHealth(createValidHeartbeat({ reliability }));
+    expect(result.healthy).toBe(false);
+    expect(result.reasons).toContain("Reliability jobs require attention");
+  });
+
   it("fails if heartbeat timestamp is stale (> 45 seconds)", () => {
     const sixtySecondsAgo = new Date(Date.now() - 60 * 1000).toISOString();
     const hb = createValidHeartbeat({

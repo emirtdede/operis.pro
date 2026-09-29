@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { PlusCircle } from "lucide-react";
@@ -7,6 +8,13 @@ import { DashboardCountsService } from "@/src/modules/dashboard/counts-service";
 import { DashboardTabs } from "@/src/components/dashboard/dashboard-tabs";
 import { DashboardInfoPanel } from "@/src/components/dashboard/dashboard-info-panel";
 import { Button } from "@/src/components/ui/button";
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export const dynamic = "force-dynamic";
 

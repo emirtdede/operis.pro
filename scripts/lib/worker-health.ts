@@ -45,6 +45,13 @@ export const WorkerHeartbeatSchemaV2 = z.object({
     hasErrors: z.boolean(),
     summary: z.record(z.unknown()),
   }),
+  reliability: z
+    .object({
+      deadCount: z.number().int().nonnegative(),
+      oldestPendingSeconds: z.number().int().nonnegative(),
+      hasErrors: z.boolean(),
+    })
+    .optional(),
 });
 
 export type WorkerHeartbeatV2 = z.infer<typeof WorkerHeartbeatSchemaV2>;
@@ -76,6 +83,14 @@ export function evaluateWorkerHealth(
 
   const hb = parseResult.data;
   const reasons: string[] = [];
+  if (
+    hb.reliability &&
+    (hb.reliability.hasErrors ||
+      hb.reliability.deadCount > 0 ||
+      hb.reliability.oldestPendingSeconds > 900)
+  ) {
+    reasons.push("Reliability jobs require attention");
+  }
   const nowMs = now.getTime();
   const hbTimeMs = new Date(hb.timestamp).getTime();
   const ageSeconds = (nowMs - hbTimeMs) / 1000;

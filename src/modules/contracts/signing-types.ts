@@ -59,6 +59,7 @@ export interface SubmitSignatureResponse {
   packageId: string;
   status: PackageSigningStatus;
   isFullySigned: boolean;
+  sha256Seal?: string | null;
   version?: number;
   messageTr: string;
   messageEn: string;

@@ -1,3 +1,5 @@
+import { getReliabilityHealth } from "../src/modules/storage/reliability-health";
+import { processSignatureStorageJobs } from "../src/modules/storage/signature-cleanup";
 const proc = process as unknown as { loadEnvFile?: (path?: string) => void };
 if (typeof proc.loadEnvFile === "function") {
   try {
@@ -16,6 +18,7 @@ import { OfferService } from "../src/modules/offers/service";
 import { ExportJobManager } from "../src/modules/privacy/export-jobs";
 import { cleanupExpiredOtpChallenges } from "../src/modules/auth/verification";
 import { cleanupExpiredRateLimits } from "../src/lib/security/rate-limit";
+import { processClerkRevocationJobs } from "../src/modules/auth/clerk-revocation";
 import {
   DEFAULT_HEARTBEAT_FILE,
   WorkerHeartbeatV2,
@@ -139,6 +142,34 @@ async function checkQueueMetrics(): Promise<void> {
         timestamp: new Date().toISOString(),
       })
     );
+  }
+}
+
+let reliabilityRunning = false;
+let reliabilityHealth = { deadCount: 0, oldestPendingSeconds: 0, hasErrors: false };
+async function runReliabilityCycle() {
+  if (isShuttingDown || reliabilityRunning) return;
+  reliabilityRunning = true;
+  try {
+    const results = await Promise.allSettled([
+      processClerkRevocationJobs(),
+      processSignatureStorageJobs(),
+    ]);
+    reliabilityHealth = {
+      ...(await getReliabilityHealth()),
+      hasErrors: results.some((r) => r.status === "rejected"),
+    };
+    if (
+      reliabilityHealth.hasErrors ||
+      reliabilityHealth.deadCount ||
+      reliabilityHealth.oldestPendingSeconds > 900
+    ) {
+      console.error(JSON.stringify({ event: "reliability_jobs_unhealthy", ...reliabilityHealth }));
+    }
+  } catch {
+    reliabilityHealth.hasErrors = true;
+  } finally {
+    reliabilityRunning = false;
   }
 }
 
@@ -342,6 +373,7 @@ async function runHeartbeatCycle(): Promise<void> {
   lastDbProbeError = probe.error;
 
   const payload: WorkerHeartbeatV2 = {
+    reliability: reliabilityHealth,
     schemaVersion: 2,
     pid: process.pid,
     uptimeSeconds: Math.floor(process.uptime()),
@@ -382,6 +414,11 @@ async function runHeartbeatCycle(): Promise<void> {
   }
 }
 
+const reliabilityTimer = setInterval(() => {
+  void runReliabilityCycle();
+}, 5000);
+void runReliabilityCycle();
+
 // Start timers
 const outboxTimer = setInterval(() => {
   runOutboxCycle().catch(() => {});
@@ -418,6 +455,7 @@ function handleShutdown(signal: string) {
     })
   );
 
+  clearInterval(reliabilityTimer);
   clearInterval(outboxTimer);
   clearInterval(exportTimer);
   clearInterval(maintenanceTimer);

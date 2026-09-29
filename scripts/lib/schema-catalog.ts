@@ -27,6 +27,14 @@ export async function readSchemaCatalog(client: Pick<Client, "query">): Promise<
     SELECT 'index',t.relname,c.relname,concat(pg_get_indexdef(i.indexrelid),';valid=',i.indisvalid)
     FROM pg_index i JOIN pg_class c ON c.oid=i.indexrelid JOIN pg_class t ON t.oid=i.indrelid
     JOIN pg_namespace n ON n.oid=t.relnamespace WHERE n.nspname='public' AND t.relname<>'__drizzle_migrations'
+    UNION ALL
+    SELECT 'trigger',c.relname,t.tgname,pg_get_triggerdef(t.oid)
+    FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid JOIN pg_namespace n ON n.oid=c.relnamespace
+    WHERE n.nspname='public' AND NOT t.tgisinternal
+    UNION ALL
+    SELECT 'function','',p.proname,pg_get_functiondef(p.oid)
+    FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace
+    WHERE n.nspname='public' AND p.proname IN ('queue_clerk_security_change','track_signature_storage','allocate_notification_sequence')
     ORDER BY kind,table_name,name
   `)
   ).rows;

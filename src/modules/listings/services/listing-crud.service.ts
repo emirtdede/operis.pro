@@ -13,6 +13,7 @@ import { inMemoryReceivedOffers, inMemorySentOffers } from "@/src/modules/offers
 import { evaluateListingVisibility } from "../visibility";
 import { generateSlug, inMemoryListings, SEVEN_DAYS_MS, validateBudgetConsistency } from "./types";
 import { ListingLifecycleService } from "./listing-lifecycle.service";
+import { notifyListingIndexNow } from "@/src/lib/seo/indexnow";
 
 export class ListingCrudService {
   /**
@@ -199,17 +200,7 @@ export class ListingCrudService {
         })
         .catch(() => {});
 
-      // Instant search engine indexing notification via IndexNow (Bing / Yandex)
-      import("@/src/lib/seo/indexnow")
-        .then(({ notifyIndexNow }) => {
-          import("@/src/lib/config/url").then(({ getAbsoluteUrl }) => {
-            notifyIndexNow([
-              getAbsoluteUrl(`/tr/ilanlar/${txResult.newListing.slug}`),
-              getAbsoluteUrl(`/en/listings/${txResult.newListing.slug}`),
-            ]).catch(() => {});
-          });
-        })
-        .catch(() => {});
+      notifyListingIndexNow(txResult.newListing.slug);
 
       // Dispatch directly in test/Vitest environments to satisfy unit assertions
       if (process.env.VITEST !== undefined || process.env.NODE_ENV === "test") {
@@ -317,6 +308,7 @@ export class ListingCrudService {
         // Non-blocking
       }
 
+      notifyListingIndexNow(slug);
       return { id: inMemId, slug };
     }
   }
@@ -449,6 +441,7 @@ export class ListingCrudService {
           );
         }
 
+        notifyListingIndexNow(listing.slug);
         return;
       } catch (err) {
         if (process.env.NODE_ENV === "production") {
@@ -548,6 +541,7 @@ export class ListingCrudService {
           }
         }
       }
+      notifyListingIndexNow(item.slug);
       return;
     }
     throw new Error("Listing not found or you are not authorized.");
@@ -694,6 +688,7 @@ export class ListingCrudService {
     if (isListingUuid) {
       try {
         const db = getDb();
+        let listingSlug: string | null = null;
 
         await db.transaction(async (tx) => {
           let listingQuery = tx
@@ -716,6 +711,7 @@ export class ListingCrudService {
           if (!listing) {
             throw new Error("Listing not found or unauthorized.");
           }
+          listingSlug = listing.slug;
           if (
             listing.status === "MATCHED" ||
             listing.status === "COMPLETED" ||
@@ -839,6 +835,7 @@ export class ListingCrudService {
             })
           );
         });
+        if (listingSlug) notifyListingIndexNow(listingSlug);
         return;
       } catch (err) {
         if (process.env.NODE_ENV === "production") {
@@ -931,6 +928,7 @@ export class ListingCrudService {
         }
       }
 
+      notifyListingIndexNow(item.slug);
       return;
     }
     throw new Error("Listing not found or unauthorized.");

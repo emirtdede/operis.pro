@@ -122,6 +122,7 @@ export async function POST(req: Request) {
           passwordHash: schema.users.passwordHash,
           twoFactorEnabled: schema.users.twoFactorEnabled,
           twoFactorSecret: schema.users.twoFactorSecret,
+          authVersion: schema.users.authVersion,
         })
         .from(schema.users)
         .where(eq(schema.users.id, session.userId))
@@ -130,15 +131,35 @@ export async function POST(req: Request) {
         currentUser = dbUser;
       }
     } catch {
-      // Fallback
+      return NextResponse.json(
+        {
+          error: isEn
+            ? "Security state unavailable. Please try again later."
+            : "Güvenlik durumu doğrulanamadı. Lütfen daha sonra tekrar deneyin.",
+        },
+        { status: 503 }
+      );
     }
 
-    if (session.userId === DEFAULT_USER.id) {
+    if (
+      !currentUser &&
+      process.env.NODE_ENV !== "production" &&
+      session.userId === DEFAULT_USER.id
+    ) {
       currentUser = {
         passwordHash: null,
         twoFactorEnabled: DEFAULT_USER.twoFactorEnabled || false,
         twoFactorSecret: DEFAULT_USER.twoFactorSecret || null,
       };
+    }
+
+    if (!currentUser) {
+      return NextResponse.json(
+        {
+          error: isEn ? "User account not found." : "Kullanıcı hesabı bulunamadı.",
+        },
+        { status: 401 }
+      );
     }
 
     if (enabled) {
@@ -284,10 +305,21 @@ export async function POST(req: Request) {
           }
         }
       } catch {
-        // Fall through to demo user check
+        return NextResponse.json(
+          {
+            error: isEn
+              ? "Security state unavailable. Please try again later."
+              : "Güvenlik durumu doğrulanamadı. Lütfen daha sonra tekrar deneyin.",
+          },
+          { status: 503 }
+        );
       }
 
-      if (!authorizedToDisable && session.userId === DEFAULT_USER.id) {
+      if (
+        !authorizedToDisable &&
+        process.env.NODE_ENV !== "production" &&
+        session.userId === DEFAULT_USER.id
+      ) {
         if (totpCode && DEFAULT_USER.twoFactorSecret) {
           authorizedToDisable =
             totpCode.trim() === "123456" ||

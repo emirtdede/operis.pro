@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useSignIn } from "@clerk/nextjs/legacy";
+import { useSignIn, useSignUp } from "@clerk/nextjs/legacy";
 import { useAuth } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
 
@@ -31,8 +31,10 @@ function SocialLoginButtonsConnected({
 }: SocialLoginButtonsProps) {
   const isTr = locale === "tr";
   const [loadingProvider, setLoadingProvider] = useState<OAuthProvider | null>(null);
-  const { isLoaded, signIn } = useSignIn();
+  const { isLoaded: signInLoaded, signIn } = useSignIn();
+  const { isLoaded: signUpLoaded, signUp } = useSignUp();
   const { isSignedIn, userId, isLoaded: authLoaded } = useAuth();
+  const isLoaded = mode === "register" ? signUpLoaded : signInLoaded;
 
   const defaultRedirect = isTr ? "/tr/ilanlar?view=stream" : "/en/listings?view=stream";
   const targetRedirect = returnUrl || defaultRedirect;
@@ -72,7 +74,7 @@ function SocialLoginButtonsConnected({
       }
     }
 
-    if (!isLoaded || !signIn) {
+    if (!isLoaded || (mode === "register" ? !signUp : !signIn)) {
       const msg = isTr
         ? `${providerName} ile giriş şu anda yükleniyor. Lütfen birkaç saniye sonra tekrar deneyin.`
         : `${providerName} sign-in is loading. Please try again in a few seconds.`;
@@ -82,11 +84,19 @@ function SocialLoginButtonsConnected({
 
     setLoadingProvider(strategy);
     try {
-      await signIn.authenticateWithRedirect({
-        strategy,
-        redirectUrl: "/sso-callback",
-        redirectUrlComplete: `/sso-callback?redirect_url=${encodeURIComponent(targetRedirect)}`,
-      });
+      if (mode === "register" && signUp) {
+        await signUp.authenticateWithRedirect({
+          strategy,
+          redirectUrl: "/sso-callback",
+          redirectUrlComplete: targetRedirect,
+        });
+      } else if (signIn) {
+        await signIn.authenticateWithRedirect({
+          strategy,
+          redirectUrl: "/sso-callback",
+          redirectUrlComplete: targetRedirect,
+        });
+      }
     } catch (err: unknown) {
       const rawMsg = err instanceof Error ? err.message : String(err);
 

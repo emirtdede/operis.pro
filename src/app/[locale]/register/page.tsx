@@ -47,7 +47,7 @@ export async function generateMetadata({
       description,
     },
     robots: {
-      index: true,
+      index: false,
       follow: true,
     },
   };

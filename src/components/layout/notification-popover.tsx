@@ -24,6 +24,7 @@ import { LiveNotificationToast } from "./live-notification-toast";
 
 export interface NotificationItem {
   id: string;
+  streamSequence?: string;
   type: string;
   payloadJson: {
     title?: string;

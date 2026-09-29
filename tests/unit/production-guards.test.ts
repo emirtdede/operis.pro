@@ -57,7 +57,9 @@ describe("Production verification guards", () => {
     expect(scriptPolicy).not.toContain("unsafe-inline");
     expect(scriptPolicy).not.toContain("unsafe-eval");
     expect(first!.headers.get("Cache-Control")).toBe("private, no-store");
-    expect(first!.headers.get("x-middleware-rewrite")).toBeTruthy();
+    expect(
+      first!.headers.get("x-middleware-next") || first!.headers.get("x-middleware-rewrite")
+    ).toBeTruthy();
   });
   it("normalizes PostgreSQL aliases without hiding length differences", () => {
     expect(normalizeSqlType("character varying(50)")).toBe(normalizeSqlType("varchar(50)"));

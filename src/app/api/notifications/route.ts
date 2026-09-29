@@ -1,3 +1,4 @@
+import { encodeNotificationCursor } from "@/src/modules/notifications/stream-cursor";
 import { NextResponse } from "next/server";
 import { eq, desc, and, isNull, sql } from "drizzle-orm";
 import { getSession } from "@/src/modules/auth/session";
@@ -32,34 +33,55 @@ export async function GET(req: Request) {
       whereConditions.push(isNull(schema.notifications.readAt));
     }
 
-    // Accurate unread count for the authenticated user
-    const unreadResults = await db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(schema.notifications)
-      .where(
-        and(eq(schema.notifications.userId, session.userId), isNull(schema.notifications.readAt))
-      );
-    const unreadCount = Number(unreadResults[0]?.count ?? 0);
+    const snapshot = await db.transaction(
+      async (tx) => {
+        // Accurate unread count for the authenticated user
+        const unreadResults = await tx
+          .select({ count: sql<number>`count(*)::int` })
+          .from(schema.notifications)
+          .where(
+            and(
+              eq(schema.notifications.userId, session.userId),
+              isNull(schema.notifications.readAt)
+            )
+          );
+        const unreadCount = Number(unreadResults[0]?.count ?? 0);
 
-    // Total matching items
-    const totalResults = await db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(schema.notifications)
-      .where(and(...whereConditions));
-    const totalCount = Number(totalResults[0]?.count ?? 0);
+        // Total matching items
+        const totalResults = await tx
+          .select({ count: sql<number>`count(*)::int` })
+          .from(schema.notifications)
+          .where(and(...whereConditions));
+        const totalCount = Number(totalResults[0]?.count ?? 0);
 
-    // Paginated rows directly from DB
-    const rows = await db
-      .select()
-      .from(schema.notifications)
-      .where(and(...whereConditions))
-      .orderBy(desc(schema.notifications.createdAt))
-      .limit(limit)
-      .offset(offset);
+        // Paginated rows directly from DB
+        const rows = await tx
+          .select()
+          .from(schema.notifications)
+          .where(and(...whereConditions))
+          .orderBy(desc(schema.notifications.createdAt))
+          .limit(limit)
+          .offset(offset);
+        const [counter] = await tx
+          .select()
+          .from(schema.notificationStreamCounters)
+          .where(eq(schema.notificationStreamCounters.userId, session.userId))
+          .limit(1);
+        return {
+          rows,
+          totalCount,
+          unreadCount,
+          streamCursor: encodeNotificationCursor(session.userId, counter?.lastSequence || "0"),
+        };
+      },
+      { isolationLevel: "repeatable read", accessMode: "read only" }
+    );
+    const { rows, totalCount, unreadCount, streamCursor } = snapshot;
 
     return NextResponse.json(
       {
         notifications: rows,
+        streamCursor,
         totalCount,
         unreadCount,
         hasMore: offset + rows.length < totalCount,

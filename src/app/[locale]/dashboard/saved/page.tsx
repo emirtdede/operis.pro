@@ -7,8 +7,6 @@ import { getSession } from "@/src/modules/auth/session";
 import { SavedListingService, SavedListingItem } from "@/src/modules/listings/saved-service";
 import { SavedListingsDashboard } from "@/src/components/dashboard/saved-listings-dashboard";
 import { Button } from "@/src/components/ui/button";
-import { JsonLd } from "@/src/components/seo/json-ld";
-import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -86,26 +84,6 @@ export default async function SavedListingsPage({
     savedItems = [];
   }
 
-  const baseUrl = getBaseUrl();
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: isTr ? "Ana Sayfa" : "Home",
-        item: `${baseUrl}/${locale}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: isTr ? "Kaydedilen İlanlar" : "Saved Jobs",
-        item: `${baseUrl}/${locale}/dashboard/saved`,
-      },
-    ],
-  };
-
   return (
     <div className="space-y-6">
       {/* Header Bar */}
@@ -151,9 +129,6 @@ export default async function SavedListingsPage({
       ) : (
         <SavedListingsDashboard initialSavedListings={savedItems} locale={locale} />
       )}
-
-      {/* Schema.org Structured Data */}
-      <JsonLd data={jsonLd} />
     </div>
   );
 }

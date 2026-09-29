@@ -247,18 +247,19 @@ export default async function ListingDetailPage({
         "@type": "Country",
         name: "TR",
       },
-      baseSalary: listing.budgetMin
-        ? {
-            "@type": "MonetaryAmount",
-            currency: listing.budgetCurrency || "TRY",
-            value: {
-              "@type": "QuantitativeValue",
-              minValue: parseFloat(listing.budgetMin),
-              maxValue: listing.budgetMax ? parseFloat(listing.budgetMax) : undefined,
-              unitText: "PROJECT",
-            },
-          }
-        : undefined,
+      baseSalary:
+        listing.budgetMin && listing.budgetMode.startsWith("HOURLY_")
+          ? {
+              "@type": "MonetaryAmount",
+              currency: listing.budgetCurrency || "TRY",
+              value: {
+                "@type": "QuantitativeValue",
+                minValue: parseFloat(listing.budgetMin),
+                maxValue: listing.budgetMax ? parseFloat(listing.budgetMax) : undefined,
+                unitText: "HOUR",
+              },
+            }
+          : undefined,
     });
   }
 

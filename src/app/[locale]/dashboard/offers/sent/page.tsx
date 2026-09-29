@@ -10,8 +10,6 @@ import {
   SentOfferItem,
 } from "@/src/components/dashboard/sent-offers-dashboard";
 import { Button } from "@/src/components/ui/button";
-import { JsonLd } from "@/src/components/seo/json-ld";
-import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -103,30 +101,6 @@ export default async function SentOffersPage({ params }: { params: Promise<{ loc
     initialOffers = [];
   }
 
-  const baseUrl = getBaseUrl();
-  const sentOffersUrl = isTr
-    ? `${baseUrl}/tr/panel/teklifler/gonderilen`
-    : `${baseUrl}/en/dashboard/offers/sent`;
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: isTr ? "Ana Sayfa" : "Home",
-        item: `${baseUrl}/${locale}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: isTr ? "Gönderilen Teklifler" : "Sent Offers",
-        item: sentOffersUrl,
-      },
-    ],
-  };
-
   return (
     <div className="space-y-6">
       {/* Header Bar */}
@@ -180,9 +154,6 @@ export default async function SentOffersPage({ params }: { params: Promise<{ loc
       <section aria-label={isTr ? "Gönderilen Teklif Listesi" : "Sent Offer List"}>
         <SentOffersDashboard initialOffers={initialOffers} locale={locale} />
       </section>
-
-      {/* Schema.org Structured Data */}
-      <JsonLd data={jsonLd} />
     </div>
   );
 }

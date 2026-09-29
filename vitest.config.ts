@@ -7,6 +7,11 @@ export default defineConfig({
     globals: true,
     setupFiles: ["tests/setup/unit.ts"],
     include: ["tests/unit/**/*.test.ts", "tests/a11y/**/*.test.ts"],
+    server: {
+      deps: {
+        inline: ["next-intl"],
+      },
+    },
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
@@ -17,6 +22,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./"),
+      "next/server": path.resolve(__dirname, "./node_modules/next/server.js"),
     },
   },
 });

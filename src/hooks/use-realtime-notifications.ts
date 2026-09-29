@@ -26,6 +26,11 @@ export function useRealtimeNotifications({ locale, enabled = true }: RealtimeNot
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const ringTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const retryCountRef = useRef(0);
+  const seenNotificationIdsRef = useRef<Set<string>>(new Set());
+  const lastEventIdRef = useRef<string | null>(null);
+  const snapshotWatermarkRef = useRef<bigint | null>(null);
+  const incomingItemsRef = useRef(new Map<string, NotificationItem>());
+  const fetchGenerationRef = useRef(0);
 
   const triggerRing = useCallback(() => {
     setIsRinging(true);
@@ -36,15 +41,46 @@ export function useRealtimeNotifications({ locale, enabled = true }: RealtimeNot
   }, []);
 
   const fetchNotifications = useCallback(async () => {
+    const generation = ++fetchGenerationRef.current;
     try {
       const res = await fetch(`/api/notifications?limit=50&locale=${locale}`, {
         headers: { "x-locale": locale },
       });
       if (res.ok) {
         const data = await res.json();
+        if (generation !== fetchGenerationRef.current) return;
         const items: NotificationItem[] = data.notifications || [];
-        setNotifications(items);
-        setUnreadCount(data.unreadCount ?? items.filter((n) => !n.readAt).length);
+        items.forEach((it) => {
+          if (it?.id) seenNotificationIdsRef.current.add(it.id);
+        });
+        if (!lastEventIdRef.current && typeof data.streamCursor === "string") {
+          lastEventIdRef.current = data.streamCursor;
+        }
+        const sequence =
+          typeof data.streamCursor === "string" ? data.streamCursor.split(".").at(-1) : undefined;
+        const watermark = sequence && /^\d+$/.test(sequence) ? BigInt(sequence) : null;
+        snapshotWatermarkRef.current = watermark;
+        const newer: NotificationItem[] = [];
+        for (const [id, item] of incomingItemsRef.current) {
+          if (
+            watermark !== null &&
+            item.streamSequence &&
+            /^\d+$/.test(item.streamSequence) &&
+            BigInt(item.streamSequence) > watermark
+          ) {
+            newer.push(item);
+          } else {
+            incomingItemsRef.current.delete(id);
+          }
+        }
+        setNotifications([
+          ...newer.filter((n) => !items.some((item) => item.id === n.id)),
+          ...items,
+        ]);
+        setUnreadCount(
+          (data.unreadCount ?? items.filter((n) => !n.readAt).length) +
+            newer.filter((n) => !n.readAt).length
+        );
       }
     } catch {
       // Handled gracefully
@@ -54,16 +90,35 @@ export function useRealtimeNotifications({ locale, enabled = true }: RealtimeNot
   // Handle incoming new notification
   const handleIncomingNotification = useCallback(
     (item: NotificationItem, fromBroadcast = false) => {
+      if (!item || !item.id) return;
+      const cached = incomingItemsRef.current.get(item.id);
+      if (cached?.readAt && !item.readAt) item = { ...item, readAt: cached.readAt };
+      incomingItemsRef.current.set(item.id, item);
+
+      const isAlreadySeen = seenNotificationIdsRef.current.has(item.id);
+      seenNotificationIdsRef.current.add(item.id);
+      // The snapshot count covers every row up to its watermark, including rows
+      // outside its latest-50 page that may subsequently arrive during replay.
+      const isIncludedInSnapshot =
+        snapshotWatermarkRef.current !== null &&
+        typeof item.streamSequence === "string" &&
+        /^\d+$/.test(item.streamSequence) &&
+        BigInt(item.streamSequence) <= snapshotWatermarkRef.current;
+
       setNotifications((prev) => {
         if (prev.some((n) => n.id === item.id)) return prev;
         return [item, ...prev];
       });
-      setUnreadCount((prev) => prev + 1);
-      triggerRing();
-      setLiveToast(item);
+
+      // Deduplicate: Only increment unread count, ring, and show toast if not previously seen and unread
+      if (!isAlreadySeen && !isIncludedInSnapshot && !item.readAt) {
+        setUnreadCount((prev) => prev + 1);
+        triggerRing();
+        setLiveToast(item);
+      }
 
       // Broadcast to other open browser tabs
-      if (!fromBroadcast && broadcastChannelRef.current) {
+      if (!fromBroadcast && !isAlreadySeen && broadcastChannelRef.current) {
         try {
           broadcastChannelRef.current.postMessage({
             type: "NEW_NOTIFICATION",
@@ -76,6 +131,26 @@ export function useRealtimeNotifications({ locale, enabled = true }: RealtimeNot
     },
     [triggerRing]
   );
+
+  const applyReadLocally = useCallback((notificationId?: string) => {
+    // A request started before this read change must not restore its older count
+    // or unread rows. Later snapshots can still merge newer cached notifications.
+    fetchGenerationRef.current += 1;
+    const nowIso = new Date().toISOString();
+    for (const [id, item] of incomingItemsRef.current) {
+      if (!notificationId || notificationId === id) {
+        incomingItemsRef.current.set(id, { ...item, readAt: item.readAt ?? nowIso });
+      }
+    }
+    setNotifications((prev) =>
+      prev.map((item) =>
+        !notificationId || notificationId === item.id
+          ? { ...item, readAt: item.readAt ?? nowIso }
+          : item
+      )
+    );
+    setUnreadCount((prev) => (notificationId ? Math.max(prev - 1, 0) : 0));
+  }, []);
 
   // Cross-tab synchronization via BroadcastChannel
   useEffect(() => {
@@ -91,17 +166,9 @@ export function useRealtimeNotifications({ locale, enabled = true }: RealtimeNot
       if (msg.type === "NEW_NOTIFICATION" && msg.notification) {
         handleIncomingNotification(msg.notification, true);
       } else if (msg.type === "MARK_READ" && msg.notificationId) {
-        const id = msg.notificationId;
-        setNotifications((prev) =>
-          prev.map((n) =>
-            n.id === id ? { ...n, readAt: n.readAt ?? new Date().toISOString() } : n
-          )
-        );
-        setUnreadCount((prev) => Math.max(prev - 1, 0));
+        applyReadLocally(msg.notificationId);
       } else if (msg.type === "MARK_ALL_READ") {
-        const nowIso = new Date().toISOString();
-        setNotifications((prev) => prev.map((n) => ({ ...n, readAt: n.readAt ?? nowIso })));
-        setUnreadCount(0);
+        applyReadLocally();
       }
     };
 
@@ -109,53 +176,64 @@ export function useRealtimeNotifications({ locale, enabled = true }: RealtimeNot
       channel.close();
       broadcastChannelRef.current = null;
     };
-  }, [handleIncomingNotification]);
+  }, [handleIncomingNotification, applyReadLocally]);
 
   // Connect to SSE Stream
   const connectSSE = useCallback(() => {
     if (!enabled || typeof window === "undefined" || !("EventSource" in window)) return;
 
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
+      reconnectTimeoutRef.current = null;
+    }
     if (eventSourceRef.current) {
       eventSourceRef.current.close();
       eventSourceRef.current = null;
     }
 
     try {
-      const es = new EventSource("/api/notifications/stream");
+      const streamUrl = lastEventIdRef.current
+        ? `/api/notifications/stream?lastEventId=${encodeURIComponent(lastEventIdRef.current)}`
+        : "/api/notifications/stream";
+      const es = new EventSource(streamUrl);
       eventSourceRef.current = es;
+
+      const reconnect = () => {
+        if (eventSourceRef.current !== es) return;
+        // Native EventSource remembers even rejected frames. Always replace it
+        // so reconnection uses only the last cursor accepted by this hook.
+        es.close();
+        eventSourceRef.current = null;
+        const backoff = Math.min(2000 * Math.pow(1.5, retryCountRef.current), 30000);
+        retryCountRef.current += 1;
+
+        if (reconnectTimeoutRef.current) clearTimeout(reconnectTimeoutRef.current);
+        reconnectTimeoutRef.current = setTimeout(() => {
+          reconnectTimeoutRef.current = null;
+          if (document.visibilityState === "visible") connectSSE();
+        }, backoff);
+      };
 
       es.onopen = () => {
         retryCountRef.current = 0;
       };
 
       es.addEventListener("notification", (event: MessageEvent) => {
+        if (eventSourceRef.current !== es) return;
         try {
           const item: NotificationItem = JSON.parse(event.data);
-          if (item && item.id) {
-            handleIncomingNotification(item);
+          if (!item || typeof item.id !== "string" || !item.id) {
+            reconnect();
+            return;
           }
+          handleIncomingNotification(item);
+          if (event.lastEventId) lastEventIdRef.current = event.lastEventId;
         } catch {
-          // Ignore malformed JSON
+          reconnect();
         }
       });
 
-      es.onerror = () => {
-        if (es.readyState === EventSource.CLOSED) {
-          es.close();
-          eventSourceRef.current = null;
-
-          // Reconnection backoff: 2s, 4s, 8s, up to 30s
-          const backoff = Math.min(2000 * Math.pow(1.5, retryCountRef.current), 30000);
-          retryCountRef.current += 1;
-
-          if (reconnectTimeoutRef.current) clearTimeout(reconnectTimeoutRef.current);
-          reconnectTimeoutRef.current = setTimeout(() => {
-            if (document.visibilityState === "visible") {
-              connectSSE();
-            }
-          }, backoff);
-        }
-      };
+      es.onerror = reconnect;
     } catch {
       // Fallback
     }
@@ -165,8 +243,10 @@ export function useRealtimeNotifications({ locale, enabled = true }: RealtimeNot
   useEffect(() => {
     if (!enabled) return;
 
-    fetchNotifications();
-    connectSSE();
+    let disposed = false;
+    void fetchNotifications().then(() => {
+      if (!disposed) connectSSE();
+    });
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
@@ -187,6 +267,7 @@ export function useRealtimeNotifications({ locale, enabled = true }: RealtimeNot
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
+      disposed = true;
       if (eventSourceRef.current) {
         eventSourceRef.current.close();
         eventSourceRef.current = null;
@@ -203,9 +284,7 @@ export function useRealtimeNotifications({ locale, enabled = true }: RealtimeNot
   }, [enabled, fetchNotifications, connectSSE]);
 
   const markAllRead = useCallback(async () => {
-    const nowIso = new Date().toISOString();
-    setNotifications((prev) => prev.map((n) => ({ ...n, readAt: n.readAt ?? nowIso })));
-    setUnreadCount(0);
+    applyReadLocally();
 
     // Broadcast
     if (broadcastChannelRef.current) {
@@ -225,14 +304,11 @@ export function useRealtimeNotifications({ locale, enabled = true }: RealtimeNot
     } catch {
       // Handled gracefully
     }
-  }, [locale]);
+  }, [locale, applyReadLocally]);
 
   const markAsRead = useCallback(
     async (notificationId: string) => {
-      setNotifications((prev) =>
-        prev.map((n) => (n.id === notificationId ? { ...n, readAt: new Date().toISOString() } : n))
-      );
-      setUnreadCount((prev) => Math.max(prev - 1, 0));
+      applyReadLocally(notificationId);
 
       // Broadcast
       if (broadcastChannelRef.current) {
@@ -256,7 +332,7 @@ export function useRealtimeNotifications({ locale, enabled = true }: RealtimeNot
         // Handled gracefully
       }
     },
-    [locale]
+    [locale, applyReadLocally]
   );
 
   const dismissToast = useCallback(() => {

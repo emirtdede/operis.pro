@@ -10,8 +10,6 @@ import {
   ReceivedOfferItem,
 } from "@/src/components/dashboard/received-offers-dashboard";
 import { Button } from "@/src/components/ui/button";
-import { JsonLd } from "@/src/components/seo/json-ld";
-import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -114,36 +112,6 @@ export default async function ReceivedOffersPage({
     initialOffers = [];
   }
 
-  const baseUrl = getBaseUrl();
-  const receivedOffersUrl = isTr
-    ? `${baseUrl}/tr/panel/teklifler/gelen`
-    : `${baseUrl}/en/dashboard/offers/received`;
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: isTr ? "Ana Sayfa" : "Home",
-        item: `${baseUrl}/${locale}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: isTr ? "İlanlarım" : "My Listings",
-        item: `${baseUrl}${isTr ? "/tr/panel/ilanlarim" : "/en/dashboard/listings"}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: isTr ? "Gelen Teklifler" : "Received Offers",
-        item: receivedOffersUrl,
-      },
-    ],
-  };
-
   return (
     <div className="space-y-6">
       {/* Header Bar */}
@@ -201,9 +169,6 @@ export default async function ReceivedOffersPage({
       <section aria-label={isTr ? "Gelen Teklif Listesi" : "Received Offer List"}>
         <ReceivedOffersDashboard initialOffers={initialOffers} locale={locale} />
       </section>
-
-      {/* Schema.org Structured Data */}
-      <JsonLd data={jsonLd} />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { eq, and, desc, or, inArray } from "drizzle-orm";
 import { getDb, schema } from "@/src/lib/db";
 import { EMOJI_REGEX, validateContentAppropriateness } from "@/src/lib/security/content-moderator";
-import { ProfileLinkInput, profileLinkSchema, isValidExternalUrl } from "../links";
+import { ProfileLinkInput, profileLinkSchema, isValidAvatarUrl } from "../links";
 import { RESERVED_HANDLES } from "../../auth/validation";
 import { DEFAULT_USER } from "../../auth/demo-user";
 import { EndorsementService, EndorsementDto } from "../../endorsements/service";
@@ -539,7 +539,7 @@ export class ProfileDataService {
         if (trimmed.length > 2000) {
           throw new Error("Avatar URL cannot exceed 2000 characters.");
         }
-        if (!isValidExternalUrl(trimmed)) {
+        if (!isValidAvatarUrl(trimmed)) {
           throw new Error("Invalid profile picture URL. Must be a valid HTTPS link.");
         }
         updateData.avatarUrl = trimmed;

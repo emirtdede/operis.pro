@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  User,
-  AtSign,
-  Trash2,
-  AlertCircle,
-  Link as LinkIcon,
-  Image as ImageIcon,
-} from "lucide-react";
+import { User, AtSign, Globe, ShieldCheck } from "lucide-react";
 import { TextInput } from "@/src/components/ui/text-input";
 import { TextArea } from "@/src/components/ui/text-area";
 
@@ -21,7 +14,7 @@ export interface ProfileGeneralTabProps {
   onDisplayNameChange: (val: string) => void;
   onHandleChange: (val: string) => void;
   onAboutChange: (val: string) => void;
-  onAvatarUrlChange: (val: string) => void;
+  onAvatarUrlChange?: (val: string) => void;
   onAvatarPreviewError: (error: boolean) => void;
 }
 
@@ -35,19 +28,9 @@ export function ProfileGeneralTab({
   onDisplayNameChange,
   onHandleChange,
   onAboutChange,
-  onAvatarUrlChange,
   onAvatarPreviewError,
 }: ProfileGeneralTabProps) {
   const isTr = locale === "tr";
-
-  const initials =
-    (displayName || "DY")
-      .trim()
-      .split(/\s+/)
-      .map((p) => p[0])
-      .slice(0, 2)
-      .join("")
-      .toUpperCase() || "DY";
 
   return (
     <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)]/70 backdrop-blur-xl p-6 sm:p-7 space-y-5">
@@ -71,7 +54,11 @@ export function ProfileGeneralTab({
                   referrerPolicy="no-referrer"
                 />
               ) : (
-                <span>{initials}</span>
+                <img
+                  src="/operis-logo-512x512.png"
+                  alt="Operis"
+                  className="h-9 w-9 object-contain drop-shadow"
+                />
               )}
             </div>
             <span className="text-[10px] text-[var(--color-text-tertiary)] uppercase font-semibold tracking-wider sm:text-center">
@@ -79,56 +66,24 @@ export function ProfileGeneralTab({
             </span>
           </div>
 
-          {/* Input & Açıklama */}
+          {/* Google Bilgilendirme */}
           <div className="min-w-0 flex-1 space-y-2">
             <div className="flex items-center justify-between gap-2">
               <label className="text-xs font-semibold text-[var(--color-text-primary)] flex items-center gap-1.5">
-                <ImageIcon className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />
-                <span>{isTr ? "Profil Resmi Bağlantısı (URL)" : "Profile Picture Link (URL)"}</span>
+                <Globe className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />
+                <span>{isTr ? "Google Hesabı ile Eşitlendi" : "Synced with Google Account"}</span>
               </label>
-              {avatarUrl.trim().length > 0 && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    onAvatarUrlChange("");
-                    onAvatarPreviewError(false);
-                  }}
-                  className="text-[11px] font-medium text-red-400 hover:text-red-300 transition-colors flex items-center gap-1 cursor-pointer"
-                >
-                  <Trash2 className="h-3 w-3" aria-hidden="true" />
-                  <span>{isTr ? "Resmi Kaldır" : "Remove Picture"}</span>
-                </button>
-              )}
+              <span className="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                {isTr ? "Google Doğrulamalı" : "Google Verified"}
+              </span>
             </div>
 
-            <TextInput
-              value={avatarUrl}
-              onChange={(e) => onAvatarUrlChange(e.target.value)}
-              placeholder="https://images.unsplash.com/... veya https://avatars.githubusercontent.com/..."
-              startIcon={
-                <LinkIcon
-                  className="h-4 w-4 text-[var(--color-text-tertiary)]"
-                  aria-hidden="true"
-                />
-              }
-            />
-
-            <p className="text-[11px] text-[var(--color-text-tertiary)] leading-normal">
+            <p className="text-[11px] text-[var(--color-text-secondary)] leading-relaxed">
               {isTr
-                ? "Sistem güvenliği ve gizliliğiniz gereği sunucularımıza doğrudan görsel dosyası yüklenmez. GitHub, Gravatar, Unsplash veya diğer halka açık doğrudan görsel bağlantınızı (HTTPS) yapıştırabilirsiniz."
-                : "For privacy and system security, image files are not stored on our servers. Paste any direct public HTTPS image URL from GitHub, Gravatar, Unsplash, or CDN."}
+                ? "Profil fotoğrafınız, güvenliğiniz ve pratiklik amacıyla bağlı Google hesabınızdan otomatik olarak aktarılır. Fotoğrafınızı değiştirmek için Google profilinizi güncelleyebilir, ardından Ayarlar sayfasından senkronize edebilirsiniz."
+                : "Your profile picture is automatically synced with your connected Google account. To change your picture, update your Google profile and sync from Settings."}
             </p>
-
-            {avatarUrl.trim().length > 0 && avatarPreviewError && (
-              <div className="text-[11px] text-amber-400/90 flex items-center gap-1.5 bg-amber-500/10 px-2.5 py-1.5 rounded-lg border border-amber-500/20">
-                <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                <span>
-                  {isTr
-                    ? "Görsel yüklenemedi. Lütfen doğrudan bir görsel URL'si (PNG, JPG, WebP) girdiğinizden emin olun."
-                    : "Image failed to load. Please make sure the URL points directly to an image."}
-                </span>
-              </div>
-            )}
           </div>
         </div>
       </div>

@@ -194,14 +194,6 @@ export default async function LandingPage({
           ? "10 sektör ve 110 kategoride komisyonsuz, doğrudan ve güvenli serbest çalışma platformu."
           : "Direct, transparent, zero-commission freelance matching platform across 10 sectors and 110 categories.",
         inLanguage: locale,
-        potentialAction: {
-          "@type": "SearchAction",
-          target: {
-            "@type": "EntryPoint",
-            urlTemplate: `${baseUrl}${isTr ? "/tr/ilanlar" : "/en/listings"}?q={search_term_string}`,
-          },
-          "query-input": "required name=search_term_string",
-        },
         publisher: {
           "@id": `${baseUrl}/#organization`,
         },

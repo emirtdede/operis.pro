@@ -410,6 +410,8 @@ export function ContactForm({ locale, selectedDepartment, onDepartmentChange }: 
           locale: isTr ? "tr" : "en",
           attachmentName: attachedFile?.name,
           attachmentSize: attachedFile?.size,
+          attachmentData: attachedFile?.data,
+          attachmentType: attachedFile?.type,
         }),
       });
 

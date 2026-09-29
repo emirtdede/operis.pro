@@ -160,7 +160,7 @@ export class NotificationService {
           })
           .catch(() => {});
       }
-      if (result) {
+      if (result && !txContext) {
         notificationPubSub.emitNotification(userId, {
           id: result.id,
           userId: result.userId,

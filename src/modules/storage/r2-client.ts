@@ -1,4 +1,9 @@
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+  ListObjectsV2Command,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { getEnv } from "@/src/config/env";
 import crypto from "node:crypto";
@@ -144,6 +149,12 @@ export async function uploadAvatarBuffer(
   }
 
   // Fallback for local development or when Cloudflare R2 credentials are not set
+  if (process.env.NODE_ENV === "production" && !process.env.VITEST) {
+    throw new Error(
+      "Cloudflare R2 storage credentials are required in production for persistent avatar storage."
+    );
+  }
+
   try {
     const uploadsDir = path.join(process.cwd(), "public", "uploads", "avatars");
     await fs.mkdir(uploadsDir, { recursive: true });
@@ -155,12 +166,7 @@ export async function uploadAvatarBuffer(
     };
   } catch (err) {
     console.error("Local avatar upload fallback error:", err);
-    const base64 = buffer.toString("base64");
-    return {
-      key,
-      publicUrl: `data:image/webp;base64,${base64}`,
-      isR2: false,
-    };
+    throw new Error("Yerel dosya sistemine avatar görseli kaydedilemedi.", { cause: err });
   }
 }
 
@@ -179,6 +185,8 @@ export async function uploadEphemeralSignature(
   const sha256 = crypto.createHash("sha256").update(buffer).digest("hex");
 
   if (isR2Configured()) {
+    const { registerSignatureUpload } = await import("./signature-cleanup");
+    await registerSignatureUpload(key, engagementId);
     const { client, bucketName, publicUrlBase } = getR2Client();
     await client.send(
       new PutObjectCommand({
@@ -192,7 +200,8 @@ export async function uploadEphemeralSignature(
           sha256,
           purpose: "ephemeral-contract-signature",
         },
-      })
+      }),
+      { abortSignal: AbortSignal.timeout(30000) }
     );
     return {
       key,
@@ -209,6 +218,12 @@ export async function uploadEphemeralSignature(
     );
   }
 
+  // A development server can still use PostgreSQL and its attachment trigger.
+  // Only isolated unit tests without a database bypass durable intent creation.
+  if (process.env.NODE_ENV !== "test" || process.env.TEST_DATABASE_URL) {
+    const { registerSignatureUpload } = await import("./signature-cleanup");
+    await registerSignatureUpload(key, engagementId);
+  }
   inMemoryEphemeralStore.set(key, { buffer, mimeType });
   return {
     key,
@@ -231,7 +246,8 @@ export async function deleteEphemeralSignature(key: string): Promise<boolean> {
         new DeleteObjectCommand({
           Bucket: bucketName,
           Key: key,
-        })
+        }),
+        { abortSignal: AbortSignal.timeout(10000) }
       );
       return true;
     } catch {
@@ -239,6 +255,7 @@ export async function deleteEphemeralSignature(key: string): Promise<boolean> {
     }
   }
 
+  if (process.env.NODE_ENV === "production") return false;
   // Fallback mock deletion
   inMemoryEphemeralStore.delete(key);
   return true;
@@ -259,4 +276,25 @@ export async function deleteEphemeralSignatures(keys: string[]): Promise<number>
  */
 export function getMockEphemeralSignatureCount(): number {
   return inMemoryEphemeralStore.size;
+}
+
+/** Read-only, prefix-limited inventory for orphan reconciliation. */
+export async function listEphemeralSignatureObjects(continuationToken?: string) {
+  const { client, bucketName } = getR2Client();
+  const page = await client.send(
+    new ListObjectsV2Command({
+      Bucket: bucketName,
+      Prefix: "ephemeral-signatures/",
+      MaxKeys: 1000,
+      ContinuationToken: continuationToken,
+    }),
+    { abortSignal: AbortSignal.timeout(10000) }
+  );
+  return {
+    objects: (page.Contents || []).map((item) => ({
+      key: item.Key,
+      modifiedAt: item.LastModified,
+    })),
+    nextToken: page.IsTruncated ? page.NextContinuationToken : undefined,
+  };
 }

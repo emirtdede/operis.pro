@@ -1,4 +1,4 @@
-import { getBaseUrl } from "@/src/lib/config/url";
+import { getAbsoluteUrl, getBaseUrl } from "@/src/lib/config/url";
 
 const DEFAULT_INDEXNOW_KEY = "8b11c0f16e3c4e3692dfba5191ec489b";
 
@@ -53,4 +53,13 @@ export async function notifyIndexNow(urls: string | string[]): Promise<boolean> 
     }
     return false;
   }
+}
+
+export function notifyListingIndexNow(slug: string): Promise<boolean> | undefined {
+  if (process.env.NODE_ENV !== "production") return undefined;
+
+  return notifyIndexNow([
+    getAbsoluteUrl(`/tr/ilanlar/${slug}`),
+    getAbsoluteUrl(`/en/listings/${slug}`),
+  ]);
 }

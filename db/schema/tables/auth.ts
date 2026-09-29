@@ -27,6 +27,7 @@ export const users = pgTable("users", {
     .default(sql`'{}'::text[]`)
     .notNull(),
   authVersion: integer("auth_version").default(1).notNull(),
+  sessionsInvalidBefore: timestamp("sessions_invalid_before", { withTimezone: true }),
   emailEnc: text("email_enc"),
   emailHmac: varchar("email_hmac", { length: 64 }),
   clerkUserId: varchar("clerk_user_id", { length: 255 }).unique(),

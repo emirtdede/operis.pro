@@ -163,6 +163,84 @@
   },
   {
     "kind": "column",
+    "table_name": "clerk_revocation_jobs",
+    "name": "attempt_count",
+    "definition": "integer;notnull=t;default=0;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "clerk_revocation_jobs",
+    "name": "auth_version",
+    "definition": "integer;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "clerk_revocation_jobs",
+    "name": "clerk_user_id",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "clerk_revocation_jobs",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "clerk_revocation_jobs",
+    "name": "cutoff",
+    "definition": "timestamp with time zone;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "clerk_revocation_jobs",
+    "name": "id",
+    "definition": "uuid;notnull=t;default=gen_random_uuid();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "clerk_revocation_jobs",
+    "name": "last_error",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "clerk_revocation_jobs",
+    "name": "lease_token",
+    "definition": "uuid;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "clerk_revocation_jobs",
+    "name": "lease_until",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "clerk_revocation_jobs",
+    "name": "next_attempt_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "clerk_revocation_jobs",
+    "name": "preserve_session_id",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "clerk_revocation_jobs",
+    "name": "status",
+    "definition": "text;notnull=t;default='PENDING'::text;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "clerk_revocation_jobs",
+    "name": "user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
     "table_name": "company_verifications",
     "name": "authorized_title",
     "definition": "character varying(100);notnull=f;default=;identity=;generated="
@@ -2089,6 +2167,18 @@
   },
   {
     "kind": "column",
+    "table_name": "notification_stream_counters",
+    "name": "last_sequence",
+    "definition": "bigint;notnull=t;default=0;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "notification_stream_counters",
+    "name": "user_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
     "table_name": "notifications",
     "name": "created_at",
     "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
@@ -2116,6 +2206,12 @@
     "table_name": "notifications",
     "name": "read_at",
     "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "notifications",
+    "name": "stream_sequence",
+    "definition": "bigint;notnull=t;default=0;identity=;generated="
   },
   {
     "kind": "column",
@@ -3157,6 +3253,72 @@
   },
   {
     "kind": "column",
+    "table_name": "signature_storage_jobs",
+    "name": "attempt_count",
+    "definition": "integer;notnull=t;default=0;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "signature_storage_jobs",
+    "name": "created_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "signature_storage_jobs",
+    "name": "engagement_id",
+    "definition": "uuid;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "signature_storage_jobs",
+    "name": "key",
+    "definition": "text;notnull=t;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "signature_storage_jobs",
+    "name": "last_error",
+    "definition": "text;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "signature_storage_jobs",
+    "name": "lease_token",
+    "definition": "uuid;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "signature_storage_jobs",
+    "name": "lease_until",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "signature_storage_jobs",
+    "name": "next_attempt_at",
+    "definition": "timestamp with time zone;notnull=t;default=now();identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "signature_storage_jobs",
+    "name": "package_id",
+    "definition": "uuid;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "signature_storage_jobs",
+    "name": "package_version",
+    "definition": "integer;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "signature_storage_jobs",
+    "name": "status",
+    "definition": "text;notnull=t;default='UPLOADING'::text;identity=;generated="
+  },
+  {
+    "kind": "column",
     "table_name": "user_private_identity",
     "name": "city",
     "definition": "text;notnull=t;default=;identity=;generated="
@@ -3284,6 +3446,12 @@
   {
     "kind": "column",
     "table_name": "users",
+    "name": "sessions_invalid_before",
+    "definition": "timestamp with time zone;notnull=f;default=;identity=;generated="
+  },
+  {
+    "kind": "column",
+    "table_name": "users",
     "name": "status",
     "definition": "character varying(30);notnull=t;default='ACTIVE'::character varying;identity=;generated="
   },
@@ -3382,6 +3550,18 @@
     "table_name": "category_translations",
     "name": "category_translations_category_id_locale_pk",
     "definition": "PRIMARY KEY (category_id, locale)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "clerk_revocation_jobs",
+    "name": "clerk_revocation_jobs_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "clerk_revocation_jobs",
+    "name": "clerk_revocation_jobs_user_id_fkey",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
   },
   {
     "kind": "constraint",
@@ -3865,6 +4045,18 @@
   },
   {
     "kind": "constraint",
+    "table_name": "notification_stream_counters",
+    "name": "notification_stream_counters_pkey",
+    "definition": "PRIMARY KEY (user_id)"
+  },
+  {
+    "kind": "constraint",
+    "table_name": "notification_stream_counters",
+    "name": "notification_stream_counters_user_id_fkey",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+  },
+  {
+    "kind": "constraint",
     "table_name": "notifications",
     "name": "notifications_delivery_key_unique",
     "definition": "UNIQUE (delivery_key)"
@@ -4105,6 +4297,12 @@
   },
   {
     "kind": "constraint",
+    "table_name": "signature_storage_jobs",
+    "name": "signature_storage_jobs_pkey",
+    "definition": "PRIMARY KEY (key)"
+  },
+  {
+    "kind": "constraint",
     "table_name": "user_private_identity",
     "name": "user_private_identity_phone_hmac_unique",
     "definition": "UNIQUE (phone_hmac)"
@@ -4138,6 +4336,24 @@
     "table_name": "users",
     "name": "users_pkey",
     "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "kind": "function",
+    "table_name": "",
+    "name": "allocate_notification_sequence",
+    "definition": "CREATE OR REPLACE FUNCTION public.allocate_notification_sequence()\n RETURNS trigger\n LANGUAGE plpgsql\nAS $function$\nDECLARE existing_sequence bigint;\nBEGIN\n  INSERT INTO notification_stream_counters(user_id) VALUES(NEW.user_id) ON CONFLICT DO NOTHING;\n  PERFORM 1 FROM notification_stream_counters WHERE user_id=NEW.user_id FOR UPDATE;\n  IF NEW.delivery_key IS NOT NULL THEN\n    SELECT stream_sequence INTO existing_sequence FROM notifications\n    WHERE delivery_key=NEW.delivery_key AND user_id=NEW.user_id;\n    IF FOUND THEN NEW.stream_sequence:=existing_sequence; RETURN NEW; END IF;\n  END IF;\n  UPDATE notification_stream_counters SET last_sequence=last_sequence+1\n  WHERE user_id=NEW.user_id RETURNING last_sequence INTO NEW.stream_sequence;\n  RETURN NEW;\nEND $function$\n"
+  },
+  {
+    "kind": "function",
+    "table_name": "",
+    "name": "queue_clerk_security_change",
+    "definition": "CREATE OR REPLACE FUNCTION public.queue_clerk_security_change()\n RETURNS trigger\n LANGUAGE plpgsql\nAS $function$\r\nBEGIN\r\n  IF NEW.auth_version IS DISTINCT FROM OLD.auth_version THEN\r\n    IF NEW.auth_version <= OLD.auth_version THEN\r\n      RAISE EXCEPTION 'auth_version must increase';\r\n    END IF;\r\n    NEW.sessions_invalid_before := clock_timestamp();\r\n    IF NEW.clerk_user_id IS NOT NULL THEN\r\n      INSERT INTO clerk_revocation_jobs(user_id, clerk_user_id, auth_version, cutoff)\r\n      VALUES (NEW.id, NEW.clerk_user_id, NEW.auth_version, NEW.sessions_invalid_before);\r\n    END IF;\r\n  END IF;\r\n  RETURN NEW;\r\nEND $function$\n"
+  },
+  {
+    "kind": "function",
+    "table_name": "",
+    "name": "track_signature_storage",
+    "definition": "CREATE OR REPLACE FUNCTION public.track_signature_storage()\n RETURNS trigger\n LANGUAGE plpgsql\nAS $function$\nDECLARE object_key text; previous_keys text[]; current_keys text[];\nBEGIN\n  IF TG_OP='DELETE' THEN\n    UPDATE signature_storage_jobs SET status='PENDING',next_attempt_at=now(),lease_token=NULL,lease_until=NULL\n    WHERE key=ANY(ARRAY[OLD.client_signature_r2_key,OLD.freelancer_signature_r2_key]);\n    RETURN OLD;\n  END IF;\n  current_keys := array_remove(ARRAY[NEW.client_signature_r2_key,NEW.freelancer_signature_r2_key],NULL);\n  previous_keys := CASE WHEN TG_OP='UPDATE' THEN array_remove(ARRAY[OLD.client_signature_r2_key,OLD.freelancer_signature_r2_key],NULL) ELSE ARRAY[]::text[] END;\n  FOREACH object_key IN ARRAY current_keys LOOP\n    IF NOT object_key=ANY(previous_keys) THEN\n      UPDATE signature_storage_jobs SET status='ATTACHED',package_id=NEW.id,package_version=NEW.version,\n        lease_token=NULL,lease_until=NULL\n      WHERE key=object_key AND engagement_id=NEW.engagement_id AND status='UPLOADING';\n      IF NOT FOUND THEN RAISE EXCEPTION 'Signature upload intent unavailable'; END IF;\n    END IF;\n  END LOOP;\n  UPDATE signature_storage_jobs SET status='PENDING',next_attempt_at=now(),lease_token=NULL,lease_until=NULL\n    WHERE key=ANY(previous_keys) AND NOT key=ANY(current_keys);\n  IF NEW.status='FULLY_SIGNED' AND (TG_OP='INSERT' OR OLD.status IS DISTINCT FROM NEW.status) THEN\n    UPDATE signature_storage_jobs SET status='PENDING',package_id=NEW.id,package_version=NEW.version,\n      next_attempt_at=now(),lease_token=NULL,lease_until=NULL WHERE key=ANY(current_keys);\n    NEW.ephemeral_cleaned_at := NULL;\n  END IF;\n  RETURN NEW;\nEND $function$\n"
   },
   {
     "kind": "index",
@@ -4198,6 +4414,24 @@
     "table_name": "category_translations",
     "name": "category_translations_category_id_locale_pk",
     "definition": "CREATE UNIQUE INDEX category_translations_category_id_locale_pk ON public.category_translations USING btree (category_id, locale);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "clerk_revocation_jobs",
+    "name": "clerk_revocation_due_idx",
+    "definition": "CREATE INDEX clerk_revocation_due_idx ON public.clerk_revocation_jobs USING btree (status, next_attempt_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "clerk_revocation_jobs",
+    "name": "clerk_revocation_jobs_pkey",
+    "definition": "CREATE UNIQUE INDEX clerk_revocation_jobs_pkey ON public.clerk_revocation_jobs USING btree (id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "clerk_revocation_jobs",
+    "name": "clerk_revocation_user_version_idx",
+    "definition": "CREATE UNIQUE INDEX clerk_revocation_user_version_idx ON public.clerk_revocation_jobs USING btree (user_id, auth_version);valid=t"
   },
   {
     "kind": "index",
@@ -4705,6 +4939,12 @@
   },
   {
     "kind": "index",
+    "table_name": "notification_stream_counters",
+    "name": "notification_stream_counters_pkey",
+    "definition": "CREATE UNIQUE INDEX notification_stream_counters_pkey ON public.notification_stream_counters USING btree (user_id);valid=t"
+  },
+  {
+    "kind": "index",
     "table_name": "notifications",
     "name": "notifications_delivery_key_unique",
     "definition": "CREATE UNIQUE INDEX notifications_delivery_key_unique ON public.notifications USING btree (delivery_key);valid=t"
@@ -4732,6 +4972,12 @@
     "table_name": "notifications",
     "name": "notifications_user_id_idx",
     "definition": "CREATE INDEX notifications_user_id_idx ON public.notifications USING btree (user_id);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "notifications",
+    "name": "notifications_user_sequence_idx",
+    "definition": "CREATE UNIQUE INDEX notifications_user_sequence_idx ON public.notifications USING btree (user_id, stream_sequence);valid=t"
   },
   {
     "kind": "index",
@@ -5047,6 +5293,18 @@
   },
   {
     "kind": "index",
+    "table_name": "signature_storage_jobs",
+    "name": "signature_storage_due_idx",
+    "definition": "CREATE INDEX signature_storage_due_idx ON public.signature_storage_jobs USING btree (status, next_attempt_at);valid=t"
+  },
+  {
+    "kind": "index",
+    "table_name": "signature_storage_jobs",
+    "name": "signature_storage_jobs_pkey",
+    "definition": "CREATE UNIQUE INDEX signature_storage_jobs_pkey ON public.signature_storage_jobs USING btree (key);valid=t"
+  },
+  {
+    "kind": "index",
     "table_name": "user_private_identity",
     "name": "user_private_identity_phone_hmac_unique",
     "definition": "CREATE UNIQUE INDEX user_private_identity_phone_hmac_unique ON public.user_private_identity USING btree (phone_hmac);valid=t"
@@ -5086,5 +5344,23 @@
     "table_name": "users",
     "name": "users_pkey",
     "definition": "CREATE UNIQUE INDEX users_pkey ON public.users USING btree (id);valid=t"
+  },
+  {
+    "kind": "trigger",
+    "table_name": "engagement_contract_packages",
+    "name": "contract_signature_storage",
+    "definition": "CREATE TRIGGER contract_signature_storage BEFORE INSERT OR DELETE OR UPDATE ON public.engagement_contract_packages FOR EACH ROW EXECUTE FUNCTION track_signature_storage()"
+  },
+  {
+    "kind": "trigger",
+    "table_name": "notifications",
+    "name": "notifications_assign_sequence",
+    "definition": "CREATE TRIGGER notifications_assign_sequence BEFORE INSERT ON public.notifications FOR EACH ROW EXECUTE FUNCTION allocate_notification_sequence()"
+  },
+  {
+    "kind": "trigger",
+    "table_name": "users",
+    "name": "users_security_change",
+    "definition": "CREATE TRIGGER users_security_change BEFORE UPDATE OF auth_version ON public.users FOR EACH ROW EXECUTE FUNCTION queue_clerk_security_change()"
   }
 ]

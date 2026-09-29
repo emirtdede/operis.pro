@@ -13,4 +13,5 @@ export * from "./tables/engagements";
 export * from "./tables/communication";
 export * from "./tables/governance";
 export * from "./tables/search-trends";
+export * from "./tables/reliability";
 export * from "./relations";

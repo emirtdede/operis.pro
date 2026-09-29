@@ -230,6 +230,4 @@ jobs:
 
 ## 5. KABUL VE ÇIKIŞ KRİTERLERİ (ACCEPTANCE CRITERIA)
 
-* [ ] Tüm SEO testleri `npm run test:seo` komutu ile 0 hata ile tamamlanmalıdır.
-* [ ] Test süresi < 5 saniye olmalı, CI sürecini yavaşlatmamalıdır.
-* [ ] Dağıtım öncesi PR kontrollerinde zorunlu (required status check) olarak kilitlenmelidir.
+Kabul ölçütü; tüm SEO testlerinin proje paket yöneticisiyle tek komutta hatasız tamamlanması, test süresinin CI akışını belirgin biçimde yavaşlatmaması ve kontrolün dağıtım öncesi zorunlu CI kapısı olmasıdır. Uygulama ve tamamlanma durumu [`../YAYIN_ONCESI_TEK_RAPOR.md`](../YAYIN_ONCESI_TEK_RAPOR.md) içinde izlenir.

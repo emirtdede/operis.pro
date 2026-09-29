@@ -8,6 +8,12 @@ export default defineConfig({
     environment: "node",
     globals: true,
     testTimeout: 30000,
+    hookTimeout: 30000,
+    // Several integration suites replace the process-wide DB singleton and the
+    // PII maintenance jobs intentionally share one advisory-lock namespace.
+    // Running test files in parallel makes otherwise isolated databases race
+    // through that shared process state.
+    fileParallelism: false,
     setupFiles: ["tests/setup/integration.ts"],
     include: ["tests/integration/**/*.test.ts"],
   },

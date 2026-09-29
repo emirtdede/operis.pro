@@ -24,6 +24,13 @@ describe("SEO: XML Sitemap Integrity & Route Rules", () => {
     expect(urls.some((u) => u.includes("/en/categories"))).toBe(true);
   });
 
+  it("must exclude transactional and authenticated entry routes", async () => {
+    const urls = (await sitemap()).map((entry) => entry.url);
+
+    expect(urls.some((url) => /\/(giris|login|kayit|register)$/.test(url))).toBe(false);
+    expect(urls.some((url) => /\/(ilanlar\/yeni|listings\/new)$/.test(url))).toBe(false);
+  });
+
   it("must include 110 category landing routes in Turkish and English", async () => {
     const entries = await sitemap();
     const urls = entries.map((e) => e.url);

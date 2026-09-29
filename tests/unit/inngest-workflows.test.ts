@@ -83,7 +83,7 @@ describe("Inngest Serverless Architecture Suite", () => {
 
   describe("Inngest Functions & Durable Workflows Configuration", () => {
     it("registers all essential background workflows in the barrel export", () => {
-      expect(inngestFunctions.length).toBe(4);
+      expect(inngestFunctions.length).toBe(5);
       expect(inngestFunctions).toContain(processOutboxJob);
       expect(inngestFunctions).toContain(maintenanceCronJob);
       expect(inngestFunctions).toContain(staleOfferLifecycleJob);
@@ -236,7 +236,7 @@ describe("Inngest Serverless Architecture Suite", () => {
         const body = (await response.json()) as Record<string, unknown>;
         expect(body).toBeDefined();
         expect(body.schema_version).toBeDefined();
-        expect(body.function_count).toBe(4);
+        expect(body.function_count).toBe(5);
       } finally {
         if (originalDev) {
           process.env.INNGEST_DEV = originalDev;

@@ -1,19 +1,26 @@
 # Operis Worker Daemon — Production Operasyon ve İzleme Kılavuzu (Runbook)
 
-**Sürüm:** 1.0.0  
-**Tarih:** 12 Eylül 2026  
-**Kapsam:** `scripts/worker-daemon.ts`, Transactional Outbox Worker, Zamanlanmış Bakım Görevleri ve Dış Alarm Entegrasyonu (K01).
+**Sürüm:** 1.1.0
+
+**Tarih:** 29 Eylül 2026
+
+**Kapsam:** `scripts/worker-daemon.ts`, transactional outbox, veri dışa aktarma, zamanlanmış bakım, Clerk oturum iptali, R2 imza temizliği ve dış alarm entegrasyonu.
 
 ---
 
 ## 1. Mimarisi ve Çalışma Prensipleri
 
-Operis Worker Daemon, arka planda bağımsız bir süreç (daemon/background service) olarak çalışır ve iki ana sorumluluğu yerine getirir:
-1. **Transactional Outbox Event Processing (1.500 ms döngü):**
+Operis Worker Daemon, arka planda bağımsız bir süreç olarak çalışır ve dört ana sorumluluğu yerine getirir:
+1. **Transactional Outbox Event Processing (5 saniye döngü):**
    * Veritabanında `PENDING` durumundaki outbox olaylarını (`schema.outboxEvents`) FOR UPDATE SKIP LOCKED ve lease fencing mekanizmasıyla toplar.
    * `LISTING_PUBLISHED`, `LISTING_REACTIVATED`, `RADAR_MATCH`, `OFFER_RECEIVED` vb. olayları hedeflenen kullanıcılara ulaştırır veya radar/kategori bildirimlerini dağıtır.
    * Başarısız olaylar için üstel geri çekilme (exponential backoff) uygular. 5 denemeyi aşan veya alıcısı geçersiz olan olaylar `FAILED` veya `DEAD` olarak işaretlenir.
-2. **Periyodik Sistem Bakım Görevleri (15 Dakika Döngü):**
+2. **Veri Dışa Aktarma Görevleri (5 saniye döngü):**
+   * Kuyruktaki kullanıcı veri dışa aktarma işlerini işler ve ilerlemeyi heartbeat verisine yansıtır.
+3. **Clerk ve İmza Saklama Güvenilirlik İşleri (5 saniye döngü):**
+   * Kalıcı Clerk oturum iptali işlerini işler; başarısız işleri yeniden dener ve dead-letter durumunu izler.
+   * Sözleşme imza objelerindeki eski R2 prefix'lerini kalıcı kuyruk üzerinden temizler ve gecikmiş işleri raporlar.
+4. **Periyodik Sistem Bakım Görevleri (60 saniye döngü):**
    * Süresi dolan ilanları (`activeUntil < NOW()`) tespit edip `EXPIRED` durumuna çeker.
    * Süresi dolan veya tüketilen tek kullanımlık SMS/OTP kodlarını (`schema.otpChallenges`) temizler.
    * Süresi dolan IP engellemelerini ve geçici oturum kilitlerini arşive kaldırır.
@@ -21,7 +28,11 @@ Operis Worker Daemon, arka planda bağımsız bir süreç (daemon/background ser
 
 ---
 
-## 2. Systemd Servis Tanımı (Linux / Ubuntu Production)
+## 2. Dağıtım ön koşulu
+
+`worker:daemon` komutu `tsx` kullanır ve `tsx` şu anda `devDependencies` altındadır. Aşağıdaki systemd ve konteyner tanımları örnektir; yayın artefaktı yalnız üretim bağımlılıklarıyla kuruluyorsa worker başlamadan önce paketleme kararı ve temiz artefakt testi tamamlanmalıdır. Açık yayın kapıları [`../YAYIN_ONCESI_TEK_RAPOR.md`](../YAYIN_ONCESI_TEK_RAPOR.md) içinde izlenir.
+
+## 3. Systemd Servis Tanımı (Linux / Ubuntu Production)
 
 Production sunucularında worker daemon'un kesintisiz çalışması ve çökme durumunda otomatik yeniden başlatılması için systemd servis birimi:
 
@@ -80,7 +91,7 @@ journalctl -u operis-worker -f -o cat
 
 ---
 
-## 3. Docker Compose Dağıtım Tanımı
+## 4. Docker Compose Dağıtım Tanımı
 
 Konteyner tabanlı ortamlarda (Kubernetes / ECS / Docker Swarm) worker daemon konfigürasyonu:
 
@@ -131,16 +142,17 @@ services:
 
 ---
 
-## 4. Dış Alarm ve İzleme Kuralları (Prometheus / Grafana / Datadog)
+## 5. Dış Alarm ve İzleme Kuralları (Prometheus / Grafana / Datadog)
 
-Sistemin sıhhatini ve güvenilirliğini garanti altına almak için aşağıdaki 4 kritik alarm kuralı yapılandırılmalıdır:
+Sistemin sıhhatini ve güvenilirliğini garanti altına almak için aşağıdaki kritik alarm kuralları yapılandırılmalıdır:
 
 | Alarm Adı | Koşul | Şiddet | Olası Neden | Aksiyon |
 |:---|:---|:---:|:---|:---|
-| `OperisWorkerHeartbeatMissing` | Son heartbeat > 120 saniye | **CRITICAL** (P1) | Worker süreci çöktü veya bellek/CPU tüketiminden kilitlendi. | Systemd/Docker servisini yeniden başlat, OOM loglarını incele. |
+| `OperisWorkerHeartbeatMissing` | Son heartbeat > 45 saniye | **CRITICAL** (P1) | Worker süreci çöktü veya bellek/CPU tüketiminden kilitlendi. | Systemd/Docker servisini yeniden başlat, OOM loglarını incele. |
 | `OperisOutboxDeadLettersPresent` | `COUNT(outboxEvents WHERE status = 'DEAD') > 0` | **HIGH** (P1) | 5 denemede iletilemeyen bildirim veya geçersiz JSON payload. | Dead letter kuyruğunu incele, alıcı kullanıcı profilini doğrula. |
 | `OperisOutboxBacklogHigh` | `COUNT(outboxEvents WHERE status = 'PENDING') > 100` | **MEDIUM** (P2) | Outbox olay üretim hızı worker tüketim hızını aştı. | Worker instance sayısını artır veya veritabanı I/O durumunu denetle. |
 | `OperisMaintenanceFailure` | `lastMaintenanceStatus == 'failed'` veya `partial_failure` | **HIGH** (P2) | DB timeout, disk doluluğu veya şema uyuşmazlığı. | PostgreSQL bağlantı havuzunu ve `scripts/worker-daemon.ts` loglarını incele. |
+| `OperisReliabilityJobsUnhealthy` | Dead job > 0, hata var veya en eski bekleyen iş > 900 saniye | **HIGH** (P1) | Clerk iptali veya R2 temizliği ilerlemiyor. | Reliability job kayıtlarını ve sağlayıcı hatalarını incele. |
 
 ### Prometheus Alertmanager Kural Örneği
 ```yaml
@@ -157,18 +169,18 @@ groups:
           description: "There are unprocessable outbox events in dead-letter state."
 
       - alert: OperisWorkerDown
-        expr: time() - operis_worker_last_heartbeat_timestamp > 120
+        expr: time() - operis_worker_last_heartbeat_timestamp > 45
         for: 1m
         labels:
           severity: critical
         annotations:
           summary: "Operis Worker Daemon is unresponsive"
-          description: "No worker heartbeat recorded in the last 2 minutes."
+          description: "No worker heartbeat recorded in the last 45 seconds."
 ```
 
 ---
 
-## 5. Sıfır Kesinti ve Sürüm Yükseltme Stratejisi
+## 6. Sıfır Kesinti ve Sürüm Yükseltme Stratejisi
 
 1. **Lease Fencing Garantisi:**
    Worker daemon, her işlem turunda `leaseToken` (UUID) ve `leaseUntil` (şimdi + 30 saniye) yazar. Yeni bir worker sürümü dağıtılırken eski worker süreci kapatılsa dahi yarım kalan işlemler en geç 30 saniye sonra yeni worker tarafından devralınır.

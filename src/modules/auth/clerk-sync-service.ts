@@ -190,7 +190,7 @@ export class ClerkSyncService {
           handle: uniqueHandle,
           displayName,
           avatarUrl: input.avatarUrl || null,
-          avatarSource: input.avatarUrl ? "oauth" : "custom",
+          avatarSource: "oauth",
           locale: "tr",
           theme: "dark",
         });
@@ -255,11 +255,10 @@ export class ClerkSyncService {
           .where(eq(schema.users.id, existingByClerkId.user.id));
       }
 
-      // Sync avatar from Google/Clerk whenever avatarSource is not 'custom'
+      // Sync avatar from Google/Clerk whenever avatar changes
       if (
         input.avatarUrl &&
         existingByClerkId.profile &&
-        existingByClerkId.profile.avatarSource !== "custom" &&
         existingByClerkId.profile.avatarUrl !== input.avatarUrl
       ) {
         await db
@@ -379,7 +378,7 @@ export class ClerkSyncService {
           handle: uniqueHandle,
           displayName,
           avatarUrl: input.avatarUrl || null,
-          avatarSource: input.avatarUrl ? "oauth" : "custom",
+          avatarSource: "oauth",
           locale: "tr",
           theme: "dark",
         });
@@ -388,7 +387,6 @@ export class ClerkSyncService {
       if (
         input.avatarUrl &&
         existingByEmail.profile &&
-        existingByEmail.profile.avatarSource !== "custom" &&
         existingByEmail.profile.avatarUrl !== input.avatarUrl
       ) {
         await db
@@ -466,7 +464,7 @@ export class ClerkSyncService {
         handle: uniqueHandle,
         displayName,
         avatarUrl: input.avatarUrl || null,
-        avatarSource: input.avatarUrl ? "oauth" : "custom",
+        avatarSource: "oauth",
         locale: "tr",
         theme: "dark",
       });

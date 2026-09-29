@@ -1,37 +1,42 @@
-# Build Manifest & Runtime Baseline
+# Operis çalışma zamanı ve derleme manifestosu
 
-**Document status:** Implementation baseline  
-**Date:** 2026-09-06  
-**Project:** Freelance Platform (Turkey / Global Tech Marketplace)  
-**Governing Specification:** `FREELANCE_PLATFORM_MASTER_SPEC.md`  
+**Son doğrulama:** 29 Eylül 2026
 
----
+**Kaynak:** Depodaki `package.json`, kilit dosyası ve yerel araç çıktıları.
 
-## 1. Runtime & Environment
+Bu belge geliştirme ve derleme tabanını kaydeder. Üretim ortamının gerçekten bu sürümleri kullandığı dağıtım sırasında ayrıca kanıtlanmalıdır.
 
-| Component | Target in Master Spec | Resolved Version | Verification |
-|---|---|---|---|
-| OS | Windows 11 / Server | Windows 10/11 x64 | Verified native PowerShell shell |
-| Node.js | 24.20.x LTS line | v24.19.0 (Node 24 LTS) | `node -v` -> `v24.19.0` |
-| Package Manager | pnpm | 12.3.4 | `pnpm -v` -> `12.3.4` |
-| npm | Supporting CLI | 11.17.0 | `npm -v` -> `11.17.0` |
-| PostgreSQL | PostgreSQL 18.6 | 18.6 | `initdb (PostgreSQL) 18.6` installed |
-| Git | Standard VCS | 2.55.0.windows.3 | `git --version` -> `2.55.0.windows.3` |
+## Doğrulanmış taban
 
----
+| Bileşen | Sürüm / durum |
+|---|---|
+| Node.js | `v24.19.0` |
+| pnpm | `10.5.2` |
+| `packageManager` | `pnpm@10.5.2` |
+| Next.js | `16.3.6` |
+| React / React DOM | `19.2.7` |
+| TypeScript | `^5.8.2` |
+| Drizzle ORM | `^0.45.3` |
+| PostgreSQL istemcisi | `pg ^8.13.3` |
 
-## 2. Core Dependencies & Framework Architecture
+## Standart komutlar
 
-- **Web Framework:** Next.js `16.3.3` (App Router, Server Actions, Server Components)
-- **UI Runtime:** React `19.2.x`
-- **Language:** TypeScript 5.8+ in strict mode
-- **Styling:** Tailwind CSS + custom semantic CSS variable design tokens
-- **Database ORM:** Drizzle ORM + PostgreSQL client (`pg` / `postgres`) + explicit SQL migrations
-- **i18n:** `next-intl` (deterministic `/tr` and `/en` routing)
-- **Validation:** Zod (centralized domain schemas, Unicode NFC, emoji prohibition)
-- **Cryptography:** Node.js native `node:crypto` (Argon2 / scrypt, AES-256-GCM for PII, HMAC-SHA256 blind index)
-- **Testing:**
-  - Vitest (Unit & Integration tests)
-  - Playwright (End-to-End browser journeys)
-  - axe-core (Automated WCAG 2.2 AA accessibility audit)
-- **Icons:** SVG-only Lucide outline icons + custom scalable SVG brand logo (zero emojis, zero raster graphics)
+```bash
+pnpm install --frozen-lockfile
+pnpm run lint
+pnpm run typecheck
+pnpm run format:check
+pnpm run test:unit
+pnpm run test:integration
+pnpm run test:a11y
+pnpm run build
+pnpm run test:e2e:prod
+```
+
+Üretim worker'ı `pnpm run worker:daemon` komutuyla başlatılır. Bu komut `tsx` kullanır; `tsx` şu anda `devDependencies` altındadır. Yalnız üretim bağımlılıklarının kurulduğu bir artefakta worker'ın başlayabildiği yayın kapısında doğrulanmalıdır.
+
+## Veritabanı tabanı
+
+Yerel makinede `psql` sürümü bu belge için doğrulanmamıştır. Entegrasyon testlerinin kullandığı PostgreSQL konteyneri ile hedef üretim PostgreSQL sürümü aynı kabul edilmemelidir. Desteklenen üretim sürümü, TLS ayarları, bağlantı havuzu, en az yetkili runtime rolü ve ayrı migration rolü hedef ortamda kayda geçirilmelidir.
+
+Güncel yayın kapıları ve eksik doğrulamalar için [`../YAYIN_ONCESI_TEK_RAPOR.md`](../YAYIN_ONCESI_TEK_RAPOR.md) kullanılır.

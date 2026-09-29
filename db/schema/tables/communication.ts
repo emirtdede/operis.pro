@@ -8,9 +8,19 @@ import {
   jsonb,
   uniqueIndex,
   index,
+  customType,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { users } from "./auth";
+
+// Preserve PostgreSQL bigint precision across JSON/SSE boundaries.
+const sequence = customType<{ data: string; driverData: string }>({ dataType: () => "bigint" });
+export const notificationStreamCounters = pgTable("notification_stream_counters", {
+  userId: uuid("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  lastSequence: sequence("last_sequence").notNull().default("0"),
+});
 
 // 18. Notifications
 export const notifications = pgTable(
@@ -23,10 +33,12 @@ export const notifications = pgTable(
     type: varchar("type", { length: 50 }).notNull(),
     payloadJson: jsonb("payload_json").notNull(),
     deliveryKey: varchar("delivery_key", { length: 191 }).unique(),
+    streamSequence: sequence("stream_sequence").notNull().default("0"),
     readAt: timestamp("read_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [
+    uniqueIndex("notifications_user_sequence_idx").on(table.userId, table.streamSequence),
     index("notifications_user_created_idx").on(table.userId, table.createdAt),
     index("notifications_user_unread_idx").on(table.userId, table.readAt),
   ]

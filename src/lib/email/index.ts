@@ -34,17 +34,27 @@ export type EmailTemplateKey =
   | "category_follow_match"
   | (string & {});
 
+export interface EmailAttachment {
+  filename: string;
+  content: string; // base64 string
+  content_id?: string;
+  contentType?: string;
+}
+
+export interface SendEmailInput {
+  to: string;
+  template: EmailTemplateKey;
+  locale: Locale;
+  variables: Record<string, string>;
+  idempotencyKey: string;
+  replyTo?: string;
+  headers?: Record<string, string>;
+  unsubscribeUrl?: string;
+  attachments?: EmailAttachment[];
+}
+
 export interface TransactionalEmailProvider {
-  send(input: {
-    to: string;
-    template: EmailTemplateKey;
-    locale: Locale;
-    variables: Record<string, string>;
-    idempotencyKey: string;
-    replyTo?: string;
-    headers?: Record<string, string>;
-    unsubscribeUrl?: string;
-  }): Promise<{ success: boolean; messageId?: string; error?: string }>;
+  send(input: SendEmailInput): Promise<{ success: boolean; messageId?: string; error?: string }>;
 }
 
 class MockEmailProvider implements TransactionalEmailProvider {
@@ -57,18 +67,10 @@ class MockEmailProvider implements TransactionalEmailProvider {
     replyTo?: string;
     headers?: Record<string, string>;
     unsubscribeUrl?: string;
+    attachments?: EmailAttachment[];
   }> = [];
 
-  async send(input: {
-    to: string;
-    template: EmailTemplateKey;
-    locale: Locale;
-    variables: Record<string, string>;
-    idempotencyKey: string;
-    replyTo?: string;
-    headers?: Record<string, string>;
-    unsubscribeUrl?: string;
-  }) {
+  async send(input: SendEmailInput) {
     this.sentEmails.push({
       to: input.to,
       template: input.template,
@@ -76,6 +78,7 @@ class MockEmailProvider implements TransactionalEmailProvider {
       variables: input.variables,
       sentAt: new Date(),
       replyTo: input.replyTo,
+      attachments: input.attachments,
     });
 
     return {
@@ -90,16 +93,9 @@ class MockEmailProvider implements TransactionalEmailProvider {
 }
 
 export class ResendEmailProvider implements TransactionalEmailProvider {
-  async send(input: {
-    to: string;
-    template: EmailTemplateKey;
-    locale: Locale;
-    variables: Record<string, string>;
-    idempotencyKey: string;
-    replyTo?: string;
-    headers?: Record<string, string>;
-    unsubscribeUrl?: string;
-  }): Promise<{ success: boolean; messageId?: string; error?: string }> {
+  async send(
+    input: SendEmailInput
+  ): Promise<{ success: boolean; messageId?: string; error?: string }> {
     // Pre-flight check: Suppress dispatch to known bounced addresses to protect sender reputation
     try {
       if (await ResendPoolService.isEmailBounced(input.to)) {
@@ -142,15 +138,19 @@ export class ResendEmailProvider implements TransactionalEmailProvider {
     });
 
     const logoBase64 = getLogoBase64();
-    const attachments = logoBase64
-      ? [
-          {
-            filename: "operis-logo.png",
-            content: logoBase64,
-            content_id: "operis-logo",
-          },
-        ]
-      : undefined;
+    const userAttachments = input.attachments || [];
+    const attachments = [
+      ...(logoBase64
+        ? [
+            {
+              filename: "operis-logo.png",
+              content: logoBase64,
+              content_id: "operis-logo",
+            },
+          ]
+        : []),
+      ...userAttachments,
+    ];
 
     const customHeaders: Record<string, string> = {
       ...(input.headers || {}),
@@ -258,6 +258,7 @@ export class EmailAdapter {
     headers?: Record<string, string>;
     unsubscribeUrl?: string;
     variables?: Record<string, string>;
+    attachments?: EmailAttachment[];
   }): Promise<boolean> {
     const result = await emailProvider.send({
       to: input.to,
@@ -266,6 +267,7 @@ export class EmailAdapter {
       replyTo: input.replyTo,
       headers: input.headers,
       unsubscribeUrl: input.unsubscribeUrl,
+      attachments: input.attachments,
       variables: {
         subject: input.subject,
         body: input.body,

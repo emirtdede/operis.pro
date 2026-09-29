@@ -52,7 +52,7 @@
           "@type": "QuantitativeValue",
           "minValue": 50000,
           "maxValue": 100000,
-          "unitText": "MONTH"
+          "unitText": "HOUR"
         }
       }
     },
@@ -88,6 +88,8 @@
   ]
 }
 ```
+
+`baseSalary` yalnız `HOURLY_EXACT` veya `HOURLY_RANGE` bütçe modlarında üretilir. Proje bazlı sabit bütçe Google JobPosting maaş birimiyle doğru biçimde ifade edilemediği için sabit bütçeli ilanlarda bu alan atlanır.
 
 ---
 

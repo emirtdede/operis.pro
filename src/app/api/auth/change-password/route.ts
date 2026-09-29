@@ -78,7 +78,11 @@ export async function POST(req: Request) {
 
     try {
       const [user] = await db
-        .select({ id: schema.users.id, passwordHash: schema.users.passwordHash })
+        .select({
+          id: schema.users.id,
+          passwordHash: schema.users.passwordHash,
+          clerkUserId: schema.users.clerkUserId,
+        })
         .from(schema.users)
         .where(eq(schema.users.id, session.userId))
         .limit(1);

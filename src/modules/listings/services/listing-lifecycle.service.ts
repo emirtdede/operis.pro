@@ -5,6 +5,7 @@ import { NotificationService } from "@/src/modules/notifications/service";
 import { DEFAULT_USER } from "@/src/modules/auth/demo-user";
 import { inMemoryReceivedOffers, inMemorySentOffers } from "@/src/modules/offers/service";
 import { inMemoryExpiringNotified, inMemoryListings, SEVEN_DAYS_MS } from "./types";
+import { notifyListingIndexNow } from "@/src/lib/seo/indexnow";
 
 export class ListingLifecycleService {
   /**
@@ -625,6 +626,7 @@ export class ListingLifecycleService {
           }
         }
 
+        notifyListingIndexNow(listing.slug);
         return;
       } catch (err) {
         if (process.env.NODE_ENV === "production") {
@@ -710,6 +712,7 @@ export class ListingLifecycleService {
         // Non-blocking
       }
 
+      notifyListingIndexNow(item.slug);
       return;
     }
     throw new Error("Listing not found or you are not authorized.");
@@ -915,7 +918,11 @@ export class ListingLifecycleService {
 
       // Select expired active listings
       const expiredListings = await db
-        .select({ id: schema.listings.id, seq: schema.listings.activationSeq })
+        .select({
+          id: schema.listings.id,
+          seq: schema.listings.activationSeq,
+          slug: schema.listings.slug,
+        })
         .from(schema.listings)
         .where(
           and(
@@ -928,7 +935,11 @@ export class ListingLifecycleService {
         return 0;
       }
 
-      const archiveSingleListing = async (item: { id: string; seq: number }): Promise<number> => {
+      const archiveSingleListing = async (item: {
+        id: string;
+        seq: number;
+        slug: string;
+      }): Promise<number> => {
         let singleExpiredCount = 0;
         const pendingNotifications: Array<{
           userId: string;
@@ -1081,6 +1092,8 @@ export class ListingLifecycleService {
           );
         }
 
+        if (singleExpiredCount > 0) notifyListingIndexNow(item.slug);
+
         return singleExpiredCount;
       };
 
@@ -1096,6 +1109,7 @@ export class ListingLifecycleService {
         if (l.status === "ACTIVE" && l.activeUntil && new Date(l.activeUntil) <= referenceTime) {
           l.status = "INACTIVE_EXPIRED";
           expiredCount++;
+          notifyListingIndexNow(l.slug);
 
           if (l.ownerUserId === DEFAULT_USER.id) {
             const isEn = DEFAULT_USER.profile.locale === "en";

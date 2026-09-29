@@ -37,6 +37,10 @@ jobs:
       PII_ENCRYPTION_KEY_CURRENT: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
       PII_HMAC_KEY: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
       APP_URL: "https://operis.pro"
+      AUTH_URL: "https://operis.pro"
+      NEXT_PUBLIC_APP_URL: "https://operis.pro"
+      ENABLE_DEMO_LOGIN: "false"
+      ALLOW_DEMO_CREDENTIALS: "false"
       LEGAL_ENTITY_NAME: "Operis Teknoloji A.S."
       LEGAL_ENTITY_TYPE: "anonim_sirket"
       LEGAL_ADDRESS: "Maslak Mah. Buyukdere Cad. No:1 Sariyer / Istanbul"
@@ -81,6 +85,9 @@ jobs:
       - name: Dual-Language (TR/EN) Parity Audit
         run: pnpm audit:i18n
 
+      - name: Search and Indexation Policy Tests
+        run: pnpm test:seo
+
       - name: Credential Leak & Secret Scanning Audit
         run: pnpm audit:secrets
 
@@ -90,7 +97,7 @@ jobs:
       - name: 6. Integration Test Suite
         run: pnpm test:integration
 
-      - name: 7. Unit & Security Matrix Test Suite (5,258 Tests)
+      - name: 7. Unit & Security Matrix Test Suite
         run: pnpm test:unit
 
       - name: 8. WAI-ARIA & Accessibility (a11y) Test Suite

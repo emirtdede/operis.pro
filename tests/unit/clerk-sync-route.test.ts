@@ -1,12 +1,13 @@
-import { describe, it, expect, vi, beforeEach, afterAll } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach, afterAll } from "vitest";
 import { POST } from "@/src/app/api/auth/clerk-sync/route";
 import { ClerkSyncService } from "@/src/modules/auth/clerk-sync-service";
 import * as dbModule from "@/src/lib/db";
-import { SESSION_COOKIE_NAME } from "@/src/modules/auth/session";
+import { SESSION_COOKIE_NAME, getVerifiedSession } from "@/src/modules/auth/session";
 
 const mockAuth = vi.fn();
 const mockCurrentUser = vi.fn();
 const mockGetUser = vi.fn();
+const mockRemoteSession = vi.fn();
 
 vi.mock("@clerk/nextjs/server", () => ({
   auth: () => mockAuth(),
@@ -15,6 +16,7 @@ vi.mock("@clerk/nextjs/server", () => ({
     users: {
       getUser: (id: string) => mockGetUser(id),
     },
+    sessions: { getSession: (id: string) => mockRemoteSession(id) },
   }),
 }));
 
@@ -26,11 +28,153 @@ describe("Clerk Sync API Route (/api/auth/clerk-sync)", () => {
     vi.clearAllMocks();
     process.env.CLERK_SECRET_KEY = "sk_test_mock_secret_key";
     process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = "pk_test_mock_pub_key";
+    mockRemoteSession.mockImplementation(async (id: string) => ({
+      id,
+      userId: (await mockAuth()).userId,
+      status: "active",
+      createdAt: Date.now(),
+    }));
   });
 
   afterAll(() => {
     process.env.CLERK_SECRET_KEY = originalSecret;
     process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = originalPub;
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllEnvs();
+  });
+
+  function mockActiveUser(authVersion = 1, sessionsInvalidBefore: Date | null = null) {
+    mockAuth.mockResolvedValue({ userId: "clerk-active", sessionId: "session-active" });
+    mockCurrentUser.mockResolvedValue({
+      id: "clerk-active",
+      primaryEmailAddressId: "email-active",
+      emailAddresses: [
+        {
+          id: "email-active",
+          emailAddress: "user@example.test",
+          verification: { status: "verified" },
+        },
+      ],
+    });
+    const sync = vi.spyOn(ClerkSyncService, "syncClerkUser").mockResolvedValue({
+      userId: "local-active",
+      isNewUser: false,
+      handle: "user",
+      email: "user@example.test",
+      displayName: "User",
+    });
+    const dbUser = {
+      id: "local-active",
+      email: "user@example.test",
+      role: "USER",
+      status: "ACTIVE",
+      authVersion,
+      sessionsInvalidBefore,
+      twoFactorEnabled: false,
+    };
+    const db = {
+      select: vi.fn(() => ({
+        from: (table: unknown) => ({
+          where: () => ({ limit: async () => (table === dbModule.schema.users ? [dbUser] : []) }),
+        }),
+      })),
+    };
+    vi.spyOn(dbModule, "getDb").mockReturnValue(db as unknown as ReturnType<typeof dbModule.getDb>);
+    return sync;
+  }
+
+  it("records explicit legal consent from the same request body used for TOTP", async () => {
+    const sync = mockActiveUser();
+    const legalConsent = { accepted: true, locale: "tr", documentVersions: { terms: "v2" } };
+    const response = await POST(
+      new Request("https://operis.test/api/auth/clerk-sync", {
+        method: "POST",
+        body: JSON.stringify({ legalConsent }),
+      })
+    );
+    expect(response.status).toBe(200);
+    expect(sync).toHaveBeenCalledWith(expect.objectContaining({ legalConsent }));
+  });
+
+  it.each(["provider-error", "missing-date", "obsolete"])(
+    "refuses %s through the real sync handler before profile writes",
+    async (failure) => {
+      const cutoff = new Date();
+      const sync = mockActiveUser(2, cutoff);
+      if (failure === "provider-error")
+        mockRemoteSession.mockRejectedValue(new Error("provider 500"));
+      else
+        mockRemoteSession.mockResolvedValue({
+          id: "session-active",
+          userId: "clerk-active",
+          status: "active",
+          createdAt: failure === "obsolete" ? cutoff.getTime() : undefined,
+        });
+      const response = await POST(
+        new Request("https://operis.test/api/auth/clerk-sync", { method: "POST" })
+      );
+      expect(response.status).toBe(failure === "provider-error" ? 503 : 401);
+      expect(response.headers.get("set-cookie")).toBeNull();
+      expect(mockRemoteSession).toHaveBeenCalledWith("session-active");
+      expect(sync).not.toHaveBeenCalled();
+    }
+  );
+
+  it("returns 503 for a provider timeout without issuing a local cookie", async () => {
+    vi.useFakeTimers();
+    const sync = mockActiveUser(2, new Date());
+    mockRemoteSession.mockImplementation(() => new Promise(() => {}));
+    const responsePromise = POST(
+      new Request("https://operis.test/api/auth/clerk-sync", { method: "POST" })
+    );
+    await vi.waitFor(() => expect(mockRemoteSession).toHaveBeenCalledWith("session-active"));
+    await vi.advanceTimersByTimeAsync(5001);
+    const response = await responsePromise;
+    expect(response.status).toBe(503);
+    expect(response.headers.get("set-cookie")).toBeNull();
+    expect(mockRemoteSession).toHaveBeenCalledWith("session-active");
+    expect(sync).not.toHaveBeenCalled();
+  });
+
+  it("returns no fallback session when the provider request times out", async () => {
+    vi.useFakeTimers();
+    vi.stubEnv("VITEST", undefined);
+    mockActiveUser(2, new Date());
+    mockRemoteSession.mockImplementation(() => new Promise(() => {}));
+    const sessionPromise = getVerifiedSession();
+    await vi.waitFor(() => expect(mockRemoteSession).toHaveBeenCalledWith("session-active"));
+    await vi.advanceTimersByTimeAsync(5001);
+    expect(await sessionPromise).toBeNull();
+  });
+
+  it.each(["provider-error", "missing-date", "obsolete"])(
+    "refuses %s through the real cookie-free fallback",
+    async (failure) => {
+      vi.stubEnv("VITEST", undefined);
+      const cutoff = new Date();
+      mockActiveUser(2, cutoff);
+      if (failure === "provider-error")
+        mockRemoteSession.mockRejectedValue(new Error("provider 500"));
+      else
+        mockRemoteSession.mockResolvedValue({
+          id: "session-active",
+          userId: "clerk-active",
+          status: "active",
+          createdAt: failure === "obsolete" ? cutoff.getTime() : undefined,
+        });
+      expect(await getVerifiedSession()).toBeNull();
+      expect(mockRemoteSession).toHaveBeenCalledWith("session-active");
+    }
+  );
+
+  it("allows a new post-cutoff session through the cookie-free fallback", async () => {
+    vi.stubEnv("VITEST", undefined);
+    mockActiveUser(2, new Date(Date.now() - 60000));
+    const session = await getVerifiedSession();
+    expect(session).toEqual(expect.objectContaining({ userId: "local-active", authVersion: 2 }));
+    expect(mockRemoteSession).toHaveBeenCalledWith("session-active");
   });
 
   it("returns 503 when Clerk keys are missing", async () => {
@@ -108,7 +252,7 @@ describe("Clerk Sync API Route (/api/auth/clerk-sync)", () => {
   });
 
   it("returns 403 when user exists in DB but is not ACTIVE", async () => {
-    mockAuth.mockResolvedValue({ userId: "user_clerk_suspended" });
+    mockAuth.mockResolvedValue({ userId: "user_clerk_suspended", sessionId: "session_suspended" });
     mockCurrentUser.mockResolvedValue({
       id: "user_clerk_suspended",
       primaryEmailAddressId: "email_1",
@@ -163,7 +307,7 @@ describe("Clerk Sync API Route (/api/auth/clerk-sync)", () => {
   });
 
   it("successfully synchronizes active Clerk user with verified email and sets fp_session cookie", async () => {
-    mockAuth.mockResolvedValue({ userId: "user_clerk_12345" });
+    mockAuth.mockResolvedValue({ userId: "user_clerk_12345", sessionId: "session_12345" });
     mockCurrentUser.mockResolvedValue({
       id: "user_clerk_12345",
       primaryEmailAddressId: "email_verified_1",
@@ -238,7 +382,10 @@ describe("Clerk Sync API Route (/api/auth/clerk-sync)", () => {
   });
 
   it("adversarial: body.clerkUserId and body.email are completely ignored even if supplied by attacker", async () => {
-    mockAuth.mockResolvedValue({ userId: "attacker_legit_clerk_id" });
+    mockAuth.mockResolvedValue({
+      userId: "attacker_legit_clerk_id",
+      sessionId: "session_attacker",
+    });
     mockCurrentUser.mockResolvedValue({
       id: "attacker_legit_clerk_id",
       primaryEmailAddressId: "email_attacker",

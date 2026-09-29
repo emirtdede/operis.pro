@@ -158,6 +158,7 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
               authVersion: schema.users.authVersion,
               twoFactorEnabled: schema.users.twoFactorEnabled,
               updatedAt: schema.users.updatedAt,
+              sessionsInvalidBefore: schema.users.sessionsInvalidBefore,
             })
             .from(schema.users)
             .where(eq(schema.users.clerkUserId, clerkAuth.userId))
@@ -191,6 +192,7 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
                     authVersion: schema.users.authVersion,
                     twoFactorEnabled: schema.users.twoFactorEnabled,
                     updatedAt: schema.users.updatedAt,
+                    sessionsInvalidBefore: schema.users.sessionsInvalidBefore,
                   })
                   .from(schema.users)
                   .where(eq(schema.users.id, syncResult.userId))
@@ -200,16 +202,32 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
           }
 
           if (dbUser && dbUser.status === "ACTIVE") {
-            const tokenIatSec =
-              typeof clerkAuth.sessionClaims?.iat === "number" ? clerkAuth.sessionClaims.iat : null;
+            const { isClerkSessionRevokedOrObsolete } = await import("./clerk-revocation");
             if (
-              tokenIatSec &&
-              (dbUser.authVersion ?? 1) > 1 &&
-              dbUser.updatedAt &&
-              tokenIatSec * 1000 < new Date(dbUser.updatedAt).getTime() - 2000
-            ) {
-              // The Clerk session token was minted before the user's security version was bumped.
-              // Invalidate access so obsolete remote Clerk sessions cannot resurrect access.
+              await isClerkSessionRevokedOrObsolete({
+                userId: dbUser.id,
+                clerkUserId: clerkAuth.userId,
+                clerkSessionId: clerkAuth.sessionId,
+                currentAuthVersion: dbUser.authVersion ?? 1,
+                sessionsInvalidBefore: dbUser.sessionsInvalidBefore,
+              })
+            )
+              return null;
+            const [freshUser] = await db
+              .select({ authVersion: schema.users.authVersion, status: schema.users.status })
+              .from(schema.users)
+              .where(eq(schema.users.id, dbUser.id))
+              .limit(1);
+            if (
+              !freshUser ||
+              freshUser.status !== "ACTIVE" ||
+              freshUser.authVersion !== dbUser.authVersion
+            )
+              return null;
+
+            // R01: Prevent issuing an unverified session if local 2FA is enabled on this account.
+            // The user must complete local TOTP challenge via /api/auth/clerk-sync before receiving a session.
+            if (dbUser.twoFactorEnabled) {
               return null;
             }
 
@@ -247,6 +265,7 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
         role: schema.users.role,
         authVersion: schema.users.authVersion,
         updatedAt: schema.users.updatedAt,
+        sessionsInvalidBefore: schema.users.sessionsInvalidBefore,
       })
       .from(schema.users)
       .where(eq(schema.users.id, session.userId))
@@ -329,22 +348,43 @@ export async function getVerifiedSession(explicitToken?: string): Promise<Sessio
  * Atomically increments a user's authVersion to invalidate all previously issued sessions (R01).
  * Optionally accepts a transaction runner to be executed within caller's atomic transaction.
  */
-export async function bumpUserAuthVersion(userId: string, tx?: unknown): Promise<number | null> {
+export async function bumpUserAuthVersion(
+  userId: string,
+  tx?: unknown,
+  preserve?: { sessionId: string; clerkUserId: string }
+): Promise<number | null> {
   try {
     const { getDb, schema } = await import("@/src/lib/db");
-    const { eq, sql } = await import("drizzle-orm");
+    const { eq, and, sql } = await import("drizzle-orm");
     const db = getDb();
-    const client = (tx as ReturnType<typeof getDb>) || db;
-    const [updated] = await client
-      .update(schema.users)
-      .set({
-        authVersion: sql`${schema.users.authVersion} + 1`,
-        updatedAt: new Date(),
-      })
-      .where(eq(schema.users.id, userId))
-      .returning({ authVersion: schema.users.authVersion });
-
-    return updated?.authVersion ?? null;
+    const execute = async (client: Pick<typeof db, "update">) => {
+      const [updated] = await client
+        .update(schema.users)
+        .set({
+          authVersion: sql`${schema.users.authVersion} + 1`,
+          updatedAt: new Date(),
+        })
+        .where(
+          preserve
+            ? and(eq(schema.users.id, userId), eq(schema.users.clerkUserId, preserve.clerkUserId))
+            : eq(schema.users.id, userId)
+        )
+        .returning({ authVersion: schema.users.authVersion });
+      if (updated && preserve) {
+        await client
+          .update(schema.clerkRevocationJobs)
+          .set({ preserveSessionId: preserve.sessionId })
+          .where(
+            and(
+              eq(schema.clerkRevocationJobs.userId, userId),
+              eq(schema.clerkRevocationJobs.authVersion, updated.authVersion)
+            )
+          );
+      }
+      return updated?.authVersion ?? null;
+    };
+    if (tx) return await execute(tx as typeof db);
+    return await db.transaction(execute);
   } catch {
     return null;
   }

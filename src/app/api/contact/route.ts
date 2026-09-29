@@ -50,6 +50,8 @@ const createContactSchema = (isEn: boolean) =>
     locale: z.enum(["tr", "en"]).optional().default("tr"),
     attachmentName: z.string().max(255).optional(),
     attachmentSize: z.string().max(50).optional(),
+    attachmentData: z.string().optional(),
+    attachmentType: z.string().max(100).optional(),
   });
 
 export async function POST(req: Request) {
@@ -95,9 +97,14 @@ export async function POST(req: Request) {
       message: rawText,
       attachmentName,
       attachmentSize,
+      attachmentData,
+      attachmentType,
     } = createContactSchema(isEn).parse(body);
 
     let attachmentNote = "";
+    let emailAttachments:
+      Array<{ filename: string; content: string; contentType?: string }> | undefined;
+
     if (attachmentName) {
       const cleanName = attachmentName.replace(/[\r\n]+/g, " ").trim();
       const defaultSize = isEn ? "Verified < 5 MB" : "Doğrulandı < 5 MB";
@@ -105,6 +112,22 @@ export async function POST(req: Request) {
       attachmentNote = isEn
         ? `\n\n[Attachment]: ${cleanName} (${cleanSize})`
         : `\n\n[Ek Dosya]: ${cleanName} (${cleanSize})`;
+
+      if (attachmentData) {
+        const parts = attachmentData.split(",");
+        const base64Data = (parts.length > 1 ? parts[1] : parts[0]) || "";
+
+        // Limit payload to 5MB file (~7MB base64 string)
+        if (base64Data && base64Data.length <= 7 * 1024 * 1024) {
+          emailAttachments = [
+            {
+              filename: cleanName,
+              content: base64Data,
+              contentType: attachmentType,
+            },
+          ];
+        }
+      }
     }
     const text = rawText + attachmentNote;
 
@@ -135,6 +158,7 @@ export async function POST(req: Request) {
         : `Gönderen: ${name} (${email})\nKonu: ${subject}\n\nMesaj:\n${text}`,
       template: "contact_form",
       locale: isEn ? "en" : "tr",
+      attachments: emailAttachments,
     });
 
     if (!sent && process.env.NODE_ENV === "production") {

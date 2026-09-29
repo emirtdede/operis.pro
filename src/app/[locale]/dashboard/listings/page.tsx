@@ -11,8 +11,6 @@ import {
 } from "@/src/components/dashboard/owner-listings-dashboard";
 import { MandatoryReviewBanner } from "@/src/components/dashboard/mandatory-review-banner";
 import { Button } from "@/src/components/ui/button";
-import { JsonLd } from "@/src/components/seo/json-ld";
-import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -105,28 +103,6 @@ export default async function DashboardListingsPage({
     initialListings = [];
   }
 
-  const baseUrl = getBaseUrl();
-  const dashboardUrl = isTr ? `${baseUrl}/tr/panel/ilanlarim` : `${baseUrl}/en/dashboard/listings`;
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: isTr ? "Ana Sayfa" : "Home",
-        item: `${baseUrl}/${locale}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: isTr ? "İlanlarım" : "My Listings",
-        item: dashboardUrl,
-      },
-    ],
-  };
-
   return (
     <div className="space-y-6">
       {/* Header Bar */}
@@ -164,9 +140,6 @@ export default async function DashboardListingsPage({
         locale={locale}
         hasLoadError={hasLoadError}
       />
-
-      {/* Schema.org Structured Data */}
-      <JsonLd data={jsonLd} />
     </div>
   );
 }

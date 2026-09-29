@@ -38,6 +38,9 @@ describe("Read-only schema audit against migrated PostgreSQL", () => {
       "Missing/changed constraint",
     ],
     ["UPDATE drizzle.__drizzle_migrations SET hash='tampered'", "Missing/changed migration"],
+    ["DROP TRIGGER users_security_change ON users", "Catalog mismatch"],
+    ["DROP TRIGGER contract_signature_storage ON engagement_contract_packages", "Catalog mismatch"],
+    ["DROP TRIGGER notifications_assign_sequence ON notifications", "Catalog mismatch"],
   ])("detects drift and leaves the database unchanged: %s", async (sql, message) => {
     const client = await context.pool.connect();
     try {

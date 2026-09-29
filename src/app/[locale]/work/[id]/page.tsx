@@ -6,9 +6,7 @@ import { getSession } from "@/src/modules/auth/session";
 import { ProfileService } from "@/src/modules/profiles/service";
 import { EngagementService } from "@/src/modules/engagements/service";
 import { MatchDetailsView } from "@/src/components/engagements/match-details-view";
-import { JsonLd } from "@/src/components/seo/json-ld";
 import { formatBudgetRange } from "@/src/lib/format/budget";
-import { getBaseUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
@@ -111,39 +109,8 @@ export default async function MatchPage({
     phone: null,
   };
 
-  const baseUrl = getBaseUrl();
-  const workspaceUrl = isTr ? `${baseUrl}/tr/calisma-alani/${id}` : `${baseUrl}/en/workspace/${id}`;
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: isTr ? "Ana Sayfa" : "Home",
-        item: `${baseUrl}/${locale}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: isTr ? "İlanlarım" : "My Listings",
-        item: `${baseUrl}${isTr ? "/tr/panel/ilanlarim" : "/en/dashboard/listings"}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: isTr ? "Çalışma Alanı" : "Workspace",
-        item: workspaceUrl,
-      },
-    ],
-  };
-
   return (
     <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-      {/* Schema.org Structured Data */}
-      <JsonLd data={jsonLd} />
-
       {/* Bilateral Engagement Guidance Banner */}
       <section
         aria-label={isTr ? "Eşleşme Süreci Rehberi" : "Match Process Guide"}

@@ -19,7 +19,7 @@
 | **TPL-06** | `/[locale]/categories/[slug]` (Kategori) | **INDEX** | **FOLLOW** | `https://operis.pro/${locale}/kategori/${slug}` | **DAHİL** | Anahtar kelime iniş sayfası |
 | **TPL-07** | `/[locale]/listings/[slug]` (Aktif İlan) | **INDEX** | **FOLLOW** | `https://operis.pro/${locale}/listings/${slug}` | **DAHİL** | 168 saat süresince tam indeks |
 | **TPL-08** | `/[locale]/listings/[slug]` (Süresi Biten) | **NOINDEX** | **FOLLOW** | Self-canonical + `noindex, follow` | HARİÇ | 200 OK + Benzer ilanlar önerilir |
-| **TPL-09** | `/[locale]/listings/[slug]` (Silinmiş İlan) | **410 GONE** | — | — | HARİÇ | Kalıcı silinme sinyali |
+| **TPL-09** | `/[locale]/listings/[slug]` (Silinmiş İlan) | **404 NOT FOUND** | — | — | HARİÇ | Uygulama silinen kaydı kamuya açmaz |
 | **TPL-10** | `/[locale]/u/[handle]` (Dolu Profil) | **INDEX** | **FOLLOW** | `https://operis.pro/${locale}/profile/${handle}` | **DAHİL** | Biyografi ve becerisi tam profiller |
 | **TPL-11** | `/[locale]/u/[handle]` (Yetersiz/Boş) | **NOINDEX** | **FOLLOW** | Self-canonical + `noindex, follow` | HARİÇ | Thin-content kalkanı |
 | **TPL-12** | `/[locale]/about` (Kurumsal Manifesto) | **INDEX** | **FOLLOW** | `https://operis.pro/${locale}/about` | **DAHİL** | E-E-A-T ve kurumsal kimlik |
@@ -67,4 +67,4 @@
 - Meta tag tekrar `index, follow` olur.
 
 ### D. İlan Silindiğinde (DELETED):
-- Sayfa HTTP 410 Gone döndürür.
+- Sayfa HTTP 404 Not Found döndürür.

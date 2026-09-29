@@ -1,3 +1,6 @@
+import { timingSafeEqual } from "node:crypto";
+import { isIP } from "node:net";
+import { resolveProxyProvider } from "./proxy-policy";
 import { NextResponse } from "next/server";
 import { GcraLimiter, type GcraRateLimitResult } from "./gcra-limiter";
 export { GcraLimiter, type GcraRateLimitResult };
@@ -322,45 +325,19 @@ if (typeof setInterval !== "undefined") {
  * to prevent client IP spoofing and rate limit bypass.
  */
 export function getClientIp(req: Request): string {
-  // 1. Cloudflare authoritative connecting IP (cannot be spoofed if behind CF)
-  const cfConnectingIp = req.headers.get("cf-connecting-ip");
-  if (cfConnectingIp) {
-    const candidate = normalizeIp(cfConnectingIp);
-    if (isValidIp(candidate)) return candidate;
-  }
-
-  // 2. Vercel edge proxy header
-  const vercelIp = req.headers.get("x-vercel-forwarded-for");
-  if (vercelIp) {
-    const rawVercel = vercelIp.split(",")[0]?.trim();
-    if (rawVercel) {
-      const candidate = normalizeIp(rawVercel);
-      if (isValidIp(candidate)) return candidate;
+  const provider = resolveProxyProvider(process.env);
+  let raw: string | null = null;
+  if (provider === "vercel") {
+    raw = req.headers.get("x-vercel-forwarded-for")?.split(",")[0]?.trim() || null;
+  } else if (provider === "cloudflare") {
+    const expected = Buffer.from(process.env.CLOUDFLARE_PROXY_SECRET || "");
+    const actual = Buffer.from(req.headers.get("x-operis-origin-auth") || "");
+    if (expected.length && expected.length === actual.length && timingSafeEqual(expected, actual)) {
+      raw = req.headers.get("cf-connecting-ip");
     }
   }
-
-  // 3. Standard reverse proxy real IP
-  const realIp = req.headers.get("x-real-ip");
-  if (realIp) {
-    const candidate = normalizeIp(realIp);
-    if (isValidIp(candidate)) return candidate;
-  }
-
-  // 4. Fallback to X-Forwarded-For
-  const forwarded = req.headers.get("x-forwarded-for");
-  if (forwarded) {
-    const ips = forwarded
-      .split(",")
-      .map((p) => p.trim())
-      .filter(Boolean);
-    for (const raw of ips) {
-      const candidate = normalizeIp(raw);
-      if (isValidIp(candidate)) {
-        return candidate;
-      }
-    }
-  }
-  return "127.0.0.1";
+  if (!raw || !isIP(raw.trim())) return "127.0.0.1";
+  return normalizeIp(raw.trim());
 }
 
 export interface RateLimitResult {

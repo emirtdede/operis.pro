@@ -60,6 +60,19 @@ export function isValidExternalUrl(urlStr: string): boolean {
   }
 }
 
+export function isValidAvatarUrl(urlStr: string): boolean {
+  if (!urlStr || typeof urlStr !== "string") return false;
+  const trimmed = urlStr.trim();
+
+  // Allow local uploads path if relative and safe
+  if (trimmed.startsWith("/uploads/avatars/")) {
+    return !trimmed.includes("..") && !trimmed.includes("//");
+  }
+
+  // External URLs (must be valid HTTPS, no private IPs)
+  return isValidExternalUrl(trimmed);
+}
+
 export const profileLinkSchema = z.object({
   type: z.enum(ALLOWED_LINK_TYPES),
   label: z

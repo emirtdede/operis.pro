@@ -11,11 +11,17 @@ import { getBaseUrl, constructCanonicalUrl } from "@/src/lib/config/url";
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const query = await searchParams;
   const isTr = locale === "tr";
+  const isFilteredView = Object.values(query).some((value) =>
+    Array.isArray(value) ? value.length > 0 : typeof value === "string" && value.length > 0
+  );
   const trUrl = constructCanonicalUrl("/tr/ilanlar");
   const enUrl = constructCanonicalUrl("/en/listings");
 
@@ -51,7 +57,7 @@ export async function generateMetadata({
       description,
     },
     robots: {
-      index: true,
+      index: !isFilteredView,
       follow: true,
     },
   };

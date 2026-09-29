@@ -10,6 +10,11 @@ export default defineConfig({
     testTimeout: 15000,
     setupFiles: ["tests/setup/unit.ts"],
     include: ["tests/unit/**/*.test.ts"],
+    server: {
+      deps: {
+        inline: ["next-intl"],
+      },
+    },
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
@@ -20,6 +25,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./"),
+      "next/server": path.resolve(__dirname, "./node_modules/next/server.js"),
     },
   },
 });

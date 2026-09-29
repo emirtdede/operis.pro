@@ -14,6 +14,12 @@ export interface LoginFormProps {
   returnUrl?: string;
 }
 
+interface ClerkLoginState {
+  clerkLoaded?: boolean;
+  clerkSignedIn?: boolean;
+  clerkUserId?: string | null;
+}
+
 function getSafeReturnUrl(url: string | undefined | null, fallback: string): string {
   if (!url) return fallback;
   if (/^\/(tr|en)(\/|$)/.test(url) && !url.startsWith("//")) {
@@ -24,9 +30,33 @@ function getSafeReturnUrl(url: string | undefined | null, fallback: string): str
   return fallback;
 }
 
-export function LoginForm({ locale, returnUrl }: LoginFormProps) {
+export function LoginForm(props: LoginFormProps) {
+  if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
+    return <LoginFormBase {...props} />;
+  }
+  return <ClerkConnectedLoginForm {...props} />;
+}
+
+function ClerkConnectedLoginForm(props: LoginFormProps) {
+  const { isLoaded, isSignedIn, userId } = useAuth();
+  return (
+    <LoginFormBase
+      {...props}
+      clerkLoaded={isLoaded}
+      clerkSignedIn={isSignedIn}
+      clerkUserId={userId}
+    />
+  );
+}
+
+function LoginFormBase({
+  locale,
+  returnUrl,
+  clerkLoaded = true,
+  clerkSignedIn = false,
+  clerkUserId = null,
+}: LoginFormProps & ClerkLoginState) {
   const isTr = locale === "tr";
-  const { isLoaded: clerkLoaded, isSignedIn: clerkSignedIn, userId: clerkUserId } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

@@ -33,15 +33,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Core static routes
   const staticKeys: RouteKey[] = [
     "listings",
-    "newListing",
     "categories",
     "about",
     "contact",
     "help",
     "brand",
     "legalCenter",
-    "login",
-    "register",
     "report",
   ];
   for (const key of staticKeys) {
@@ -54,13 +51,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     } else if (key === "categories") {
       priority = 0.85;
       changeFrequency = "daily";
-    } else if (key === "register") {
-      priority = 0.8;
-      changeFrequency = "weekly";
-    } else if (key === "login") {
-      priority = 0.75;
-      changeFrequency = "weekly";
-    } else if (key === "about" || key === "newListing") {
+    } else if (key === "about") {
       priority = 0.7;
       changeFrequency = "weekly";
     }

@@ -13,11 +13,9 @@ import {
   Trash2,
   Globe,
   Sparkles,
-  Camera,
-  UploadCloud,
   ShieldCheck,
-  Link as LinkIcon,
   Check,
+  RefreshCw,
 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { TextInput } from "@/src/components/ui/text-input";
@@ -72,13 +70,15 @@ export function ProfileIdentityTab({
   const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl);
   const [links, setLinks] = useState<ProfileLinkItem[]>(initialLinks || []);
 
-  // Avatar upload states
-  const [uploadingAvatar, setUploadingAvatar] = useState(false);
-  const [avatarUploadError, setAvatarUploadError] = useState<string | null>(null);
-  const [avatarUploadSuccess, setAvatarUploadSuccess] = useState<string | null>(null);
-  const [isDraggingAvatar, setIsDraggingAvatar] = useState(false);
-  const [showUrlInput, setShowUrlInput] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  // Avatar states & Google sync
+  const [avatarError, setAvatarError] = useState(false);
+  const [topAvatarError, setTopAvatarError] = useState(false);
+  const [isSyncingAvatar, setIsSyncingAvatar] = useState(false);
+  const [syncFeedback, setSyncFeedback] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
+  const [syncCooldown, setSyncCooldown] = useState(0);
 
   // New link states
   const [newLinkType, setNewLinkType] = useState("github");
@@ -309,73 +309,83 @@ export function ProfileIdentityTab({
     }
   };
 
-  // Avatar file upload handler
-  const handleAvatarFileSelect = async (file: File) => {
-    if (!file) return;
+  // Cooldown timer for Google avatar sync
+  useEffect(() => {
+    if (syncCooldown <= 0) return;
+    const timer = setInterval(() => {
+      setSyncCooldown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [syncCooldown]);
 
-    if (!file.type.startsWith("image/")) {
-      setAvatarUploadError(
-        isTr
-          ? "Lütfen geçerli bir görsel dosyası seçin (PNG, JPG, WebP, AVIF, HEIC)."
-          : "Please select an image file (PNG, JPG, WebP, AVIF, HEIC)."
-      );
-      return;
-    }
+  // Reset image errors when avatarUrl changes
+  useEffect(() => {
+    setAvatarError(false);
+    setTopAvatarError(false);
+  }, [avatarUrl]);
 
-    if (file.size > 5 * 1024 * 1024) {
-      setAvatarUploadError(
-        isTr ? "Dosya boyutu 5 MB sınırını aşamaz." : "File size cannot exceed 5MB."
-      );
-      return;
-    }
+  // Google avatar sync handler
+  const handleSyncAvatarFromGoogle = async () => {
+    if (isSyncingAvatar || syncCooldown > 0) return;
 
-    setAvatarUploadError(null);
-    setAvatarUploadSuccess(null);
-    setUploadingAvatar(true);
+    setIsSyncingAvatar(true);
+    setSyncFeedback(null);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const res = await fetch("/api/upload/avatar", {
+      const res = await fetch("/api/profile/sync-avatar", {
         method: "POST",
-        headers: { "x-locale": locale },
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+          "x-locale": locale,
+        },
       });
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || (isTr ? "Fotoğraf yüklenemedi." : "Upload failed."));
+        throw new Error(
+          data.error ||
+            (isTr
+              ? "Google profil fotoğrafı senkronize edilemedi."
+              : "Failed to sync profile picture from Google.")
+        );
       }
 
-      setAvatarUrl(data.avatarUrl);
-      setAvatarUploadSuccess(
-        isTr
-          ? "Profil fotoğrafınız başarıyla güncellendi!"
-          : "Profile picture updated successfully!"
-      );
-      setTimeout(() => setAvatarUploadSuccess(null), 4000);
+      if (data.avatarUrl) {
+        setAvatarUrl(data.avatarUrl);
+        setAvatarError(false);
+        setTopAvatarError(false);
+        setSyncFeedback({
+          type: "success",
+          message: isTr
+            ? "Profil fotoğrafınız Google hesabınızla başarıyla eşitlendi!"
+            : "Profile picture successfully synced with Google!",
+        });
+      } else {
+        setAvatarUrl("");
+        setSyncFeedback({
+          type: "success",
+          message: isTr
+            ? "Google hesabınızda fotoğraf bulunamadı. Operis amblemi gösteriliyor."
+            : "No photo found on Google account. Operis emblem is displayed.",
+        });
+      }
+
+      setSyncCooldown(30);
+      setTimeout(() => setSyncFeedback(null), 5000);
     } catch (err: unknown) {
-      setAvatarUploadError(
-        err instanceof Error ? err.message : isTr ? "Fotoğraf yüklenemedi." : "Upload failed."
-      );
+      setSyncFeedback({
+        type: "error",
+        message:
+          err instanceof Error
+            ? err.message
+            : isTr
+              ? "Google fotoğrafı eşitlenemedi."
+              : "Failed to sync photo.",
+      });
+      setTimeout(() => setSyncFeedback(null), 5000);
     } finally {
-      setUploadingAvatar(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
+      setIsSyncingAvatar(false);
     }
-  };
-
-  // Remove avatar handler
-  const handleRemoveAvatar = () => {
-    setAvatarUrl("");
-    setAvatarUploadSuccess(
-      isTr
-        ? "Profil fotoğrafı kaldırıldı (Baş harfler kullanılacak)."
-        : "Avatar removed (Initials will be shown)."
-    );
-    setTimeout(() => setAvatarUploadSuccess(null), 3000);
   };
 
   // Check handle availability on change
@@ -501,12 +511,20 @@ export function ProfileIdentityTab({
         <div className="p-4 sm:p-5 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
           <div className="flex items-center gap-3.5 min-w-0">
             <div className="relative h-14 w-14 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-600/20 to-indigo-600/30 border border-blue-500/30 flex items-center justify-center shrink-0 shadow-inner">
-              {avatarUrl ? (
-                <img src={avatarUrl} alt={displayName} className="h-full w-full object-cover" />
+              {avatarUrl && !topAvatarError ? (
+                <img
+                  src={avatarUrl}
+                  alt={displayName}
+                  className="h-full w-full object-cover"
+                  onError={() => setTopAvatarError(true)}
+                  referrerPolicy="no-referrer"
+                />
               ) : (
-                <span className="text-lg font-bold text-blue-400">
-                  {displayName.slice(0, 2).toUpperCase() || "OP"}
-                </span>
+                <img
+                  src="/operis-logo-512x512.png"
+                  alt="Operis"
+                  className="h-8 w-8 object-contain drop-shadow"
+                />
               )}
             </div>
             <div className="min-w-0 space-y-0.5">
@@ -543,184 +561,111 @@ export function ProfileIdentityTab({
         </div>
       </div>
 
-      {/* 2. Profil Fotoğrafı Alanı */}
+      {/* 2. Profil Fotoğrafı ve Google Senkronizasyon Kartı */}
       <div className="pt-4 border-t border-[var(--color-border-subtle)] space-y-4">
         <div className="flex items-center justify-between">
           <label className="text-xs font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
-            <Camera className="h-4 w-4 text-blue-400" />
-            <span>{isTr ? "Profil Fotoğrafı" : "Profile Photo"}</span>
+            <Globe className="h-4 w-4 text-blue-500" />
+            <span>{isTr ? "Profil Fotoğrafı" : "Profile Picture"}</span>
           </label>
-          <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-medium">
+          <div className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-400">
             <ShieldCheck className="h-3.5 w-3.5" />
-            <span>{isTr ? "Güvenli Depolama • Maks. 5 MB" : "Secure Storage • Max 5 MB"}</span>
+            <span>{isTr ? "Google ile Doğrulandı" : "Verified with Google"}</span>
           </div>
         </div>
 
-        {/* Interactive Avatar Upload Box */}
-        <div
-          onDragOver={(e) => {
-            e.preventDefault();
-            setIsDraggingAvatar(true);
-          }}
-          onDragLeave={() => setIsDraggingAvatar(false)}
-          onDrop={(e) => {
-            e.preventDefault();
-            setIsDraggingAvatar(false);
-            const file = e.dataTransfer.files?.[0];
-            if (file) handleAvatarFileSelect(file);
-          }}
-          className={`p-4 sm:p-5 rounded-2xl border transition-all ${
-            isDraggingAvatar
-              ? "border-blue-500 bg-blue-500/10 scale-[1.01]"
-              : "border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/30 hover:border-blue-500/40"
-          }`}
-        >
+        <div className="p-4 sm:p-5 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-hover)]/30 hover:border-blue-500/40 transition-all">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
-            {/* Clickable Large Avatar with Camera Sheen */}
+            {/* Large Avatar Container with Operis Logo Fallback */}
             <div
-              onClick={() => fileInputRef.current?.click()}
-              className="relative h-24 w-24 sm:h-28 sm:w-28 rounded-3xl overflow-hidden bg-gradient-to-br from-blue-600/10 to-indigo-600/20 border-2 border-blue-500/30 flex items-center justify-center shrink-0 cursor-pointer shadow-lg group transition-transform active:scale-95"
-              title={isTr ? "Fotoğraf yüklemek için tıklayın" : "Click to upload photo"}
+              className="relative h-24 w-24 sm:h-28 sm:w-28 rounded-3xl overflow-hidden bg-gradient-to-br from-blue-600/10 to-indigo-600/20 border-2 border-blue-500/30 flex items-center justify-center shrink-0 shadow-lg"
+              title={displayName}
             >
-              {avatarUrl ? (
-                <img src={avatarUrl} alt={displayName} className="h-full w-full object-cover" />
+              {avatarUrl && !avatarError ? (
+                <img
+                  src={avatarUrl}
+                  alt={displayName}
+                  className="h-full w-full object-cover"
+                  onError={() => setAvatarError(true)}
+                  referrerPolicy="no-referrer"
+                />
               ) : (
-                <span className="text-3xl font-extrabold text-blue-400">
-                  {displayName.slice(0, 2).toUpperCase() || "OP"}
-                </span>
+                <div className="flex flex-col items-center justify-center p-3 text-center">
+                  <img
+                    src="/operis-logo-512x512.png"
+                    alt="Operis Logo"
+                    className="h-12 w-12 object-contain drop-shadow"
+                  />
+                  <span className="text-[10px] font-bold text-blue-400 mt-1 uppercase tracking-wider">
+                    Operis
+                  </span>
+                </div>
               )}
-
-              {/* Hover / Uploading Overlay */}
-              <div
-                className={`absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-1 text-white text-[11px] font-semibold transition-opacity ${
-                  uploadingAvatar ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-                }`}
-              >
-                {uploadingAvatar ? (
-                  <>
-                    <Loader2 className="h-5 w-5 animate-spin text-blue-400" />
-                    <span className="text-[10px] text-center px-1">
-                      {isTr ? "Yükleniyor..." : "Uploading..."}
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <Camera className="h-5 w-5 text-white" />
-                    <span>{isTr ? "Değiştir" : "Change"}</span>
-                  </>
-                )}
-              </div>
             </div>
 
-            {/* Upload Controls & Information */}
+            {/* Sync Controls & Information */}
             <div className="flex-1 space-y-3 text-center sm:text-left">
               <div>
-                <h4 className="text-xs font-bold text-[var(--color-text-primary)]">
-                  {isTr ? "Profil Fotoğrafınızı Güncelleyin" : "Update Profile Picture"}
+                <h4 className="text-xs font-bold text-[var(--color-text-primary)] flex items-center justify-center sm:justify-start gap-1.5">
+                  <span>
+                    {isTr ? "Google Hesabınız ile Eşitlendi" : "Synced with Google Account"}
+                  </span>
                 </h4>
-                <p className="text-[11px] text-[var(--color-text-secondary)] leading-relaxed mt-0.5">
+                <p className="text-[11px] text-[var(--color-text-secondary)] leading-relaxed mt-1">
                   {isTr
-                    ? "Yüklediğiniz fotoğraf profilinizde ve tekliflerinizde en net kalitede görüntülenecek şekilde otomatik olarak optimize edilir."
-                    : "Your photo is automatically optimized for crisp, high-quality display across your profile and proposals."}
+                    ? "Profil fotoğrafınız, hesap güvenliğiniz ve pratiklik amacıyla bağlı Google hesabınızdan otomatik olarak aktarılır. Fotoğrafınızı değiştirmek için Google profilinizi güncelleyebilir, ardından aşağıdaki butona tıklayarak hemen Operis'e yansıtabilirsiniz."
+                    : "Your profile picture is automatically synced with your connected Google account. To change your picture, update your Google profile and click below to sync."}
                 </p>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp,image/avif,image/gif,image/heic"
-                  className="hidden"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) handleAvatarFileSelect(file);
-                  }}
-                />
-
+              {/* Action Button: Google Sync */}
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
                 <Button
                   type="button"
                   variant="primary"
                   size="sm"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploadingAvatar}
-                  className="gap-1.5 text-xs h-9 px-3.5 rounded-xl cursor-pointer shadow-sm shadow-blue-500/20"
+                  onClick={handleSyncAvatarFromGoogle}
+                  disabled={isSyncingAvatar || syncCooldown > 0}
+                  className="gap-2 text-xs h-9 px-4 rounded-xl cursor-pointer shadow-sm shadow-blue-500/20 shrink-0"
                 >
-                  {uploadingAvatar ? (
+                  {isSyncingAvatar ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
                   ) : (
-                    <UploadCloud className="h-3.5 w-3.5" />
+                    <RefreshCw className="h-3.5 w-3.5" />
                   )}
                   <span>
-                    {uploadingAvatar
+                    {isSyncingAvatar
                       ? isTr
-                        ? "Fotoğraf Yükleniyor..."
-                        : "Uploading Photo..."
-                      : isTr
-                        ? "Fotoğraf Yükle"
-                        : "Upload Photo"}
+                        ? "Google'dan Eşitleniyor..."
+                        : "Syncing from Google..."
+                      : syncCooldown > 0
+                        ? `${isTr ? "Yeniden denemek için bekleyin" : "Retry in"}: ${syncCooldown}s`
+                        : isTr
+                          ? "Google'dan Güncelle"
+                          : "Sync from Google"}
                   </span>
-                </Button>
-
-                {avatarUrl && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleRemoveAvatar}
-                    disabled={uploadingAvatar}
-                    className="gap-1.5 text-xs h-9 px-3 rounded-xl text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 cursor-pointer"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                    <span>{isTr ? "Fotoğrafı Kaldır" : "Remove Photo"}</span>
-                  </Button>
-                )}
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowUrlInput(!showUrlInput)}
-                  className="gap-1.5 text-xs h-9 px-3 rounded-xl text-[var(--color-text-secondary)] cursor-pointer"
-                >
-                  <LinkIcon className="h-3.5 w-3.5" />
-                  <span>{isTr ? "Harici URL ile Belirt" : "Use External URL"}</span>
                 </Button>
               </div>
 
               {/* Status Feedback Banners */}
-              {avatarUploadSuccess && (
-                <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-xl animate-in fade-in">
-                  <Check className="h-3.5 w-3.5 shrink-0" />
-                  <span>{avatarUploadSuccess}</span>
-                </div>
-              )}
-
-              {avatarUploadError && (
-                <div className="flex items-center gap-1.5 text-[11px] text-rose-400 font-semibold bg-rose-500/10 border border-rose-500/20 px-3 py-1.5 rounded-xl animate-in fade-in">
-                  <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-                  <span>{avatarUploadError}</span>
+              {syncFeedback && (
+                <div
+                  className={`flex items-center gap-1.5 text-[11px] font-semibold px-3 py-1.5 rounded-xl animate-in fade-in ${
+                    syncFeedback.type === "success"
+                      ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/20"
+                      : "text-rose-400 bg-rose-500/10 border border-rose-500/20"
+                  }`}
+                >
+                  {syncFeedback.type === "success" ? (
+                    <Check className="h-3.5 w-3.5 shrink-0" />
+                  ) : (
+                    <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                  )}
+                  <span>{syncFeedback.message}</span>
                 </div>
               )}
             </div>
           </div>
-
-          {/* Optional Expandable External URL Input */}
-          {showUrlInput && (
-            <div className="mt-4 pt-3 border-t border-[var(--color-border-subtle)] space-y-1.5 animate-in fade-in duration-200">
-              <label className="text-[11px] font-semibold text-[var(--color-text-tertiary)] block">
-                {isTr
-                  ? "Doğrudan Harici Resim Bağlantısı (Avatar URL)"
-                  : "Direct Image Link (Avatar URL)"}
-              </label>
-              <TextInput
-                value={avatarUrl}
-                onChange={(e) => setAvatarUrl(e.target.value)}
-                placeholder="https://images.unsplash.com/... veya https://lh3.googleusercontent.com/..."
-                className="text-xs font-mono"
-              />
-            </div>
-          )}
         </div>
       </div>
 
